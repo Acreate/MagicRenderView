@@ -65,8 +65,6 @@ endif()
 
 target_include_directories( "${prject_name}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/srcs" )
 
-printf_qt_cmake_out()
-
 # # 需要生成的 *.ts 文件保存到 translation_file_list 变量当中
 SET( translation_file_list_auto
 

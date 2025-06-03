@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required( VERSION 3.19 )
 
 # # 加载模块
-find_package( CmakeFuncs REQUIRED PATHS "${CMAKE_CURRENT_SOURCE_DIR}/srcs/cmakeFuncs/CmakeFuncs" )
+find_package( CmakeFuncs REQUIRED PATHS "${CMAKE_CURRENT_SOURCE_DIR}/srcs/cmake/cmakeFuncs/CmakeFuncs" )
 
 # # 获取当前文件夹名称
 get_current_dir_name( prject_name ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -24,7 +24,7 @@ include( GNUInstallDirs )
 get_cmake_separator( _cmake_sep )
 init_std_builder_path()
 
-find_package( Qt6 COMPONENTS Widgets Core LinguistTools )
+find_package( Qt6 QUIET COMPONENTS Widgets Core LinguistTools )
 if( NOT Qt6_FOUND OR NOT EXISTS "${Qt6_DIR}" )
     # # 使用 qt6
     set( Qt6_DIR "C:/Qt/6.8.2/msvc2022_64/lib/cmake/QT6/" )
@@ -34,6 +34,7 @@ else()
     init_qt_dir_event( "${Qt6_DIR}" )
 endif()
 
+PRINTF_QT_CMAKE_OUT()
 
 qt_standard_project_setup()
 
@@ -45,7 +46,7 @@ get_cmake_separator( cmake_sep_char )
 # add_subdirectory_tools_lib()
 # add_subdirectory_code_cpp23_project()
 # add_subdirectory_code_project() # # 测试工具
-get_path_cmake_dir_path( bin_list "${CMAKE_CURRENT_SOURCE_DIR}/srcs/qt" "CMakeLists.txt" )
+get_path_cmake_dir_path( bin_list "${CMAKE_CURRENT_SOURCE_DIR}/srcs/cpp" "CMakeLists.txt" )
 list( APPEND out_path_list ${lib_list} ${bin_list} )
 filter_path_repetition( list_result out_path_list )
 append_sub_directory_cmake_project_path_list( list_result )
