@@ -1,0 +1,3 @@
+[submodule "srcs/cmakeFuncs"]
+	path = srcs/cmakeFuncs
+	url = https://gitee.com/ChenYLhuman/cmakeFuncs.git
