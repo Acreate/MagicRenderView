@@ -13,20 +13,23 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 NodeGraph::~NodeGraph( ) {
 }
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
-	Qt::MouseButton mouseButton = event->button( );
+	// 鼠标按键
+	Qt::MouseButton mouseButton = event->button( );	
+	// 鼠标全局位置
+	QPoint cursorPos = QCursor::pos( );
+	// 鼠标窗口位置
 	QPoint currentMouseInWidgetPos = event->pos( );
 	switch( mouseButton ) {
 		case Qt::RightButton : // 使用配置的位置显示菜单
-			nodeMenu->move( QCursor::pos( ) );
+			nodeMenu->move( cursorPos );
 			nodeMenu->show( );
 			break;
 		case Qt::LeftButton : // 配置位置
-			cursorPos = QCursor::pos( );
 			if( mousePosLabel->isHidden( ) ) {
 				mousePosLabel->show( );
 				mousePosLabel->move( currentMouseInWidgetPos );
 			} else if( mousePosLabel->geometry( ).contains( currentMouseInWidgetPos ) ) {
-				nodeMenu->move( QCursor::pos( ) );
+				nodeMenu->move( cursorPos );
 				nodeMenu->show( );
 			} else
 				mousePosLabel->move( currentMouseInWidgetPos );

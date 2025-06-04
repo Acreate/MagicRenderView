@@ -12,8 +12,7 @@ protected:
 	NodeAddMenu* nodeMenu;
 	/// @brief 用于显示鼠标位置
 	QLabel *mousePosLabel;
-	/// @brief 鼠标位置
-	QPoint cursorPos;
+
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph()override;
