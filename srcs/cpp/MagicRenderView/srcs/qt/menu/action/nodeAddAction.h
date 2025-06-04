@@ -13,6 +13,7 @@ protected:
 public:
 	NodeAddAction( QObject *parent, const std_shared_ptr< IFunctionDeclaration > &function_declaration );
 	~NodeAddAction( ) override;
+	const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 };
 
 #endif // NODEADDACTION_H_H_HEAD__FILE__

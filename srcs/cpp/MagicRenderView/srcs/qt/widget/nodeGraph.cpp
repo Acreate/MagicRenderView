@@ -3,9 +3,19 @@
 
 #include <qt/menu/nodeAddMenu.h>
 #include <QLabel>
+
+#include "qt/functionDeclaration/IFunctionDeclaration.h"
+#include "qt/menu/action/nodeAddAction.h"
+#include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	nodeMenu = new NodeAddMenu( this );
-
+	// todo : 创建需要的节点，并且绘制到该窗口当中 
+	connect( nodeMenu, &NodeAddMenu::activeNodeAction, [this] ( const NodeAddAction *node_add_action ) ->void {
+		auto functionDeclaration = node_add_action->getFunctionDeclaration( ).get( );
+		if( functionDeclaration == nullptr )
+			return;
+		tools::debug::printError( functionDeclaration->getFunctionDeclarationName( ) );
+	} );
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
 	mousePosLabel->hide( );
@@ -43,7 +53,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		}
-		// todo : 操作被选中的节点
+		// todo : 操作被选中的节点 
 		case MouseEventType::Move :
 			break;
 	}
