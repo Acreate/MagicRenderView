@@ -16,10 +16,10 @@ protected:
 public:
 	CombinationTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ) { }
 
-	virtual ITypeObject * setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &&var_name ) {
+	virtual std_shared_ptr< ITypeObject > setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &&var_name ) {
 		for( auto &pair : dataStruct )
 			if( pair->second == var_name ) {
-				ITypeObject *element = pair->first.get( ); // 用于覆盖返回
+				std_shared_ptr< ITypeObject > element = pair->first; // 用于覆盖返回
 				pair->first = new_type;
 				return element;
 			}
@@ -28,14 +28,16 @@ public:
 		ptr->first = new_type;
 		ptr->second = var_name;
 		dataStruct.emplace_back( ptr );
-		return nullptr;
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
 	}
 
-	virtual ITypeObject * getVarObject( const QString &&var_name ) const {
+	virtual std_shared_ptr< ITypeObject > getVarObject( const QString &&var_name ) const {
 		for( auto pair : dataStruct )
 			if( pair->second == var_name )
-				return pair->first.get( );
-		return nullptr;
+				return pair->first;
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
 	}
 
 	virtual const std_shared_ptr< ITypeObject > & operator[]( const QString &&var_name ) const {
