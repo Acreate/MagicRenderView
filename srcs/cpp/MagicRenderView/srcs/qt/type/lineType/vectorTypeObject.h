@@ -13,6 +13,13 @@ class VectorTypeObject : public ITypeObject {
 protected:
 	std_shared_ptr< std_vector< std_shared_ptr< ITypeObject > > > vector;
 public:
+	operator std_vector< std_shared_ptr< ITypeObject > >( ) const {
+		std_vector< std_shared_ptr< ITypeObject > > result;
+		for( auto ptr : *vector )
+			result.emplace_back( ptr );
+		return result;
+	}
+public:
 	VectorTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 	}
 	VectorTypeObject( const VectorTypeObject &other )
