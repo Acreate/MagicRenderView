@@ -12,12 +12,62 @@ class CombinationTypeObject : public ITypeObject {
 	Q_OBJECT;
 protected:
 	/// @brief 数据结构
-	std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > dataStruct;
+	std_shared_ptr< std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > > dataStruct;
 public:
-	CombinationTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ) { }
+	CombinationTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
+	}
+	CombinationTypeObject( const CombinationTypeObject &other )
+		: ITypeObject( other ),
+		dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
+		*dataStruct = *other.dataStruct;
+	}
+	CombinationTypeObject & operator=( const CombinationTypeObject &other ) {
+		if( this == &other )
+			return *this;
+		ITypeObject::operator =( other );
+		dataStruct.reset( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) );
+		*dataStruct = *other.dataStruct;
+		return *this;
+	}
+	virtual std_shared_ptr< ITypeObject > removeBeginElemnt( ) {
+		size_t count = dataStruct->size( );
+		if( count > 0 ) {
+			auto iterator = dataStruct->begin( ) + count - 1;
+			std_shared_ptr< ITypeObject > result = iterator->get( )->first;
+			dataStruct->erase( iterator );
+			return result;
+		}
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
+	}
+
+	virtual std_shared_ptr< ITypeObject > removeEndElemnt( ) {
+		size_t count = dataStruct->size( );
+		if( count > 0 ) {
+			auto iterator = dataStruct->begin( ) + count - 1;
+			std_shared_ptr< ITypeObject > result = iterator->get( )->first;
+			dataStruct->erase( iterator );
+			return result;
+		}
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
+	}
+
+	virtual std_shared_ptr< ITypeObject > removeItem( const QString &&var_name ) {
+		auto itorater = dataStruct->begin( );
+		auto end = dataStruct->end( );
+		for( ; itorater != end; ++itorater )
+			if( itorater->get( )->second == var_name ) {
+				std::shared_ptr< ITypeObject > result = itorater->get( )->first;
+				dataStruct->erase( itorater );
+				return result;
+			}
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
+	}
 
 	virtual std_shared_ptr< ITypeObject > setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &&var_name ) {
-		for( auto &pair : dataStruct )
+		for( auto &pair : *dataStruct )
 			if( pair->second == var_name ) {
 				std_shared_ptr< ITypeObject > element = pair->first; // 用于覆盖返回
 				pair->first = new_type;
@@ -27,13 +77,13 @@ public:
 		auto ptr = std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > >( );
 		ptr->first = new_type;
 		ptr->second = var_name;
-		dataStruct.emplace_back( ptr );
+		dataStruct->emplace_back( ptr );
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
 		return shared;
 	}
 
 	virtual std_shared_ptr< ITypeObject > getVarObject( const QString &&var_name ) const {
-		for( auto pair : dataStruct )
+		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
@@ -41,7 +91,7 @@ public:
 	}
 
 	virtual const std_shared_ptr< ITypeObject > & operator[]( const QString &&var_name ) const {
-		for( auto pair : dataStruct )
+		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
@@ -49,7 +99,7 @@ public:
 	}
 
 	virtual std_shared_ptr< ITypeObject > & operator[]( const QString &&var_name ) {
-		for( auto pair : dataStruct )
+		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
@@ -60,20 +110,20 @@ public:
 		auto typeObject = &rhs;
 		if( this == typeObject )
 			return 0;
-		auto combinationTypeObject = qobject_cast< CombinationTypeObject * >( typeObject );
+		auto combinationTypeObject = qobject_cast< const CombinationTypeObject * >( typeObject );
 		if( combinationTypeObject == nullptr )
 			return -2;
-		size_t thisCount = dataStruct.size( );
-		size_t rCount = combinationTypeObject->dataStruct.size( );
+		size_t thisCount = dataStruct->size( );
+		size_t rCount = combinationTypeObject->dataStruct->size( );
 		if( thisCount > rCount )
 			return 1;
 		if( thisCount < rCount )
 			return -1;
 		for( size_t index = 0; index < thisCount; ++index ) {
-			int compare = dataStruct[ index ]->first->compare( *combinationTypeObject->dataStruct[ index ]->first );
+			int compare = dataStruct->at( index )->first->compare( *combinationTypeObject->dataStruct->at( index )->first );
 			if( compare != 0 )
 				return compare;
-			compare = dataStruct[ index ]->second.compare( combinationTypeObject->dataStruct[ index ]->second );
+			compare = dataStruct->at( index )->second.compare( combinationTypeObject->dataStruct->at( index )->second );
 			if( compare != 0 )
 				return compare;
 		}
@@ -82,13 +132,13 @@ public:
 
 	size_t typeMemorySize( ) const override {
 		size_t result = 0;
-		for( auto pair : dataStruct )
+		for( auto pair : *dataStruct )
 			result += pair->first->typeMemorySize( ) + ( pair->second.size( ) + 1 ) * sizeof( QChar );
 		return result;
 	}
 	QString toString( ) const override {
 		QStringList result;
-		for( auto pair : dataStruct )
+		for( auto pair : *dataStruct )
 			result.append( pair->first->toString( ) + " " + pair->second );
 		return "{" + result.join( "," ) + "}";
 	}

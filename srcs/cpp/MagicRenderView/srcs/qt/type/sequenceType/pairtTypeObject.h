@@ -4,6 +4,7 @@
 #include "alias/type_alias.h"
 
 #include "qt/type/ITypeObject.h"
+#include <qt/type/baseType/nullTypeObject.h>
 
 class PairtTypeObject : public ITypeObject {
 	Q_OBJECT;
@@ -11,7 +12,8 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( QObject *parent = nullptr );
+	PairtTypeObject( QObject *parent = nullptr ): ITypeObject( parent ) {
+	}
 	PairtTypeObject( QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
 		: ITypeObject( parent ),
 		first( first ),
@@ -43,7 +45,7 @@ public:
 		const ITypeObject *typeObject = &rhs;
 		if( this == typeObject )
 			return 0;
-		auto pairtTypeObject = qobject_cast< PairtTypeObject * >( typeObject );
+		auto pairtTypeObject = qobject_cast< const PairtTypeObject * >( typeObject );
 		if( pairtTypeObject == nullptr )
 			return -2;
 		int compare = first->compare( *pairtTypeObject->first );
@@ -54,7 +56,15 @@ public:
 			return compare;
 		return 0;
 	}
-	QString toString( ) const override;
+	QString toString( ) const override {
+		QString resultString( "(" );
+		if( first )
+			resultString = resultString + first->toString( );
+		if( scond )
+			resultString = resultString + "," + first->toString( ) + ")";
+		return resultString;
+	}
+
 	QString typeName( ) const override {
 		return "PairtTypeObject";
 	}

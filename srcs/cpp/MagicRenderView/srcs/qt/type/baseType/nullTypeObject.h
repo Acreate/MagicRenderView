@@ -7,7 +7,7 @@ class NullTypeObject : public ITypeObject {
 	Q_OBJECT;
 public:
 	static bool isNullptr( const ITypeObject *object ) {
-		if( object == nullptr || qobject_cast< NullTypeObject * >( object ) )
+		if( object == nullptr || qobject_cast< const NullTypeObject * >( object ) )
 			return true;
 		return object->isNullptr( );
 	}
@@ -21,10 +21,11 @@ public:
 		auto typeObject = &rhs;
 		if( this == typeObject )
 			return true;
-		if( typeObject == nullptr || qobject_cast< NullTypeObject * >( typeObject ) )
+		if( typeObject == nullptr || qobject_cast< const NullTypeObject * >( typeObject ) )
 			return true;
 		return typeObject->isNullptr( );
 	}
+
 	QString toString( ) const override {
 		return "nullptr";
 	}

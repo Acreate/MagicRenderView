@@ -167,7 +167,7 @@ public:
 		const ITypeObject *typeObject = &rhs;
 		if( this == typeObject )
 			return 0;
-		auto vectorTypeObject = qobject_cast< VectorTypeObject * >( typeObject );
+		auto vectorTypeObject = qobject_cast< const VectorTypeObject * >( typeObject );
 		if( vectorTypeObject == nullptr )
 			return -2;
 		auto thisCount = this->vector->size( );
@@ -183,7 +183,13 @@ public:
 		}
 		return 0;
 	}
-	QString toString( ) const override;
+	QString toString( ) const override {
+		QStringList result;
+		for( auto elemt : *vector )
+			result.append( elemt->toString( ) );
+		return "(" + result.join( "," ) + ")";
+	}
+
 	QString typeName( ) const override {
 		return "VectorTypeObject";
 	}
