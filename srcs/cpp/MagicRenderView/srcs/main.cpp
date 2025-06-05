@@ -1,6 +1,7 @@
 ﻿#include "qt/application/application.h"
 #include "qt/functionDeclaration/baseArithmetic/addFunctionDeclaration.h"
 #include "qt/mainWindow/mainWindow.h"
+#include "qt/type/blendType/combinationTypeObject.h"
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
@@ -13,6 +14,8 @@ int main( int argc, char *argv[ ] ) {
 	for( auto paramInfo : paramInfos )
 		qDebug( ) << paramInfo.get(  )->first << " : " << paramInfo.get(  )->second << "=========";
 
+
+	
 	MainWindow mainwidget;
 	mainwidget.show( );
 

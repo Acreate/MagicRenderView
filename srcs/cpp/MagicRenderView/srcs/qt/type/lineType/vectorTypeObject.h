@@ -6,6 +6,7 @@
 
 #include "qt/tools/tools.h"
 #include "qt/type/ITypeObject.h"
+#include "qt/type/baseType/nullTypeObject.h"
 
 class VectorTypeObject : public ITypeObject {
 	Q_OBJECT;
@@ -60,7 +61,8 @@ public:
 		for( auto elemt : *vector )
 			if( find_function( elemt ) )
 				return elemt;
-		return nullptr;
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
 	}
 	/// @brief 查找元素
 	/// @param find_function 查找的函数，当返回 true 时，返回该匹配的元素
@@ -184,6 +186,9 @@ public:
 	QString toString( ) const override;
 	QString typeName( ) const override {
 		return "VectorTypeObject";
+	}
+	bool isNullptr( ) const override {
+		return false;
 	}
 };
 

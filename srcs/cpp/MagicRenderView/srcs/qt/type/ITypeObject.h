@@ -34,6 +34,9 @@ public:
 	/// @brief 类型名称
 	/// @return 类型名称字符串表现
 	virtual QString typeName() const =0;
+	/// @brief 是否是空指针
+	/// @return 返回 true 表示空对象
+	virtual bool isNullptr() const = 0;
 };
 
 #endif // ITYPEOBJECT_H_H_HEAD__FILE__

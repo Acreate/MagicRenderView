@@ -58,6 +58,9 @@ public:
 	QString typeName( ) const override {
 		return "PairtTypeObject";
 	}
+	bool isNullptr( ) const override {
+		return false;
+	}
 };
 
 #endif // PAIRTTYPEOBJECT_H_H_HEAD__FILE__

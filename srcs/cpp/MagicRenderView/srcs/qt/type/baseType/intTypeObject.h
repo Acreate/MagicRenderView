@@ -7,6 +7,7 @@
 
 class IntTypeObject : public ITypeObject {
 	Q_OBJECT;
+	
 public:
 	IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ) { }
 };
