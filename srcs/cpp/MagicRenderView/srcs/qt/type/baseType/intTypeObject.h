@@ -15,19 +15,31 @@ public:
 	operator double_t( ) const {
 		return val;
 	}
-	IntTypeObject & operator=( const int64_t &right ) {
+	IntTypeObject & operator=( const int8_t &&right ) {
 		val = right;
 		return *this;
 	}
-	IntTypeObject & operator=( const double_t &right ) {
+	IntTypeObject & operator=( const int16_t &&right ) {
+		val = right;
+		return *this;
+	}
+	IntTypeObject & operator=( const int32_t &&right ) {
+		val = right;
+		return *this;
+	}
+	IntTypeObject & operator=( const int64_t &&right ) {
+		val = right;
+		return *this;
+	}
+	IntTypeObject & operator=( const double_t &&right ) {
 		val = right;
 		return *this;
 	}
 public:
-	IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
-	IntTypeObject( const int64_t val, QObject *parent = nullptr )
+	explicit IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
+	explicit IntTypeObject( const int64_t val, QObject *parent = nullptr )
 		: ITypeObject( parent ), val( val ) { }
-	IntTypeObject( const IntTypeObject &other )
+	explicit IntTypeObject( const IntTypeObject &other )
 		: ITypeObject( other ),
 		val( other.val ) { }
 	IntTypeObject & operator=( const IntTypeObject &other ) {
