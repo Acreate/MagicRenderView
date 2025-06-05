@@ -9,7 +9,22 @@ class FloatTypeObject : public ITypeObject {
 protected:
 	double_t val;
 public:
-	FloatTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ) { }
+	operator int64_t( ) const {
+		return val;
+	}
+	operator double_t( ) const {
+		return val;
+	}
+	FloatTypeObject & operator=( const int64_t &right ) {
+		val = right;
+		return *this;
+	}
+	FloatTypeObject & operator=( const double_t &right ) {
+		val = right;
+		return *this;
+	}
+public:
+	FloatTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
 	FloatTypeObject( const FloatTypeObject &other )
 		: val( other.val ) {
 		setParent( other.parent( ) );
@@ -23,10 +38,7 @@ public:
 	}
 	FloatTypeObject( const double_t val, QObject *parent = nullptr )
 		: ITypeObject( parent ), val( val ) { }
-	FloatTypeObject & operator=( const double_t &right ) {
-		val = right;
-		return *this;
-	}
+
 	size_t typeMemorySize( ) const override {
 		return sizeof val;
 	}

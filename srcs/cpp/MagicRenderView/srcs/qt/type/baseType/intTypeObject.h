@@ -9,7 +9,22 @@ class IntTypeObject : public ITypeObject {
 protected:
 	int64_t val;
 public:
-	IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ) { }
+	operator int64_t( ) const {
+		return val;
+	}
+	operator double_t( ) const {
+		return val;
+	}
+	IntTypeObject & operator=( const int64_t &right ) {
+		val = right;
+		return *this;
+	}
+	IntTypeObject & operator=( const double_t &right ) {
+		val = right;
+		return *this;
+	}
+public:
+	IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
 	IntTypeObject( const int64_t val, QObject *parent = nullptr )
 		: ITypeObject( parent ), val( val ) { }
 	IntTypeObject( const IntTypeObject &other )
@@ -20,10 +35,6 @@ public:
 			return *this;
 		ITypeObject::operator =( other );
 		val = other.val;
-		return *this;
-	}
-	IntTypeObject & operator=( const int64_t &right ) {
-		val = right;
 		return *this;
 	}
 	size_t typeMemorySize( ) const override {
