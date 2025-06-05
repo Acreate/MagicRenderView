@@ -27,6 +27,10 @@ int main( int argc, char *argv[ ] ) {
 		tools::debug::printError( "地址一致" );
 	else
 		tools::debug::printError( "不是同一个对象" );
-
+	auto typeObject = varStack->generateVar( "int" );
+	
+	tools::debug::printError( typeObject->toString(  ) );
+	tools::debug::printError( typeObject->metaObject(  )->className(  ) );
+	tools::debug::printError( typeObject.get(  )->typeName(  ) );
 	return app.exec( );
 }

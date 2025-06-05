@@ -26,7 +26,7 @@ public:
 	/// @brief 从存储当中删除匹配的变量名
 	/// @param storage_name 存储的变量名
 	/// @return 被删除的对象，失败返回 nullptr
-	virtual std_shared_ptr< ITypeObject > removeStorageVar( const QString &storage_name ) const = 0;
+	virtual std_shared_ptr< ITypeObject > removeStorageVar( const QString &storage_name ) = 0;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< IVarStack > > instanceVector;

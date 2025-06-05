@@ -1,15 +1,67 @@
 ﻿#include "baseStack.h"
 
-BaseStack::BaseStack( ) { }
-std_shared_ptr<ITypeObject> BaseStack::generateVar( const QString &type_name ) const {
-	return { };
+#include "qt/type/baseType/dataTypeObject.h"
+#include "qt/type/baseType/floatTypeObject.h"
+#include "qt/type/baseType/intTypeObject.h"
+#include "qt/type/baseType/nullTypeObject.h"
+#include "qt/type/baseType/stringTypeObject.h"
+#include "qt/type/blendType/combinationTypeObject.h"
+#include "qt/type/lineType/vectorTypeObject.h"
+
+#define emplace_back_generateInfos( element_, type_, alias_name_  )\
+	element_.first.first = alias_name_;\
+	element_.first.second = type_::staticMetaObject.className( );\
+	element_.second = [this]( ) ->std_shared_ptr< ITypeObject > {\
+		return std_shared_ptr< ITypeObject >( new type_( this ) );\
+	};\
+	generateInfos.emplace_back( element )
+
+BaseStack::BaseStack( ) {
+	std_pairt< std_pairt< QString, QString >, std_function< std_shared_ptr< ITypeObject >( ) > > element;
+	emplace_back_generateInfos( element, IntTypeObject, "int" );
+	emplace_back_generateInfos( element, FloatTypeObject, "float" );
+	emplace_back_generateInfos( element, NullTypeObject, "nullptr" );
+	emplace_back_generateInfos( element, DataTypeObject, "binary" );
+	emplace_back_generateInfos( element, StringTypeObject, "string" );
+	emplace_back_generateInfos( element, CombinationTypeObject, "struct" );
+	emplace_back_generateInfos( element, VectorTypeObject, "array" );
+	emplace_back_generateInfos( element, PairtTypeObject, "pairt" );
 }
-std_shared_ptr<ITypeObject> BaseStack::setStorageVar( const std_shared_ptr<ITypeObject> &storage_obj, const QString &storage_name ) {
-	return { };
+std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
+	for( auto &element : generateInfos )
+		if( element.first.first == type_name || element.first.second == type_name )
+			return element.second( );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
-std_shared_ptr<ITypeObject> BaseStack::getStorageVar( const QString &storage_name ) const {
-	return { };
+std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
+	auto iterator = storage.begin( );
+	auto end = storage.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->second == storage_name ) {
+			std::shared_ptr< ITypeObject > typeObject = iterator->first;
+			iterator->first = storage_obj;
+			return typeObject;
+		}
+
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
-std_shared_ptr<ITypeObject> BaseStack::removeStorageVar( const QString &storage_name ) const {
-	return { };
+std_shared_ptr< ITypeObject > BaseStack::getStorageVar( const QString &storage_name ) const {
+	auto iterator = storage.begin( );
+	auto end = storage.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->second == storage_name )
+			return iterator->first;
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+}
+std_shared_ptr< ITypeObject > BaseStack::removeStorageVar( const QString &storage_name ) {
+	auto iterator = storage.begin( );
+	auto end = storage.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->second == storage_name ) {
+			std::shared_ptr< ITypeObject > typeObject = iterator->first;
+			storage.erase( iterator );
+			return typeObject;
+		}
+
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
