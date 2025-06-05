@@ -3,6 +3,84 @@
 #pragma once
 
 #include <QObject>
+
+
+#define operator_equ( Type, Return_var )\
+	operator uint8_t( ) const {\
+		return Return_var;\
+	}\
+	operator uint16_t( ) const {\
+		return Return_var;\
+	}\
+	operator uint32_t( ) const {\
+		return Return_var;\
+	}\
+	operator uint64_t( ) const {\
+		return Return_var;\
+	}\
+	operator int8_t( ) const {\
+		return Return_var;\
+	}\
+	operator int16_t( ) const {\
+		return Return_var;\
+	}\
+	operator int32_t( ) const {\
+		return Return_var;\
+	}\
+	operator int64_t( ) const {\
+		return Return_var;\
+	}\
+	operator float( ) const {\
+		return Return_var;\
+	}\
+	operator double( ) const {\
+		return Return_var;\
+	}\
+	Type & operator=( const int8_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int16_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int32_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int64_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint8_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint16_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint32_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint64_t &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const float &right ) {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const double &right ) {\
+		Return_var = right;\
+		return *this;\
+	}
+
+
+
+
+
 class ITypeObject : public QObject {
 	Q_OBJECT;
 public:

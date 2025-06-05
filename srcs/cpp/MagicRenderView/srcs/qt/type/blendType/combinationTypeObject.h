@@ -90,7 +90,7 @@ public:
 		return shared;
 	}
 
-	virtual const std_shared_ptr< ITypeObject > & operator[]( const QString &&var_name ) const {
+	virtual std_shared_ptr< ITypeObject > operator[]( const QString &&var_name ) const {
 		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;
@@ -98,7 +98,7 @@ public:
 		return shared;
 	}
 
-	virtual std_shared_ptr< ITypeObject > & operator[]( const QString &&var_name ) {
+	virtual std_shared_ptr< ITypeObject > operator[]( const QString &&var_name ) {
 		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;

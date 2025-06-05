@@ -9,20 +9,7 @@ class FloatTypeObject : public ITypeObject {
 protected:
 	double_t val;
 public:
-	operator int64_t( ) const {
-		return val;
-	}
-	operator double_t( ) const {
-		return val;
-	}
-	FloatTypeObject & operator=( const int64_t &right ) {
-		val = right;
-		return *this;
-	}
-	FloatTypeObject & operator=( const double_t &right ) {
-		val = right;
-		return *this;
-	}
+	operator_equ( FloatTypeObject, val );
 public:
 	FloatTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
 	FloatTypeObject( const FloatTypeObject &other )

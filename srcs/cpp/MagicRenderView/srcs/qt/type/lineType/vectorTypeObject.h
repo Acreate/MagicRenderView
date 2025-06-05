@@ -50,7 +50,8 @@ public:
 		if( count > index )
 			return vector->at( index );
 		tools::debug::printError( "访问下标越界" );
-		return nullptr;
+		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
+		return shared;
 	}
 	virtual std_vector< std_shared_ptr< ITypeObject > > getVector( ) const { return *vector; }
 	virtual std_vector< std_shared_ptr< ITypeObject > > & getRefVector( ) const { return *vector; }

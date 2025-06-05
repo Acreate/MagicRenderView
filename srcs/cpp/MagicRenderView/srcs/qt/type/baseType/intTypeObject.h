@@ -9,32 +9,7 @@ class IntTypeObject : public ITypeObject {
 protected:
 	int64_t val;
 public:
-	operator int64_t( ) const {
-		return val;
-	}
-	operator double_t( ) const {
-		return val;
-	}
-	IntTypeObject & operator=( const int8_t &&right ) {
-		val = right;
-		return *this;
-	}
-	IntTypeObject & operator=( const int16_t &&right ) {
-		val = right;
-		return *this;
-	}
-	IntTypeObject & operator=( const int32_t &&right ) {
-		val = right;
-		return *this;
-	}
-	IntTypeObject & operator=( const int64_t &&right ) {
-		val = right;
-		return *this;
-	}
-	IntTypeObject & operator=( const double_t &&right ) {
-		val = right;
-		return *this;
-	}
+	operator_equ( IntTypeObject, val );
 public:
 	explicit IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
 	explicit IntTypeObject( const int64_t val, QObject *parent = nullptr )
