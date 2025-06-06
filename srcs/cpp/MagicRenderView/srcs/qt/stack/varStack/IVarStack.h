@@ -84,7 +84,7 @@ public:
 			TChild_Type::staticMetaObject.className( );
 			qobject_cast< TChild_Type * >( ta ) ;
 		}
-	std_shared_ptr< TChild_Type > generateTUBVar( ) {
+	std_shared_ptr< TChild_Type > generateTUBVar( ) const {
 		auto typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
 		if( typeObject && qobject_cast< TChild_Type * >( typeObject ) )
 			return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );

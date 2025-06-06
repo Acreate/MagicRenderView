@@ -9,7 +9,7 @@ int main( int argc, char *argv[ ] ) {
 	MainWindow mainwidget;
 	mainwidget.show( );
 
-	auto varStack = IVarStack::getInstance< BaseStack >( );
+	const auto varStack = IVarStack::getInstance< BaseStack >( );
 	auto typeObject = varStack->generateVar( "int" );
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
 	if( qobjectCast )
