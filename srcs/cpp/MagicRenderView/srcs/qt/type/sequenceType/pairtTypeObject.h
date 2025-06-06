@@ -19,10 +19,10 @@ public:
 		first( first ),
 		scond( scond ) { }
 	PairtTypeObject( const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: first( first ),
+		: ITypeObject( nullptr ),first( first ),
 		scond( scond ) { }
 	PairtTypeObject( const PairtTypeObject &other )
-		: ITypeObject( other ),
+		: ITypeObject( other.parent(  ) ),
 		first( other.first ),
 		scond( other.scond ) {
 	}

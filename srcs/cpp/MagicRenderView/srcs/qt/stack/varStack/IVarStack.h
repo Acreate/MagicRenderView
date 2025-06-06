@@ -9,7 +9,7 @@ class ITypeObject;
 class IVarStack : public QObject {
 	Q_OBJECT;
 public:
-	IVarStack( QObject *parent = nullptr ) : QObject( parent ) { }
+	IVarStack( QObject *parent ) : QObject( parent ) { }
 	/// @brief 生成类型
 	/// @param type_name 类型名称
 	/// @return 不存在匹配类型返回 nullptr
@@ -27,6 +27,9 @@ public:
 	/// @param storage_name 存储的变量名
 	/// @return 被删除的对象，失败返回 nullptr
 	virtual std_shared_ptr< ITypeObject > removeStorageVar( const QString &storage_name ) = 0;
+	/// @brief 获取允许生成列表
+	/// @return 类名，别名列表
+	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionVarType( ) const = 0;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< IVarStack > > instanceVector;

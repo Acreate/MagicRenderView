@@ -4,7 +4,6 @@
 
 #include <QObject>
 
-
 #define operator_equ( Type, Return_var )\
 	operator uint8_t( ) const {\
 		return Return_var;\
@@ -77,14 +76,10 @@
 		return *this;\
 	}
 
-
-
-
-
 class ITypeObject : public QObject {
 	Q_OBJECT;
 public:
-	ITypeObject( QObject *parent = nullptr ) : QObject( parent ) { }
+	ITypeObject( QObject *parent ) : QObject( parent ) { }
 	ITypeObject( const ITypeObject &other )
 		: QObject( other.parent( ) ) {
 	}

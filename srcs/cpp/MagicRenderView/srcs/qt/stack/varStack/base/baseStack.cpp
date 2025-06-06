@@ -1,5 +1,7 @@
 ﻿#include "baseStack.h"
 
+#include <ranges>
+
 #include "qt/type/baseType/dataTypeObject.h"
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
@@ -8,16 +10,18 @@
 #include "qt/type/blendType/combinationTypeObject.h"
 #include "qt/type/lineType/vectorTypeObject.h"
 
-#define emplace_back_generateInfos( element_, type_, alias_name_  )\
-	element_.first.first = alias_name_;\
-	element_.first.second = type_::staticMetaObject.className( );\
+#define emplace_back_generateInfos( element_, type_, ...  )\
+	element.first.first = type_::staticMetaObject.className( ) ;\
+	element.first.second = {__VA_ARGS__ };\
 	element_.second = [this]( ) ->std_shared_ptr< ITypeObject > {\
 		return std_shared_ptr< ITypeObject >( new type_( this ) );\
 	};\
 	generateInfos.emplace_back( element )
 
-BaseStack::BaseStack( ) {
-	std_pairt< std_pairt< QString, QString >, std_function< std_shared_ptr< ITypeObject >( ) > > element;
+BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
+	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< std_shared_ptr< ITypeObject >( ) > > element;
+
+	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, FloatTypeObject, "float" );
 	emplace_back_generateInfos( element, NullTypeObject, "nullptr" );
@@ -29,8 +33,12 @@ BaseStack::BaseStack( ) {
 }
 std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
 	for( auto &element : generateInfos )
-		if( element.first.first == type_name || element.first.second == type_name )
+		if( element.first.first == type_name )
 			return element.second( );
+		else
+			for( auto &name : element.first.second )
+				if( name == type_name )
+					return element.second( );
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
 std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
@@ -64,4 +72,10 @@ std_shared_ptr< ITypeObject > BaseStack::removeStorageVar( const QString &storag
 		}
 
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+}
+std_vector< std_pairt< QString, std_vector< QString > > > BaseStack::permissionVarType( ) const {
+	std_vector< std_pairt< QString, std_vector< QString > > > result;
+	for( auto key : generateInfos | std::views::keys )
+		result.emplace_back( key );
+	return result;
 }

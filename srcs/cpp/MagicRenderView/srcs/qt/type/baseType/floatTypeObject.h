@@ -13,8 +13,7 @@ public:
 public:
 	FloatTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
 	FloatTypeObject( const FloatTypeObject &other )
-		: val( other.val ) {
-		setParent( other.parent( ) );
+		:ITypeObject( other.parent(  ) ), val( other.val ) {
 	}
 	FloatTypeObject & operator=( const FloatTypeObject &other ) {
 		if( this == &other )

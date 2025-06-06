@@ -7,20 +7,20 @@
 #include "alias/type_alias.h"
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
+class ITypeObject;
 class IFunctionDeclaration;
 class INodeWidget : public QWidget {
 	Q_OBJECT;
-protected:
-	/// @brief 引用的函数
-	std_shared_ptr< IFunctionDeclaration > functionDeclarationPtr;
 public:
-	INodeWidget( QWidget *parent, const std_shared_ptr< IFunctionDeclaration > &function_declaration_ptr, const Qt::WindowFlags &f ): QWidget( parent, f ), functionDeclarationPtr( function_declaration_ptr ) {
+	INodeWidget( QWidget *parent, const Qt::WindowFlags &f ): QWidget( parent, f ) {
 	}
-	virtual void call( ) const {
-		if( functionDeclarationPtr )
-			functionDeclarationPtr.get( )->call( );
-	}
-	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclarationPtr( ) const { return functionDeclarationPtr; }
+	/// @brief 调用一次该节点
+	virtual void call( ) const = 0;
+	/// @brief 连接到目标节点
+	/// @param target_node 目标节点对象
+	/// @param link_target_name 目标变量名称
+	/// @return 如果该节点为单向节点，那么返回上次链接对象，或返回断开链接对象
+	virtual const INodeWidget * linkTarget( INodeWidget *target_node, const QString &link_target_name ) const = 0;
 };
 
 #endif // INODEWIDGET_H_H_HEAD__FILE__
