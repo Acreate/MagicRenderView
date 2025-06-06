@@ -6,7 +6,6 @@
 
 #include "alias/type_alias.h"
 
-#include "qt/functionDeclaration/IFunctionDeclaration.h"
 class ITypeObject;
 class IFunctionDeclaration;
 class INodeWidget : public QWidget {

@@ -14,9 +14,14 @@ int main( int argc, char *argv[ ] ) {
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
 	if( qobjectCast )
 		*qobjectCast = 122;
-	tools::debug::printError( typeObject->toString( ) );
+	qDebug( ) << typeObject->toString( );
 	auto pairs = varStack->permissionVarType( );
 	for( auto &element : pairs )
 		qDebug( ) << element.first << " : " << element.second;
+
+	auto intTypeObject = varStack->generateTUBVar< IntTypeObject >( );
+	if( qobjectCast )
+		*qobjectCast = 23;
+	qDebug( ) << typeObject->toString( );
 	return app.exec( );
 }

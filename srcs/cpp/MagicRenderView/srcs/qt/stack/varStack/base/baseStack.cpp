@@ -13,13 +13,13 @@
 #define emplace_back_generateInfos( element_, type_, ...  )\
 	element.first.first = type_::staticMetaObject.className( ) ;\
 	element.first.second = {__VA_ARGS__ };\
-	element_.second = [this]( ) ->std_shared_ptr< ITypeObject > {\
-		return std_shared_ptr< ITypeObject >( new type_( this ) );\
+	element_.second = [this]( ) -> ITypeObject * {\
+		return  new type_( this ) ;\
 	};\
 	generateInfos.emplace_back( element )
 
 BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
-	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< std_shared_ptr< ITypeObject >( ) > > element;
+	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;
 
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
@@ -31,7 +31,7 @@ BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
 	emplace_back_generateInfos( element, VectorTypeObject, "array" );
 	emplace_back_generateInfos( element, PairtTypeObject, "pairt" );
 }
-std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
+ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
 	for( auto &element : generateInfos )
 		if( element.first.first == type_name )
 			return element.second( );
@@ -39,6 +39,16 @@ std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name )
 			for( auto &name : element.first.second )
 				if( name == type_name )
 					return element.second( );
+	return new NullTypeObject( );
+}
+std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
+	for( auto &element : generateInfos )
+		if( element.first.first == type_name )
+			return std_shared_ptr< ITypeObject >( element.second( ) );
+		else
+			for( auto &name : element.first.second )
+				if( name == type_name )
+					return std_shared_ptr< ITypeObject >( element.second( ) );
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
 std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {

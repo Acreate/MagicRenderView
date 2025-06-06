@@ -31,6 +31,11 @@ public:
 	/// @return 类名，别名列表
 	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionVarType( ) const = 0;
 protected:
+	/// @brief 创建非安全指针，需要用户自动释放
+	/// @param type_name 类型名称
+	/// @return 非安全指针对象
+	virtual ITypeObject * generateUBVar( const QString &type_name ) const = 0;
+protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< IVarStack > > instanceVector;
 public:
@@ -41,13 +46,17 @@ public:
 		requires requires {
 			TChild_Type::staticMetaObject.className( );
 		}
-	static std_shared_ptr< IVarStack > getInstance( ) {
+	static TChild_Type * getInstance( ) {
 		QString egName = TChild_Type::staticMetaObject.className( );
+		TChild_Type *result = nullptr;
 		for( auto &ptr : instanceVector )
-			if( ptr->metaObject( )->className( ) == egName )
-				return ptr;
-		auto result = std_shared_ptr< IVarStack >( new TChild_Type );
-		instanceVector.emplace_back( result );
+			if( ptr->metaObject( )->className( ) == egName ) {
+				result = qobject_cast< TChild_Type * >( ptr.get( ) );
+				if( result )
+					return result;
+			}
+		result = new TChild_Type;
+		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
 	/// @brief 释放类型实例
@@ -67,7 +76,18 @@ public:
 				instanceVector.erase( iterator );
 				return varStack;
 			}
+		return nullptr;
+	}
 
+	template< class TChild_Type >
+		requires requires ( TChild_Type* ta ) {
+			TChild_Type::staticMetaObject.className( );
+			qobject_cast< TChild_Type * >( ta ) ;
+		}
+	std_shared_ptr< TChild_Type > generateTUBVar( ) {
+		auto typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		if( typeObject && qobject_cast< TChild_Type * >( typeObject ) )
+			return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );
 		return nullptr;
 	}
 };
