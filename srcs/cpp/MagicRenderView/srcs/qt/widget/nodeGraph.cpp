@@ -9,6 +9,9 @@
 #include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	nodeMenu = new NodeAddMenu( this );
+	setMouseTracking( true );
+	mouseEventStatus = MouseEventType::Init;
+
 	// todo : 创建需要的节点，并且绘制到该窗口当中 
 	connect( nodeMenu, &NodeAddMenu::activeNodeAction, [this] ( const NodeAddAction *node_add_action ) ->void {
 		auto functionDeclaration = node_add_action->getFunctionDeclaration( ).get( );
@@ -19,8 +22,15 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
 	mousePosLabel->hide( );
-	setMouseTracking( true );
-	mouseEventStatus = MouseEventType::Init;
+
+	QLabel *test = new QLabel( this );
+	test->setText( "测试仪1" );
+	test->move( 0, 0 );
+	test->setStyleSheet( "*{background:red;}" );
+	test = new QLabel( this );
+	test->setText( "测试仪2" );
+	test->move( 10, 10 );
+	test->setStyleSheet( "*{background:green;}" );
 }
 NodeGraph::~NodeGraph( ) {
 }
@@ -63,5 +73,9 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	mouseEventStatus = MouseEventType::Move;
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
-	mouseEventStatus = MouseEventType::Press;
+	QWidget *widget = childAt( event->pos( ) );
+	if( widget && widget != mousePosLabel ) {
+		widget->raise( );
+	} else
+		mouseEventStatus = MouseEventType::Press;
 }
