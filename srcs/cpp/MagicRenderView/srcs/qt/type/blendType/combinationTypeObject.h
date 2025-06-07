@@ -15,6 +15,7 @@ protected:
 	std_shared_ptr< std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > > dataStruct;
 public:
 	CombinationTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
+		currentTypeName.emplace_back( CombinationTypeObject::staticMetaObject.className( ) );
 	}
 	CombinationTypeObject( const CombinationTypeObject &other )
 		: ITypeObject( other.currentTypeName, other.parent( ) ),

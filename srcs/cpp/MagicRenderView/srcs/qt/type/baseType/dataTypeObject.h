@@ -13,9 +13,11 @@ public:
 	DataTypeObject( const std_vector< char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ),
 		val( new std_vector< char >( val ) ) {
+		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 	}
 	DataTypeObject( const std_vector< unsigned char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ) {
+		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 		size_t count = val.size( );
 		this->val.reset( new std_vector< char >( count ) );
 		if( count == 0 )
@@ -27,7 +29,25 @@ public:
 		targetData[ 0 ] = data[ 0 ];
 	}
 	DataTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
-		: ITypeObject( alias_type_name, parent ) { }
+		: ITypeObject( alias_type_name, parent ),
+		val( new std_vector< char >( ) ) {
+		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
+	}
+
+	DataTypeObject( const DataTypeObject &other )
+		: ITypeObject( other.currentTypeName, other.parent( ) ) {
+		val.reset( new std_vector< char >( ) );
+		*val = *other.val;
+	}
+	DataTypeObject & operator=( const DataTypeObject &other ) {
+		if( this == &other )
+			return *this;
+		ITypeObject::operator =( other );
+		val.reset( new std_vector< char >( ) );
+		*val = *other.val;
+		return *this;
+	}
+
 	void append( char data ) {
 		val->emplace_back( data );
 	}

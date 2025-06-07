@@ -1,13 +1,15 @@
 ﻿#include "baseStackEx.h"
 
+#include "qt/type/baseType/stringTypeObject.h"
 #include "qt/type/blendType/combinationTypeObject.h"
 
- void BaseStackEx:: appendMap(  const std_vector< QString > &type_name, const std_function< ITypeObject *( ) > &create_function ) {
-	generateInfosEx.emplace_back( std_pairt( type_name, create_function ) );
-}
-
 BaseStackEx::BaseStackEx( ) {
-
+	generateInfosEx.emplace_back( std_pairt( std_vector< QString > { "file" }, []( )->ITypeObject * {
+		auto ptr = new CombinationTypeObject( {  { "file" } } );
+		new StringTypeObject({"string"});
+		ptr->setVarObject(  );
+		return ptr;
+	} ) );
 }
 ITypeObject * BaseStackEx::generateUBVar( const QString &type_name ) const {
 	auto generateUbVar = BaseStack::generateUBVar( type_name );

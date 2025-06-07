@@ -21,6 +21,7 @@ public:
 	}
 public:
 	VectorTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
+		currentTypeName.emplace_back( VectorTypeObject::staticMetaObject.className( ) );
 	}
 	VectorTypeObject( const VectorTypeObject &other )
 		: ITypeObject( other.currentTypeName, other.parent( ) ),

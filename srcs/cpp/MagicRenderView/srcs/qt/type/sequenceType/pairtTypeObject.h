@@ -13,14 +13,19 @@ protected:
 	std_shared_ptr< ITypeObject > scond;
 public:
 	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
+		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 	}
 	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
 		: ITypeObject( alias_type_name, parent ),
 		first( first ),
-		scond( scond ) { }
+		scond( scond ) {
+		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
+	}
 	PairtTypeObject( const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
 		: ITypeObject( { }, nullptr ), first( first ),
-		scond( scond ) { }
+		scond( scond ) {
+		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
+	}
 	PairtTypeObject( const PairtTypeObject &other )
 		: ITypeObject( other.currentTypeName, other.parent( ) ),
 		first( other.first ),

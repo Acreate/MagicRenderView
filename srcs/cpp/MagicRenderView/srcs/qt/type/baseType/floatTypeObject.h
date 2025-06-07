@@ -15,15 +15,17 @@ public:
 	FloatTypeObject( const FloatTypeObject &other )
 		: ITypeObject( other.currentTypeName, other.parent( ) ), val( other.val ) {
 	}
+	FloatTypeObject( const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( alias_type_name, parent ), val( val ) {
+		currentTypeName.emplace_back( FloatTypeObject::staticMetaObject.className( ) );
+	}
 	FloatTypeObject & operator=( const FloatTypeObject &other ) {
 		if( this == &other )
 			return *this;
-		setParent( other.parent( ) );
+		ITypeObject::operator=( other );
 		val = other.val;
 		return *this;
 	}
-	FloatTypeObject( const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
-		: ITypeObject( alias_type_name, parent ), val( val ) { }
 
 	int compare( const ITypeObject &rhs ) const override {
 		decltype(this) result_ptr;

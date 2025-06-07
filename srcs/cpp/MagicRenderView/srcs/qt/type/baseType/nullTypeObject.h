@@ -12,7 +12,9 @@ public:
 		return object->isNullptr( );
 	}
 public:
-	NullTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ) { }
+	NullTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ) {
+		currentTypeName.emplace_back( NullTypeObject::staticMetaObject.className( ) );
+	}
 	size_t typeMemorySize( ) const override {
 		return 0;
 	}
