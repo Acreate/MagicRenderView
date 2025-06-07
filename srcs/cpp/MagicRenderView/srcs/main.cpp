@@ -23,5 +23,6 @@ int main( int argc, char *argv[ ] ) {
 	if( qobjectCast )
 		*qobjectCast = 23;
 	qDebug( ) << typeObject->toString( );
+	IVarStack::deleteInstance<BaseStack>(  );
 	return app.exec( );
 }
