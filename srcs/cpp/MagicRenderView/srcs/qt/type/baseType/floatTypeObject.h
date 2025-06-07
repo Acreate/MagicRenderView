@@ -34,6 +34,9 @@ public:
 	bool isNullptr( ) const override {
 		return false;
 	}
+	~FloatTypeObject() override {
+		
+	}
 };
 
 #endif // FLOATTYPEOBJECT_H_H_HEAD__FILE__

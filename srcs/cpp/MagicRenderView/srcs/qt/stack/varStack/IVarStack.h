@@ -5,6 +5,8 @@
 #include <QObject>
 
 #include "alias/type_alias.h"
+
+#include "qt/type/ITypeObject.h"
 class ITypeObject;
 class IVarStack : public QObject {
 	Q_OBJECT;
@@ -88,9 +90,30 @@ public:
 			cheack = ta;
 		}
 	std_shared_ptr< TChild_Type > generateTUBVar( ) const {
-		auto typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
-		if( typeObject && qobject_cast< TChild_Type * >( typeObject ) )
-			return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );
+		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		if( typeObject )
+			if( qobject_cast< TChild_Type * >( typeObject ) )
+				return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );
+			else
+				delete typeObject;
+		return nullptr;
+	}
+
+	template< class TChild_Type >
+		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
+			TChild_Type::staticMetaObject.className( );
+			qobject_cast< TChild_Type * >( ta ) ;
+			cheack = ta;
+		}
+	TChild_Type * generateTUBVar( QObject *parnet ) const {
+		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		if( typeObject )
+			if( qobject_cast< TChild_Type * >( typeObject ) ) {
+				typeObject->setParent( parnet );
+				return ( TChild_Type * ) typeObject;
+			} else
+				delete typeObject;
+
 		return nullptr;
 	}
 };

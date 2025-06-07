@@ -3,6 +3,7 @@
 #include "qt/stack/varStack/base/baseStack.h"
 #include "qt/stack/varStack/base/baseStackEx.h"
 #include "qt/tools/tools.h"
+#include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
@@ -21,9 +22,14 @@ int main( int argc, char *argv[ ] ) {
 		qDebug( ) << element.first << " : " << element.second;
 
 	auto intTypeObject = varStack->generateTUBVar< IntTypeObject >( );
-	if( qobjectCast )
-		*qobjectCast = 23;
-	qDebug( ) << typeObject->toString( );
+	if( intTypeObject )
+		*intTypeObject = 23;
+	qDebug( ) << intTypeObject->toString( );
+	
+	auto floatTypeObject = varStack->generateTUBVar< FloatTypeObject >( &mainwidget );
+	if( floatTypeObject )
+		*floatTypeObject = 123.5;
+	qDebug( ) << floatTypeObject->toString( );
 	IVarStack::deleteInstance< BaseStackEx >( );
 	return app.exec( );
 }
