@@ -5,6 +5,12 @@
 #include "qt/tools/tools.h"
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
+
+template< const char * b >
+void print( ) {
+	qDebug( ) << b;
+}
+
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
@@ -25,12 +31,20 @@ int main( int argc, char *argv[ ] ) {
 	if( intTypeObject )
 		*intTypeObject = 23;
 	qDebug( ) << intTypeObject->toString( );
-	
+
 	auto floatTypeObject = varStack->generateTUBVar< FloatTypeObject >( &mainwidget );
 	if( floatTypeObject )
 		*floatTypeObject = 123.5;
 	qDebug( ) << floatTypeObject->toString( );
 	qDebug( ) << floatTypeObject->typeNames( );
-	IVarStack::deleteInstance< BaseStackEx >( );
+	static const char cpp17Super[ ] = "int"; // no linkage
+	auto generateTubVar = varStack->generateTUBVar< cpp17Super >( &mainwidget );
+	auto object = qobject_cast< IntTypeObject * >( generateTubVar );
+	if( object ) {
+		*object = 123.5;
+		qDebug( ) << object->toString( );
+		qDebug( ) << object->typeNames( );
+		IVarStack::deleteInstance< BaseStackEx >( );
+	}
 	return app.exec( );
 }

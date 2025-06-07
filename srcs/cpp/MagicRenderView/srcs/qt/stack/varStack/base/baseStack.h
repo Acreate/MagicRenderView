@@ -17,6 +17,7 @@ protected:
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
 protected:
 	BaseStack( QObject *parent = nullptr );
+	ITypeObject * newVar( const QString &type_name ) const;
 	ITypeObject * generateUBVar( const QString &type_name ) const override;
 public:
 	std_shared_ptr< ITypeObject > generateVar( const QString &type_name ) const override;

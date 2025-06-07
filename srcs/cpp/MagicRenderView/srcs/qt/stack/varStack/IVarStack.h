@@ -62,6 +62,18 @@ public:
 		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
+
+	virtual ITypeObject * generateNewVar( const QString &type_name, QObject *parnet = nullptr ) const {
+		ITypeObject *typeObject = generateUBVar( type_name );
+		if( typeObject )
+			if( parnet ) {
+				typeObject->setParent( parnet );
+				return typeObject;
+			} else
+				return typeObject;
+		return nullptr;
+	}
+
 	/// @brief 释放类型实例
 	/// @tparam TChild_Type 类型
 	/// @return 成功返回释放实例对象引用
@@ -89,7 +101,7 @@ public:
 			qobject_cast< TChild_Type * >( ta ) ;
 			cheack = ta;
 		}
-	std_shared_ptr< TChild_Type > generateTUBVar( ) const {
+	std_shared_ptr< TChild_Type > generateTVar( ) const {
 		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
 		if( typeObject )
 			if( qobject_cast< TChild_Type * >( typeObject ) )
@@ -105,7 +117,7 @@ public:
 			qobject_cast< TChild_Type * >( ta ) ;
 			cheack = ta;
 		}
-	TChild_Type * generateTUBVar( QObject *parnet ) const {
+	TChild_Type * generateTUBVar( QObject *parnet = nullptr ) const {
 		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
 		if( typeObject )
 			if( qobject_cast< TChild_Type * >( typeObject ) ) {
@@ -115,6 +127,19 @@ public:
 				delete typeObject;
 
 		return nullptr;
+	}
+
+	/// @brief 	static const char hello17[ ] = "Hello World!"; // no linkage
+	/// @brief 	使用字符串进行变量生成-该方式不会诞生共享释放的变量对象
+	/// @tparam type_name 变量名称
+	/// @param parnet 父对象
+	/// @return 成功返回非 nullptr
+	template< const char * type_name >
+	ITypeObject * generateTUBVar( QObject *parnet = nullptr ) const {
+		ITypeObject *typeObject = generateUBVar( QString::fromStdString( type_name ) );
+		if( typeObject && parnet )
+			typeObject->setParent( parnet );
+		return typeObject;
 	}
 };
 

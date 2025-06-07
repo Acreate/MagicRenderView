@@ -38,7 +38,7 @@ BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
 	emplace_back_generateInfos( element, VectorTypeObject, "array" );
 	emplace_back_generateInfos( element, PairtTypeObject, "pairt" );
 }
-ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
+ITypeObject * BaseStack::newVar( const QString &type_name ) const {
 	for( auto &element : generateInfos )
 		if( element.first.first == type_name )
 			return element.second( );
@@ -47,6 +47,9 @@ ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
 				if( name == type_name )
 					return element.second( );
 	return new NullTypeObject( );
+}
+ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
+	return newVar( type_name );
 }
 std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
 	return std_shared_ptr< ITypeObject >( generateUBVar( type_name ) );
