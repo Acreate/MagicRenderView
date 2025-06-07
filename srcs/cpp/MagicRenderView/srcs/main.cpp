@@ -37,14 +37,23 @@ int main( int argc, char *argv[ ] ) {
 		*floatTypeObject = 123.5;
 	qDebug( ) << floatTypeObject->toString( );
 	qDebug( ) << floatTypeObject->typeNames( );
+	auto generateUbVar = varStack->generateUbVar( "int", &mainwidget );
+	IntTypeObject *object;
+	object = qobject_cast< IntTypeObject * >( generateUbVar );
+	if( object ) {
+		*object = 44;
+		qDebug( ) << object->toString( );
+		qDebug( ) << object->typeNames( );
+	}
+
 	static const char cpp17Super[ ] = "int"; // no linkage
-	auto generateTubVar = varStack->generateTUBVar< cpp17Super >( &mainwidget );
-	auto object = qobject_cast< IntTypeObject * >( generateTubVar );
+	generateUbVar = varStack->generateTUBVar< cpp17Super >( &mainwidget );
+	object = qobject_cast< IntTypeObject * >( generateUbVar );
 	if( object ) {
 		*object = 123.5;
 		qDebug( ) << object->toString( );
 		qDebug( ) << object->typeNames( );
-		IVarStack::deleteInstance< BaseStackEx >( );
 	}
+	IVarStack::deleteInstance< BaseStackEx >( );
 	return app.exec( );
 }

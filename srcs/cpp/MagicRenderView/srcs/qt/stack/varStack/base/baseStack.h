@@ -18,7 +18,7 @@ protected:
 protected:
 	BaseStack( QObject *parent = nullptr );
 	ITypeObject * newVar( const QString &type_name ) const;
-	ITypeObject * generateUBVar( const QString &type_name ) const override;
+	ITypeObject * _generateUBVar( const QString &type_name ) const override;
 public:
 	std_shared_ptr< ITypeObject > generateVar( const QString &type_name ) const override;
 	std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) override;

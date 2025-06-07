@@ -1,4 +1,5 @@
 ﻿#include "baseStackEx.h"
+#include <ranges>
 
 #include "qt/type/baseType/stringTypeObject.h"
 #include "qt/type/blendType/combinationTypeObject.h"
@@ -17,9 +18,18 @@ BaseStackEx::BaseStackEx( ) {
 		return ptr;
 	} ) );
 }
-ITypeObject * BaseStackEx::generateUBVar( const QString &type_name ) const {
-	auto generateUbVar = BaseStack::generateUBVar( type_name );
+ITypeObject * BaseStackEx::_generateUBVar( const QString &type_name ) const {
+	auto generateUbVar = BaseStack::_generateUBVar( type_name );
 	if( generateUbVar == nullptr /* 使用该类的名称 */ ) {
 	}
 	return generateUbVar;
+}
+std_vector< std_pairt< QString, std_vector< QString > > > BaseStackEx::permissionVarType( ) const {
+	std_vector< std_pairt< QString, std_vector< QString > > > result;
+	for( auto key : generateInfos | std::views::keys )
+		result.emplace_back( key );
+
+	for( auto key : generateInfosEx | std::views::keys )
+		result.emplace_back( key[ 0 ], key );
+	return result;
 }

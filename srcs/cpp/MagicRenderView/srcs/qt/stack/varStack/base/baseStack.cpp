@@ -48,11 +48,11 @@ ITypeObject * BaseStack::newVar( const QString &type_name ) const {
 					return element.second( );
 	return new NullTypeObject( );
 }
-ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
+ITypeObject * BaseStack::_generateUBVar( const QString &type_name ) const {
 	return newVar( type_name );
 }
 std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
-	return std_shared_ptr< ITypeObject >( generateUBVar( type_name ) );
+	return std_shared_ptr< ITypeObject >( _generateUBVar( type_name ) );
 }
 std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
 	auto iterator = storage.begin( );

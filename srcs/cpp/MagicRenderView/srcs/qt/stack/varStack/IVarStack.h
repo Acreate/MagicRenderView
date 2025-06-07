@@ -36,7 +36,7 @@ protected:
 	/// @brief 创建非安全指针，需要用户自动释放
 	/// @param type_name 类型名称
 	/// @return 非安全指针对象
-	virtual ITypeObject * generateUBVar( const QString &type_name ) const = 0;
+	virtual ITypeObject * _generateUBVar( const QString &type_name ) const = 0;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< IVarStack > > instanceVector;
@@ -62,9 +62,12 @@ public:
 		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
-
-	virtual ITypeObject * generateNewVar( const QString &type_name, QObject *parnet = nullptr ) const {
-		ITypeObject *typeObject = generateUBVar( type_name );
+	/// @brief 生成不安全变量
+	/// @param type_name 变量类型名称
+	/// @param parnet qt 内存管理对象
+	/// @return 失败返回 nullptr
+	virtual ITypeObject * generateUbVar( const QString &type_name, QObject *parnet = nullptr ) const {
+		ITypeObject *typeObject = _generateUBVar( type_name );
 		if( typeObject )
 			if( parnet ) {
 				typeObject->setParent( parnet );
@@ -76,7 +79,7 @@ public:
 
 	/// @brief 释放类型实例
 	/// @tparam TChild_Type 类型
-	/// @return 成功返回释放实例对象引用
+	/// @return 失败返回 nullptr，成功返回自动释放内存变量引用指针对象
 	template< class TChild_Type >
 		requires requires ( TChild_Type *a, IVarStack *te ) {
 			TChild_Type::staticMetaObject.className( );
@@ -94,7 +97,9 @@ public:
 			}
 		return nullptr;
 	}
-
+	/// @brief 生成指定类型变量
+	/// @tparam TChild_Type 类型
+	/// @return 失败返回 nullptr，成功返回自动释放内存变量引用指针对象
 	template< class TChild_Type >
 		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
 			TChild_Type::staticMetaObject.className( );
@@ -102,7 +107,26 @@ public:
 			cheack = ta;
 		}
 	std_shared_ptr< TChild_Type > generateTVar( ) const {
-		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		ITypeObject *typeObject = _generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		if( typeObject )
+			if( qobject_cast< TChild_Type * >( typeObject ) )
+				return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );
+			else
+				delete typeObject;
+		return nullptr;
+	}
+	/// @brief 生成变量
+	/// @tparam TChild_Type 变量类型
+	/// @param type_name 类型名称
+	/// @return 失败返回 nullptr，成功返回自动释放内存变量引用指针对象
+	template< class TChild_Type >
+		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
+			TChild_Type::staticMetaObject.className( );
+			qobject_cast< TChild_Type * >( ta ) ;
+			cheack = ta;
+		}
+	std_shared_ptr< TChild_Type > generateTVar( const QString &type_name ) const {
+		ITypeObject *typeObject = _generateUBVar( type_name );
 		if( typeObject )
 			if( qobject_cast< TChild_Type * >( typeObject ) )
 				return std_shared_ptr< TChild_Type >( ( TChild_Type * ) typeObject );
@@ -111,6 +135,10 @@ public:
 		return nullptr;
 	}
 
+	/// @brief 生成指定变量
+	/// @tparam TChild_Type 变量类型
+	/// @param parnet qt 内存管理对象
+	/// @return 失败返回 nullptr
 	template< class TChild_Type >
 		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
 			TChild_Type::staticMetaObject.className( );
@@ -118,7 +146,30 @@ public:
 			cheack = ta;
 		}
 	TChild_Type * generateTUBVar( QObject *parnet = nullptr ) const {
-		ITypeObject *typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		ITypeObject *typeObject = _generateUBVar( TChild_Type::staticMetaObject.className( ) );
+		if( typeObject )
+			if( qobject_cast< TChild_Type * >( typeObject ) ) {
+				typeObject->setParent( parnet );
+				return ( TChild_Type * ) typeObject;
+			} else
+				delete typeObject;
+
+		return nullptr;
+	}
+
+	/// @brief 生成指定变量
+	/// @tparam TChild_Type 类型
+	/// @param type_name 变量名称
+	/// @param parnet qt 内存管理对象
+	/// @return 失败返回 nullptr
+	template< class TChild_Type >
+		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
+			TChild_Type::staticMetaObject.className( );
+			qobject_cast< TChild_Type * >( ta ) ;
+			cheack = ta;
+		}
+	TChild_Type * generateTUBVar( const QString &type_name, QObject *parnet = nullptr ) const {
+		ITypeObject *typeObject = _generateUBVar( type_name );
 		if( typeObject )
 			if( qobject_cast< TChild_Type * >( typeObject ) ) {
 				typeObject->setParent( parnet );
@@ -136,7 +187,7 @@ public:
 	/// @return 成功返回非 nullptr
 	template< const char * type_name >
 	ITypeObject * generateTUBVar( QObject *parnet = nullptr ) const {
-		ITypeObject *typeObject = generateUBVar( QString::fromStdString( type_name ) );
+		ITypeObject *typeObject = _generateUBVar( QString::fromStdString( type_name ) );
 		if( typeObject && parnet )
 			typeObject->setParent( parnet );
 		return typeObject;

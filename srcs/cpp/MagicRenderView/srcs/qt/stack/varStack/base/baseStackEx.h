@@ -12,10 +12,13 @@ protected:
 	std_vector< std_pairt< std_vector< QString >, std_function< ITypeObject *( ) > > > generateInfosEx;
 protected:
 	BaseStackEx( );
-	ITypeObject * generateUBVar( const QString &type_name ) const override;
+	ITypeObject * _generateUBVar( const QString &type_name ) const override;
 public:
 	~BaseStackEx( ) override {
 	}
+
+public:
+	std_vector<std_pairt<QString, std_vector<QString>>> permissionVarType( ) const override;
 };
 
 #endif // BASESTACKEX_H_H_HEAD__FILE__
