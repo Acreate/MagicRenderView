@@ -11,9 +11,9 @@ protected:
 public:
 	operator_equ( IntTypeObject, val );
 public:
-	explicit IntTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
-	explicit IntTypeObject( const int64_t val, QObject *parent = nullptr )
-		: ITypeObject( parent ), val( val ) { }
+	explicit IntTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) { }
+	explicit IntTypeObject( const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( alias_type_name, parent ), val( val ) { }
 	explicit IntTypeObject( const IntTypeObject &other )
 		: ITypeObject( other ),
 		val( other.val ) { }
@@ -24,6 +24,17 @@ public:
 		val = other.val;
 		return *this;
 	}
+
+	
+	int compare( const ITypeObject &rhs ) const override {
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr != this )
+			return this->val - result_ptr->val;
+		return result;
+	}
+
+	
 	size_t typeMemorySize( ) const override {
 		return sizeof val;
 	}

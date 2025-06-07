@@ -11,9 +11,9 @@ protected:
 public:
 	operator_equ( FloatTypeObject, val );
 public:
-	FloatTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), val( 0 ) { }
+	FloatTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) { }
 	FloatTypeObject( const FloatTypeObject &other )
-		:ITypeObject( other.parent(  ) ), val( other.val ) {
+		: ITypeObject( other.currentTypeName, other.parent( ) ), val( other.val ) {
 	}
 	FloatTypeObject & operator=( const FloatTypeObject &other ) {
 		if( this == &other )
@@ -22,9 +22,16 @@ public:
 		val = other.val;
 		return *this;
 	}
-	FloatTypeObject( const double_t val, QObject *parent = nullptr )
-		: ITypeObject( parent ), val( val ) { }
+	FloatTypeObject( const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( alias_type_name, parent ), val( val ) { }
 
+	int compare( const ITypeObject &rhs ) const override {
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr != this )
+			return this->val - result_ptr->val;
+		return result;
+	}
 	size_t typeMemorySize( ) const override {
 		return sizeof val;
 	}
@@ -34,8 +41,7 @@ public:
 	bool isNullptr( ) const override {
 		return false;
 	}
-	~FloatTypeObject() override {
-		
+	~FloatTypeObject( ) override {
 	}
 };
 

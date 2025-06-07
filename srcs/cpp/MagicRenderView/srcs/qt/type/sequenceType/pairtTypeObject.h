@@ -12,17 +12,17 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( QObject *parent = nullptr ): ITypeObject( parent ) {
+	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
 	}
-	PairtTypeObject( QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( parent ),
+	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
+		: ITypeObject( alias_type_name, parent ),
 		first( first ),
 		scond( scond ) { }
 	PairtTypeObject( const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( nullptr ),first( first ),
+		: ITypeObject( { }, nullptr ), first( first ),
 		scond( scond ) { }
 	PairtTypeObject( const PairtTypeObject &other )
-		: ITypeObject( other.parent(  ) ),
+		: ITypeObject( other.currentTypeName, other.parent( ) ),
 		first( other.first ),
 		scond( other.scond ) {
 	}
@@ -41,20 +41,19 @@ public:
 	size_t typeMemorySize( ) const override {
 		return ( first ? first->typeMemorySize( ) : 0 ) + ( scond ? scond->typeMemorySize( ) : 0 );
 	}
+
 	int compare( const ITypeObject &rhs ) const override {
-		const ITypeObject *typeObject = &rhs;
-		if( this == typeObject )
-			return 0;
-		auto pairtTypeObject = qobject_cast< const PairtTypeObject * >( typeObject );
-		if( pairtTypeObject == nullptr )
-			return -2;
-		int compare = first->compare( *pairtTypeObject->first );
-		if( compare != 0 )
-			return compare;
-		compare = scond->compare( *pairtTypeObject->scond );
-		if( compare != 0 )
-			return compare;
-		return 0;
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr == this ) {
+			int compare = first->compare( *result_ptr->first );
+			if( compare != 0 )
+				return compare;
+			compare = scond->compare( *result_ptr->scond );
+			if( compare != 0 )
+				return compare;
+		}
+		return result;
 	}
 	QString toString( ) const override {
 		QString resultString( "(" );

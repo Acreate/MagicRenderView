@@ -30,6 +30,7 @@ int main( int argc, char *argv[ ] ) {
 	if( floatTypeObject )
 		*floatTypeObject = 123.5;
 	qDebug( ) << floatTypeObject->toString( );
+	qDebug( ) << floatTypeObject->typeNames( );
 	IVarStack::deleteInstance< BaseStackEx >( );
 	return app.exec( );
 }

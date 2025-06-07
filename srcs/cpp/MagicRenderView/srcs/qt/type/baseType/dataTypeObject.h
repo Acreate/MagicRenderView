@@ -10,11 +10,24 @@ class DataTypeObject : public ITypeObject {
 protected:
 	std_shared_ptr< std_vector< char > > val;
 public:
-	DataTypeObject( const std_vector< char > &val, QObject *const parent = nullptr )
-		: ITypeObject( parent ),
-		val( new std_vector< char > ) { }
-	DataTypeObject( QObject *const parent = nullptr )
-		: ITypeObject( parent ) { }
+	DataTypeObject( const std_vector< char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( alias_type_name, parent ),
+		val( new std_vector< char >( val ) ) {
+	}
+	DataTypeObject( const std_vector< unsigned char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( alias_type_name, parent ) {
+		size_t count = val.size( );
+		this->val.reset( new std_vector< char >( count ) );
+		if( count == 0 )
+			return;
+		auto data = val.data( );
+		auto targetData = this->val->data( );
+		for( --count; 0 < count; --count )
+			targetData[ count ] = data[ count ];
+		targetData[ 0 ] = data[ 0 ];
+	}
+	DataTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( alias_type_name, parent ) { }
 	void append( char data ) {
 		val->emplace_back( data );
 	}
@@ -51,6 +64,23 @@ public:
 		return source[ index ];
 	}
 
+	int compare( const ITypeObject &rhs ) const override {
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr != this ) {
+			size_t count = val->size( );
+			size_t countR = result_ptr->val->size( );
+			if( count != countR )
+				return count - countR;
+			auto data = val->data( );
+			auto compData = result_ptr->val->data( );
+			for( countR = 0; count < countR; ++count )
+				if( data[ count ] != compData[ count ] )
+					return data[ count ] - compData[ count ];
+			return 0;
+		}
+		return result;
+	}
 	size_t typeMemorySize( ) const override {
 		return val->size( ) * sizeof( char );
 	}

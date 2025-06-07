@@ -14,14 +14,21 @@
 	element.first.first = type_::staticMetaObject.className( ) ;\
 	element.first.second = {__VA_ARGS__ };\
 	element_.second = [this]( ) -> ITypeObject * {\
-		return  new type_(  ) ;\
+		return  new type_( std_vector< QString >( {type_::staticMetaObject.className( ),__VA_ARGS__} )) ;\
 	};\
 	generateInfos.emplace_back( element )
 
 BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
 	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;
 
-	emplace_back_generateInfos( element, IntTypeObject, "int" );
+	element.first.first = IntTypeObject::staticMetaObject.className( );
+	element.first.second = { "int" };
+	element.second = [this]( ) ->ITypeObject * {
+		auto intTypeObject = new IntTypeObject( );
+
+		return intTypeObject;
+	};
+	generateInfos.emplace_back( element );
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, FloatTypeObject, "float" );
 	emplace_back_generateInfos( element, NullTypeObject, "nullptr" );

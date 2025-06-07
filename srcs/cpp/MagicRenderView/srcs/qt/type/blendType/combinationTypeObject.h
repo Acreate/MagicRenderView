@@ -14,10 +14,10 @@ protected:
 	/// @brief 数据结构
 	std_shared_ptr< std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > > dataStruct;
 public:
-	CombinationTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
+	CombinationTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
 	}
 	CombinationTypeObject( const CombinationTypeObject &other )
-		: ITypeObject( other ),
+		: ITypeObject( other.currentTypeName, other.parent( ) ),
 		dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
 		*dataStruct = *other.dataStruct;
 	}
@@ -107,27 +107,26 @@ public:
 		return *dataStruct;
 	}
 	int compare( const ITypeObject &rhs ) const override {
-		auto typeObject = &rhs;
-		if( this == typeObject )
-			return 0;
-		auto combinationTypeObject = qobject_cast< const CombinationTypeObject * >( typeObject );
-		if( combinationTypeObject == nullptr )
-			return -2;
-		size_t thisCount = dataStruct->size( );
-		size_t rCount = combinationTypeObject->dataStruct->size( );
-		if( thisCount > rCount )
-			return 1;
-		if( thisCount < rCount )
-			return -1;
-		for( size_t index = 0; index < thisCount; ++index ) {
-			int compare = dataStruct->at( index )->first->compare( *combinationTypeObject->dataStruct->at( index )->first );
-			if( compare != 0 )
-				return compare;
-			compare = dataStruct->at( index )->second.compare( combinationTypeObject->dataStruct->at( index )->second );
-			if( compare != 0 )
-				return compare;
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr == this ) {
+			size_t thisCount = dataStruct->size( );
+			size_t rCount = result_ptr->dataStruct->size( );
+			if( thisCount > rCount )
+				return 1;
+			if( thisCount < rCount )
+				return -1;
+			for( size_t index = 0; index < thisCount; ++index ) {
+				int compare = dataStruct->at( index )->first->compare( *result_ptr->dataStruct->at( index )->first );
+				if( compare != 0 )
+					return compare;
+				compare = dataStruct->at( index )->second.compare( result_ptr->dataStruct->at( index )->second );
+				if( compare != 0 )
+					return compare;
+			}
 		}
-		return 0;
+
+		return result;
 	}
 
 	size_t typeMemorySize( ) const override {

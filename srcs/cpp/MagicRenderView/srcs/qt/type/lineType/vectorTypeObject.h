@@ -20,10 +20,10 @@ public:
 		return result;
 	}
 public:
-	VectorTypeObject( QObject *parent = nullptr ) : ITypeObject( parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
+	VectorTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 	}
 	VectorTypeObject( const VectorTypeObject &other )
-		: ITypeObject( other.parent( ) ),
+		: ITypeObject( other.currentTypeName, other.parent( ) ),
 		vector( other.vector ) {
 	}
 	VectorTypeObject & operator=( const VectorTypeObject &other ) {
@@ -172,24 +172,22 @@ public:
 		return result;
 	}
 	int compare( const ITypeObject &rhs ) const override {
-		const ITypeObject *typeObject = &rhs;
-		if( this == typeObject )
-			return 0;
-		auto vectorTypeObject = qobject_cast< const VectorTypeObject * >( typeObject );
-		if( vectorTypeObject == nullptr )
-			return -2;
-		auto thisCount = this->vector->size( );
-		auto otherCount = vectorTypeObject->vector->size( );
-		if( thisCount > otherCount )
-			return 1;
-		if( thisCount < otherCount )
-			return -1;
-		for( size_t index = 0; index < otherCount; ++index ) {
-			int compare = this->vector->at( index )->compare( *vectorTypeObject->vector->at( index ) );
-			if( compare != 0 )
-				return compare;
+		decltype(this) result_ptr;
+		int result = comp( this, &rhs, result_ptr );
+		if( result == 0 && result_ptr == this ) {
+			auto thisCount = this->vector->size( );
+			auto otherCount = result_ptr->vector->size( );
+			if( thisCount > otherCount )
+				return 1;
+			if( thisCount < otherCount )
+				return -1;
+			for( size_t index = 0; index < otherCount; ++index ) {
+				int compare = this->vector->at( index )->compare( *result_ptr->vector->at( index ) );
+				if( compare != 0 )
+					return compare;
+			}
 		}
-		return 0;
+		return result;
 	}
 	QString toString( ) const override {
 		QStringList result;
