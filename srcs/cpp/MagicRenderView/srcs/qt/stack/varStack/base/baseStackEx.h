@@ -12,6 +12,7 @@ protected:
 	std_vector< std_pairt< std_vector< QString >, std_function< ITypeObject *( ) > > > generateInfosEx;
 protected:
 	BaseStackEx( );
+	ITypeObject * newVar( const QString &type_name ) const;
 	ITypeObject * _generateUBVar( const QString &type_name ) const override;
 public:
 	~BaseStackEx( ) override {

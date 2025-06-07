@@ -6,7 +6,7 @@
 
 BaseStackEx::BaseStackEx( ) {
 	generateInfosEx.emplace_back( std_pairt( std_vector< QString > { "file" }, [this]( )->ITypeObject * {
-		auto ptr = new CombinationTypeObject( { "file" } );
+		auto ptr = new CombinationTypeObject( { "file", CombinationTypeObject::staticMetaObject.className( ) } );
 		std_shared_ptr< ITypeObject > path( BaseStack::newVar( "string" ) );
 		std_shared_ptr< ITypeObject > bitSize( BaseStack::newVar( "int" ) );
 		std_shared_ptr< ITypeObject > createTime( BaseStack::newVar( "int" ) );
@@ -18,10 +18,20 @@ BaseStackEx::BaseStackEx( ) {
 		return ptr;
 	} ) );
 }
+ITypeObject * BaseStackEx::newVar( const QString &type_name ) const {
+	for( auto &element : generateInfosEx ) {
+		auto end = element.first.end( );
+		auto result = std::find( element.first.begin( ), end, type_name );
+		if( result != end )
+			return element.second( );
+	}
+
+	return nullptr;
+}
 ITypeObject * BaseStackEx::_generateUBVar( const QString &type_name ) const {
 	auto generateUbVar = BaseStack::_generateUBVar( type_name );
-	if( generateUbVar == nullptr /* 使用该类的名称 */ ) {
-	}
+	if( generateUbVar == nullptr /* 使用该类的名称 */ )
+		return BaseStackEx::newVar( type_name );
 	return generateUbVar;
 }
 std_vector< std_pairt< QString, std_vector< QString > > > BaseStackEx::permissionVarType( ) const {

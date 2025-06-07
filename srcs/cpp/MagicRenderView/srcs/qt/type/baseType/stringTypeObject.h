@@ -9,7 +9,6 @@ protected:
 	QString string;
 public:
 	StringTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
-		currentTypeName.emplace_back( StringTypeObject::staticMetaObject.className( ) );
 	}
 	StringTypeObject( const QString &rhs, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
 		string = rhs;

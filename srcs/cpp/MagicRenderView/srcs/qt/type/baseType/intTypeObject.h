@@ -12,7 +12,6 @@ public:
 	operator_equ( IntTypeObject, val );
 public:
 	explicit IntTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) {
-		currentTypeName.emplace_back( IntTypeObject::staticMetaObject.className( ) );
 	}
 	explicit IntTypeObject( const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
 		: ITypeObject( alias_type_name, parent ), val( val ) {

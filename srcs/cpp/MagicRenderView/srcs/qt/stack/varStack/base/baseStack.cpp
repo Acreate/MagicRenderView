@@ -20,15 +20,6 @@
 
 BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
 	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;
-
-	element.first.first = IntTypeObject::staticMetaObject.className( );
-	element.first.second = { "int" };
-	element.second = [this]( ) ->ITypeObject * {
-		auto intTypeObject = new IntTypeObject( );
-
-		return intTypeObject;
-	};
-	generateInfos.emplace_back( element );
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, FloatTypeObject, "float" );
 	emplace_back_generateInfos( element, NullTypeObject, "nullptr" );
@@ -46,7 +37,7 @@ ITypeObject * BaseStack::newVar( const QString &type_name ) const {
 			for( auto &name : element.first.second )
 				if( name == type_name )
 					return element.second( );
-	return new NullTypeObject( );
+	return nullptr;
 }
 ITypeObject * BaseStack::_generateUBVar( const QString &type_name ) const {
 	return newVar( type_name );

@@ -24,8 +24,17 @@ int main( int argc, char *argv[ ] ) {
 		*qobjectCast = 122;
 	qDebug( ) << typeObject->toString( );
 	auto pairs = varStack->permissionVarType( );
-	for( auto &element : pairs )
+	for( auto &element : pairs ) {
 		qDebug( ) << element.first << " : " << element.second;
+		typeObject = varStack->generateVar( element.first );
+		qDebug( ) << typeObject->typeNames( );
+	}
+	qDebug( ) << "=====================";
+	for( auto &element : pairs ) {
+		typeObject = varStack->generateVar( element.first );
+		qDebug( ) << typeObject->typeNames( );
+	}
+	qDebug( ) << "=====================";
 
 	auto intTypeObject = varStack->generateTUBVar< IntTypeObject >( );
 	if( intTypeObject )
@@ -54,6 +63,13 @@ int main( int argc, char *argv[ ] ) {
 		qDebug( ) << object->toString( );
 		qDebug( ) << object->typeNames( );
 	}
+
+	auto stdSharedPtr = varStack->generateVar( "file" );
+	if( stdSharedPtr ) {
+		qDebug( ) << stdSharedPtr->toString( );
+		qDebug( ) << stdSharedPtr->typeNames( );
+	} else
+		tools::debug::printError( "创建失败" );
 	IVarStack::deleteInstance< BaseStackEx >( );
 	return app.exec( );
 }

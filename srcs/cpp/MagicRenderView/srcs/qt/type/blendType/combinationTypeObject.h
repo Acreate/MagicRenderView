@@ -15,7 +15,6 @@ protected:
 	std_shared_ptr< std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > > dataStruct;
 public:
 	CombinationTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
-		currentTypeName.emplace_back( CombinationTypeObject::staticMetaObject.className( ) );
 	}
 	CombinationTypeObject( const CombinationTypeObject &other )
 		: ITypeObject( other.currentTypeName, other.parent( ) ),
@@ -75,7 +74,7 @@ public:
 				return element;
 			}
 
-		auto ptr = std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > >( );
+		auto ptr = std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > >( new std_pairt< std_shared_ptr< ITypeObject >, QString >( ) );
 		ptr->first = new_type;
 		ptr->second = var_name;
 		dataStruct->emplace_back( ptr );
@@ -139,8 +138,8 @@ public:
 	QString toString( ) const override {
 		QStringList result;
 		for( auto pair : *dataStruct )
-			result.append( pair->first->toString( ) + " " + pair->second );
-		return "{" + result.join( "," ) + "}";
+			result.append( pair->second + "( " + pair->first->toString( ) + " )" );
+		return QString( metaObject( )->className( ) ) + " { " + result.join( ", " ) + " }";
 	}
 	bool isNullptr( ) const override {
 		return false;

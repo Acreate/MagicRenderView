@@ -13,7 +13,6 @@ public:
 	DataTypeObject( const std_vector< char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ),
 		val( new std_vector< char >( val ) ) {
-		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 	}
 	DataTypeObject( const std_vector< unsigned char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ) {
