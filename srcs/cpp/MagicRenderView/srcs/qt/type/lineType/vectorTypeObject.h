@@ -198,9 +198,6 @@ public:
 		return "(" + result.join( "," ) + ")";
 	}
 
-	QString typeName( ) const override {
-		return "VectorTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

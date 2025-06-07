@@ -1,6 +1,7 @@
 ﻿#include "qt/application/application.h"
 #include "qt/mainWindow/mainWindow.h"
 #include "qt/stack/varStack/base/baseStack.h"
+#include "qt/stack/varStack/base/baseStackEx.h"
 #include "qt/tools/tools.h"
 #include "qt/type/baseType/intTypeObject.h"
 int main( int argc, char *argv[ ] ) {
@@ -9,7 +10,7 @@ int main( int argc, char *argv[ ] ) {
 	MainWindow mainwidget;
 	mainwidget.show( );
 
-	const auto varStack = IVarStack::getInstance< BaseStack >( );
+	const auto varStack = IVarStack::getInstance< BaseStackEx >( );
 	auto typeObject = varStack->generateVar( "int" );
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
 	if( qobjectCast )
@@ -23,6 +24,6 @@ int main( int argc, char *argv[ ] ) {
 	if( qobjectCast )
 		*qobjectCast = 23;
 	qDebug( ) << typeObject->toString( );
-	IVarStack::deleteInstance<BaseStack>(  );
+	IVarStack::deleteInstance< BaseStackEx >( );
 	return app.exec( );
 }

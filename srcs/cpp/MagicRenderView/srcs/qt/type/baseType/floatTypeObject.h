@@ -31,9 +31,6 @@ public:
 	QString toString( ) const override {
 		return QString::number( val );
 	}
-	QString typeName( ) const override {
-		return "FloatTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

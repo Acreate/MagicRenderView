@@ -43,19 +43,20 @@ public:
 	/// @tparam TChild_Type 类型
 	/// @return 成功返回类型的实例
 	template< class TChild_Type >
-		requires requires {
+		requires requires ( TChild_Type *a, IVarStack *te ) {
 			TChild_Type::staticMetaObject.className( );
+			te = a;
 		}
 	static TChild_Type * getInstance( ) {
 		QString egName = TChild_Type::staticMetaObject.className( );
-		TChild_Type *result = nullptr;
+		TChild_Type *result;
 		for( auto &ptr : instanceVector )
 			if( ptr->metaObject( )->className( ) == egName ) {
 				result = qobject_cast< TChild_Type * >( ptr.get( ) );
 				if( result )
 					return result;
 			}
-		result = new TChild_Type;
+		result = new TChild_Type( );
 		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
@@ -63,8 +64,9 @@ public:
 	/// @tparam TChild_Type 类型
 	/// @return 成功返回释放实例对象引用
 	template< class TChild_Type >
-		requires requires {
+		requires requires ( TChild_Type *a, IVarStack *te ) {
 			TChild_Type::staticMetaObject.className( );
+			te = a;
 		}
 	static std_shared_ptr< IVarStack > deleteInstance( ) {
 		QString egName = TChild_Type::staticMetaObject.className( );
@@ -80,9 +82,10 @@ public:
 	}
 
 	template< class TChild_Type >
-		requires requires ( TChild_Type* ta ) {
+		requires requires ( TChild_Type *ta, ITypeObject *cheack ) {
 			TChild_Type::staticMetaObject.className( );
 			qobject_cast< TChild_Type * >( ta ) ;
+			cheack = ta;
 		}
 	std_shared_ptr< TChild_Type > generateTUBVar( ) const {
 		auto typeObject = generateUBVar( TChild_Type::staticMetaObject.className( ) );

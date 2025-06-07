@@ -29,9 +29,6 @@ public:
 	QString toString( ) const override {
 		return "nullptr";
 	}
-	QString typeName( ) const override {
-		return "NullTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return true;
 	}

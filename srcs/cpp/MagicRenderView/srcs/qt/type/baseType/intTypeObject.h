@@ -30,9 +30,6 @@ public:
 	QString toString( ) const override {
 		return QString::number( val );
 	}
-	QString typeName( ) const override {
-		return "IntTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

@@ -60,9 +60,6 @@ public:
 			result.append( "0x" + QString::number( bin, 16 ) );
 		return "{ " + result.join( ", " ) + " }";
 	}
-	QString typeName( ) const override {
-		return "DataTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

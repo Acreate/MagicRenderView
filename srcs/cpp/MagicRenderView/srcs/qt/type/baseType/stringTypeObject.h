@@ -39,9 +39,6 @@ public:
 	QString toString( ) const override {
 		return string;
 	}
-	QString typeName( ) const override {
-		return "StringTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

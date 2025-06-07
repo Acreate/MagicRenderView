@@ -14,7 +14,7 @@
 	element.first.first = type_::staticMetaObject.className( ) ;\
 	element.first.second = {__VA_ARGS__ };\
 	element_.second = [this]( ) -> ITypeObject * {\
-		return  new type_( this ) ;\
+		return  new type_(  ) ;\
 	};\
 	generateInfos.emplace_back( element )
 
@@ -42,14 +42,7 @@ ITypeObject * BaseStack::generateUBVar( const QString &type_name ) const {
 	return new NullTypeObject( );
 }
 std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
-	for( auto &element : generateInfos )
-		if( element.first.first == type_name )
-			return std_shared_ptr< ITypeObject >( element.second( ) );
-		else
-			for( auto &name : element.first.second )
-				if( name == type_name )
-					return std_shared_ptr< ITypeObject >( element.second( ) );
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+	return std_shared_ptr< ITypeObject >( generateUBVar( type_name ) );
 }
 std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
 	auto iterator = storage.begin( );

@@ -65,9 +65,6 @@ public:
 		return resultString;
 	}
 
-	QString typeName( ) const override {
-		return "PairtTypeObject";
-	}
 	bool isNullptr( ) const override {
 		return false;
 	}

@@ -81,7 +81,9 @@ public:
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
 		return shared;
 	}
-
+	/// @brief 获取成员变量
+	/// @param var_name 成员名称
+	/// @return 变量
 	virtual std_shared_ptr< ITypeObject > getVarObject( const QString &&var_name ) const {
 		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
@@ -89,7 +91,9 @@ public:
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
 		return shared;
 	}
-
+	/// @brief 获取匹配的结构体成员
+	/// @param var_name 成员名称
+	/// @return 成员
 	virtual std_shared_ptr< ITypeObject > operator[]( const QString &&var_name ) const {
 		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
@@ -97,15 +101,11 @@ public:
 		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
 		return shared;
 	}
-
-	virtual std_shared_ptr< ITypeObject > operator[]( const QString &&var_name ) {
-		for( auto pair : *dataStruct )
-			if( pair->second == var_name )
-				return pair->first;
-		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
-		return shared;
+	/// @brief 获取当前成员列表
+	/// @return 成员列表
+	virtual const std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > & getStructInfo( ) const {
+		return *dataStruct;
 	}
-
 	int compare( const ITypeObject &rhs ) const override {
 		auto typeObject = &rhs;
 		if( this == typeObject )
@@ -141,9 +141,6 @@ public:
 		for( auto pair : *dataStruct )
 			result.append( pair->first->toString( ) + " " + pair->second );
 		return "{" + result.join( "," ) + "}";
-	}
-	QString typeName( ) const override {
-		return "CombinationTypeObject";
 	}
 	bool isNullptr( ) const override {
 		return false;
