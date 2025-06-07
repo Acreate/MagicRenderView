@@ -6,17 +6,9 @@
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
 
-template< const char * b >
-void print( ) {
-	qDebug( ) << b;
-}
-
-int main( int argc, char *argv[ ] ) {
-	Application app( argc, argv );
-
-	MainWindow mainwidget;
-	mainwidget.show( );
-
+/// @brief 检测到堆栈变量的生成
+/// @param mainwidget 可能挂靠的父节点
+void checkStack( MainWindow &mainwidget ) {
 	const auto varStack = IVarStack::getInstance< BaseStackEx >( );
 	auto typeObject = varStack->generateVar( "int" );
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
@@ -71,5 +63,14 @@ int main( int argc, char *argv[ ] ) {
 	} else
 		tools::debug::printError( "创建失败" );
 	IVarStack::deleteInstance< BaseStackEx >( );
+}
+int main( int argc, char *argv[ ] ) {
+	Application app( argc, argv );
+
+	MainWindow mainwidget;
+	mainwidget.show( );
+
+	checkStack( mainwidget );
+
 	return app.exec( );
 }
