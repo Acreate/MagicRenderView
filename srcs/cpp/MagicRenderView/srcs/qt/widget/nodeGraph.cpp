@@ -92,9 +92,11 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 void NodeGraph::selectNodeComponent( INodeWidget *event_node, QWidget *select_component ) {
 	event_node->call( );
 }
-void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr<ITypeObject> &msg, size_t error_code, size_t error_line ) {
+void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
+	std_vector< std_pairt< QString, size_t > > pair;
+	qDebug( ) << tools::debug::getFunctionName( 1, pair )[ 0 ].first << " ( " << pair[ 0 ].second << " )  : " << send_obj_ptr->objectName( ) << " :->: " << "error( " << error_code << " ) " << error_line;
 }
-void NodeGraph::finish( INodeWidget *send_obj_ptr, const std_shared_ptr<ITypeObject> &result_type_object, size_t return_code, size_t over_line ) {
-	qDebug() << send_obj_ptr->objectName(  ) << " :->: " << over_line;
-	
+void NodeGraph::finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &result_type_object, size_t return_code, size_t over_line ) {
+	std_vector< std_pairt< QString, size_t > > pair;
+	qDebug( ) << tools::debug::getFunctionName( 1, pair )[ 0 ].first << " ( " << pair[ 0 ].second << " )  : " << send_obj_ptr->objectName( ) << " :->: " << over_line;
 }

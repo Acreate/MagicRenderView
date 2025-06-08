@@ -23,7 +23,12 @@ namespace tools {
 		/// @brief 获取层级调用信息
 		/// @param leven 层级
 		/// @return 返回指定层级上的所有层级与行号
-		std_vector< std_pairt< QString, size_t > > getFunctionName(size_t leven);
+		std_vector< std_pairt< QString, size_t > > getFunctionName( size_t leven );
+		/// @brief 获取层级调用信息
+		/// @param leven 层级
+		/// @param result_pairt 返回，与该函数返回一致
+		/// @return 返回指定层级上的所有层级与行号
+		std_vector< std_pairt< QString, size_t > > & getFunctionName( size_t leven, std_vector< std_pairt< QString, size_t > > &result_pairt );
 		/// @brief 输出错误信息
 		/// @param msg 信息
 		/// @param start_index 堆栈-0 为本函数调用
