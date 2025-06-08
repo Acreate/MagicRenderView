@@ -9,11 +9,11 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
-/.vs
+/.*
 auto_generate_files
 /builder
 /out
 /*.json
 
 /sync.ffs_db
-/_ReSharper.Caches
+/*.Caches
