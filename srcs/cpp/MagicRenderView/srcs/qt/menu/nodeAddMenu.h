@@ -5,8 +5,6 @@
 #include <QMenu>
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
-#include "qt/functionDeclaration/baseArithmetic/addFunctionDeclaration.h"
-#include "qt/functionDeclaration/baseArithmetic/subFunctionDeclaration.h"
 #include "qt/stack/nodeStack/INodeStack.h"
 
 class INodeStack;

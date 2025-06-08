@@ -35,7 +35,7 @@ inline bool findParams( const QChar *data_ptr, const qsizetype &data_count, cons
 	return false;
 }
 
-bool IFunctionDeclaration::init( const QString &function_declaration_name ) {
+bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	isValid = true;
 	functionDeclarationName = function_declaration_name;
 	auto declData = function_declaration_name.data( );
@@ -133,7 +133,7 @@ bool IFunctionDeclaration::init( const QString &function_declaration_name ) {
 	}
 	return true;
 }
-IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_function< void( ) > &call_function ) : callFcuntion( call_function ) {
-	if( init( function_declaration_name ) )
+IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function ) : callFcuntion( call_function ) {
+	if( _init( function_declaration_name ) )
 		return;
 }

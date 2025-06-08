@@ -4,10 +4,6 @@
 
 #include <qt/tools/tools.h>
 
-#include "qt/functionDeclaration/baseArithmetic/addFunctionDeclaration.h"
-#include "qt/functionDeclaration/baseArithmetic/divFunctionDeclaration.h"
-#include "qt/functionDeclaration/baseArithmetic/mulFunctionDeclaration.h"
-#include "qt/functionDeclaration/baseArithmetic/subFunctionDeclaration.h"
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 
 bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
@@ -19,7 +15,7 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 	topMenu->setTitle( node_stack->objectName( ) );
 	auto pairs = node_stack->permissionNodeType( );
 	for( auto &pair : pairs ) {
-		std_shared_ptr< IFunctionDeclaration > functionDeclaration( new UserFunctionDeclaration( pair.first) );
+		std_shared_ptr< IFunctionDeclaration > functionDeclaration( new UserFunctionDeclaration( pair.first.first ) );
 		auto action = new NodeAddAction( this, functionDeclaration );
 		topMenu->addAction( action );
 	}

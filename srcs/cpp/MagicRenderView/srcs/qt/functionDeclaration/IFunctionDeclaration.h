@@ -4,7 +4,14 @@
 
 #include <alias/type_alias.h>
 
-class IFunctionDeclaration {
+#include "qt/type/ITypeObject.h"
+
+class INodeWidget;
+class StringTypeObject;
+class IFunctionDeclaration : public QObject {
+	Q_OBJECT;
+public:
+	using std_call = std_function< void( ) >;
 protected:
 	/// @brief 变量名称
 	std_vector< std_shared_ptr< std_pairt< QString, QString > > > paramInfo;
@@ -19,13 +26,13 @@ protected:
 	/// @brief 是否有效
 	bool isValid;
 	/// @brief 调换函数
-	std_function< void( ) > callFcuntion;
+	std_call callFcuntion;
 protected:
 	/// @brief 使用声明初始化函数信息
-	bool init( const QString &function_declaration_name );
-	IFunctionDeclaration( ) { }
+	bool _init( const QString &function_declaration_name );
 public:
-	IFunctionDeclaration( const QString &function_declaration_name, const std_function< void( ) > &call_function );
+	IFunctionDeclaration( ) { }
+	IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function );
 
 	IFunctionDeclaration( const IFunctionDeclaration &other )
 		: paramInfo( other.paramInfo ),
@@ -47,15 +54,20 @@ public:
 		callFcuntion = other.callFcuntion;
 		return *this;
 	}
-	virtual ~IFunctionDeclaration( ) { }
+	/// @brief 使用声明初始化函数信息
+	virtual bool initDeclaration( const QString &function_declaration_name ) {
+		return _init( function_declaration_name );
+	}
 	/// @brief 调用一次函数
 	virtual void call( ) const {
 		if( callFcuntion )
 			callFcuntion( );
 	}
+	const std_call & getCallFcuntion( ) const { return callFcuntion; }
+	void setCallFcuntion( const std_call &call_fcuntion ) { callFcuntion = call_fcuntion; }
 	/// @brief 获取调用函数
 	/// @return 调用函数
-	virtual std_function< void( ) > getFunction( ) const {
+	virtual std_call getFunction( ) const {
 		return callFcuntion;
 	}
 	virtual const std_vector< std_shared_ptr< std_pairt< QString, QString > > > & getParamInfos( ) const { return paramInfo; }
@@ -95,9 +107,13 @@ public:
 			return paramInfo[ index ];
 		return nullptr;
 	}
+	/// @brief 获取返回类型
 	virtual const QString & getReturnType( ) const { return returnType; }
+	/// @brief 获取函数名称
 	virtual const QString & getDeclarationName( ) const { return declarationName; }
+	/// @brief 获取属性
 	virtual const QString & getAttribute( ) const { return attribute; }
+	/// @brief 获取函数原型
 	virtual const QString & getFunctionDeclarationName( ) const { return functionDeclarationName; }
 	/// @brief 是否有效
 	/// @return 返回 false 表示无效声明
