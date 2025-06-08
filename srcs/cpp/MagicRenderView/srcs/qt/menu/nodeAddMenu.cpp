@@ -25,11 +25,7 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 }
 NodeAddMenu::NodeAddMenu( QWidget *parent ) : QMenu( parent ) {
 	connect( this, &QMenu::triggered, [this] ( QAction *action ) {
-		auto conver = qobject_cast< NodeAddAction * >( action );
-		if( conver )
-			emit this->activeNodeAction( conver );
-		else
-			emit this->activeQAction( action );
+			emit this->activeAction( action );
 	} );
 }
 NodeAddMenu::~NodeAddMenu( ) {

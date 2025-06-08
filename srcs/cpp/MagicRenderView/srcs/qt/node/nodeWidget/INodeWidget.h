@@ -34,6 +34,7 @@ public:
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	void paintEvent( QPaintEvent *event ) override;
 public:
 Q_SIGNALS:
 	/// @brief 选中窗口时候除法该信号

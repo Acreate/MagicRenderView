@@ -21,11 +21,8 @@ public:
 	~NodeAddMenu( ) override;
 Q_SIGNALS:
 	/// @brief 选项被正式激活
-	/// @param node_add_acton 激活选项
-	void activeNodeAction( const NodeAddAction *node_add_acton );
-	/// @brief 选项被正式激活
 	/// @param action 激活选项
-	void activeQAction( const QAction *action );
+	void activeAction( QAction *action );
 public:
 	template< typename TNodeGenerate >
 		requires requires ( INodeStack *paren, TNodeGenerate *ta ) {

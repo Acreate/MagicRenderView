@@ -15,33 +15,26 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	setMouseTracking( true );
 	mouseEventStatus = MouseEventType::Init;
 
-	// todo : 创建需要的节点，并且绘制到该窗口当中 
-	connect( nodeMenu, &NodeAddMenu::activeNodeAction, [this] ( const NodeAddAction *node_add_action ) ->void {
+	connect( nodeMenu, &NodeAddMenu::activeAction, [this] ( QAction *action ) ->void {
 		auto instance = INodeStack::getInstance< BaseNodeStack >( );
-		QString functionName = node_add_action->getFunctionName( );
+		QString functionName;
+		auto nodeAddAction = qobject_cast< NodeAddAction * >( action );
+		if( nodeAddAction )
+			functionName = nodeAddAction->getFunctionName( );
+		else
+			functionName = action->text( );
 		auto generateNode = instance->generateNode( functionName );
 		if( generateNode ) {
 			generateNode->move( currentMouseInWidgetPos );
 			generateNode->setParent( this );
 			generateNode->connectNodeGraphWidget( this );
 			generateNode->show( );
-			auto pair = tools::debug::getFunctionName( 1 )[ 0 ];
-			qDebug( ) << pair.first << " ( " << pair.second << " ) 创建成功 : " + generateNode->objectName( );
 		} else
 			tools::debug::printError( functionName );
 	} );
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
 	mousePosLabel->hide( );
-
-	QLabel *test = new QLabel( this );
-	test->setText( "测试仪1" );
-	test->move( 0, 0 );
-	test->setStyleSheet( "*{background:red;}" );
-	test = new QLabel( this );
-	test->setText( "测试仪2" );
-	test->move( 10, 10 );
-	test->setStyleSheet( "*{background:green;}" );
 }
 NodeGraph::~NodeGraph( ) {
 }
@@ -67,7 +60,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						nodeMenu->show( );
 					} else
 						mousePosLabel->move( currentMouseInWidgetPos );
-
+					mousePosLabel->raise( );
 					break;
 			}
 			break;
