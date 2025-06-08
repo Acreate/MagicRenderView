@@ -15,20 +15,67 @@ class INodeComponent;
 class INodeWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	/// @brief 函数声明对象
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
+	/// @brief 连接到该节点的节点
+	std_shared_ptr< std_vector< const INodeWidget * > > connectNodeWidgets;
+protected:
+	/// @brief 链接到该节点
+	/// @param target_node_widget 链接到该节点的对象指针
+	virtual void linkThis( const INodeWidget *target_node_widget ) const {
+		if( target_node_widget == nullptr )
+			return;
+		size_t count = connectNodeWidgets->size( );
+		if( count > 0 ) {
+			auto nodeWidget = connectNodeWidgets->data( );
+			for( size_t index = 0; index < count; ++index )
+				if( nodeWidget[ index ] == target_node_widget )
+					return;
+		}
+		connectNodeWidgets->emplace_back( target_node_widget );
+		connect( target_node_widget, &QObject::deleteLater, [this, target_node_widget]( ) {
+			auto iterator = connectNodeWidgets->begin( );
+			auto end = connectNodeWidgets->end( );
+			for( ; iterator != end; ++iterator )
+				if( iterator.operator*( ) == target_node_widget ) {
+					connectNodeWidgets->erase( iterator );
+					return;
+				}
+		} );
+	}
+	/// @brief 断开节点
+	/// @param target_node_widget 断开该节点的对象指针
+	virtual void unLinkThis( const INodeWidget *target_node_widget ) const {
+		if( target_node_widget == nullptr )
+			return;
+		auto iterator = connectNodeWidgets->begin( );
+		auto end = connectNodeWidgets->end( );
+		for( ; iterator != end; ++iterator )
+			if( iterator.operator*( ) == target_node_widget ) {
+				disconnect( target_node_widget, &QObject::deleteLater, this, nullptr );
+				connectNodeWidgets->erase( iterator );
+				return;
+			}
+	}
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
 	/// @param function_declaration 函数信息
 	/// @param parent 父节点，用于 qt 内存管理系统。
 	/// @param f 窗口风格
-	INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ) { }
+	INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), connectNodeWidgets( new std_vector< const INodeWidget * > ) { }
 	/// @brief 信号连接到指定窗口
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
-	virtual void call( ) {
-		if( functionDeclaration )
-			if( functionDeclaration.get( ) )
-				functionDeclaration.get( )->call( );
+	virtual void call( ) const {
+		if( functionDeclaration ) {
+			size_t count = connectNodeWidgets->size( );
+			if( count > 0 /* 链接到该节点的节点窗口 */ ) {
+				auto nodeWidget = connectNodeWidgets->data( );
+				for( size_t index = 0; index < count; ++index )
+					nodeWidget[ index ]->call( );
+			}
+			functionDeclaration.get( )->call( );
+		}
 	}
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }
@@ -41,10 +88,12 @@ Q_SIGNALS:
 	/// @brief 选中窗口时候除法该信号-鼠标释放触发
 	/// @param event_node 触发节点
 	/// @param select_component 当命中组件时，该指针不为 nullptr
+	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
 	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 选中窗口时候除法该信号-鼠标按下触发
 	/// @param event_node 触发节点
 	/// @param select_component 当命中组件时，该指针不为 nullptr
+	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
 	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象

@@ -66,7 +66,7 @@ public:
 		return shared;
 	}
 
-	virtual std_shared_ptr< ITypeObject > setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &&var_name ) {
+	virtual std_shared_ptr< ITypeObject > setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &var_name ) {
 		for( auto &pair : *dataStruct )
 			if( pair->second == var_name ) {
 				std_shared_ptr< ITypeObject > element = pair->first; // 用于覆盖返回
@@ -84,7 +84,7 @@ public:
 	/// @brief 获取成员变量
 	/// @param var_name 成员名称
 	/// @return 变量
-	virtual std_shared_ptr< ITypeObject > getVarObject( const QString &&var_name ) const {
+	virtual std_shared_ptr< ITypeObject > getVarObject( const QString &var_name ) const {
 		for( auto pair : *dataStruct )
 			if( pair->second == var_name )
 				return pair->first;
@@ -94,12 +94,8 @@ public:
 	/// @brief 获取匹配的结构体成员
 	/// @param var_name 成员名称
 	/// @return 成员
-	virtual std_shared_ptr< ITypeObject > operator[]( const QString &&var_name ) const {
-		for( auto pair : *dataStruct )
-			if( pair->second == var_name )
-				return pair->first;
-		std_shared_ptr< ITypeObject > shared( new NullTypeObject( ) ); // 返回一个空指针
-		return shared;
+	virtual std_shared_ptr< ITypeObject > operator[]( const QString &var_name ) const {
+		return getVarObject( var_name );
 	}
 	/// @brief 获取当前成员列表
 	/// @return 成员列表
