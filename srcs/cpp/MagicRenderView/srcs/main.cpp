@@ -1,5 +1,9 @@
-﻿#include "qt/application/application.h"
+﻿#include <stacktrace>
+
+#include "qt/application/application.h"
 #include "qt/mainWindow/mainWindow.h"
+#include "qt/stack/nodeStack/INodeStack.h"
+#include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/tools/tools.h"
 #include "qt/type/baseType/floatTypeObject.h"
@@ -7,7 +11,9 @@
 
 /// @brief 检测到堆栈变量的生成
 /// @param mainwidget 可能挂靠的父节点
-void checkStack( MainWindow &mainwidget ) {
+void checkVarStack( QWidget &mainwidget ) {
+	qDebug( ) << "==================";
+	qDebug( ) << "\t\t测试 checkVarStack";
 	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 	auto typeObject = varStack->generateVar( "int" );
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
@@ -62,6 +68,29 @@ void checkStack( MainWindow &mainwidget ) {
 	} else
 		tools::debug::printError( "创建失败" );
 	IVarStack::deleteInstance< BaseVarStackEx >( );
+
+	qDebug( ) << "\t\t结束 checkVarStack";
+	qDebug( ) << "==================\n";
+}
+void checkNodeStack( QWidget &mainwidget ) {
+	qDebug( ) << "==================";
+	qDebug( ) << "\t\t测试 checkNodeStack";
+	qDebug( ) << "===";
+	auto nodeStack = INodeStack::getInstance< BaseNodeStack >( );
+	auto propertyNames = nodeStack->permissionNodeType( );
+	for( auto &name : propertyNames )
+		qDebug( ) << name;
+	qDebug( ) << "===";
+	QString typeName = "fileInfo";
+	auto generateNode = nodeStack->generateNode( typeName, &mainwidget );
+	if( !generateNode )
+		tools::debug::printError( "无法创建 " + typeName + " 窗口" );
+	else {
+		qDebug( ) << "窗口 " << generateNode->objectName( ) << " 退出";
+		generateNode->deleteLater( );
+	}
+	qDebug( ) << "\t\t结束 checkNodeStack";
+	qDebug( ) << "==================\n";
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
@@ -69,7 +98,8 @@ int main( int argc, char *argv[ ] ) {
 	MainWindow mainwidget;
 	mainwidget.show( );
 
-	checkStack( mainwidget );
+	checkVarStack( mainwidget );
+	checkNodeStack( mainwidget );
 
 	return app.exec( );
 }

@@ -6,12 +6,16 @@
 class BaseNodeStack : public INodeStack {
 	Q_OBJECT;
 protected:
+	using aliasVector = std_pairt< QString, std_vector< QString > >;
+	using generateFcuntion = std_function< INodeWidget*( ) >;
+	using generateNodePairt = std_pairt< aliasVector, generateFcuntion >;
+	std_shared_ptr< std_vector< generateNodePairt > > nodeGenerate;
+public:
+	BaseNodeStack( );
+protected:
 	INodeWidget * _newNode( const QString &type_name ) const;
 public:
 	INodeWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr ) const override;
-	INodeWidget * setStorageNode( INodeWidget *storage_obj, const QString &storage_name ) override;
-	INodeWidget * getStorageNode( const QString &storage_name ) const override;
-	INodeWidget * removeStorageNode( const QString &storage_name ) override;
 	std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const override;
 };
 

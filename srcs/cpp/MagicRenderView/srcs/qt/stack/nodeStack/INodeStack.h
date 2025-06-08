@@ -6,6 +6,10 @@
 
 class INodeStack : public QObject {
 	Q_OBJECT;
+protected:
+	std_vector< std_pairt< INodeWidget *, QString > > storageNode;
+public:
+	~INodeStack() override;
 public:
 	/// @brief 生成类型
 	/// @param type_name 类型名称
@@ -15,15 +19,15 @@ public:
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
 	/// @return 被覆盖的对象
-	virtual INodeWidget * setStorageNode( INodeWidget *storage_obj, const QString &storage_name ) = 0;
+	virtual INodeWidget * setStorageNode( INodeWidget *storage_obj, const QString &storage_name );
 	/// @brief 获取存储的对象
 	/// @param storage_name 存储的对象名称 
 	/// @return 失败返回 nullptr
-	virtual INodeWidget * getStorageNode( const QString &storage_name ) const = 0;
+	virtual INodeWidget * getStorageNode( const QString &storage_name ) const;
 	/// @brief 从存储当中删除匹配的变量名
 	/// @param storage_name 存储的变量名
 	/// @return 被删除的对象，失败返回 nullptr
-	virtual INodeWidget * removeStorageNode( const QString &storage_name ) = 0;
+	virtual INodeWidget * removeStorageNode( const QString &storage_name );
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
 	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const = 0;

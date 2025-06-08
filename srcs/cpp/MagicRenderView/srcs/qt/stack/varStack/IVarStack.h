@@ -10,25 +10,30 @@
 class ITypeObject;
 class IVarStack : public QObject {
 	Q_OBJECT;
+protected:
+	/// @brief 仓库存储
+	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
 public:
 	IVarStack( QObject *parent ) : QObject( parent ) { }
-	/// @brief 生成类型
-	/// @param type_name 类型名称
-	/// @return 不存在匹配类型返回 nullptr
-	virtual std_shared_ptr< ITypeObject > generateVar( const QString &type_name ) const = 0;
+public:
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
 	/// @return 被覆盖的对象
-	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) = 0;
+	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name );
 	/// @brief 获取存储的对象
 	/// @param storage_name 存储的对象名称 
 	/// @return 失败返回 nullptr
-	virtual std_shared_ptr< ITypeObject > getStorageVar( const QString &storage_name ) const = 0;
+	virtual std_shared_ptr< ITypeObject > getStorageVar( const QString &storage_name ) const;
 	/// @brief 从存储当中删除匹配的变量名
 	/// @param storage_name 存储的变量名
 	/// @return 被删除的对象，失败返回 nullptr
-	virtual std_shared_ptr< ITypeObject > removeStorageVar( const QString &storage_name ) = 0;
+	virtual std_shared_ptr< ITypeObject > removeStorageVar( const QString &storage_name );
+public:
+	/// @brief 生成类型
+	/// @param type_name 类型名称
+	/// @return 不存在匹配类型返回 nullptr
+	virtual std_shared_ptr< ITypeObject > generateVar( const QString &type_name ) const = 0;
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
 	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionVarType( ) const = 0;

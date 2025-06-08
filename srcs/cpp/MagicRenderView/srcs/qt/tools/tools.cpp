@@ -33,6 +33,29 @@ int tools::ui::moveDisplayCenter( QWindow *move_target, size_t display_target ) 
 	move_target->setGeometry( newX, newY, windowSize.width( ), windowSize.height( ) );
 	return 0;
 }
+std_vector< std_pairt< QString, size_t > > tools::debug::getFunctionName( size_t leven ) {
+	std_vector< std_pairt< QString, size_t > > result, buff;
+	auto applicationName = qApp->applicationName( );
+	auto stacktrace = std::stacktrace::current( );
+	for( auto &iterator : stacktrace ) {
+		QString fromStdString = QString::fromStdString( iterator.description( ) );
+		qsizetype indexOf = fromStdString.indexOf( applicationName );
+		if( indexOf == -1 )
+			continue;
+		buff.emplace_back( fromStdString, iterator.source_line( ) );
+	}
+	size_t count = buff.size( );
+	count = count > leven ? leven : count;
+	auto data = buff.data( );
+	for( size_t index = 1; index < count; ++index ) {
+		qsizetype indexOf = data[ index ].first.indexOf( "!main+0x" );
+		result.emplace_back( data[ index ] );
+		if( indexOf != -1 )
+			break;
+	}
+
+	return result;
+}
 void tools::debug::printError( const std::wstring &msg, size_t start_index, size_t last_remove_count ) {
 	using stringType = std::wstring;
 	using stringStreamType = std::wstringstream;

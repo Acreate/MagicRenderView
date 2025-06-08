@@ -4,6 +4,8 @@
 
 #include <QMainWindow>
 
+#include "alias/type_alias.h"
+
 namespace tools {
 	namespace ui {
 		/// @brief 窗口移动到指定显示器当中
@@ -18,6 +20,10 @@ namespace tools {
 		int moveDisplayCenter( QWindow *move_target, size_t display_target );
 	}
 	namespace debug {
+		/// @brief 获取层级调用信息
+		/// @param leven 层级
+		/// @return 返回指定层级上的所有层级与行号
+		std_vector< std_pairt< QString, size_t > > getFunctionName(size_t leven);
 		/// @brief 输出错误信息
 		/// @param msg 信息
 		/// @param start_index 堆栈-0 为本函数调用

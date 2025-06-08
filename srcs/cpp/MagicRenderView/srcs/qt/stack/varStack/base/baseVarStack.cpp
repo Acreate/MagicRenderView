@@ -45,38 +45,6 @@ ITypeObject * BaseVarStack::_generateUBVar( const QString &type_name ) const {
 std_shared_ptr< ITypeObject > BaseVarStack::generateVar( const QString &type_name ) const {
 	return std_shared_ptr< ITypeObject >( _generateUBVar( type_name ) );
 }
-std_shared_ptr< ITypeObject > BaseVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
-	auto iterator = storage.begin( );
-	auto end = storage.end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->second == storage_name ) {
-			std::shared_ptr< ITypeObject > typeObject = iterator->first;
-			iterator->first = storage_obj;
-			return typeObject;
-		}
-
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
-}
-std_shared_ptr< ITypeObject > BaseVarStack::getStorageVar( const QString &storage_name ) const {
-	auto iterator = storage.begin( );
-	auto end = storage.end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->second == storage_name )
-			return iterator->first;
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
-}
-std_shared_ptr< ITypeObject > BaseVarStack::removeStorageVar( const QString &storage_name ) {
-	auto iterator = storage.begin( );
-	auto end = storage.end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->second == storage_name ) {
-			std::shared_ptr< ITypeObject > typeObject = iterator->first;
-			storage.erase( iterator );
-			return typeObject;
-		}
-
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
-}
 std_vector< std_pairt< QString, std_vector< QString > > > BaseVarStack::permissionVarType( ) const {
 	std_vector< std_pairt< QString, std_vector< QString > > > result;
 	for( auto key : generateInfos | std::views::keys )
