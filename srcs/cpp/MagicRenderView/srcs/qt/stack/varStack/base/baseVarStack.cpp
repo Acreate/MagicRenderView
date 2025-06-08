@@ -1,4 +1,4 @@
-﻿#include "baseStack.h"
+﻿#include "BaseVarStack.h"
 
 #include <ranges>
 
@@ -18,7 +18,7 @@
 	};\
 	generateInfos.emplace_back( element )
 
-BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
+BaseVarStack::BaseVarStack( QObject *parent ): IVarStack( parent ) {
 	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;
 	emplace_back_generateInfos( element, IntTypeObject, "int" );
 	emplace_back_generateInfos( element, FloatTypeObject, "float" );
@@ -29,7 +29,7 @@ BaseStack::BaseStack( QObject *parent ): IVarStack( parent ) {
 	emplace_back_generateInfos( element, VectorTypeObject, "array" );
 	emplace_back_generateInfos( element, PairtTypeObject, "pairt" );
 }
-ITypeObject * BaseStack::newVar( const QString &type_name ) const {
+ITypeObject * BaseVarStack::newVar( const QString &type_name ) const {
 	for( auto &element : generateInfos )
 		if( element.first.first == type_name )
 			return element.second( );
@@ -39,13 +39,13 @@ ITypeObject * BaseStack::newVar( const QString &type_name ) const {
 					return element.second( );
 	return nullptr;
 }
-ITypeObject * BaseStack::_generateUBVar( const QString &type_name ) const {
+ITypeObject * BaseVarStack::_generateUBVar( const QString &type_name ) const {
 	return newVar( type_name );
 }
-std_shared_ptr< ITypeObject > BaseStack::generateVar( const QString &type_name ) const {
+std_shared_ptr< ITypeObject > BaseVarStack::generateVar( const QString &type_name ) const {
 	return std_shared_ptr< ITypeObject >( _generateUBVar( type_name ) );
 }
-std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
+std_shared_ptr< ITypeObject > BaseVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
 	auto iterator = storage.begin( );
 	auto end = storage.end( );
 	for( ; iterator != end; ++iterator )
@@ -57,7 +57,7 @@ std_shared_ptr< ITypeObject > BaseStack::setStorageVar( const std_shared_ptr< IT
 
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
-std_shared_ptr< ITypeObject > BaseStack::getStorageVar( const QString &storage_name ) const {
+std_shared_ptr< ITypeObject > BaseVarStack::getStorageVar( const QString &storage_name ) const {
 	auto iterator = storage.begin( );
 	auto end = storage.end( );
 	for( ; iterator != end; ++iterator )
@@ -65,7 +65,7 @@ std_shared_ptr< ITypeObject > BaseStack::getStorageVar( const QString &storage_n
 			return iterator->first;
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
-std_shared_ptr< ITypeObject > BaseStack::removeStorageVar( const QString &storage_name ) {
+std_shared_ptr< ITypeObject > BaseVarStack::removeStorageVar( const QString &storage_name ) {
 	auto iterator = storage.begin( );
 	auto end = storage.end( );
 	for( ; iterator != end; ++iterator )
@@ -77,7 +77,7 @@ std_shared_ptr< ITypeObject > BaseStack::removeStorageVar( const QString &storag
 
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
 }
-std_vector< std_pairt< QString, std_vector< QString > > > BaseStack::permissionVarType( ) const {
+std_vector< std_pairt< QString, std_vector< QString > > > BaseVarStack::permissionVarType( ) const {
 	std_vector< std_pairt< QString, std_vector< QString > > > result;
 	for( auto key : generateInfos | std::views::keys )
 		result.emplace_back( key );

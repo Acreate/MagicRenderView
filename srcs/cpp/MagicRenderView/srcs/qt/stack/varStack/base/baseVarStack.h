@@ -6,7 +6,7 @@
 #include "qt/type/ITypeObject.h"
 #include "../IVarStack.h"
 /// @brief 使用 IVarStack::getInstance< BaseStack >( ); 创建该实例
-class BaseStack : public IVarStack {
+class BaseVarStack : public IVarStack {
 	Q_OBJECT;
 public:
 	friend class IVarStack;
@@ -16,7 +16,7 @@ protected:
 	/// @brief 仓库存储
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
 protected:
-	BaseStack( QObject *parent = nullptr );
+	BaseVarStack( QObject *parent = nullptr );
 	ITypeObject * newVar( const QString &type_name ) const;
 	ITypeObject * _generateUBVar( const QString &type_name ) const override;
 public:
