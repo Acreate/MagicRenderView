@@ -34,13 +34,18 @@ public:
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	void mousePressEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 public:
 Q_SIGNALS:
-	/// @brief 选中窗口时候除法该信号
+	/// @brief 选中窗口时候除法该信号-鼠标释放触发
 	/// @param event_node 触发节点
 	/// @param select_component 当命中组件时，该指针不为 nullptr
-	void selectNodeComponent( INodeWidget *event_node, QWidget *select_component );
+	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
+	/// @brief 选中窗口时候除法该信号-鼠标按下触发
+	/// @param event_node 触发节点
+	/// @param select_component 当命中组件时，该指针不为 nullptr
+	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

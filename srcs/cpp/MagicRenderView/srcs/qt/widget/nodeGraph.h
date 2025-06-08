@@ -31,6 +31,10 @@ protected:
 	QPoint cursorPos;
 	// 鼠标窗口位置
 	QPoint currentMouseInWidgetPos;
+	/// @brief 选中的控件
+	QWidget *selectWidget;
+	/// @brief 选中控件时，基于控件的相对偏移
+	QPoint selectWidgetOffset;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
@@ -39,7 +43,8 @@ protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
 public Q_SLOTS:
-	void selectNodeComponent( INodeWidget *event_node, QWidget *select_component );
+	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
+	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

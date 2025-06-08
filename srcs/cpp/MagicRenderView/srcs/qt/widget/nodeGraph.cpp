@@ -10,6 +10,7 @@
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
+	selectWidget = nullptr;
 	nodeMenu = new NodeAddMenu( this );
 	nodeMenu->init< BaseNodeStack >( );
 	setMouseTracking( true );
@@ -67,23 +68,38 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 		}
 		// todo : 操作被选中的节点 
 		case MouseEventType::Move :
+			if( selectWidget ) {
+				selectWidget->move( event->pos( ) - selectWidgetOffset );
+				selectWidget = nullptr;
+			}
 			break;
 	}
 	mouseEventStatus = MouseEventType::Release;
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
-	mouseEventStatus = MouseEventType::Move;
+	if( selectWidget ) {
+		selectWidget->move( event->pos( ) - selectWidgetOffset );
+		mouseEventStatus = MouseEventType::Move;
+	}
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
-	QWidget *widget = childAt( event->pos( ) );
-	if( widget && widget != mousePosLabel ) {
-		widget->raise( );
+	auto raiseWidget = childAt( event->pos( ) );
+	if( raiseWidget && raiseWidget != mousePosLabel ) {
+		raiseWidget->raise( );
+		if( qobject_cast< INodeWidget * >( raiseWidget ) == nullptr )
+			raiseWidget = nullptr;
 	} else
 		mouseEventStatus = MouseEventType::Press;
 }
 
-void NodeGraph::selectNodeComponent( INodeWidget *event_node, QWidget *select_component ) {
-	event_node->call( );
+void NodeGraph::selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
+	if( mouseEventStatus != MouseEventType::Move )
+		event_node->call( );
+	selectWidget = nullptr;
+}
+void NodeGraph::selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
+	selectWidget = event_node;
+	selectWidgetOffset = mouse_offset_pos;
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
 	std_vector< std_pairt< QString, size_t > > pair;
