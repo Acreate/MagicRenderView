@@ -8,6 +8,7 @@ class NodeFileInfo : public INodeWidget {
 public:
 	NodeFileInfo( QWidget *parent, Qt::WindowFlags f );
 	NodeFileInfo( ) : NodeFileInfo( nullptr, Qt::WindowFlags( ) ) { }
+	void connectNodeGraphWidget( NodeGraph *node_graph ) override;
 };
 
 #endif // NODEFILEINFO_H_H_HEAD__FILE__

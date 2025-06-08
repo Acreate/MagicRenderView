@@ -24,9 +24,9 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			generateNode->move( currentMouseInWidgetPos );
 			generateNode->setParent( this );
 			generateNode->connectNodeGraphWidget( this );
-			generateNode->show(  );
+			generateNode->show( );
 			auto pair = tools::debug::getFunctionName( 1 )[ 0 ];
-			qDebug( ) << pair.first << " ( " << pair.second  << " ) 创建成功 : " + generateNode->objectName( );
+			qDebug( ) << pair.first << " ( " << pair.second << " ) 创建成功 : " + generateNode->objectName( );
 		} else
 			tools::debug::printError( functionName );
 	} );
@@ -88,5 +88,13 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	} else
 		mouseEventStatus = MouseEventType::Press;
 }
-void NodeGraph::selectNodeWidgetBody( INodeComponent *select_node_component ) {
+
+void NodeGraph::selectNodeComponent( INodeWidget *event_node, QWidget *select_component ) {
+	event_node->call( );
+}
+void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr<ITypeObject> &msg, size_t error_code, size_t error_line ) {
+}
+void NodeGraph::finish( INodeWidget *send_obj_ptr, const std_shared_ptr<ITypeObject> &result_type_object, size_t return_code, size_t over_line ) {
+	qDebug() << send_obj_ptr->objectName(  ) << " :->: " << over_line;
+	
 }

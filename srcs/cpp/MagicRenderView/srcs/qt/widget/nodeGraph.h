@@ -3,6 +3,10 @@
 #pragma once
 
 #include <QWidget>
+
+#include "alias/type_alias.h"
+class ITypeObject;
+class INodeWidget;
 class INodeComponent;
 class QLabel;
 class NodeAddMenu;
@@ -35,7 +39,19 @@ protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
 public Q_SLOTS:
-	void selectNodeWidgetBody( INodeComponent *select_node_component );
+	void selectNodeComponent( INodeWidget *event_node, QWidget *select_component );
+	/// @brief 执行错误时，产生该消息
+	/// @param send_obj_ptr 信号对象
+	/// @param msg 错误消息
+	/// @param error_code 错误代码
+	/// @param error_line 错误行
+	void error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line );
+	/// @brief 执行完毕调用该函数
+	/// @param send_obj_ptr 信号对象
+	/// @param result_type_object 返回对象
+	/// @param return_code 返回代码
+	/// @param over_line 执行完成的行
+	void finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &result_type_object, size_t return_code, size_t over_line );
 };
 
 #endif // NODEGRAPH_H_H_HEAD__FILE__
