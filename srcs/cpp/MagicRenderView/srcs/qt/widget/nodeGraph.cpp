@@ -6,6 +6,8 @@
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
+#include "qt/stack/nodeStack/INodeStack.h"
+#include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	nodeMenu = new NodeAddMenu( this );
@@ -17,7 +19,19 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 		auto functionDeclaration = node_add_action->getFunctionDeclaration( ).get( );
 		if( functionDeclaration == nullptr )
 			return;
-		tools::debug::printError( functionDeclaration->getFunctionDeclarationName( ) );
+		auto instance = INodeStack::getInstance< BaseNodeStack >( );
+		QString functionDeclarationName = functionDeclaration->getFunctionDeclarationName( );
+		auto generateNode = instance->generateNode( functionDeclarationName, this );
+		if( generateNode ) {
+			auto point = nodeMenu->pos( );
+			auto toGlobal = mapToGlobal( point );
+			generateNode->move( toGlobal );
+			generateNode->setParent( this );
+			generateNode->connectNodeGraphWidget( this );
+
+			qDebug( ) << "创建成功 : " + generateNode->objectName( );
+		} else
+			tools::debug::printError( functionDeclarationName );
 	} );
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
@@ -78,4 +92,6 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 		widget->raise( );
 	} else
 		mouseEventStatus = MouseEventType::Press;
+}
+void NodeGraph::selectNodeWidgetBody( INodeComponent *select_node_component ) {
 }

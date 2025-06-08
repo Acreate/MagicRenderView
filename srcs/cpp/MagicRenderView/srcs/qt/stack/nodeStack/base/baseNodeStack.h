@@ -16,7 +16,7 @@ protected:
 	INodeWidget * _newNode( const QString &type_name ) const;
 public:
 	INodeWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr ) const override;
-	std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const override;
+	std_vector< std_pairt< std_pairt< QString, std_vector< QString > >, std_function< void( ) > > > permissionNodeType( ) const override;
 };
 
 #endif // BASENODESTACK_H_H_HEAD__FILE__

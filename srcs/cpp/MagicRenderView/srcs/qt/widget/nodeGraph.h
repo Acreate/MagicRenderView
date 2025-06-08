@@ -3,6 +3,7 @@
 #pragma once
 
 #include <QWidget>
+class INodeComponent;
 class QLabel;
 class NodeAddMenu;
 class NodeGraph : public QWidget {
@@ -28,6 +29,8 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
+public Q_SLOTS:
+	void selectNodeWidgetBody( INodeComponent *select_node_component );
 };
 
 #endif // NODEGRAPH_H_H_HEAD__FILE__

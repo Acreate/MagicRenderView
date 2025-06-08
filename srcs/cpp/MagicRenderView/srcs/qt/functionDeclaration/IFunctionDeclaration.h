@@ -49,7 +49,10 @@ public:
 	}
 	virtual ~IFunctionDeclaration( ) { }
 	/// @brief 调用一次函数
-	virtual void call( ) const = 0;
+	virtual void call( ) const {
+		if( callFcuntion )
+			callFcuntion( );
+	}
 	/// @brief 获取调用函数
 	/// @return 调用函数
 	virtual std_function< void( ) > getFunction( ) const {

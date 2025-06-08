@@ -9,7 +9,7 @@ class INodeStack : public QObject {
 protected:
 	std_vector< std_pairt< INodeWidget *, QString > > storageNode;
 public:
-	~INodeStack() override;
+	~INodeStack( ) override;
 public:
 	/// @brief 生成类型
 	/// @param type_name 类型名称
@@ -30,7 +30,7 @@ public:
 	virtual INodeWidget * removeStorageNode( const QString &storage_name );
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
-	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const = 0;
+	virtual std_vector< std_pairt< std_pairt< QString, std_vector< QString > >, std_function< void( ) > > > permissionNodeType( ) const = 0;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< INodeStack > > instanceVector;
