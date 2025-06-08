@@ -7,11 +7,14 @@ class INodeComponent;
 class INodeWidget : public QWidget {
 	Q_OBJECT;
 public:
-	INodeWidget( ) { }
+	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
+	/// @param parent 父节点，用于 qt 内存管理系统。
+	/// @param f 窗口风格
+	INodeWidget( QWidget *parent, Qt::WindowFlags f ) { }
 Q_SIGNALS:
 	/// @brief 选中窗口时候除法该信号
 	/// @param select_node_component 当命中组件时，该指针不为 nullptr
-	void selectNodeWidgetBody(INodeComponent *select_node_component);
+	void selectNodeWidgetBody( INodeComponent *select_node_component );
 };
 
 #endif // INODEWIDGET_H_H_HEAD__FILE__

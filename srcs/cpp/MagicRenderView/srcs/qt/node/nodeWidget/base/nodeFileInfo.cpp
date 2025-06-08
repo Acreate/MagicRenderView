@@ -1,4 +1,4 @@
 ﻿#include "nodeFileInfo.h"
-NodeFileInfo::NodeFileInfo( ) {
+NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ): INodeWidget( parent, f ) {
 	
 }

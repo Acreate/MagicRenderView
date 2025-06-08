@@ -6,7 +6,8 @@
 class NodeFileInfo : public INodeWidget {
 	Q_OBJECT;
 public:
-	NodeFileInfo( );
+	NodeFileInfo( QWidget *parent, Qt::WindowFlags f );
+	NodeFileInfo( ) : NodeFileInfo( nullptr, Qt::WindowFlags( ) ) { }
 };
 
 #endif // NODEFILEINFO_H_H_HEAD__FILE__
