@@ -2,8 +2,9 @@
 
 #include <qt/tools/tools.h>
 
-NodeAddAction::NodeAddAction( QObject *parent, const std_shared_ptr< IFunctionDeclaration > &function_declaration ): QAction( ), functionDeclaration( function_declaration ) {
+NodeAddAction::NodeAddAction( QObject *parent, const QString &function_name ): QAction( ), functionName( function_name ) {
 	setParent( parent );
+	setText( functionName );
 }
 NodeAddAction::~NodeAddAction( ) {
 }

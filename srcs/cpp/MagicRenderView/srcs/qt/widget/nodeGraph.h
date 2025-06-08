@@ -22,6 +22,11 @@ protected:
 	QLabel *mousePosLabel;
 	/// @brief 当前鼠标状态
 	MouseEventType mouseEventStatus;
+
+	// 鼠标全局位置
+	QPoint cursorPos;
+	// 鼠标窗口位置
+	QPoint currentMouseInWidgetPos;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;

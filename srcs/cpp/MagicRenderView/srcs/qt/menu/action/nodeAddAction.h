@@ -9,11 +9,11 @@ class IFunctionDeclaration;
 class NodeAddAction : public QAction {
 	Q_OBJECT;
 protected:
-	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
+	QString functionName;
 public:
-	NodeAddAction( QObject *parent, const std_shared_ptr< IFunctionDeclaration > &function_declaration );
+	NodeAddAction( QObject *parent, const QString &function_name );
 	~NodeAddAction( ) override;
-	const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
+	const QString & getFunctionName( ) const { return functionName; }
 };
 
 #endif // NODEADDACTION_H_H_HEAD__FILE__

@@ -12,16 +12,25 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 
 	QMenu *topMenu = new QMenu( this );
 	addMenu( topMenu );
-	topMenu->setTitle( node_stack->objectName( ) );
+	QString objectName = node_stack->objectName( );
+	topMenu->setTitle( objectName );
 	auto pairs = node_stack->permissionNodeType( );
 	for( auto &pair : pairs ) {
-		std_shared_ptr< IFunctionDeclaration > functionDeclaration( new UserFunctionDeclaration( pair.first.first ) );
-		auto action = new NodeAddAction( this, functionDeclaration );
+		auto first = pair.first;
+		QString name = first.first;
+		auto action = new NodeAddAction( this, name );
 		topMenu->addAction( action );
 	}
 	return true;
 }
 NodeAddMenu::NodeAddMenu( QWidget *parent ) : QMenu( parent ) {
+	connect( this, &QMenu::triggered, [this] ( QAction *action ) {
+		auto conver = qobject_cast< NodeAddAction * >( action );
+		if( conver )
+			emit this->activeNodeAction( conver );
+		else
+			emit this->activeQAction( action );
+	} );
 }
 NodeAddMenu::~NodeAddMenu( ) {
 }

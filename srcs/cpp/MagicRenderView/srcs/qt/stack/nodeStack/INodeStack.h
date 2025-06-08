@@ -14,9 +14,8 @@ public:
 public:
 	/// @brief 生成类型
 	/// @param type_name 类型名称
-	/// @param function_declaration
 	/// @return 不存在匹配类型返回 nullptr
-	virtual INodeWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr, const std_shared_ptr<IFunctionDeclaration> &function_declaration = { } ) const = 0;
+	virtual INodeWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr ) const = 0;
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称

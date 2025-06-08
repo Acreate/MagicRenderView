@@ -11,27 +11,24 @@
 #include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	nodeMenu = new NodeAddMenu( this );
+	nodeMenu->init< BaseNodeStack >( );
 	setMouseTracking( true );
 	mouseEventStatus = MouseEventType::Init;
 
 	// todo : 创建需要的节点，并且绘制到该窗口当中 
 	connect( nodeMenu, &NodeAddMenu::activeNodeAction, [this] ( const NodeAddAction *node_add_action ) ->void {
-		auto functionDeclaration = node_add_action->getFunctionDeclaration( ).get( );
-		if( functionDeclaration == nullptr )
-			return;
 		auto instance = INodeStack::getInstance< BaseNodeStack >( );
-		QString functionDeclarationName = functionDeclaration->getFunctionDeclarationName( );
-		auto generateNode = instance->generateNode( functionDeclarationName, this );
+		QString functionName = node_add_action->getFunctionName( );
+		auto generateNode = instance->generateNode( functionName );
 		if( generateNode ) {
-			auto point = nodeMenu->pos( );
-			auto toGlobal = mapToGlobal( point );
-			generateNode->move( toGlobal );
+			generateNode->move( currentMouseInWidgetPos );
 			generateNode->setParent( this );
 			generateNode->connectNodeGraphWidget( this );
-
-			qDebug( ) << "创建成功 : " + generateNode->objectName( );
+			generateNode->show(  );
+			auto pair = tools::debug::getFunctionName( 1 )[ 0 ];
+			qDebug( ) << pair.first << " ( " << pair.second  << " ) 创建成功 : " + generateNode->objectName( );
 		} else
-			tools::debug::printError( functionDeclarationName );
+			tools::debug::printError( functionName );
 	} );
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
@@ -54,10 +51,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 		case MouseEventType::Press : {
 			// 鼠标按键
 			Qt::MouseButton mouseButton = event->button( );
-			// 鼠标全局位置
-			QPoint cursorPos = QCursor::pos( );
-			// 鼠标窗口位置
-			QPoint currentMouseInWidgetPos = event->pos( );
+			cursorPos = QCursor::pos( );
+			currentMouseInWidgetPos = event->pos( );
 			switch( mouseButton ) {
 				case Qt::RightButton : // 使用配置的位置显示菜单
 					nodeMenu->move( cursorPos );

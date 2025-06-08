@@ -45,11 +45,22 @@ std_vector< std_pairt< QString, size_t > > tools::debug::getFunctionName( size_t
 		buff.emplace_back( fromStdString, iterator.source_line( ) );
 	}
 	size_t count = buff.size( );
+	++leven;
 	count = count > leven ? leven : count;
 	auto data = buff.data( );
+	qsizetype indexOf;
+	qint64 position = applicationName.size( ) + 1;
 	for( size_t index = 1; index < count; ++index ) {
-		qsizetype indexOf = data[ index ].first.indexOf( "!main+0x" );
-		result.emplace_back( data[ index ] );
+		auto &pair = data[ index ];
+		auto &first = pair.first;
+
+		indexOf = first.indexOf( applicationName );
+		if( indexOf != -1 ) {
+			qsizetype end = first.indexOf( "+0x" );
+			first = first.mid( position, end - position );
+		}
+		result.emplace_back( pair );
+		indexOf = first.indexOf( "!main+0x" );
 		if( indexOf != -1 )
 			break;
 	}

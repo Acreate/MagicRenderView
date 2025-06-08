@@ -10,7 +10,6 @@
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
 
-class NullTypeObject;
 /// @brief 检测到堆栈变量的生成
 /// @param mainwidget 可能挂靠的父节点
 void checkVarStack( QWidget *mainwidget ) {

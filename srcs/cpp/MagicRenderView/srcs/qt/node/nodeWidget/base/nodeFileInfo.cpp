@@ -1,9 +1,12 @@
 ﻿#include "nodeFileInfo.h"
 
+#include <QLabel>
+#include <QVBoxLayout>
+
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
-NodeFileInfo::NodeFileInfo( const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( nullptr, parent, f ) {
+NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( nullptr, parent, f ) {
 	auto declaration = new UserFunctionDeclaration(
 		"file fileInfo(string); " );
 	declaration->setCallFcuntion( [this,declaration]( ) {
@@ -11,4 +14,8 @@ NodeFileInfo::NodeFileInfo( const std_shared_ptr< IFunctionDeclaration > &functi
 		emit this->finish( IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< NullTypeObject >( ), 0, __LINE__ );
 	} );
 	functionDeclaration.reset( declaration );
+
+	QVBoxLayout *vBoxLayout = new QVBoxLayout( this );
+	QLabel *title = new QLabel( declaration->getDeclarationName( ), this );
+	vBoxLayout->addWidget( title );
 }
