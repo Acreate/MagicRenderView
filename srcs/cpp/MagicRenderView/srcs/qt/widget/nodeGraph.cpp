@@ -93,13 +93,18 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 }
 
 void NodeGraph::selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
-	if( mouseEventStatus != MouseEventType::Move )
-		event_node->call( );
-	selectWidget = nullptr;
+	qDebug( ) << tools::debug::getFunctionName( );
 }
 void NodeGraph::selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
 	selectWidget = event_node;
 	selectWidgetOffset = mouse_offset_pos;
+	qDebug( ) << tools::debug::getFunctionName( );
+}
+void NodeGraph::ActionNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
+	if( mouseEventStatus != MouseEventType::Move )
+		event_node->call( );
+	selectWidget = nullptr;
+	qDebug( ) << tools::debug::getFunctionName( );
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
 	std_vector< std_pairt< QString, size_t > > pair;

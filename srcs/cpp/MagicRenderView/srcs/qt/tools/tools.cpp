@@ -33,41 +33,8 @@ int tools::ui::moveDisplayCenter( QWindow *move_target, size_t display_target ) 
 	move_target->setGeometry( newX, newY, windowSize.width( ), windowSize.height( ) );
 	return 0;
 }
-std_vector< std_pairt< QString, size_t > > tools::debug::getFunctionName( size_t leven ) {
-	std_vector< std_pairt< QString, size_t > > result, buff;
-	auto applicationName = qApp->applicationName( );
-	auto stacktrace = std::stacktrace::current( );
-	for( auto &iterator : stacktrace ) {
-		QString fromStdString = QString::fromStdString( iterator.description( ) );
-		qsizetype indexOf = fromStdString.indexOf( applicationName );
-		if( indexOf == -1 )
-			continue;
-		buff.emplace_back( fromStdString, iterator.source_line( ) );
-	}
-	size_t count = buff.size( );
-	++leven;
-	count = count > leven ? leven : count;
-	auto data = buff.data( );
-	qsizetype indexOf;
-	qint64 position = applicationName.size( ) + 1;
-	for( size_t index = 1; index < count; ++index ) {
-		auto &pair = data[ index ];
-		auto &first = pair.first;
 
-		indexOf = first.indexOf( applicationName );
-		if( indexOf != -1 ) {
-			qsizetype end = first.indexOf( "+0x" );
-			first = first.mid( position, end - position );
-		}
-		result.emplace_back( pair );
-		indexOf = first.indexOf( "!main+0x" );
-		if( indexOf != -1 )
-			break;
-	}
-
-	return result;
-}
-std_vector< std_pairt< QString, size_t > > & tools::debug::getFunctionName( size_t leven, std_vector< std_pairt< QString, size_t > > &result_pairt ) {
+std_vector< std_pairt< QString, size_t > > & tools::debug::getFunctionName( size_t start, size_t leven, std_vector< std_pairt< QString, size_t > > &result_pairt ) {
 	result_pairt.clear( );
 	std_vector< std_pairt< QString, size_t > > buff;
 	auto applicationName = qApp->applicationName( );
@@ -80,12 +47,14 @@ std_vector< std_pairt< QString, size_t > > & tools::debug::getFunctionName( size
 		buff.emplace_back( fromStdString, iterator.source_line( ) );
 	}
 	size_t count = buff.size( );
-	++leven;
-	count = count > leven ? leven : count;
+	//count = count > leven ? leven : count;
 	auto data = buff.data( );
 	qsizetype indexOf;
 	qint64 position = applicationName.size( ) + 1;
-	for( size_t index = 1; index < count; ++index ) {
+	for( size_t index = start + 1; index < count; ++index ) {
+		if( leven == 0 )
+			break;
+		--leven;
 		auto &pair = data[ index ];
 		auto &first = pair.first;
 

@@ -45,6 +45,12 @@ protected:
 public Q_SLOTS:
 	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
+	
+	/// @brief 选中窗口时候除法该信号-鼠标释放触发
+	/// @param event_node 触发节点
+	/// @param select_component 当命中组件时，该指针不为 nullptr
+	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
+	void ActionNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

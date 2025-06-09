@@ -7,30 +7,37 @@
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
 NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( nullptr, parent, f ) {
-	auto declaration = new UserFunctionDeclaration(
-		"file fileInfo(string); " );
+	UserFunctionDeclaration *declaration;
+	declaration = new UserFunctionDeclaration(
+		"file fileInfo(string file_path); " );
 	declaration->setCallFcuntion( [this,declaration]( ) {
 		qDebug( ) << declaration->getDeclarationName( );
 		emit this->finish( this, IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< NullTypeObject >( ), 0, __LINE__ );
 	} );
 	functionDeclaration.reset( declaration );
-
-	QVBoxLayout *vBoxLayout = new QVBoxLayout( this );
-	QLabel *title = new QLabel( declaration->getDeclarationName( ), this );
-	vBoxLayout->addWidget( title );
+	title->setText( declaration->getDeclarationName( ) );
 }
 void NodeFileInfo::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	INodeWidget::connectNodeGraphWidget( node_graph );
 }
-std_shared_ptr<ITypeObject> NodeFileInfo::getResult( ) const {
+std_shared_ptr< ITypeObject > NodeFileInfo::getResult( ) const {
 	return { };
 }
-std_vector_unity_shared<ITypeObject> NodeFileInfo::getParams( ) const {
+std_vector_unity_shared< ITypeObject > NodeFileInfo::getParams( ) const {
 	return { };
 }
-std_vector_unity_shared<ITypeObject> NodeFileInfo::setParams( const std_vector_unity_shared<ITypeObject> &params ) const {
+std_vector_unity_shared< ITypeObject > NodeFileInfo::setParams( const std_vector_unity_shared< ITypeObject > &params ) const {
 	return { };
 }
-bool NodeFileInfo::setParam( const std_shared_ptr<ITypeObject> &param, size_t param_index ) const {
+bool NodeFileInfo::setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const {
 	return false;
+}
+void NodeFileInfo::resizeEvent( QResizeEvent *event ) {
+	INodeWidget::resizeEvent( event );
+	QRect contentsRect = mainBoxLayout->contentsRect( );
+	auto contentSize = contentsRect.size( );
+	int contentWidth = contentSize.width( );
+	int contentHeight = contentsRect.height( );
+	int titleWidth = title->size( ).width( );
+	int newX = titleWidth + ( contentWidth - titleWidth ) / 2;
 }

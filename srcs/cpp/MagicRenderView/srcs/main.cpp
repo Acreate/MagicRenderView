@@ -81,7 +81,7 @@ void checkVarStack( QWidget *mainwidget ) {
 	IVarStack::deleteInstance< BaseVarStackEx >( );
 
 	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换";
-	
+
 #define TestConverPtr(type_) \
 		do {\
 		type_ *nnu = nullptr;\
@@ -101,8 +101,6 @@ void checkVarStack( QWidget *mainwidget ) {
 	TestConverPtr( VectorTypeObject );
 	TestConverPtr( PairtTypeObject );
 
-
-	
 	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换";
 #define TestConverITypeObjectPtr(type_) \
 		do {\
@@ -123,8 +121,6 @@ void checkVarStack( QWidget *mainwidget ) {
 	TestConverITypeObjectPtr( VectorTypeObject );
 	TestConverITypeObjectPtr( PairtTypeObject );
 
-
-	
 	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换-多层赋值";
 #define TestConverMulEquPtr(type_) \
 		do {\
@@ -145,8 +141,7 @@ void checkVarStack( QWidget *mainwidget ) {
 	TestConverMulEquPtr( CombinationTypeObject );
 	TestConverMulEquPtr( VectorTypeObject );
 	TestConverMulEquPtr( PairtTypeObject );
-	
-	
+
 	qDebug( ) << "\t\t结束 checkVarStack";
 	qDebug( ) << "==================\n";
 }
@@ -172,6 +167,7 @@ void checkNodeStack( QWidget *mainwidget ) {
 }
 /// @brief 测试函数
 void checkFunction( ) {
+	qDebug( ) << "==========================";
 	auto userFunctionDeclaration = UserFunctionDeclaration(
 		"file fileInfo(string); ",
 		[]( ) {
@@ -180,6 +176,19 @@ void checkFunction( ) {
 	qDebug( ) << userFunctionDeclaration.getDeclarationName( );
 	for( auto &ptr : userFunctionDeclaration.getParamInfos( ) )
 		qDebug( ) << ptr->first << " : " << ptr->second;
+	qDebug( ) << "==========================";
+}
+/// @brief 测试工具函数
+void checkTools( ) {
+	qDebug( ) << "==========================";
+	std_vector< std_pairt< QString, size_t > > functionName;
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( );
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 1 );
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 0, 1 );
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( functionName );
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 1, functionName );
+	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 0, 1, functionName );
+	qDebug( ) << "==========================";
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
@@ -190,5 +199,6 @@ int main( int argc, char *argv[ ] ) {
 	checkVarStack( &mainwidget );
 	checkNodeStack( &mainwidget );
 	checkFunction( );
+	checkTools( );
 	return app.exec( );
 }
