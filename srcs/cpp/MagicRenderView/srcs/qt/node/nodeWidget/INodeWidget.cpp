@@ -22,6 +22,15 @@ INodeWidget::INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function
 	mainBoxLayout->addWidget( title );
 	setMouseTracking( true );
 	timer = new QTimer( this );
+
+	connect( timer, &QTimer::timeout, [=]( ) {
+		timer->stop( );
+		emit selectNodeComponentPress( this, selectComponent, mouseOffsetPos );
+		if( mouseEvent == MouseEvent::Release )
+			emit selectNodeComponentRelease( this, selectComponent, mouseOffsetPos );
+		mouseEvent = MouseEvent::Over;
+		selectComponent = nullptr; // 相应消息之后，重置选择空间
+	} );
 	doubleClickTimeOutCheck = std::chrono::milliseconds( 250 );
 }
 void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
@@ -36,11 +45,9 @@ QString INodeWidget::getNodeTitle( ) const {
 }
 void INodeWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
-	mouseOffsetPos = event->pos( );
-	QWidget *component = childAt( mouseOffsetPos );
-	emit selectNodeComponentRelease( this, component, mouseOffsetPos );
+	if( mouseEvent != MouseEvent::Release )
+		emit selectNodeComponentRelease( this, selectComponent, mouseOffsetPos );
 	mouseEvent = MouseEvent::Release;
-	qDebug( ) << tools::debug::getFunctionName( );
 }
 
 void INodeWidget::mousePressEvent( QMouseEvent *event ) {
@@ -51,7 +58,6 @@ void INodeWidget::mousePressEvent( QMouseEvent *event ) {
 	if( selectComponent == nullptr )
 		selectComponent = currentSelectComponent;
 	if( timer->isActive( ) /* 正在计时 */ ) {
-		disconnect( timer, &QTimer::timeout, nullptr, nullptr );
 		timer->stop( ); // 终止
 		if( mouseEvent == MouseEvent::Release ) {
 			// 发送双击指令
@@ -62,35 +68,20 @@ void INodeWidget::mousePressEvent( QMouseEvent *event ) {
 			selectComponent = nullptr; // 相应消息之后，重置选择空间
 			mouseEvent = MouseEvent::Over;
 		}
-		qDebug( ) << tools::debug::getFunctionName( );
 		return; // 结束
 	}
-
-	connect( timer, &QTimer::timeout, [=]( ) {
-		disconnect( timer, &QTimer::timeout, nullptr, nullptr );
-		timer->stop( ); // 终止
-		emit selectNodeComponentPress( this, selectComponent, mouseOffsetPos );
-		if( mouseEvent == MouseEvent::Release )
-			emit selectNodeComponentRelease( this, selectComponent, mouseOffsetPos );
-		mouseEvent = MouseEvent::Over;
-		selectComponent = nullptr; // 相应消息之后，重置选择空间
-		qDebug( ) << tools::debug::getFunctionName( );
-	} );
 	mouseEvent = MouseEvent::Press;
 	timer->start( doubleClickTimeOutCheck );
-	qDebug( ) << tools::debug::getFunctionName( );
 }
 void INodeWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	if( timer->isActive( ) /* 正在计时 */ ) {
 		timer->stop( ); // 终止
-		disconnect( timer, &QTimer::timeout, nullptr, nullptr );
 		if( mouseEvent == MouseEvent::Press )
 			emit selectNodeComponentPress( this, selectComponent, mouseOffsetPos );
 		selectComponent = nullptr;
 	}
 	mouseEvent = MouseEvent::Move;
-	qDebug( ) << tools::debug::getFunctionName( );
 }
 
 void INodeWidget::paintEvent( QPaintEvent *event ) {
@@ -106,9 +97,4 @@ void INodeWidget::paintEvent( QPaintEvent *event ) {
 }
 void INodeWidget::leaveEvent( QEvent *event ) {
 	QWidget::leaveEvent( event );
-	disconnect( timer, &QTimer::timeout, nullptr, nullptr );
-	if( timer->isActive( ) /* 正在计时 */ ) {
-		timer->stop( ); // 终止
-		selectComponent = nullptr;
-	}
 }

@@ -66,15 +66,9 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		}
-		// todo : 操作被选中的节点 
-		case MouseEventType::Move :
-			if( selectWidget ) {
-				selectWidget->move( event->pos( ) - selectWidgetOffset );
-				selectWidget = nullptr;
-			}
-			break;
 	}
 	mouseEventStatus = MouseEventType::Release;
+	selectWidget = nullptr;
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	if( selectWidget ) {
@@ -84,11 +78,9 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	auto raiseWidget = childAt( event->pos( ) );
-	if( raiseWidget && raiseWidget != mousePosLabel ) {
+	if( raiseWidget && raiseWidget != mousePosLabel )
 		raiseWidget->raise( );
-		if( qobject_cast< INodeWidget * >( raiseWidget ) == nullptr )
-			raiseWidget = nullptr;
-	} else
+	else
 		mouseEventStatus = MouseEventType::Press;
 }
 
