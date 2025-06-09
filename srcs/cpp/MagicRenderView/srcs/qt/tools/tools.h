@@ -20,7 +20,6 @@ namespace tools {
 		int moveDisplayCenter( QWindow *move_target, size_t display_target );
 	}
 	namespace debug {
-
 		/// @brief 获取层级调用信息
 		/// @param start 开始
 		/// @param leven 层级
@@ -44,15 +43,16 @@ namespace tools {
 			std_vector< std_pairt< QString, size_t > > result;
 			return getFunctionName( 1, leven, result );
 		}
-		/// @brief 获取层级调用信息
-		/// @param leven 层级
-		/// @param result_pairt 返回，与该函数返回一致
-		/// @return 返回指定层级上的所有层级与行号
+		
+		/// @brief 返回调用函数的层级信息
+		/// @param leven 上层次数
+		/// @param result_pairt 返回引用
+		/// @return 同 result_pairt
 		inline std_vector< std_pairt< QString, size_t > > & getFunctionName( size_t leven, std_vector< std_pairt< QString, size_t > > &result_pairt ) {
 			return getFunctionName( 1, leven, result_pairt );
 		}
-		/// @brief 获取层级调用信息
-		/// @return 返回指定层级上的所有层级与行号
+		/// @brief 返回调用函数信息
+		/// @return 调用函数的信息
 		inline std_vector< std_pairt< QString, size_t > > getFunctionName( ) {
 			std_vector< std_pairt< QString, size_t > > result;
 			return getFunctionName( 1, 1, result );
