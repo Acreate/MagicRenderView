@@ -16,17 +16,19 @@ protected:
 public:
 	CombinationTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
 	}
-	CombinationTypeObject( const CombinationTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent( ) ),
-		dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
-		*dataStruct = *other.dataStruct;
-	}
+	Def_Clone_Move_override_function( CombinationTypeObject );
 	CombinationTypeObject & operator=( const CombinationTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator =( other );
-		dataStruct.reset( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) );
-		*dataStruct = *other.dataStruct;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == typeObject )
+				return *this;
+			ITypeObject::operator =( other );
+			dataStruct.reset( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) );
+			*dataStruct = *other.dataStruct;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 	virtual std_shared_ptr< ITypeObject > removeBeginElemnt( ) {
@@ -136,9 +138,6 @@ public:
 		for( auto pair : *dataStruct )
 			result.append( pair->second + "( " + pair->first->toString( ) + " )" );
 		return QString( metaObject( )->className( ) ) + " { " + result.join( ", " ) + " }";
-	}
-	bool isNullptr( ) const override {
-		return false;
 	}
 };
 

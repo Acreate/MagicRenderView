@@ -14,18 +14,28 @@ public:
 		string = rhs;
 	}
 
-	StringTypeObject( const StringTypeObject &rhs ): ITypeObject( rhs.currentTypeName, rhs.parent( ) ) {
-		string = rhs.string;
-	}
+	Def_Clone_Move_override_function( StringTypeObject );
 
 	StringTypeObject & operator+=( const StringTypeObject &&rhs ) {
-		string += rhs.string;
-		currentTypeName = rhs.currentTypeName;
+		if( this == nullptr || thisPtr == nullptr )
+			return *this;
+		auto typeObject = &rhs;
+		if( typeObject != nullptr && rhs.thisPtr != nullptr ) {
+			string += rhs.string;
+			currentTypeName = rhs.currentTypeName;
+		}
 		return *this;
 	}
-	StringTypeObject & operator=( const StringTypeObject &&rhs ) {
-		string = rhs.string;
-		currentTypeName = rhs.currentTypeName;
+	StringTypeObject & operator=( const StringTypeObject &other ) {
+		auto typeObject = &other;
+		if( typeObject != nullptr ) {
+			if( typeObject == this )
+				return *this;
+			ITypeObject::operator=( other );
+			string = other.string;
+			currentTypeName = other.currentTypeName;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 	StringTypeObject operator+( const StringTypeObject &&rhs ) const {
@@ -48,9 +58,6 @@ public:
 	}
 	QString toString( ) const override {
 		return string;
-	}
-	bool isNullptr( ) const override {
-		return false;
 	}
 };
 

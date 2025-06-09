@@ -12,18 +12,23 @@ public:
 	operator_equ( FloatTypeObject, val );
 public:
 	FloatTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) { }
-	FloatTypeObject( const FloatTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent( ) ), val( other.val ) {
-	}
+
 	FloatTypeObject( const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
 		: ITypeObject( alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( FloatTypeObject::staticMetaObject.className( ) );
 	}
+	Def_Clone_Move_override_function( FloatTypeObject );
 	FloatTypeObject & operator=( const FloatTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator=( other );
-		val = other.val;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == &other )
+				return *this;
+			ITypeObject::operator=( other );
+			val = other.val;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 
@@ -40,9 +45,7 @@ public:
 	QString toString( ) const override {
 		return QString::number( val );
 	}
-	bool isNullptr( ) const override {
-		return false;
-	}
+
 	~FloatTypeObject( ) override {
 	}
 };

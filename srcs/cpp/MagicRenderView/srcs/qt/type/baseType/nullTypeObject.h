@@ -13,6 +13,21 @@ public:
 	}
 public:
 	NullTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ) {
+		thisPtr = nullptr;
+	}
+	Def_Clone_Move_override_function( NullTypeObject );
+
+	NullTypeObject & operator=( const NullTypeObject &other ) {
+		if( this == nullptr || thisPtr == nullptr )
+			return *this;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == &other )
+				return *this;
+			ITypeObject::operator =( other );
+		} else
+			thisPtr = nullptr;
+		return *this;
 	}
 	size_t typeMemorySize( ) const override {
 		return 0;
@@ -29,9 +44,6 @@ public:
 
 	QString toString( ) const override {
 		return "nullptr";
-	}
-	bool isNullptr( ) const override {
-		return true;
 	}
 };
 

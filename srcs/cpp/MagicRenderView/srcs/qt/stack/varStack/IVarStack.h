@@ -13,8 +13,10 @@ class IVarStack : public QObject {
 protected:
 	/// @brief 仓库存储
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
+
 public:
-	IVarStack( QObject *parent ) : QObject( parent ) { }
+	IVarStack( QObject *parent ) : QObject( parent ) {
+	}
 public:
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象

@@ -7,8 +7,12 @@
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/tools/tools.h"
+#include "qt/type/baseType/dataTypeObject.h"
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
+#include "qt/type/baseType/stringTypeObject.h"
+#include "qt/type/blendType/combinationTypeObject.h"
+#include "qt/type/lineType/vectorTypeObject.h"
 
 /// @brief 检测到堆栈变量的生成
 /// @param mainwidget 可能挂靠的父节点
@@ -74,9 +78,75 @@ void checkVarStack( QWidget *mainwidget ) {
 
 	if( *stdSharedPtr != nullptr )
 		qDebug( ) << "不等于 nullptr";
-
 	IVarStack::deleteInstance< BaseVarStackEx >( );
 
+	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换";
+	
+#define TestConverPtr(type_) \
+		do {\
+		type_ *nnu = nullptr;\
+		type_ nullptrConverObj = ( type_ ) ( *nnu );\
+		if( nullptrConverObj != nullptr )\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+		else\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+		}while(false)
+
+	TestConverPtr( IntTypeObject );
+	TestConverPtr( FloatTypeObject );
+	TestConverPtr( DataTypeObject );
+	TestConverPtr( NullTypeObject );
+	TestConverPtr( StringTypeObject );
+	TestConverPtr( CombinationTypeObject );
+	TestConverPtr( VectorTypeObject );
+	TestConverPtr( PairtTypeObject );
+
+
+	
+	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换";
+#define TestConverITypeObjectPtr(type_) \
+		do {\
+		ITypeObject *nnu = nullptr;\
+		type_ nullptrConverObj = *nnu;\
+		if( nullptrConverObj != nullptr )\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+		else\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+		}while(false)
+
+	TestConverITypeObjectPtr( IntTypeObject );
+	TestConverITypeObjectPtr( FloatTypeObject );
+	TestConverITypeObjectPtr( DataTypeObject );
+	TestConverITypeObjectPtr( NullTypeObject );
+	TestConverITypeObjectPtr( StringTypeObject );
+	TestConverITypeObjectPtr( CombinationTypeObject );
+	TestConverITypeObjectPtr( VectorTypeObject );
+	TestConverITypeObjectPtr( PairtTypeObject );
+
+
+	
+	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换-多层赋值";
+#define TestConverMulEquPtr(type_) \
+		do {\
+		type_ *nnu = nullptr;\
+		type_ nullptrConverObj = ( type_ ) ( *nnu );\
+		type_ nullptrConverObj2 = nullptrConverObj;\
+		if( nullptrConverObj2 != nullptr )\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+		else\
+			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+		}while(false)
+
+	TestConverMulEquPtr( IntTypeObject );
+	TestConverMulEquPtr( FloatTypeObject );
+	TestConverMulEquPtr( DataTypeObject );
+	TestConverMulEquPtr( NullTypeObject );
+	TestConverMulEquPtr( StringTypeObject );
+	TestConverMulEquPtr( CombinationTypeObject );
+	TestConverMulEquPtr( VectorTypeObject );
+	TestConverMulEquPtr( PairtTypeObject );
+	
+	
 	qDebug( ) << "\t\t结束 checkVarStack";
 	qDebug( ) << "==================\n";
 }

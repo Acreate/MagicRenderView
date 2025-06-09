@@ -25,17 +25,21 @@ public:
 		scond( scond ) {
 		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 	}
-	PairtTypeObject( const PairtTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent( ) ),
-		first( other.first ),
-		scond( other.scond ) {
-	}
+
+	Def_Clone_Move_override_function( PairtTypeObject );
+
 	PairtTypeObject & operator=( const PairtTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator =( other );
-		first = other.first;
-		scond = other.scond;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == typeObject )
+				return *this;
+			ITypeObject::operator =( other );
+			first = other.first;
+			scond = other.scond;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 	const ITypeObject * getFirst( ) const { return first.get( ); }
@@ -68,9 +72,6 @@ public:
 		return resultString;
 	}
 
-	bool isNullptr( ) const override {
-		return false;
-	}
 };
 
 #endif // PAIRTTYPEOBJECT_H_H_HEAD__FILE__

@@ -33,17 +33,20 @@ public:
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 	}
 
-	DataTypeObject( const DataTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent( ) ) {
-		val.reset( new std_vector< char >( ) );
-		*val = *other.val;
-	}
+	Def_Clone_Move_override_function( DataTypeObject );
+
 	DataTypeObject & operator=( const DataTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator =( other );
-		val.reset( new std_vector< char >( ) );
-		*val = *other.val;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == typeObject )
+				return *this;
+			ITypeObject::operator =( other );
+			val.reset( new std_vector< char >( ) );
+			*val = *other.val;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 
@@ -108,9 +111,6 @@ public:
 		for( auto bin : *val )
 			result.append( "0x" + QString::number( bin, 16 ) );
 		return "{ " + result.join( ", " ) + " }";
-	}
-	bool isNullptr( ) const override {
-		return false;
 	}
 };
 

@@ -2,6 +2,8 @@
 #define INTTYPEOBJECT_H_H_HEAD__FILE__
 #pragma once
 
+#include "nullTypeObject.h"
+
 #include "qt/type/ITypeObject.h"
 
 class IntTypeObject : public ITypeObject {
@@ -17,15 +19,17 @@ public:
 		: ITypeObject( alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( IntTypeObject::staticMetaObject.className( ) );
 	}
-	explicit IntTypeObject( const IntTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent(  ) ),
-		val( other.val ) {
-	}
+	Def_Clone_Move_override_function( IntTypeObject );
 	IntTypeObject & operator=( const IntTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator =( other );
-		val = other.val;
+		if( &other != nullptr && other.thisPtr != nullptr ) {
+			if( this == &other )
+				return *this;
+			ITypeObject::operator =( other );
+			val = other.val;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 
@@ -42,9 +46,6 @@ public:
 	}
 	QString toString( ) const override {
 		return QString::number( val );
-	}
-	bool isNullptr( ) const override {
-		return false;
 	}
 };
 

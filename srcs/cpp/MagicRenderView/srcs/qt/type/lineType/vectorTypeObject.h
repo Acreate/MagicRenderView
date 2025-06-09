@@ -22,15 +22,20 @@ public:
 public:
 	VectorTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 	}
-	VectorTypeObject( const VectorTypeObject &other )
-		: ITypeObject( other.currentTypeName, other.parent( ) ),
-		vector( other.vector ) {
-	}
+
+	Def_Clone_Move_override_function( VectorTypeObject );
+
 	VectorTypeObject & operator=( const VectorTypeObject &other ) {
-		if( this == &other )
+		if( this == nullptr || thisPtr == nullptr )
 			return *this;
-		ITypeObject::operator =( other );
-		vector = other.vector;
+		auto typeObject = &other;
+		if( typeObject != nullptr && other.thisPtr != nullptr ) {
+			if( this == typeObject )
+				return *this;
+			ITypeObject::operator =( other );
+			vector = other.vector;
+		} else
+			thisPtr = nullptr;
 		return *this;
 	}
 	virtual void append( const std_shared_ptr< ITypeObject > &append_object ) {
@@ -196,9 +201,6 @@ public:
 		return "(" + result.join( "," ) + ")";
 	}
 
-	bool isNullptr( ) const override {
-		return false;
-	}
 };
 
 #endif // VECTORTYPEOBJECT_H_H_HEAD__FILE__

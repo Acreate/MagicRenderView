@@ -42,48 +42,84 @@
 		return *this;\
 	}\
 	Type & operator=( const int16_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const int32_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const int64_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const uint8_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const uint16_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const uint32_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const uint64_t &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const float &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
 	}\
 	Type & operator=( const double &right ) {\
-		Return_var = right;\
+		if(this != nullptr) \
+			Return_var = right;\
 		return *this;\
+	}
+
+#define Def_Clone_Move_override_function(type_)\
+	type_( const ITypeObject &other ) {\
+		if(this == nullptr|| thisPtr == nullptr ) \
+			return ;\
+		auto dataTypeObject = qobject_cast< const type_ * >( &other );\
+		if( dataTypeObject )\
+			type_::operator=( *dataTypeObject );\
+		else\
+			thisPtr = nullptr;\
+	}\
+	type_ & operator=( const ITypeObject &other ) override {\
+		if(this == nullptr|| thisPtr == nullptr ) \
+			return *this;\
+		auto dataTypeObject = qobject_cast< const type_ * >( &other );\
+		if( dataTypeObject )\
+			type_::operator=( *dataTypeObject );\
+		else\
+			thisPtr = nullptr;\
+		return *this;\
+	}\
+	type_( const type_ &other ) {\
+		type_::operator=( other );\
 	}
 
 class ITypeObject : public QObject {
 	Q_OBJECT;
 protected:
 	std_vector< QString > currentTypeName;
+	/// @brief 本身的对象指针
+	const ITypeObject *thisPtr;
 public:
 	ITypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : QObject( parent ) {
+		thisPtr = this;
 		currentTypeName.emplace_back( ITypeObject::staticMetaObject.className( ) );
 
 		size_t count = alias_type_name.size( );
@@ -100,12 +136,20 @@ public:
 	ITypeObject( const ITypeObject &other )
 		: QObject( other.parent( ) ) {
 		currentTypeName = other.currentTypeName;
+		thisPtr = &other;
 	}
-	ITypeObject & operator=( const ITypeObject &other ) {
+	virtual ITypeObject & operator=( const ITypeObject &other ) {
+		if( this == nullptr || thisPtr == nullptr )
+			return *this;
 		if( this == &other )
 			return *this;
-		setParent( other.parent( ) );
-		currentTypeName = other.currentTypeName;
+		if( other.thisPtr != nullptr ) {
+			setParent( other.parent( ) );
+			currentTypeName = other.currentTypeName;
+			thisPtr = &other;
+		} else
+			thisPtr = nullptr;
+
 		return *this;
 	}
 	/// @brief 比较两个对象。并且返回
@@ -125,7 +169,9 @@ public:
 	virtual QString toString( ) const = 0;
 	/// @brief 是否是空指针
 	/// @return 返回 true 表示空对象
-	virtual bool isNullptr( ) const = 0;
+	virtual bool isNullptr( ) const {
+		return this == nullptr || thisPtr == nullptr;
+	}
 	/// @brief 获取类型名称
 	/// @return 名称列表
 	virtual std_vector< QString > typeNames( ) const {
@@ -172,10 +218,10 @@ inline bool equ( const ITypeObject &left, const void *right ) {
 	return true;
 }
 inline bool operator!=( const ITypeObject &left, std::nullptr_t right ) {
-	return !equ( left, (const void *)right );
+	return !equ( left, ( const void * ) right );
 }
 inline bool operator==( const ITypeObject &left, std::nullptr_t right ) {
-	return equ( left, (const void *)right );
+	return equ( left, ( const void * ) right );
 }
 
 inline bool operator==( const ITypeObject &left, const void *right ) {
