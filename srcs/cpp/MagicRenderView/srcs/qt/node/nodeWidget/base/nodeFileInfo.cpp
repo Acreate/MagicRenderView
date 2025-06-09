@@ -22,3 +22,15 @@ NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( 
 void NodeFileInfo::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	INodeWidget::connectNodeGraphWidget( node_graph );
 }
+std_shared_ptr<ITypeObject> NodeFileInfo::getResult( ) const {
+	return { };
+}
+std_vector_unity_shared<ITypeObject> NodeFileInfo::getParams( ) const {
+	return { };
+}
+std_vector_unity_shared<ITypeObject> NodeFileInfo::setParams( const std_vector_unity_shared<ITypeObject> &params ) const {
+	return { };
+}
+bool NodeFileInfo::setParam( const std_shared_ptr<ITypeObject> &param, size_t param_index ) const {
+	return false;
+}

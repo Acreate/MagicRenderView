@@ -79,6 +79,21 @@ public:
 	}
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }
+	/// @brief 获取返回值
+	/// @return 返回值，不存在返回 nullptr
+	virtual std_shared_ptr< ITypeObject > getResult( ) const = 0;
+	/// @brief 获取包含的所有参数
+	/// @return 参数列表，参数未被设置时，返回 nullptr
+	virtual std_vector_unity_shared<ITypeObject> getParams() const = 0;
+	/// @brief 设置参数
+	/// @param params 参数列表
+	/// @return 成功被设置的参数列表，设置失败参数则不在该返回
+	virtual std_vector_unity_shared<ITypeObject> setParams(const std_vector_unity_shared<ITypeObject>& params) const = 0;
+	/// @brief 设置指定位置的参数
+	/// @param param 参数
+	/// @param param_index 设置的参数位置
+	/// @return 设置成功返回 true
+	virtual bool setParam(const std_shared_ptr<ITypeObject>& param, size_t param_index) const = 0;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;

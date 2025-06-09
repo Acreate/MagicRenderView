@@ -68,6 +68,13 @@ void checkVarStack( QWidget *mainwidget ) {
 		qDebug( ) << stdSharedPtr->typeNames( );
 	} else
 		tools::debug::printError( "创建失败" );
+
+	if( stdSharedPtr != nullptr )
+		qDebug( ) << "不等于 nullptr";
+
+	if( *stdSharedPtr != nullptr )
+		qDebug( ) << "不等于 nullptr";
+
 	IVarStack::deleteInstance< BaseVarStackEx >( );
 
 	qDebug( ) << "\t\t结束 checkVarStack";

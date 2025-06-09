@@ -132,7 +132,6 @@ public:
 		return currentTypeName;
 	}
 
-	
 	template< typename TLeft, typename TRight >
 		requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta ) {
 			le->currentTypeName.size( );
@@ -140,11 +139,11 @@ public:
 			ta->currentTypeName.size( );
 			le->currentTypeName.data( )[ 0 ].compare( ta->currentTypeName[ 0 ] );
 		}
-	int comp( const TLeft *le_ptr, const TRight *ri_ptr , const TLeft* &result_ptr ) const {
+	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const {
 		if( ri_ptr == le_ptr )
 			return 0;
 		result_ptr = qobject_cast< const TLeft * >( ri_ptr );
-		if( result_ptr == nullptr  )
+		if( result_ptr == nullptr )
 			return 1;
 		size_t typeNameCount = le_ptr->currentTypeName.size( );
 		size_t count = result_ptr->currentTypeName.size( );
@@ -157,7 +156,33 @@ public:
 				return leftData[ count ].compare( rightData[ count ] );
 		return 0;
 	}
-	
+
 };
 
+inline bool equ( const ITypeObject &left, const void *right ) {
+	if( right == nullptr )
+		if( &left == nullptr || left.isNullptr( ) )
+			return true;
+		else
+			return false;
+	if( &left == nullptr || left.isNullptr( ) )
+		return false;
+	if( &left != right )
+		return false;
+	return true;
+}
+inline bool operator!=( const ITypeObject &left, std::nullptr_t right ) {
+	return !equ( left, (const void *)right );
+}
+inline bool operator==( const ITypeObject &left, std::nullptr_t right ) {
+	return equ( left, (const void *)right );
+}
+
+inline bool operator==( const ITypeObject &left, const void *right ) {
+	return equ( left, right );
+}
+
+inline bool operator!=( const ITypeObject &left, const void *right ) {
+	return !equ( left, right );
+}
 #endif // ITYPEOBJECT_H_H_HEAD__FILE__
