@@ -40,6 +40,7 @@ void INodeWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget *component = childAt( mouseOffsetPos );
 	emit selectNodeComponentRelease( this, component, mouseOffsetPos );
 	mouseEvent = MouseEvent::Release;
+	qDebug( ) << tools::debug::getFunctionName( );
 }
 
 void INodeWidget::mousePressEvent( QMouseEvent *event ) {
@@ -60,19 +61,24 @@ void INodeWidget::mousePressEvent( QMouseEvent *event ) {
 				emit ActionNodeComponentRelease( this, nullptr, mouseOffsetPos );
 			selectComponent = nullptr; // 相应消息之后，重置选择空间
 			mouseEvent = MouseEvent::Over;
-			return; // 结束
 		}
+		qDebug( ) << tools::debug::getFunctionName( );
+		return; // 结束
 	}
 
 	connect( timer, &QTimer::timeout, [=]( ) {
 		disconnect( timer, &QTimer::timeout, nullptr, nullptr );
 		timer->stop( ); // 终止
 		emit selectNodeComponentPress( this, selectComponent, mouseOffsetPos );
+		if( mouseEvent == MouseEvent::Release )
+			emit selectNodeComponentRelease( this, selectComponent, mouseOffsetPos );
 		mouseEvent = MouseEvent::Over;
 		selectComponent = nullptr; // 相应消息之后，重置选择空间
+		qDebug( ) << tools::debug::getFunctionName( );
 	} );
 	mouseEvent = MouseEvent::Press;
 	timer->start( doubleClickTimeOutCheck );
+	qDebug( ) << tools::debug::getFunctionName( );
 }
 void INodeWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
@@ -84,6 +90,7 @@ void INodeWidget::mouseMoveEvent( QMouseEvent *event ) {
 		selectComponent = nullptr;
 	}
 	mouseEvent = MouseEvent::Move;
+	qDebug( ) << tools::debug::getFunctionName( );
 }
 
 void INodeWidget::paintEvent( QPaintEvent *event ) {
