@@ -30,6 +30,21 @@ public:
 	/// @brief 重置值
 	/// @return 成功返回 true
 	virtual bool resetOrg( ) = 0;
+public:
+	/// @brief 配置新的大小
+	/// @param new_size 新大小
+	virtual void setNewSize( const QSize &new_size );
+	/// @brief 配置新的大小
+	/// @param width 新宽度
+	/// @param height 新高度
+	virtual void setNewSize( const size_t &width, const size_t &height ) {
+		setNewSize( QSize( width, height ) );
+	}
+Q_SIGNALS:
+	/// @brief 控件大小被改变
+	void changeSize( QSize new_size );
+protected:
+	void paintEvent( QPaintEvent *event ) override;
 };
 
 #endif // INODECOMPONENT_H_H_HEAD__FILE__

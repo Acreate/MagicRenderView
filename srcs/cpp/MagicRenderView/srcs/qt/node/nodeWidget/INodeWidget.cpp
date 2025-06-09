@@ -1,5 +1,4 @@
-﻿#include "INodeWidget.h"
-#include "INodeWidget.h"
+﻿#include "./INodeWidget.h"
 
 #include <QLabel>
 
@@ -9,12 +8,14 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-#include "qt/tools/tools.h"
-
 INodeWidget::INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), connectNodeWidgets( new std_vector< const INodeWidget * > ) {
 	selectComponent = nullptr;
 	mouseEvent = MouseEvent::None;
 	mainBoxLayout = new QVBoxLayout( this );
+	
+	mainBoxLayout->setContentsMargins( 0, 0, 0, 0 );
+	mainBoxLayout->setSpacing( 0 );
+	
 	if( function_declaration )
 		title = new QLabel( function_declaration->getDeclarationName( ), this );
 	else
@@ -87,14 +88,14 @@ void INodeWidget::mouseMoveEvent( QMouseEvent *event ) {
 
 void INodeWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
+	/*QPainter painter( this );
 	QPen pen;
 	QBrush brush;
 	pen.setWidth( 5 );
 	pen.setColor( Qt::red );
 	painter.setPen( pen );
 	auto geometry = size( );
-	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );
+	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );*/
 }
 void INodeWidget::leaveEvent( QEvent *event ) {
 	QWidget::leaveEvent( event );

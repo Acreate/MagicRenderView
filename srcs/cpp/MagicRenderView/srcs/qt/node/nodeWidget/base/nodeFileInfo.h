@@ -16,8 +16,10 @@ public:
 	std_vector_unity_shared< ITypeObject > getParams( ) const override;
 	std_vector_unity_shared< ITypeObject > setParams( const std_vector_unity_shared< ITypeObject > &params ) const override;
 	bool setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const override;
+private:
+	void updateSize( );
 protected:
-	void resizeEvent( QResizeEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
 };
 
 #endif // NODEFILEINFO_H_H_HEAD__FILE__

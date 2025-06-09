@@ -14,11 +14,9 @@ protected:
 	std_shared_ptr< StringTypeObject > var;
 protected:
 	QHBoxLayout *mainLayout;
-	QLineEdit *inputLine;
 	QLabel *titile;
 public:
 	virtual void setTitle( const QString &new_title );
-	virtual void setPlaceholderText( const QString &new_title );
 public:
 	NodeInputLineText( ): NodeInputLineText( nullptr, Qt::WindowFlags( ) ) { }
 	NodeInputLineText( QWidget *parent )
@@ -31,6 +29,8 @@ public:
 	const ITypeObject * getVarObjectPtr( ) const override;
 	bool setVar( const std_shared_ptr< ITypeObject > &new_var ) const override;
 	bool setVar( const ITypeObject &new_var ) const override;
+protected:
+	void paintEvent( QPaintEvent *event ) override;
 };
 
 #endif // NODEINPUTLINETEXT_H_H_HEAD__FILE__
