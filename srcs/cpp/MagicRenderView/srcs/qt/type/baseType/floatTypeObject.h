@@ -9,7 +9,7 @@ class FloatTypeObject : public ITypeObject {
 protected:
 	double_t val;
 public:
-	operator_equ( FloatTypeObject, val );
+	operator_virtual_equ( FloatTypeObject, val );
 public:
 	FloatTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) { }
 

@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
+#include "qt/node/nodeComponent/base/nodeInputLineText.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
 NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( nullptr, parent, f ) {
@@ -16,6 +17,9 @@ NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( 
 	} );
 	functionDeclaration.reset( declaration );
 	title->setText( declaration->getDeclarationName( ) );
+	NodeInputLineText *path = new NodeInputLineText( this );
+	path->setPlaceholderText( "请输入路径" );
+	mainBoxLayout->addWidget( path );
 }
 void NodeFileInfo::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	INodeWidget::connectNodeGraphWidget( node_graph );

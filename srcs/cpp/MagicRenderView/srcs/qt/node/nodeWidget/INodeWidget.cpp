@@ -19,7 +19,8 @@ INodeWidget::INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function
 		title = new QLabel( function_declaration->getDeclarationName( ), this );
 	else
 		title = new QLabel( INodeWidget::staticMetaObject.className( ), this );
-	mainBoxLayout->addWidget( title );
+
+	mainBoxLayout->addWidget( title, 0, Qt::AlignCenter );
 	setMouseTracking( true );
 	timer = new QTimer( this );
 

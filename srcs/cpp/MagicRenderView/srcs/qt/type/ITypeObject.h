@@ -6,82 +6,163 @@
 
 #include "alias/type_alias.h"
 
-#define operator_equ( Type, Return_var )\
-	operator uint8_t( ) const {\
+#define operator_virtual_equ( Type, Return_var )\
+virtual	operator uint8_t( ) const {\
 		return Return_var;\
 	}\
-	operator uint16_t( ) const {\
+virtual	operator uint16_t( ) const {\
 		return Return_var;\
 	}\
-	operator uint32_t( ) const {\
+virtual	operator uint32_t( ) const {\
 		return Return_var;\
 	}\
-	operator uint64_t( ) const {\
+virtual	operator uint64_t( ) const {\
 		return Return_var;\
 	}\
-	operator int8_t( ) const {\
+virtual	operator int8_t( ) const {\
 		return Return_var;\
 	}\
-	operator int16_t( ) const {\
+virtual	operator int16_t( ) const {\
 		return Return_var;\
 	}\
-	operator int32_t( ) const {\
+virtual	operator int32_t( ) const {\
 		return Return_var;\
 	}\
-	operator int64_t( ) const {\
+virtual	operator int64_t( ) const {\
 		return Return_var;\
 	}\
-	operator float( ) const {\
+virtual	operator float( ) const {\
 		return Return_var;\
 	}\
-	operator double( ) const {\
+virtual	operator double( ) const {\
 		return Return_var;\
 	}\
-	Type & operator=( const int8_t &right ) {\
+virtual	Type & operator=( const int8_t &right ) {\
 		Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const int16_t &right ) {\
+virtual	Type & operator=( const int16_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const int32_t &right ) {\
+virtual	Type & operator=( const int32_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const int64_t &right ) {\
+virtual	Type & operator=( const int64_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const uint8_t &right ) {\
+virtual	Type & operator=( const uint8_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const uint16_t &right ) {\
+virtual	Type & operator=( const uint16_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const uint32_t &right ) {\
+virtual	Type & operator=( const uint32_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const uint64_t &right ) {\
+virtual	Type & operator=( const uint64_t &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const float &right ) {\
+virtual	Type & operator=( const float &right ) {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\
 	}\
-	Type & operator=( const double &right ) {\
+virtual	Type & operator=( const double &right ) {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}
+
+#define operator_override_equ( Type, Return_var )\
+	operator uint8_t( ) const override {\
+		return Return_var;\
+	}\
+	operator uint16_t( ) const override {\
+		return Return_var;\
+	}\
+	operator uint32_t( ) const override {\
+		return Return_var;\
+	}\
+	operator uint64_t( ) const override {\
+		return Return_var;\
+	}\
+	operator int8_t( ) const override {\
+		return Return_var;\
+	}\
+	operator int16_t( ) const override {\
+		return Return_var;\
+	}\
+	operator int32_t( ) const override {\
+		return Return_var;\
+	}\
+	operator int64_t( ) const override {\
+		return Return_var;\
+	}\
+	operator float( ) const override {\
+		return Return_var;\
+	}\
+	operator double( ) const override {\
+		return Return_var;\
+	}\
+	Type & operator=( const int8_t &right ) override {\
+		Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int16_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int32_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const int64_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint8_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint16_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint32_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const uint64_t &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const float &right ) override {\
+		if(this != nullptr) \
+			Return_var = right;\
+		return *this;\
+	}\
+	Type & operator=( const double &right ) override {\
 		if(this != nullptr) \
 			Return_var = right;\
 		return *this;\

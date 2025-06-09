@@ -16,7 +16,7 @@ public:
 
 	Def_Clone_Move_override_function( StringTypeObject );
 
-	StringTypeObject & operator+=( const StringTypeObject &&rhs ) {
+	virtual StringTypeObject & operator+=( const StringTypeObject &&rhs ) {
 		if( this == nullptr || thisPtr == nullptr )
 			return *this;
 		auto typeObject = &rhs;
@@ -26,7 +26,7 @@ public:
 		}
 		return *this;
 	}
-	StringTypeObject & operator=( const StringTypeObject &other ) {
+	virtual StringTypeObject & operator=( const StringTypeObject &other ) {
 		auto typeObject = &other;
 		if( typeObject != nullptr ) {
 			if( typeObject == this )
@@ -38,7 +38,7 @@ public:
 			thisPtr = nullptr;
 		return *this;
 	}
-	StringTypeObject operator+( const StringTypeObject &&rhs ) const {
+	virtual StringTypeObject operator+( const StringTypeObject &&rhs ) const {
 		StringTypeObject result;
 		result.string = string + rhs.string;
 		return result;
@@ -50,7 +50,8 @@ public:
 			return this->string.compare( result_ptr->string );
 		return result;
 	}
-
+	virtual const QString & getString( ) const { return string; }
+	virtual void setString( const QString &string ) { this->string = string; }
 	size_t typeMemorySize( ) const override {
 		if( string.isNull( ) )
 			return 0;

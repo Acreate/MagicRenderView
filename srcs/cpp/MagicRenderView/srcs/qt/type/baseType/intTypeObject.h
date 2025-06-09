@@ -2,7 +2,6 @@
 #define INTTYPEOBJECT_H_H_HEAD__FILE__
 #pragma once
 
-#include "nullTypeObject.h"
 
 #include "qt/type/ITypeObject.h"
 
@@ -11,7 +10,7 @@ class IntTypeObject : public ITypeObject {
 protected:
 	int64_t val;
 public:
-	operator_equ( IntTypeObject, val );
+	operator_virtual_equ( IntTypeObject, val );
 public:
 	explicit IntTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) {
 	}
