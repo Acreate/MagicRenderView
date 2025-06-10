@@ -8,6 +8,10 @@ class QVBoxLayout;
 class NodePanel : public INodeComponent {
 	Q_OBJECT
 protected: // ui
+	/// @brief 左窗口
+	QWidget *leftWidget;
+	/// @brief 右窗口
+	QWidget *rightWidget;
 	/// @brief 左侧布局列表
 	QVBoxLayout *leftVectorBoxLayout;
 	/// @brief 右侧布局列表
@@ -51,10 +55,9 @@ protected:
 	void updateSize( );
 	void childComponentChangeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
 public:
-	NodePanel( ) : NodePanel( nullptr, Qt::WindowFlags( ) ) { }
-	NodePanel( QWidget *parent )
-		: NodePanel( parent, Qt::WindowFlags( ) ) { }
-	NodePanel( QWidget *parent, Qt::WindowFlags f );
+	NodePanel( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f );
+	NodePanel( const QString &node_component_name, QWidget *parent ): NodePanel( node_component_name, parent, Qt::WindowFlags( ) ) {
+	}
 	const std_shared_ptr< ITypeObject > getVarObject( ) const override {
 		return nullptr;
 	}
@@ -70,6 +73,7 @@ public:
 	bool resetOrg( ) override {
 		return true;
 	}
+	INodeComponent * getPosNodeComponent( const QPoint &pos ) const override;
 protected:
 	void showEvent( QShowEvent *event ) override;
 };

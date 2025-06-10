@@ -6,11 +6,13 @@
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
+#include "qt/node/nodeComponent/INodeComponent.h"
 #include "qt/stack/nodeStack/INodeStack.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/tools/tools.h"
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
-	selectWidget = nullptr;
+	selectNodeWidget = nullptr;
+	selectNodeComponent = nullptr;
 	nodeMenu = new NodeAddMenu( this );
 	nodeMenu->init< BaseNodeStack >( );
 	setMouseTracking( true );
@@ -68,33 +70,33 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 		}
 	}
 	mouseEventStatus = MouseEventType::Release;
-	selectWidget = nullptr;
+	selectNodeWidget = nullptr;
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
-	if( selectWidget ) {
-		selectWidget->move( event->pos( ) - selectWidgetOffset );
-		mouseEventStatus = MouseEventType::Move;
-	}
+	mouseEventStatus = MouseEventType::Move;
+	cursorPos = QCursor::pos( );
+	currentMouseInWidgetPos = event->pos( );
+	if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
+		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
-	auto raiseWidget = childAt( event->pos( ) );
-	if( raiseWidget && raiseWidget != mousePosLabel )
-		raiseWidget->raise( );
-	else
-		mouseEventStatus = MouseEventType::Press;
-}
-
-void NodeGraph::selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
-	selectWidget = nullptr;
-}
-void NodeGraph::selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
-	selectWidget = event_node;
-	selectWidgetOffset = mouse_offset_pos;
-}
-void NodeGraph::ActionNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos ) {
-	if( mouseEventStatus != MouseEventType::Move )
-		event_node->call( );
-	selectWidget = nullptr;
+	mouseEventStatus = MouseEventType::Press;
+	cursorPos = QCursor::pos( );
+	currentMouseInWidgetPos = event->pos( );
+	auto childrenList = children( );
+	QRect geometry;
+	for( auto child : childrenList ) {
+		selectNodeWidget = qobject_cast< INodeWidget * >( child );
+		if( selectNodeWidget ) {
+			selectNodeWidgetOffset = event->pos( );
+			geometry = selectNodeWidget->geometry( );
+			if( geometry.contains( selectNodeWidgetOffset ) == false )
+				continue;
+			selectNodeWidgetOffset = selectNodeWidgetOffset - selectNodeWidget->pos( );
+			selectNodeComponent = selectNodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
+			return;
+		}
+	}
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
 	std_vector< std_pairt< QString, size_t > > pair;

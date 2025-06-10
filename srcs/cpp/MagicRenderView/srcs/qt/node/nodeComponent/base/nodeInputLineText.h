@@ -16,12 +16,9 @@ protected:
 	QHBoxLayout *mainLayout;
 	QLabel *titile;
 public:
-	virtual void setTitle( const QString &new_title );
-public:
-	NodeInputLineText( ): NodeInputLineText( nullptr, Qt::WindowFlags( ) ) { }
-	NodeInputLineText( QWidget *parent )
-		: NodeInputLineText( parent, Qt::WindowFlags( ) ) { }
-	NodeInputLineText( QWidget *parent, Qt::WindowFlags f );
+	NodeInputLineText( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f );
+	NodeInputLineText( const QString &node_component_name, QWidget *parent ): NodeInputLineText( node_component_name, parent, Qt::WindowFlags( ) ) {
+	}
 	bool resetOrg( ) override;
 	virtual bool setText( const QString &text );
 	virtual QString getText( ) const;
@@ -29,6 +26,8 @@ public:
 	const ITypeObject * getVarObjectPtr( ) const override;
 	bool setVar( const std_shared_ptr< ITypeObject > &new_var ) const override;
 	bool setVar( const ITypeObject &new_var ) const override;
+	void setNodeComponentName( const QString &node_component_name ) override;
+	INodeComponent * getPosNodeComponent( const QPoint &pos ) const override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

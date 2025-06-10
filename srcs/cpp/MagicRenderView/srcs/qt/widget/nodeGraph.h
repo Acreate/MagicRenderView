@@ -26,15 +26,17 @@ protected:
 	QLabel *mousePosLabel;
 	/// @brief 当前鼠标状态
 	MouseEventType mouseEventStatus;
-
 	// 鼠标全局位置
 	QPoint cursorPos;
 	// 鼠标窗口位置
 	QPoint currentMouseInWidgetPos;
-	/// @brief 选中的控件
-	QWidget *selectWidget;
+	/// @brief 选中的节点
+	INodeWidget *selectNodeWidget;
 	/// @brief 选中控件时，基于控件的相对偏移
-	QPoint selectWidgetOffset;
+	QPoint selectNodeWidgetOffset;
+
+	/// @brief 选中的节点组件
+	INodeComponent *selectNodeComponent;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
@@ -43,14 +45,6 @@ protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
 public Q_SLOTS:
-	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
-	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
-	
-	/// @brief 选中窗口时候除法该信号-鼠标释放触发
-	/// @param event_node 触发节点
-	/// @param select_component 当命中组件时，该指针不为 nullptr
-	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
-	void ActionNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

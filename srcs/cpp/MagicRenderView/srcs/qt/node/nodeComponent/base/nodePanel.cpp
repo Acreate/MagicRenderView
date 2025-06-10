@@ -5,20 +5,24 @@
 #include "qt/tools/tools.h"
 void NodePanel::updateSize( ) {
 	size_t leftHeight = 0, rightHeight = 0;
-
+	QWidget *widget;
 	int count = leftVectorBoxLayout->count( );
 	int index = 0;
 	for( ; index < count; ++index ) {
-		QWidget *widget = leftVectorBoxLayout->itemAt( index )->widget( );
-		if( widget )
+		widget = leftVectorBoxLayout->itemAt( index )->widget( );
+		if( widget ) {
+			widget->show( );
 			leftHeight += widget->height( );
+		}
 	}
 
 	count = rightVectorBoxLayout->count( );
 	for( index = 0; index < count; ++index ) {
-		QWidget *widget = rightVectorBoxLayout->itemAt( index )->widget( );
-		if( widget )
+		widget = rightVectorBoxLayout->itemAt( index )->widget( );
+		if( widget ) {
+			widget->show( );
 			rightHeight += widget->height( );
+		}
 	}
 	leftHeight = leftHeight > rightHeight ? leftHeight : rightHeight;
 	setNewSize( QSize( this->width( ), leftHeight ) );
@@ -31,20 +35,24 @@ void NodePanel::childComponentChangeChannel( INodeComponent *component, Channel_
 			break;
 		case Channel_Type::Input_Read : // 转到输出
 			leftVectorBoxLayout->removeWidget( component );
+			component->setParent( rightWidget );
 			count = rightVectorBoxLayout->count( );
 			rightVectorBoxLayout->insertWidget( count - 1, component, 0, Qt::AlignRight | Qt::AlignTop );
 			repaint( );
 			break;
 		case Channel_Type::Output_Write : // 转到输入
 			rightVectorBoxLayout->removeWidget( component );
+			component->setParent( leftWidget );
 			count = leftVectorBoxLayout->count( );
 			leftVectorBoxLayout->insertWidget( count - 1, component, 0, Qt::AlignLeft | Qt::AlignTop );
 			repaint( );
 			break;
 	}
 }
+
 bool NodePanel::appendInput( INodeComponent *input_component ) {
 	int count = leftVectorBoxLayout->count( );
+	input_component->setParent( leftWidget );
 	leftVectorBoxLayout->insertWidget( count - 1, input_component, 0, Qt::AlignLeft | Qt::AlignTop );
 	input_component->setComponentChannel( Channel_Type::Input_Read );
 	connect( input_component, &INodeComponent::changeChannel, this, &NodePanel::childComponentChangeChannel );
@@ -56,6 +64,7 @@ bool NodePanel::removeInputItem( INodeComponent *output_component ) {
 	for( int index = 0; index < count; ++index )
 		if( leftVectorBoxLayout->itemAt( index )->widget( ) == output_component ) {
 			leftVectorBoxLayout->removeWidget( output_component );
+			output_component->setParent( nullptr );
 			disconnect( output_component, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 			repaint( );
 			return true;
@@ -71,6 +80,7 @@ QWidget * NodePanel::removeInputItem( size_t index ) {
 		if( nodeComponent )
 			disconnect( nodeComponent, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 		repaint( );
+		widget->setParent( nullptr );
 		return widget;
 	}
 	return nullptr;
@@ -85,6 +95,7 @@ QWidget * NodePanel::getInputItem( size_t index ) const {
 }
 bool NodePanel::appendOutput( INodeComponent *output_component ) {
 	int count = rightVectorBoxLayout->count( );
+	output_component->setParent( rightWidget );
 	rightVectorBoxLayout->insertWidget( count - 1, output_component, 0, Qt::AlignRight | Qt::AlignTop );
 	output_component->setComponentChannel( Channel_Type::Output_Write );
 	connect( output_component, &INodeComponent::changeChannel, this, &NodePanel::childComponentChangeChannel );
@@ -96,6 +107,7 @@ bool NodePanel::removeOutputItem( INodeComponent *output_component ) {
 	for( int index = 0; index < count; ++index )
 		if( rightVectorBoxLayout->itemAt( index )->widget( ) == output_component ) {
 			rightVectorBoxLayout->removeWidget( output_component );
+			output_component->setParent( nullptr );
 			disconnect( output_component, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 			repaint( );
 			return true;
@@ -110,6 +122,7 @@ QWidget * NodePanel::removeOutputItem( size_t index ) {
 		if( nodeComponent )
 			disconnect( nodeComponent, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 		repaint( );
+		widget->setParent( nullptr );
 		return widget;
 	}
 	return nullptr;
@@ -123,11 +136,11 @@ QWidget * NodePanel::getOutputItem( size_t index ) const {
 	return nullptr;
 }
 
-NodePanel::NodePanel( QWidget *parent, Qt::WindowFlags f ): INodeComponent( parent, f ) {
+NodePanel::NodePanel( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ): INodeComponent( node_component_name, parent, f ) {
 	mainLayout = new QHBoxLayout( this );
-	auto leftWidget = new QWidget( this );
+	leftWidget = new QWidget( this );
 	leftVectorBoxLayout = new QVBoxLayout( leftWidget );
-	auto rightWidget = new QWidget( this );
+	rightWidget = new QWidget( this );
 	rightVectorBoxLayout = new QVBoxLayout( rightWidget );
 
 	mainLayout->addWidget( leftWidget );
@@ -144,6 +157,35 @@ NodePanel::NodePanel( QWidget *parent, Qt::WindowFlags f ): INodeComponent( pare
 	rightVectorBoxLayout->setContentsMargins( 0, 0, 0, 0 );
 	rightVectorBoxLayout->setSpacing( 0 );
 	rightVectorBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
+}
+
+INodeComponent * NodePanel::getPosNodeComponent( const QPoint &pos ) const {
+	INodeComponent *nodeComponent;
+	QRect geometry = leftWidget->geometry( );
+	if( geometry.contains( pos ) ) {
+		auto childrenList = leftWidget->children( );
+		auto point = pos - leftWidget->pos( );
+		for( auto child : childrenList ) {
+			nodeComponent = qobject_cast< INodeComponent * >( child );
+			if( nodeComponent == nullptr )
+				continue;
+			geometry = nodeComponent->geometry( );
+			if( geometry.contains( point ) )
+				return nodeComponent;
+		}
+	} else {
+		auto childrenList = rightWidget->children( );
+		auto point = pos - rightWidget->pos( );
+		for( auto child : childrenList ) {
+			nodeComponent = qobject_cast< INodeComponent * >( child );
+			if( nodeComponent == nullptr )
+				continue;
+			geometry = nodeComponent->geometry( );
+			if( geometry.contains( point ) )
+				return nodeComponent;
+		}
+	}
+	return INodeComponent::getPosNodeComponent( pos );;
 }
 void NodePanel::showEvent( QShowEvent *event ) {
 	//INodeComponent::showEvent( event );

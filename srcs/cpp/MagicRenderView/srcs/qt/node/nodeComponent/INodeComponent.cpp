@@ -5,6 +5,20 @@ void INodeComponent::setNewSize( const QSize &new_size ) {
 	setFixedSize( new_size );
 	emit changeSize( new_size );
 }
+INodeComponent * INodeComponent::getPosNodeComponent( const QPoint &pos ) const {
+	auto childrenList = children( );
+	INodeComponent *nodeComponent;
+	QRect geometry;
+	for( auto child : childrenList ) {
+		nodeComponent = qobject_cast< INodeComponent * >( child );
+		if( nodeComponent == nullptr )
+			continue;
+		geometry = nodeComponent->geometry( );
+		if( geometry.contains( pos ) )
+			return nodeComponent;
+	}
+	return nullptr;
+}
 void INodeComponent::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	/*QPainter painter( this );

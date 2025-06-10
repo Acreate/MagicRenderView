@@ -17,35 +17,18 @@ class NodeGraph;
 class INodeComponent;
 class INodeWidget : public QWidget {
 	Q_OBJECT;
-public:
-	enum class MouseEvent {
-		None, // 初始化
-		Press, // 按下
-		Move, // 移动
-		Release, // 释放
-		Over // 结束
-	};
 protected:
 	/// @brief 函数声明对象
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
 	/// @brief 连接到该节点的节点
 	std_shared_ptr< std_vector< const INodeWidget * > > connectNodeWidgets;
+	/// @brief 节点窗口名称
+	QString nodeWidgetName;
 protected: // ui
 	/// @brief 标题
 	QLabel *title;
 	/// @brief 布局
 	QVBoxLayout *mainBoxLayout;
-	/// @brief 选择的空间
-	QWidget *selectComponent;
-	/// @brief 选择时的偏移
-	QPoint mouseOffsetPos;
-protected:// 异步
-	/// @brief 双击超时
-	std::chrono::milliseconds doubleClickTimeOutCheck;
-	/// @brief 双击超时计数器
-	QTimer *timer;
-	/// @brief 鼠标事件
-	MouseEvent mouseEvent;
 protected:
 	/// @brief 链接到该节点
 	/// @param target_node_widget 链接到该节点的对象指针
@@ -86,10 +69,11 @@ protected:
 	}
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
+	/// @param node_widget_name 节点名称
 	/// @param function_declaration 函数信息
 	/// @param parent 父节点，用于 qt 内存管理系统。
 	/// @param f 窗口风格
-	INodeWidget( const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
+	INodeWidget( const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
 	/// @brief 信号连接到指定窗口
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
@@ -122,37 +106,17 @@ public:
 	/// @return 设置成功返回 true
 	virtual bool setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const = 0;
 	virtual QString getNodeTitle( ) const;
-	/// @brief 获取双击超时
-	/// @return 毫秒
-	virtual const std::chrono::milliseconds & getDoubleClickTimeOutCheck( ) const { return doubleClickTimeOutCheck; }
-	/// @brief 设置双击超时毫秒
-	/// @param double_click_time_out_check 毫秒
-	virtual void setDoubleClickTimeOutCheck( const std::chrono::milliseconds &double_click_time_out_check ) { doubleClickTimeOutCheck = double_click_time_out_check; }
-	/// @brief 设置双击超时毫秒
-	/// @param double_click_time_out_check 毫秒
-	virtual void setDoubleClickTimeOutCheck( const size_t &double_click_time_out_check ) { doubleClickTimeOutCheck = std::chrono::milliseconds( double_click_time_out_check ); }
+	virtual QString getNodeName( ) const {
+		return nodeWidgetName;
+	}
+	virtual void setNodeWidgetName( const QString &node_widget_name ) { nodeWidgetName = node_widget_name; }
+	/// @brief 获取位置下的组件
+	/// @param pos 位置
+	/// @return 组件
+	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const ;
 protected:
-	void mouseReleaseEvent( QMouseEvent *event ) override;
-	void mousePressEvent( QMouseEvent *event ) override;
-	void mouseMoveEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
-	void leaveEvent( QEvent *event ) override;
 Q_SIGNALS:
-	/// @brief 选中窗口时候除法该信号-鼠标释放触发
-	/// @param event_node 触发节点
-	/// @param select_component 当命中组件时，该指针不为 nullptr
-	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
-	void selectNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
-	/// @brief 选中窗口时候除法该信号-鼠标按下触发
-	/// @param event_node 触发节点
-	/// @param select_component 当命中组件时，该指针不为 nullptr
-	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
-	void selectNodeComponentPress( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
-	/// @brief 选中窗口时候除法该信号-鼠标释放触发
-	/// @param event_node 触发节点
-	/// @param select_component 当命中组件时，该指针不为 nullptr
-	/// @param mouse_offset_pos 基于该节点的鼠标点击偏移
-	void ActionNodeComponentRelease( INodeWidget *event_node, QWidget *select_component, QPoint mouse_offset_pos );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

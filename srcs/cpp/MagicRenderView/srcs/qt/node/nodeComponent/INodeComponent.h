@@ -17,10 +17,13 @@ public:
 	};
 protected:
 	Channel_Type channelType;
+	QString nodeComponentName;
 public:
-	INodeComponent( ) : INodeComponent( nullptr, Qt::WindowFlags( ) ) { }
-	INodeComponent( QWidget *parent ) : INodeComponent( parent, Qt::WindowFlags( ) ) { }
-	INodeComponent( QWidget *parent, Qt::WindowFlags f ) { channelType = Channel_Type::Normal_Default; }
+	INodeComponent( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ) {
+		channelType = Channel_Type::Normal_Default;
+		nodeComponentName = node_component_name;
+		setAttribute( Qt::WA_InputMethodTransparent, true );
+	}
 public:
 	/// @brief 获取值
 	/// @return 值指针对象
@@ -62,7 +65,8 @@ public:
 	virtual Channel_Type getComponentChannel( ) const {
 		return channelType;
 	}
-public:
+	virtual const QString & getNodeComponentName( ) const { return nodeComponentName; }
+	virtual void setNodeComponentName( const QString &node_component_name ) { nodeComponentName = node_component_name; }
 	/// @brief 配置新的大小
 	/// @param new_size 新大小
 	virtual void setNewSize( const QSize &new_size );
@@ -72,6 +76,10 @@ public:
 	virtual void setNewSize( const size_t &width, const size_t &height ) {
 		setNewSize( QSize( width, height ) );
 	}
+	/// @brief 获取位置下的组件
+	/// @param pos 位置
+	/// @return 组件
+	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const ;
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );

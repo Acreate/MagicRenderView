@@ -5,16 +5,13 @@
 #include <qboxlayout.h>
 
 #include "qt/type/baseType/stringTypeObject.h"
-void NodeInputLineText::setTitle( const QString &new_title ) {
-	titile->setText( new_title );
-}
 
-NodeInputLineText::NodeInputLineText( QWidget *parent, Qt::WindowFlags f ): INodeComponent( parent, f ) {
+NodeInputLineText::NodeInputLineText( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ): INodeComponent( node_component_name, parent, f ) {
 	var.reset( new StringTypeObject );
 	mainLayout = new QHBoxLayout( this );
 	titile = new QLabel( this );
-	titile->setText( "输入" );
-
+	titile->setText( node_component_name );
+	setObjectName( node_component_name );
 	mainLayout->addWidget( titile );
 }
 bool NodeInputLineText::resetOrg( ) {
@@ -54,6 +51,14 @@ bool NodeInputLineText::setVar( const ITypeObject &new_var ) const {
 	*var = *qobjectCast;
 	bool cond = var->isNullptr( ) == false;
 	return cond;
+}
+void NodeInputLineText::setNodeComponentName( const QString &node_component_name ) {
+	INodeComponent::setNodeComponentName( node_component_name );
+	titile->setText( node_component_name );
+	setObjectName( node_component_name );
+}
+INodeComponent * NodeInputLineText::getPosNodeComponent( const QPoint &pos ) const {
+	return nullptr;
 }
 void NodeInputLineText::paintEvent( QPaintEvent *event ) {
 	//	INodeComponent::paintEvent( event );
