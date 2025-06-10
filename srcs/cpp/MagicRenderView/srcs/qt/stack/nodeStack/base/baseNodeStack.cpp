@@ -6,9 +6,6 @@
 #define emplace_back_NodeGenerate( type_, first_name_, ... ) \
 	nodeGenerate->emplace_back( std_pairt( first_name_, std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } ) ), [](  )->INodeWidget * {\
 		type_ *nodeWidgetPtr = new type_;\
-		auto name = nodeWidgetPtr->metaObject( )->className( );\
-		nodeWidgetPtr->setObjectName( name );\
-		nodeWidgetPtr->setWindowTitle( name );\
 		return nodeWidgetPtr;\
 	} )
 

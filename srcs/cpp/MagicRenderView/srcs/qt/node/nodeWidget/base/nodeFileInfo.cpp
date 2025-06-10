@@ -17,15 +17,16 @@ NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( 
 		emit this->finish( this, IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< NullTypeObject >( ), 0, __LINE__ );
 	} );
 	functionDeclaration.reset( declaration );
-	title->setText( declaration->getDeclarationName( ) );
-
+	auto declarationName = declaration->getDeclarationName( );
+	title->setText( declarationName );
+	setObjectName( declarationName );
 	auto subPlan = new NodePanel( this );
 	mainBoxLayout->addWidget( subPlan );
 
 	NodeInputLineText *path = new NodeInputLineText( this );
 	path->setTitle( "路径" );
 	subPlan->appendInput( path );
-	
+
 	path = new NodeInputLineText( this );
 	path->setTitle( "全路径" );
 	subPlan->appendOutput( path );
@@ -44,11 +45,11 @@ NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( 
 	path = new NodeInputLineText( this );
 	path->setTitle( "拥有者" );
 	subPlan->appendOutput( path );
-	
+
 	path = new NodeInputLineText( this );
 	path->setTitle( "内容" );
 	subPlan->appendOutput( path );
-	
+
 	mainBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
 	subPlan->repaint( );
 	repaint( );

@@ -157,9 +157,17 @@ void checkNodeStack( QWidget *mainwidget ) {
 	QString typeName = "fileInfo";
 	auto generateNode = nodeStack->generateNode( typeName, mainwidget );
 	if( !generateNode )
+		tools::debug::printError( "无法创建 " + typeName + " 节点" );
+	else {
+		qDebug( ) << "节点 " << generateNode->objectName( ) << " 退出";
+		generateNode->deleteLater( );
+	}
+	typeName = "文件信息节点";
+	generateNode = nodeStack->generateNode( typeName, mainwidget );
+	if( !generateNode )
 		tools::debug::printError( "无法创建 " + typeName + " 窗口" );
 	else {
-		qDebug( ) << "窗口 " << generateNode->objectName( ) << " 退出";
+		qDebug( ) << "节点 " << generateNode->objectName( ) << " 退出";
 		generateNode->deleteLater( );
 	}
 	qDebug( ) << "\t\t结束 checkNodeStack";
