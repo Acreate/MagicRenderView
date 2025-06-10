@@ -55,18 +55,6 @@ bool NodeInputLineText::setVar( const ITypeObject &new_var ) const {
 	bool cond = var->isNullptr( ) == false;
 	return cond;
 }
-void NodeInputLineText::permissionChannel( bool &input_type, bool &output_type, bool &all ) {
-	output_type = input_type = true;
-	all = false;
-}
-bool NodeInputLineText::setComponentChannel( const Channel_Type &channel_type ) {
-	if( channelType == channel_type )
-		return true;
-	auto temp = channelType;
-	channelType = channel_type;
-	emit changeChannel( this, temp, channelType );
-	return true;
-}
 void NodeInputLineText::paintEvent( QPaintEvent *event ) {
 	//	INodeComponent::paintEvent( event );
 }

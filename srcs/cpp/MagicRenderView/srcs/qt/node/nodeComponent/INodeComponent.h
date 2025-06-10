@@ -42,17 +42,20 @@ public:
 	/// @brief 允许类型
 	/// @param input_type 返回 true 表示允许输入通道
 	/// @param output_type 返回 true 表示允许输出通道
-	/// @param all 允许同时拥有输入与输出
-	virtual void permissionChannel( bool &input_type, bool &output_type, bool &all ) {
-		input_type = false;
-		output_type = false;
-		all = false;
+	virtual void permissionChannel( bool &input_type, bool &output_type ) {
+		input_type = true;
+		output_type = true;
 	}
 	/// @brief 设置通道类型
 	/// @param channel_type 通道类型
 	/// @return 成功返回 true
 	virtual bool setComponentChannel( const Channel_Type &channel_type ) {
-		return false;
+		if( channelType == channel_type )
+			return true;
+		auto temp = channelType;
+		channelType = channel_type;
+		emit changeChannel( this, temp, channelType );
+		return true;
 	}
 	/// @brief 获取通道类型
 	/// @return 通道类型
