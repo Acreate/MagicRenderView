@@ -29,6 +29,8 @@ public:
 	const ITypeObject * getVarObjectPtr( ) const override;
 	bool setVar( const std_shared_ptr< ITypeObject > &new_var ) const override;
 	bool setVar( const ITypeObject &new_var ) const override;
+	void permissionChannel( bool &input_type, bool &output_type, bool &all ) override;
+	bool setComponentChannel( const Channel_Type &channel_type ) override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

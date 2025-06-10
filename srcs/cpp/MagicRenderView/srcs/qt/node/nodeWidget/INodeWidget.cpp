@@ -47,6 +47,8 @@ QString INodeWidget::getNodeTitle( ) const {
 }
 void INodeWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
+	Qt::MouseButton button = event->button(  );
+
 	if( mouseEvent != MouseEvent::Release )
 		emit selectNodeComponentRelease( this, selectComponent, mouseOffsetPos );
 	mouseEvent = MouseEvent::Release;

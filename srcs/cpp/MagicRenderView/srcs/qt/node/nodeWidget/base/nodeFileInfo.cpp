@@ -44,6 +44,7 @@ NodeFileInfo::NodeFileInfo( QWidget *parent, Qt::WindowFlags f ) : INodeWidget( 
 	path = new NodeInputLineText( this );
 	path->setTitle( "拥有者" );
 	subPlan->appendOutput( path );
+	
 	path = new NodeInputLineText( this );
 	path->setTitle( "内容" );
 	subPlan->appendOutput( path );

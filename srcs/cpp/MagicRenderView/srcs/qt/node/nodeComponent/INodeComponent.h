@@ -9,9 +9,18 @@ class ITypeObject;
 class INodeComponent : public QWidget {
 	Q_OBJECT;
 public:
+	/// @brief 通道类型
+	enum class Channel_Type {
+		Normal_Default, // 默认
+		Input_Read, // 输入
+		Output_Write, // 输出
+	};
+protected:
+	Channel_Type channelType;
+public:
 	INodeComponent( ) : INodeComponent( nullptr, Qt::WindowFlags( ) ) { }
 	INodeComponent( QWidget *parent ) : INodeComponent( parent, Qt::WindowFlags( ) ) { }
-	INodeComponent( QWidget *parent, Qt::WindowFlags f ) { }
+	INodeComponent( QWidget *parent, Qt::WindowFlags f ) { channelType = Channel_Type::Normal_Default; }
 public:
 	/// @brief 获取值
 	/// @return 值指针对象
@@ -30,6 +39,26 @@ public:
 	/// @brief 重置值
 	/// @return 成功返回 true
 	virtual bool resetOrg( ) = 0;
+	/// @brief 允许类型
+	/// @param input_type 返回 true 表示允许输入通道
+	/// @param output_type 返回 true 表示允许输出通道
+	/// @param all 允许同时拥有输入与输出
+	virtual void permissionChannel( bool &input_type, bool &output_type, bool &all ) {
+		input_type = false;
+		output_type = false;
+		all = false;
+	}
+	/// @brief 设置通道类型
+	/// @param channel_type 通道类型
+	/// @return 成功返回 true
+	virtual bool setComponentChannel( const Channel_Type &channel_type ) {
+		return false;
+	}
+	/// @brief 获取通道类型
+	/// @return 通道类型
+	virtual Channel_Type getComponentChannel( ) const {
+		return channelType;
+	}
 public:
 	/// @brief 配置新的大小
 	/// @param new_size 新大小
@@ -43,6 +72,11 @@ public:
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );
+	/// @brief 当通道发生改变时，相应该信号
+	/// @param component 消息指针
+	/// @param old_channel_type 旧的通道类型
+	/// @param new_channel_type 新通道类型
+	void changeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

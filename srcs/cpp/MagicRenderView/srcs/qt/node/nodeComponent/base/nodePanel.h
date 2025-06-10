@@ -18,11 +18,11 @@ public:
 	/// @brief 增加输入选项
 	/// @param input_component 输入选项
 	/// @return 成功返回 true
-	virtual bool appendInput( QWidget *input_component );
+	virtual bool appendInput( INodeComponent *input_component );
 	/// @brief 删除输入选项
 	/// @param output_component 删除组件
 	/// @return 成功返回 true
-	virtual bool removeInputItem( QWidget *output_component );
+	virtual bool removeInputItem( INodeComponent *output_component );
 	/// @brief 删除指定下表的输入选项
 	/// @param index 删除下标
 	/// @return 成功返回 true
@@ -34,11 +34,11 @@ public:
 	/// @brief 增加输出选项
 	/// @param output_component 输出选项
 	/// @return 成功返回 true
-	virtual bool appendOutput( QWidget *output_component );
+	virtual bool appendOutput( INodeComponent *output_component );
 	/// @brief 删除输入选项
 	/// @param output_component 删除组件
 	/// @return 成功返回 true
-	virtual bool removeOutputItem( QWidget *output_component );
+	virtual bool removeOutputItem( INodeComponent *output_component );
 	/// @brief 删除指定下表的输入选项
 	/// @param index 删除下标
 	/// @return 成功返回 true
@@ -48,7 +48,8 @@ public:
 	/// @return 失败返回 nullptr
 	virtual QWidget * getOutputItem( size_t index ) const;
 protected:
-	void updateSize();
+	void updateSize( );
+	void childComponentChangeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
 public:
 	NodePanel( ) : NodePanel( nullptr, Qt::WindowFlags( ) ) { }
 	NodePanel( QWidget *parent )
