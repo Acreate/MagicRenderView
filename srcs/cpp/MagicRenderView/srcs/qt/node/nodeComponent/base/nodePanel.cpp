@@ -33,11 +33,13 @@ void NodePanel::childComponentChangeChannel( INodeComponent *component, Channel_
 			leftVectorBoxLayout->removeWidget( component );
 			count = rightVectorBoxLayout->count( );
 			rightVectorBoxLayout->insertWidget( count - 1, component, 0, Qt::AlignRight | Qt::AlignTop );
+			repaint( );
 			break;
 		case Channel_Type::Output_Write : // 转到输入
 			rightVectorBoxLayout->removeWidget( component );
 			count = leftVectorBoxLayout->count( );
 			leftVectorBoxLayout->insertWidget( count - 1, component, 0, Qt::AlignLeft | Qt::AlignTop );
+			repaint( );
 			break;
 	}
 }
