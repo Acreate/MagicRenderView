@@ -54,6 +54,7 @@ bool NodePanel::removeInputItem( INodeComponent *output_component ) {
 	for( int index = 0; index < count; ++index )
 		if( leftVectorBoxLayout->itemAt( index )->widget( ) == output_component ) {
 			leftVectorBoxLayout->removeWidget( output_component );
+			disconnect( output_component, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 			repaint( );
 			return true;
 		}
@@ -64,6 +65,9 @@ QWidget * NodePanel::removeInputItem( size_t index ) {
 	if( count > index ) {
 		auto widget = leftVectorBoxLayout->itemAt( index )->widget( );
 		leftVectorBoxLayout->removeWidget( widget );
+		auto nodeComponent = qobject_cast< INodeComponent * >( widget );
+		if( nodeComponent )
+			disconnect( nodeComponent, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 		repaint( );
 		return widget;
 	}
@@ -90,6 +94,7 @@ bool NodePanel::removeOutputItem( INodeComponent *output_component ) {
 	for( int index = 0; index < count; ++index )
 		if( rightVectorBoxLayout->itemAt( index )->widget( ) == output_component ) {
 			rightVectorBoxLayout->removeWidget( output_component );
+			disconnect( output_component, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 			repaint( );
 			return true;
 		}
@@ -99,6 +104,9 @@ QWidget * NodePanel::removeOutputItem( size_t index ) {
 	int count = rightVectorBoxLayout->count( );
 	if( count > index ) {
 		auto widget = rightVectorBoxLayout->itemAt( index )->widget( );
+		auto nodeComponent = qobject_cast< INodeComponent * >( widget );
+		if( nodeComponent )
+			disconnect( nodeComponent, &INodeComponent::changeChannel, this, &NodePanel::changeChannel );
 		repaint( );
 		return widget;
 	}
