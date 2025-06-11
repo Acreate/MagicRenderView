@@ -45,55 +45,63 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	switch( mouseEventStatus ) {
 		/// 左键菜单
 		case MouseEventType::Press : {
-			// 鼠标按键
-			Qt::MouseButton mouseButton = event->button( );
-			cursorPos = QCursor::pos( );
-			currentMouseInWidgetPos = event->pos( );
-			switch( mouseButton ) {
-				case Qt::RightButton : // 使用配置的位置显示菜单
-					nodeMenu->move( cursorPos );
-					nodeMenu->show( );
-					break;
-				case Qt::LeftButton : // 配置位置
-					if( mousePosLabel->isHidden( ) ) {
-						mousePosLabel->show( );
-						mousePosLabel->move( currentMouseInWidgetPos );
-					} else if( mousePosLabel->geometry( ).contains( currentMouseInWidgetPos ) ) {
+			if( selectNodeComponent == nullptr && selectNodeWidget == nullptr ) {
+				// 鼠标按键
+				Qt::MouseButton mouseButton = event->button( );
+				cursorPos = QCursor::pos( );
+				currentMouseInWidgetPos = event->pos( );
+				switch( mouseButton ) {
+					case Qt::RightButton : // 使用配置的位置显示菜单
 						nodeMenu->move( cursorPos );
 						nodeMenu->show( );
-					} else
-						mousePosLabel->move( currentMouseInWidgetPos );
-					mousePosLabel->raise( );
-					break;
+						break;
+					case Qt::LeftButton : // 配置位置
+						if( mousePosLabel->isHidden( ) ) {
+							mousePosLabel->show( );
+							mousePosLabel->move( currentMouseInWidgetPos );
+						} else if( mousePosLabel->geometry( ).contains( currentMouseInWidgetPos ) ) {
+							nodeMenu->move( cursorPos );
+							nodeMenu->show( );
+						} else
+							mousePosLabel->move( currentMouseInWidgetPos );
+						mousePosLabel->raise( );
+						break;
+				}
+				return;
 			}
 			break;
 		}
 	}
 	mouseEventStatus = MouseEventType::Release;
 	selectNodeWidget = nullptr;
+	selectNodeComponent = nullptr;
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	mouseEventStatus = MouseEventType::Move;
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
+	if( selectNodeComponent == nullptr && selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
 		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
+	selectNodeWidget = nullptr;
+	selectNodeComponent = nullptr;
 	mouseEventStatus = MouseEventType::Press;
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	auto childrenList = children( );
 	QRect geometry;
+	INodeWidget *nodeWidget;
 	for( auto child : childrenList ) {
-		selectNodeWidget = qobject_cast< INodeWidget * >( child );
-		if( selectNodeWidget ) {
+		nodeWidget = qobject_cast< INodeWidget * >( child );
+		if( nodeWidget ) {
 			selectNodeWidgetOffset = event->pos( );
-			geometry = selectNodeWidget->geometry( );
+			geometry = nodeWidget->geometry( );
 			if( geometry.contains( selectNodeWidgetOffset ) == false )
 				continue;
-			selectNodeWidgetOffset = selectNodeWidgetOffset - selectNodeWidget->pos( );
-			selectNodeComponent = selectNodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
+			selectNodeWidget = nodeWidget;
+			selectNodeWidgetOffset = selectNodeWidgetOffset - nodeWidget->pos( );
+			selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
 			return;
 		}
 	}
