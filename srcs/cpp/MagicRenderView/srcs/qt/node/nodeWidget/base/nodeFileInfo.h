@@ -19,6 +19,7 @@ public:
 	std_vector_unity_shared< ITypeObject > setParams( const std_vector_unity_shared< ITypeObject > &params ) const override;
 	bool setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const override;
 	void setNodeWidgetName( const QString &node_widget_name ) override;
+	bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const override;
 private:
 	void updateSize( );
 protected:

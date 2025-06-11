@@ -74,6 +74,7 @@ public:
 		return true;
 	}
 	INodeComponent * getPosNodeComponent( const QPoint &pos ) const override;
+	bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const override;
 protected:
 	void showEvent( QShowEvent *event ) override;
 };

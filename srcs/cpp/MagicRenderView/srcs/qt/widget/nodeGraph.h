@@ -37,6 +37,8 @@ protected:
 
 	/// @brief 选中的节点组件
 	INodeComponent *selectNodeComponent;
+	/// @brief 选择组件时的坐标位置
+	QPoint selectNodeComponentPoint;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
@@ -44,6 +46,7 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
+	void paintEvent( QPaintEvent *event ) override;
 public Q_SLOTS:
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象

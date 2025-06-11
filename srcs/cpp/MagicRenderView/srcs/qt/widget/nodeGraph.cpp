@@ -3,6 +3,7 @@
 
 #include <qt/menu/nodeAddMenu.h>
 #include <QLabel>
+#include <QPainter>
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
@@ -42,6 +43,8 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 NodeGraph::~NodeGraph( ) {
 }
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
+	cursorPos = QCursor::pos( );
+	currentMouseInWidgetPos = event->pos( );
 	switch( mouseEventStatus ) {
 		// 在按下之后抬起事件
 		case MouseEventType::Press : {
@@ -49,9 +52,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 			} else if( selectNodeWidget == nullptr ) {
 				// 鼠标按键
 				Qt::MouseButton mouseButton = event->button( );
-				cursorPos = QCursor::pos( );
-				currentMouseInWidgetPos = event->pos( );
-				
+
 				switch( mouseButton ) {
 					case Qt::RightButton : // 使用配置的位置显示菜单
 						nodeMenu->move( cursorPos );
@@ -71,6 +72,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 				}
 			}
 			mouseEventStatus = MouseEventType::Release;
+			repaint( );
 			return;
 		}
 	}
@@ -83,6 +85,7 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	if( selectNodeComponent ) {
+		repaint( );
 	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
 		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 }
@@ -105,8 +108,18 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 			selectNodeWidget = nodeWidget;
 			selectNodeWidgetOffset = selectNodeWidgetOffset - nodeWidget->pos( );
 			selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
+			if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */)
+				selectNodeComponent = nullptr;
 			return;
 		}
+	}
+	repaint( );
+}
+void NodeGraph::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+	QPainter painter( this );
+	if( selectNodeComponent /* 绘制即时连线 */ ) {
+		painter.drawLine( selectNodeComponentPoint, currentMouseInWidgetPos );
 	}
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {

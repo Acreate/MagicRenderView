@@ -79,7 +79,32 @@ public:
 	/// @brief 获取位置下的组件
 	/// @param pos 位置
 	/// @return 组件
-	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const ;
+	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const;
+
+	/// @brief 获取组件可链接位置
+	/// @param component 组件
+	/// @param resulut_pos 位置
+	/// @return 失败返回 false
+	virtual bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
+		if( component != this )
+			return false;
+		QRect thisRect = rect( );
+		QPoint point = pos( );
+		switch( channelType ) {
+			case Channel_Type::Normal_Default :
+				resulut_pos = thisRect.center( ) + point;
+				break;
+			case Channel_Type::Input_Read :
+				resulut_pos.setX( thisRect.left( ) + point.x( ) );
+				resulut_pos.setY( thisRect.center( ).y( ) + point.y( ) );
+				break;
+			case Channel_Type::Output_Write :
+				resulut_pos.setX( thisRect.right( ) + point.x( ) );
+				resulut_pos.setY( thisRect.center( ).y( ) + point.y( ) );
+				break;
+		}
+		return true;
+	}
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );

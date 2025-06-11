@@ -113,7 +113,12 @@ public:
 	/// @brief 获取位置下的组件
 	/// @param pos 位置
 	/// @return 组件
-	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const ;
+	virtual INodeComponent * getPosNodeComponent( const QPoint &pos ) const;
+	/// @brief 获取组件可链接位置
+	/// @param component 组件
+	/// @param resulut_pos 位置
+	/// @return 失败返回 false
+	virtual bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

@@ -65,7 +65,14 @@ void NodeFileInfo::setNodeWidgetName( const QString &node_widget_name ) {
 	title->setText( node_widget_name );
 	setObjectName( node_widget_name );
 }
+bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
+	if( subPlan->getComponentLinkPos( component, resulut_pos ) ) {
+		resulut_pos = pos( ) + resulut_pos;
+		return true;
+	}
 
+	return false;
+}
 
 void NodeFileInfo::updateSize( ) {
 	size_t leftHeight = 0, width = 0;

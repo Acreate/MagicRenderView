@@ -187,6 +187,22 @@ INodeComponent * NodePanel::getPosNodeComponent( const QPoint &pos ) const {
 	}
 	return INodeComponent::getPosNodeComponent( pos );;
 }
+bool NodePanel::getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
+	QObjectList childrenList = leftWidget->children( );
+	for( auto child : childrenList )
+		if( component == child && component->getComponentLinkPos( component, resulut_pos ) == true ) {
+			resulut_pos = resulut_pos + leftWidget->pos( ) + pos( );
+			return true;
+		}
+	childrenList = rightWidget->children( );
+	for( auto child : childrenList )
+		if( component == child && component->getComponentLinkPos( component, resulut_pos ) == true ) {
+			resulut_pos = resulut_pos + rightWidget->pos( ) + pos( );
+			return true;
+		}
+	return false;
+}
+
 void NodePanel::showEvent( QShowEvent *event ) {
 	//INodeComponent::showEvent( event );
 	QWidget::showEvent( event );

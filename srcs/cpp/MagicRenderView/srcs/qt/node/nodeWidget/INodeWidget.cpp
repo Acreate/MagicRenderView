@@ -42,6 +42,16 @@ INodeComponent * INodeWidget::getPosNodeComponent( const QPoint &pos ) const {
 
 	return nullptr;
 }
+bool INodeWidget::getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
+	auto childrenList = children( );
+	for( auto child : childrenList )
+		if( component == child && component->getComponentLinkPos( component, resulut_pos ) ) {
+			resulut_pos = pos( ) + resulut_pos;
+			return true;
+		}
+
+	return false;
+}
 void INodeWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	/*QPainter painter( this );
