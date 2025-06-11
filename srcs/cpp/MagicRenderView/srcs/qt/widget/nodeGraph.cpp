@@ -43,13 +43,15 @@ NodeGraph::~NodeGraph( ) {
 }
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	switch( mouseEventStatus ) {
-		/// 左键菜单
+		// 在按下之后抬起事件
 		case MouseEventType::Press : {
-			if( selectNodeComponent == nullptr && selectNodeWidget == nullptr ) {
+			if( selectNodeComponent ) {
+			} else if( selectNodeWidget == nullptr ) {
 				// 鼠标按键
 				Qt::MouseButton mouseButton = event->button( );
 				cursorPos = QCursor::pos( );
 				currentMouseInWidgetPos = event->pos( );
+				
 				switch( mouseButton ) {
 					case Qt::RightButton : // 使用配置的位置显示菜单
 						nodeMenu->move( cursorPos );
@@ -67,9 +69,9 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						mousePosLabel->raise( );
 						break;
 				}
-				return;
 			}
-			break;
+			mouseEventStatus = MouseEventType::Release;
+			return;
 		}
 	}
 	mouseEventStatus = MouseEventType::Release;
@@ -80,7 +82,8 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	mouseEventStatus = MouseEventType::Move;
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	if( selectNodeComponent == nullptr && selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
+	if( selectNodeComponent ) {
+	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
 		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {

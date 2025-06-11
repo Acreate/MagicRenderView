@@ -8,10 +8,10 @@
 		type_ *nodeWidgetPtr = new type_(first_name_, parent_, window_flags_);\
 		return nodeWidgetPtr;\
 	} )
-
+#define Type_to_QString( type_ ) QString( #type_)
 BaseNodeStack::BaseNodeStack( ) : nodeGenerate( new std_vector< generateNodePairt >( ) ) {
 	setObjectName( BaseNodeStack::staticMetaObject.className( ) );
-
+	nodeStackName = "常规节点";
 	emplace_back_NodeGenerate( NodeFileInfo, nullptr, Qt::WindowFlags(), "文件信息节点" );
 }
 INodeWidget * BaseNodeStack::_newNode( const QString &type_name ) const {

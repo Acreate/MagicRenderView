@@ -12,8 +12,7 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 
 	QMenu *topMenu = new QMenu( this );
 	addMenu( topMenu );
-	QString objectName = node_stack->objectName( );
-	topMenu->setTitle( objectName );
+	topMenu->setTitle( node_stack->getNodeStackName(  ) );
 	auto pairs = node_stack->permissionNodeType( );
 	for( auto &pair : pairs ) {
 		auto first = pair.first;
