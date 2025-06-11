@@ -21,7 +21,6 @@ public: // 类型
 		Release, // 释放
 		Move,// 移动
 	};
-
 protected:
 	/// @brief 节点添加菜单
 	NodeAddMenu *nodeMenu;
@@ -33,6 +32,8 @@ protected:
 	QPoint cursorPos;
 	// 鼠标窗口位置
 	QPoint currentMouseInWidgetPos;
+	/// @brief 所有节点
+	std_vector< INodeWidget * > nodeWidgets;
 	/// @brief 选中的节点
 	INodeWidget *selectNodeWidget;
 	/// @brief 选中控件时，基于控件的相对偏移
@@ -54,6 +55,8 @@ public:
 	/// @param result_node_component 节点组件
 	/// @return 存在节点返回 true
 	virtual bool findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component );
+	/// @brief 更新渲染窗口的大小
+	virtual void updateMinSize( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

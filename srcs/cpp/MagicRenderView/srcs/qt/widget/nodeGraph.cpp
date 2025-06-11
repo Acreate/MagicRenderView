@@ -11,6 +11,19 @@
 #include "qt/stack/nodeStack/INodeStack.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/tools/tools.h"
+
+template< typename TUnity >
+inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &unity_vector ) {
+	auto count = unity_vector.size( );
+	if( count == 0 )
+		return false;
+	auto dataPtr = unity_vector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( dataPtr[ index ] == unity )
+			return true;
+	return false;
+}
+
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
@@ -27,12 +40,14 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			functionName = nodeAddAction->getFunctionName( );
 		else
 			functionName = action->text( );
-		auto generateNode = instance->generateNode( functionName );
+		auto generateNode = instance->generateNode( functionName ); // 节点生成
 		if( generateNode ) {
+			nodeWidgets.emplace_back( generateNode );
 			generateNode->move( currentMouseInWidgetPos );
 			generateNode->setParent( this );
 			generateNode->connectNodeGraphWidget( this );
 			generateNode->show( );
+			updateMinSize( );
 		} else
 			tools::debug::printError( functionName );
 	} );
@@ -43,36 +58,32 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 NodeGraph::~NodeGraph( ) {
 }
 bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component ) {
-	auto childrenList = children( );
-	QRect geometry;
-	for( auto child : childrenList ) {
-		*result_node_widget = qobject_cast< INodeWidget * >( child );
-		if( *result_node_widget ) {
-			geometry = ( *result_node_widget )->geometry( );
-			if( geometry.contains( check_pos ) == false )
-				continue;
-			auto checkPos = check_pos - ( *result_node_widget )->pos( );
-			*result_node_component = ( *result_node_widget )->getPosNodeComponent( checkPos );
-			return true;
-		}
-	}
-	*result_node_widget = nullptr;
-	*result_node_component = nullptr;
-	return false;
-}
-
-template< typename TUnity >
-inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &unity_vector ) {
-	auto count = unity_vector.size( );
+	size_t count = nodeWidgets.size( );
 	if( count == 0 )
 		return false;
-	auto dataPtr = unity_vector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( dataPtr[ index ] == unity )
-			return true;
+	auto nodeWidgetVectDataPtr = nodeWidgets.data( );
+	INodeWidget *nodeWidgetPtr;
+	QRect geometry;
+	for( size_t index = 0; index < count; ++index ) {
+		nodeWidgetPtr = nodeWidgetVectDataPtr[ index ];
+		geometry = nodeWidgetPtr->geometry( );
+		if( geometry.contains( check_pos ) == false )
+			continue;
+		*result_node_widget = nodeWidgetPtr;
+		auto checkPos = check_pos - nodeWidgetPtr->pos( );
+		*result_node_component = nodeWidgetPtr->getPosNodeComponent( checkPos );
+		return true;
+	}
 	return false;
 }
 
+void NodeGraph::updateMinSize( ) {
+	QRect newRect = this->rect( );
+	for( auto nodeWidgetPtr : nodeWidgets )
+		newRect = newRect.united( nodeWidgetPtr->geometry( ) );
+	QSize newSize = newRect.size( );
+	setMinimumSize( newSize );
+}
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
@@ -101,8 +112,6 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						break;
 				}
 			}
-			mouseEventStatus = MouseEventType::Release;
-			return;
 		}
 		case MouseEventType::Move :
 			if( selectNodeComponent ) {
@@ -120,7 +129,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							nodeLinkItems.emplace_back( nodeLinkItem );
 						break;
 				}
-			}
+			} else if( selectNodeWidget )
+				updateMinSize( );
 			break;
 	}
 	mouseEventStatus = MouseEventType::Release;
@@ -143,23 +153,18 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	mouseEventStatus = MouseEventType::Press;
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	auto childrenList = children( );
 	QRect geometry;
-	INodeWidget *nodeWidget;
-	for( auto child : childrenList ) {
-		nodeWidget = qobject_cast< INodeWidget * >( child );
-		if( nodeWidget ) {
-			geometry = nodeWidget->geometry( );
-			if( geometry.contains( currentMouseInWidgetPos ) == false )
-				continue;
-			selectNodeWidget = nodeWidget;
-			selectNodeWidgetOffset = currentMouseInWidgetPos - nodeWidget->pos( );
-			selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
-			if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
-				selectNodeComponent = nullptr;
-			repaint( );
-			return;
-		}
+	for( auto nodeWidget : nodeWidgets ) {
+		geometry = nodeWidget->geometry( );
+		if( geometry.contains( currentMouseInWidgetPos ) == false )
+			continue;
+		selectNodeWidget = nodeWidget;
+		selectNodeWidgetOffset = currentMouseInWidgetPos - nodeWidget->pos( );
+		selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
+		if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
+			selectNodeComponent = nullptr;
+		repaint( );
+		return;
 	}
 }
 void NodeGraph::paintEvent( QPaintEvent *event ) {
