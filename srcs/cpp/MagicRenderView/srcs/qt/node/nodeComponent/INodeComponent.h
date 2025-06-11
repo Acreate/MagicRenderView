@@ -5,6 +5,8 @@
 
 #include "alias/type_alias.h"
 
+#include "qt/type/ITypeObject.h"
+
 class ITypeObject;
 class INodeComponent : public QWidget {
 	Q_OBJECT;
@@ -86,6 +88,24 @@ public:
 	/// @param resulut_pos 位置
 	/// @return 失败返回 false
 	virtual bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const;
+	/// @brief 测试变量是否允许修改该组件的值，该执行并不会更改该组件值
+	/// @param object_ptr 测试的变量指针
+	/// @return 允许被参数变量改变该组件则返回 true
+	virtual bool tryLetChangeVar( const ITypeObject *object_ptr ) const {
+		auto thisVarPtr = getVarObjectPtr( );
+		if( thisVarPtr->metaObject( )->className( ) == object_ptr->metaObject( )->className( ) )
+			return true;
+		return false;
+	}
+	/// @brief 测试组件是否允许修改该组件的值，该执行并不会更改该组件值
+	/// @brief 相同通道类型不能转换，如果不需要检测该配置，请使用 @code bool tryLetChangeVar( const ITypeObject *object_ptr ) const;  @endcode 
+	/// @param component_object_ptr 测试的变量指针
+	/// @return 允许被参数组件改变该组件则返回 true
+	virtual bool tryLetChangeVar( const INodeComponent *component_object_ptr ) const {
+		if( component_object_ptr->channelType == Channel_Type::Normal_Default || component_object_ptr->channelType == channelType )
+			return false;
+		return tryLetChangeVar( component_object_ptr->getVarObjectPtr( ) );
+	}
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );

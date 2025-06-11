@@ -28,6 +28,8 @@ public:
 	bool setVar( const ITypeObject &new_var ) const override;
 	void setNodeComponentName( const QString &node_component_name ) override;
 	INodeComponent * getPosNodeComponent( const QPoint &pos ) const override;
+	bool tryLetChangeVar( const ITypeObject *object_ptr ) const override;
+	bool tryLetChangeVar( const INodeComponent *component_object_ptr ) const override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

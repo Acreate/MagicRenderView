@@ -60,6 +60,17 @@ void NodeInputLineText::setNodeComponentName( const QString &node_component_name
 INodeComponent * NodeInputLineText::getPosNodeComponent( const QPoint &pos ) const {
 	return nullptr;
 }
+bool NodeInputLineText::tryLetChangeVar( const ITypeObject *object_ptr ) const {
+	if( qobject_cast< const StringTypeObject * >( object_ptr ) )
+		return true;
+	return false;
+}
+bool NodeInputLineText::tryLetChangeVar( const INodeComponent *component_object_ptr ) const {
+	Channel_Type componentChannel = component_object_ptr->getComponentChannel( );
+	if( componentChannel == Channel_Type::Normal_Default || componentChannel == channelType )
+		return false;
+	return tryLetChangeVar( component_object_ptr->getVarObjectPtr( ) );
+}
 void NodeInputLineText::paintEvent( QPaintEvent *event ) {
 	//	INodeComponent::paintEvent( event );
 }

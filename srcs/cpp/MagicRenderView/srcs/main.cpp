@@ -198,6 +198,17 @@ void checkTools( ) {
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 0, 1, functionName );
 	qDebug( ) << "==========================";
 }
+
+class A {
+
+};
+class B : public A {
+
+};
+class C : public A {
+
+};
+
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 

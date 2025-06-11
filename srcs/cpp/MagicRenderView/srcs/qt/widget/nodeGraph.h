@@ -5,6 +5,8 @@
 #include <QWidget>
 
 #include "alias/type_alias.h"
+
+#include "qt/node/nodeLink/nodeLinkItem.h"
 class ITypeObject;
 class INodeWidget;
 class INodeComponent;
@@ -12,13 +14,14 @@ class QLabel;
 class NodeAddMenu;
 class NodeGraph : public QWidget {
 	Q_OBJECT;
-private: // 私有类型
+public: // 类型
 	enum class MouseEventType {
 		Init, // 初始化
 		Press, // 按下
 		Release, // 释放
 		Move,// 移动
 	};
+
 protected:
 	/// @brief 节点添加菜单
 	NodeAddMenu *nodeMenu;
@@ -39,10 +42,8 @@ protected:
 	INodeComponent *selectNodeComponent;
 	/// @brief 选择组件时的坐标位置
 	QPoint selectNodeComponentPoint;
-	/// @brief 节点链接线 call 列表
-	std_vector<std_pairt<std_function<QPoint()>,std_function<QPoint()>>> nodeComponentLink;
-	/// @brief 当前链接节点调用 call
-	std_pairt<std_function<QPoint()>,std_function<QPoint()>> currentSelectLinkCall;
+	/// @brief 节点组件的连接
+	std_vector< NodeLinkItem > nodeLinkItems;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;

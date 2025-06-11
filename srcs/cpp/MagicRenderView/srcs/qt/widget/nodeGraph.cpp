@@ -60,6 +60,19 @@ bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_n
 	*result_node_component = nullptr;
 	return false;
 }
+
+template< typename TUnity >
+inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &unity_vector ) {
+	auto count = unity_vector.size( );
+	if( count == 0 )
+		return false;
+	auto dataPtr = unity_vector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( dataPtr[ index ] == unity )
+			return true;
+	return false;
+}
+
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
@@ -93,26 +106,19 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 		}
 		case MouseEventType::Move :
 			if( selectNodeComponent ) {
-				auto copySelectNode = selectNodeWidget;
-				auto copySelectNodeComponent = selectNodeComponent;
-				currentSelectLinkCall.first = [copySelectNode,copySelectNodeComponent]( ) {
-					QPoint target;
-					copySelectNode->getComponentLinkPos( copySelectNodeComponent, target );
-					return target;
-				};
-
-				if( findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent ) {
-					QPoint target;
-					if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, target ) ) {
-						copySelectNode = selectNodeWidget;
-						copySelectNodeComponent = selectNodeComponent;
-						currentSelectLinkCall.second = [copySelectNode,copySelectNodeComponent]( ) {
-							QPoint target;
-							copySelectNode->getComponentLinkPos( copySelectNodeComponent, target );
-							return target;
-						};
-						nodeComponentLink.emplace_back( currentSelectLinkCall );
-					}
+				NodeLinkItem nodeLinkItem;
+				INodeComponent::Channel_Type componentChannel = selectNodeComponent->getComponentChannel( );
+				switch( componentChannel ) {
+					case INodeComponent::Channel_Type::Normal_Default :
+						break;
+					case INodeComponent::Channel_Type::Input_Read :
+						if( nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) && findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent && selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) && nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) == true && hasUnity( nodeLinkItem, nodeLinkItems ) == false )
+							nodeLinkItems.emplace_back( nodeLinkItem );
+						break;
+					case INodeComponent::Channel_Type::Output_Write :
+						if( nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) && findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent && selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) && nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) == true && hasUnity( nodeLinkItem, nodeLinkItems ) == false )
+							nodeLinkItems.emplace_back( nodeLinkItem );
+						break;
 				}
 			}
 			break;
@@ -127,7 +133,6 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	if( selectNodeComponent ) {
-		
 	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
 		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 	repaint( );
@@ -160,8 +165,10 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 void NodeGraph::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-	for( auto [ start, end ] : nodeComponentLink )
-		painter.drawLine( start( ), end( ) );
+	QPoint start, end;
+	for( auto item : nodeLinkItems )
+		if( item.getInputOutputPos( &start, &end ) )
+			painter.drawLine( start, end );
 	if( selectNodeComponent /* 绘制即时连线 */ ) {
 		painter.drawLine( selectNodeComponentPoint, currentMouseInWidgetPos );
 	}
