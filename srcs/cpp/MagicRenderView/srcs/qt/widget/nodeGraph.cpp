@@ -42,14 +42,31 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 }
 NodeGraph::~NodeGraph( ) {
 }
+bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component ) {
+	auto childrenList = children( );
+	QRect geometry;
+	for( auto child : childrenList ) {
+		*result_node_widget = qobject_cast< INodeWidget * >( child );
+		if( *result_node_widget ) {
+			geometry = ( *result_node_widget )->geometry( );
+			if( geometry.contains( check_pos ) == false )
+				continue;
+			auto checkPos = check_pos - ( *result_node_widget )->pos( );
+			*result_node_component = ( *result_node_widget )->getPosNodeComponent( checkPos );
+			return true;
+		}
+	}
+	*result_node_widget = nullptr;
+	*result_node_component = nullptr;
+	return false;
+}
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	switch( mouseEventStatus ) {
 		// 在按下之后抬起事件
 		case MouseEventType::Press : {
-			if( selectNodeComponent ) {
-			} else if( selectNodeWidget == nullptr ) {
+			if( selectNodeComponent == nullptr && selectNodeWidget == nullptr ) {
 				// 鼠标按键
 				Qt::MouseButton mouseButton = event->button( );
 
@@ -72,13 +89,38 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 				}
 			}
 			mouseEventStatus = MouseEventType::Release;
-			repaint( );
 			return;
 		}
+		case MouseEventType::Move :
+			if( selectNodeComponent ) {
+				auto copySelectNode = selectNodeWidget;
+				auto copySelectNodeComponent = selectNodeComponent;
+				currentSelectLinkCall.first = [copySelectNode,copySelectNodeComponent]( ) {
+					QPoint target;
+					copySelectNode->getComponentLinkPos( copySelectNodeComponent, target );
+					return target;
+				};
+
+				if( findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent ) {
+					QPoint target;
+					if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, target ) ) {
+						copySelectNode = selectNodeWidget;
+						copySelectNodeComponent = selectNodeComponent;
+						currentSelectLinkCall.second = [copySelectNode,copySelectNodeComponent]( ) {
+							QPoint target;
+							copySelectNode->getComponentLinkPos( copySelectNodeComponent, target );
+							return target;
+						};
+						nodeComponentLink.emplace_back( currentSelectLinkCall );
+					}
+				}
+			}
+			break;
 	}
 	mouseEventStatus = MouseEventType::Release;
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
+	repaint( );
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	mouseEventStatus = MouseEventType::Move;
@@ -101,23 +143,24 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	for( auto child : childrenList ) {
 		nodeWidget = qobject_cast< INodeWidget * >( child );
 		if( nodeWidget ) {
-			selectNodeWidgetOffset = event->pos( );
 			geometry = nodeWidget->geometry( );
-			if( geometry.contains( selectNodeWidgetOffset ) == false )
+			if( geometry.contains( currentMouseInWidgetPos ) == false )
 				continue;
 			selectNodeWidget = nodeWidget;
-			selectNodeWidgetOffset = selectNodeWidgetOffset - nodeWidget->pos( );
+			selectNodeWidgetOffset = currentMouseInWidgetPos - nodeWidget->pos( );
 			selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
-			if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */)
+			if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
 				selectNodeComponent = nullptr;
+			repaint( );
 			return;
 		}
 	}
-	repaint( );
 }
 void NodeGraph::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
+	for( auto [ start, end ] : nodeComponentLink )
+		painter.drawLine( start( ), end( ) );
 	if( selectNodeComponent /* 绘制即时连线 */ ) {
 		painter.drawLine( selectNodeComponentPoint, currentMouseInWidgetPos );
 	}

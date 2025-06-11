@@ -39,9 +39,20 @@ protected:
 	INodeComponent *selectNodeComponent;
 	/// @brief 选择组件时的坐标位置
 	QPoint selectNodeComponentPoint;
+	/// @brief 节点链接线 call 列表
+	std_vector<std_pairt<std_function<QPoint()>,std_function<QPoint()>>> nodeComponentLink;
+	/// @brief 当前链接节点调用 call
+	std_pairt<std_function<QPoint()>,std_function<QPoint()>> currentSelectLinkCall;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
+public:
+	/// @brief 获取指定位置下的节点信息
+	/// @param check_pos 位置
+	/// @param result_node_widget 节点
+	/// @param result_node_component 节点组件
+	/// @return 存在节点返回 true
+	virtual bool findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

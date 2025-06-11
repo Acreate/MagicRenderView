@@ -19,6 +19,26 @@ INodeComponent * INodeComponent::getPosNodeComponent( const QPoint &pos ) const 
 	}
 	return nullptr;
 }
+bool INodeComponent::getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
+	if( component != this )
+		return false;
+	QRect thisRect = rect( );
+	QPoint point = pos( );
+	switch( channelType ) {
+		case Channel_Type::Normal_Default :
+			resulut_pos = thisRect.center( ) + point;
+			break;
+		case Channel_Type::Input_Read :
+			resulut_pos.setX( thisRect.left( ) + point.x( ) );
+			resulut_pos.setY( thisRect.center( ).y( ) + point.y( ) );
+			break;
+		case Channel_Type::Output_Write :
+			resulut_pos.setX( thisRect.right( ) + point.x( ) );
+			resulut_pos.setY( thisRect.center( ).y( ) + point.y( ) );
+			break;
+	}
+	return true;
+}
 void INodeComponent::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	/*QPainter painter( this );
