@@ -273,24 +273,27 @@ void checkSerializeVar( ) {
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""IntTypeObject"") " << typeObject->toString( );
 				else tools::debug::printError( " :(""IntTypeObject"") "" 反序列化失败" );
-
+				qDebug( ) << __LINE__ << " : " << "开始测试 ISerialize::SerializeInfo 功能";
 				ISerialize::SerializeInfo info( ser.data( ), ser.size( ) );
-				QStringList list;
-				for( auto &typeName : info.getTypeNames( ) )
-					list.append( typeName );
-				qDebug( ) << "类型列表 : " << list.join( ", " );
-				list.clear( );
-				for( auto &typeName : info.getMetaObjectClassNames( ) )
-					list.append( typeName );
-				qDebug( ) << "多媒体列表 : " << list.join( ", " );
+				if( info.init( ) ) {
+					QStringList list;
+					for( auto &typeName : info.getTypeNames( ) )
+						list.append( typeName );
+					qDebug( ) << __LINE__ << " : " << "类型列表 : " << list.join( ", " );
+					list.clear( );
+					for( auto &typeName : info.getMetaObjectClassNames( ) )
+						list.append( typeName );
+					qDebug( ) << __LINE__ << " : " << "多媒体列表 : " << list.join( ", " );
 
-				auto typeNames = info.getTypeNames( );
-				QString string = typeNames[ typeNames.size( ) - 1 ];
-				auto var = varStack->generateVar( string );
-				if( var ) {
-					qDebug( ) << __LINE__ << "创建成功 : " << var->typeNames( );
-					qDebug( ) << __LINE__ << var->toString( );
-				}
+					auto typeNames = info.getTypeNames( );
+					QString string = typeNames[ typeNames.size( ) - 1 ];
+					auto var = varStack->generateVar( string );
+					if( var ) {
+						qDebug( ) << __LINE__  << " : "<< "创建成功 : " << var->typeNames( );
+						qDebug( ) << __LINE__ << " : " << var->toString( );
+					}
+				} else
+					tools::debug::printError( "ISerialize::SerializeInfo 功能缺陷" );
 			} else
 				tools::debug::printError( " :(""IntTypeObject"") "" 序列化失败" );
 		}

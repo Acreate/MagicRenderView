@@ -3,19 +3,25 @@
 #include <QList>
 
 ISerialize::SerializeInfo::SerializeInfo( const uint8_t *data_ptr, const size_t &data_size ): data( data_size ) {
+	isInitTrue = false;
 	auto dataPtr = data.data( );
 	for( size_t index = 0; index < data_size; ++index )
 		dataPtr[ index ] = data_ptr[ index ];
-	if( init( ) == false )
-		tools::debug::printError( "数据是损坏的" );
 }
 bool ISerialize::SerializeInfo::init( ) {
 	auto dataPtr = data.data( );
 	size_t dataCount = data.size( );
+	// 获取大小端
 	begEndian = *dataPtr;
+	uchar endian = getBegEndian( );
 	size = *( type_size_t * ) ( dataPtr + 1 );
-	if( size < dataCount )
+	if( begEndian != endian )
+		converEndian( size );
+	if( size < dataCount ) {
+		tools::debug::printError( "数据是损坏的" );
+		isInitTrue = false;
 		return false;
+	}
 	// 找到类型
 	dataPtr = dataPtr + 1 + sizeof( type_size_t );
 	QByteArray hex;

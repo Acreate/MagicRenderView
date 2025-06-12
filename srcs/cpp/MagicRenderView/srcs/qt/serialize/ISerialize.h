@@ -23,15 +23,18 @@ public:
 		type_size_t size;
 		/// @brief 从原始数据当中解析实现的结尾指针，该内容可能是真实的数据值
 		const uint8_t *infoLastPtr;
+		/// @brief 是否初始化成功
+		bool isInitTrue;
 	public:
 		SerializeInfo( const uint8_t *data_ptr, const size_t &data_size );
 		bool init( );
-		const std_vector<uint8_t> & getData( ) const { return data; }
-		const std_vector<QString> & getTypeNames( ) const { return typeNames; }
-		const std_vector<QString> & getMetaObjectClassNames( ) const { return metaObjectClassNames; }
+		const std_vector< uint8_t > & getData( ) const { return data; }
+		const std_vector< QString > & getTypeNames( ) const { return typeNames; }
+		const std_vector< QString > & getMetaObjectClassNames( ) const { return metaObjectClassNames; }
 		uchar getBegEndian( ) const { return begEndian; }
 		type_size_t getSize( ) const { return size; }
 		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr; }
+		bool isIsInitTrue( ) const { return isInitTrue; }
 	};
 public:
 	/// @brief 数据序列化到参数
@@ -154,6 +157,11 @@ public:
 		typename = typename std::enable_if< std_is_same_base_var_type( TUnity_Data_Type ) > >
 	static void converEndian( TUnity_Data_Type &ptr, uint64_t size ) {
 		converEndian( ( uint8_t * ) &ptr, size );
+	}
+	template< typename TUnity_Data_Type,
+		typename = typename std::enable_if< std_is_same_base_var_type( TUnity_Data_Type ) > >
+	static void converEndian( TUnity_Data_Type &ptr ) {
+		converEndian( ( uint8_t * ) &ptr, sizeof( TUnity_Data_Type ) );
 	}
 	//#undef std_is_same
 	//#undef std_is_same_base_var_type
