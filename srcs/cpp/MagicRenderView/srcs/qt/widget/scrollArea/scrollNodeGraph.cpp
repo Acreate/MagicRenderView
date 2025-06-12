@@ -8,9 +8,9 @@ ScrollNodeGraph::ScrollNodeGraph( QWidget *parent ): QScrollArea( parent ) {
 }
 ScrollNodeGraph::~ScrollNodeGraph( ) {
 }
-size_t ScrollNodeGraph::serializeToObjectData( const std_vector< uchar > &read_data_vector ) const {
-	return nodeGraph->serializeToObjectData( read_data_vector );
+size_t ScrollNodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) const {
+	return nodeGraph->serializeToObjectData( read_data_vector, TODO );
 }
-bool ScrollNodeGraph::serializeToVectorData( std_vector< uchar > *result_data_vector ) const {
+bool ScrollNodeGraph::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
 	return nodeGraph->serializeToVectorData( result_data_vector );
 }

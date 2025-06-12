@@ -198,17 +198,29 @@ void checkTools( ) {
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 0, 1, functionName );
 	qDebug( ) << "==========================";
 }
-
-class A {
-
-};
-class B : public A {
-
-};
-class C : public A {
-
-};
-
+/// @brief 测试序列化
+void checkSerializeVar( ) {
+	qDebug( ) << "==================";
+	qDebug( ) << "\t\t测试 " << tools::debug::getFunctionName( );
+	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
+	auto typeObject = varStack->generateTUBVar< IntTypeObject >( );
+	if( typeObject ) {
+		*typeObject = 1;
+		std_vector< uchar > ser;
+		if( typeObject->serializeToVectorData( &ser ) ) {
+			qDebug( ) << __LINE__ << " : " << typeObject->toString( );
+			*typeObject = 33;
+			qDebug( ) << __LINE__ << " : " << typeObject->toString( );
+			if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+				qDebug( ) << __LINE__ << " : " << typeObject->toString( );
+			else
+				tools::debug::printError( "int 反序列化失败" );
+		} else
+			tools::debug::printError( "int 序列化失败" );
+	}
+	qDebug( ) << "\t\t结束 " << tools::debug::getFunctionName( );
+	qDebug( ) << "==================";
+}
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
@@ -219,5 +231,6 @@ int main( int argc, char *argv[ ] ) {
 	checkNodeStack( &mainwidget );
 	checkFunction( );
 	checkTools( );
+	checkSerializeVar( );
 	return app.exec( );
 }
