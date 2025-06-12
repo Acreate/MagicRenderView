@@ -289,7 +289,7 @@ void checkSerializeVar( ) {
 					QString string = typeNames[ typeNames.size( ) - 1 ];
 					auto var = varStack->generateVar( string );
 					if( var ) {
-						qDebug( ) << __LINE__  << " : "<< "创建成功 : " << var->typeNames( );
+						qDebug( ) << __LINE__ << " : " << "创建成功 : " << var->typeNames( );
 						qDebug( ) << __LINE__ << " : " << var->toString( );
 					}
 				} else
@@ -307,11 +307,12 @@ int main( int argc, char *argv[ ] ) {
 
 	MainWindow mainwidget;
 	mainwidget.show( );
-
+#if _DEBUG
 	checkVarStack( &mainwidget );
 	checkNodeStack( &mainwidget );
 	checkFunction( );
 	checkTools( );
 	checkSerializeVar( );
+#endif
 	return app.exec( );
 }

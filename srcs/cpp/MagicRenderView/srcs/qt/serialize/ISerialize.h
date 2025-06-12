@@ -40,16 +40,12 @@ public:
 	/// @brief 数据序列化到参数
 	/// @param result_data_vector 返回被序列化后的数据
 	/// @return 失败返回 false
-	virtual bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
-		return false;
-	}
+	virtual bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const = 0;
 	/// @brief 从数据当中获取信息，并且重新初始化对象
 	/// @param read_data_vector 源数据序列
 	/// @param data_count
 	/// @return 使用数据的个数
-	virtual size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
-		return 0;
-	}
+	virtual size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) = 0;
 	virtual ~ISerialize( ) { }
 public:
 	/// @brief 返回值 -1 则为转换数据的最后一个数据
