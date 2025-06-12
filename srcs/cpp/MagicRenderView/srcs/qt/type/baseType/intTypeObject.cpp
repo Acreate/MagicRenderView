@@ -42,7 +42,7 @@ size_t IntTypeObject::serializeToObjectData( const uint8_t *read_data_vector, co
 }
 bool IntTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	auto object = metaObject( );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, sizeof( val ) );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, typeNames( ), sizeof( val ) );
 	*( decltype(val) * ) lastDataPtr = val;
 	return result_data_vector->size( );
 }
