@@ -57,6 +57,39 @@ public:
 	virtual bool findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component );
 	/// @brief 更新渲染窗口的大小
 	virtual void updateMinSize( );
+	/// @brief 检查连接列表当中是否存在组件
+	/// @param unity 检查组件
+	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在
+	virtual int linkHasUnity( const INodeComponent *unity ) const;
+	/// @brief 检查连接列表当中是否存在节点
+	/// @param unity 检查节点
+	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在
+	virtual int linkHasUnity( const INodeWidget *unity ) const;
+	/// @brief 检查连接列表当中是否存在输入组件
+	/// @param input_unity 检查组件
+	/// @return 返回 0 表示不存在
+	virtual int linkHasInputUnity( const INodeComponent *input_unity ) const;
+	/// @brief 检查连接列表当中是否存在输入节点
+	/// @param input_unity 检查节点
+	/// @return 返回 0 表示不存在
+	virtual int linkHasInputUnity( const INodeWidget *input_unity ) const;
+	/// @brief 检查连接列表当中是否存在输出组件
+	/// @param output_unity 检查组件
+	/// @return 返回 0 表示不存在
+	virtual int linkHasOutputUnity( const INodeComponent *output_unity ) const;
+	/// @brief 检查连接列表当中是否存在输出节点
+	/// @param output_unity 检查节点
+	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在
+	virtual int linkHasOutputUnity( const INodeWidget *output_unity ) const;
+	/// @brief 删除第一个链接的输入组件
+	/// @param input_unity 输入组件
+	/// @return 成功返回 1
+	virtual int linkRemoveFirstInputItem( const INodeComponent *input_unity );
+	/// @brief 删除第一个链接配对的输入组件
+	/// @param output_unity 输出组件
+	/// @param input_unity 输入组件
+	/// @return 成功返回 1
+	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

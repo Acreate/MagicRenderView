@@ -21,7 +21,61 @@ public:
 		: QObject( other.parent( ) ),
 		input_node_component_info( other.input_node_component_info ),
 		output_node_component_info( other.output_node_component_info ) { }
-	NodeLinkItem & operator=( const NodeLinkItem &other ) {
+	/// @brief 校验是否存在指定组件
+	/// @param component 匹配的组件指针
+	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在组件
+	virtual int has( const INodeComponent *component ) const {
+		if( input_node_component_info.second == component )
+			return 1;
+		if( output_node_component_info.second == component )
+			return -1;
+		return 0;
+	}
+	/// @brief 校验是否存在指定节点
+	/// @param node_widget 匹配的节点指针
+	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在
+	virtual int has( const INodeWidget *node_widget ) const {
+		if( input_node_component_info.first == node_widget )
+			return 1;
+		if( output_node_component_info.first == node_widget )
+			return -1;
+		return 0;
+	}
+
+	/// @brief 校验是否存在指定输入组件
+	/// @param component 匹配的输入组件指针
+	/// @return 返回 false 表示不存在组件
+	virtual bool hasInput( const INodeComponent *component ) const {
+		if( input_node_component_info.second == component )
+			return true;
+		return false;
+	}
+	/// @brief 校验是否存在指定节点
+	/// @param node_widget 匹配的输入节点指针
+	/// @return 返回 false 表示不存在
+	virtual bool hasInput( const INodeWidget *node_widget ) const {
+		if( input_node_component_info.first == node_widget )
+			return true;
+		return false;
+	}
+	/// @brief 校验是否存在指定组件
+	/// @param component 匹配的组件指针
+	/// @return 返回 false 表示不存在
+	virtual bool hasOutput( const INodeComponent *component ) const {
+		if( output_node_component_info.second == component )
+			return true;
+		return false;
+	}
+	/// @brief 校验是否存在指定节点
+	/// @param node_widget 匹配的节点指针
+	/// @return 返回 false 表示不存在
+	virtual bool hasOutput( const INodeWidget *node_widget ) const {
+		if( output_node_component_info.first == node_widget )
+			return true;
+		return false;
+	}
+
+	virtual NodeLinkItem & operator=( const NodeLinkItem &other ) {
 		if( this == &other )
 			return *this;
 		setParent( other.parent( ) );

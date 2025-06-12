@@ -147,6 +147,90 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
 	repaint( );
 }
+
+int NodeGraph::linkHasUnity( const INodeComponent *unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return 0;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	int has;
+	for( size_t index = 0; index < count; ++index )
+		if( ( has = nodeLinkItemDataPtr[ index ].has( unity ), has != 0 ) )
+			return has;
+	return 0;
+}
+
+int NodeGraph::linkHasUnity( const INodeWidget *unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return 0;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	int has;
+	for( size_t index = 0; index < count; ++index )
+		if( ( has = nodeLinkItemDataPtr[ index ].has( unity ), has != 0 ) )
+			return has;
+	return 0;
+}
+int NodeGraph::linkHasInputUnity( const INodeComponent *input_unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return false;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nodeLinkItemDataPtr[ index ].hasInput( input_unity ) )
+			return true;
+	return false;
+}
+int NodeGraph::linkHasInputUnity( const INodeWidget *input_unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return false;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nodeLinkItemDataPtr[ index ].hasInput( input_unity ) )
+			return true;
+	return false;
+}
+int NodeGraph::linkHasOutputUnity( const INodeComponent *output_unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return false;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nodeLinkItemDataPtr[ index ].hasOutput( output_unity ) )
+			return true;
+	return false;
+}
+int NodeGraph::linkHasOutputUnity( const INodeWidget *output_unity ) const {
+	size_t count = nodeLinkItems.size( );
+	if( count == 0 )
+		return false;
+	auto nodeLinkItemDataPtr = nodeLinkItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nodeLinkItemDataPtr[ index ].hasOutput( output_unity ) )
+			return true;
+	return false;
+}
+int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *input_unity ) {
+	auto iterator = nodeLinkItems.begin( );
+	auto end = nodeLinkItems.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->hasInput( input_unity ) ) {
+			nodeLinkItems.erase( iterator );
+			return 1;
+		}
+	return 0;
+}
+int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity ) {
+	auto iterator = nodeLinkItems.begin( );
+	auto end = nodeLinkItems.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->hasInput( input_unity ) && iterator->hasOutput( output_unity ) ) {
+			nodeLinkItems.erase( iterator );
+			return 1;
+		}
+	return 0;
+}
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
@@ -163,6 +247,9 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 		selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
 		if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
 			selectNodeComponent = nullptr;
+		else if( selectNodeComponent->getComponentChannel( ) == INodeComponent::Channel_Type::Input_Read && selectNodeComponent->isOverlayMulVar( ) == false && linkHasInputUnity( selectNodeComponent ) != 0 )
+			if( linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
+				tools::debug::printError( "清除连接组件失败 " + selectNodeComponent->getNodeComponentName( ) + QString::number( ( size_t ) selectNodeComponent, 16 ) );
 		repaint( );
 		return;
 	}

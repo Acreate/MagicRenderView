@@ -106,6 +106,11 @@ public:
 			return false;
 		return tryLetChangeVar( component_object_ptr->getVarObjectPtr( ) );
 	}
+	/// @brief 是否允许多重叠加变量
+	/// @return true 表示允许
+	virtual bool isOverlayMulVar() const {
+		return false;
+	}
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );
