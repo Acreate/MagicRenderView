@@ -6,6 +6,7 @@
 #include "alias/type_alias.h"
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
+#include "qt/serialize/ISerialize.h"
 
 class NodeInputLineText;
 class QLabel;
@@ -15,7 +16,7 @@ class StringTypeObject;
 class IFunctionDeclaration;
 class NodeGraph;
 class INodeComponent;
-class INodeWidget : public QWidget {
+class INodeWidget : public QWidget, public ISerialize {
 	Q_OBJECT;
 protected:
 	/// @brief 函数声明对象

@@ -5,10 +5,11 @@
 
 #include "alias/type_alias.h"
 
+#include "qt/serialize/ISerialize.h"
 #include "qt/type/ITypeObject.h"
 
 class ITypeObject;
-class INodeComponent : public QWidget {
+class INodeComponent : public QWidget, public ISerialize {
 	Q_OBJECT;
 public:
 	/// @brief 通道类型
@@ -108,7 +109,7 @@ public:
 	}
 	/// @brief 是否允许多重叠加变量
 	/// @return true 表示允许
-	virtual bool isOverlayMulVar() const {
+	virtual bool isOverlayMulVar( ) const {
 		return false;
 	}
 Q_SIGNALS:

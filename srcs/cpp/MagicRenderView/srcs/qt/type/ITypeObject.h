@@ -6,6 +6,8 @@
 
 #include "alias/type_alias.h"
 
+#include "qt/serialize/ISerialize.h"
+
 #define operator_virtual_equ( Type, Return_var )\
 virtual	operator uint8_t( ) const {\
 		return Return_var;\
@@ -192,7 +194,7 @@ virtual	Type & operator=( const double &right ) {\
 		type_::operator=( other );\
 	}
 
-class ITypeObject : public QObject {
+class ITypeObject : public QObject, public ISerialize {
 	Q_OBJECT;
 protected:
 	std_vector< QString > currentTypeName;

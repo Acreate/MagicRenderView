@@ -249,7 +249,7 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 			selectNodeComponent = nullptr;
 		else if( selectNodeComponent->getComponentChannel( ) == INodeComponent::Channel_Type::Input_Read && selectNodeComponent->isOverlayMulVar( ) == false && linkHasInputUnity( selectNodeComponent ) != 0 )
 			if( linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
-				tools::debug::printError( "清除连接组件失败 " + selectNodeComponent->getNodeComponentName( ) + QString::number( ( size_t ) selectNodeComponent, 16 ) );
+				tools::debug::printError( "清除连接组件失败 : " + selectNodeComponent->getNodeComponentName( ) + QString::number( ( size_t ) selectNodeComponent, 16 ) );
 		repaint( );
 		return;
 	}

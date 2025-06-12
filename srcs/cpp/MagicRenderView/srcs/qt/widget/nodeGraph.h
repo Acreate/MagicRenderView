@@ -12,7 +12,7 @@ class INodeWidget;
 class INodeComponent;
 class QLabel;
 class NodeAddMenu;
-class NodeGraph : public QWidget {
+class NodeGraph : public QWidget, public ISerialize {
 	Q_OBJECT;
 public: // 类型
 	enum class MouseEventType {

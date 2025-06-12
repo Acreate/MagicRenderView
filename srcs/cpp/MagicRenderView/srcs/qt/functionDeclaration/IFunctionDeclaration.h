@@ -4,11 +4,12 @@
 
 #include <alias/type_alias.h>
 
+#include "qt/serialize/ISerialize.h"
 #include "qt/type/ITypeObject.h"
 
 class INodeWidget;
 class StringTypeObject;
-class IFunctionDeclaration : public QObject {
+class IFunctionDeclaration : public QObject, public ISerialize {
 	Q_OBJECT;
 public:
 	using std_call = std_function< void( ) >;
