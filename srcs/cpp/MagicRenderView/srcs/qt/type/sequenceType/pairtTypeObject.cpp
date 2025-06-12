@@ -1,5 +1,5 @@
 ﻿#include "pairtTypeObject.h"
-size_t PairtTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) const {
+size_t PairtTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	if( data_count == 0 )
 		return 0;
 	auto fromUtf8 = QString::fromUtf8( read_data_vector );

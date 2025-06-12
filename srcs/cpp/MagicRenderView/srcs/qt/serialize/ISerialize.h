@@ -18,7 +18,7 @@ public:
 	/// @param read_data_vector 源数据序列
 	/// @param data_count
 	/// @return 使用数据的个数
-	virtual size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) const {
+	virtual size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 		return 0;
 	}
 	virtual ~ISerialize( ) { }
@@ -26,6 +26,7 @@ public:
 	/// @brief 是否大端
 	/// @return 返回 true 表示大端
 	static uint8_t isBegEndian( );
+
 	/// @brief 大小端转换
 	/// @param ptr 数据起始地址
 	/// @param size 数据长度
@@ -67,7 +68,11 @@ public:
 		toData( data, &result );
 		return result;
 	}
-
+	template< typename TUnity_Data_Type,
+		typename = typename std::enable_if< std_is_same_base_var_type( TUnity_Data_Type ) > >
+	static void converEndian( TUnity_Data_Type &ptr, uint64_t size ) {
+		converEndian( ( uint8_t * ) &ptr, size );
+	}
 #undef std_is_same
 #undef std_is_same_base_var_type
 
