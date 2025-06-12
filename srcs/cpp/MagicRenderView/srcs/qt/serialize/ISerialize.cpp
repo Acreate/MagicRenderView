@@ -2,6 +2,49 @@
 #include <qt/type/ITypeObject.h>
 #include <QList>
 
+ISerialize::SerializeInfo::SerializeInfo( const uint8_t *data_ptr, const size_t &data_size ): data( data_size ) {
+	auto dataPtr = data.data( );
+	for( size_t index = 0; index < data_size; ++index )
+		dataPtr[ index ] = data_ptr[ index ];
+	if( init( ) == false )
+		tools::debug::printError( "数据是损坏的" );
+}
+bool ISerialize::SerializeInfo::init( ) {
+	auto dataPtr = data.data( );
+	size_t dataCount = data.size( );
+	begEndian = *dataPtr;
+	size = *( type_size_t * ) ( dataPtr + 1 );
+	if( size < dataCount )
+		return false;
+	// 找到类型
+	dataPtr = dataPtr + 1 + sizeof( type_size_t );
+	QByteArray hex;
+	hex.resize( size );
+	auto hexDataPtr = hex.data( );
+	for( size_t index = 0; index < size; ++index )
+		hexDataPtr[ index ] = dataPtr[ index ];
+	// 找到 [] 
+	QString structString( hex );
+	qsizetype left = structString.indexOf( "[" );
+	qsizetype right = structString.indexOf( "]", left );
+	QString mid = structString.mid( left, right - left );
+	auto stringList = mid.split( "," );
+	typeNames.clear( );
+	for( auto &unityString : stringList )
+		typeNames.emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
+
+	// 找到 {}
+	left = structString.indexOf( "{", right );
+	right = structString.indexOf( "}", left );
+	mid = structString.mid( left, right - left );
+	stringList = mid.split( "," );
+	metaObjectClassNames.clear( );
+	for( auto &unityString : stringList )
+		metaObjectClassNames.emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
+	// 配置数据起始地址
+	infoLastPtr = dataPtr + size;
+	return true;
+}
 uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
 

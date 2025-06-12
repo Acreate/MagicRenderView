@@ -24,37 +24,37 @@ void checkVarStack( QWidget *mainwidget ) {
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
 	if( qobjectCast )
 		*qobjectCast = 122;
-	qDebug( ) << typeObject->toString( );
+	qDebug( ) << __LINE__ << " : " << typeObject->toString( );
 	auto pairs = varStack->permissionVarType( );
 	for( auto &element : pairs ) {
-		qDebug( ) << element.first << " : " << element.second;
+		qDebug( ) << __LINE__ << " : " << element.first << " : " << element.second;
 		typeObject = varStack->generateVar( element.first );
-		qDebug( ) << typeObject->typeNames( );
+		qDebug( ) << __LINE__ << " : " << typeObject->typeNames( );
 	}
 	qDebug( ) << "=====================";
 	for( auto &element : pairs ) {
 		typeObject = varStack->generateVar( element.first );
-		qDebug( ) << typeObject->typeNames( );
+		qDebug( ) << __LINE__ << " : " << typeObject->typeNames( );
 	}
 	qDebug( ) << "=====================";
 
 	auto intTypeObject = varStack->generateTUBVar< IntTypeObject >( );
 	if( intTypeObject )
 		*intTypeObject = 23;
-	qDebug( ) << intTypeObject->toString( );
+	qDebug( ) << __LINE__ << " : " << intTypeObject->toString( );
 
 	auto floatTypeObject = varStack->generateTUBVar< FloatTypeObject >( mainwidget );
 	if( floatTypeObject )
 		*floatTypeObject = 123.5;
-	qDebug( ) << floatTypeObject->toString( );
-	qDebug( ) << floatTypeObject->typeNames( );
+	qDebug( ) << __LINE__ << " : " << floatTypeObject->toString( );
+	qDebug( ) << __LINE__ << " : " << floatTypeObject->typeNames( );
 	auto generateUbVar = varStack->generateUbVar( "int", mainwidget );
 	IntTypeObject *object;
 	object = qobject_cast< IntTypeObject * >( generateUbVar );
 	if( object ) {
 		*object = 44;
-		qDebug( ) << object->toString( );
-		qDebug( ) << object->typeNames( );
+		qDebug( ) << __LINE__ << " : " << object->toString( );
+		qDebug( ) << __LINE__ << " : " << object->typeNames( );
 	}
 
 	static const char cpp17Super[ ] = "int"; // no linkage
@@ -62,22 +62,22 @@ void checkVarStack( QWidget *mainwidget ) {
 	object = qobject_cast< IntTypeObject * >( generateUbVar );
 	if( object ) {
 		*object = 123.5;
-		qDebug( ) << object->toString( );
-		qDebug( ) << object->typeNames( );
+		qDebug( ) << __LINE__ << " : " << object->toString( );
+		qDebug( ) << __LINE__ << " : " << object->typeNames( );
 	}
 
 	auto stdSharedPtr = varStack->generateVar( "file" );
 	if( stdSharedPtr ) {
-		qDebug( ) << stdSharedPtr->toString( );
-		qDebug( ) << stdSharedPtr->typeNames( );
+		qDebug( ) << __LINE__ << " : " << stdSharedPtr->toString( );
+		qDebug( ) << __LINE__ << " : " << stdSharedPtr->typeNames( );
 	} else
 		tools::debug::printError( "创建失败" );
 
 	if( stdSharedPtr != nullptr )
-		qDebug( ) << "不等于 nullptr";
+		qDebug( ) << __LINE__ << " : " << "不等于 nullptr";
 
 	if( *stdSharedPtr != nullptr )
-		qDebug( ) << "不等于 nullptr";
+		qDebug( ) << __LINE__ << " : " << "不等于 nullptr";
 	IVarStack::deleteInstance< BaseVarStackEx >( );
 
 	qDebug( ) << "\n\n" << "开始测试 \"(iTypeObject *)nullptr\" 转换";
@@ -87,9 +87,9 @@ void checkVarStack( QWidget *mainwidget ) {
 		type_ *nnu = nullptr;\
 		type_ nullptrConverObj = ( type_ ) ( *nnu );\
 		if( nullptrConverObj != nullptr )\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+			qDebug( ) << __LINE__ << " : " << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
 		else\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+			qDebug( ) << __LINE__ << " : " << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
 		}while(false)
 
 	TestConverPtr( IntTypeObject );
@@ -107,9 +107,9 @@ void checkVarStack( QWidget *mainwidget ) {
 		ITypeObject *nnu = nullptr;\
 		type_ nullptrConverObj = *nnu;\
 		if( nullptrConverObj != nullptr )\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+			qDebug( ) << __LINE__ << " : "  << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
 		else\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+			qDebug( ) << __LINE__ << " : "  << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
 		}while(false)
 
 	TestConverITypeObjectPtr( IntTypeObject );
@@ -128,9 +128,9 @@ void checkVarStack( QWidget *mainwidget ) {
 		type_ nullptrConverObj = ( type_ ) ( *nnu );\
 		type_ nullptrConverObj2 = nullptrConverObj;\
 		if( nullptrConverObj2 != nullptr )\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
+			qDebug( ) << __LINE__ << " : "  << "\"("<< #type_ <<" *)nullptr\" 不等于 nullptr";\
 		else\
-			qDebug( ) << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
+			qDebug( ) << __LINE__ << " : "  << "\"("<< #type_ <<" *)nullptr\" 等于 nullptr";\
 		}while(false)
 
 	TestConverMulEquPtr( IntTypeObject );
@@ -152,14 +152,14 @@ void checkNodeStack( QWidget *mainwidget ) {
 	auto nodeStack = INodeStack::getInstance< BaseNodeStack >( );
 	auto propertyNames = nodeStack->permissionNodeType( );
 	for( auto &name : propertyNames )
-		qDebug( ) << name.first;
+		qDebug( ) << __LINE__ << " : " << name.first;
 	qDebug( ) << "===";
 	QString typeName = "fileInfo";
 	auto generateNode = nodeStack->generateNode( typeName, mainwidget );
 	if( !generateNode )
 		tools::debug::printError( "无法创建 " + typeName + " 节点" );
 	else {
-		qDebug( ) << "节点 " << generateNode->objectName( ) << " 退出";
+		qDebug( ) << __LINE__ << " : " << "节点 " << generateNode->objectName( ) << " 退出";
 		generateNode->deleteLater( );
 	}
 	typeName = "文件信息节点";
@@ -167,7 +167,7 @@ void checkNodeStack( QWidget *mainwidget ) {
 	if( !generateNode )
 		tools::debug::printError( "无法创建 " + typeName + " 窗口" );
 	else {
-		qDebug( ) << "节点 " << generateNode->objectName( ) << " 退出";
+		qDebug( ) << __LINE__ << " : " << "节点 " << generateNode->objectName( ) << " 退出";
 		generateNode->deleteLater( );
 	}
 	qDebug( ) << "\t\t结束 checkNodeStack";
@@ -177,18 +177,18 @@ void checkNodeStack( QWidget *mainwidget ) {
 void checkFunction( ) {
 	qDebug( ) << "==========================";
 	auto userFunctionDeclaration = UserFunctionDeclaration(
-		"file fileInfo(string); ",
+		"file fileInfo(string,string); ",
 		[]( ) {
 		} );
-	qDebug( ) << userFunctionDeclaration.getReturnType( );
-	qDebug( ) << userFunctionDeclaration.getDeclarationName( );
+	qDebug( ) << __LINE__ << " : " << userFunctionDeclaration.getReturnType( );
+	qDebug( ) << __LINE__ << " : " << userFunctionDeclaration.getDeclarationName( );
 	for( auto &ptr : userFunctionDeclaration.getParamInfos( ) )
-		qDebug( ) << ptr->first << " : " << ptr->second;
+		qDebug( ) << __LINE__ << " : " << ptr->first << " : " << ptr->second;
 	qDebug( ) << "==========================";
 }
 /// @brief 测试工具函数
 void checkTools( ) {
-	qDebug( ) << "==========================";
+	qDebug( ) << "\n==========================";
 	std_vector< std_pairt< QString, size_t > > functionName;
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( );
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 1 );
@@ -196,12 +196,12 @@ void checkTools( ) {
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( functionName );
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 1, functionName );
 	qDebug( ) << __LINE__ << " : " << tools::debug::getFunctionName( 0, 1, functionName );
-	qDebug( ) << "==========================";
+	qDebug( ) << "\n==========================";
 }
 /// @brief 测试序列化
 void checkSerializeVar( ) {
-	qDebug( ) << "==================";
-	qDebug( ) << "\t\t测试 " << tools::debug::getFunctionName( );
+	qDebug( ) << "\n==================";
+	qDebug( ) << "\t\t测试 " << tools::debug::getFunctionName( ) << "\n\n";
 	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 
 #define testSerVar( type_ , old_var_, new_var_) do{ \
@@ -250,7 +250,7 @@ void checkSerializeVar( ) {
 			std_vector< uchar > ser;
 			if( typeObject->serializeToVectorData( &ser ) ) {
 				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
-			typeObject->append( 8888 );
+				typeObject->append( 8888 );
 				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
@@ -258,7 +258,45 @@ void checkSerializeVar( ) {
 			} else tools::debug::printError( " :(""DataTypeObject"") "" 序列化失败" );
 		}
 	} while( false );
-	qDebug( ) << "\t\t结束 " << tools::debug::getFunctionName( );
+
+	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTUBVar< IntTypeObject >( );
+		if( typeObject ) {
+			*typeObject = 12;
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""IntTypeObject"") " << typeObject->toString( );
+				*typeObject = 32;
+				qDebug( ) << __LINE__ << " :(""IntTypeObject"") " << typeObject->toString( );
+
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""IntTypeObject"") " << typeObject->toString( );
+				else tools::debug::printError( " :(""IntTypeObject"") "" 反序列化失败" );
+
+				ISerialize::SerializeInfo info( ser.data( ), ser.size( ) );
+				QStringList list;
+				for( auto &typeName : info.getTypeNames( ) )
+					list.append( typeName );
+				qDebug( ) << "类型列表 : " << list.join( ", " );
+				list.clear( );
+				for( auto &typeName : info.getMetaObjectClassNames( ) )
+					list.append( typeName );
+				qDebug( ) << "多媒体列表 : " << list.join( ", " );
+
+				auto typeNames = info.getTypeNames( );
+				QString string = typeNames[ typeNames.size( ) - 1 ];
+				auto var = varStack->generateVar( string );
+				if( var ) {
+					qDebug( ) << __LINE__ << "创建成功 : " << var->typeNames( );
+					qDebug( ) << __LINE__ << var->toString( );
+				}
+			} else
+				tools::debug::printError( " :(""IntTypeObject"") "" 序列化失败" );
+		}
+	} while( false );
+
+	qDebug( ) << "\n\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }
 int main( int argc, char *argv[ ] ) {

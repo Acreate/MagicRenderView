@@ -203,18 +203,18 @@ protected:
 public:
 	ITypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : QObject( parent ) {
 		thisPtr = this;
-		currentTypeName.emplace_back( ITypeObject::staticMetaObject.className( ) );
-
 		size_t count = alias_type_name.size( );
 		if( count == 0 )
 			return;
 		auto datas = alias_type_name.data( );
-		size_t newsize = 1 + count;
 		// 扩张
-		currentTypeName.resize( newsize );
+		currentTypeName.resize( count );
 		auto targetPtr = currentTypeName.data( );
-		for( size_t index = 1; index < newsize; ++index )
-			targetPtr[ index ] = datas[ index - 1 ];
+		for( size_t index = 0; index < count; ++index ) {
+			QString trimmed = datas[ index ].trimmed( );
+			if( !trimmed.isEmpty( ) )
+				targetPtr[ index ] = trimmed;
+		}
 	}
 	ITypeObject( const ITypeObject &other )
 		: QObject( other.parent( ) ) {

@@ -106,7 +106,7 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 		mid = arg.mid( index, end - index );
 		params.emplace_back( mid );
 		// 找到非空
-		for( index = end + 2; index < declCount; ++index )
+		for( index = end + 1; index < declCount; ++index )
 			if( !dataPtr[ index ].isSpace( ) )
 				break;
 	}

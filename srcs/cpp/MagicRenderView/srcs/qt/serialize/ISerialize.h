@@ -3,10 +3,36 @@
 #pragma once
 #include "alias/type_alias.h"
 
+#include "qt/tools/tools.h"
+
 class ISerialize {
-protected:
+public:
 	/// @brief 类型信息长度
 	using type_size_t = uint64_t;
+	/// @brief 序列化信息
+	class SerializeInfo final {
+		/// @brief 原始数据
+		std_vector< uint8_t > data;
+		/// @brief 从原始数据当中获取到的类型名称列表
+		std_vector< QString > typeNames;
+		/// @brief 从原始数据当中获取到的 qt 媒体类名
+		std_vector< QString > metaObjectClassNames;
+		/// @brief 从原始数据当中获取到的大小端标识
+		uchar begEndian;
+		/// @brief 从原始数据当中获取到的数据大小
+		type_size_t size;
+		/// @brief 从原始数据当中解析实现的结尾指针，该内容可能是真实的数据值
+		const uint8_t *infoLastPtr;
+	public:
+		SerializeInfo( const uint8_t *data_ptr, const size_t &data_size );
+		bool init( );
+		const std_vector<uint8_t> & getData( ) const { return data; }
+		const std_vector<QString> & getTypeNames( ) const { return typeNames; }
+		const std_vector<QString> & getMetaObjectClassNames( ) const { return metaObjectClassNames; }
+		uchar getBegEndian( ) const { return begEndian; }
+		type_size_t getSize( ) const { return size; }
+		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr; }
+	};
 public:
 	/// @brief 数据序列化到参数
 	/// @param result_data_vector 返回被序列化后的数据
