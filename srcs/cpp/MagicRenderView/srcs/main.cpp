@@ -203,21 +203,61 @@ void checkSerializeVar( ) {
 	qDebug( ) << "==================";
 	qDebug( ) << "\t\t测试 " << tools::debug::getFunctionName( );
 	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
-	auto typeObject = varStack->generateTUBVar< IntTypeObject >( );
-	if( typeObject ) {
-		*typeObject = 1;
-		std_vector< uchar > ser;
-		if( typeObject->serializeToVectorData( &ser ) ) {
-			qDebug( ) << __LINE__ << " : " << typeObject->toString( );
-			*typeObject = 33;
-			qDebug( ) << __LINE__ << " : " << typeObject->toString( );
-			if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
-				qDebug( ) << __LINE__ << " : " << typeObject->toString( );
-			else
-				tools::debug::printError( "int 反序列化失败" );
-		} else
-			tools::debug::printError( "int 序列化失败" );
-	}
+
+#define testSerVar( type_ , old_var_, new_var_) do{ \
+		auto typeObject = varStack->generateTUBVar< type_ >( );\
+		if( typeObject ) {\
+			*typeObject = old_var_;\
+			std_vector< uchar > ser;\
+			if( typeObject->serializeToVectorData( &ser ) ) {\
+				qDebug( ) << __LINE__ << " :("#type_") " << typeObject->toString( );\
+				*typeObject = new_var_;\
+				qDebug( ) << __LINE__ << " :("#type_") " << typeObject->toString( );\
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )\
+					qDebug( ) << __LINE__ << " :("#type_") " << typeObject->toString( );\
+				else\
+					tools::debug::printError( " :("#type_") "" 反序列化失败" );\
+			} else\
+				tools::debug::printError( " :("#type_") "" 序列化失败" );\
+		}\
+	}while(false)
+
+	testSerVar( IntTypeObject, 11, 33 );
+	qDebug( ) << "-------------------";
+	testSerVar( FloatTypeObject, 2.44, 57487 );
+	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTUBVar< StringTypeObject >( );
+		if( typeObject ) {
+			typeObject->setString( "旧的变量" );
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
+				typeObject->setString( "新的变量" );
+				qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
+				else tools::debug::printError( " :(""StringTypeObject"") "" 反序列化失败" );
+			} else tools::debug::printError( " :(""StringTypeObject"") "" 序列化失败" );
+		}
+	} while( false );
+
+	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTUBVar< DataTypeObject >( );
+		if( typeObject ) {
+			typeObject->append( 52 );
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
+			typeObject->append( 8888 );
+				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
+				else tools::debug::printError( " :(""DataTypeObject"") "" 反序列化失败" );
+			} else tools::debug::printError( " :(""DataTypeObject"") "" 序列化失败" );
+		}
+	} while( false );
 	qDebug( ) << "\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }

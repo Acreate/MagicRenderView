@@ -8,17 +8,17 @@
 class DataTypeObject : public ITypeObject {
 	Q_OBJECT;
 protected:
-	std_shared_ptr< std_vector< char > > val;
+	std_shared_ptr< std_vector< uint8_t > > val;
 public:
-	DataTypeObject( const std_vector< char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+	DataTypeObject( const std_vector< uint8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ),
-		val( new std_vector< char >( val ) ) {
+		val( new std_vector< uint8_t >( val ) ) {
 	}
-	DataTypeObject( const std_vector< unsigned char > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+	DataTypeObject( const std_vector< int8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 		size_t count = val.size( );
-		this->val.reset( new std_vector< char >( count ) );
+		this->val.reset( new std_vector< uint8_t >( count ) );
 		if( count == 0 )
 			return;
 		auto data = val.data( );
@@ -29,7 +29,7 @@ public:
 	}
 	DataTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( alias_type_name, parent ),
-		val( new std_vector< char >( ) ) {
+		val( new std_vector< uint8_t >( ) ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 	}
 
@@ -43,26 +43,70 @@ public:
 			if( this == typeObject )
 				return *this;
 			ITypeObject::operator =( other );
-			val.reset( new std_vector< char >( ) );
+			val.reset( new std_vector< uint8_t >( ) );
 			*val = *other.val;
 		} else
 			thisPtr = nullptr;
 		return *this;
 	}
 
-	void append( char data ) {
+	void append( int8_t data ) {
 		val->emplace_back( data );
 	}
-	void append( uchar data ) {
+	void append( int16_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+	void append( int32_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+	void append( int64_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+
+	void append( uint8_t data ) {
 		val->emplace_back( data );
 	}
+	void append( uint16_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+	void append( uint32_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+	void append( uint64_t data ) {
+		auto stdVector = toData( data );
+		size_t count = stdVector.size( );
+		auto sourceData = stdVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			val->emplace_back( sourceData[ index ] );
+	}
+
 	void resetSize( const size_t &new_size ) {
 		val->resize( new_size );
 	}
 	size_t count( ) const {
 		return val->size( );
 	}
-	std_vector< char > getCharArray( ) const {
+	std_vector< uint8_t > getCharArray( ) const {
 		return *val;
 	}
 	std_vector< uchar > getUCharArray( ) const {
@@ -76,12 +120,11 @@ public:
 			data[ index ] = source[ index ];
 		return result;
 	}
-	char & operator[]( const size_t &index ) const {
+	uint8_t & operator[]( const size_t &index ) const {
 		size_t count = val->size( );
-		char result = 0;
+		uint8_t result = 0;
 		if( count == 0 )
 			return result;
-
 		auto source = val->data( );
 		return source[ index ];
 	}
@@ -112,6 +155,8 @@ public:
 			result.append( "0x" + QString::number( bin, 16 ) );
 		return "{ " + result.join( ", " ) + " }";
 	}
+	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
+	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 };
 
 #endif // DATATYPEOBJECT_H_H_HEAD__FILE__

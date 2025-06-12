@@ -4,14 +4,23 @@
 
 uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
-	classNameList.append( meta_object_ptr->className( ) );
+
+	for( auto &str : native_type_name )
+		classNameList.append( str.toUtf8( ).toHex( ) );
+	QString classList = "[" + classNameList.join( ", " );
+
+	classNameList.clear( );
+	QString className = meta_object_ptr->className( );
+	classNameList.append( className.toUtf8( ).toHex( ) );
 	do {
 		meta_object_ptr = meta_object_ptr->superClass( );
 		if( meta_object_ptr == nullptr )
 			break;
+		className = meta_object_ptr->className( );
+		classNameList.append( className.toUtf8( ).toHex( ) );
 	} while( true );
 
-	QString classList = "[" + native_type_name.join( "," ) + "]:{" + classNameList.join( "," ) + "}";
+	classList = classList + "]:{" + classNameList.join( "," ) + "}";
 	QByteArray utf8 = classList.toUtf8( );
 	qint64 utfCount = utf8.size( );
 	auto type_name_date = utf8.data( );
