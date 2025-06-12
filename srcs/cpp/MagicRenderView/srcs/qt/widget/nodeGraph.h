@@ -90,6 +90,8 @@ public:
 	/// @param input_unity 输入组件
 	/// @return 成功返回 1
 	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
+	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

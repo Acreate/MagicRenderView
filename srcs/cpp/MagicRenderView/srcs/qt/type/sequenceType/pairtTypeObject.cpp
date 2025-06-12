@@ -9,17 +9,16 @@ size_t PairtTypeObject::serializeToObjectData( const uint8_t *read_data_vector, 
 	auto end = fromUtf8.indexOf( "}", indexOf + 1 );
 	if( end == -1 ) // 必须存在 {} 组成的列表
 		return 0;
-	auto string = fromUtf8.mid( indexOf, end-indexOf );
+	auto string = fromUtf8.mid( indexOf, end - indexOf );
 	auto stringList = string.split( "," );
 	// 媒体信息
-	const QMetaObject * meta = metaObject( );
+	const QMetaObject *meta = metaObject( );
 	// 该类名称
 	auto className = meta->className( );
-	auto superClass = meta->superClass(  );
-	
+	auto superClass = meta->superClass( );
 
 	return 0;
 }
-bool PairtTypeObject::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
-	return ITypeObject::serializeToVectorData( result_data_vector );
+bool PairtTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
+	return false;
 }

@@ -30,6 +30,8 @@ public:
 	INodeComponent * getPosNodeComponent( const QPoint &pos ) const override;
 	bool tryLetChangeVar( const ITypeObject *object_ptr ) const override;
 	bool tryLetChangeVar( const INodeComponent *component_object_ptr ) const override;
+	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

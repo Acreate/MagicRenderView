@@ -14,6 +14,7 @@
 #include "qt/type/blendType/combinationTypeObject.h"
 #include "qt/type/lineType/vectorTypeObject.h"
 
+#if _DEBUG
 /// @brief 检测到堆栈变量的生成
 /// @param mainwidget 可能挂靠的父节点
 void checkVarStack( QWidget *mainwidget ) {
@@ -302,6 +303,7 @@ void checkSerializeVar( ) {
 	qDebug( ) << "\n\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }
+#endif
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 

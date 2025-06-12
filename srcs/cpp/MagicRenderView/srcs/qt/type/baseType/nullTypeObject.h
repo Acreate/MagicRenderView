@@ -45,6 +45,8 @@ public:
 	QString toString( ) const override {
 		return "nullptr";
 	}
+	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 };
 
 #endif // NULLTYPEOBJECT_H_H_HEAD__FILE__

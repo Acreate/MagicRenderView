@@ -235,6 +235,12 @@ int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, con
 		}
 	return 0;
 }
+bool NodeGraph::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
+	return false;
+}
+size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
+	return 0;
+}
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;

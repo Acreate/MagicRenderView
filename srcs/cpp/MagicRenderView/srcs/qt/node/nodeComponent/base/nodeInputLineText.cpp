@@ -71,6 +71,12 @@ bool NodeInputLineText::tryLetChangeVar( const INodeComponent *component_object_
 		return false;
 	return tryLetChangeVar( component_object_ptr->getVarObjectPtr( ) );
 }
+bool NodeInputLineText::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
+	return false;
+}
+size_t NodeInputLineText::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
+	return 0;
+}
 void NodeInputLineText::paintEvent( QPaintEvent *event ) {
 	//	INodeComponent::paintEvent( event );
 }

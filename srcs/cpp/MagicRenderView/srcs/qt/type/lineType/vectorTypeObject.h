@@ -200,7 +200,8 @@ public:
 			result.append( elemt->toString( ) );
 		return "(" + result.join( "," ) + ")";
 	}
-
+	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 };
 
 #endif // VECTORTYPEOBJECT_H_H_HEAD__FILE__

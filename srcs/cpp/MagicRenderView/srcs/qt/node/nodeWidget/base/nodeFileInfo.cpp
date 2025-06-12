@@ -73,6 +73,12 @@ bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint 
 
 	return false;
 }
+bool NodeFileInfo::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
+	return false;
+}
+size_t NodeFileInfo::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
+	return 0;
+}
 
 void NodeFileInfo::updateSize( ) {
 	size_t leftHeight = 0, width = 0;
