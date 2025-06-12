@@ -5,7 +5,7 @@ size_t IntTypeObject::serializeToObjectData( const uint8_t *read_data_vector, co
 	auto object = metaObject( );
 	// 获取值的长度
 	type_size_t valSize = sizeof( val );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, valSize );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, typeNames( ), valSize );
 
 	auto resultDataCount = resultData.size( );
 	if( resultDataCount > data_count /* 如果数据源小于当前序列化数据，则返回 */ )

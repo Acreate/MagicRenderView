@@ -143,8 +143,12 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	if( selectNodeComponent ) {
-	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) )
-		selectNodeWidget->move( currentMouseInWidgetPos - selectNodeWidgetOffset );
+	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
+		QPoint point = currentMouseInWidgetPos - selectNodeWidgetOffset;
+		point.setX( std::max( 0, point.x( ) ) );
+		point.setY( std::max( 0, point.y( ) ) );
+		selectNodeWidget->move( point );
+	}
 	repaint( );
 }
 

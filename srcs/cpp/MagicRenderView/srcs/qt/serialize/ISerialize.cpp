@@ -1,8 +1,8 @@
 ﻿#include "./ISerialize.h"
-
+#include <qt/type/ITypeObject.h>
 #include <QList>
 
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const size_t &append_size ) {
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
 	classNameList.append( meta_object_ptr->className( ) );
 	do {
@@ -11,7 +11,7 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 			break;
 	} while( true );
 
-	QString classList = "{" + classNameList.join( "," ) + "}";
+	QString classList = "[" + native_type_name.join( "," ) + "]:{" + classNameList.join( "," ) + "}";
 	QByteArray utf8 = classList.toUtf8( );
 	qint64 utfCount = utf8.size( );
 	auto type_name_date = utf8.data( );
@@ -46,6 +46,28 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 
 	orgIndex = index + orgIndex;
 	return dataPtr + orgIndex;
+}
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size ) {
+	QStringList stringList;
+	size_t count = native_type_name.size( );
+	if( count == 0 )
+		return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stringList, append_size );
+	auto data = native_type_name.data( );
+	for( size_t index = 0; index < count; ++index )
+		stringList.append( data[ index ] );
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stringList, append_size );
+}
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size ) {
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), native_type_name, append_size );
+}
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), native_type_name, append_size );
+}
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const size_t &append_size ) {
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, QStringList { }, append_size );
+}
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const size_t &append_size ) {
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), QStringList { }, append_size );
 }
 uint8_t ISerialize::isBegEndian( ) {
 	static union {
