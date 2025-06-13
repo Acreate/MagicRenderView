@@ -42,3 +42,13 @@ INodeWidget * INodeStack::removeStorageNode( const QString &storage_name ) {
 		}
 	return result;
 }
+INodeStack * INodeStack::getInstance( const QString &stack_name ) {
+	INodeStack *result = nullptr;
+	for( auto &ptr : instanceVector )
+		if( ptr->metaObject( )->className( ) == stack_name ) {
+			result = qobject_cast< INodeStack * >( ptr.get( ) );
+			if( result )
+				return result;
+		}
+	return result;
+}

@@ -59,6 +59,22 @@ public:
 		instanceVector.emplace_back( std_shared_ptr< INodeStack >( result ) );
 		return result;
 	}
+	/// @brief 追加一个创建对象。\n
+	/// 使用 @code metaObject( )->className( ) @endcode 进行类型名称匹配，如果已经存在重复的类型名称，那么存储失败
+	/// @param append_unity 追加的对象指针
+	/// @return 成功返回 true
+	static bool appendInstance( const std_shared_ptr< INodeStack > &append_unity ) {
+		auto egName = append_unity->metaObject( )->className( );
+		for( auto &ptr : instanceVector )
+			if( ptr->metaObject( )->className( ) == egName )
+				return false;
+		instanceVector.emplace_back( append_unity );
+		return true;
+	}
+	/// @brief 使用生成器名称获取生成器实例对象
+	/// @param stack_name 生成器名称
+	/// @return 失败返回 nullptr
+	static INodeStack * getInstance( const QString &stack_name );
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称
 	/// @param parnet qt 内存管理对象
