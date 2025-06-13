@@ -251,7 +251,10 @@ void checkSerializeVar( ) {
 			std_vector< uchar > ser;
 			if( typeObject->serializeToVectorData( &ser ) ) {
 				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
+				typeObject->clear(  );
 				typeObject->append( 8888 );
+				typeObject->append( 45 );
+				typeObject->append( 1112 );
 				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );

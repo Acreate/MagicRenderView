@@ -13,10 +13,7 @@ size_t DataTypeObject::serializeToObjectData( const uint8_t *read_data_vector, c
 		return 0;
 	auto resultDataPtr = resultData.data( );
 	if( *resultDataPtr == *read_data_vector /* 比较大小端 */ ) /* 大小端相同 */ {
-		type_size_t resultDataLen = *( ( type_size_t * ) ( resultDataPtr + 1 ) );
 		type_size_t readDataLen = *( ( type_size_t * ) ( read_data_vector + 1 ) );
-		if( resultDataLen != readDataLen /* 长度是否匹配 */ )
-			return 0;
 		type_size_t start = sizeof( uint8_t ) + sizeof( type_size_t );
 		for( ; ( resultDataPtr + start ) != lastDataPtr; ++start )
 			if( resultDataPtr[ start ] != read_data_vector[ start ] )
@@ -52,15 +49,14 @@ size_t DataTypeObject::serializeToObjectData( const uint8_t *read_data_vector, c
 	return 0;
 }
 bool DataTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
-	type_size_t strLen = val->size( ) * sizeof( val->at( 0 ) );
+	type_size_t strLen = val->size( );
 	auto object = metaObject( );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, typeNames( ), sizeof( strLen ) );
+	size_t typeSize = sizeof( strLen );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, typeNames( ), typeSize + strLen );
 	*( decltype(strLen) * ) lastDataPtr = strLen;
-	size_t size = result_data_vector->size( );
-	result_data_vector->resize( size + strLen );
-	auto data = result_data_vector->data( ) + size;
+	lastDataPtr = lastDataPtr + typeSize;
 	auto utfDataPtr = val->data( );
 	for( type_size_t index = 0; index < strLen; ++index )
-		data[ index ] = utfDataPtr[ index ];
+		lastDataPtr[ index ] = utfDataPtr[ index ];
 	return result_data_vector->size( );
 }

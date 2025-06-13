@@ -99,7 +99,9 @@ public:
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-
+	void clear( ) {
+		val->clear( );
+	}
 	void resetSize( const size_t &new_size ) {
 		val->resize( new_size );
 	}
