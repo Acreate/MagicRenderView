@@ -44,5 +44,14 @@ IVarStack * IVarStack::getInstance( const QString &stack_name ) {
 		return getInstance< BaseVarStack >( );
 	else if( stack_name == BaseVarStackEx::staticMetaObject.className( ) )
 		return getInstance< BaseVarStackEx >( );
+	IVarStack *instance;
+	instance = getInstance< BaseVarStackEx >( );
+	for( auto &name : instance->getTypeName( ) )
+		if( name == stack_name )
+			return instance;
+	instance = getInstance< BaseVarStack >( );
+	for( auto &name : instance->getTypeName( ) )
+		if( name == stack_name )
+			return instance;
 	return nullptr;
 }
