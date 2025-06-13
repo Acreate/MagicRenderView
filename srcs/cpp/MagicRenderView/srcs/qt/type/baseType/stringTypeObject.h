@@ -8,9 +8,9 @@ class StringTypeObject : public ITypeObject {
 protected:
 	QString string;
 public:
-	StringTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
+	StringTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
 	}
-	StringTypeObject( const QString &rhs, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
+	StringTypeObject( IVarStack *gener_var_stack, const QString &rhs, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
 		string = rhs;
 	}
 
@@ -39,7 +39,7 @@ public:
 		return *this;
 	}
 	virtual StringTypeObject operator+( const StringTypeObject &&rhs ) const {
-		StringTypeObject result;
+		StringTypeObject result( this->stack );
 		result.string = string + rhs.string;
 		return result;
 	}
@@ -61,7 +61,7 @@ public:
 		return string;
 	}
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
-	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 };
 
 #endif // STRINGTYPEOBJECT_H_H_HEAD__FILE__

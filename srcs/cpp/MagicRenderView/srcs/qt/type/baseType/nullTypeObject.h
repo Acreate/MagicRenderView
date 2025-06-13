@@ -12,7 +12,7 @@ public:
 		return object->isNullptr( );
 	}
 public:
-	NullTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ) {
+	NullTypeObject( IVarStack *gener_var_stack = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ) {
 		thisPtr = nullptr;
 	}
 	Def_Clone_Move_override_function( NullTypeObject );
@@ -45,7 +45,7 @@ public:
 	QString toString( ) const override {
 		return "nullptr";
 	}
-	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 };
 

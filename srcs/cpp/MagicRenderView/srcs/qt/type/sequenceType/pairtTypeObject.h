@@ -12,16 +12,16 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): ITypeObject( alias_type_name, parnet ) {
+	PairtTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
 	}
-	PairtTypeObject( const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( alias_type_name, parent ),
+	PairtTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ),
 		first( first ),
 		scond( scond ) {
 		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 	}
-	PairtTypeObject( const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( { }, nullptr ), first( first ),
+	PairtTypeObject( IVarStack *gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
+		: ITypeObject( gener_var_stack, { }, nullptr ), first( first ),
 		scond( scond ) {
 		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 	}

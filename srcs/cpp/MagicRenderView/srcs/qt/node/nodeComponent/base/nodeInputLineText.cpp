@@ -4,10 +4,12 @@
 #include <QLineEdit>
 #include <qboxlayout.h>
 
+#include "qt/stack/varStack/IVarStack.h"
+#include "qt/stack/varStack/base/baseVarStack.h"
 #include "qt/type/baseType/stringTypeObject.h"
 
 NodeInputLineText::NodeInputLineText( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ): INodeComponent( node_component_name, parent, f ) {
-	var.reset( new StringTypeObject );
+	var = IVarStack::getInstance< BaseVarStack >( )->generateTVar< StringTypeObject >( );
 	mainLayout = new QHBoxLayout( this );
 	titile = new QLabel( this );
 	titile->setText( node_component_name );
@@ -15,7 +17,7 @@ NodeInputLineText::NodeInputLineText( const QString &node_component_name, QWidge
 	mainLayout->addWidget( titile );
 }
 bool NodeInputLineText::resetOrg( ) {
-	var.reset( new StringTypeObject );
+	var = IVarStack::getInstance< BaseVarStack >( )->generateTVar< StringTypeObject >( );
 	bool cond = var->isNullptr( ) != true;
 	return cond;
 }
@@ -71,7 +73,7 @@ bool NodeInputLineText::tryLetChangeVar( const INodeComponent *component_object_
 		return false;
 	return tryLetChangeVar( component_object_ptr->getVarObjectPtr( ) );
 }
-bool NodeInputLineText::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
+bool NodeInputLineText::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	return false;
 }
 size_t NodeInputLineText::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {

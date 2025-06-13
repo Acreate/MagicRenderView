@@ -13,11 +13,12 @@ class IVarStack : public QObject {
 protected:
 	/// @brief 仓库存储
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
-
+	std_vector< QString > typeName;
 public:
 	IVarStack( QObject *parent ) : QObject( parent ) {
 	}
 public:
+	const std_vector< QString > & getTypeName( ) const { return typeName; }
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
@@ -69,6 +70,11 @@ public:
 		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
+	/// @brief 使用生成器名称获取生成器实例对象
+	/// @param stack_name 生成器名称
+	/// @return 失败返回 nullptr
+	static IVarStack * getInstance( const QString &stack_name );
+
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称
 	/// @param parnet qt 内存管理对象

@@ -10,12 +10,12 @@ class DataTypeObject : public ITypeObject {
 protected:
 	std_shared_ptr< std_vector< uint8_t > > val;
 public:
-	DataTypeObject( const std_vector< uint8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
-		: ITypeObject( alias_type_name, parent ),
+	DataTypeObject( IVarStack *gener_var_stack, const std_vector< uint8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ),
 		val( new std_vector< uint8_t >( val ) ) {
 	}
-	DataTypeObject( const std_vector< int8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
-		: ITypeObject( alias_type_name, parent ) {
+	DataTypeObject( IVarStack *gener_var_stack, const std_vector< int8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 		size_t count = val.size( );
 		this->val.reset( new std_vector< uint8_t >( count ) );
@@ -27,8 +27,8 @@ public:
 			targetData[ count ] = data[ count ];
 		targetData[ 0 ] = data[ 0 ];
 	}
-	DataTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
-		: ITypeObject( alias_type_name, parent ),
+	DataTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ),
 		val( new std_vector< uint8_t >( ) ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 	}

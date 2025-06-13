@@ -2,7 +2,6 @@
 #define INTTYPEOBJECT_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "qt/type/ITypeObject.h"
 
 class IntTypeObject : public ITypeObject {
@@ -12,10 +11,10 @@ protected:
 public:
 	operator_virtual_equ( IntTypeObject, val );
 public:
-	explicit IntTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) {
+	explicit IntTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) {
 	}
-	explicit IntTypeObject( const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
-		: ITypeObject( alias_type_name, parent ), val( val ) {
+	explicit IntTypeObject( IVarStack *gener_var_stack, const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( IntTypeObject::staticMetaObject.className( ) );
 	}
 	Def_Clone_Move_override_function( IntTypeObject );
@@ -48,7 +47,7 @@ public:
 	}
 
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
-	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 
 };
 

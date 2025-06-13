@@ -1,5 +1,8 @@
 ﻿#include "IVarStack.h"
 
+#include "base/baseVarStack.h"
+#include "base/baseVarStackEx.h"
+
 #include "qt/type/baseType/nullTypeObject.h"
 
 std_vector< std_shared_ptr< IVarStack > > IVarStack::instanceVector;
@@ -14,7 +17,7 @@ std_shared_ptr< ITypeObject > IVarStack::setStorageVar( const std_shared_ptr< IT
 			return typeObject;
 		}
 
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( nullptr ) );
 }
 std_shared_ptr< ITypeObject > IVarStack::getStorageVar( const QString &storage_name ) const {
 	auto iterator = storage.begin( );
@@ -22,7 +25,7 @@ std_shared_ptr< ITypeObject > IVarStack::getStorageVar( const QString &storage_n
 	for( ; iterator != end; ++iterator )
 		if( iterator->second == storage_name )
 			return iterator->first;
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( nullptr ) );
 }
 std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storage_name ) {
 	auto iterator = storage.begin( );
@@ -34,5 +37,12 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 			return typeObject;
 		}
 
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( ) );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( nullptr ) );
+}
+IVarStack * IVarStack::getInstance( const QString &stack_name ) {
+	if( stack_name == BaseVarStack::staticMetaObject.className( ) )
+		return getInstance< BaseVarStack >( );
+	else if( stack_name == BaseVarStackEx::staticMetaObject.className( ) )
+		return getInstance< BaseVarStackEx >( );
+	return nullptr;
 }

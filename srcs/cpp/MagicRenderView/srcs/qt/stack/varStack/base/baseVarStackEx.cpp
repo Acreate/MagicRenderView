@@ -6,7 +6,7 @@
 
 BaseVarStackEx::BaseVarStackEx( ) {
 	generateInfosEx.emplace_back( std_pairt( std_vector< QString > { "file" }, [this]( )->ITypeObject * {
-		auto ptr = new CombinationTypeObject( { "file", CombinationTypeObject::staticMetaObject.className( ) } );
+		auto ptr = new CombinationTypeObject( this, { "file", CombinationTypeObject::staticMetaObject.className( ) } );
 		std_shared_ptr< ITypeObject > path( BaseVarStack::newVar( "string" ) );
 		std_shared_ptr< ITypeObject > bitSize( BaseVarStack::newVar( "int" ) );
 		std_shared_ptr< ITypeObject > createTime( BaseVarStack::newVar( "int" ) );

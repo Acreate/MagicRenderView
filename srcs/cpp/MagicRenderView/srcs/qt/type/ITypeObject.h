@@ -194,14 +194,16 @@ virtual	Type & operator=( const double &right ) {\
 		type_::operator=( other );\
 	}
 
+class IVarStack;
 class ITypeObject : public QObject, public ISerialize {
 	Q_OBJECT;
 protected:
 	std_vector< QString > currentTypeName;
 	/// @brief 本身的对象指针
 	const ITypeObject *thisPtr;
+	IVarStack *stack;
 public:
-	ITypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : QObject( parent ) {
+	ITypeObject( IVarStack *gener_var_stack = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : QObject( parent ) {
 		thisPtr = this;
 		size_t count = alias_type_name.size( );
 		if( count == 0 )
@@ -220,6 +222,7 @@ public:
 		: QObject( other.parent( ) ) {
 		currentTypeName = other.currentTypeName;
 		thisPtr = &other;
+		stack = other.stack;
 	}
 	virtual ITypeObject & operator=( const ITypeObject &other ) {
 		if( this == nullptr || thisPtr == nullptr )
@@ -230,6 +233,7 @@ public:
 			setParent( other.parent( ) );
 			currentTypeName = other.currentTypeName;
 			thisPtr = &other;
+			stack = other.stack;
 		} else
 			thisPtr = nullptr;
 
@@ -262,15 +266,20 @@ public:
 	}
 
 	template< typename TLeft, typename TRight >
-		requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta ) {
+		requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr ) {
 			le->currentTypeName.size( );
 			ta = qobject_cast< const TLeft * >( ri );
 			ta->currentTypeName.size( );
 			le->currentTypeName.data( )[ 0 ].compare( ta->currentTypeName[ 0 ] );
+			dptr = le;
+			dptr = ri;
+			dptr = ta;
 		}
 	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const {
 		if( ri_ptr == le_ptr )
 			return 0;
+		if( le_ptr->stack != ri_ptr->stack )
+			return -1;
 		result_ptr = qobject_cast< const TLeft * >( ri_ptr );
 		if( result_ptr == nullptr )
 			return 1;

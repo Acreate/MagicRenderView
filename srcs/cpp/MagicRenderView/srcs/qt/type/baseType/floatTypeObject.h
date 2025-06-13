@@ -11,10 +11,10 @@ protected:
 public:
 	operator_virtual_equ( FloatTypeObject, val );
 public:
-	FloatTypeObject( const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( alias_type_name, parent ), val( 0 ) { }
+	FloatTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) { }
 
-	FloatTypeObject( const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
-		: ITypeObject( alias_type_name, parent ), val( val ) {
+	FloatTypeObject( IVarStack *gener_var_stack, const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( gener_var_stack, alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( FloatTypeObject::staticMetaObject.className( ) );
 	}
 	Def_Clone_Move_override_function( FloatTypeObject );
@@ -49,7 +49,7 @@ public:
 	~FloatTypeObject( ) override {
 	}
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
-	bool serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const override;
+	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 };
 
 #endif // FLOATTYPEOBJECT_H_H_HEAD__FILE__

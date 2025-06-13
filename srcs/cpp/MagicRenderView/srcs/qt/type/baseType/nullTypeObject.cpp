@@ -1,7 +1,22 @@
 ﻿#include "nullTypeObject.h"
-bool NullTypeObject::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
-	return false;
+bool NullTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
+	auto object = metaObject( );
+	auto nativeTypeName = typeNames( );
+	converQMetaObjectInfoToUInt8Vector( result_data_vector, object, nativeTypeName, 0 );
+	return result_data_vector->size( );
 }
 size_t NullTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
-	return 0;
+	std_vector< uint8_t > resultData;
+	auto object = metaObject( );
+	auto nativeTypeName = typeNames( );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, nativeTypeName, 0 );
+	size_t size = resultData.size( );
+	if( size > data_count )
+		return 0;
+	auto resultDataPtr = resultData.data( );
+	type_size_t start = 0;
+	for( ; ( resultDataPtr + start ) != lastDataPtr; ++start )
+		if( resultDataPtr[ start ] != read_data_vector[ start ] )
+			return 0;
+	return size;
 }

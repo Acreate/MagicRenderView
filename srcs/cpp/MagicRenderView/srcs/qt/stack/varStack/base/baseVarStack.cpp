@@ -14,7 +14,7 @@
 	element.first.first = type_::staticMetaObject.className( ) ;\
 	element.first.second = {__VA_ARGS__ };\
 	element_.second = [this]( ) -> ITypeObject * {\
-		return  new type_( std_vector< QString >( {type_::staticMetaObject.className( ),__VA_ARGS__} )) ;\
+		return  new type_(this, std_vector< QString >( {type_::staticMetaObject.className( ),__VA_ARGS__} )) ;\
 	};\
 	generateInfos.emplace_back( element )
 
