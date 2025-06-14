@@ -1,9 +1,13 @@
 ﻿#include "ITypeObject.h"
 
 #include "qt/stack/varStack/IVarStack.h"
-ITypeObject::ITypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
-	if( get_stack_function_get_function )
-		varStackSharedPtr = get_stack_function_get_function( );
+#include "qt/stack/varStack/base/baseVarStackEx.h"
+ITypeObject::ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+	if( !getStackFunction )
+		getStackFunction = [] {
+			return IVarStack::getInstance< BaseVarStackEx >( );
+		};
+	varStackSharedPtr = getStackFunction( );
 	thisPtr = this;
 	size_t count = alias_type_name.size( );
 	if( count == 0 )
@@ -22,6 +26,7 @@ ITypeObject::ITypeObject( const ITypeObject &other ): QObject( other.parent( ) )
 	currentTypeName = other.currentTypeName;
 	getStackFunction = other.getStackFunction;
 	thisPtr = other.thisPtr;
+	varStackSharedPtr = other.varStackSharedPtr;
 }
 ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )
@@ -33,6 +38,7 @@ ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 		currentTypeName = other.currentTypeName;
 		thisPtr = &other;
 		getStackFunction = other.getStackFunction;
+		varStackSharedPtr = other.varStackSharedPtr;
 	} else
 		thisPtr = nullptr;
 

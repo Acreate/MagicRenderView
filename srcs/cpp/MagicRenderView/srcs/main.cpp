@@ -348,6 +348,29 @@ void checkSerializeVar( ) {
 		}
 	} while( false );
 	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTVar< PairtTypeObject >( );
+		if( typeObject ) {
+			auto unity1 = varStack->generateTVar< StringTypeObject >( );
+			*unity1 = "first";
+			auto unity2 = varStack->generateTVar< StringTypeObject >( );
+			*unity2 = "scond";
+			typeObject->setFirst( unity1 );
+			typeObject->setScond( unity2 );
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
+				*unity1 = "100";
+				*unity2 = "55555.2";
+				qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
+				else tools::debug::printError( " :(""PairtTypeObject"") "" 反序列化失败" );
+			} else
+				tools::debug::printError( " :(""PairtTypeObject"") "" 序列化失败" );
+		}
+	} while( false );
+	qDebug( ) << "-------------------";
 	qDebug( ) << "\n\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }

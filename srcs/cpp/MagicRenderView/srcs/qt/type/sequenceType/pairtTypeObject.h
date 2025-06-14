@@ -4,7 +4,6 @@
 #include "alias/type_alias.h"
 
 #include "qt/type/ITypeObject.h"
-#include <qt/type/baseType/nullTypeObject.h>
 
 class PairtTypeObject : public ITypeObject {
 	Q_OBJECT;
@@ -12,9 +11,9 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
-	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
-	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
+	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
 
 	Def_Clone_Move_override_function( PairtTypeObject );
 
@@ -41,11 +40,8 @@ public:
 		return result;
 	}
 	QString toString( ) const override {
-		QString resultString( "(" );
-		if( first )
-			resultString = resultString + first->toString( );
-		if( scond )
-			resultString = resultString + "," + first->toString( ) + ")";
+		QString resultString = "(" + first->toString( ) +
+			"," + scond->toString( ) + ")";
 		return resultString;
 	}
 	size_t serializeToObjectData( const uint8_t *read_data_vector, size_t data_count ) override;
