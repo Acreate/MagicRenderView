@@ -61,16 +61,38 @@ public:
 			TChild_Type::staticMetaObject.className( );
 			te = a;
 		}
-	static std_shared_ptr< TChild_Type > getInstance( ) {
+	static TChild_Type * getTUBPtrInstance( ) {
 		QString egName = TChild_Type::staticMetaObject.className( );
 		for( auto ptr : instanceVector )
 			if( ptr->metaObject( )->className( ) == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-				return ( std_shared_ptr< TChild_Type > ) ptr;
+				return ( TChild_Type * ) ptr.get( );
 			else
 				for( auto &typeName : ptr->getStackTypeNames( ) )
 					if( typeName == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-						return ( std_shared_ptr< TChild_Type > ) ptr;
-		std_shared_ptr< TChild_Type > result( new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr ) );
+						return ( TChild_Type * ) ptr.get( );
+		TChild_Type * child = new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
+		std_shared_ptr< IVarStack > result( child );
+		instanceVector.emplace_back( result );
+		return child;
+	}
+	/// @brief 获取类型实例
+	/// @tparam TChild_Type 类型
+	/// @return 成功返回类型的实例
+	template< class TChild_Type >
+		requires requires ( TChild_Type *a, IVarStack *te ) {
+			TChild_Type::staticMetaObject.className( );
+			te = a;
+		}
+	static std_shared_ptr< IVarStack > getInstance( ) {
+		QString egName = TChild_Type::staticMetaObject.className( );
+		for( auto ptr : instanceVector )
+			if( ptr->metaObject( )->className( ) == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
+				return ptr;
+			else
+				for( auto &typeName : ptr->getStackTypeNames( ) )
+					if( typeName == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
+						return ptr;
+		std_shared_ptr< IVarStack > result( new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr ) );
 		instanceVector.emplace_back( result );
 		return result;
 	}
@@ -83,6 +105,10 @@ public:
 	/// @param stack_name 生成器名称
 	/// @return 失败返回 nullptr
 	static std_shared_ptr< IVarStack > getInstance( const QString &stack_name );
+	/// @brief 使用生成器名称获取生成器实例对象
+	/// @param stack_name 生成器名称
+	/// @return 失败返回 nullptr
+	static IVarStack* getTUBPtrInstance( const QString &stack_name );
 
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称

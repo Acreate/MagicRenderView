@@ -65,6 +65,22 @@ std_shared_ptr< IVarStack > IVarStack::getInstance( const QString &stack_name ) 
 			return instance;
 	return nullptr;
 }
+IVarStack * IVarStack::getTUBPtrInstance( const QString &stack_name ) {
+	if( stack_name == BaseVarStack::staticMetaObject.className( ) )
+		return getTUBPtrInstance< BaseVarStack >( );
+	else if( stack_name == BaseVarStackEx::staticMetaObject.className( ) )
+		return getTUBPtrInstance< BaseVarStackEx >( );
+
+	IVarStack *instance = getTUBPtrInstance< BaseVarStackEx >( );
+	for( auto &name : instance->getStackTypeNames( ) )
+		if( name == stack_name )
+			return instance;
+	instance = getTUBPtrInstance< BaseVarStack >( );
+	for( auto &name : instance->getStackTypeNames( ) )
+		if( name == stack_name )
+			return instance;
+	return nullptr;
+}
 ITypeObject * IVarStack::generateUbVar( const QString &type_name, QObject *parnet ) const {
 	ITypeObject *typeObject = _generateUBVar( type_name );
 	if( typeObject )
