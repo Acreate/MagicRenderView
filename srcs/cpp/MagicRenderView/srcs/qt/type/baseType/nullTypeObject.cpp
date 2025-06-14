@@ -1,6 +1,14 @@
 ﻿#include "nullTypeObject.h"
 
 #include "qt/stack/varStack/IVarStack.h"
+#include "qt/stack/varStack/base/baseVarStackEx.h"
+NullTypeObject::NullTypeObject( const std_function< std_shared_ptr< IVarStack >( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( gener_var_stack, alias_type_name, parent ) {
+	thisPtr = nullptr;
+	if( gener_var_stack == nullptr ) {
+		getStackFunction = [] { return IVarStack::getInstance< BaseVarStackEx >( ); };
+		varStackSharedPtr = getStackFunction( );
+	}
+}
 bool NullTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	auto object = metaObject( );
 	auto nativeTypeName = typeNames( );

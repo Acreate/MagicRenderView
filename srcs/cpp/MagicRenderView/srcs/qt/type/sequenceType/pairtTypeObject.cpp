@@ -1,12 +1,12 @@
 ﻿#include "pairtTypeObject.h"
-PairtTypeObject::PairtTypeObject( const std_function< IVarStack *( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
+PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
 }
-PairtTypeObject::PairtTypeObject( const std_function< IVarStack *( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ): ITypeObject( gener_var_stack, alias_type_name, parent ),
+PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ): ITypeObject( gener_var_stack, alias_type_name, parent ),
 	first( first ),
 	scond( scond ) {
 	currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 }
-PairtTypeObject::PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ) : ITypeObject( gener_var_stack, { }, nullptr ), first( first ), scond( scond ) {
+PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ) : ITypeObject( gener_var_stack, { }, nullptr ), first( first ), scond( scond ) {
 	currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
 }
 PairtTypeObject & PairtTypeObject::operator=( const PairtTypeObject &other ) {

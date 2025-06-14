@@ -5,6 +5,7 @@
 #include <qboxlayout.h>
 
 #include "qt/stack/varStack/IVarStack.h"
+#include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/stack/varStack/base/baseVarStack.h"
 #include "qt/type/baseType/stringTypeObject.h"
 

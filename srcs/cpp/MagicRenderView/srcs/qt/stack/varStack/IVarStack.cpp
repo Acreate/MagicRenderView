@@ -7,16 +7,6 @@
 
 std_vector< std_shared_ptr< IVarStack > > IVarStack::instanceVector;
 
-IVarStack * IVarStack::getStack( ) const {
-	if( getStackFunction )
-		return nullptr;
-	return getStackFunction( );
-}
-std_vector<QString> IVarStack::getStackTypeNames( ) const {
-	if( getStackFunction )
-		return { };
-	return getStackFunction( )->getStackTypeNames( );
-}
 std_shared_ptr< ITypeObject > IVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
 	auto iterator = storage.begin( );
 	auto end = storage.end( );
@@ -47,9 +37,11 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 			return typeObject;
 		}
 
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( nullptr ) );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( [] {
+		return IVarStack::getInstance< BaseVarStackEx >( );
+	} ) );
 }
-bool IVarStack::appendInstance( const std_shared_ptr<IVarStack> &append_unity ) {
+bool IVarStack::appendInstance( const std_shared_ptr< IVarStack > &append_unity ) {
 	auto egName = append_unity->metaObject( )->className( );
 	for( auto &ptr : instanceVector )
 		if( ptr->metaObject( )->className( ) == egName )
@@ -57,12 +49,12 @@ bool IVarStack::appendInstance( const std_shared_ptr<IVarStack> &append_unity ) 
 	instanceVector.emplace_back( append_unity );
 	return true;
 }
-IVarStack * IVarStack::getInstance( const QString &stack_name ) {
+std_shared_ptr< IVarStack > IVarStack::getInstance( const QString &stack_name ) {
 	if( stack_name == BaseVarStack::staticMetaObject.className( ) )
 		return getInstance< BaseVarStack >( );
 	else if( stack_name == BaseVarStackEx::staticMetaObject.className( ) )
 		return getInstance< BaseVarStackEx >( );
-	IVarStack *instance;
+	std_shared_ptr< IVarStack > instance;
 	instance = getInstance< BaseVarStackEx >( );
 	for( auto &name : instance->getStackTypeNames( ) )
 		if( name == stack_name )

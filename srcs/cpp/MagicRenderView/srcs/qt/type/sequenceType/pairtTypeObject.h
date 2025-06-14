@@ -12,9 +12,9 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
-	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
-	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
+	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
 
 	Def_Clone_Move_override_function( PairtTypeObject );
 

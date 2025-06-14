@@ -201,9 +201,10 @@ protected:
 	std_vector< QString > currentTypeName;
 	/// @brief 本身的对象指针
 	const ITypeObject *thisPtr;
-	std_function< IVarStack*( ) > getStackFunction;
+	std_shared_ptr< IVarStack > varStackSharedPtr;
+	std_function< std_shared_ptr< IVarStack > ( ) > getStackFunction;
 public:
-	ITypeObject( const std_function< IVarStack*( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
 	ITypeObject( const ITypeObject &other );
 	virtual ITypeObject & operator=( const ITypeObject &other );
 	/// @brief 比较两个对象。并且返回
@@ -244,7 +245,7 @@ public:
 		}
 	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const;
 
-	virtual IVarStack * getStack( ) const {
+	virtual std_shared_ptr< IVarStack > getStack( ) const {
 		if( getStackFunction )
 			return getStackFunction( );
 		return nullptr;
@@ -252,11 +253,11 @@ public:
 	virtual std_vector< QString > getStackTypeNames( ) const;
 };
 template< typename TLeft, typename TRight >
-	requires requires (const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr) { le->currentTypeName.size(); ta = qobject_cast<const TLeft *>(ri); ta->currentTypeName.size(); le->currentTypeName.data()[0].compare(ta->currentTypeName[0]); dptr = le; dptr = ri; dptr = ta; }
+	requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr ) { le->currentTypeName.size( ); ta = qobject_cast< const TLeft * >( ri ); ta->currentTypeName.size( ); le->currentTypeName.data( )[ 0 ].compare( ta->currentTypeName[ 0 ] ); dptr = le; dptr = ri; dptr = ta; }
 int ITypeObject::comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft *&result_ptr ) const {
 	if( ri_ptr == le_ptr )
 		return 0;
-	if( le_ptr->getStack() != ri_ptr->getStack() )
+	if( le_ptr->getStack( ) != ri_ptr->getStack( ) )
 		return -1;
 	result_ptr = qobject_cast< const TLeft * >( ri_ptr );
 	if( result_ptr == nullptr )

@@ -4,9 +4,11 @@
 #include "qt/type/baseType/stringTypeObject.h"
 #include "qt/type/blendType/combinationTypeObject.h"
 
-BaseVarStackEx::BaseVarStackEx( const std_function< IVarStack*( ) > &get_stack_function_get_function, QObject *parent ) : BaseVarStack( get_stack_function_get_function, parent ) {
+BaseVarStackEx::BaseVarStackEx( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : BaseVarStack( get_stack_function_get_function, parent ) {
+	stackTypeNames.clear( );
+	stackTypeNames.emplace_back( BaseVarStackEx::staticMetaObject.className( ) );
 	generateInfosEx.emplace_back( std_pairt( std_vector< QString > { "file" }, [this]( )->ITypeObject * {
-		auto lambda = []( ) ->IVarStack * {
+		auto lambda = []( ) {
 			QMetaObject staticMetaObject = BaseVarStackEx::staticMetaObject;
 			return IVarStack::getInstance( staticMetaObject.className( ) );
 		};

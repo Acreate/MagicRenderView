@@ -13,13 +13,16 @@ class IVarStack : public QObject {
 protected:
 	/// @brief 仓库存储
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
-	std_function< IVarStack*( ) > getStackFunction;
+	std_vector< QString > stackTypeNames;
+	std_function< std_shared_ptr< IVarStack >( ) > getStackFunction;
 public:
-	IVarStack( const std_function< IVarStack*( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ) {
 	}
 public:
-	IVarStack * getStack( ) const;
-	std_vector< QString > getStackTypeNames( ) const;
+	virtual const std_function< std_shared_ptr< IVarStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
+	virtual std_vector< QString > getStackTypeNames( ) const {
+		return stackTypeNames;
+	}
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
@@ -58,23 +61,17 @@ public:
 			TChild_Type::staticMetaObject.className( );
 			te = a;
 		}
-	static TChild_Type * getInstance( ) {
+	static std_shared_ptr< TChild_Type > getInstance( ) {
 		QString egName = TChild_Type::staticMetaObject.className( );
-		TChild_Type *result;
-		for( auto &ptr : instanceVector )
-			if( ptr->metaObject( )->className( ) == egName ) {
-				result = qobject_cast< TChild_Type * >( ptr.get( ) );
-				if( result )
-					return result;
-			} else
+		for( auto ptr : instanceVector )
+			if( ptr->metaObject( )->className( ) == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
+				return ( std_shared_ptr< TChild_Type > ) ptr;
+			else
 				for( auto &typeName : ptr->getStackTypeNames( ) )
-					if( typeName == egName ) {
-						result = qobject_cast< TChild_Type * >( ptr.get( ) );
-						if( result )
-							return result;
-					}
-		result = new TChild_Type( []->TChild_Type * { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
-		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
+					if( typeName == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
+						return ( std_shared_ptr< TChild_Type > ) ptr;
+		std_shared_ptr< TChild_Type > result( new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr ) );
+		instanceVector.emplace_back( result );
 		return result;
 	}
 	/// @brief 追加一个创建对象。\n
@@ -85,7 +82,7 @@ public:
 	/// @brief 使用生成器名称获取生成器实例对象
 	/// @param stack_name 生成器名称
 	/// @return 失败返回 nullptr
-	static IVarStack * getInstance( const QString &stack_name );
+	static std_shared_ptr< IVarStack > getInstance( const QString &stack_name );
 
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称

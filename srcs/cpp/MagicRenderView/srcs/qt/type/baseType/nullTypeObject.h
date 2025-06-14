@@ -12,9 +12,7 @@ public:
 		return object->isNullptr( );
 	}
 public:
-	NullTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ) {
-		thisPtr = nullptr;
-	}
+	NullTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
 	Def_Clone_Move_override_function( NullTypeObject );
 
 	NullTypeObject & operator=( const NullTypeObject &other ) {

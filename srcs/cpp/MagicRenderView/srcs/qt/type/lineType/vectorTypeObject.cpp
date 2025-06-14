@@ -3,7 +3,7 @@
 #include "qt/stack/varStack/IVarStack.h"
 #include "qt/type/baseType/nullTypeObject.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
-VectorTypeObject::VectorTypeObject( const std_function< IVarStack *( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
+VectorTypeObject::VectorTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 }
 VectorTypeObject & VectorTypeObject::operator=( const VectorTypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )
@@ -35,7 +35,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::operator[]( const size_t index )
 	if( count > index )
 		return vector->at( index );
 	tools::debug::printError( "访问下标越界" );
-	auto newCall = [this]->IVarStack * { return IVarStack::getInstance< BaseVarStackEx >( ); };
+	auto newCall = [this] { return IVarStack::getInstance< BaseVarStackEx >( ); };
 	auto nullTypeObject = new NullTypeObject( newCall );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;
@@ -51,7 +51,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::find( const std_function< bool( 
 		if( find_function( elemt ) )
 			return elemt;
 	NullTypeObject *nullTypeObject = new NullTypeObject(
-		[]->IVarStack * { return IVarStack::getInstance< BaseVarStackEx >( ); } );
+		[] { return IVarStack::getInstance< BaseVarStackEx >( ); } );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;
 }
@@ -238,8 +238,8 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	if( unitySize == 0 )
 		return resultSize;
 	readDataPtr += appendSize;
-	size_t count = readDataPtr- read_data_vector;
+	size_t count = readDataPtr - read_data_vector;
 	ISerialize::SerializeInfo info( readDataPtr, count );
-	info.init(  );
+	info.init( );
 	return 0;
 }

@@ -1,7 +1,9 @@
 ﻿#include "ITypeObject.h"
 
 #include "qt/stack/varStack/IVarStack.h"
-ITypeObject::ITypeObject( const std_function< IVarStack *( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+ITypeObject::ITypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+	if( get_stack_function_get_function )
+		varStackSharedPtr = get_stack_function_get_function( );
 	thisPtr = this;
 	size_t count = alias_type_name.size( );
 	if( count == 0 )

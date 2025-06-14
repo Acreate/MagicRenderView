@@ -22,7 +22,7 @@
 void checkVarStack( QWidget *mainwidget ) {
 	qDebug( ) << "==================";
 	qDebug( ) << "\t\t测试 checkVarStack";
-	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
+	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 	auto typeObject = varStack->generateVar( "int" );
 	auto qobjectCast = qobject_cast< IntTypeObject * >( typeObject.get( ) );
 	if( qobjectCast )
@@ -205,7 +205,7 @@ void checkTools( ) {
 void checkSerializeVar( ) {
 	qDebug( ) << "\n==================";
 	qDebug( ) << "\t\t测试 " << tools::debug::getFunctionName( ) << "\n\n";
-	const auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
+	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 
 #define testSerVar( type_ , old_var_, new_var_) do{ \
 		auto typeObject = varStack->generateTVar< type_ >( );\
@@ -243,29 +243,6 @@ void checkSerializeVar( ) {
 		}
 	} while( false );
 
-	qDebug( ) << "-------------------";
-	do {
-		auto typeObject = varStack->generateTVar< VectorTypeObject >( );
-		if( typeObject ) {
-			auto unity1 = varStack->generateTVar< IntTypeObject >( );
-			*unity1 = 22;
-			auto unity2 = varStack->generateTVar< FloatTypeObject >( );
-			*unity2 = 99.5;
-			typeObject->append( unity1 );
-			typeObject->append( unity2 );
-			std_vector< uchar > ser;
-			if( typeObject->serializeToVectorData( &ser ) ) {
-				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
-				*unity1 = 100;
-				*unity2 = 55555.2;
-				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
-				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
-					qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""VectorTypeObject"") "" 反序列化失败" );
-			} else
-				tools::debug::printError( " :(""VectorTypeObject"") "" 序列化失败" );
-		}
-	} while( false );
 	qDebug( ) << "-------------------";
 	do {
 		auto typeObject = varStack->generateTVar< StringTypeObject >( );
@@ -347,6 +324,30 @@ void checkSerializeVar( ) {
 		}
 	} while( false );
 
+	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTVar< VectorTypeObject >( );
+		if( typeObject ) {
+			auto unity1 = varStack->generateTVar< IntTypeObject >( );
+			*unity1 = 22;
+			auto unity2 = varStack->generateTVar< FloatTypeObject >( );
+			*unity2 = 99.5;
+			typeObject->append( unity1 );
+			typeObject->append( unity2 );
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
+				*unity1 = 100;
+				*unity2 = 55555.2;
+				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
+				else tools::debug::printError( " :(""VectorTypeObject"") "" 反序列化失败" );
+			} else
+				tools::debug::printError( " :(""VectorTypeObject"") "" 序列化失败" );
+		}
+	} while( false );
+	qDebug( ) << "-------------------";
 	qDebug( ) << "\n\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }

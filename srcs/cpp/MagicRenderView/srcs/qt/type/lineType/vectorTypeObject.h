@@ -21,7 +21,7 @@ public:
 		return result;
 	}
 public:
-	VectorTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	VectorTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
 
 	Def_Clone_Move_override_function( VectorTypeObject );
 
