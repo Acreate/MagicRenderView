@@ -37,7 +37,17 @@ public:
 		type_size_t getSize( ) const { return size; }
 		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr; }
 		bool isIsInitTrue( ) const { return isInitTrue; }
-		const std_vector<QString> & getStackNames( ) const { return stackNames; }
+		const std_vector< QString > & getStackNames( ) const { return stackNames; }
+
+		/// @brief 从数据当中获取值
+		/// @param data_ptr 数据起始位置
+		/// @param data_size 数据大小
+		/// @param result_is_beg_endian 返回的大小端
+		/// @param result_stack_type_name 返回的堆栈名称
+		/// @param result_qt_meta_names 返回的媒体类型名称
+		/// @param result_obj_type_names 返回的对象类型名称
+		/// @return 使用数据的量
+		static type_size_t getSerializeInfo( const uint8_t *data_ptr, const size_t &data_size, uint8_t *result_is_beg_endian, std_vector< QString > *result_stack_type_name, std_vector< QString > *result_qt_meta_names, std_vector< QString > *result_obj_type_names );
 	};
 public:
 	/// @brief 数据序列化到参数

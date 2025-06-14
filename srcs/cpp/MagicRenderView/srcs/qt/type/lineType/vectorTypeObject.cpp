@@ -164,13 +164,12 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 	// 序列化成员对象到数据
 	uint8_t *dataPtr;
 	uint8_t *targetDataPtr;
-	size_t targetIndex = 0;
 	size_t copySize;
 	size_t copyIndex;
 
 	size_t buffSize = 0;
 	size_t thisValVectorIndex = 0;
-	std_vector< uint8_t > unityDataVector( buffSize ), serializeBuff;
+	std_vector< uint8_t > unityDataVector, serializeBuff;
 	size_t thisValVectorCount = vector->size( );
 	auto thisValVectorDataPtr = vector->data( );
 
@@ -182,17 +181,12 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 			return false;
 		dataPtr = serializeBuff.data( );
 		copySize = serializeBuff.size( );
-		if( buffSize < copySize ) {
-#define extend_size (1024)
-			buffSize += copySize + extend_size;
-			targetIndex = ( size_t ) ( unityDataVector.data( ) - targetIndex );
-			unityDataVector.reserve( buffSize );
-		}
-		targetDataPtr = unityDataVector.data( );
-		for( copyIndex = 0; copyIndex < copySize; ++copyIndex, ++targetIndex )
-			targetDataPtr[ targetIndex ] = dataPtr[ copyIndex ];
+		for( copyIndex = 0; copyIndex < copySize; ++copyIndex )
+			unityDataVector.emplace_back( dataPtr[ copyIndex ] );
 	}
+
 	size_t appendSize = sizeof( size_t );
+	buffSize = unityDataVector.size( );
 	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize + buffSize );
 	size_t resultSize = result_data_vector->size( );
 	if( resultSize == 0 )
@@ -208,7 +202,6 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 }
 size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	// 序列化序列成员
-
 	std_vector< uint8_t > result;
 	size_t appendSize = sizeof( size_t );
 	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize );
@@ -230,16 +223,39 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	for( ; ( data + index ) != lastPtr; ++index )
 		if( data[ index ] != readDataPtr[ index ] )
 			return 0;
-
 	readDataPtr += index;
 	unitySize = *( type_size_t * ) readDataPtr;
 	if( cond )
 		converEndian( unitySize );
 	if( unitySize == 0 )
 		return resultSize;
+
+	uint8_t en;
+	std_vector< QString > typeName, stackName;
+	std_shared_ptr< IVarStack > varStack;
+	std_shared_ptr< ITypeObject > typeObject;
+	std_vector< std_shared_ptr< ITypeObject > > ve;
+	uint64_t userDataCount;
+	size_t count;
 	readDataPtr += appendSize;
-	size_t count = readDataPtr - read_data_vector;
-	ISerialize::SerializeInfo info( readDataPtr, count );
-	info.init( );
-	return 0;
+	count = data_count - ( readDataPtr - read_data_vector );
+
+	for( index = 0; index < unitySize; ++index ) {
+		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
+		if( userDataCount == 0 )
+			return 0;
+		varStack = IVarStack::getInstance( stackName[ 0 ] );
+		if( varStack == nullptr )
+			return 0;
+		typeObject = varStack->generateVar( typeName[ 0 ] );
+		if( typeObject == nullptr )
+			return 0;
+		userDataCount = typeObject->serializeToObjectData( readDataPtr, count );
+		resultSize += userDataCount;
+		count -= userDataCount; // 减去用量
+		readDataPtr += userDataCount;// 增加偏移
+		ve.emplace_back( typeObject );
+	}
+	*vector = ve;
+	return resultSize;
 }
