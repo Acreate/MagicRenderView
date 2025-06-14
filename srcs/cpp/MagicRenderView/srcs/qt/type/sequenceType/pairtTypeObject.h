@@ -12,36 +12,13 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
-	}
-	PairtTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( gener_var_stack, alias_type_name, parent ),
-		first( first ),
-		scond( scond ) {
-		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
-	}
-	PairtTypeObject( IVarStack *gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond )
-		: ITypeObject( gener_var_stack, { }, nullptr ), first( first ),
-		scond( scond ) {
-		currentTypeName.emplace_back( PairtTypeObject::staticMetaObject.className( ) );
-	}
+	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
+	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *const parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
 
 	Def_Clone_Move_override_function( PairtTypeObject );
 
-	PairtTypeObject & operator=( const PairtTypeObject &other ) {
-		if( this == nullptr || thisPtr == nullptr )
-			return *this;
-		auto typeObject = &other;
-		if( typeObject != nullptr && other.thisPtr != nullptr ) {
-			if( this == typeObject )
-				return *this;
-			ITypeObject::operator =( other );
-			first = other.first;
-			scond = other.scond;
-		} else
-			thisPtr = nullptr;
-		return *this;
-	}
+	PairtTypeObject & operator=( const PairtTypeObject &other );
 	const ITypeObject * getFirst( ) const { return first.get( ); }
 	const ITypeObject * getScond( ) const { return scond.get( ); }
 	void setFirst( const std_shared_ptr< ITypeObject > &first ) { this->first = first; }

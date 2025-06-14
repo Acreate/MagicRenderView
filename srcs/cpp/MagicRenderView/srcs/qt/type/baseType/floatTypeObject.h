@@ -11,9 +11,9 @@ protected:
 public:
 	operator_virtual_equ( FloatTypeObject, val );
 public:
-	FloatTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) { }
+	FloatTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) { }
 
-	FloatTypeObject( IVarStack *gener_var_stack, const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+	FloatTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const double_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
 		: ITypeObject( gener_var_stack, alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( FloatTypeObject::staticMetaObject.className( ) );
 	}

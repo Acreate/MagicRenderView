@@ -11,12 +11,11 @@ protected:
 	/// @brief 生成信息对象列表
 	std_vector< std_pairt< std_vector< QString >, std_function< ITypeObject *( ) > > > generateInfosEx;
 protected:
-	BaseVarStackEx( );
+	BaseVarStackEx( const std_function< IVarStack*( ) > &get_stack_function_get_function, QObject *parent );
 	ITypeObject * newVar( const QString &type_name ) const;
 	ITypeObject * _generateUBVar( const QString &type_name ) const override;
-
 public:
-	std_vector<std_pairt<QString, std_vector<QString>>> permissionVarType( ) const override;
+	std_vector< std_pairt< QString, std_vector< QString > > > permissionVarType( ) const override;
 };
 
 #endif // BASESTACKEX_H_H_HEAD__FILE__

@@ -13,12 +13,13 @@ class IVarStack : public QObject {
 protected:
 	/// @brief 仓库存储
 	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
-	std_vector< QString > typeName;
+	std_function< IVarStack*( ) > getStackFunction;
 public:
-	IVarStack( QObject *parent ) : QObject( parent ) {
+	IVarStack( const std_function< IVarStack*( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ) {
 	}
 public:
-	const std_vector< QString > & getTypeName( ) const { return typeName; }
+	IVarStack * getStack( ) const;
+	std_vector< QString > getStackTypeNames( ) const;
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
@@ -65,8 +66,14 @@ public:
 				result = qobject_cast< TChild_Type * >( ptr.get( ) );
 				if( result )
 					return result;
-			}
-		result = new TChild_Type( );
+			} else
+				for( auto &typeName : ptr->getStackTypeNames( ) )
+					if( typeName == egName ) {
+						result = qobject_cast< TChild_Type * >( ptr.get( ) );
+						if( result )
+							return result;
+					}
+		result = new TChild_Type( []->TChild_Type * { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
 		instanceVector.emplace_back( std_shared_ptr< IVarStack >( result ) );
 		return result;
 	}
@@ -74,14 +81,7 @@ public:
 	/// 使用 @code metaObject( )->className( ) @endcode 进行类型名称匹配，如果已经存在重复的类型名称，那么存储失败
 	/// @param append_unity 追加的对象指针
 	/// @return 成功返回 true
-	static bool appendInstance( const std_shared_ptr< IVarStack > &append_unity ) {
-		auto egName = append_unity->metaObject( )->className( );
-		for( auto &ptr : instanceVector )
-			if( ptr->metaObject( )->className( ) == egName )
-				return false;
-		instanceVector.emplace_back( append_unity );
-		return true;
-	}
+	static bool appendInstance( const std_shared_ptr< IVarStack > &append_unity );
 	/// @brief 使用生成器名称获取生成器实例对象
 	/// @param stack_name 生成器名称
 	/// @return 失败返回 nullptr
@@ -91,16 +91,7 @@ public:
 	/// @param type_name 变量类型名称
 	/// @param parnet qt 内存管理对象
 	/// @return 失败返回 nullptr
-	virtual ITypeObject * generateUbVar( const QString &type_name, QObject *parnet = nullptr ) const {
-		ITypeObject *typeObject = _generateUBVar( type_name );
-		if( typeObject )
-			if( parnet ) {
-				typeObject->setParent( parnet );
-				return typeObject;
-			} else
-				return typeObject;
-		return nullptr;
-	}
+	virtual ITypeObject * generateUbVar( const QString &type_name, QObject *parnet = nullptr ) const;
 
 	/// @brief 释放类型实例
 	/// @tparam TChild_Type 类型

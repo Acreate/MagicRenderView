@@ -14,6 +14,8 @@ public:
 		/// @brief 原始数据
 		std_vector< uint8_t > data;
 		/// @brief 从原始数据当中获取到的类型名称列表
+		std_vector< QString > stackNames;
+		/// @brief 从原始数据当中获取到的类型名称列表
 		std_vector< QString > typeNames;
 		/// @brief 从原始数据当中获取到的 qt 媒体类名
 		std_vector< QString > metaObjectClassNames;
@@ -35,6 +37,7 @@ public:
 		type_size_t getSize( ) const { return size; }
 		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr; }
 		bool isIsInitTrue( ) const { return isInitTrue; }
+		const std_vector<QString> & getStackNames( ) const { return stackNames; }
 	};
 public:
 	/// @brief 数据序列化到参数
@@ -53,57 +56,21 @@ public:
 	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
 	/// @param result_data 返回的数据序列
 	/// @param meta_object_ptr 转化的多媒体对象指针
+	/// @param stack_type_name 堆栈类型名称
 	/// @param native_type_name 多媒体对象变量别名
 	/// @param append_size 追加的大小
 	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size );
+	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size );
 	/// @brief 返回值 -1 则为转换数据的最后一个数据
 	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
 	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
 	/// @param result_data 返回的数据序列
 	/// @param meta_object_ptr 转化的多媒体对象指针
+	/// @param stack_type_name 堆栈类型名称
 	/// @param native_type_name 多媒体对象变量别名
 	/// @param append_size 追加的大小
 	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size );
-
-	/// @brief 返回值 -1 则为转换数据的最后一个数据
-	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
-	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
-	/// @param result_data 返回的数据序列
-	/// @param meta_object_ptr 转化的多媒体对象指针
-	/// @param native_type_name 多媒体对象变量别名
-	/// @param append_size 追加的大小
-	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size );
-
-	/// @brief 返回值 -1 则为转换数据的最后一个数据
-	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
-	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
-	/// @param result_data 返回的数据序列
-	/// @param meta_object_ptr 转化的多媒体对象指针
-	/// @param native_type_name 多媒体对象变量别名
-	/// @param append_size 追加的大小
-	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size );
-	/// @brief 返回值 -1 则为转换数据的最后一个数据
-	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
-	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
-	/// @param result_data 返回的数据序列
-	/// @param meta_object_ptr 转化的多媒体对象指针
-	/// @param append_size 追加的大小
-	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const size_t &append_size );
-
-	/// @brief 返回值 -1 则为转换数据的最后一个数据
-	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
-	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
-	/// @param result_data 返回的数据序列
-	/// @param meta_object_ptr 转化的多媒体对象指针
-	/// @param append_size 追加的大小
-	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const size_t &append_size );
-
+	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size );
 	/// @brief 是否大端
 	/// @return 返回 true 表示大端
 	static uint8_t isBegEndian( );

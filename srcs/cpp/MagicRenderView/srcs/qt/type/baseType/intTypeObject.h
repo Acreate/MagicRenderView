@@ -11,9 +11,9 @@ protected:
 public:
 	operator_virtual_equ( IntTypeObject, val );
 public:
-	explicit IntTypeObject( IVarStack *gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) {
+	explicit IntTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) {
 	}
-	explicit IntTypeObject( IVarStack *gener_var_stack, const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+	explicit IntTypeObject( const std_function< IVarStack*( ) > &gener_var_stack, const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
 		: ITypeObject( gener_var_stack, alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( IntTypeObject::staticMetaObject.className( ) );
 	}

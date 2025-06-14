@@ -29,9 +29,12 @@ bool ISerialize::SerializeInfo::init( ) {
 	auto hexDataPtr = hex.data( );
 	for( size_t index = 0; index < size; ++index )
 		hexDataPtr[ index ] = dataPtr[ index ];
-	// 找到 [] 
+	// 找到 [ 
 	QString structString( hex );
 	qsizetype left = structString.indexOf( "[" );
+	for( auto &type : structString.mid( 0, left - 1 ).split( "," ) )
+		stackNames.emplace_back( type );
+	// 找到 ]
 	qsizetype right = structString.indexOf( "]", left );
 	QString mid = structString.mid( left, right - left );
 	auto stringList = mid.split( "," );
@@ -51,12 +54,13 @@ bool ISerialize::SerializeInfo::init( ) {
 	infoLastPtr = dataPtr + size;
 	return true;
 }
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
+
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
 
 	for( auto &str : native_type_name )
 		classNameList.append( str.toUtf8( ).toHex( ) );
-	QString classList = "[" + classNameList.join( ", " );
+	QString classList = stack_type_name.join( "," ) + "![" + classNameList.join( ", " );
 
 	classNameList.clear( );
 	QString className = meta_object_ptr->className( );
@@ -105,27 +109,18 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	orgIndex = index + orgIndex;
 	return dataPtr + orgIndex;
 }
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size ) {
-	QStringList stringList;
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size ) {
+	QStringList nativeTypeList, stackTypeList;
 	size_t count = native_type_name.size( );
-	if( count == 0 )
-		return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stringList, append_size );
 	auto data = native_type_name.data( );
 	for( size_t index = 0; index < count; ++index )
-		stringList.append( data[ index ] );
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stringList, append_size );
-}
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const std_vector< QString > &native_type_name, const size_t &append_size ) {
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), native_type_name, append_size );
-}
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const QStringList &native_type_name, const size_t &append_size ) {
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), native_type_name, append_size );
-}
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const size_t &append_size ) {
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, QStringList { }, append_size );
-}
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QObject *meta_object_ptr, const size_t &append_size ) {
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr->metaObject( ), QStringList { }, append_size );
+		nativeTypeList.append( data[ index ] );
+	count = stack_type_name.size( );
+	data = stack_type_name.data( );
+	for( size_t index = 0; index < count; ++index )
+		stackTypeList.append( data[ index ] );
+
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stackTypeList, nativeTypeList, append_size );
 }
 uint8_t ISerialize::isBegEndian( ) {
 	static union {

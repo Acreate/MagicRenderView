@@ -201,44 +201,11 @@ protected:
 	std_vector< QString > currentTypeName;
 	/// @brief 本身的对象指针
 	const ITypeObject *thisPtr;
-	IVarStack *stack;
+	std_function< IVarStack*( ) > getStackFunction;
 public:
-	ITypeObject( IVarStack *gener_var_stack = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : QObject( parent ) {
-		thisPtr = this;
-		size_t count = alias_type_name.size( );
-		if( count == 0 )
-			return;
-		auto datas = alias_type_name.data( );
-		// 扩张
-		currentTypeName.resize( count );
-		auto targetPtr = currentTypeName.data( );
-		for( size_t index = 0; index < count; ++index ) {
-			QString trimmed = datas[ index ].trimmed( );
-			if( !trimmed.isEmpty( ) )
-				targetPtr[ index ] = trimmed;
-		}
-	}
-	ITypeObject( const ITypeObject &other )
-		: QObject( other.parent( ) ) {
-		currentTypeName = other.currentTypeName;
-		thisPtr = &other;
-		stack = other.stack;
-	}
-	virtual ITypeObject & operator=( const ITypeObject &other ) {
-		if( this == nullptr || thisPtr == nullptr )
-			return *this;
-		if( this == &other )
-			return *this;
-		if( other.thisPtr != nullptr ) {
-			setParent( other.parent( ) );
-			currentTypeName = other.currentTypeName;
-			thisPtr = &other;
-			stack = other.stack;
-		} else
-			thisPtr = nullptr;
-
-		return *this;
-	}
+	ITypeObject( const std_function< IVarStack*( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	ITypeObject( const ITypeObject &other );
+	virtual ITypeObject & operator=( const ITypeObject &other );
 	/// @brief 比较两个对象。并且返回
 	/// @param rhs 右比较对象
 	/// @return 返回 0 表示相等，1 表示大于参数，-1 表示小于参数，其他为未知
@@ -275,40 +242,38 @@ public:
 			dptr = ri;
 			dptr = ta;
 		}
-	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const {
-		if( ri_ptr == le_ptr )
-			return 0;
-		if( le_ptr->stack != ri_ptr->stack )
-			return -1;
-		result_ptr = qobject_cast< const TLeft * >( ri_ptr );
-		if( result_ptr == nullptr )
-			return 1;
-		size_t typeNameCount = le_ptr->currentTypeName.size( );
-		size_t count = result_ptr->currentTypeName.size( );
-		if( typeNameCount != count )
-			return typeNameCount - count;
-		auto leftData = le_ptr->currentTypeName.data( );
-		auto rightData = result_ptr->currentTypeName.data( );
-		for( count = 0; count < typeNameCount; ++count )
-			if( leftData[ count ] != rightData[ count ] )
-				return leftData[ count ].compare( rightData[ count ] );
-		return 0;
+	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const;
+
+	virtual IVarStack * getStack( ) const {
+		if( getStackFunction )
+			return getStackFunction( );
+		return nullptr;
 	}
-
+	virtual std_vector< QString > getStackTypeNames( ) const;
 };
-
-inline bool equ( const ITypeObject &left, const void *right ) {
-	if( right == nullptr )
-		if( &left == nullptr || left.isNullptr( ) )
-			return true;
-		else
-			return false;
-	if( &left == nullptr || left.isNullptr( ) )
-		return false;
-	if( &left != right )
-		return false;
-	return true;
+template< typename TLeft, typename TRight >
+	requires requires (const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr) { le->currentTypeName.size(); ta = qobject_cast<const TLeft *>(ri); ta->currentTypeName.size(); le->currentTypeName.data()[0].compare(ta->currentTypeName[0]); dptr = le; dptr = ri; dptr = ta; }
+int ITypeObject::comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft *&result_ptr ) const {
+	if( ri_ptr == le_ptr )
+		return 0;
+	if( le_ptr->getStack() != ri_ptr->getStack() )
+		return -1;
+	result_ptr = qobject_cast< const TLeft * >( ri_ptr );
+	if( result_ptr == nullptr )
+		return 1;
+	size_t typeNameCount = le_ptr->currentTypeName.size( );
+	size_t count = result_ptr->currentTypeName.size( );
+	if( typeNameCount != count )
+		return typeNameCount - count;
+	auto leftData = le_ptr->currentTypeName.data( );
+	auto rightData = result_ptr->currentTypeName.data( );
+	for( count = 0; count < typeNameCount; ++count )
+		if( leftData[ count ] != rightData[ count ] )
+			return leftData[ count ].compare( rightData[ count ] );
+	return 0;
 }
+
+bool equ( const ITypeObject &left, const void *right );
 inline bool operator!=( const ITypeObject &left, std::nullptr_t right ) {
 	return !equ( left, ( const void * ) right );
 }

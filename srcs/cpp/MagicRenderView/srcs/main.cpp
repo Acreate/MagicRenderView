@@ -10,9 +10,11 @@
 #include "qt/type/baseType/dataTypeObject.h"
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
+#include "qt/type/baseType/nullTypeObject.h"
 #include "qt/type/baseType/stringTypeObject.h"
 #include "qt/type/blendType/combinationTypeObject.h"
 #include "qt/type/lineType/vectorTypeObject.h"
+#include "qt/type/sequenceType/pairtTypeObject.h"
 
 #if _DEBUG
 /// @brief 检测到堆栈变量的生成
@@ -249,7 +251,8 @@ void checkSerializeVar( ) {
 			*unity1 = 22;
 			auto unity2 = varStack->generateTVar< FloatTypeObject >( );
 			*unity2 = 99.5;
-			typeObject->append( typeObject );
+			typeObject->append( unity1 );
+			typeObject->append( unity2 );
 			std_vector< uchar > ser;
 			if( typeObject->serializeToVectorData( &ser ) ) {
 				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
@@ -259,7 +262,8 @@ void checkSerializeVar( ) {
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
 				else tools::debug::printError( " :(""VectorTypeObject"") "" 反序列化失败" );
-			} else tools::debug::printError( " :(""VectorTypeObject"") "" 序列化失败" );
+			} else
+				tools::debug::printError( " :(""VectorTypeObject"") "" 序列化失败" );
 		}
 	} while( false );
 	qDebug( ) << "-------------------";
@@ -317,6 +321,10 @@ void checkSerializeVar( ) {
 				ISerialize::SerializeInfo info( ser.data( ), ser.size( ) );
 				if( info.init( ) ) {
 					QStringList list;
+					for( auto &typeName : info.getStackNames( ) )
+						list.append( typeName );
+					qDebug( ) << __LINE__ << " : " << "堆栈列表 : " << list.join( ", " );
+					list.clear( );
 					for( auto &typeName : info.getTypeNames( ) )
 						list.append( typeName );
 					qDebug( ) << __LINE__ << " : " << "类型列表 : " << list.join( ", " );

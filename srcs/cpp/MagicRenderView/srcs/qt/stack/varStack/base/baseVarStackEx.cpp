@@ -4,9 +4,13 @@
 #include "qt/type/baseType/stringTypeObject.h"
 #include "qt/type/blendType/combinationTypeObject.h"
 
-BaseVarStackEx::BaseVarStackEx( ) {
+BaseVarStackEx::BaseVarStackEx( const std_function< IVarStack*( ) > &get_stack_function_get_function, QObject *parent ) : BaseVarStack( get_stack_function_get_function, parent ) {
 	generateInfosEx.emplace_back( std_pairt( std_vector< QString > { "file" }, [this]( )->ITypeObject * {
-		auto ptr = new CombinationTypeObject( this, { "file", CombinationTypeObject::staticMetaObject.className( ) } );
+		auto lambda = []( ) ->IVarStack * {
+			QMetaObject staticMetaObject = BaseVarStackEx::staticMetaObject;
+			return IVarStack::getInstance( staticMetaObject.className( ) );
+		};
+		auto ptr = new CombinationTypeObject( lambda, { "file", CombinationTypeObject::staticMetaObject.className( ) } );
 		std_shared_ptr< ITypeObject > path( BaseVarStack::newVar( "string" ) );
 		std_shared_ptr< ITypeObject > bitSize( BaseVarStack::newVar( "int" ) );
 		std_shared_ptr< ITypeObject > createTime( BaseVarStack::newVar( "int" ) );

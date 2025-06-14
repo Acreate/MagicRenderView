@@ -1,15 +1,17 @@
 ﻿#include "nullTypeObject.h"
+
+#include "qt/stack/varStack/IVarStack.h"
 bool NullTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	auto object = metaObject( );
 	auto nativeTypeName = typeNames( );
-	converQMetaObjectInfoToUInt8Vector( result_data_vector, object, nativeTypeName, 0 );
+	converQMetaObjectInfoToUInt8Vector( result_data_vector, object, getStackTypeNames( ), nativeTypeName, 0 );
 	return result_data_vector->size( );
 }
 size_t NullTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	std_vector< uint8_t > resultData;
 	auto object = metaObject( );
 	auto nativeTypeName = typeNames( );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, nativeTypeName, 0 );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeNames( ), nativeTypeName, 0 );
 	size_t size = resultData.size( );
 	if( size > data_count )
 		return 0;

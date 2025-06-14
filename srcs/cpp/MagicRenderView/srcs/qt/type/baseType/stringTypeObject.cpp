@@ -1,12 +1,14 @@
 ﻿#include "stringTypeObject.h"
 
+#include "qt/stack/varStack/IVarStack.h"
+
 size_t StringTypeObject::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	std_vector< uint8_t > resultData;
 
 	auto object = metaObject( );
 	// 获取值的长度
 	type_size_t valSize = sizeof( type_size_t );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, typeNames( ), valSize );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeNames(  ), typeNames( ), valSize );
 
 	auto resultDataCount = resultData.size( );
 	if( resultDataCount > data_count /* 如果数据源小于当前序列化数据，则返回 */ )
@@ -48,7 +50,7 @@ bool StringTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 	type_size_t strLen = qsizetype * sizeof( utf8[ 0 ] );
 	auto object = metaObject( );
 	size_t sizeType = sizeof( strLen );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, typeNames( ), sizeType + strLen );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, getStackTypeNames( ), typeNames( ), sizeType + strLen );
 	*( decltype(strLen) * ) lastDataPtr = strLen;
 	lastDataPtr = lastDataPtr + sizeType;
 	char *utfDataPtr = utf8.data( );
