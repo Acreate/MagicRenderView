@@ -167,9 +167,10 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 	size_t copySize;
 	size_t copyIndex;
 
-	size_t buffSize = 0;
+	size_t buffIndex = 0;
+	size_t buffSize = 1024;
 	size_t thisValVectorIndex = 0;
-	std_vector< uint8_t > unityDataVector, serializeBuff;
+	std_vector< uint8_t > unityDataVector( buffSize ), serializeBuff;
 	size_t thisValVectorCount = vector->size( );
 	auto thisValVectorDataPtr = vector->data( );
 
@@ -181,13 +182,18 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 			return false;
 		dataPtr = serializeBuff.data( );
 		copySize = serializeBuff.size( );
-		for( copyIndex = 0; copyIndex < copySize; ++copyIndex )
-			unityDataVector.emplace_back( dataPtr[ copyIndex ] );
+		copyIndex = buffSize - buffIndex;
+		if( copyIndex < copySize ) {
+			buffSize = buffSize + copySize;
+			unityDataVector.resize( buffSize );
+		}
+		targetDataPtr = unityDataVector.data( );
+		for( copyIndex = 0; copyIndex < copySize; ++copyIndex, ++buffIndex )
+			targetDataPtr[ buffIndex ] = dataPtr[ copyIndex ];
 	}
 
 	size_t appendSize = sizeof( size_t );
-	buffSize = unityDataVector.size( );
-	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize + buffSize );
+	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize + buffIndex );
 	size_t resultSize = result_data_vector->size( );
 	if( resultSize == 0 )
 		return false;
@@ -196,7 +202,7 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 		return true;
 	lastPtr += appendSize; // 指向数据起始地址
 	targetDataPtr = unityDataVector.data( );
-	for( size_t index = 0; index < buffSize; ++index )
+	for( size_t index = 0; index < buffIndex; ++index )
 		lastPtr[ index ] = targetDataPtr[ index ];
 	return true;
 }
