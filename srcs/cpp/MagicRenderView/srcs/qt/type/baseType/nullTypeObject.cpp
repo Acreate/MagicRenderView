@@ -21,12 +21,16 @@ size_t NullTypeObject::serializeToObjectData( const uint8_t *read_data_vector, c
 	auto nativeTypeName = typeNames( );
 	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeNames( ), nativeTypeName, 0 );
 	size_t size = resultData.size( );
-	if( size > data_count )
-		return 0;
+	if( size > data_count ) {
+		tools::debug::printError( "无法满足对象信息序列化校验需求" );
+		return false;
+	}
 	auto resultDataPtr = resultData.data( );
 	type_size_t start = 0;
 	for( ; ( resultDataPtr + start ) != lastDataPtr; ++start )
-		if( resultDataPtr[ start ] != read_data_vector[ start ] )
-			return 0;
+		if( resultDataPtr[ start ] != read_data_vector[ start ] ) {
+			tools::debug::printError( "类型信息不匹配" );
+			return false;
+		}
 	return size;
 }

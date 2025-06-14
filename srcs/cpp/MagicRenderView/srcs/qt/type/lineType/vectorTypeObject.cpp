@@ -212,8 +212,10 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	size_t appendSize = sizeof( size_t );
 	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize );
 	size_t resultSize = result.size( );
-	if( resultSize == 0 || data_count < resultSize )
+	if( resultSize == 0 || data_count < resultSize ) {
+		tools::debug::printError( "无法序列化该对象信息" );
 		return false;
+	}
 	auto data = result.data( );
 	// 大小端
 	bool cond = *data != *read_data_vector;
@@ -221,14 +223,18 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	size_t unitySize = *( type_size_t * ) readDataPtr;
 	if( cond )
 		converEndian( unitySize );
-	if( unitySize > data_count ) // 所需数据大于提供的参数
-		return 0;
+	if( unitySize > data_count ) {
+		tools::debug::printError( "所需数据大于提供的参数" );
+		return false;
+	}
 	readDataPtr += appendSize;
 	data += appendSize + 1;
 	size_t index = 0;
 	for( ; ( data + index ) != lastPtr; ++index )
-		if( data[ index ] != readDataPtr[ index ] )
-			return 0;
+		if( data[ index ] != readDataPtr[ index ] ) {
+			tools::debug::printError( "类型信息不匹配" );
+			return false;
+		}
 	readDataPtr += index;
 	unitySize = *( type_size_t * ) readDataPtr;
 	if( cond )
@@ -248,14 +254,20 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
-		if( userDataCount == 0 )
+		if( userDataCount == 0 ) {
+			tools::debug::printError( "无法序列化该对象的成员类型信息" );
 			return 0;
+		}
 		varStack = IVarStack::getInstance( stackName[ 0 ] );
-		if( varStack == nullptr )
+		if( varStack == nullptr ) {
+			tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
 			return 0;
+		}
 		typeObject = varStack->generateVar( typeName[ 0 ] );
-		if( typeObject == nullptr )
+		if( typeObject == nullptr ) {
+			tools::debug::printError( "堆栈当中无法找到匹配的类型 : " + typeName[ 0 ] );
 			return 0;
+		}
 		userDataCount = typeObject->serializeToObjectData( readDataPtr, count );
 		resultSize += userDataCount;
 		count -= userDataCount; // 减去用量

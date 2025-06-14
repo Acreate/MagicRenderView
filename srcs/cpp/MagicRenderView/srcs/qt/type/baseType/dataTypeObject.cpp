@@ -11,18 +11,22 @@ size_t DataTypeObject::serializeToObjectData( const uint8_t *read_data_vector, c
 	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeNames( ), typeNames( ), valSize );
 
 	auto resultDataCount = resultData.size( );
-	if( resultDataCount > data_count /* 如果数据源小于当前序列化数据，则返回 */ )
-		return 0;
+	if( resultDataCount > data_count /* 如果数据源小于当前序列化数据，则返回 */ ) {
+		tools::debug::printError( "无法满足对象信息序列化校验需求" );
+		return false;
+	}
 	auto resultDataPtr = resultData.data( );
 	type_size_t start = sizeof( uint8_t ) + sizeof( type_size_t );
 	for( ; ( resultDataPtr + start ) != lastDataPtr; ++start )
-		if( resultDataPtr[ start ] != read_data_vector[ start ] )
-			return 0;
+		if( resultDataPtr[ start ] != read_data_vector[ start ] ) {
+			tools::debug::printError( "类型信息不匹配" );
+			return false;
+		}
 	// 比较大小端
 	bool cond = *resultDataPtr != *read_data_vector;
 	const uint8_t *text = read_data_vector + start;
 	start = *( ( decltype(start) * ) text );
-	if( cond ) // 大小端逆转
+	if( cond )
 		converEndian( start, sizeof( start ) );
 	text = text + sizeof( type_size_t );
 	val->clear( );

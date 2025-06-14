@@ -218,10 +218,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :("#type_") " << typeObject->toString( );\
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )\
 					qDebug( ) << __LINE__ << " :("#type_") " << typeObject->toString( );\
-				else\
-					tools::debug::printError( " :("#type_") "" 反序列化失败" );\
-			} else\
-				tools::debug::printError( " :("#type_") "" 序列化失败" );\
+			} \
 		}\
 	}while(false)
 
@@ -238,8 +235,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""NullTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""NullTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""NullTypeObject"") "" 反序列化失败" );
-			} else tools::debug::printError( " :(""NullTypeObject"") "" 序列化失败" );
+			} 
 		}
 	} while( false );
 
@@ -255,8 +251,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""StringTypeObject"") "" 反序列化失败" );
-			} else tools::debug::printError( " :(""StringTypeObject"") "" 序列化失败" );
+			} 
 		}
 	} while( false );
 
@@ -275,8 +270,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""DataTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""DataTypeObject"") "" 反序列化失败" );
-			} else tools::debug::printError( " :(""DataTypeObject"") "" 序列化失败" );
+			}
 		}
 	} while( false );
 
@@ -317,10 +311,8 @@ void checkSerializeVar( ) {
 						qDebug( ) << __LINE__ << " : " << "创建成功 : " << var->typeNames( );
 						qDebug( ) << __LINE__ << " : " << var->toString( );
 					}
-				} else
-					tools::debug::printError( "ISerialize::SerializeInfo 功能缺陷" );
-			} else
-				tools::debug::printError( " :(""IntTypeObject"") "" 序列化失败" );
+				}
+			}
 		}
 	} while( false );
 
@@ -342,9 +334,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""VectorTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""VectorTypeObject"") "" 反序列化失败" );
-			} else
-				tools::debug::printError( " :(""VectorTypeObject"") "" 序列化失败" );
+			}
 		}
 	} while( false );
 	qDebug( ) << "-------------------";
@@ -360,14 +350,41 @@ void checkSerializeVar( ) {
 			std_vector< uchar > ser;
 			if( typeObject->serializeToVectorData( &ser ) ) {
 				qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
-				*unity1 = "100";
-				*unity2 = "55555.2";
+				*unity1 = "0x100-1";
+				*unity2 = "0x55555.2+5";
 				qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""PairtTypeObject"") " << typeObject->toString( );
-				else tools::debug::printError( " :(""PairtTypeObject"") "" 反序列化失败" );
-			} else
-				tools::debug::printError( " :(""PairtTypeObject"") "" 序列化失败" );
+			}
+		}
+	} while( false );
+	qDebug( ) << "-------------------";
+	do {
+		auto typeObject = varStack->generateTVar< CombinationTypeObject >( );
+		if( typeObject ) {
+			auto unity1 = varStack->generateTVar< StringTypeObject >( );
+			*unity1 = "first";
+			auto unity2 = varStack->generateTVar< StringTypeObject >( );
+			*unity2 = "scond";
+			auto unity3 = varStack->generateTVar< IntTypeObject >( );
+			auto unity4 = varStack->generateTVar< FloatTypeObject >( );
+			*unity3 = 23;
+			*unity4 = 99.2201;
+			typeObject->setVarObject( unity1, "1" );
+			typeObject->setVarObject( unity2, "2" );
+			typeObject->setVarObject( unity3, "5" );
+			typeObject->setVarObject( unity4, "unity4" );
+			std_vector< uchar > ser;
+			if( typeObject->serializeToVectorData( &ser ) ) {
+				qDebug( ) << __LINE__ << " :(""CombinationTypeObject"") " << typeObject->toString( );
+				*unity1 = "100";
+				*unity2 = "55555.2";
+				*unity3 = 0;
+				*unity4 = 1;
+				qDebug( ) << __LINE__ << " :(""CombinationTypeObject"") " << typeObject->toString( );
+				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					qDebug( ) << __LINE__ << " :(""CombinationTypeObject"") " << typeObject->toString( );
+			}
 		}
 	} while( false );
 	qDebug( ) << "-------------------";
