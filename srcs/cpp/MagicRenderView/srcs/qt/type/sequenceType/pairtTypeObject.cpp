@@ -110,7 +110,7 @@ size_t PairtTypeObject::serializeToObjectData( const uint8_t *read_data_vector, 
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
 		if( userDataCount == 0 ) {
-			tools::debug::printError( "无法序列化该对象的成员类型信息" );
+			tools::debug::printError( "无法从数据当中反序列化对象的成员类型信息" );
 			return 0;
 		}
 		varStack = IVarStack::getInstance( stackName[ 0 ] );

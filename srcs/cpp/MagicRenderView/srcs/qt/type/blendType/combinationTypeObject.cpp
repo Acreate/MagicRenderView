@@ -60,8 +60,8 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::getVarObject( const QString
 }
 
 bool CombinationTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
-	// 序列化成员对象到数据
-	size_t sizeSize = sizeof( size_t );
+	// sizeof( size_t );
+	size_t sizeSize = sizeof( type_size_t );
 	size_t buffIndex = 0;
 	size_t buffSize = 1024;
 	size_t thisValVectorIndex = 0;
@@ -106,7 +106,7 @@ bool CombinationTypeObject::serializeToVectorData( std_vector< uint8_t > *result
 			unityDataVector.resize( buffSize );
 			targetDataPtr = unityDataVector.data( );
 		}
-		*( size_t * ) targetDataPtr = qsizetype;
+		*( size_t * ) ( targetDataPtr + buffIndex ) = qsizetype;
 		buffIndex += sizeSize;
 		copySize -= sizeSize;
 
@@ -133,7 +133,7 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	// 序列化序列成员
 	std_vector< uint8_t > result;
 	//  sizeof( size_t )
-	size_t appendSize = sizeof( size_t );
+	size_t appendSize = sizeof( type_size_t );
 	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize );
 	size_t resultSize = result.size( );
 	if( resultSize == 0 || data_count < resultSize ) {
@@ -154,12 +154,11 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	readDataPtr += appendSize;
 	data += appendSize + 1;
 	size_t index = 0;
-	for( ; ( data + index ) != lastPtr; ++index )
-		if( data[ index ] != readDataPtr[ index ] ) {
+	for( ; data != lastPtr; ++readDataPtr, ++data )
+		if( *data != *readDataPtr ) {
 			tools::debug::printError( "类型信息不匹配" );
 			return false;
 		}
-	readDataPtr += index;
 	unitySize = *( type_size_t * ) readDataPtr;
 	if( cond )
 		converEndian( unitySize );
@@ -183,7 +182,7 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
 		if( userDataCount == 0 ) {
-			tools::debug::printError( "无法序列化该对象的成员类型信息" );
+			tools::debug::printError( "无法从数据当中反序列化对象的成员类型信息" );
 			return 0;
 		}
 		varStack = IVarStack::getInstance( stackName[ 0 ] );
@@ -202,7 +201,9 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 		readDataPtr += userDataCount;// 增加偏移
 
 		stringDataSize = *( size_t * ) readDataPtr;
-		readDataPtr += stringDataSize;
+		if( cond )
+			converEndian( stringDataSize );
+		readDataPtr += appendSize;
 		utf8.resize( stringDataSize );
 		targetPtr = utf8.data( );
 		for( utfIndex = 0; utfIndex < stringDataSize; ++utfIndex )
@@ -212,8 +213,7 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 		count = count - stringDataSize - appendSize; // 减去用量
 		readDataPtr += stringDataSize;// 增加偏移
 
-		QString string( utf8 );
-		//  QByteArray::fromHex( unityString.toUtf8( ) )
+		QString string(  QByteArray::fromHex( utf8) );
 		std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > sharedPtr( new std_pairt< std_shared_ptr< ITypeObject >, QString > );
 		sharedPtr->first = typeObject;
 		sharedPtr->second = string;
