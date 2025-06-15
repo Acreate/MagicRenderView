@@ -3,10 +3,22 @@
 #include "qt/node/nodeWidget/base/nodeFileInfo.h"
 
 #define emplace_back_NodeGenerate( type_, parent_, window_flags_, first_name_, ... ) \
-	nodeGenerate->emplace_back( std_pairt( first_name_, std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } ) ), [get_stack_function](  )->INodeWidget * {\
-		type_ *nodeWidgetPtr = new type_(get_stack_function,first_name_, parent_, window_flags_);\
-		return nodeWidgetPtr;\
-	} )
+	do{\
+		nodeGenerate->emplace_back( std_pairt( first_name_, std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } ) ), [get_stack_function](  )->INodeWidget * {\
+			type_ *nodeWidgetPtr = new type_(get_stack_function,{first_name_}, parent_, window_flags_);\
+			return nodeWidgetPtr;\
+			}\
+		);\
+	}while(false)
+
+#define emplace_back_NodeGenerate_appendList( type_, parent_, window_flags_, first_name_, list_, ... ) \
+	do{\
+		auto nameList= std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } );\
+		nameList.assign(list_.begin(), list_.end()); \
+		nodeGenerate->emplace_back( std_pairt( first_name_,nameList  ), [get_stack_function,nameList](  )->INodeWidget * {\
+			type_ *nodeWidgetPtr = new type_(get_stack_function,nameList, parent_, window_flags_);\
+			return nodeWidgetPtr;\
+	} )}while(false)
 #define Type_to_QString( type_ ) QString( #type_)
 BaseNodeStack::BaseNodeStack(const std_function< std_shared_ptr< INodeStack >( ) >& get_stack_function ) : INodeStack( get_stack_function ) {
 	stackTypeNames.clear( );

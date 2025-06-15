@@ -25,7 +25,7 @@ protected:
 	/// @brief 连接到该节点的节点
 	std_shared_ptr< std_vector< const INodeWidget * > > connectNodeWidgets;
 	/// @brief 节点窗口名称
-	QString nodeWidgetName;
+	std_vector< QString > nodeWidgetNames;
 	/// @brief 生成该节点的对象
 	std_shared_ptr< INodeStack > nodeStack;
 	/// @brief 节点工厂生成函数
@@ -76,11 +76,11 @@ protected:
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
 	/// @param get_stack_function 节点生成函数
-	/// @param node_widget_name 节点名称
+	/// @param node_widget_name_s 节点名称
 	/// @param function_declaration 函数信息
 	/// @param parent 父节点，用于 qt 内存管理系统。
 	/// @param f 窗口风格
-	INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
+	INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
 	/// @brief 信号连接到指定窗口
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
@@ -112,11 +112,9 @@ public:
 	/// @param param_index 设置的参数位置
 	/// @return 设置成功返回 true
 	virtual bool setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const = 0;
-	virtual QString getNodeTitle( ) const;
-	virtual QString getNodeName( ) const {
-		return nodeWidgetName;
+	virtual std_vector< QString > getNodeNames( ) const {
+		return nodeWidgetNames;
 	}
-	virtual void setNodeWidgetName( const QString &node_widget_name ) { nodeWidgetName = node_widget_name; }
 	/// @brief 获取位置下的组件
 	/// @param pos 位置
 	/// @return 组件
@@ -128,6 +126,8 @@ public:
 	virtual bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const;
 	const std_shared_ptr< INodeStack > & getNodeStack( ) const { return nodeStack; }
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
+	virtual void setNodoTitle( const QString &titile );
+	virtual QString getNodeTitle() const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

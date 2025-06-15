@@ -8,7 +8,7 @@
 #include "qt/node/nodeComponent/base/nodePanel.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
-NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const QString &node_widget_name, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name, nullptr, parent, f ) {
+NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector<QString> &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
 	UserFunctionDeclaration *declaration;
 	declaration = new UserFunctionDeclaration(
 		"文件信息 获取文件信息(字符串 文件路径); " );
@@ -60,11 +60,7 @@ std_vector_unity_shared< ITypeObject > NodeFileInfo::setParams( const std_vector
 bool NodeFileInfo::setParam( const std_shared_ptr< ITypeObject > &param, size_t param_index ) const {
 	return false;
 }
-void NodeFileInfo::setNodeWidgetName( const QString &node_widget_name ) {
-	INodeWidget::setNodeWidgetName( node_widget_name );
-	title->setText( node_widget_name );
-	setObjectName( node_widget_name );
-}
+
 bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const {
 	if( subPlan->getComponentLinkPos( component, resulut_pos ) ) {
 		resulut_pos = pos( ) + resulut_pos;
