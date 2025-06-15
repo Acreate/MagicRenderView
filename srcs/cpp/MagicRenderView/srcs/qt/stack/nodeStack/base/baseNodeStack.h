@@ -12,7 +12,7 @@ protected:
 	using generateNodePairt = std_pairt< aliasVector, generateFcuntion >;
 	std_shared_ptr< std_vector< generateNodePairt > > nodeGenerate;
 public:
-	BaseNodeStack( );
+	BaseNodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function );
 protected:
 	INodeWidget * _newNode( const QString &type_name ) const;
 public:

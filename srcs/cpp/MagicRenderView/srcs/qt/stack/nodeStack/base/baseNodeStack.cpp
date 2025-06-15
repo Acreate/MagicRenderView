@@ -1,17 +1,17 @@
 ﻿#include "./baseNodeStack.h"
 
-#include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/node/nodeWidget/base/nodeFileInfo.h"
 
 #define emplace_back_NodeGenerate( type_, parent_, window_flags_, first_name_, ... ) \
-	nodeGenerate->emplace_back( std_pairt( first_name_, std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } ) ), [](  )->INodeWidget * {\
-		type_ *nodeWidgetPtr = new type_(first_name_, parent_, window_flags_);\
+	nodeGenerate->emplace_back( std_pairt( first_name_, std_vector< QString >({ NodeFileInfo::staticMetaObject.className(  ),__VA_ARGS__ } ) ), [get_stack_function](  )->INodeWidget * {\
+		type_ *nodeWidgetPtr = new type_(get_stack_function,first_name_, parent_, window_flags_);\
 		return nodeWidgetPtr;\
 	} )
 #define Type_to_QString( type_ ) QString( #type_)
-BaseNodeStack::BaseNodeStack( ) : nodeGenerate( new std_vector< generateNodePairt >( ) ) {
+BaseNodeStack::BaseNodeStack(const std_function< std_shared_ptr< INodeStack >( ) >& get_stack_function ) : INodeStack( get_stack_function ) {
+	stackTypeNames.clear( );
+	stackTypeNames.emplace_back( "常规节点" );
 	setObjectName( BaseNodeStack::staticMetaObject.className( ) );
-	nodeStackName = "常规节点";
 	emplace_back_NodeGenerate( NodeFileInfo, nullptr, Qt::WindowFlags(), "文件信息节点" );
 }
 INodeWidget * BaseNodeStack::_newNode( const QString &type_name ) const {

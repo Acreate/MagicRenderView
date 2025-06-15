@@ -8,7 +8,7 @@
 #include "qt/node/nodeComponent/base/nodePanel.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
-NodeFileInfo::NodeFileInfo( const QString &node_widget_name, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( node_widget_name, nullptr, parent, f ) {
+NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const QString &node_widget_name, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name, nullptr, parent, f ) {
 	UserFunctionDeclaration *declaration;
 	declaration = new UserFunctionDeclaration(
 		"文件信息 获取文件信息(字符串 文件路径); " );
@@ -73,7 +73,7 @@ bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint 
 
 	return false;
 }
-bool NodeFileInfo::serializeToVectorData( std_vector<uint8_t> *result_data_vector ) const {
+bool NodeFileInfo::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	return false;
 }
 size_t NodeFileInfo::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {

@@ -8,6 +8,7 @@
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/serialize/ISerialize.h"
 
+class INodeStack;
 class NodeInputLineText;
 class QLabel;
 class QVBoxLayout;
@@ -25,6 +26,10 @@ protected:
 	std_shared_ptr< std_vector< const INodeWidget * > > connectNodeWidgets;
 	/// @brief 节点窗口名称
 	QString nodeWidgetName;
+	/// @brief 生成该节点的对象
+	std_shared_ptr< INodeStack > nodeStack;
+	/// @brief 节点工厂生成函数
+	std_function< std_shared_ptr< INodeStack >( ) > getStackFunction;
 protected: // ui
 	/// @brief 标题
 	QLabel *title;
@@ -70,11 +75,12 @@ protected:
 	}
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
+	/// @param get_stack_function 节点生成函数
 	/// @param node_widget_name 节点名称
 	/// @param function_declaration 函数信息
 	/// @param parent 父节点，用于 qt 内存管理系统。
 	/// @param f 窗口风格
-	INodeWidget( const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
+	INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f );
 	/// @brief 信号连接到指定窗口
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
@@ -120,6 +126,8 @@ public:
 	/// @param resulut_pos 位置
 	/// @return 失败返回 false
 	virtual bool getComponentLinkPos( const INodeComponent *component, QPoint &resulut_pos ) const;
+	const std_shared_ptr< INodeStack > & getNodeStack( ) const { return nodeStack; }
+	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

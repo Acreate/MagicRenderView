@@ -9,8 +9,13 @@
 #include <QTimer>
 
 #include "qt/node/nodeComponent/INodeComponent.h"
+#include "qt/stack/nodeStack/INodeStack.h"
+#include "qt/stack/nodeStack/base/baseNodeStack.h"
 
-INodeWidget::INodeWidget( const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), connectNodeWidgets( new std_vector< const INodeWidget * > ), nodeWidgetName( node_widget_name ) {
+INodeWidget::INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const QString &node_widget_name, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), connectNodeWidgets( new std_vector< const INodeWidget * > ), nodeWidgetName( node_widget_name ), getStackFunction( get_stack_function ) {
+	if( !getStackFunction )
+		getStackFunction = [] { return INodeStack::getStdSharedPtrInstance< BaseNodeStack >( ); };
+	nodeStack = getStackFunction( );
 	mainBoxLayout = new QVBoxLayout( this );
 	mainBoxLayout->setContentsMargins( 0, 0, 0, 0 );
 	mainBoxLayout->setSpacing( 0 );
@@ -18,7 +23,6 @@ INodeWidget::INodeWidget( const QString &node_widget_name, const std_shared_ptr<
 	title = new QLabel( this );
 	mainBoxLayout->addWidget( title, 0, Qt::AlignHCenter );
 }
-
 void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	connect( this, &INodeWidget::error, node_graph, &NodeGraph::error );
 	connect( this, &INodeWidget::finish, node_graph, &NodeGraph::finish );

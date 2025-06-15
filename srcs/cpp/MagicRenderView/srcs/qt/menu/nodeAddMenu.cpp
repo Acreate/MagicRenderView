@@ -12,7 +12,7 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 
 	QMenu *topMenu = new QMenu( this );
 	addMenu( topMenu );
-	topMenu->setTitle( node_stack->getNodeStackName(  ) );
+	topMenu->setTitle( node_stack->getStackTypeNames( )[ 0 ] );
 	auto pairs = node_stack->permissionNodeType( );
 	for( auto &pair : pairs ) {
 		auto first = pair.first;
@@ -24,7 +24,7 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 }
 NodeAddMenu::NodeAddMenu( QWidget *parent ) : QMenu( parent ) {
 	connect( this, &QMenu::triggered, [this] ( QAction *action ) {
-			emit this->activeAction( action );
+		emit this->activeAction( action );
 	} );
 }
 NodeAddMenu::~NodeAddMenu( ) {
