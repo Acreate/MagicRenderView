@@ -20,7 +20,7 @@
 			return nodeWidgetPtr;\
 	} )}while(false)
 #define Type_to_QString( type_ ) QString( #type_)
-BaseNodeStack::BaseNodeStack(const std_function< std_shared_ptr< INodeStack >( ) >& get_stack_function ) : INodeStack( get_stack_function ) {
+BaseNodeStack::BaseNodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function ) : INodeStack( get_stack_function ), nodeGenerate( new std_vector< generateNodePairt > ) {
 	stackTypeNames.clear( );
 	stackTypeNames.emplace_back( "常规节点" );
 	setObjectName( BaseNodeStack::staticMetaObject.className( ) );

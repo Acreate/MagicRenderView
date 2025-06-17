@@ -19,6 +19,8 @@ class NodeGraph;
 class INodeComponent;
 class INodeWidget : public QWidget, public ISerialize {
 	Q_OBJECT;
+public:
+	friend class NodeGraph;
 protected:
 	/// @brief 函数声明对象
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
@@ -35,6 +37,8 @@ protected: // ui
 	QLabel *title;
 	/// @brief 布局
 	QVBoxLayout *mainBoxLayout;
+	/// @brief 节点id
+	size_t nodeWidgetID = 0;
 protected:
 	/// @brief 链接到该节点
 	/// @param target_node_widget 链接到该节点的对象指针
@@ -128,8 +132,12 @@ public:
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 	virtual void setNodoTitle( const QString &titile );
 	virtual QString getNodeTitle() const;
+	virtual size_t getId() const {
+		return nodeWidgetID;
+	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
 Q_SIGNALS:
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
@@ -143,6 +151,12 @@ Q_SIGNALS:
 	/// @param return_code 返回代码
 	/// @param over_line 执行完成的行
 	void finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &result_type_object, size_t return_code, size_t over_line );
+	/// @brief 请求id
+	/// @param request_node_widget_ptr 请求节点
+	void requestNodeWidgetID(INodeWidget* request_node_widget_ptr);
+	/// @brief 请求id
+	/// @param request_node_widget_ptr 请求节点
+	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
 };
 
 #endif // INODEWIDGET_H_H_HEAD__FILE__

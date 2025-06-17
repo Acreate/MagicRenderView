@@ -9,8 +9,10 @@
 #include "qt/type/ITypeObject.h"
 
 class ITypeObject;
-class INodeComponent : public QWidget, public ISerialize {
+class INodeComponent : public QWidget {
 	Q_OBJECT;
+public:
+	friend class NodeGraph;
 public:
 	/// @brief 通道类型
 	enum class Channel_Type {
@@ -21,11 +23,13 @@ public:
 protected:
 	Channel_Type channelType;
 	QString nodeComponentName;
+	size_t nodeComponentID;
 public:
 	INodeComponent( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ) {
 		channelType = Channel_Type::Normal_Default;
 		nodeComponentName = node_component_name;
 		setAttribute( Qt::WA_InputMethodTransparent, true );
+		nodeComponentID = 0;
 	}
 public:
 	/// @brief 获取值
@@ -120,8 +124,15 @@ Q_SIGNALS:
 	/// @param old_channel_type 旧的通道类型
 	/// @param new_channel_type 新通道类型
 	void changeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
+	/// @brief 请求id
+	/// @param request_node_component_ptr 请求组件
+	void requestNodeComponentID(INodeComponent* request_node_component_ptr);
+	/// @brief 请求id
+	/// @param request_node_component_ptr 请求组件
+	void destoryNodeComponentID( INodeComponent *request_node_component_ptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
 };
 
 #endif // INODECOMPONENT_H_H_HEAD__FILE__

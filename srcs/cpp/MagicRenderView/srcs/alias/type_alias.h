@@ -7,9 +7,9 @@
 #include <QString>
 #include <set>
 #include <QEvent>
+#include <mutex>
 /// @brief 事件类型
 using t_event_type = decltype(QEvent::Type::AcceptDropsChange);
-
 
 template< typename TPtrType >
 using std_shared_ptr = std::shared_ptr< TPtrType >;
@@ -52,4 +52,9 @@ using std_set = std::set< TValue >;
 /// @brief 属性功能函数
 template< typename TFunction >
 using std_function = std::function< TFunction >;
+/// @brief 锁
+using std_mutex = std::mutex;
+/// @brief 自动锁
+using std_lock_grad_mutex = std::lock_guard<std_mutex>;
+
 #endif // TYPE_ALIAS_H_H_HEAD__FILE__

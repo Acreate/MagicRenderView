@@ -26,6 +26,18 @@ INodeWidget::INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > 
 void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	connect( this, &INodeWidget::error, node_graph, &NodeGraph::error );
 	connect( this, &INodeWidget::finish, node_graph, &NodeGraph::finish );
+	connect( this, &INodeWidget::requestNodeWidgetID, node_graph, &NodeGraph::requestNodeWidgetID );
+	connect( this, &INodeWidget::destroyed, [this]( ) {
+		emit destoryNodeWidgetID( this );
+	} );
+	// 子组件
+	auto nodeComponents = findChildren< INodeComponent * >( );
+	for( auto nodeCompoent : nodeComponents ) {
+		connect( nodeCompoent, &INodeComponent::requestNodeComponentID, node_graph, &NodeGraph::requestNodeComponentID );
+		connect( nodeCompoent, &INodeWidget::destroyed, [nodeCompoent]( ) {
+			emit nodeCompoent->destoryNodeComponentID( nodeCompoent );
+		} );
+	}
 }
 
 INodeComponent * INodeWidget::getPosNodeComponent( const QPoint &pos ) const {
@@ -59,7 +71,7 @@ void INodeWidget::setNodoTitle( const QString &titile ) {
 	title->setText( titile );
 }
 QString INodeWidget::getNodeTitle( ) const {
-	return title->text(  );
+	return title->text( );
 }
 void INodeWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
@@ -71,4 +83,11 @@ void INodeWidget::paintEvent( QPaintEvent *event ) {
 	painter.setPen( pen );
 	auto geometry = size( );
 	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );*/
+}
+void INodeWidget::showEvent( QShowEvent *event ) {
+	if( nodeWidgetID == 0 ) {
+		hide( );
+		emit requestNodeWidgetID( this );
+	} else
+		QWidget::showEvent( event );
 }
