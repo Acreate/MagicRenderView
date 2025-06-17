@@ -116,6 +116,7 @@ public:
 	virtual bool isOverlayMulVar( ) const {
 		return false;
 	}
+	virtual size_t getNodeComponentId( ) const { return nodeComponentID; }
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );
@@ -126,13 +127,12 @@ Q_SIGNALS:
 	void changeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
 	/// @brief 请求id
 	/// @param request_node_component_ptr 请求组件
-	void requestNodeComponentID(INodeComponent* request_node_component_ptr);
+	void requestNodeComponentID( INodeComponent *request_node_component_ptr );
 	/// @brief 请求id
 	/// @param request_node_component_ptr 请求组件
 	void destoryNodeComponentID( INodeComponent *request_node_component_ptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-	void showEvent( QShowEvent *event ) override;
 };
 
 #endif // INODECOMPONENT_H_H_HEAD__FILE__

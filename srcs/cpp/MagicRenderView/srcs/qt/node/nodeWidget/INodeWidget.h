@@ -131,13 +131,10 @@ public:
 	const std_shared_ptr< INodeStack > & getNodeStack( ) const { return nodeStack; }
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 	virtual void setNodoTitle( const QString &titile );
-	virtual QString getNodeTitle() const;
-	virtual size_t getId() const {
-		return nodeWidgetID;
-	}
+	virtual QString getNodeTitle( ) const;
+	virtual size_t getNodeWidgetId( ) const { return nodeWidgetID; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-	void showEvent( QShowEvent *event ) override;
 Q_SIGNALS:
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
@@ -153,7 +150,7 @@ Q_SIGNALS:
 	void finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &result_type_object, size_t return_code, size_t over_line );
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
-	void requestNodeWidgetID(INodeWidget* request_node_widget_ptr);
+	void requestNodeWidgetID( INodeWidget *request_node_widget_ptr );
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );

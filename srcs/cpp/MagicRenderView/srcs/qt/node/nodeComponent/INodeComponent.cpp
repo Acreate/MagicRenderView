@@ -50,11 +50,3 @@ void INodeComponent::paintEvent( QPaintEvent *event ) {
 	auto geometry = size( );
 	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );*/
 }
-void INodeComponent::showEvent( QShowEvent *event ) {
-	if( nodeComponentID == 0 ) {
-		hide( );
-		emit requestNodeComponentID( this );
-	}
-	else
-		QWidget::showEvent( event );
-}

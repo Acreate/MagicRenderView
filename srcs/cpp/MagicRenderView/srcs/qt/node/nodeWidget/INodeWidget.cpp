@@ -84,10 +84,4 @@ void INodeWidget::paintEvent( QPaintEvent *event ) {
 	auto geometry = size( );
 	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );*/
 }
-void INodeWidget::showEvent( QShowEvent *event ) {
-	if( nodeWidgetID == 0 ) {
-		hide( );
-		emit requestNodeWidgetID( this );
-	} else
-		QWidget::showEvent( event );
-}
+
