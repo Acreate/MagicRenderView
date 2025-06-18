@@ -93,6 +93,10 @@ public:
 	/// @param input_unity 输入组件
 	/// @return 成功返回 1
 	virtual int linkRemoveFirstInputItem( const INodeComponent *input_unity );
+	/// @brief 删除第一个链接的输出组件
+	/// @param output_unity 输出组件 
+	/// @return 成功返回 1
+	virtual int linkRemoveFirstOutputItem( const INodeComponent *output_unity );
 	/// @brief 删除第一个链接配对的输入组件
 	/// @param output_unity 输出组件
 	/// @param input_unity 输入组件

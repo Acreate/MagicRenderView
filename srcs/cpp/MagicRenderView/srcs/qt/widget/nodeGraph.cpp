@@ -146,6 +146,8 @@ void NodeGraph::updateMinSize( ) {
 void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
+	INodeComponent *inputNodeComponent = nullptr, *outputNodeComponent = nullptr;
+	INodeWidget *inputNodeWidget = nullptr, *outputNodeWidget = nullptr;
 	switch( mouseEventStatus ) {
 		// 在按下之后抬起事件
 		case MouseEventType::Press : {
@@ -180,12 +182,54 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 					case INodeComponent::Channel_Type::Normal_Default :
 						break;
 					case INodeComponent::Channel_Type::Input_Read :
-						if( nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) && findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent && selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) && nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) == true && hasUnity( nodeLinkItem, nodeLinkItems ) == false )
-							nodeLinkItems.emplace_back( nodeLinkItem );
+						// 允许配置输入
+						if( nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) == false )
+							break;
+						// 查找输出目标
+						if( findPosNodeInfo( currentMouseInWidgetPos, &outputNodeWidget, &outputNodeComponent ) == false )
+							break;
+						// 输出组件是否存在
+						if( !outputNodeComponent )
+							break;
+						// 获取输出组件的作为位置
+						if( outputNodeComponent->getComponentLinkPos( outputNodeComponent, selectNodeComponentPoint ) == false )
+							break;
+						// 配置输出位置
+						if( nodeLinkItem.setOutput( outputNodeWidget, outputNodeComponent ) == false )
+							break;
+						// 是否已经存在重复链接
+						if( hasUnity( nodeLinkItem, nodeLinkItems ) == true )
+							break;
+						// 输入组件是否允许重复输入
+						if( selectNodeComponent->isOverlayMulVar( ) == false )
+							linkRemoveFirstInputItem( selectNodeComponent );
+						// 加入链接
+						nodeLinkItems.emplace_back( nodeLinkItem );
 						break;
 					case INodeComponent::Channel_Type::Output_Write :
-						if( nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) && findPosNodeInfo( currentMouseInWidgetPos, &selectNodeWidget, &selectNodeComponent ) && selectNodeComponent && selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) && nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) == true && hasUnity( nodeLinkItem, nodeLinkItems ) == false )
-							nodeLinkItems.emplace_back( nodeLinkItem );
+						// 配置输出组件
+						if( nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) == false )
+							break;
+						// 查找输入组件
+						if( findPosNodeInfo( currentMouseInWidgetPos, &inputNodeWidget, &inputNodeComponent ) == false )
+							break;
+						// 不存在输入组件
+						if( !inputNodeComponent )
+							break;
+						// 获取输入组件位置
+						if( inputNodeWidget->getComponentLinkPos( inputNodeComponent, selectNodeComponentPoint ) == false )
+							break;
+						// 配置输入组件
+						if( nodeLinkItem.setInput( inputNodeWidget, inputNodeComponent ) == false )
+							break;
+						// 是否已经存在重复链接
+						if( hasUnity( nodeLinkItem, nodeLinkItems ) == true )
+							break;
+						// 是否允许重复输入
+						if( inputNodeComponent->isOverlayMulVar( ) == false )
+							linkRemoveFirstInputItem( inputNodeComponent );
+						// 配置链接
+						nodeLinkItems.emplace_back( nodeLinkItem );
 						break;
 				}
 			} else if( selectNodeWidget )
@@ -284,6 +328,16 @@ int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *input_unity ) {
 		}
 	return 0;
 }
+int NodeGraph::linkRemoveFirstOutputItem( const INodeComponent *output_unity ) {
+	auto iterator = nodeLinkItems.begin( );
+	auto end = nodeLinkItems.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->hasOutput( output_unity ) ) {
+			nodeLinkItems.erase( iterator );
+			return 1;
+		}
+	return 0;
+}
 int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity ) {
 	auto iterator = nodeLinkItems.begin( );
 	auto end = nodeLinkItems.end( );
@@ -330,9 +384,6 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 		selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
 		if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
 			selectNodeComponent = nullptr;
-		else if( selectNodeComponent->getComponentChannel( ) == INodeComponent::Channel_Type::Input_Read && selectNodeComponent->isOverlayMulVar( ) == false && linkHasInputUnity( selectNodeComponent ) != 0 )
-			if( linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
-				tools::debug::printError( "清除连接组件失败 : " + selectNodeComponent->getNodeComponentName( ) + QString::number( ( size_t ) selectNodeComponent, 16 ) );
 		repaint( );
 		return;
 	}
