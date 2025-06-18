@@ -202,7 +202,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							break;
 						// 输入组件是否允许重复输入
 						if( selectNodeComponent->isOverlayMulVar( ) == false )
-							linkRemoveFirstInputItem( selectNodeComponent );
+							if( linkHasInputUnity( selectNodeComponent ) && linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
+								tools::debug::printError( "无法断开链接 : " + selectNodeWidget->getNodeTitle( ) + "->" + selectNodeComponent->getNodeComponentName( ) );
 						// 加入链接
 						nodeLinkItems.emplace_back( nodeLinkItem );
 						break;
@@ -227,7 +228,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							break;
 						// 是否允许重复输入
 						if( inputNodeComponent->isOverlayMulVar( ) == false )
-							linkRemoveFirstInputItem( inputNodeComponent );
+							if( linkHasInputUnity( inputNodeComponent ) && linkRemoveFirstInputItem( inputNodeComponent ) != 1 )
+								tools::debug::printError( "无法断开链接 : " + inputNodeWidget->getNodeTitle( ) + "->" + inputNodeComponent->getNodeComponentName( ) );
 						// 配置链接
 						nodeLinkItems.emplace_back( nodeLinkItem );
 						break;
@@ -400,20 +402,54 @@ void NodeGraph::paintEvent( QPaintEvent *event ) {
 	}
 }
 
-size_t NodeGraph::randomId( INodeComponent *request_ui_ptr ) {
+size_t NodeGraph::registerID( INodeComponent *request_ui_ptr ) {
 	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	return ::randomId( nodeComponentID, request_ui_ptr );
 }
-size_t NodeGraph::randomId( INodeWidget *request_ui_ptr ) {
+size_t NodeGraph::registerID( INodeWidget *request_ui_ptr ) {
 	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	return ::randomId( nodeWidgetID, request_ui_ptr );
 }
+size_t NodeGraph::registerID( INodeComponent *request_ui_ptr, size_t advise_id ) {
+	size_t count = nodeComponentID.size( );
+	if( count == 0 ) {
+		nodeComponentID.emplace_back( request_ui_ptr, advise_id );
+		request_ui_ptr->repaint( );
+		return advise_id;
+	}
+	auto data = nodeComponentID.data( );
+	size_t index = 0;
+	while( index < count )
+		if( data[ index ].second == advise_id ) {
+			request_ui_ptr->repaint( );
+			return 0;
+		}
+	nodeComponentID.emplace_back( request_ui_ptr, advise_id );
+	request_ui_ptr->repaint( );
+	return advise_id;
+}
+size_t NodeGraph::registerID( INodeWidget *request_ui_ptr, size_t advise_id ) {
+	size_t count = nodeWidgetID.size( );
+	if( count == 0 ) {
+		nodeWidgetID.emplace_back( request_ui_ptr, advise_id );
+		request_ui_ptr->repaint( );
+		return advise_id;
+	}
+	auto data = nodeWidgetID.data( );
+	size_t index = 0;
+	while( index < count )
+		if( data[ index ].second == advise_id ) {
+			request_ui_ptr->repaint( );
+			return 0;
+		}
+	nodeWidgetID.emplace_back( request_ui_ptr, advise_id );
+	request_ui_ptr->repaint( );
+	return advise_id;
+}
 size_t NodeGraph::removeId( INodeComponent *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	return ::removeId( nodeComponentID, request_ui_ptr );
 }
 size_t NodeGraph::removeId( INodeWidget *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	return ::removeId( nodeWidgetID, request_ui_ptr );
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
@@ -425,18 +461,28 @@ void NodeGraph::finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeOb
 	qDebug( ) << tools::debug::getFunctionName( 1, pair )[ 0 ].first << " ( " << pair[ 0 ].second << " )  : " << send_obj_ptr->objectName( ) << " :->: " << over_line;
 }
 void NodeGraph::requestNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
-	size_t id = randomId( request_node_widget_ptr );
+	size_t id = registerID( request_node_widget_ptr );
 	if( id )
 		request_node_widget_ptr->show( );
 }
 void NodeGraph::requestNodeComponentID( INodeComponent *request_node_component_ptr ) {
-	size_t id = randomId( request_node_component_ptr );
+	size_t id = registerID( request_node_component_ptr );
 	if( id )
 		request_node_component_ptr->show( );
 }
+void NodeGraph::requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id ) {
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
+	registerID( request_node_widget_ptr, advise_id );
+}
+void NodeGraph::requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id ) {
+	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
+	registerID( request_node_component_ptr, advise_id );
+}
 void NodeGraph::destoryNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	removeId( request_node_widget_ptr );
 }
 void NodeGraph::destoryNodeComponentID( INodeComponent *request_node_component_ptr ) {
+	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	removeId( request_node_component_ptr );
 }

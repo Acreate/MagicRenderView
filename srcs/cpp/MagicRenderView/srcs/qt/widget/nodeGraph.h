@@ -38,7 +38,6 @@ protected:
 	INodeWidget *selectNodeWidget;
 	/// @brief 选中控件时，基于控件的相对偏移
 	QPoint selectNodeWidgetOffset;
-
 	/// @brief 选中的节点组件
 	INodeComponent *selectNodeComponent;
 	/// @brief 选择组件时的坐标位置
@@ -112,8 +111,10 @@ protected:
 	void mousePressEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 protected:
-	size_t randomId( INodeComponent *request_ui_ptr );
-	size_t randomId( INodeWidget *request_ui_ptr );
+	size_t registerID( INodeComponent *request_ui_ptr );
+	size_t registerID( INodeWidget *request_ui_ptr );
+	size_t registerID( INodeComponent *request_ui_ptr, size_t advise_id );
+	size_t registerID( INodeWidget *request_ui_ptr, size_t advise_id );
 	size_t removeId( INodeComponent *request_ui_ptr );
 	size_t removeId( INodeWidget *request_ui_ptr );
 public Q_SLOTS:
@@ -135,6 +136,14 @@ public Q_SLOTS:
 	/// @brief 请求id
 	/// @param request_node_component_ptr 请求组件
 	void requestNodeComponentID( INodeComponent *request_node_component_ptr );
+	/// @brief 请求id
+	/// @param request_node_widget_ptr 请求节点
+	/// @param advise_id 建议 id
+	void requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id );
+	/// @brief 请求id
+	/// @param request_node_component_ptr 请求组件
+	/// @param advise_id 建议 id
+	void requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id );
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
