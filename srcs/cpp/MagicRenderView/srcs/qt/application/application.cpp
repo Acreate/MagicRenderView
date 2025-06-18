@@ -3,7 +3,12 @@
 #include "../node/nodeComponent/INodeComponent.h"
 #include "../node/nodeWidget/INodeWidget.h"
 
+#include "../widget/nodeGraph.h"
+
 #include "qt/tools/tools.h"
+
+NodeGraph *Application::mainNodeGraph = nullptr;
+
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
 }
 
@@ -17,11 +22,13 @@ bool Application::notify( QObject *object, QEvent *event ) {
 	INodeComponent *nodeComponent;
 	INodeWidget *nodeWidget;
 	bool notify = QApplication::notify( object, event );
+	if( mainNodeGraph == nullptr )
+		return notify;
 	switch( event->type( ) ) {
 		case QEvent::Show :
 			nodeComponent = qobject_cast< INodeComponent * >( object );
 			if( nodeComponent ) {
-				if( nodeComponent->getNodeComponentId( ) == 0 ) {
+				if( mainNodeGraph->getNodeCompoentID( nodeComponent ) == 0 ) {
 					nodeComponent->hide( );
 					emit nodeComponent->requestNodeComponentID( nodeComponent );
 				}
@@ -30,7 +37,7 @@ bool Application::notify( QObject *object, QEvent *event ) {
 			nodeWidget = qobject_cast< INodeWidget * >( object );
 
 			if( nodeWidget ) {
-				if( nodeWidget->getNodeWidgetId( ) == 0 ) {
+				if( mainNodeGraph->getNodeWidgetID( nodeWidget ) == 0 ) {
 					nodeWidget->hide( );
 					emit nodeWidget->requestNodeWidgetID( nodeWidget );
 				}

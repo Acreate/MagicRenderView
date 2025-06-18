@@ -46,9 +46,9 @@ protected:
 	/// @brief 节点组件的连接
 	std_vector< NodeLinkItem > nodeLinkItems;
 	/// @brief 组件id锁
-	std_mutex nodeComponentIDMutex;
+	std_shared_ptr< std_mutex > nodeComponentIDMutex;
 	/// @brief 组件节点锁
-	std_mutex nodeWidgetIDMutex;
+	std_shared_ptr< std_mutex > nodeWidgetIDMutex;
 	/// @brief 存储组件id
 	std_vector_pairt< INodeComponent *, size_t > nodeComponentID;
 	/// @brief 存储节点id
@@ -100,6 +100,8 @@ public:
 	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
+	size_t getNodeCompoentID( INodeComponent *node_component ) const;
+	size_t getNodeWidgetID( INodeWidget *node_widget ) const;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

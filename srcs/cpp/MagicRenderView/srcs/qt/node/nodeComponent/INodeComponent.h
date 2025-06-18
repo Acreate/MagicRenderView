@@ -23,13 +23,11 @@ public:
 protected:
 	Channel_Type channelType;
 	QString nodeComponentName;
-	size_t nodeComponentID;
 public:
 	INodeComponent( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ) {
 		channelType = Channel_Type::Normal_Default;
 		nodeComponentName = node_component_name;
 		setAttribute( Qt::WA_InputMethodTransparent, true );
-		nodeComponentID = 0;
 	}
 public:
 	/// @brief 获取值
@@ -116,7 +114,6 @@ public:
 	virtual bool isOverlayMulVar( ) const {
 		return false;
 	}
-	virtual size_t getNodeComponentId( ) const { return nodeComponentID; }
 Q_SIGNALS:
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );

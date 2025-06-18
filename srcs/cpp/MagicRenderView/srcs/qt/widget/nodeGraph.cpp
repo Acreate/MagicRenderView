@@ -5,12 +5,67 @@
 #include <QLabel>
 #include <QPainter>
 
+#include <qt/application/application.h>
+
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
 #include "qt/node/nodeComponent/INodeComponent.h"
 #include "qt/stack/nodeStack/INodeStack.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/tools/tools.h"
+
+template< typename TUnity >
+size_t randomId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
+	auto count = storage_vector.size( );
+	if( count == 0 ) {
+		storage_vector.emplace_back( request_ui_ptr, 1 );
+		return 1;
+	}
+	auto data = storage_vector.data( );
+	size_t max = 0;
+	while( max < count )
+		if( data[ max ].first == request_ui_ptr )
+			return data[ max ].second;
+		else
+			++max;
+	max = 1;
+	while( max != 0 )
+		if( data[ max ].second == max )
+			++max;
+		else {
+			storage_vector.emplace_back( request_ui_ptr, max );
+			return max;
+		}
+	return 0;
+}
+
+template< typename TUnity >
+size_t removeId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
+	size_t result = 0;
+	auto begin = storage_vector.begin( );
+	auto end = storage_vector.end( );
+	for( ; begin != end; ++begin )
+		if( begin->first == request_ui_ptr ) {
+			result = begin->second;
+			storage_vector.emplace( begin );
+			return result;
+		}
+	return result;
+}
+
+template< typename TUnity >
+inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr, size_t *result_scond ) {
+	auto count = storage_vector.size( );
+	if( count == 0 )
+		return false;
+	auto dataPtr = storage_vector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( dataPtr[ index ].first == request_ui_ptr ) {
+			*result_scond = dataPtr[ index ].second;
+			return true;
+		}
+	return false;
+}
 
 template< typename TUnity >
 inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &unity_vector ) {
@@ -25,6 +80,8 @@ inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &un
 }
 
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
+	nodeComponentIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
+	nodeWidgetIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
 	nodeMenu = new NodeAddMenu( this );
@@ -55,6 +112,7 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	mousePosLabel = new QLabel( this );
 	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
 	mousePosLabel->hide( );
+	Application::setNewNodeGraph( this );
 }
 NodeGraph::~NodeGraph( ) {
 }
@@ -242,6 +300,20 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	return 0;
 }
+size_t NodeGraph::getNodeCompoentID( INodeComponent *node_component ) const {
+	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
+	size_t resultID = 0;
+	if( ::getUnitySecond( nodeComponentID, node_component, &resultID ) )
+		return resultID;
+	return 0;
+}
+size_t NodeGraph::getNodeWidgetID( INodeWidget *node_widget ) const {
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
+	size_t resultID = 0;
+	if( ::getUnitySecond( nodeWidgetID, node_widget, &resultID ) )
+		return resultID;
+	return 0;
+}
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
@@ -277,53 +349,20 @@ void NodeGraph::paintEvent( QPaintEvent *event ) {
 	}
 }
 
-template< typename TUnity >
-size_t randomId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
-	auto count = storage_vector.size( );
-	if( count == 0 ) {
-		storage_vector.emplace_back( request_ui_ptr, 1 );
-		return 1;
-	}
-	auto data = storage_vector.data( );
-	size_t max = 1;
-	while( max != 0 )
-		if( data[ max ].second == max )
-			++max;
-		else {
-			storage_vector.emplace_back( request_ui_ptr, max );
-			return max;
-		}
-	return 0;
-}
-
-template< typename TUnity >
-size_t removeId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
-	size_t result = 0;
-	auto begin = storage_vector.begin( );
-	auto end = storage_vector.end( );
-	for( ; begin != end; ++begin )
-		if( begin->first == request_ui_ptr ) {
-			result = begin->second;
-			storage_vector.emplace( begin );
-			return result;
-		}
-	return result;
-}
-
 size_t NodeGraph::randomId( INodeComponent *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( nodeComponentIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	return ::randomId( nodeComponentID, request_ui_ptr );
 }
 size_t NodeGraph::randomId( INodeWidget *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( nodeWidgetIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	return ::randomId( nodeWidgetID, request_ui_ptr );
 }
 size_t NodeGraph::removeId( INodeComponent *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( nodeWidgetIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	return ::removeId( nodeComponentID, request_ui_ptr );
 }
 size_t NodeGraph::removeId( INodeWidget *request_ui_ptr ) {
-	std_lock_grad_mutex lockGradMutex( nodeWidgetIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	return ::removeId( nodeWidgetID, request_ui_ptr );
 }
 void NodeGraph::error( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeObject > &msg, size_t error_code, size_t error_line ) {
@@ -336,17 +375,13 @@ void NodeGraph::finish( INodeWidget *send_obj_ptr, const std_shared_ptr< ITypeOb
 }
 void NodeGraph::requestNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
 	size_t id = randomId( request_node_widget_ptr );
-	if( id ) {
-		request_node_widget_ptr->nodeWidgetID = id;
+	if( id )
 		request_node_widget_ptr->show( );
-	}
 }
 void NodeGraph::requestNodeComponentID( INodeComponent *request_node_component_ptr ) {
 	size_t id = randomId( request_node_component_ptr );
-	if( id ) {
-		request_node_component_ptr->nodeComponentID = id;
+	if( id )
 		request_node_component_ptr->show( );
-	}
 }
 void NodeGraph::destoryNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
 	removeId( request_node_widget_ptr );

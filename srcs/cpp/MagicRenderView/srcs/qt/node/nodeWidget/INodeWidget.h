@@ -37,8 +37,6 @@ protected: // ui
 	QLabel *title;
 	/// @brief 布局
 	QVBoxLayout *mainBoxLayout;
-	/// @brief 节点id
-	size_t nodeWidgetID = 0;
 protected:
 	/// @brief 链接到该节点
 	/// @param target_node_widget 链接到该节点的对象指针
@@ -132,7 +130,6 @@ public:
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 	virtual void setNodoTitle( const QString &titile );
 	virtual QString getNodeTitle( ) const;
-	virtual size_t getNodeWidgetId( ) const { return nodeWidgetID; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
