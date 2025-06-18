@@ -100,8 +100,8 @@ public:
 	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
-	size_t getNodeCompoentID( INodeComponent *node_component ) const;
-	size_t getNodeWidgetID( INodeWidget *node_widget ) const;
+	size_t getNodeCompoentID( const INodeComponent *node_component ) const;
+	size_t getNodeWidgetID( const INodeWidget *node_widget ) const;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

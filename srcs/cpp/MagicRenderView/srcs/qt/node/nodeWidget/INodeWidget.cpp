@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
+#include "../../application/application.h"
+
 #include "qt/node/nodeComponent/INodeComponent.h"
 #include "qt/stack/nodeStack/INodeStack.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
@@ -73,6 +75,9 @@ void INodeWidget::setNodoTitle( const QString &titile ) {
 QString INodeWidget::getNodeTitle( ) const {
 	return title->text( );
 }
+size_t INodeWidget::getID( ) const {
+	return Application::getID( this );
+}
 void INodeWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	/*QPainter painter( this );
@@ -84,4 +89,3 @@ void INodeWidget::paintEvent( QPaintEvent *event ) {
 	auto geometry = size( );
 	painter.drawRect( QRect( 0, 0, geometry.width( ) - 1, geometry.height( ) - 1 ) );*/
 }
-

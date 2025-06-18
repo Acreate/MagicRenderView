@@ -11,6 +11,16 @@ NodeGraph *Application::mainNodeGraph = nullptr;
 
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
 }
+size_t Application::getID(const  INodeComponent *node_component ) {
+	if( mainNodeGraph == nullptr )
+		return 0;
+	return mainNodeGraph->getNodeCompoentID( node_component );
+}
+size_t Application::getID(const  INodeWidget *node_widget ) {
+	if( mainNodeGraph == nullptr )
+		return 0;
+	return mainNodeGraph->getNodeWidgetID( node_widget );
+}
 
 void Application::setWindowToIndexScreenCentre( size_t index ) {
 	QWindowList windowList = qGuiApp->allWindows( );
@@ -19,12 +29,14 @@ void Application::setWindowToIndexScreenCentre( size_t index ) {
 }
 
 bool Application::notify( QObject *object, QEvent *event ) {
-	INodeComponent *nodeComponent;
-	INodeWidget *nodeWidget;
 	bool notify = QApplication::notify( object, event );
 	if( mainNodeGraph == nullptr )
 		return notify;
-	switch( event->type( ) ) {
+	INodeComponent *nodeComponent;
+	INodeWidget *nodeWidget;
+	QEvent::Type eventType = event->type( );
+
+	switch( eventType ) {
 		case QEvent::Show :
 			nodeComponent = qobject_cast< INodeComponent * >( object );
 			if( nodeComponent ) {

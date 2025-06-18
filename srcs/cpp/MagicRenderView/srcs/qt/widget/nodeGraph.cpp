@@ -54,7 +54,7 @@ size_t removeId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *r
 }
 
 template< typename TUnity >
-inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr, size_t *result_scond ) {
+inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &storage_vector, const TUnity *request_ui_ptr, size_t *result_scond ) {
 	auto count = storage_vector.size( );
 	if( count == 0 )
 		return false;
@@ -300,14 +300,14 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	return 0;
 }
-size_t NodeGraph::getNodeCompoentID( INodeComponent *node_component ) const {
+size_t NodeGraph::getNodeCompoentID( const INodeComponent *node_component ) const {
 	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
 	size_t resultID = 0;
 	if( ::getUnitySecond( nodeComponentID, node_component, &resultID ) )
 		return resultID;
 	return 0;
 }
-size_t NodeGraph::getNodeWidgetID( INodeWidget *node_widget ) const {
+size_t NodeGraph::getNodeWidgetID( const INodeWidget *node_widget ) const {
 	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	size_t resultID = 0;
 	if( ::getUnitySecond( nodeWidgetID, node_widget, &resultID ) )

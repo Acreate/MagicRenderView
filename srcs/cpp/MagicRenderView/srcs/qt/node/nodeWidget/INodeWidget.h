@@ -130,6 +130,7 @@ public:
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 	virtual void setNodoTitle( const QString &titile );
 	virtual QString getNodeTitle( ) const;
+	virtual size_t getID() const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

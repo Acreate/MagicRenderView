@@ -3,9 +3,18 @@
 #pragma once
 
 #include <QApplication>
+class INodeWidget;
+class INodeComponent;
 class NodeGraph;
 class Application : public QApplication {
 	Q_OBJECT;
+public: // 类型
+	enum class MouseEventType {
+		Init, // 初始化
+		Press, // 按下
+		Release, // 释放
+		Move,// 移动
+	};
 protected:
 	/// @brief 渲染面板
 	static NodeGraph *mainNodeGraph;
@@ -23,6 +32,8 @@ public:
 		mainNodeGraph = node_graph;
 		return oldNodeGraph;
 	}
+	static size_t getID( const INodeComponent *node_component );
+	static size_t getID( const INodeWidget *node_widget );
 public:
 	bool notify( QObject *, QEvent * ) override;
 };
