@@ -439,6 +439,7 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 
 				if( pairDataPtr[ index ].first->getVarObject( )->serializeToVectorData( &componentResult ) == false ) {
 					tools::debug::printError( "序列化失败 : " + nodeWidget->getNodeTitle( ) + " -> " + pairDataPtr[ index ].first->getNodeComponentName( ) );
+					nodeWidgetIDMutex->unlock( );
 					return false;
 				}
 
@@ -485,6 +486,7 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 		auto mul = result.size( ) - ( lastPtr - result.data( ) );
 		if( mul < count ) {
 			tools::debug::printError( "存储数量不足填充后续数据，请检查大小是否异常。( " + QString::number( mul ) + " < " + QString::number( count ) + " ) 判定成立" );
+			nodeWidgetIDMutex->unlock( );
 			return false;
 		}
 		for( index = 0; index < count; ++index )
@@ -520,8 +522,10 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		ISerialize::converEndian( nodeWidgetCount );
 	// 数据头
 	size_t jumpCompCount = sizeof size_t + 1;
-	if( nodeWidgetCount == 0 )
+	if( nodeWidgetCount == 0 ) {
+		nodeWidgetIDMutex->unlock( );
 		return sizeof jumpCompCount;
+	}
 	// 获取节点个数
 	auto lastPtr = read_data_vector + jumpCompCount;
 	size_t needCount = *( size_t * ) ( lastPtr );
@@ -529,6 +533,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		ISerialize::converEndian( needCount );
 	if( needCount > data_count ) {
 		tools::debug::printError( "参考数据不满足所需数据" );
+		nodeWidgetIDMutex->unlock( );
 		return 0;
 	}
 	lastPtr += sizeof size_t;
@@ -560,27 +565,32 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
 		if( useCount == 0 ) {
 			tools::debug::printError( "无法从序列化中获取对象信息" );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		nodeStack = INodeStack::getInstance( stackNames[ 0 ] );
 		if( nodeStack == nullptr ) {
 			tools::debug::printError( "无法匹配适应的节点生成器 : " + stackNames[ 0 ] );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		generateNode = nodeStack->generateNode( typeNames[ 0 ] );
 		if( generateNode == nullptr ) {
 			tools::debug::printError( "无法生成对应的节点 : " + typeNames[ 0 ] );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		inheritInfo = ISerialize::SerializeInfo::getMetaInheritInfo( generateNode->metaObject( ) );
 		inheritCount = inheritInfo.size( );
 		if( inheritCount != meteObjectNames.size( ) ) {
 			tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		for( index = 0; index < inheritCount; ++index )
 			if( meteObjectNames[ index ] != inheritInfo[ index ] ) {
 				tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
+				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 		// 获取 id
@@ -592,6 +602,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		for( size_t pariIndex = 0; pariIndex < pairCount; ++pariIndex )
 			if( pair[ pariIndex ].second == id ) {
 				tools::debug::printError( "数据存在重复 ID : " + generateNode->getNodeTitle( ) + " => " + pair[ pariIndex ].first->getNodeTitle( ) );
+				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 		overNodeWidget.emplace_back( generateNode, id );
@@ -613,11 +624,13 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		lastPtr += sizeof id;
 		if( surplus < useCount ) {
 			tools::debug::printError( "数据量使用异常" );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		surplus = data_count - ( lastPtr - read_data_vector );
 		if( id > surplus ) {
 			tools::debug::printError( "数据量无法配置节点组件信息" );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		if( id == 0 )
@@ -633,6 +646,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 
 		if( buffComponentId.size( ) != componentCount ) {
 			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 
@@ -642,6 +656,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 			id = *( ( decltype(id) * ) lastPtr );
 			if( id == 0 ) {
 				tools::debug::printError( "组件id序列为 : 0 。出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 			lastPtr += sizeof id;
@@ -653,21 +668,25 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 						useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
 						if( useCount == 0 ) {
 							tools::debug::printError( "组件id序列为 : " + QString::number( id ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						varStack = IVarStack::getInstance( stackNames[ 0 ] );
 						if( varStack == nullptr ) {
 							tools::debug::printError( "无法找到匹配变量堆栈 : " + stackNames[ 0 ] );
+							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						varObject = varStack->generateVar( typeNames[ 0 ] );
 						if( varObject == nullptr ) {
 							tools::debug::printError( "变量堆栈创建类型失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
+							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						useCount = varObject->serializeToObjectData( lastPtr, surplus );
 						if( useCount == 0 ) {
 							tools::debug::printError( "变量反序列化失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
+							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						lastPtr += useCount;
@@ -678,11 +697,13 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 				}
 			if( index != 0 ) {
 				tools::debug::printError( "组件id序列为 : " + QString::number( id ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 			size_t mod = lastPtr - read_data_vector;
 			if( data_count < mod ) {
 				tools::debug::printError( "数据量使用异常" );
+				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 		}
