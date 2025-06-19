@@ -48,6 +48,10 @@ protected:
 	std_shared_ptr< std_mutex > nodeComponentIDMutex;
 	/// @brief 组件节点锁
 	std_shared_ptr< std_mutex > nodeWidgetIDMutex;
+	/// @brief 建议请求组件id锁
+	std_shared_ptr< std_mutex > nodeComponentAdviseIDMutex;
+	/// @brief 建议请求组件节点锁
+	std_shared_ptr< std_mutex > nodeWidgetAdviseIDMutex;
 	/// @brief 存储组件id
 	std_vector_pairt< INodeComponent *, size_t > nodeComponentID;
 	/// @brief 存储节点id

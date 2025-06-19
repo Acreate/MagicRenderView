@@ -151,6 +151,10 @@ Q_SIGNALS:
 	void requestNodeWidgetID( INodeWidget *request_node_widget_ptr );
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
+	/// @param advise_id 建议 id
+	void requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id );
+	/// @brief 请求id
+	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
 };
 

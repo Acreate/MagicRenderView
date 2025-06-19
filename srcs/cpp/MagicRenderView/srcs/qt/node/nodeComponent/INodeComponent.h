@@ -128,6 +128,10 @@ Q_SIGNALS:
 	/// @brief 请求id
 	/// @param request_node_component_ptr 请求组件
 	void destoryNodeComponentID( INodeComponent *request_node_component_ptr );
+	/// @brief 请求id
+	/// @param request_node_component_ptr 请求组件
+	/// @param advise_id 建议 id
+	void requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

@@ -82,6 +82,12 @@ inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &un
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	nodeComponentIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 	nodeWidgetIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
+	nodeWidgetAdviseIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
+	nodeComponentAdviseIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
+
+	nodeWidgetAdviseIDMutex->lock(  );
+	nodeComponentAdviseIDMutex->lock(  );
+	
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
 	nodeMenu = new NodeAddMenu( this );
@@ -471,11 +477,11 @@ void NodeGraph::requestNodeComponentID( INodeComponent *request_node_component_p
 		request_node_component_ptr->show( );
 }
 void NodeGraph::requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id ) {
-	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetAdviseIDMutex );
 	registerID( request_node_widget_ptr, advise_id );
 }
 void NodeGraph::requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id ) {
-	std_lock_grad_mutex lockGradMutex( *nodeComponentIDMutex );
+	std_lock_grad_mutex lockGradMutex( *nodeComponentAdviseIDMutex );
 	registerID( request_node_component_ptr, advise_id );
 }
 void NodeGraph::destoryNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
