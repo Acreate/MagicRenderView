@@ -48,6 +48,10 @@ public:
 		/// @param result_obj_type_names 返回的对象类型名称
 		/// @return 使用数据的量
 		static type_size_t getSerializeInfo( const uint8_t *data_ptr, const size_t &data_size, uint8_t *result_is_beg_endian, std_vector< QString > *result_stack_type_name, std_vector< QString > *result_qt_meta_names, std_vector< QString > *result_obj_type_names );
+		/// @brief 获取继承关系
+		/// @param meta_object_ptr 多媒体
+		/// @return 继承关系列表
+		static std_vector< QString > getMetaInheritInfo( const QMetaObject *meta_object_ptr );
 	};
 public:
 	/// @brief 数据序列化到参数

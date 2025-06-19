@@ -69,6 +69,19 @@ ISerialize::type_size_t ISerialize::SerializeInfo::getSerializeInfo( const uint8
 	}
 	return stringInfoSize + 1 + sizeof( type_size_t );
 }
+std_vector< QString > ISerialize::SerializeInfo::getMetaInheritInfo( const QMetaObject *meta_object_ptr ) {
+	std_vector< QString > result;
+	QString className = meta_object_ptr->className( );
+	result.emplace_back( className );
+	do {
+		meta_object_ptr = meta_object_ptr->superClass( );
+		if( meta_object_ptr == nullptr )
+			break;
+		className = meta_object_ptr->className( );
+		result.emplace_back( className );
+	} while( true );
+	return result;
+}
 uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
 

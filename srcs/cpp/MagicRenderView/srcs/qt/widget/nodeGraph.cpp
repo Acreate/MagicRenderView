@@ -437,32 +437,41 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 	auto surplus = data_count - jumpCompCount;
 	while( surplus != 0 ) {
 		auto lastPtr = read_data_vector + jumpCompCount;
-		cood = *lastPtr != isBegEndian( );
-		needCount = *( size_t * ) ( lastPtr + 1 );
-		if( cood )
-			ISerialize::converEndian( needCount );
-		if( needCount > surplus ) {
-			tools::debug::printError( "参考数据不满足所需数据" );
+		uchar beg;
+		std_vector< QString > stackNames;
+		std_vector< QString > meteObjectNames;
+		std_vector< QString > typeNames;
+		size_t useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
+		if( useCount == 0 ) {
+			tools::debug::printError( "无法从序列化中获取对象信息" );
 			return 0;
 		}
-		surplus = surplus - jumpCompCount;
-		lastPtr += jumpCompCount;
-
-		size_t strSize = *(size_t*)lastPtr;
-		
-		QByteArray byteArray;
-		byteArray.resize( strSize );
-		auto data = byteArray.data( );
-		for( index = 0; index < strSize; ++index )
-			data[ index ] = lastPtr[ index ];
-		QString info( byteArray );
-		qsizetype indexOf = info.indexOf( "!" );
-		QString stackName = info.mid( 0, indexOf );
-		auto nodeStack = INodeStack::getInstance( stackName );
+		auto nodeStack = INodeStack::getInstance( stackNames[ 0 ] );
 		if( nodeStack == nullptr ) {
-			tools::debug::printError( "找不到匹配的堆栈 : " + stackName );
+			tools::debug::printError( "无法匹配适应的节点生成器 : " + stackNames[ 0 ] );
 			return 0;
 		}
+		INodeWidget *generateNode = nodeStack->generateNode( typeNames[ 0 ] );
+		if( generateNode == nullptr ) {
+			tools::debug::printError( "无法生成对应的节点 : " + typeNames[ 0 ] );
+			return 0;
+		}
+		auto inheritInfo = ISerialize::SerializeInfo::getMetaInheritInfo( generateNode->metaObject( ) );
+		size_t inheritCount = inheritInfo.size( );
+		if( inheritCount != meteObjectNames.size( ) ) {
+			tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
+			return 0;
+		}
+		for( index = 0; index < inheritCount; ++index )
+			if( meteObjectNames[ index ] != inheritInfo[ index ] ) {
+				tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
+				return 0;
+			}
+		if( surplus < useCount ) {
+			tools::debug::printError( "数据量使用异常" );
+			return 0;
+		}
+		surplus = surplus - useCount;
 	}
 
 	return 0;
