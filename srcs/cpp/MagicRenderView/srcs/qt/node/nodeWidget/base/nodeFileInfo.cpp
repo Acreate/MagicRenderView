@@ -3,12 +3,14 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+#include "../../../stack/nodeStack/INodeStack.h"
+
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 #include "qt/node/nodeComponent/base/nodeInputLineText.h"
 #include "qt/node/nodeComponent/base/nodePanel.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
-NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector<QString> &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
+NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
 	UserFunctionDeclaration *declaration;
 	declaration = new UserFunctionDeclaration(
 		"文件信息 获取文件信息(字符串 文件路径); " );
@@ -23,23 +25,23 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 	subPlan = new NodePanel( "节点面板", this );
 	mainBoxLayout->addWidget( subPlan );
 
-	NodeInputLineText *path = new NodeInputLineText( "路径", this );
-	subPlan->appendInput( path );
+	inputPath = new NodeInputLineText( "路径", this );
+	subPlan->appendInput( inputPath );
 
-	path = new NodeInputLineText( "全路径", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "大小", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "占用", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "创建日期", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "最后更改日期", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "拥有者", this );
-	subPlan->appendOutput( path );
-	path = new NodeInputLineText( "内容", this );
-	subPlan->appendOutput( path );
+	outAbsPath = new NodeInputLineText( "全路径", this );
+	subPlan->appendOutput( outAbsPath );
+	outSize = new NodeInputLineText( "大小", this );
+	subPlan->appendOutput( outSize );
+	outUserSize = new NodeInputLineText( "占用", this );
+	subPlan->appendOutput( outUserSize );
+	outCreateFileTimeData = new NodeInputLineText( "创建日期", this );
+	subPlan->appendOutput( outCreateFileTimeData );
+	outLastChangeFileTimeData = new NodeInputLineText( "最后更改日期", this );
+	subPlan->appendOutput( outLastChangeFileTimeData );
+	outFileOwner = new NodeInputLineText( "拥有者", this );
+	subPlan->appendOutput( outFileOwner );
+	outFileContent = new NodeInputLineText( "内容", this );
+	subPlan->appendOutput( outFileContent );
 
 	mainBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
 	subPlan->repaint( );
@@ -69,12 +71,7 @@ bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint 
 
 	return false;
 }
-bool NodeFileInfo::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
-	return false;
-}
-size_t NodeFileInfo::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
-	return 0;
-}
+
 
 void NodeFileInfo::updateSize( ) {
 	size_t leftHeight = 0, width = 0;

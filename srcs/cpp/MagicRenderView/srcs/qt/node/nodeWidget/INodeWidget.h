@@ -17,15 +17,13 @@ class StringTypeObject;
 class IFunctionDeclaration;
 class NodeGraph;
 class INodeComponent;
-class INodeWidget : public QWidget, public ISerialize {
+class INodeWidget : public QWidget {
 	Q_OBJECT;
 public:
 	friend class NodeGraph;
 protected:
 	/// @brief 函数声明对象
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
-	/// @brief 连接到该节点的节点
-	std_shared_ptr< std_vector< const INodeWidget * > > connectNodeWidgets;
 	/// @brief 节点窗口名称
 	std_vector< QString > nodeWidgetNames;
 	/// @brief 生成该节点的对象
@@ -37,44 +35,6 @@ protected: // ui
 	QLabel *title;
 	/// @brief 布局
 	QVBoxLayout *mainBoxLayout;
-protected:
-	/// @brief 链接到该节点
-	/// @param target_node_widget 链接到该节点的对象指针
-	virtual void linkThis( const INodeWidget *target_node_widget ) const {
-		if( target_node_widget == nullptr )
-			return;
-		size_t count = connectNodeWidgets->size( );
-		if( count > 0 ) {
-			auto nodeWidget = connectNodeWidgets->data( );
-			for( size_t index = 0; index < count; ++index )
-				if( nodeWidget[ index ] == target_node_widget )
-					return;
-		}
-		connectNodeWidgets->emplace_back( target_node_widget );
-		connect( target_node_widget, &QObject::deleteLater, [this, target_node_widget]( ) {
-			auto iterator = connectNodeWidgets->begin( );
-			auto end = connectNodeWidgets->end( );
-			for( ; iterator != end; ++iterator )
-				if( iterator.operator*( ) == target_node_widget ) {
-					connectNodeWidgets->erase( iterator );
-					return;
-				}
-		} );
-	}
-	/// @brief 断开节点
-	/// @param target_node_widget 断开该节点的对象指针
-	virtual void unLinkThis( const INodeWidget *target_node_widget ) const {
-		if( target_node_widget == nullptr )
-			return;
-		auto iterator = connectNodeWidgets->begin( );
-		auto end = connectNodeWidgets->end( );
-		for( ; iterator != end; ++iterator )
-			if( iterator.operator*( ) == target_node_widget ) {
-				disconnect( target_node_widget, &QObject::deleteLater, this, nullptr );
-				connectNodeWidgets->erase( iterator );
-				return;
-			}
-	}
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
 	/// @param get_stack_function 节点生成函数
@@ -87,15 +47,8 @@ public:
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
 	virtual void call( ) const {
-		if( functionDeclaration ) {
-			size_t count = connectNodeWidgets->size( );
-			if( count > 0 /* 链接到该节点的节点窗口 */ ) {
-				auto nodeWidget = connectNodeWidgets->data( );
-				for( size_t index = 0; index < count; ++index )
-					nodeWidget[ index ]->call( );
-			}
+		if( functionDeclaration ) 
 			functionDeclaration.get( )->call( );
-		}
 	}
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }

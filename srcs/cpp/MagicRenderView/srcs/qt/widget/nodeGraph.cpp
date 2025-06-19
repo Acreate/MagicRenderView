@@ -60,8 +60,8 @@ size_t getId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *requ
 		return 0;
 	auto data = storage_vector.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( data[ index ]->first == request_ui_ptr )
-			return data[ index ]->second;
+		if( data[ index ].first == request_ui_ptr )
+			return data[ index ].second;
 	return 0;
 }
 

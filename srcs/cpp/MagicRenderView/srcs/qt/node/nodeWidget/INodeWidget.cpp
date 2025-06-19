@@ -14,7 +14,7 @@
 #include "qt/stack/nodeStack/INodeStack.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 
-INodeWidget::INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), connectNodeWidgets( new std_vector< const INodeWidget * > ), nodeWidgetNames( node_widget_name_s ), getStackFunction( get_stack_function ) {
+INodeWidget::INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), nodeWidgetNames( node_widget_name_s ), getStackFunction( get_stack_function ) {
 	if( !getStackFunction )
 		getStackFunction = [] { return INodeStack::getStdSharedPtrInstance< BaseNodeStack >( ); };
 	nodeStack = getStackFunction( );
