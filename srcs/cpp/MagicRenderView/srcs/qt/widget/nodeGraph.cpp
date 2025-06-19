@@ -7,6 +7,8 @@
 
 #include <qt/application/application.h>
 
+#include "../stack/varStack/IVarStack.h"
+
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
 #include "qt/node/nodeComponent/INodeComponent.h"
@@ -386,12 +388,17 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	std_vector< uint8_t > nodeCompoent;
 	std_vector< uchar > idData;
 	size_t index;
-	for( auto nodeWidget : nodeWidgets ) {
+	int64_t pos;
+	qsizetype nodeWidgetCount = nodeWidgets.size( );
+	qsizetype nodeWidgetIndex = 0;
+	auto nodeWidgetDataPtr = nodeWidgets.data( );
+	INodeWidget *nodeWidget;
+
+	for( ; nodeWidgetIndex < nodeWidgetCount; ++nodeWidgetIndex ) {
+		nodeWidget = nodeWidgetDataPtr[ nodeWidgetIndex ];
 		componentId = nodeWidget->getComponentID( );
 		std::ranges::sort( componentId, lambda );
-		nodeWidgetId = getNodeWidgetID( nodeWidget );
-		nodeCompoent.resize( sizeof( nodeWidgetId ) );
-		*( size_t * ) nodeCompoent.data( ) = nodeWidgetId;
+		nodeCompoent.resize( 0 );
 		for( auto [ component,id ] : componentId )
 			if( component->getVarObject( ) != nullptr && component->getVarObject( )->serializeToVectorData( &componentResult ) ) {
 				toData( id, &idData );
@@ -399,30 +406,57 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 				nodeCompoent.append_range( componentResult );
 			}
 		count = nodeCompoent.size( );
-		lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) + count );
+		// 追加数量 = 组件大小 + ( 组件数据量+ ID 占用 +  xy坐标)
+		index = sizeof( size_t ) * 4 + count;
+		lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), index );
+		long long i = lastPtr - result.data( );
+		// 赋值节点ID
+		nodeWidgetId = getNodeWidgetID( nodeWidget );
+		*( size_t * ) lastPtr = nodeWidgetId;
+		lastPtr += sizeof( nodeWidgetId );
+		// 坐标赋值
+		index = sizeof pos;
+		// 赋值 x
+		pos = nodeWidget->x( );
+		*( decltype(pos) * ) lastPtr = pos;
+
+		lastPtr += index;
+		// 赋值 y
+		pos = nodeWidget->y( );
+		*( decltype(pos) * ) lastPtr = pos;
+		lastPtr += index;
+
+		// 赋值组件数据量
 		*( size_t * ) lastPtr = count;
 		lastPtr += sizeof( nodeWidgetId );
+		// 拷贝组件数据
 		data = nodeCompoent.data( );
 		for( index = 0; index < count; ++index )
 			lastPtr[ index ] = data[ index ];
 		mulStdData.append_range( result );
 	}
 	count = mulStdData.size( );
-	index = 1 + sizeof size_t;
+	// 大小端 + (组件数量 + 总数(各个节点序列化的数据量))
+	index = 1 + sizeof size_t + sizeof qsizetype;
 	result_data_vector->resize( count + index );
 
 	lastPtr = result_data_vector->data( );
 	*lastPtr = isBegEndian( );
 	lastPtr += 1;
 	*( size_t * ) lastPtr = count;
+	lastPtr += sizeof size_t;
+	*( qsizetype * ) lastPtr = nodeWidgetCount;
 
-	lastPtr += index - 1;
+	lastPtr = result_data_vector->data( ) + index;
 	data = mulStdData.data( );
 	for( index = 0; index < count; ++index )
 		lastPtr[ index ] = data[ index ];
 	return result_data_vector->size( );
 }
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
+	std_lock_grad_mutex lockGradMutexWidget( *nodeWidgetIDMutex );
+	std_lock_grad_mutex lockGradMutexComponent( *nodeComponentIDMutex );
+
 	auto cood = *read_data_vector != isBegEndian( );
 	size_t needCount = *( size_t * ) ( read_data_vector + 1 );
 	if( cood )
@@ -433,7 +467,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		tools::debug::printError( "参考数据不满足所需数据" );
 		return 0;
 	}
-	size_t index = 0;
+	size_t index;
 	auto surplus = data_count - jumpCompCount;
 	while( surplus != 0 ) {
 		auto lastPtr = read_data_vector + jumpCompCount;
@@ -467,13 +501,96 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 				tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
 				return 0;
 			}
+		// 获取 id
+		lastPtr = lastPtr + useCount;
+		size_t id = *( ( size_t * ) lastPtr );
+		registerID( generateNode, id );
+		// 获取 x
+		lastPtr += sizeof( size_t );
+		int64_t x = *( ( int64_t * ) lastPtr );
+		// 获取 y
+		lastPtr += sizeof int64_t;
+		int64_t y = *( ( int64_t * ) lastPtr );
+		generateNode->move( x, y );
+		// 获取组件数目
+		lastPtr += sizeof int64_t;
+		qsizetype componentCount = *( ( qsizetype * ) lastPtr );
+		lastPtr += sizeof qsizetype;
+		surplus = data_count - ( lastPtr - read_data_vector );
+		if( componentCount == 0 )
+			continue; // 组件为 0
+		id = *( ( size_t * ) lastPtr );
 		if( surplus < useCount ) {
 			tools::debug::printError( "数据量使用异常" );
 			return 0;
 		}
 		surplus = surplus - useCount;
+		if( id > surplus ) {
+			tools::debug::printError( "数据量无法配置节点组件信息" );
+			return 0;
+		}
+		lastPtr += sizeof size_t;
+		if( id == 0 )
+			continue;
+		auto componentId = generateNode->getComponentID( );
+		size_t componentIdCount = componentId.size( );
+		auto componentDataPtr = componentId.data( );
+		if( componentIdCount != componentCount ) {
+			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+			return 0;
+		}
+		for( qsizetype idIndex = 0; componentCount < componentIdCount; ++idIndex ) {
+			inheritCount = *( ( size_t * ) lastPtr );
+			lastPtr += sizeof size_t;
+			surplus = data_count - ( lastPtr - read_data_vector );
+			for( index = 0; index < componentIdCount; ++index )
+				if( componentDataPtr[ index ].second == inheritCount ) {
+					auto varObject = componentDataPtr[ index ].first->getVarObject( );
+					if( varObject != nullptr ) {
+						useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
+						if( useCount == 0 ) {
+							tools::debug::printError( "组件id序列为 : " + QString::number( inheritCount ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+							return 0;
+						}
+						auto varStack = IVarStack::getInstance( stackNames[ 0 ] );
+						if( varObject == nullptr ) {
+							tools::debug::printError( "无法找到匹配变量堆栈 : " + stackNames[ 0 ] );
+							return 0;
+						}
+						auto typeObject = varStack->generateVar( typeNames[ 0 ] );
+						if( typeObject == nullptr ) {
+							tools::debug::printError( "变量堆栈创建类型失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
+							return 0;
+						}
+						useCount = typeObject->serializeToObjectData( lastPtr, surplus );
+						if( useCount == 0 ) {
+							tools::debug::printError( "变量反序列化失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
+							return 0;
+						}
+						lastPtr += useCount;
+						componentDataPtr[ index ].first->setVar( typeObject );
+						lastPtr += useCount;
+					}
+					index = 0;
+					break;
+				}
+			if( index != 0 ) {
+				tools::debug::printError( "组件id序列为 : " + QString::number( inheritCount ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+				return 0;
+			}
+			size_t mod = lastPtr - read_data_vector;
+			if( data_count < mod ) {
+				tools::debug::printError( "数据量使用异常" );
+				return 0;
+			}
+			surplus = data_count - mod;
+			if( surplus == 0 )
+				break;
+		}
 	}
 
+	nodeComponentAdviseIDMutex->lock( );
+	nodeWidgetAdviseIDMutex->lock( );
 	return 0;
 }
 size_t NodeGraph::getNodeCompoentID( const INodeComponent *node_component ) const {
@@ -534,36 +651,28 @@ size_t NodeGraph::registerID( INodeComponent *request_ui_ptr, size_t advise_id )
 	size_t count = nodeComponentID.size( );
 	if( count == 0 ) {
 		nodeComponentID.emplace_back( request_ui_ptr, advise_id );
-		request_ui_ptr->repaint( );
 		return advise_id;
 	}
 	auto data = nodeComponentID.data( );
 	size_t index = 0;
-	while( index < count )
-		if( data[ index ].second == advise_id ) {
-			request_ui_ptr->repaint( );
+	for( ; index < count; ++index )
+		if( data[ index ].second == advise_id )
 			return 0;
-		}
 	nodeComponentID.emplace_back( request_ui_ptr, advise_id );
-	request_ui_ptr->repaint( );
 	return advise_id;
 }
 size_t NodeGraph::registerID( INodeWidget *request_ui_ptr, size_t advise_id ) {
 	size_t count = nodeWidgetID.size( );
 	if( count == 0 ) {
 		nodeWidgetID.emplace_back( request_ui_ptr, advise_id );
-		request_ui_ptr->repaint( );
 		return advise_id;
 	}
 	auto data = nodeWidgetID.data( );
 	size_t index = 0;
-	while( index < count )
-		if( data[ index ].second == advise_id ) {
-			request_ui_ptr->repaint( );
+	for( ; index < count; ++index )
+		if( data[ index ].second == advise_id )
 			return 0;
-		}
 	nodeWidgetID.emplace_back( request_ui_ptr, advise_id );
-	request_ui_ptr->repaint( );
 	return advise_id;
 }
 size_t NodeGraph::removeId( INodeComponent *request_ui_ptr ) {

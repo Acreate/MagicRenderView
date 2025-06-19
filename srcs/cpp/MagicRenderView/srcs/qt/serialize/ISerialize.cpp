@@ -67,7 +67,7 @@ ISerialize::type_size_t ISerialize::SerializeInfo::getSerializeInfo( const uint8
 		for( auto &unityString : stringList )
 			result_qt_meta_names->emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
 	}
-	return stringInfoSize + 1 + sizeof( type_size_t );
+	return stringInfoSize + 1 + sizeof( type_size_t ) * 2;
 }
 std_vector< QString > ISerialize::SerializeInfo::getMetaInheritInfo( const QMetaObject *meta_object_ptr ) {
 	std_vector< QString > result;
