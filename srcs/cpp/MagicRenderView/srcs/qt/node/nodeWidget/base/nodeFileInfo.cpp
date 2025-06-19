@@ -10,7 +10,14 @@
 #include "qt/node/nodeComponent/base/nodePanel.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
+
+#define emplace_back_ID( component_ptr_ ) \
+	component_ptr_->setParentNodeWidget( this ); \
+	componentID.emplace_back( component_ptr_,ID );\
+	++ID
+
 NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
+	std_lock_grad_mutex lockGradMutex( *componentIDMutex );
 	UserFunctionDeclaration *declaration;
 	declaration = new UserFunctionDeclaration(
 		"文件信息 获取文件信息(字符串 文件路径); " );
@@ -24,24 +31,42 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 	setObjectName( declarationName );
 	subPlan = new NodePanel( "节点面板", this );
 	mainBoxLayout->addWidget( subPlan );
-
+	size_t ID = 1;
+	
+	emplace_back_ID(subPlan);
+	
 	inputPath = new NodeInputLineText( "路径", this );
 	subPlan->appendInput( inputPath );
+	
+	emplace_back_ID(inputPath);
 
 	outAbsPath = new NodeInputLineText( "全路径", this );
 	subPlan->appendOutput( outAbsPath );
+	emplace_back_ID(outAbsPath);
+	
 	outSize = new NodeInputLineText( "大小", this );
 	subPlan->appendOutput( outSize );
+	emplace_back_ID(outSize);
+	
 	outUserSize = new NodeInputLineText( "占用", this );
 	subPlan->appendOutput( outUserSize );
+	emplace_back_ID(outUserSize);
+	
 	outCreateFileTimeData = new NodeInputLineText( "创建日期", this );
 	subPlan->appendOutput( outCreateFileTimeData );
+	emplace_back_ID(outCreateFileTimeData);
+	
 	outLastChangeFileTimeData = new NodeInputLineText( "最后更改日期", this );
 	subPlan->appendOutput( outLastChangeFileTimeData );
+	emplace_back_ID(outLastChangeFileTimeData);
+	
 	outFileOwner = new NodeInputLineText( "拥有者", this );
 	subPlan->appendOutput( outFileOwner );
+	emplace_back_ID(outFileOwner);
+	
 	outFileContent = new NodeInputLineText( "内容", this );
 	subPlan->appendOutput( outFileContent );
+	emplace_back_ID(outFileContent);
 
 	mainBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
 	subPlan->repaint( );
@@ -71,7 +96,6 @@ bool NodeFileInfo::getComponentLinkPos( const INodeComponent *component, QPoint 
 
 	return false;
 }
-
 
 void NodeFileInfo::updateSize( ) {
 	size_t leftHeight = 0, width = 0;

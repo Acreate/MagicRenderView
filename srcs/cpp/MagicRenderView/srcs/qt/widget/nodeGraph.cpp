@@ -369,7 +369,15 @@ int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, con
 	return 0;
 }
 bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
-	return false;
+	std_vector< uint8_t > result;
+	QList< INodeWidget * > nodeWidgets = findChildren< INodeWidget * >( );
+	for( auto nodeWidget : nodeWidgets ) {
+		size_t nodeWidgetId = getNodeWidgetID( nodeWidget );
+		auto lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) );
+		*( size_t * ) lastPtr = nodeWidgetId;
+		result_data_vector->append_range( result );
+	}
+	return result.size( );
 }
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	return 0;

@@ -17,6 +17,7 @@
 INodeWidget::INodeWidget( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, const std_shared_ptr< IFunctionDeclaration > &function_declaration, QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ), nodeWidgetNames( node_widget_name_s ), getStackFunction( get_stack_function ) {
 	if( !getStackFunction )
 		getStackFunction = [] { return INodeStack::getStdSharedPtrInstance< BaseNodeStack >( ); };
+	componentIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 	nodeStack = getStackFunction( );
 	mainBoxLayout = new QVBoxLayout( this );
 	mainBoxLayout->setContentsMargins( 0, 0, 0, 0 );

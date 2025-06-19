@@ -1,6 +1,13 @@
 ﻿#include "INodeComponent.h"
 
 #include <QPainter>
+
+#include "../nodeWidget/INodeWidget.h"
+size_t INodeComponent::getNodeWidgetAtNodeCompoentID( ) const {
+	if( parentNodeWidget )
+		return parentNodeWidget->getChildNodeCompoentID( this );
+	return 0;
+}
 void INodeComponent::setNewSize( const QSize &new_size ) {
 	setFixedSize( new_size );
 	emit changeSize( new_size );

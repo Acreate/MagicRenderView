@@ -3,6 +3,8 @@
 #pragma once
 #include <QWidget>
 
+#include "../nodeComponent/INodeComponent.h"
+
 #include "alias/type_alias.h"
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
@@ -30,6 +32,10 @@ protected:
 	std_shared_ptr< INodeStack > nodeStack;
 	/// @brief 节点工厂生成函数
 	std_function< std_shared_ptr< INodeStack >( ) > getStackFunction;
+	/// @brief 存储子组件ID
+	std_vector_pairt< INodeComponent *, size_t > componentID;
+	/// @brief 组件ID读取锁
+	std_shared_ptr< std_mutex > componentIDMutex;
 protected: // ui
 	/// @brief 标题
 	QLabel *title;
@@ -47,7 +53,7 @@ public:
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
 	virtual void call( ) const {
-		if( functionDeclaration ) 
+		if( functionDeclaration )
 			functionDeclaration.get( )->call( );
 	}
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
@@ -84,6 +90,40 @@ public:
 	virtual void setNodoTitle( const QString &titile );
 	virtual QString getNodeTitle( ) const;
 	virtual size_t getID( ) const;
+	/// @brief 获取子组件在当前节点中的 ID 编号
+	/// @param node_component 组件指针
+	/// @return 子组件ID
+	virtual size_t getChildNodeCompoentID( const INodeComponent *node_component ) const {
+		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+		size_t count = componentID.size( );
+		if( count == 0 )
+			return 0;
+		auto data = componentID.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ].first == node_component )
+				return data[ index ].second;
+		return 0;
+	}
+	/// @brief 根据 ID 获取组件
+	/// @param id 匹配 id
+	/// @return 组件，不存在返回 nullptr
+	virtual INodeComponent * getCompoent( const size_t &id ) const {
+		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+		size_t count = componentID.size( );
+		if( count == 0 )
+			return nullptr;
+		auto data = componentID.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ].second == id )
+				return data[ index ].first;
+		return 0;
+	}
+	/// @brief 获取组件映射 ID
+	/// @return 组件ID列表
+	virtual std_vector_pairt< INodeComponent *, size_t > getComponentID( ) const {
+		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+		return componentID;
+	}
 public Q_SLOTS:
 	/// @brief 节点注册id完成
 	/// @param id 注册的id

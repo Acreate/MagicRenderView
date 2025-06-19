@@ -8,6 +8,7 @@
 #include "qt/serialize/ISerialize.h"
 #include "qt/type/ITypeObject.h"
 
+class INodeWidget;
 class ITypeObject;
 class INodeComponent : public QWidget {
 	Q_OBJECT;
@@ -23,6 +24,7 @@ public:
 protected:
 	Channel_Type channelType;
 	QString nodeComponentName;
+	INodeWidget *parentNodeWidget;
 public:
 	INodeComponent( const QString &node_component_name, QWidget *parent, Qt::WindowFlags f ) {
 		channelType = Channel_Type::Normal_Default;
@@ -30,6 +32,14 @@ public:
 		setAttribute( Qt::WA_InputMethodTransparent, true );
 	}
 public:
+	/// @brief 配置父节点（并不会改变父窗口）
+	/// @param parent_node_widget 父节点
+	virtual void setParentNodeWidget( INodeWidget *parent_node_widget ) {
+		parentNodeWidget = parent_node_widget;
+	}
+	/// @brief 获取在父节点上的 ID
+	/// @return 0 表示不存在父节点
+	virtual size_t getNodeWidgetAtNodeCompoentID( ) const;
 	/// @brief 获取值
 	/// @return 值指针对象
 	virtual const std_shared_ptr< ITypeObject > getVarObject( ) const =0;
