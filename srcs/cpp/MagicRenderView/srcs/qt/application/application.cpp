@@ -11,12 +11,12 @@ NodeGraph *Application::mainNodeGraph = nullptr;
 
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
 }
-size_t Application::getID(const  INodeComponent *node_component ) {
+size_t Application::getID( const INodeComponent *node_component ) {
 	if( mainNodeGraph == nullptr )
 		return 0;
 	return mainNodeGraph->getNodeCompoentID( node_component );
 }
-size_t Application::getID(const  INodeWidget *node_widget ) {
+size_t Application::getID( const INodeWidget *node_widget ) {
 	if( mainNodeGraph == nullptr )
 		return 0;
 	return mainNodeGraph->getNodeWidgetID( node_widget );

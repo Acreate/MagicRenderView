@@ -29,15 +29,15 @@ void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	connect( this, &INodeWidget::error, node_graph, &NodeGraph::error );
 	connect( this, &INodeWidget::finish, node_graph, &NodeGraph::finish );
 	connect( this, &INodeWidget::requestNodeWidgetID, node_graph, &NodeGraph::requestNodeWidgetID );
+	connect( this, &INodeWidget::requestNodeWidgetAdviseID, node_graph, &NodeGraph::requestNodeWidgetAdviseID );
 	connect( this, &INodeWidget::destroyed, [this]( ) {
 		emit destoryNodeWidgetID( this );
 	} );
-	connect( this, &INodeWidget::requestNodeWidgetAdviseID, node_graph, &NodeGraph::requestNodeWidgetAdviseID );
 	// 子组件
 	auto nodeComponents = findChildren< INodeComponent * >( );
 	for( auto nodeCompoent : nodeComponents ) {
 		connect( nodeCompoent, &INodeComponent::requestNodeComponentID, node_graph, &NodeGraph::requestNodeComponentID );
-		connect( nodeCompoent, &INodeComponent::requestNodeComponentAdviseID, node_graph, &NodeGraph::requestNodeWidgetAdviseID );
+		connect( nodeCompoent, &INodeComponent::requestNodeComponentAdviseID, node_graph, &NodeGraph::requestNodeComponentAdviseID );
 		connect( nodeCompoent, &INodeComponent::destroyed, [nodeCompoent]( ) {
 			emit nodeCompoent->destoryNodeComponentID( nodeCompoent );
 		} );
@@ -79,6 +79,12 @@ QString INodeWidget::getNodeTitle( ) const {
 }
 size_t INodeWidget::getID( ) const {
 	return Application::getID( this );
+}
+void INodeWidget::registerIDFinish( size_t id ) {
+	if( id == 0 )
+		requestNodeWidgetID( this );
+	else
+		show( );
 }
 void INodeWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

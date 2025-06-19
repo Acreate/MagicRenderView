@@ -132,6 +132,10 @@ Q_SIGNALS:
 	/// @param request_node_component_ptr 请求组件
 	/// @param advise_id 建议 id
 	void requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id );
+public Q_SLOTS:
+	/// @brief 节点注册id完成
+	/// @param id 注册的id
+	virtual void registerIDFinish( size_t id );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

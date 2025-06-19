@@ -39,6 +39,12 @@ bool INodeComponent::getComponentLinkPos( const INodeComponent *component, QPoin
 	}
 	return true;
 }
+void INodeComponent::registerIDFinish( size_t id ) {
+	if( id == 0 )
+		requestNodeComponentID( this );
+	else
+		show( );
+}
 void INodeComponent::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	/*QPainter painter( this );
