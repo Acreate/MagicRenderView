@@ -81,6 +81,28 @@ QString INodeWidget::getNodeTitle( ) const {
 size_t INodeWidget::getID( ) const {
 	return Application::getID( this );
 }
+size_t INodeWidget::getChildNodeCompoentID( const INodeComponent *node_component ) const {
+	std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+	size_t count = componentID.size( );
+	if( count == 0 )
+		return 0;
+	auto data = componentID.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].first == node_component )
+			return data[ index ].second;
+	return 0;
+}
+INodeComponent * INodeWidget::getCompoent( const size_t &id ) const {
+	std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+	size_t count = componentID.size( );
+	if( count == 0 )
+		return nullptr;
+	auto data = componentID.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].second == id )
+			return data[ index ].first;
+	return 0;
+}
 void INodeWidget::registerIDFinish( size_t id ) {
 	if( id == 0 )
 		requestNodeWidgetID( this );

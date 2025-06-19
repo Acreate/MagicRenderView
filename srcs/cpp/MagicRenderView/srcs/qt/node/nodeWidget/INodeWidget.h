@@ -3,8 +3,6 @@
 #pragma once
 #include <QWidget>
 
-#include "../nodeComponent/INodeComponent.h"
-
 #include "alias/type_alias.h"
 
 #include "qt/functionDeclaration/IFunctionDeclaration.h"
@@ -93,31 +91,11 @@ public:
 	/// @brief 获取子组件在当前节点中的 ID 编号
 	/// @param node_component 组件指针
 	/// @return 子组件ID
-	virtual size_t getChildNodeCompoentID( const INodeComponent *node_component ) const {
-		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
-		size_t count = componentID.size( );
-		if( count == 0 )
-			return 0;
-		auto data = componentID.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ].first == node_component )
-				return data[ index ].second;
-		return 0;
-	}
+	virtual size_t getChildNodeCompoentID( const INodeComponent *node_component ) const;
 	/// @brief 根据 ID 获取组件
 	/// @param id 匹配 id
 	/// @return 组件，不存在返回 nullptr
-	virtual INodeComponent * getCompoent( const size_t &id ) const {
-		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
-		size_t count = componentID.size( );
-		if( count == 0 )
-			return nullptr;
-		auto data = componentID.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ].second == id )
-				return data[ index ].first;
-		return 0;
-	}
+	virtual INodeComponent * getCompoent( const size_t &id ) const;
 	/// @brief 获取组件映射 ID
 	/// @return 组件ID列表
 	virtual std_vector_pairt< INodeComponent *, size_t > getComponentID( ) const {

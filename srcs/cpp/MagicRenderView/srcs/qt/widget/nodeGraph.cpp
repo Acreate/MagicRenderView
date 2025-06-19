@@ -372,12 +372,31 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	std_vector< uint8_t > result;
 	QList< INodeWidget * > nodeWidgets = findChildren< INodeWidget * >( );
 	for( auto nodeWidget : nodeWidgets ) {
+		auto componentId = nodeWidget->getComponentID( );
+		std::sort( componentId.begin( ), componentId.end( ), [] ( std_pairt< INodeComponent *, size_t > &left, std_pairt< INodeComponent *, size_t > &right ) {
+			return left.second < right.second;
+		} );
+		std_vector< uint8_t > componentResult;
 		size_t nodeWidgetId = getNodeWidgetID( nodeWidget );
-		auto lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) );
-		*( size_t * ) lastPtr = nodeWidgetId;
+		std_vector< uint8_t > nodeCompoent( sizeof( nodeWidgetId ) );
+		*( size_t * ) nodeCompoent.data( ) = nodeWidgetId;
+		for( auto [ component,id ] : componentId )
+			if( component->getVarObject( ) != nullptr && component->getVarObject( )->serializeToVectorData( &componentResult ) ) {
+				std_vector< uchar > idData;
+				toData( id, &idData );
+				nodeCompoent.append_range( idData );
+				nodeCompoent.append_range( componentResult );
+			}
+		size_t size = nodeCompoent.size( );
+		auto lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) + size );
+		*( size_t * ) lastPtr = size;
+		lastPtr += sizeof( nodeWidgetId );
+		auto data = nodeCompoent.data( );
+		for( size_t index = 0; index < size; ++index )
+			lastPtr[ index ] = data[ index ];
 		result_data_vector->append_range( result );
 	}
-	return result.size( );
+	return result_data_vector->size( );
 }
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
 	return 0;
