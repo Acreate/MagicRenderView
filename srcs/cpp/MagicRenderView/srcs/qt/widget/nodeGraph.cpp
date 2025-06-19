@@ -7,6 +7,8 @@
 
 #include <qt/application/application.h>
 
+#include "../mainWindow/mainWindow.h"
+
 #include "../stack/varStack/IVarStack.h"
 
 #include "qt/menu/action/nodeAddAction.h"
@@ -108,6 +110,7 @@ inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &un
 }
 
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
+	mainWindow = nullptr;
 	nodeWidgetIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 	nodeWidgetAdviseIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 
@@ -170,7 +173,16 @@ bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_n
 }
 
 void NodeGraph::updateMinSize( ) {
-	QRect newRect = this->rect( );
+	QWidget *widget;
+	QRect newRect;
+	auto mainWindow = getMainWindow( );
+	if( mainWindow == nullptr ) {
+		widget = qobject_cast< QWidget * >( parent( ) );
+		if( widget == nullptr )
+			widget = this;
+		newRect = widget->rect( );
+	} else
+		newRect = mainWindow->rect( );
 	for( auto nodeWidgetPtr : nodeWidgets )
 		newRect = newRect.united( nodeWidgetPtr->geometry( ) );
 	QSize newSize = newRect.size( );
@@ -409,6 +421,9 @@ bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *
 	nodeWidgetIDMutex->unlock( );
 	for( auto node : nodeWidgets )
 		node->show( );
+
+	updateMinSize( );
+	repaint( );
 	return true;
 }
 bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {

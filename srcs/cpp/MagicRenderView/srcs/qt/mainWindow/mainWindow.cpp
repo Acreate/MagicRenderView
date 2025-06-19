@@ -9,6 +9,7 @@
 #include <qt/widget/scrollArea/scrollNodeGraph.h>
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
 	nodeGraph = new ScrollNodeGraph( this );
+	nodeGraph->setMainWindow( this );
 	setCentralWidget( nodeGraph );
 	setWindowToIndexScreenCentre( 0 );
 	mainMenuBar = menuBar( );

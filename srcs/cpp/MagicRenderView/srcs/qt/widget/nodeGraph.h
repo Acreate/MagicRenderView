@@ -7,6 +7,7 @@
 #include "alias/type_alias.h"
 
 #include "qt/node/nodeLink/nodeLinkItem.h"
+class MainWindow;
 class ITypeObject;
 class INodeWidget;
 class INodeComponent;
@@ -22,6 +23,8 @@ public: // 类型
 		Move,// 移动
 	};
 protected:
+	/// @brief 主要窗口
+	MainWindow* mainWindow;
 	/// @brief 节点添加菜单
 	NodeAddMenu *nodeMenu;
 	/// @brief 用于显示鼠标位置
@@ -108,6 +111,8 @@ public:
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 	size_t getNodeWidgetID( const INodeWidget *node_widget ) const;
 	INodeWidget * getNodeWidgetFromID( const size_t &id ) const;
+	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
+	virtual void setMainWindow( MainWindow * const main_window ) { mainWindow = main_window; }
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;

@@ -14,3 +14,5 @@ size_t ScrollNodeGraph::serializeToObjectData( const uint8_t *read_data_vector, 
 bool ScrollNodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	return nodeGraph->serializeToVectorData( result_data_vector );
 }
+MainWindow * ScrollNodeGraph::getMainWindow( ) const { return nodeGraph->getMainWindow( ); }
+void ScrollNodeGraph::setMainWindow( MainWindow *const main_window ) { nodeGraph->setMainWindow( main_window ); }
