@@ -24,6 +24,8 @@ bool ISerialize::SerializeInfo::init( ) {
 	}
 	// 找到类型
 	dataPtr = dataPtr + 1 + sizeof( type_size_t );
+	size = *( size_t * ) dataPtr;
+	dataPtr += sizeof( type_size_t );
 	QByteArray hex;
 	hex.resize( size );
 	auto hexDataPtr = hex.data( );
@@ -71,10 +73,12 @@ ISerialize::type_size_t ISerialize::SerializeInfo::getSerializeInfo( const uint8
 	}
 	// 找到类型
 	dataPtr = dataPtr + 1 + sizeof( type_size_t );
+	auto stringInfoSize = *( size_t * ) dataPtr;
+	dataPtr += sizeof( type_size_t );
 	QByteArray hex;
-	hex.resize( size );
+	hex.resize( stringInfoSize );
 	auto hexDataPtr = hex.data( );
-	for( size_t index = 0; index < size; ++index )
+	for( size_t index = 0; index < stringInfoSize; ++index )
 		hexDataPtr[ index ] = dataPtr[ index ];
 	// 找到 [ 
 	QString structString( hex );
@@ -107,7 +111,7 @@ ISerialize::type_size_t ISerialize::SerializeInfo::getSerializeInfo( const uint8
 		for( auto &unityString : stringList )
 			result_qt_meta_names->emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
 	}
-	return size;
+	return stringInfoSize + 1 + sizeof( type_size_t );
 }
 uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
@@ -133,7 +137,7 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	auto type_name_date = utf8.data( );
 	type_size_t utfCharSize = utfCount * sizeof( type_name_date[ 0 ] );
 
-	type_size_t vectorSize = sizeof( uint8_t ) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + utfCharSize /* (媒体对象) */ + append_size /* (追加的大小) */;
+	type_size_t vectorSize = sizeof( uint8_t ) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof( type_size_t ) /* (字符串信息大小) */ + utfCharSize /* (媒体对象) */ + append_size /* (追加的大小) */;
 
 	// 存储访问保存数据下标
 	type_size_t index = 0;
@@ -142,6 +146,7 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	// 配置大小端
 	auto beg = isBegEndian( );
 	auto dataPtr = result_data->data( );
+	// 大小端
 	dataPtr[ index ] = beg;
 	// 存储转换列表
 	std_vector< uint8_t > toDataVector;
@@ -151,17 +156,25 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	type_size_t sourceCount;
 	toData( vectorSize, &toDataVector );
 	// 偏移下标
-	size_t orgIndex = index + 1;
 	sourceCount = toDataVector.size( );
 	sourceDataPtr = toDataVector.data( );
+	// 总大小
+	dataPtr += 1;
 	for( index = 0; index < sourceCount; ++index )
-		dataPtr[ index + orgIndex ] = sourceDataPtr[ index ];
-	orgIndex = index + orgIndex;
+		dataPtr[ index ] = sourceDataPtr[ index ];
+	// 字符串大小
+	toData( utfCharSize, &toDataVector );
+	sourceDataPtr = toDataVector.data( );
+	sourceCount = toDataVector.size( );
+	dataPtr += index;
+	for( index = 0; index < sourceCount; ++index )
+		dataPtr[ index ] = sourceDataPtr[ index ];
+	// 字符串信息
+	dataPtr += index;
 	for( index = 0; index < utfCharSize; ++index )
-		dataPtr[ index + orgIndex ] = type_name_date[ index ];
-
-	orgIndex = index + orgIndex;
-	return dataPtr + orgIndex;
+		dataPtr[ index ] = type_name_date[ index ];
+	dataPtr += index;
+	return dataPtr;
 }
 uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size ) {
 	QStringList nativeTypeList, stackTypeList;

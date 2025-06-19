@@ -21,7 +21,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	auto openFileAction = firstMenu->addAction( "打开文件..." );
 
 	connect( openFileAction, &QAction::triggered, [this]( ) {
-		QString openFileName = QFileDialog::getOpenFileName( this, "打开文件", qApp->applicationDirPath( ),"艺术文件(*.mser)" );
+		QString openFileName = QFileDialog::getOpenFileName( this, "打开文件", qApp->applicationDirPath( ), "艺术文件(*.mser)" );
 		if( openFileName.isEmpty( ) )
 			return;
 		QFile file( openFileName );
@@ -34,7 +34,15 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	auto saveFileAction = firstMenu->addAction( "存储文件..." );
 
 	connect( saveFileAction, &QAction::triggered, [this]( ) {
-		QString openFileName = QFileDialog::getSaveFileName( this, "打开文件", qApp->applicationDirPath( ),"艺术文件(*.mser)" );
+		std_vector< uchar > ser;
+		if( nodeGraph->serializeToVectorData( &ser ) ) {
+			if( nodeGraph->serializeToObjectData( ser.data( ), ser.size( ) ) )
+				tools::debug::printError( "已经序列化完成" );
+			else
+				tools::debug::printError( "序列化失败" );
+		}
+		return;
+		QString openFileName = QFileDialog::getSaveFileName( this, "打开文件", qApp->applicationDirPath( ), "艺术文件(*.mser)" );
 		if( openFileName.isEmpty( ) )
 			return;
 		QFile file( openFileName );
@@ -42,6 +50,10 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 			std_vector< uchar > ser;
 			if( nodeGraph->serializeToVectorData( &ser ) ) {
 				file.write( ( const char * ) ser.data( ), ser.size( ) );
+				if( nodeGraph->serializeToObjectData( ser.data( ), ser.size( ) ) )
+					tools::debug::printError( "已经序列化完成" );
+				else
+					tools::debug::printError( "序列化失败" );
 			}
 			file.close( );
 		}

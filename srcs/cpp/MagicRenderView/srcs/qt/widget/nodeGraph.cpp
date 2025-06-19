@@ -369,36 +369,102 @@ int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, con
 	return 0;
 }
 bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
+	/// 累加数据
+	std_vector< uint8_t > mulStdData;
+	size_t count;
 	std_vector< uint8_t > result;
 	QList< INodeWidget * > nodeWidgets = findChildren< INodeWidget * >( );
+	// 排序表达式
+	auto lambda = [] ( std_pairt< INodeComponent *, size_t > &left, std_pairt< INodeComponent *, size_t > &right ) {
+		return left.second < right.second;
+	};
+	std_vector< uint8_t > componentResult;
+	uint8_t *lastPtr;
+	uint8_t *data;
+	std_vector_pairt< INodeComponent *, size_t > componentId;
+	size_t nodeWidgetId;
+	std_vector< uint8_t > nodeCompoent;
+	std_vector< uchar > idData;
+	size_t index;
 	for( auto nodeWidget : nodeWidgets ) {
-		auto componentId = nodeWidget->getComponentID( );
-		std::sort( componentId.begin( ), componentId.end( ), [] ( std_pairt< INodeComponent *, size_t > &left, std_pairt< INodeComponent *, size_t > &right ) {
-			return left.second < right.second;
-		} );
-		std_vector< uint8_t > componentResult;
-		size_t nodeWidgetId = getNodeWidgetID( nodeWidget );
-		std_vector< uint8_t > nodeCompoent( sizeof( nodeWidgetId ) );
+		componentId = nodeWidget->getComponentID( );
+		std::ranges::sort( componentId, lambda );
+		nodeWidgetId = getNodeWidgetID( nodeWidget );
+		nodeCompoent.resize( sizeof( nodeWidgetId ) );
 		*( size_t * ) nodeCompoent.data( ) = nodeWidgetId;
 		for( auto [ component,id ] : componentId )
 			if( component->getVarObject( ) != nullptr && component->getVarObject( )->serializeToVectorData( &componentResult ) ) {
-				std_vector< uchar > idData;
 				toData( id, &idData );
 				nodeCompoent.append_range( idData );
 				nodeCompoent.append_range( componentResult );
 			}
-		size_t size = nodeCompoent.size( );
-		auto lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) + size );
-		*( size_t * ) lastPtr = size;
+		count = nodeCompoent.size( );
+		lastPtr = converQMetaObjectInfoToUInt8Vector( &result, nodeWidget->metaObject( ), nodeWidget->getNodeStack( )->getStackTypeNames( ), nodeWidget->getNodeNames( ), sizeof( nodeWidgetId ) + count );
+		*( size_t * ) lastPtr = count;
 		lastPtr += sizeof( nodeWidgetId );
-		auto data = nodeCompoent.data( );
-		for( size_t index = 0; index < size; ++index )
+		data = nodeCompoent.data( );
+		for( index = 0; index < count; ++index )
 			lastPtr[ index ] = data[ index ];
-		result_data_vector->append_range( result );
+		mulStdData.append_range( result );
 	}
+	count = mulStdData.size( );
+	index = 1 + sizeof size_t;
+	result_data_vector->resize( count + index );
+
+	lastPtr = result_data_vector->data( );
+	*lastPtr = isBegEndian( );
+	lastPtr += 1;
+	*( size_t * ) lastPtr = count;
+
+	lastPtr += index - 1;
+	data = mulStdData.data( );
+	for( index = 0; index < count; ++index )
+		lastPtr[ index ] = data[ index ];
 	return result_data_vector->size( );
 }
 size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) {
+	auto cood = *read_data_vector != isBegEndian( );
+	size_t needCount = *( size_t * ) ( read_data_vector + 1 );
+	if( cood )
+		ISerialize::converEndian( needCount );
+	// 数据头
+	size_t jumpCompCount = sizeof size_t + 1;
+	if( needCount > data_count ) {
+		tools::debug::printError( "参考数据不满足所需数据" );
+		return 0;
+	}
+	size_t index = 0;
+	auto surplus = data_count - jumpCompCount;
+	while( surplus != 0 ) {
+		auto lastPtr = read_data_vector + jumpCompCount;
+		cood = *lastPtr != isBegEndian( );
+		needCount = *( size_t * ) ( lastPtr + 1 );
+		if( cood )
+			ISerialize::converEndian( needCount );
+		if( needCount > surplus ) {
+			tools::debug::printError( "参考数据不满足所需数据" );
+			return 0;
+		}
+		surplus = surplus - jumpCompCount;
+		lastPtr += jumpCompCount;
+
+		size_t strSize = *(size_t*)lastPtr;
+		
+		QByteArray byteArray;
+		byteArray.resize( strSize );
+		auto data = byteArray.data( );
+		for( index = 0; index < strSize; ++index )
+			data[ index ] = lastPtr[ index ];
+		QString info( byteArray );
+		qsizetype indexOf = info.indexOf( "!" );
+		QString stackName = info.mid( 0, indexOf );
+		auto nodeStack = INodeStack::getInstance( stackName );
+		if( nodeStack == nullptr ) {
+			tools::debug::printError( "找不到匹配的堆栈 : " + stackName );
+			return 0;
+		}
+	}
+
 	return 0;
 }
 size_t NodeGraph::getNodeCompoentID( const INodeComponent *node_component ) const {
