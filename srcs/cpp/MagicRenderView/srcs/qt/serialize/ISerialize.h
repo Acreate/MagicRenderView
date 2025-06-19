@@ -24,7 +24,7 @@ public:
 		/// @brief 从原始数据当中获取到的数据大小
 		type_size_t size;
 		/// @brief 从原始数据当中解析实现的结尾指针，该内容可能是真实的数据值
-		const uint8_t *infoLastPtr;
+		size_t infoLastPtr;
 		/// @brief 是否初始化成功
 		bool isInitTrue;
 	public:
@@ -35,7 +35,7 @@ public:
 		const std_vector< QString > & getMetaObjectClassNames( ) const { return metaObjectClassNames; }
 		uchar getBegEndian( ) const { return begEndian; }
 		type_size_t getSize( ) const { return size; }
-		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr; }
+		const uint8_t * getInfoLastPtr( ) const { return infoLastPtr + data.data( ); }
 		bool isIsInitTrue( ) const { return isInitTrue; }
 		const std_vector< QString > & getStackNames( ) const { return stackNames; }
 

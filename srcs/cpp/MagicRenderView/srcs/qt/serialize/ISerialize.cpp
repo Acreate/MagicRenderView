@@ -9,53 +9,9 @@ ISerialize::SerializeInfo::SerializeInfo( const uint8_t *data_ptr, const size_t 
 		dataPtr[ index ] = data_ptr[ index ];
 }
 bool ISerialize::SerializeInfo::init( ) {
-	auto dataPtr = data.data( );
-	size_t dataCount = data.size( );
-	// 获取大小端
-	begEndian = *dataPtr;
-	uchar endian = getBegEndian( );
-	size = *( type_size_t * ) ( dataPtr + 1 );
-	if( begEndian != endian )
-		converEndian( size );
-	if( size > dataCount ) {
-		tools::debug::printError( "数据是损坏的" );
-		isInitTrue = false;
-		return false;
-	}
-	// 找到类型
-	dataPtr = dataPtr + 1 + sizeof( type_size_t );
-	size = *( size_t * ) dataPtr;
-	dataPtr += sizeof( type_size_t );
-	QByteArray hex;
-	hex.resize( size );
-	auto hexDataPtr = hex.data( );
-	for( size_t index = 0; index < size; ++index )
-		hexDataPtr[ index ] = dataPtr[ index ];
-	// 找到 [ 
-	QString structString( hex );
-	qsizetype left = structString.indexOf( "[" );
-	stackNames.clear( );
-	for( auto &type : structString.mid( 0, left - 1 ).split( "," ) )
-		stackNames.emplace_back( type );
-	// 找到 ]
-	qsizetype right = structString.indexOf( "]", left );
-	QString mid = structString.mid( left, right - left );
-	auto stringList = mid.split( "," );
-	typeNames.clear( );
-	for( auto &unityString : stringList )
-		typeNames.emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
-
-	// 找到 {}
-	left = structString.indexOf( "{", right );
-	right = structString.indexOf( "}", left );
-	mid = structString.mid( left, right - left );
-	stringList = mid.split( "," );
-	metaObjectClassNames.clear( );
-	for( auto &unityString : stringList )
-		metaObjectClassNames.emplace_back( QByteArray::fromHex( unityString.toUtf8( ) ) );
+	infoLastPtr = getSerializeInfo( data.data( ), data.size( ), &begEndian, &stackNames, &metaObjectClassNames, &typeNames );
 	// 配置数据起始地址
-	infoLastPtr = dataPtr + size;
-	return true;
+	return infoLastPtr;
 }
 
 ISerialize::type_size_t ISerialize::SerializeInfo::getSerializeInfo( const uint8_t *data_ptr, const size_t &data_size, uint8_t *result_is_beg_endian, std_vector< QString > *result_stack_type_name, std_vector< QString > *result_qt_meta_names, std_vector< QString > *result_obj_type_names ) {
