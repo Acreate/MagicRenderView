@@ -119,6 +119,8 @@ public:
 	/// @param result_output_component_pos 返回输出的组件位置
 	/// @return 成功返回 true
 	virtual bool getInputOutputPos( QPoint *result_input_component_pos, QPoint *result_output_component_pos ) const;
+	virtual const std_pairt< INodeWidget *, INodeComponent * > & getInputNodeComponentInfo( ) const { return input_node_component_info; }
+	virtual const std_pairt< INodeWidget *, INodeComponent * > & getOutputNodeComponentInfo( ) const { return output_node_component_info; }
 };
 
 #endif // NODELINKITEM_H_H_HEAD__FILE__

@@ -9,7 +9,6 @@
 
 #include "../stack/varStack/IVarStack.h"
 
-#include "qt/functionDeclaration/IFunctionDeclaration.h"
 #include "qt/menu/action/nodeAddAction.h"
 #include "qt/node/nodeComponent/INodeComponent.h"
 #include "qt/stack/nodeStack/INodeStack.h"
@@ -25,19 +24,21 @@ size_t randomId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *r
 	}
 	auto data = storage_vector.data( );
 	size_t max = 0;
-	while( max < count )
-		if( data[ max ].first == request_ui_ptr )
-			return data[ max ].second;
-		else
-			++max;
-	max = 1;
-	while( max != 0 )
-		if( data[ max ].second == max )
-			++max;
-		else {
-			storage_vector.emplace_back( request_ui_ptr, max );
-			return max;
+	max -= 1;
+
+	for( size_t adId = 1; adId < max; ++adId ) {
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].second == adId )
+				break;
+			else if( data[ index ].first == request_ui_ptr )
+				return data[ index ].second;
+		if( index == count ) {
+			storage_vector.emplace_back( request_ui_ptr, adId );
+			return adId;
 		}
+	}
+
 	return 0;
 }
 
@@ -80,6 +81,18 @@ inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &s
 			return true;
 		}
 	return false;
+}
+
+template< typename TUnity >
+inline static TUnity * getUnityFirst( const std_vector_pairt< TUnity *, size_t > &storage_vector, const size_t &scond ) {
+	auto count = storage_vector.size( );
+	if( count == 0 )
+		return nullptr;
+	auto dataPtr = storage_vector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( dataPtr[ index ].second == scond )
+			return dataPtr[ index ].first;
+	return nullptr;
 }
 
 template< typename TUnity >
@@ -370,7 +383,7 @@ int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, con
 		}
 	return 0;
 }
-bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list ) {
+bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list, const std_vector< NodeLinkItem > &new_link_items_vector ) {
 	nodeWidgetIDMutex->lock( );
 	nodeWidgets.clear( );
 	auto data = nodeWidgetID->data( );
@@ -391,7 +404,8 @@ bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *
 		nodeWidgets.emplace_back( nodeWidget );
 		nodeWidget->setParent( this );
 	}
-
+	for( auto item : new_link_items_vector )
+		nodeLinkItems->emplace_back( item );
 	nodeWidgetIDMutex->unlock( );
 	for( auto node : nodeWidgets )
 		node->show( );
@@ -415,9 +429,9 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	qsizetype nodeWidgetIndex = 0;
 	INodeWidget **nodeWidgetDataPtr = nodeWidgets.data( );
 	size_t activeNodeCount = 0;
-	size_t activeComponentCount = 0;
-
+	// 节点列表
 	for( ; nodeWidgetIndex < nodeWidgetCount; ++nodeWidgetIndex ) {
+		size_t activeComponentCount = 0;
 		INodeWidget *nodeWidget = nodeWidgetDataPtr[ nodeWidgetIndex ];
 		size_t nodeWidgetId;
 		::getUnitySecond( *nodeWidgetID, nodeWidget, &nodeWidgetId );
@@ -493,21 +507,54 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 			lastPtr[ index ] = data[ index ];
 		mulStdData.append_range( result );
 	}
-	count = mulStdData.size( );
+	// 连接列表
+	auto linkItem = nodeLinkItems->data( );
+	size_t linkCount = nodeLinkItems->size( );
+	std_vector< uchar > linkBuff;
+	for( index = 0; index < linkCount; ++index ) {
+		size_t nodeWidgetId;
+		std_vector< uchar > idBuff;
+		auto inputNodeComponentInfo = linkItem[ index ].getInputNodeComponentInfo( );
+		::getUnitySecond( *nodeWidgetID, inputNodeComponentInfo.first, &nodeWidgetId );
+		toData( nodeWidgetId, &idBuff );
+		linkBuff.append_range( idBuff );
+		nodeWidgetId = inputNodeComponentInfo.second->getNodeWidgetAtNodeCompoentID( );
+		toData( nodeWidgetId, &idBuff );
+		linkBuff.append_range( idBuff );
+
+		inputNodeComponentInfo = linkItem[ index ].getOutputNodeComponentInfo( );
+		::getUnitySecond( *nodeWidgetID, inputNodeComponentInfo.first, &nodeWidgetId );
+		toData( nodeWidgetId, &idBuff );
+		linkBuff.append_range( idBuff );
+		nodeWidgetId = inputNodeComponentInfo.second->getNodeWidgetAtNodeCompoentID( );
+		toData( nodeWidgetId, &idBuff );
+		linkBuff.append_range( idBuff );
+	}
+	size_t mulCount = mulStdData.size( );
+	size_t linkBuffCount = linkBuff.size( );
+	count = mulCount + linkBuffCount;
 	// 大小端 + 节点数
-	index = 1 + sizeof size_t + sizeof qsizetype;
+	index = 1 + sizeof size_t + sizeof qsizetype + sizeof( linkCount ) + sizeof( linkBuffCount );
 	result_data_vector->resize( count + index );
 
 	lastPtr = result_data_vector->data( );
 	*lastPtr = isBegEndian( );
 	lastPtr += 1;
-	*( qsizetype * ) lastPtr = activeNodeCount;
-	lastPtr += sizeof qsizetype;
-	*( size_t * ) lastPtr = count;
-	lastPtr += sizeof size_t;
+	*( decltype(activeNodeCount) * ) lastPtr = activeNodeCount;
+	lastPtr += sizeof activeNodeCount;
+	*( decltype(mulCount) * ) lastPtr = mulCount;
+	lastPtr += sizeof mulCount;
 	// 拷贝数据
 	data = mulStdData.data( );
-	for( index = 0; index < count; ++index )
+	for( index = 0; index < mulCount; ++index )
+		lastPtr[ index ] = data[ index ];
+	lastPtr += index;
+	*( decltype(linkCount) * ) lastPtr = linkCount;
+	lastPtr += sizeof linkCount;
+	*( decltype(linkBuffCount) * ) lastPtr = linkBuffCount;
+	lastPtr += sizeof linkBuffCount;
+	data = linkBuff.data( );
+	for( index = 0; index < linkBuffCount; ++index )
 		lastPtr[ index ] = data[ index ];
 	count = result_data_vector->size( );
 	nodeWidgetIDMutex->unlock( );
@@ -638,19 +685,20 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		componentId = generateNode->getComponentID( );
 		componentIdCount = componentId.size( );
 		componentDataPtr = componentId.data( );
+		buffComponentId.clear( );
 		for( idIndex = 0; idIndex < componentIdCount; ++idIndex )
 			if( componentDataPtr[ idIndex ].second == 0 || componentDataPtr[ idIndex ].first->getVarObject( ) == nullptr )
 				continue;
 			else
 				buffComponentId.emplace_back( componentDataPtr[ idIndex ] );
 
-		if( buffComponentId.size( ) != componentCount ) {
-			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
+		componentIdCount = buffComponentId.size( );
+		if( componentIdCount != componentCount ) {
+			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常 ( " + QString::number( componentIdCount ) + " != " + QString::number( componentCount ) + " ) " );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 
-		componentIdCount = buffComponentId.size( );
 		componentDataPtr = buffComponentId.data( );
 		for( idIndex = 0; idIndex < componentIdCount; ++idIndex ) {
 			id = *( ( decltype(id) * ) lastPtr );
@@ -708,9 +756,48 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 			}
 		}
 	}
+	size_t linkCount = *( size_t * ) lastPtr;
+	lastPtr += sizeof size_t;
+	size_t linkDataCount = *( size_t * ) lastPtr;
+	lastPtr += sizeof size_t;
+	std_vector< NodeLinkItem > newLinkItemsVector;
+	if( linkCount != 0 && linkDataCount != 0 ) {
+		surplus = data_count - ( lastPtr - read_data_vector );
+		if( linkDataCount > surplus ) {
+			tools::debug::printError( "数据量使用异常，剩余数据不足填充链表" );
+			nodeWidgetIDMutex->unlock( );
+			return 0;
+		}
+		for( index = 0; index < linkCount; ++index ) {
+			NodeLinkItem linkItem;
+			size_t inputWidgetID = *( size_t * ) lastPtr;
+			lastPtr += sizeof size_t;
+
+			auto inputLink = getUnityFirst( overNodeWidget, inputWidgetID );
+			size_t inputComponentID = *( size_t * ) lastPtr;
+			lastPtr += sizeof size_t;
+			auto componetFromId = inputLink->getComponetFromID( inputComponentID );
+			linkItem.setInput( inputLink, componetFromId );
+
+			size_t outputWidgetID = *( size_t * ) lastPtr;
+			lastPtr += sizeof size_t;
+			inputLink = getUnityFirst( overNodeWidget, outputWidgetID );
+			size_t outputComponentID = *( size_t * ) lastPtr;
+			lastPtr += sizeof size_t;
+			componetFromId = inputLink->getComponetFromID( outputComponentID );
+			linkItem.setOutput( inputLink, componetFromId );
+			newLinkItemsVector.emplace_back( linkItem );
+		}
+	} else if( linkDataCount == 0 && linkCount == 0 );
+	else if( linkDataCount == 0 || linkCount == 0 ) {
+		tools::debug::printError( "链接列表数据异常" );
+		nodeWidgetIDMutex->unlock( );
+		return 0;
+	}
+
 	useCount = lastPtr - read_data_vector;
 	nodeWidgetIDMutex->unlock( );
-	overSerializeToObjectData( overNodeWidget );
+	overSerializeToObjectData( overNodeWidget, newLinkItemsVector );
 	return useCount;
 }
 size_t NodeGraph::getNodeWidgetID( const INodeWidget *node_widget ) const {
@@ -719,6 +806,10 @@ size_t NodeGraph::getNodeWidgetID( const INodeWidget *node_widget ) const {
 	if( ::getUnitySecond( *nodeWidgetID, node_widget, &resultID ) )
 		return resultID;
 	return 0;
+}
+INodeWidget * NodeGraph::getNodeWidgetFromID( const size_t &id ) const {
+	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
+	return getUnityFirst( *nodeWidgetID, id );
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	selectNodeWidget = nullptr;

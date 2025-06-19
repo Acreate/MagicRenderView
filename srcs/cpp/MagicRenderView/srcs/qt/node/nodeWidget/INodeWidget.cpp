@@ -83,7 +83,7 @@ size_t INodeWidget::getChildNodeCompoentID( const INodeComponent *node_component
 			return data[ index ].second;
 	return 0;
 }
-INodeComponent * INodeWidget::getCompoent( const size_t &id ) const {
+INodeComponent * INodeWidget::getComponetFromID( const size_t &id ) const {
 	std_lock_grad_mutex lockGradMutex( *componentIDMutex );
 	size_t count = componentID.size( );
 	if( count == 0 )

@@ -95,7 +95,7 @@ public:
 	/// @brief 根据 ID 获取组件
 	/// @param id 匹配 id
 	/// @return 组件，不存在返回 nullptr
-	virtual INodeComponent * getCompoent( const size_t &id ) const;
+	virtual INodeComponent * getComponetFromID( const size_t &id ) const;
 	/// @brief 获取组件映射 ID
 	/// @return 组件ID列表
 	virtual std_vector_pairt< INodeComponent *, size_t > getComponentID( ) const {

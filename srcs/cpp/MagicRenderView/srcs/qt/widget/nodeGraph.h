@@ -101,11 +101,13 @@ public:
 	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
 	/// @brief 实现序列化之后，调用该函数
 	/// @param over_widget_list 实现反序列化的节点
+	/// @param new_link_items_vector 新的连接列表
 	/// @return 成功返回 true
-	virtual bool overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list );
+	virtual bool overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list, const std_vector< NodeLinkItem > &new_link_items_vector );
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
 	size_t getNodeWidgetID( const INodeWidget *node_widget ) const;
+	INodeWidget * getNodeWidgetFromID( const size_t &id ) const;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
