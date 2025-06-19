@@ -105,15 +105,15 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	qint64 utfCount = utf8.size( );
 	auto type_name_date = utf8.data( );
 	type_size_t utfCharSize = utfCount * sizeof( type_name_date[ 0 ] );
-
-	type_size_t vectorSize = sizeof( uint8_t ) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof( type_size_t ) /* (字符串信息大小) */ + utfCharSize /* (媒体对象) */ + append_size /* (追加的大小) */;
+	
+	// 配置大小端
+	auto beg = isBegEndian( );
+	type_size_t vectorSize = sizeof( beg ) /* (大小端标识) */ + sizeof( utfCharSize ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof( vectorSize ) /* (字符串信息大小) */ + utfCharSize /* (媒体对象) */ + append_size /* (追加的大小) */;
 
 	// 存储访问保存数据下标
 	type_size_t index = 0;
 	result_data->resize( vectorSize );
 
-	// 配置大小端
-	auto beg = isBegEndian( );
 	auto dataPtr = result_data->data( );
 	// 大小端
 	dataPtr[ index ] = beg;

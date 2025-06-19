@@ -132,20 +132,6 @@ Q_SIGNALS:
 	/// @param old_channel_type 旧的通道类型
 	/// @param new_channel_type 新通道类型
 	void changeChannel( INodeComponent *component, Channel_Type old_channel_type, Channel_Type new_channel_type );
-	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	void requestNodeComponentID( INodeComponent *request_node_component_ptr );
-	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	void destoryNodeComponentID( INodeComponent *request_node_component_ptr );
-	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	/// @param advise_id 建议 id
-	void requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id );
-public Q_SLOTS:
-	/// @brief 节点注册id完成
-	/// @param id 注册的id
-	virtual void registerIDFinish( size_t id );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

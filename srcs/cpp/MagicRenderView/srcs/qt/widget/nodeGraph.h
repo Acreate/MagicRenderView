@@ -43,19 +43,13 @@ protected:
 	/// @brief 选择组件时的坐标位置
 	QPoint selectNodeComponentPoint;
 	/// @brief 节点组件的连接
-	std_vector< NodeLinkItem > nodeLinkItems;
-	/// @brief 组件id锁
-	std_shared_ptr< std_mutex > nodeComponentIDMutex;
+	std_shared_ptr< std_vector< NodeLinkItem > > nodeLinkItems;
 	/// @brief 组件节点锁
 	std_shared_ptr< std_mutex > nodeWidgetIDMutex;
-	/// @brief 建议请求组件id锁
-	std_shared_ptr< std_mutex > nodeComponentAdviseIDMutex;
 	/// @brief 建议请求组件节点锁
 	std_shared_ptr< std_mutex > nodeWidgetAdviseIDMutex;
-	/// @brief 存储组件id
-	std_vector_pairt< INodeComponent *, size_t > nodeComponentID;
 	/// @brief 存储节点id
-	std_vector_pairt< INodeWidget *, size_t > nodeWidgetID;
+	std_shared_ptr< std_vector_pairt< INodeWidget *, size_t > > nodeWidgetID;
 public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
@@ -105,9 +99,12 @@ public:
 	/// @param input_unity 输入组件
 	/// @return 成功返回 1
 	virtual int linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity );
+	/// @brief 实现序列化之后，调用该函数
+	/// @param over_widget_list 实现反序列化的节点
+	/// @return 成功返回 true
+	virtual bool overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list );
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
-	size_t getNodeCompoentID( const INodeComponent *node_component ) const;
 	size_t getNodeWidgetID( const INodeWidget *node_widget ) const;
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
@@ -115,11 +112,8 @@ protected:
 	void mousePressEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 protected:
-	size_t registerID( INodeComponent *request_ui_ptr );
 	size_t registerID( INodeWidget *request_ui_ptr );
-	size_t registerID( INodeComponent *request_ui_ptr, size_t advise_id );
 	size_t registerID( INodeWidget *request_ui_ptr, size_t advise_id );
-	size_t removeId( INodeComponent *request_ui_ptr );
 	size_t removeId( INodeWidget *request_ui_ptr );
 public Q_SLOTS:
 	/// @brief 执行错误时，产生该消息
@@ -138,22 +132,12 @@ public Q_SLOTS:
 	/// @param request_node_widget_ptr 请求节点
 	void requestNodeWidgetID( INodeWidget *request_node_widget_ptr );
 	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	void requestNodeComponentID( INodeComponent *request_node_component_ptr );
-	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	/// @param advise_id 建议 id
 	void requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id );
 	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	/// @param advise_id 建议 id
-	void requestNodeComponentAdviseID( INodeComponent *request_node_component_ptr, size_t advise_id );
-	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
-	/// @brief 请求id
-	/// @param request_node_component_ptr 请求组件
-	void destoryNodeComponentID( INodeComponent *request_node_component_ptr );
 };
 
 #endif // NODEGRAPH_H_H_HEAD__FILE__

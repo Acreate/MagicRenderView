@@ -34,15 +34,6 @@ void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
 	connect( this, &INodeWidget::destroyed, [this]( ) {
 		emit destoryNodeWidgetID( this );
 	} );
-	// 子组件
-	auto nodeComponents = findChildren< INodeComponent * >( );
-	for( auto nodeCompoent : nodeComponents ) {
-		connect( nodeCompoent, &INodeComponent::requestNodeComponentID, node_graph, &NodeGraph::requestNodeComponentID );
-		connect( nodeCompoent, &INodeComponent::requestNodeComponentAdviseID, node_graph, &NodeGraph::requestNodeComponentAdviseID );
-		connect( nodeCompoent, &INodeComponent::destroyed, [nodeCompoent]( ) {
-			emit nodeCompoent->destoryNodeComponentID( nodeCompoent );
-		} );
-	}
 }
 
 INodeComponent * INodeWidget::getPosNodeComponent( const QPoint &pos ) const {

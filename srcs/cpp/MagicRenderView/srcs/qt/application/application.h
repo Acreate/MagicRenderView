@@ -32,7 +32,6 @@ public:
 		mainNodeGraph = node_graph;
 		return oldNodeGraph;
 	}
-	static size_t getID( const INodeComponent *node_component );
 	static size_t getID( const INodeWidget *node_widget );
 public:
 	bool notify( QObject *, QEvent * ) override;

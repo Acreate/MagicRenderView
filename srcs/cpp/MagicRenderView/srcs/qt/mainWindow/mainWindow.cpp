@@ -27,34 +27,23 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 		QFile file( openFileName );
 		if( file.open( QIODeviceBase::ReadOnly ) ) {
 			QByteArray byteArray = file.readAll( );
-			nodeGraph->serializeToObjectData( ( const uchar * ) byteArray.data( ), byteArray.size( ) );
+			if( nodeGraph->serializeToObjectData( ( const uchar * ) byteArray.data( ), byteArray.size( ) ) == 0 ) {
+				tools::debug::printError( "文件无法读取，或者内容失败 : " + file.fileName( ) );
+			}
 			file.close( );
 		}
 	} );
 	auto saveFileAction = firstMenu->addAction( "存储文件..." );
 
 	connect( saveFileAction, &QAction::triggered, [this]( ) {
-		std_vector< uchar > ser;
-		if( nodeGraph->serializeToVectorData( &ser ) ) {
-			if( nodeGraph->serializeToObjectData( ser.data( ), ser.size( ) ) )
-				tools::debug::printError( "已经序列化完成" );
-			else
-				tools::debug::printError( "序列化失败" );
-		}
-		return;
-		QString openFileName = QFileDialog::getSaveFileName( this, "打开文件", qApp->applicationDirPath( ), "艺术文件(*.mser)" );
+		QString openFileName = QFileDialog::getSaveFileName( this, "存储文件", qApp->applicationDirPath( ), "艺术文件(*.mser)" );
 		if( openFileName.isEmpty( ) )
 			return;
 		QFile file( openFileName );
 		if( file.open( QIODeviceBase::WriteOnly ) ) {
 			std_vector< uchar > ser;
-			if( nodeGraph->serializeToVectorData( &ser ) ) {
+			if( nodeGraph->serializeToVectorData( &ser ) )
 				file.write( ( const char * ) ser.data( ), ser.size( ) );
-				if( nodeGraph->serializeToObjectData( ser.data( ), ser.size( ) ) )
-					tools::debug::printError( "已经序列化完成" );
-				else
-					tools::debug::printError( "序列化失败" );
-			}
 			file.close( );
 		}
 	} );
