@@ -467,31 +467,51 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		tools::debug::printError( "参考数据不满足所需数据" );
 		return 0;
 	}
+	// 获取节点个数
+	auto lastPtr = read_data_vector + jumpCompCount;
+	auto nodeWidgetCount = *lastPtr;
+	if( nodeWidgetCount == 0 )
+		return jumpCompCount;
 	size_t index;
+	size_t useCount;
+	size_t inheritCount;
+	size_t id;
+	uchar beg;
+	int64_t x;
+	int64_t y;
+	qsizetype idIndex;
+	qsizetype componentCount;
+	std_vector< QString > stackNames;
+	std_vector< QString > meteObjectNames;
+	std_vector< QString > typeNames;
+	INodeStack *nodeStack;
+	INodeWidget *generateNode;
+	std_vector< QString > inheritInfo;
+	std_vector_pairt< INodeComponent *, size_t > componentId;
+	size_t componentIdCount;
+	std::pair< INodeComponent *, size_t > *componentDataPtr;
+	std_shared_ptr< ITypeObject > varObject;
+	std_shared_ptr< IVarStack > varStack;
 	auto surplus = data_count - jumpCompCount;
-	while( surplus != 0 ) {
-		auto lastPtr = read_data_vector + jumpCompCount;
-		uchar beg;
-		std_vector< QString > stackNames;
-		std_vector< QString > meteObjectNames;
-		std_vector< QString > typeNames;
-		size_t useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
+	lastPtr += sizeof size_t;
+	for( size_t serIndex = 0; serIndex < nodeWidgetCount; ++serIndex ) {
+		useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
 		if( useCount == 0 ) {
 			tools::debug::printError( "无法从序列化中获取对象信息" );
 			return 0;
 		}
-		auto nodeStack = INodeStack::getInstance( stackNames[ 0 ] );
+		nodeStack = INodeStack::getInstance( stackNames[ 0 ] );
 		if( nodeStack == nullptr ) {
 			tools::debug::printError( "无法匹配适应的节点生成器 : " + stackNames[ 0 ] );
 			return 0;
 		}
-		INodeWidget *generateNode = nodeStack->generateNode( typeNames[ 0 ] );
+		generateNode = nodeStack->generateNode( typeNames[ 0 ] );
 		if( generateNode == nullptr ) {
 			tools::debug::printError( "无法生成对应的节点 : " + typeNames[ 0 ] );
 			return 0;
 		}
-		auto inheritInfo = ISerialize::SerializeInfo::getMetaInheritInfo( generateNode->metaObject( ) );
-		size_t inheritCount = inheritInfo.size( );
+		inheritInfo = ISerialize::SerializeInfo::getMetaInheritInfo( generateNode->metaObject( ) );
+		inheritCount = inheritInfo.size( );
 		if( inheritCount != meteObjectNames.size( ) ) {
 			tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
 			return 0;
@@ -503,18 +523,20 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 			}
 		// 获取 id
 		lastPtr = lastPtr + useCount;
-		size_t id = *( ( size_t * ) lastPtr );
+
+		id = *( ( size_t * ) lastPtr );
 		registerID( generateNode, id );
 		// 获取 x
 		lastPtr += sizeof( size_t );
-		int64_t x = *( ( int64_t * ) lastPtr );
+		x = *( ( int64_t * ) lastPtr );
 		// 获取 y
 		lastPtr += sizeof int64_t;
-		int64_t y = *( ( int64_t * ) lastPtr );
+		y = *( ( int64_t * ) lastPtr );
 		generateNode->move( x, y );
 		// 获取组件数目
 		lastPtr += sizeof int64_t;
-		qsizetype componentCount = *( ( qsizetype * ) lastPtr );
+
+		componentCount = *( ( qsizetype * ) lastPtr );
 		lastPtr += sizeof qsizetype;
 		surplus = data_count - ( lastPtr - read_data_vector );
 		if( componentCount == 0 )
@@ -532,43 +554,44 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		lastPtr += sizeof size_t;
 		if( id == 0 )
 			continue;
-		auto componentId = generateNode->getComponentID( );
-		size_t componentIdCount = componentId.size( );
-		auto componentDataPtr = componentId.data( );
+		componentId = generateNode->getComponentID( );
+		componentIdCount = componentId.size( );
+		componentDataPtr = componentId.data( );
 		if( componentIdCount != componentCount ) {
 			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
 			return 0;
 		}
-		for( qsizetype idIndex = 0; componentCount < componentIdCount; ++idIndex ) {
+
+		for( idIndex = 0; componentCount < componentIdCount; ++idIndex ) {
 			inheritCount = *( ( size_t * ) lastPtr );
 			lastPtr += sizeof size_t;
 			surplus = data_count - ( lastPtr - read_data_vector );
 			for( index = 0; index < componentIdCount; ++index )
 				if( componentDataPtr[ index ].second == inheritCount ) {
-					auto varObject = componentDataPtr[ index ].first->getVarObject( );
+					varObject = componentDataPtr[ index ].first->getVarObject( );
 					if( varObject != nullptr ) {
 						useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
 						if( useCount == 0 ) {
 							tools::debug::printError( "组件id序列为 : " + QString::number( inheritCount ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
 							return 0;
 						}
-						auto varStack = IVarStack::getInstance( stackNames[ 0 ] );
+						varStack = IVarStack::getInstance( stackNames[ 0 ] );
 						if( varObject == nullptr ) {
 							tools::debug::printError( "无法找到匹配变量堆栈 : " + stackNames[ 0 ] );
 							return 0;
 						}
-						auto typeObject = varStack->generateVar( typeNames[ 0 ] );
-						if( typeObject == nullptr ) {
+						varObject = varStack->generateVar( typeNames[ 0 ] );
+						if( varObject == nullptr ) {
 							tools::debug::printError( "变量堆栈创建类型失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
 							return 0;
 						}
-						useCount = typeObject->serializeToObjectData( lastPtr, surplus );
+						useCount = varObject->serializeToObjectData( lastPtr, surplus );
 						if( useCount == 0 ) {
 							tools::debug::printError( "变量反序列化失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
 							return 0;
 						}
 						lastPtr += useCount;
-						componentDataPtr[ index ].first->setVar( typeObject );
+						componentDataPtr[ index ].first->setVar( varObject );
 						lastPtr += useCount;
 					}
 					index = 0;
