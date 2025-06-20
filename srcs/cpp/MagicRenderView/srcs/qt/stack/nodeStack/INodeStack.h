@@ -8,36 +8,22 @@
 class INodeStack : public QObject {
 	Q_OBJECT;
 protected:
-	std_vector< std_pairt< INodeWidget *, QString > > storageNode;
 	std_vector< QString > stackTypeNames;
 	std_function< std_shared_ptr< INodeStack >( ) > getStackFunction;
 public:
-	INodeStack( std_function< std_shared_ptr< INodeStack >( ) > get_stack_function )
+	INodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function )
 		: getStackFunction( get_stack_function ) { }
 	const std_vector< QString > & getStackTypeNames( ) const { return stackTypeNames; }
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
-	~INodeStack( ) override;
 public:
 	/// @brief 生成类型
 	/// @param type_name 类型名称
+	/// @param parnet 可挂载的父对象
 	/// @return 不存在匹配类型返回 nullptr
 	virtual INodeWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr ) const = 0;
-	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
-	/// @param storage_obj 存储的对象
-	/// @param storage_name 存储的名称
-	/// @return 被覆盖的对象
-	virtual INodeWidget * setStorageNode( INodeWidget *storage_obj, const QString &storage_name );
-	/// @brief 获取存储的对象
-	/// @param storage_name 存储的对象名称 
-	/// @return 失败返回 nullptr
-	virtual INodeWidget * getStorageNode( const QString &storage_name ) const;
-	/// @brief 从存储当中删除匹配的变量名
-	/// @param storage_name 存储的变量名
-	/// @return 被删除的对象，失败返回 nullptr
-	virtual INodeWidget * removeStorageNode( const QString &storage_name );
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
-	virtual std_vector< std_pairt< std_pairt< QString, std_vector< QString > >, std_function< void( ) > > > permissionNodeType( ) const = 0;
+	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const = 0;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< INodeStack > > instanceVector;
@@ -60,7 +46,7 @@ public:
 				for( auto &name : ptr->getStackTypeNames( ) )
 					if( name == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
 						return ptr;
-		
+
 		INodeStack *child = new TChild_Type( [] {
 			return INodeStack::getStdSharedPtrInstance< TChild_Type >( );
 		} );
@@ -153,28 +139,6 @@ public:
 						instanceVector.erase( iterator );
 						return varStack;
 					}
-		return nullptr;
-	}
-
-	/// @brief 生成指定变量
-	/// @tparam TChild_Type 变量类型
-	/// @param parnet qt 内存管理对象
-	/// @return 失败返回 nullptr
-	template< class TChild_Type >
-		requires requires ( TChild_Type *ta, INodeWidget *cheack ) {
-			TChild_Type::staticMetaObject.className( );
-			qobject_cast< TChild_Type * >( ta ) ;
-			cheack = ta;
-		}
-	TChild_Type * generateTUBNode( QObject *parnet = nullptr ) const {
-		ITypeObject *typeObject = _generateUBVar( TChild_Type::staticMetaObject.className( ) );
-		if( typeObject )
-			if( qobject_cast< TChild_Type * >( typeObject ) ) {
-				typeObject->setParent( parnet );
-				return ( TChild_Type * ) typeObject;
-			} else
-				delete typeObject;
-
 		return nullptr;
 	}
 

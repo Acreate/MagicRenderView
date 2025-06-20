@@ -198,6 +198,7 @@ class IVarStack;
 class ITypeObject : public QObject, public ISerialize {
 	Q_OBJECT;
 protected:
+	std_vector< QString > uiTypeName;
 	std_vector< QString > currentTypeName;
 	/// @brief 本身的对象指针
 	const ITypeObject *thisPtr;
@@ -233,6 +234,13 @@ public:
 		return currentTypeName;
 	}
 
+	/// @brief 比较 le 与 ri 变量类型，相等返回 0
+	/// @tparam TLeft 左侧配置类型
+	/// @tparam TRight 右侧配置类型
+	/// @param le_ptr 左比较数
+	/// @param ri_ptr 右比较数
+	/// @param result_ptr 返回比较数
+	/// @return 0 表示类型相等
 	template< typename TLeft, typename TRight >
 		requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr ) {
 			le->currentTypeName.size( );
@@ -243,36 +251,41 @@ public:
 			dptr = ri;
 			dptr = ta;
 		}
-	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const;
+	int comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft * &result_ptr ) const {
+		if( ri_ptr == le_ptr )
+			return 0;
+		if( le_ptr->getStack( ) != ri_ptr->getStack( ) )
+			return -1;
+		result_ptr = qobject_cast< const TLeft * >( ri_ptr );
+		if( result_ptr == nullptr )
+			return 1;
+		size_t typeNameCount = le_ptr->currentTypeName.size( );
+		size_t count = result_ptr->currentTypeName.size( );
+		if( typeNameCount != count )
+			return typeNameCount - count;
+		auto leftData = le_ptr->currentTypeName.data( );
+		auto rightData = result_ptr->currentTypeName.data( );
+		for( count = 0; count < typeNameCount; ++count )
+			if( leftData[ count ] != rightData[ count ] )
+				return leftData[ count ].compare( rightData[ count ] );
+		return 0;
+	}
 
+	/// @brief 获取创建该变量的堆栈对象指针
+	/// @return 创建该变量的堆栈对象指针
 	virtual std_shared_ptr< IVarStack > getStack( ) const {
 		if( getStackFunction )
 			return getStackFunction( );
 		return nullptr;
 	}
+	/// @brief 创建该变量的堆栈名称列表
+	/// @return 创建该变量的堆栈名称列表
 	virtual std_vector< QString > getStackTypeNames( ) const;
+	/// @brief ui 类型名称
+	/// @return ui 类型名称列表
+	virtual const std_vector< QString > & getUiTypeName( ) const { return uiTypeName; }
+	virtual void setUiTypeName( const std_vector< QString > &ui_type_name ) { uiTypeName = ui_type_name; }
 };
-template< typename TLeft, typename TRight >
-	requires requires ( const TLeft *le, const TRight *ri, const TLeft *ta, const ITypeObject *dptr ) { le->currentTypeName.size( ); ta = qobject_cast< const TLeft * >( ri ); ta->currentTypeName.size( ); le->currentTypeName.data( )[ 0 ].compare( ta->currentTypeName[ 0 ] ); dptr = le; dptr = ri; dptr = ta; }
-int ITypeObject::comp( const TLeft *le_ptr, const TRight *ri_ptr, const TLeft *&result_ptr ) const {
-	if( ri_ptr == le_ptr )
-		return 0;
-	if( le_ptr->getStack( ) != ri_ptr->getStack( ) )
-		return -1;
-	result_ptr = qobject_cast< const TLeft * >( ri_ptr );
-	if( result_ptr == nullptr )
-		return 1;
-	size_t typeNameCount = le_ptr->currentTypeName.size( );
-	size_t count = result_ptr->currentTypeName.size( );
-	if( typeNameCount != count )
-		return typeNameCount - count;
-	auto leftData = le_ptr->currentTypeName.data( );
-	auto rightData = result_ptr->currentTypeName.data( );
-	for( count = 0; count < typeNameCount; ++count )
-		if( leftData[ count ] != rightData[ count ] )
-			return leftData[ count ].compare( rightData[ count ] );
-	return 0;
-}
 
 bool equ( const ITypeObject &left, const void *right );
 inline bool operator!=( const ITypeObject &left, std::nullptr_t right ) {

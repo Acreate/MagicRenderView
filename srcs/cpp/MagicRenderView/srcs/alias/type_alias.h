@@ -3,6 +3,7 @@
 #pragma once
 
 #include "cmake_value_to_c_cpp_header_env.h"
+#include <vector>
 #include <memory>
 #include <QString>
 #include <set>

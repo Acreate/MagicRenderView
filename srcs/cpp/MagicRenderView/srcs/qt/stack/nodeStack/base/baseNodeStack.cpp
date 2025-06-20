@@ -47,14 +47,14 @@ INodeWidget * BaseNodeStack::generateNode( const QString &type_name, QWidget *pa
 	return newNode;
 }
 
-std_vector< std_pairt< std_pairt< QString, std_vector< QString > >, std_function< void( ) > > > BaseNodeStack::permissionNodeType( ) const {
+std_vector< std_pairt< QString, std_vector< QString > > > BaseNodeStack::permissionNodeType( ) const {
 	size_t count = nodeGenerate->size( );
 	if( count == 0 )
 		return { };
 	auto data = nodeGenerate->data( );
-	std_vector< std_pairt< std_pairt< QString, std_vector< QString > >, std_function< void( ) > > > result( count );
+	std_vector< std_pairt< QString, std_vector< QString > > > result( count );
 	auto targetDataPtr = result.data( );
 	for( size_t index = 0; index < count; ++index )
-		targetDataPtr[ index ].first = data[ index ].first;
+		targetDataPtr[ index ] = data[ index ].first;
 	return result;
 }

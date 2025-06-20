@@ -10,16 +10,16 @@ ITypeObject::ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > 
 	varStackSharedPtr = getStackFunction( );
 	thisPtr = this;
 	size_t count = alias_type_name.size( );
-	if( count == 0 )
-		return;
-	auto datas = alias_type_name.data( );
-	// 扩张
-	currentTypeName.resize( count );
-	auto targetPtr = currentTypeName.data( );
-	for( size_t index = 0; index < count; ++index ) {
-		QString trimmed = datas[ index ].trimmed( );
-		if( !trimmed.isEmpty( ) )
-			targetPtr[ index ] = trimmed;
+	if( count != 0 ) {
+		auto datas = alias_type_name.data( );
+		// 扩张
+		currentTypeName.resize( count );
+		auto targetPtr = currentTypeName.data( );
+		for( size_t index = 0; index < count; ++index ) {
+			QString trimmed = datas[ index ].trimmed( );
+			if( !trimmed.isEmpty( ) )
+				targetPtr[ index ] = trimmed;
+		}
 	}
 }
 ITypeObject::ITypeObject( const ITypeObject &other ): QObject( other.parent( ) ) {
@@ -39,6 +39,7 @@ ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 		thisPtr = &other;
 		getStackFunction = other.getStackFunction;
 		varStackSharedPtr = other.varStackSharedPtr;
+		uiTypeName = other.uiTypeName;
 	} else
 		thisPtr = nullptr;
 
