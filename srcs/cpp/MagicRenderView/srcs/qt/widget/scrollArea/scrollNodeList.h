@@ -11,6 +11,7 @@ protected:
 	NodeList *nodeList;
 public:
 	ScrollNodeList( QWidget *parent );
+	virtual NodeList * getNodeList( ) const { return nodeList; }
 };
 
 #endif // SCROLLNODELIST_H_H_HEAD__FILE__

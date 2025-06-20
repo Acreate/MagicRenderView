@@ -110,6 +110,7 @@ inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &un
 }
 
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
+	activeNodeWidget = nullptr;
 	mainWindow = nullptr;
 	nodeWidgetIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 	nodeWidgetAdviseIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
@@ -142,6 +143,7 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			generateNode->connectNodeGraphWidget( this );
 			generateNode->show( );
 			updateMinSize( );
+			emit generateNodeWidget( this, generateNode, nodeWidgets );
 		} else
 			tools::debug::printError( functionName );
 	} );
@@ -289,16 +291,16 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	repaint( );
 }
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
-	mouseEventStatus = MouseEventType::Move;
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	if( selectNodeComponent ) {
-	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
+	if( selectNodeComponent );
+	else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
 		QPoint point = currentMouseInWidgetPos - selectNodeWidgetOffset;
 		point.setX( std::max( 0, point.x( ) ) );
 		point.setY( std::max( 0, point.y( ) ) );
 		selectNodeWidget->move( point );
 	}
+	mouseEventStatus = MouseEventType::Move;
 	repaint( );
 }
 
@@ -827,6 +829,7 @@ INodeWidget * NodeGraph::getNodeWidgetFromID( const size_t &id ) const {
 	return getUnityFirst( *nodeWidgetID, id );
 }
 void NodeGraph::mousePressEvent( QMouseEvent *event ) {
+	QWidget::mousePressEvent( event );
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
 	mouseEventStatus = MouseEventType::Press;
@@ -842,6 +845,9 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 		selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
 		if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
 			selectNodeComponent = nullptr;
+		auto old = activeNodeWidget;
+		activeNodeWidget = selectNodeWidget;
+		emit selectActiveNodeWidget( this, activeNodeWidget, old );
 		repaint( );
 		return;
 	}

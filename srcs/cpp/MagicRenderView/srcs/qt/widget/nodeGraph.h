@@ -24,7 +24,7 @@ public: // 类型
 	};
 protected:
 	/// @brief 主要窗口
-	MainWindow* mainWindow;
+	MainWindow *mainWindow;
 	/// @brief 节点添加菜单
 	NodeAddMenu *nodeMenu;
 	/// @brief 用于显示鼠标位置
@@ -37,6 +37,8 @@ protected:
 	QPoint currentMouseInWidgetPos;
 	/// @brief 所有节点
 	std_vector< INodeWidget * > nodeWidgets;
+	/// @brief 激活节点
+	INodeWidget *activeNodeWidget;
 	/// @brief 选中的节点
 	INodeWidget *selectNodeWidget;
 	/// @brief 选中控件时，基于控件的相对偏移
@@ -57,6 +59,9 @@ public:
 	NodeGraph( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeGraph( ) override;
 public:
+	/// @brief 获取当前被激活的节点
+	/// @return nullptr 表示不存在
+	virtual INodeWidget * getActiveNodeWidget( ) const { return activeNodeWidget; }
 	/// @brief 获取指定位置下的节点信息
 	/// @param check_pos 位置
 	/// @param result_node_widget 节点
@@ -112,7 +117,7 @@ public:
 	size_t getNodeWidgetID( const INodeWidget *node_widget ) const;
 	INodeWidget * getNodeWidgetFromID( const size_t &id ) const;
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
-	virtual void setMainWindow( MainWindow * const main_window ) { mainWindow = main_window; }
+	virtual void setMainWindow( MainWindow *const main_window ) { mainWindow = main_window; }
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
@@ -145,6 +150,17 @@ public Q_SLOTS:
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
+Q_SIGNALS:
+	/// @brief 激活节点时，触发该信号
+	/// @param node_graph 信号发送者
+	/// @param now_select_active_node_widget 激活的节点
+	/// @param old_select_active_node_widget 旧的激活节点
+	void selectActiveNodeWidget( NodeGraph *node_graph, INodeWidget *now_select_active_node_widget, INodeWidget *old_select_active_node_widget );
+	/// @brief 激活节点时，触发该信号
+	/// @param node_graph 信号发送者
+	/// @param new_active_node_widget 新增节点
+	/// @param node_widgets 节点列表
+	void generateNodeWidget( NodeGraph *node_graph, INodeWidget *new_active_node_widget, const std_vector< INodeWidget * > &node_widgets );
 };
 
 #endif // NODEGRAPH_H_H_HEAD__FILE__

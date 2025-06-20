@@ -11,6 +11,7 @@ protected:
 	NodeInfo *nodeInfo;
 public:
 	ScrollNodeInfo( QWidget *parent );
+	virtual NodeInfo * getNodeInfo( ) const { return nodeInfo; }
 };
 
 

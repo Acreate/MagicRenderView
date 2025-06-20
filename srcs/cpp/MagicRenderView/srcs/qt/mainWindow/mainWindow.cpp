@@ -7,10 +7,40 @@
 #include "qt/tools/tools.h"
 
 #include <qt/widget/scrollArea/scrollNodeGraph.h>
+
+#include <qt/widget/nodeGraph.h>
+#include <qt/widget/scrollArea/scrollNodeInfo.h>
+
+#include "../widget/nodeInfo.h"
+#include "../widget/nodeList.h"
+#include "../widget/scrollArea/scrollNodeList.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
 	nodeGraph = new ScrollNodeGraph( this );
-	nodeGraph->setMainWindow( this );
+	NodeGraph *graph = nodeGraph->getNodeGraph( );
+	graph->setMainWindow( this );
 	setCentralWidget( nodeGraph );
+
+	nodeInfo = new ScrollNodeInfo( this );
+	nodeInfo->hide( );
+	nodeInfo->getNodeInfo( )->setMainWindow( this );
+
+	connect( graph, &NodeGraph::selectActiveNodeWidget, [this] ( NodeGraph *node_graph, INodeWidget *now_select_active_node_widget, INodeWidget *old_select_active_node_widget ) {
+		if( now_select_active_node_widget == nullptr )
+			return;
+		NodeInfo *info = nodeInfo->getNodeInfo( );
+		info->setNodeWidget( now_select_active_node_widget );
+	} );
+
+	nodeList = new ScrollNodeList( this );
+	nodeList->height( );
+	nodeList->getNodeList( )->setMainWindow( this );
+
+	connect( graph, &NodeGraph::generateNodeWidget, [this] ( NodeGraph *node_graph, INodeWidget *new_active_node_widget, const std_vector< INodeWidget * > &node_widgets ) {
+		if( new_active_node_widget == nullptr )
+			return;
+		nodeList->getNodeList( )->setCurrentNodeWidgets( node_widgets );
+	} );
+
 	setWindowToIndexScreenCentre( 0 );
 	mainMenuBar = menuBar( );
 	if( mainMenuBar == nullptr )
@@ -28,7 +58,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 		QFile file( openFileName );
 		if( file.open( QIODeviceBase::ReadOnly ) ) {
 			QByteArray byteArray = file.readAll( );
-			if( nodeGraph->serializeToObjectData( ( const uchar * ) byteArray.data( ), byteArray.size( ) ) == 0 ) {
+			if( nodeGraph->getNodeGraph( )->serializeToObjectData( ( const uchar * ) byteArray.data( ), byteArray.size( ) ) == 0 ) {
 				tools::debug::printError( "文件无法读取，或者内容失败 : " + file.fileName( ) );
 			}
 			file.close( );
@@ -43,7 +73,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 		QFile file( openFileName );
 		if( file.open( QIODeviceBase::WriteOnly ) ) {
 			std_vector< uchar > ser;
-			if( nodeGraph->serializeToVectorData( &ser ) )
+			if( nodeGraph->getNodeGraph( )->serializeToVectorData( &ser ) )
 				file.write( ( const char * ) ser.data( ), ser.size( ) );
 			file.close( );
 		}

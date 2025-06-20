@@ -25,13 +25,11 @@ void Application::setWindowToIndexScreenCentre( size_t index ) {
 }
 
 bool Application::notify( QObject *object, QEvent *event ) {
-	bool notify = QApplication::notify( object, event );
 	if( mainNodeGraph == nullptr )
-		return notify;
+		return QApplication::notify( object, event );
 	INodeComponent *nodeComponent;
 	INodeWidget *nodeWidget;
 	QEvent::Type eventType = event->type( );
-
 	switch( eventType ) {
 		case QEvent::Show :
 			nodeWidget = qobject_cast< INodeWidget * >( object );
@@ -40,9 +38,9 @@ bool Application::notify( QObject *object, QEvent *event ) {
 					nodeWidget->hide( );
 					emit nodeWidget->requestNodeWidgetID( nodeWidget );
 				}
-				return notify;
+				return QApplication::notify( object, event );
 			}
 			break;
 	}
-	return notify;
+	return QApplication::notify( object, event );
 }
