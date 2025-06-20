@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 
+class QPushButton;
 class ScrollNodeList;
 class ScrollNodeInfo;
 
@@ -19,11 +20,16 @@ protected:
 	ScrollNodeList *nodeList;
 	/// @brief 窗口的工具栏菜单
 	QMenuBar *mainMenuBar;
+	/// @brief 列表显示按钮
+	QPushButton* listBtn;
+	/// @brief 信息显示按钮
+	QPushButton* infoBtn;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	void setWindowToIndexScreenCentre( size_t index );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

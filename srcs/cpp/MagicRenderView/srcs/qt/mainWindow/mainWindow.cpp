@@ -3,23 +3,22 @@
 #include <qguiapplication.h>
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QPushButton>
 
-#include "qt/tools/tools.h"
+#include <qt/tools/tools.h>
 
 #include <qt/widget/scrollArea/scrollNodeGraph.h>
-
-#include <qt/widget/nodeGraph.h>
 #include <qt/widget/scrollArea/scrollNodeInfo.h>
-
-#include "../widget/nodeInfo.h"
-#include "../widget/nodeList.h"
-#include "../widget/scrollArea/scrollNodeList.h"
+#include <qt/widget/scrollArea/scrollNodeList.h>
+#include <qt/widget/nodeGraph.h>
+#include <qt/widget/nodeInfo.h>
+#include <qt/widget/nodeList.h>
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
 	nodeGraph = new ScrollNodeGraph( this );
 	NodeGraph *graph = nodeGraph->getNodeGraph( );
 	graph->setMainWindow( this );
 	setCentralWidget( nodeGraph );
-	nodeGraph->show(  );
+	nodeGraph->show( );
 
 	nodeInfo = new ScrollNodeInfo( this );
 	nodeInfo->getNodeInfo( )->setMainWindow( this );
@@ -39,6 +38,36 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 			return;
 		nodeList->getNodeList( )->setCurrentNodeWidgets( node_widgets );
 	} );
+
+	listBtn = new QPushButton( this );
+	listBtn->setText( "节点列表" );
+	connect( listBtn, &QPushButton::clicked, [this] ( bool flag ) {
+		if( nodeList->isHidden( ) )
+			nodeList->show( );
+		else
+			nodeList->hide( );
+	} );
+
+	infoBtn = new QPushButton( this );
+	infoBtn->setText( "节点信息" );
+	connect( infoBtn, &QPushButton::clicked, [this] ( bool flag ) {
+		if( nodeInfo->isHidden( ) )
+			nodeInfo->show( );
+		else
+			nodeInfo->hide( );
+	} );
+
+	auto thisSize = size( );
+	listBtn->move( 10, listBtn->height( ) );
+	infoBtn->move( thisSize.width( ) - listBtn->width( ) - 20, infoBtn->height( ) );
+
+	auto geometry = listBtn->geometry( );
+	nodeList->setGeometry( geometry.x( ), geometry.y( ) + geometry.height( ), geometry.width( ) + 10, thisSize.height( ) - geometry.height( ) - geometry.y( ) - 20 );
+	geometry = infoBtn->geometry( );
+	nodeInfo->setGeometry( geometry.x( ) - 10, geometry.y( ) + geometry.height( ), geometry.width( ) + 10, thisSize.height( ) - geometry.height( ) - geometry.y( ) - 20 );
+
+	auto minWidth = nodeList->width( ) + nodeInfo->width( ) + 10 * 4;
+	setMinimumSize( minWidth, 264 );
 
 	setWindowToIndexScreenCentre( 0 );
 	mainMenuBar = menuBar( );
@@ -87,4 +116,15 @@ void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
+}
+void MainWindow::resizeEvent( QResizeEvent *event ) {
+	QMainWindow::resizeEvent( event );
+	auto thisSize = size( );
+	listBtn->move( 10, listBtn->height( ) );
+	infoBtn->move( thisSize.width( ) - listBtn->width( ) - 20, infoBtn->height( ) );
+
+	auto geometry = listBtn->geometry( );
+	nodeList->setGeometry( geometry.x( ), geometry.y( ) + geometry.height( ), geometry.width( ) + 10, thisSize.height( ) - geometry.height( ) - geometry.y( ) - 20 );
+	geometry = infoBtn->geometry( );
+	nodeInfo->setGeometry( geometry.x( ) - 10, geometry.y( ) + geometry.height( ), geometry.width( ) + 10, thisSize.height( ) - geometry.height( ) - geometry.y( ) - 20 );
 }
