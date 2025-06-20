@@ -10,9 +10,21 @@ class QLabel;
 class ErrorMsgWidget : public IInfoWidget {
 	Q_OBJECT;
 protected:
-	QLabel *title;
+	std_shared_ptr< QString > text;
+	std_shared_ptr< QString > placeholder;
 public:
-	ErrorMsgWidget( QWidget *parent, const QString &error_msg );
+	ErrorMsgWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &error_msg );
+	QString getText( ) const override {
+		return *text;
+	}
+	void setText( const QString &new_text ) const override;
+	void setTitle( const QString &new_title ) const override;
+	void setPlaceholderText( const QString &placeholder_text ) const override;
+	QString getPlaceholderText( ) const override {
+		return *placeholder;
+	}
+protected:
+	void mouseMoveEvent( QMouseEvent *event ) override;
 };
 
 #endif // ERRORMSGWIDGET_H_H_HEAD__FILE__

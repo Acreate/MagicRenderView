@@ -3,10 +3,12 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
-TextWidget::TextWidget( QWidget *parent, const QString &title_msg ): IInfoWidget( parent, title_msg ) {
+TextWidget::TextWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): TextWidget( get_stack_function, parent, title_msg, title_msg ) {
+}
+TextWidget::TextWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg, const QString &placeholder_text ) : IInfoWidget( get_stack_function, parent, title_msg ) {
 	edit = new QLineEdit( this );
 	mainLayout->addWidget( edit );
-	edit->setPlaceholderText( title_msg );
+	edit->setPlaceholderText( placeholder_text );
 
 	connect( edit, &QLineEdit::cursorPositionChanged, this, &TextWidget::cursorPositionChanged );
 	connect( edit, &QLineEdit::editingFinished, this, &TextWidget::editingFinished );

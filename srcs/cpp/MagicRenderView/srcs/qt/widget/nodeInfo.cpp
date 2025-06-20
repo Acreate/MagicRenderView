@@ -7,6 +7,9 @@
 #include "../node/nodeComponent/INodeComponent.h"
 #include "../node/nodeWidget/INodeWidget.h"
 
+#include "../stack/infoWidgetStack/IInfoWidgetStack.h"
+#include "../stack/infoWidgetStack/base/baseInfoWidgetStack.h"
+
 #include "../type/baseType/dataTypeObject.h"
 #include "../type/baseType/floatTypeObject.h"
 #include "../type/baseType/intTypeObject.h"
@@ -46,7 +49,7 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 	QString vectorTypeName = VectorTypeObject::staticMetaObject.className( );
 	// 结构体
 	QString combinationTypeName = CombinationTypeObject::staticMetaObject.className( );
-
+	auto infoWidgetGen = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	auto data = nodeComponents.data( );
 	for( size_t index = 0; index < count; ++index ) {
 		auto nodeComponent = data[ index ];
@@ -58,11 +61,30 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 		std_vector< QString > types = typeObject->typeNames( );
 		// 字符串
 		if( tools::vector::has( types, stringTypeName ) == true ) {
-			QString name = nodeComponent->getNodeComponentName( );
-			TextWidget *textWidget = new TextWidget( this, name );
-			textWidget->setTitle( name );
-			textWidget->setPlaceholderText( name );
-			mainLayout->addWidget( textWidget );
+			std_vector< QString > uiTypeName = typeObject->getUiTypeName( );
+			size_t uiTypeCount = uiTypeName.size( );
+			QString *uiTypeDataPtr = uiTypeName.data( );
+			size_t uiIndex = 0;
+			for( ; uiIndex < uiTypeCount; ++uiIndex ) {
+				IInfoWidget *infoWidget = infoWidgetGen->generateInfoWidget( uiTypeDataPtr[ uiIndex ] );
+				if( infoWidget ) {
+					QString name = nodeComponent->getNodeComponentName( );
+					infoWidget->setTitle( name );
+					infoWidget->setPlaceholderText( name );
+					mainLayout->addWidget( infoWidget );
+					break;
+				}
+			}
+			if( uiIndex == uiTypeCount ) {
+				IInfoWidget *infoWidget = infoWidgetGen->generateInfoWidget( ErrorMsgWidget::staticMetaObject.className( ) );
+				if( infoWidget ) {
+					QString name = nodeComponent->getNodeComponentName( );
+					infoWidget->setTitle( name );
+					infoWidget->setText( "无法匹配对应的信息小窗口" );
+					infoWidget->setPlaceholderText( "或许可以增加基本变量类型，并且修改其 ui 类型来实现信息面板的创建项" );
+					mainLayout->addWidget( infoWidget );
+				}
+			}
 		} else if( tools::vector::has( types, intTypeName ) == true ) {
 		} else if( tools::vector::has( types, floatTypeName ) == true ) {
 		} else if( tools::vector::has( types, dataTypeName ) == true ) {
@@ -70,7 +92,12 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 		} else if( tools::vector::has( types, combinationTypeName ) == true ) {
 		} else {
 			tools::debug::printError( "没有匹配的类型，请配置有效类型" );
-			mainLayout->addWidget( new ErrorMsgWidget( this, "错误标签" ) );
+			IInfoWidget *infoWidget = infoWidgetGen->generateInfoWidget( ErrorMsgWidget::staticMetaObject.className( ) );
+			if( infoWidget ) {
+				infoWidget->setTitle( "错误标签" );
+				infoWidget->setPlaceholderText( "或许可以增加基本变量类型，并且修改其 ui 类型来实现信息面板的创建项" );
+				mainLayout->addWidget( infoWidget );
+			}
 		}
 	}
 	mainLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );

@@ -2,7 +2,6 @@
 #define TEXTWIDGET_H_H_HEAD__FILE__
 #pragma once
 
-
 #include <QWidget>
 
 #include "../IInfoWidget.h"
@@ -14,12 +13,13 @@ class TextWidget : public IInfoWidget {
 protected:
 	QLineEdit *edit;
 public:
-	TextWidget( QWidget *parent, const QString &title_msg );
-	virtual QString getText( ) const;
-	virtual void setText( const QString &new_text ) const;
-	virtual void setTitle( const QString &new_title ) const;
-	virtual void setPlaceholderText( const QString &placeholder_text ) const;
-	virtual QString getPlaceholderText( ) const;
+	TextWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
+	TextWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg , const QString& placeholder_text);
+	QString getText( ) const override;
+	void setText( const QString &new_text ) const override;
+	void setTitle( const QString &new_title ) const override;
+	void setPlaceholderText( const QString &placeholder_text ) const override;
+	QString getPlaceholderText( ) const override;
 Q_SIGNALS:
 	void cursorPositionChanged( int oldPos, int newPos );
 	void editingFinished( );

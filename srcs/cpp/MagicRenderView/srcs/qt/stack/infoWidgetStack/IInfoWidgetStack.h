@@ -21,7 +21,7 @@ public:
 	/// @param type_name 类型名称
 	/// @param parnet 可挂载的父对象
 	/// @return 不存在匹配类型返回 nullptr
-	virtual IInfoWidget * generateNode( const QString &type_name, QWidget *parnet = nullptr ) const = 0;
+	virtual IInfoWidget * generateInfoWidget( const QString &type_name, QWidget *parnet = nullptr ) const = 0;
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
 	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionInfoWidget( ) const = 0;

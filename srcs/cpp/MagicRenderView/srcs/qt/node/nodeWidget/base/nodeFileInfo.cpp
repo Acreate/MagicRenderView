@@ -32,41 +32,42 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 	subPlan = new NodePanel( "节点面板", this );
 	mainBoxLayout->addWidget( subPlan );
 	size_t ID = 1;
-	
-	emplace_back_ID(subPlan);
-	
+
+	emplace_back_ID( subPlan );
+
 	inputPath = new NodeInputLineText( "路径", this );
 	subPlan->appendInput( inputPath );
-	
-	emplace_back_ID(inputPath);
+	inputPath->getVarObject( )->setUiTypeName( { "路径", "文本" } );
+
+	emplace_back_ID( inputPath );
 
 	outAbsPath = new NodeInputLineText( "全路径", this );
 	subPlan->appendOutput( outAbsPath );
-	emplace_back_ID(outAbsPath);
-	
+	emplace_back_ID( outAbsPath );
+
 	outSize = new NodeInputLineText( "大小", this );
 	subPlan->appendOutput( outSize );
-	emplace_back_ID(outSize);
-	
+	emplace_back_ID( outSize );
+
 	outUserSize = new NodeInputLineText( "占用", this );
 	subPlan->appendOutput( outUserSize );
-	emplace_back_ID(outUserSize);
-	
+	emplace_back_ID( outUserSize );
+
 	outCreateFileTimeData = new NodeInputLineText( "创建日期", this );
 	subPlan->appendOutput( outCreateFileTimeData );
-	emplace_back_ID(outCreateFileTimeData);
-	
+	emplace_back_ID( outCreateFileTimeData );
+
 	outLastChangeFileTimeData = new NodeInputLineText( "最后更改日期", this );
 	subPlan->appendOutput( outLastChangeFileTimeData );
-	emplace_back_ID(outLastChangeFileTimeData);
-	
+	emplace_back_ID( outLastChangeFileTimeData );
+
 	outFileOwner = new NodeInputLineText( "拥有者", this );
 	subPlan->appendOutput( outFileOwner );
-	emplace_back_ID(outFileOwner);
-	
+	emplace_back_ID( outFileOwner );
+
 	outFileContent = new NodeInputLineText( "内容", this );
 	subPlan->appendOutput( outFileContent );
-	emplace_back_ID(outFileContent);
+	emplace_back_ID( outFileContent );
 
 	mainBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
 	subPlan->repaint( );

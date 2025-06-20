@@ -1,5 +1,6 @@
 ﻿#include "./IInfoWidgetStack.h"
 
+std_vector< std_shared_ptr< IInfoWidgetStack > > IInfoWidgetStack::instanceVector;
 
 std_shared_ptr< IInfoWidgetStack > IInfoWidgetStack::getStdSharedPtrInstance( const QString &stack_name ) {
 	for( auto &ptr : instanceVector )

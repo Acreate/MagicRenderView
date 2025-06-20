@@ -14,12 +14,8 @@ bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
 	addMenu( topMenu );
 	topMenu->setTitle( node_stack->getStackTypeNames( )[ 0 ] );
 	auto pairs = node_stack->permissionNodeType( );
-	for( auto &pair : pairs ) {
-		auto first = pair.first;
-		QString name = first.first;
-		auto action = new NodeAddAction( this, name );
-		topMenu->addAction( action );
-	}
+	for( auto &[ key,value ] : pairs )
+		topMenu->addAction( new NodeAddAction( this, key ) );
 	return true;
 }
 NodeAddMenu::NodeAddMenu( QWidget *parent ) : QMenu( parent ) {
