@@ -19,9 +19,9 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	NodeGraph *graph = nodeGraph->getNodeGraph( );
 	graph->setMainWindow( this );
 	setCentralWidget( nodeGraph );
+	nodeGraph->show(  );
 
 	nodeInfo = new ScrollNodeInfo( this );
-	nodeInfo->hide( );
 	nodeInfo->getNodeInfo( )->setMainWindow( this );
 
 	connect( graph, &NodeGraph::selectActiveNodeWidget, [this] ( NodeGraph *node_graph, INodeWidget *now_select_active_node_widget, INodeWidget *old_select_active_node_widget ) {
@@ -32,7 +32,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	} );
 
 	nodeList = new ScrollNodeList( this );
-	nodeList->height( );
 	nodeList->getNodeList( )->setMainWindow( this );
 
 	connect( graph, &NodeGraph::generateNodeWidget, [this] ( NodeGraph *node_graph, INodeWidget *new_active_node_widget, const std_vector< INodeWidget * > &node_widgets ) {

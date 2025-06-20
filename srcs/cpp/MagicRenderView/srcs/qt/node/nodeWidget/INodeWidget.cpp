@@ -35,6 +35,10 @@ void INodeWidget::connectNodeGraphWidget( NodeGraph *node_graph ) {
 		emit destoryNodeWidgetID( this );
 	} );
 }
+void INodeWidget::call( ) const {
+	if( functionDeclaration )
+		functionDeclaration.get( )->call( );
+}
 
 INodeComponent * INodeWidget::getPosNodeComponent( const QPoint &pos ) const {
 	auto childrenList = children( );

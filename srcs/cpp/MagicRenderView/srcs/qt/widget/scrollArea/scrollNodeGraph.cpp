@@ -5,6 +5,7 @@ ScrollNodeGraph::ScrollNodeGraph( QWidget *parent ): QScrollArea( parent ) {
 	nodeGraph = new NodeGraph( this );
 	setWidget( nodeGraph );
 	setWidgetResizable( true );
+	hide(  );
 }
 ScrollNodeGraph::~ScrollNodeGraph( ) {
 }

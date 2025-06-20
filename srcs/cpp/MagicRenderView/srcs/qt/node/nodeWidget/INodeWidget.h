@@ -5,8 +5,6 @@
 
 #include "alias/type_alias.h"
 
-#include "qt/functionDeclaration/IFunctionDeclaration.h"
-#include "qt/serialize/ISerialize.h"
 
 class INodeStack;
 class NodeInputLineText;
@@ -50,10 +48,7 @@ public:
 	/// @brief 信号连接到指定窗口
 	/// @param node_graph 响应信号的窗口
 	virtual void connectNodeGraphWidget( NodeGraph *node_graph );
-	virtual void call( ) const {
-		if( functionDeclaration )
-			functionDeclaration.get( )->call( );
-	}
+	virtual void call( ) const;
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual void setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) { functionDeclaration = function_declaration; }
 	/// @brief 获取返回值
@@ -101,6 +96,15 @@ public:
 	virtual std_vector_pairt< INodeComponent *, size_t > getComponentID( ) const {
 		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
 		return componentID;
+	}
+	virtual std_vector< INodeComponent * > getNodeComponents( ) const {
+		std_vector< INodeComponent * > result;
+		std_lock_grad_mutex lockGradMutex( *componentIDMutex );
+		size_t count = componentID.size( );
+		auto pair = componentID.data( );
+		for( size_t index = 0; index < count; ++index )
+			result.emplace_back( pair[ index ].first );
+		return result;
 	}
 public Q_SLOTS:
 	/// @brief 节点注册id完成

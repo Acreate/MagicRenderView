@@ -5,4 +5,5 @@ ScrollNodeList::ScrollNodeList( QWidget *parent ) : QScrollArea( parent ) {
 	nodeList = new NodeList( this );
 	setWidget( nodeList );
 	setWidgetResizable( true );
+	hide(  );
 }
