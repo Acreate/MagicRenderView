@@ -25,6 +25,8 @@ public:
 	virtual const std_function< bool( const ITypeObject * ) > & getScondVerify( ) const { return scondVerify; }
 	virtual void setScondVerify( const std_function< bool( const ITypeObject * ) > &scond_verify ) { scondVerify = scond_verify; }
 
+	void setValue( const std_shared_ptr<ITypeObject> &value ) const override;
+
 	/// @brief 获取键
 	/// @return 键
 	virtual std_shared_ptr< ITypeObject > getFirst( ) const;

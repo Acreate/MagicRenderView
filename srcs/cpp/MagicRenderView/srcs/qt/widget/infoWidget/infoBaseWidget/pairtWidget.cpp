@@ -1,12 +1,19 @@
 ﻿#include "./pairtWidget.h"
 
+#include <QVBoxLayout>
+
 #include "../../../stack/infoWidgetStack/IInfoWidgetStack.h"
 #include "../../../stack/infoWidgetStack/base/baseInfoWidgetStack.h"
 
 #include "../../../type/baseType/nullTypeObject.h"
+#include "../../../type/sequenceType/pairtTypeObject.h"
 PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
-	first.reset( new IInfoWidget * );
-	scond.reset( new IInfoWidget * );
+	IInfoWidget **infoWidget = new IInfoWidget *;
+	*infoWidget = nullptr;
+	first.reset( infoWidget );
+	infoWidget = new IInfoWidget *;
+	*infoWidget = nullptr;
+	scond.reset( infoWidget );
 }
 QString PairtWidget::getText( ) const {
 	return "";
@@ -18,6 +25,56 @@ void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
 }
 QString PairtWidget::getPlaceholderText( ) const {
 	return "";
+}
+void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+	auto typeObject = value.get( );
+	if( typeObject == nullptr )
+		return;
+	auto pairtTypeObject = qobject_cast< PairtTypeObject * >( typeObject );
+	if( pairtTypeObject == nullptr )
+		return;
+
+	auto first = pairtTypeObject->getFirst( );
+	auto firstPtr = first.get( );
+	if( *firstPtr == nullptr )
+		return;
+
+	auto scond = pairtTypeObject->getScond( );
+	auto scondPtr = scond.get( );
+	if( *scondPtr == nullptr )
+		return;
+
+	auto infoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
+
+	auto charses = firstPtr->getUiTypeName( );
+	IInfoWidget *firstWidget = nullptr;
+	for( auto uiType : charses ) {
+		firstWidget = infoWidgetStack->generateInfoWidget( uiType );
+		if( firstWidget != nullptr )
+			break;
+	}
+
+	charses = scondPtr->getUiTypeName( );
+	IInfoWidget *scondWidget = nullptr;
+	for( auto uiType : charses ) {
+		scondWidget = infoWidgetStack->generateInfoWidget( uiType );
+		if( scondWidget != nullptr )
+			break;
+	}
+
+	if( firstWidget == nullptr || scondWidget == nullptr )
+		return;
+	IInfoWidget **thisFirstWidget = this->first.get( );
+	IInfoWidget **thisScondWidget = this->scond.get( );
+	if( *thisFirstWidget )
+		delete *thisFirstWidget;
+	if( *thisScondWidget )
+		delete *thisScondWidget;
+	*thisFirstWidget = firstWidget;
+	*thisScondWidget = scondWidget;
+
+	mainLayout->addWidget( *thisFirstWidget );
+	mainLayout->addWidget( *thisScondWidget );
 }
 std_shared_ptr< ITypeObject > PairtWidget::getFirst( ) const {
 	if( *first == nullptr )
@@ -45,6 +102,8 @@ bool PairtWidget::setFirst( const std_shared_ptr< ITypeObject > &key ) const {
 		auto widgetStack = infoWidgetStack->generateInfoWidget( uiType );
 		if( widgetStack != nullptr ) {
 			IInfoWidget **infoWidget = first.get( );
+			widgetStack->setTitle( "键" );
+			mainLayout->replaceWidget( *infoWidget, widgetStack );
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;
@@ -66,6 +125,8 @@ bool PairtWidget::setScond( const std_shared_ptr< ITypeObject > &value ) const {
 		auto widgetStack = infoWidgetStack->generateInfoWidget( uiType );
 		if( widgetStack != nullptr ) {
 			IInfoWidget **infoWidget = scond.get( );
+			widgetStack->setTitle( "值" );
+			mainLayout->replaceWidget( *infoWidget, widgetStack );
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;

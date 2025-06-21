@@ -18,8 +18,8 @@ public:
 	Def_Clone_Move_override_function( PairtTypeObject );
 
 	PairtTypeObject & operator=( const PairtTypeObject &other );
-	const ITypeObject * getFirst( ) const { return first.get( ); }
-	const ITypeObject * getScond( ) const { return scond.get( ); }
+	virtual const std_shared_ptr< ITypeObject > & getFirst( ) const { return first; }
+	virtual const std_shared_ptr< ITypeObject > & getScond( ) const { return scond; }
 	void setFirst( const std_shared_ptr< ITypeObject > &first ) { this->first = first; }
 	void setScond( const std_shared_ptr< ITypeObject > &scond ) { this->scond = scond; }
 	size_t typeMemorySize( ) const override {
