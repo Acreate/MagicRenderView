@@ -4,24 +4,25 @@
 
 #include <alias/type_alias.h>
 
-#include "../node/nodeComponent/INodeComponent.h"
-#include "../node/nodeWidget/INodeWidget.h"
+#include <qt/node/nodeComponent/INodeComponent.h>
+#include <qt/node/nodeWidget/INodeWidget.h>
 
-#include "../stack/infoWidgetStack/IInfoWidgetStack.h"
-#include "../stack/infoWidgetStack/base/baseInfoWidgetStack.h"
+#include <qt/stack/infoWidgetStack/IInfoWidgetStack.h>
+#include <qt/stack/infoWidgetStack/base/baseInfoWidgetStack.h>
 
-#include "../type/baseType/dataTypeObject.h"
-#include "../type/baseType/floatTypeObject.h"
-#include "../type/baseType/intTypeObject.h"
-#include "../type/baseType/stringTypeObject.h"
-#include "../type/blendType/combinationTypeObject.h"
-#include "../type/lineType/vectorTypeObject.h"
+#include <qt/type/baseType/dataTypeObject.h>
+#include <qt/type/baseType/floatTypeObject.h>
+#include <qt/type/baseType/intTypeObject.h>
+#include <qt/type/baseType/stringTypeObject.h>
+#include <qt/type/blendType/combinationTypeObject.h>
+#include <qt/type/lineType/vectorTypeObject.h>
 
-#include "infoWidget/infoBaseWidget/errorMsgWidget.h"
-#include "infoWidget/infoBaseWidget/textWidget.h"
+#include <qt/widget/infoWidget/infoBaseWidget/errorMsgWidget.h>
 
 NodeInfo::NodeInfo( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	mainLayout = new QVBoxLayout( this );
+	mainLayout->setContentsMargins( 0, 0, 0, 0 );
+	mainLayout->setSpacing( 0 );
 	currentNodeWidget = nullptr;
 }
 void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
@@ -72,6 +73,9 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 					infoWidget->setTitle( name );
 					infoWidget->setPlaceholderText( name );
 					mainLayout->addWidget( infoWidget );
+					connect( infoWidget, &IInfoWidget::valueChanged, [infoWidget, nodeComponent] {
+						nodeComponent->setVar( infoWidget->getValue( ) );
+					} );
 					break;
 				}
 			}

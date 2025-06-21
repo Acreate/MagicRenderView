@@ -1,19 +1,34 @@
 ﻿#include "./baseInfoWidgetStack.h"
 
 #include <qt/widget/infoWidget/IInfoWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/combinationWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/dataWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/errorMsgWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/floatWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/intWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/pairtWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/stringWidget.h>
+#include <qt/widget/infoWidget/infoBaseWidget/vectorWidget.h>
+#include <qt/widget/infoWidget/superInfoWidget/pathWidget.h>
 
-#include <qt/widget/infoWidget/infoBaseWidget/textWidget.h>
-
-#include "../../../widget/infoWidget/infoBaseWidget/errorMsgWidget.h"
-
-#define emplace_back_InfoWidget( type_, titile) \
-	infoWidgetGenerate->emplace_back( generateInfoWidgetPairt( { type_::staticMetaObject.className( ), { titile } }, [this]( ) ->IInfoWidget * {	return new type_( getStackFunction, nullptr, titile );	} ) )
+#define emplace_back_InfoWidget( type_, titile, ...) \
+	infoWidgetGenerate->emplace_back( generateInfoWidgetPairt( { type_::staticMetaObject.className( ), { titile , __VA_ARGS__ } }, [this]( ) ->IInfoWidget * {	return new type_( getStackFunction, nullptr, titile );	} ) )
 
 BaseInfoWidgetStack::BaseInfoWidgetStack( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function ): IInfoWidgetStack( get_stack_function ), infoWidgetGenerate( new std_vector< generateInfoWidgetPairt > ) {
 	stackTypeNames.clear( );
 	stackTypeNames.emplace_back( "常规窗口" );
-	emplace_back_InfoWidget( TextWidget, "文本" );
-	emplace_back_InfoWidget( ErrorMsgWidget, "错误" );
+	emplace_back_InfoWidget( StringWidget, "文本", "字符串" );
+	emplace_back_InfoWidget( PathWidget, "路径" );
+	emplace_back_InfoWidget( IntWidget, "整数", "数字" );
+	emplace_back_InfoWidget( FloatWidget, "浮点", "数值" );
+	emplace_back_InfoWidget( VectorWidget, "列表" );
+	emplace_back_InfoWidget( DataWidget, "二进制", "数据" );
+	emplace_back_InfoWidget( CombinationWidget, "混合", "结构体" );
+	emplace_back_InfoWidget( PairtWidget, "配对", "键值对" );
+
+	emplace_back_InfoWidget( PathWidget, "路径" );
+
+	emplace_back_InfoWidget( ErrorMsgWidget, "错误", "空", "nullptr", "提示" );
 }
 IInfoWidget * BaseInfoWidgetStack::_newNode( const QString &type_name ) const {
 	size_t count = infoWidgetGenerate->size( );
