@@ -42,6 +42,8 @@ public:
 	size_t typeMemorySize( ) const override {
 		return sizeof val;
 	}
+	virtual double_t getVal( ) const { return val; }
+	virtual void setVal( const double_t val ) { this->val = val; }
 	QString toString( ) const override {
 		return QString::number( val );
 	}

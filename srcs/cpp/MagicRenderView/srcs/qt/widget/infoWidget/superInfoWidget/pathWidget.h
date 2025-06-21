@@ -15,10 +15,9 @@ public:
 	PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	QString getText( ) const override;
 	void setText( const QString &new_text ) const override;
-	void setTitle( const QString &new_title ) const override;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override;
-	const std_shared_ptr< ITypeObject > & getValue( ) const override;
+	std_shared_ptr<ITypeObject> getValue( ) const override;
 	void setValue( const std_shared_ptr< ITypeObject > &value ) const override;
 Q_SIGNALS:
 	/// @brief 路径修改完毕之后触发该信号

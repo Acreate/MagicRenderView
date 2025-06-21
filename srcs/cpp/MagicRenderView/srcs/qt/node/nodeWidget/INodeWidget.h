@@ -5,7 +5,6 @@
 
 #include "alias/type_alias.h"
 
-
 class INodeStack;
 class NodeInputLineText;
 class QLabel;
@@ -135,6 +134,25 @@ Q_SIGNALS:
 	/// @brief 请求id
 	/// @param request_node_widget_ptr 请求节点
 	void destoryNodeWidgetID( INodeWidget *request_node_widget_ptr );
+	/// @brief 替换链接时触发该信号
+	/// @param old_output 旧连接到该组件的输出
+	/// @param new_output 新连接到该组件的输出
+	/// @param current_input 接受输出的输入组件
+	void replaceLink( INodeComponent *old_output, INodeComponent *new_output, INodeComponent *current_input );
+	/// @brief 追加链接时触发该信号
+	/// @param old_output_vector 旧的链接输出列表
+	/// @param append_new_output 追加新的输出链接
+	/// @param current_input 接受输出的输入组件
+	void appendLink( std_vector< INodeComponent * > old_output_vector, INodeComponent *append_new_output, INodeComponent *current_input );
+	/// @brief 断开链接时触发该信号
+	/// @param disconnect_output 断开的输出链接组件
+	/// @param current_input 断开的输入链接组件
+	void disconnectLink( INodeComponent *disconnect_output, INodeComponent *current_input );
+	/// @brief 组件值被改变时触发该信号
+	/// @param value_component 值被改变的组件
+	/// @param old_var_value 旧的变量值
+	/// @param new_var_value 新的变量值
+	void changedComponentValue( INodeComponent *value_component, const std_shared_ptr<ITypeObject>& old_var_value,  const std_shared_ptr<ITypeObject>& new_var_value );
 };
 
 #endif // INODEWIDGET_H_H_HEAD__FILE__

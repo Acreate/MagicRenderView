@@ -27,7 +27,10 @@ IInfoWidget::IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 QString IInfoWidget::getTitle( ) const {
 	return title->text( );
 }
-const std_shared_ptr< ITypeObject > & IInfoWidget::getValue( ) const { return IVarStack::getInstance< BaseVarStack >( )->generateTVar< NullTypeObject >( ); }
+void IInfoWidget::setTitle( const QString &new_title ) const {
+	title->setText( new_title );
+}
+std_shared_ptr<ITypeObject> IInfoWidget::getValue( ) const { return IVarStack::getInstance< BaseVarStack >( )->generateTVar< NullTypeObject >( ); }
 void IInfoWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );

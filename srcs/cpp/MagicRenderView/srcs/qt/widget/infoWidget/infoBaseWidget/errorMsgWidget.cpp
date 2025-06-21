@@ -9,9 +9,7 @@ void ErrorMsgWidget::setText( const QString &new_text ) const {
 	*text = new_text;
 	title->setToolTip( QString( "注意:%1\n建议:%2" ).arg( *text ).arg( *placeholder ) );
 }
-void ErrorMsgWidget::setTitle( const QString &new_title ) const {
-	title->setText( new_title );
-}
+
 void ErrorMsgWidget::setPlaceholderText( const QString &placeholder_text ) const {
 	*placeholder = placeholder_text;
 	title->setToolTip( QString( "注意:%1\n建议:%2" ).arg( *text ).arg( *placeholder ) );

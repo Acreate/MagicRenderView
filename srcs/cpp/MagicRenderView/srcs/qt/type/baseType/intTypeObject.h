@@ -38,7 +38,8 @@ public:
 			return this->val - result_ptr->val;
 		return result;
 	}
-
+	virtual int64_t getVal( ) const { return val; }
+	virtual void setVal( const int64_t val ) { this->val = val; }
 	size_t typeMemorySize( ) const override {
 		return sizeof val;
 	}

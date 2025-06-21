@@ -23,7 +23,7 @@ public:
 
 	virtual QString getText( ) const = 0;
 	virtual void setText( const QString &new_text ) const = 0;
-	virtual void setTitle( const QString &new_title ) const = 0;
+	virtual void setTitle( const QString &new_title ) const;
 	virtual void setPlaceholderText( const QString &placeholder_text ) const = 0;
 	virtual QString getPlaceholderText( ) const = 0;
 
@@ -34,7 +34,7 @@ public:
 			return getStackFunction( );
 		return nullptr;
 	}
-	virtual const std_shared_ptr< ITypeObject > & getValue( ) const;
+	virtual std_shared_ptr<ITypeObject> getValue( ) const;
 	virtual void setValue( const std_shared_ptr< ITypeObject > &value ) const { }
 protected:
 	void paintEvent( QPaintEvent *event ) override;

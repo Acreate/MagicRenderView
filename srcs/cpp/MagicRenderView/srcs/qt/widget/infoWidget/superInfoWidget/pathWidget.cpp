@@ -11,6 +11,7 @@
 #include "../../../stack/varStack/base/baseVarStackEx.h"
 
 #include "../../../type/ITypeObject.h"
+#include "../../../type/baseType/nullTypeObject.h"
 #include "../../../type/baseType/stringTypeObject.h"
 PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	stringTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< StringTypeObject >( );
@@ -65,23 +66,29 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 	} );
 }
 QString PathWidget::getText( ) const {
-	return this->getText( );
+	return pathText->text( );
 }
 void PathWidget::setText( const QString &new_text ) const {
-	this->setText( new_text );
+	QFileInfo info( new_text + "/" );
+	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
+	pathText->setText( absoluteFilePath );
+	stringTypeObject->setString( absoluteFilePath );
 }
-void PathWidget::setTitle( const QString &new_title ) const {
-	title->setText( new_title );
-}
+
 void PathWidget::setPlaceholderText( const QString &placeholder_text ) const {
 	pathText->setPlaceholderText( placeholder_text );
 }
 QString PathWidget::getPlaceholderText( ) const {
 	return pathText->placeholderText( );
 }
-const std_shared_ptr< ITypeObject > & PathWidget::getValue( ) const {
+std_shared_ptr< ITypeObject > PathWidget::getValue( ) const {
 	return stringTypeObject;
 }
 void PathWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
-	stringTypeObject->setString( value->toString( ) );
+	if( *value == nullptr )
+		return;
+	QFileInfo info( value->toString( ) + "/" );
+	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
+	pathText->setText( absoluteFilePath );
+	stringTypeObject->setString( absoluteFilePath );
 }

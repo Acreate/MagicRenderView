@@ -1,12 +1,13 @@
-﻿#include <stacktrace>
-
-#include "qt/application/application.h"
-#include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
+﻿#include "qt/application/application.h"
 #include "qt/mainWindow/mainWindow.h"
-#include "qt/stack/nodeStack/INodeStack.h"
+
+#if _DEBUG
+
+#include <stacktrace>
+#include "qt/tools/tools.h"
+#include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 #include "qt/stack/nodeStack/base/baseNodeStack.h"
 #include "qt/stack/varStack/base/baseVarStackEx.h"
-#include "qt/tools/tools.h"
 #include "qt/type/baseType/dataTypeObject.h"
 #include "qt/type/baseType/floatTypeObject.h"
 #include "qt/type/baseType/intTypeObject.h"
@@ -15,11 +16,17 @@
 #include "qt/type/blendType/combinationTypeObject.h"
 #include "qt/type/lineType/vectorTypeObject.h"
 #include "qt/type/sequenceType/pairtTypeObject.h"
+#include "qt/stack/nodeStack/INodeStack.h"
+#include "qt/widget/infoWidget/infoBaseWidget/dataWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/combinationWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/floatWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/intWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/pairtWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/stringWidget.h"
+#include "qt/widget/infoWidget/infoBaseWidget/vectorWidget.h"
 
-#if _DEBUG
 /// @brief 检测到堆栈变量的生成
-/// @param mainwidget 可能挂靠的父节点
-void checkVarStack( QWidget *mainwidget ) {
+void checkVarStack( ) {
 	qDebug( ) << "==================";
 	qDebug( ) << "\t\t测试 checkVarStack";
 	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
@@ -46,12 +53,12 @@ void checkVarStack( QWidget *mainwidget ) {
 		*intTypeObject = 23;
 	qDebug( ) << __LINE__ << " : " << intTypeObject->toString( );
 
-	auto floatTypeObject = varStack->generateTUBVar< FloatTypeObject >( mainwidget );
+	auto floatTypeObject = varStack->generateTUBVar< FloatTypeObject >( );
 	if( floatTypeObject )
 		*floatTypeObject = 123.5;
 	qDebug( ) << __LINE__ << " : " << floatTypeObject->toString( );
 	qDebug( ) << __LINE__ << " : " << floatTypeObject->typeNames( );
-	auto generateUbVar = varStack->generateUbVar( "int", mainwidget );
+	auto generateUbVar = varStack->generateUbVar( "int" );
 	IntTypeObject *object;
 	object = qobject_cast< IntTypeObject * >( generateUbVar );
 	if( object ) {
@@ -61,7 +68,7 @@ void checkVarStack( QWidget *mainwidget ) {
 	}
 
 	static const char cpp17Super[ ] = "int"; // no linkage
-	generateUbVar = varStack->generateTUBVar< cpp17Super >( mainwidget );
+	generateUbVar = varStack->generateTUBVar< cpp17Super >( );
 	object = qobject_cast< IntTypeObject * >( generateUbVar );
 	if( object ) {
 		*object = 123.5;
@@ -148,7 +155,7 @@ void checkVarStack( QWidget *mainwidget ) {
 	qDebug( ) << "\t\t结束 checkVarStack";
 	qDebug( ) << "==================\n";
 }
-void checkNodeStack( QWidget *mainwidget ) {
+void checkNodeStack( ) {
 	qDebug( ) << "==================";
 	qDebug( ) << "\t\t测试 checkNodeStack";
 	qDebug( ) << "===";
@@ -158,7 +165,7 @@ void checkNodeStack( QWidget *mainwidget ) {
 		qDebug( ) << __LINE__ << " : " << name.first;
 	qDebug( ) << "===";
 	QString typeName = "fileInfo";
-	auto generateNode = nodeStack->generateNode( typeName, mainwidget );
+	auto generateNode = nodeStack->generateNode( typeName );
 	if( !generateNode )
 		tools::debug::printError( "无法创建 " + typeName + " 节点" );
 	else {
@@ -166,7 +173,7 @@ void checkNodeStack( QWidget *mainwidget ) {
 		generateNode->deleteLater( );
 	}
 	typeName = "文件信息节点";
-	generateNode = nodeStack->generateNode( typeName, mainwidget );
+	generateNode = nodeStack->generateNode( typeName );
 	if( !generateNode )
 		tools::debug::printError( "无法创建 " + typeName + " 窗口" );
 	else {
@@ -235,7 +242,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""NullTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""NullTypeObject"") " << typeObject->toString( );
-			} 
+			}
 		}
 	} while( false );
 
@@ -251,7 +258,7 @@ void checkSerializeVar( ) {
 				qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
 				if( typeObject->serializeToObjectData( ser.data( ), ser.size( ) ) )
 					qDebug( ) << __LINE__ << " :(""StringTypeObject"") " << typeObject->toString( );
-			} 
+			}
 		}
 	} while( false );
 
@@ -391,18 +398,40 @@ void checkSerializeVar( ) {
 	qDebug( ) << "\n\t\t结束 " << tools::debug::getFunctionName( );
 	qDebug( ) << "==================";
 }
+
 #endif
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
-	MainWindow mainwidget;
-	mainwidget.show( );
 #if _DEBUG
-	checkVarStack( &mainwidget );
-	checkNodeStack( &mainwidget );
+	checkVarStack( );
+	checkNodeStack( );
 	checkFunction( );
 	checkTools( );
 	checkSerializeVar( );
 #endif
+
+#define _testInfoWidget 
+#ifdef _testInfoWidget && _DEBUG
+
+
+
+	DataWidget dataWidget( nullptr, nullptr, "二进制" );
+	dataWidget.show( );
+
+	//VectorWidget vectorWidget( nullptr, nullptr, "数组" );
+	//vectorWidget.show( );
+
+	//PairtWidget pairtWidget( nullptr, nullptr, "键值对" );
+	//pairtWidget.show( );
+
+	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
+	//combinationWidget.show( );
+
+#else
+	MainWindow mainwidget;
+	mainwidget.show( );
+#endif
+
 	return app.exec( );
 }

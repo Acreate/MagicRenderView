@@ -18,7 +18,6 @@ public:
 		return *text;
 	}
 	void setText( const QString &new_text ) const override;
-	void setTitle( const QString &new_title ) const override;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override {
 		return *placeholder;
