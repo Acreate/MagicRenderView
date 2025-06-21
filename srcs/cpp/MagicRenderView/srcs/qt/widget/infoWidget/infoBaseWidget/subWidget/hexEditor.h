@@ -11,8 +11,9 @@ protected:
 	QString currentText;
 public:
 	HexEditor( QWidget *parent = nullptr );
-	virtual const QString & getCurrentText( ) const { return currentText; }
-	virtual void setCurrentText( const QString &current_text ) { currentText = current_text; }
+	virtual const QString & getCurrentHexText( ) const { return currentText; }
+	virtual bool setString( const QString &hex_text );
+	virtual void setHex( const QByteArray &hex_text );
 protected:
 	void keyPressEvent( QKeyEvent *e ) override;
 	void leaveEvent( QEvent *event ) override;

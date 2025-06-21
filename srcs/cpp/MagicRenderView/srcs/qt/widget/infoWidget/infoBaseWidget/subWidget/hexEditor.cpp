@@ -3,6 +3,38 @@
 #include <qevent.h>
 HexEditor::HexEditor( QWidget *parent ) : QTextEdit( parent ) {
 }
+
+void HexEditor::setHex( const QByteArray &hex_text ) {
+	currentText = hex_text;
+	auto cursor = textCursor( );
+	cursor.setPosition( currentText.length( ) );
+	setText( hex_text );
+	setTextCursor( cursor );
+}
+bool HexEditor::setString( const QString &hex_text ) {
+	auto count = hex_text.length( );
+	auto qchar = hex_text.data( );
+	QChar zeroChar = '0';
+	QChar overstepNumberChar = QChar( '9' + 1 );
+	QChar aChar = 'A';
+	QChar fChar = 'F';
+	for( decltype(count) index = 0; index < count; ++index ) {
+		QChar checkChar = qchar[ index ];
+		if( checkChar < zeroChar )
+			return false;
+		if( checkChar < overstepNumberChar )
+			continue;
+		auto upper = checkChar.toUpper( );
+		if( upper < aChar || upper > fChar )
+			return false;
+	}
+	currentText = hex_text;
+	auto cursor = textCursor( );
+	cursor.setPosition( count );
+	setText( hex_text );
+	setTextCursor( cursor );
+	return true;
+}
 void HexEditor::keyPressEvent( QKeyEvent *e ) {
 	auto cursor = textCursor( );
 	int anchor = cursor.anchor( );

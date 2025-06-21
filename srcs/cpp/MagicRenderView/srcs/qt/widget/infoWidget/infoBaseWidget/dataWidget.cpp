@@ -18,6 +18,7 @@ QString DataWidget::getText( ) const {
 	return edit->toPlainText( );
 }
 void DataWidget::setText( const QString &new_text ) const {
+	edit->setString( new_text );
 }
 
 void DataWidget::setPlaceholderText( const QString &placeholder_text ) const {
