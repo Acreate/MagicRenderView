@@ -414,16 +414,12 @@ int main( int argc, char *argv[ ] ) {
 #define _testInfoWidget 
 #ifdef _testInfoWidget && _DEBUG
 
-
-
-	DataWidget dataWidget( nullptr, nullptr, "二进制" );
-	dataWidget.show( );
+	PairtWidget pairtWidget( nullptr, nullptr, "键值对" );
+	pairtWidget.show( );
+	pairtWidget.setFirst( nullptr );
 
 	//VectorWidget vectorWidget( nullptr, nullptr, "数组" );
 	//vectorWidget.show( );
-
-	//PairtWidget pairtWidget( nullptr, nullptr, "键值对" );
-	//pairtWidget.show( );
 
 	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
 	//combinationWidget.show( );
