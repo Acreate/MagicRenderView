@@ -3,13 +3,13 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 
-#include "../../../stack/varStack/IVarStack.h"
-#include "../../../stack/varStack/base/baseVarStackEx.h"
+#include <qt/stack/varStack/IVarStack.h>
+#include <qt/stack/varStack/base/baseVarStackEx.h>
 #include <qt/type/baseType/dataTypeObject.h>
 
-#include "../../../type/baseType/floatTypeObject.h"
-#include "../../../type/baseType/intTypeObject.h"
-#include "../../../type/baseType/stringTypeObject.h"
+#include <qt/type/baseType/floatTypeObject.h>
+#include <qt/type/baseType/intTypeObject.h>
+#include <qt/type/baseType/stringTypeObject.h>
 
 #include "subWidget/hexEditor.h"
 DataWidget::DataWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
@@ -38,7 +38,6 @@ bool DataWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	ITypeObject *element = value.get( );
 	if( *element == nullptr )
 		return false;
-
 	auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
 	if( stringTypeObject )
 		return edit->setHex( element->toString( ).toUtf8( ).toHex( ) );
