@@ -29,18 +29,21 @@ IntWidget::IntWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) 
 QString IntWidget::getText( ) const {
 	return lineEdit->text( );
 }
-void IntWidget::setText( const QString &new_text ) const {
+bool IntWidget::setText( const QString &new_text ) const {
 	bool result = false;
 	auto varValue = new_text.toLongLong( &result );
 	if( result != false ) {
 		value->setVal( varValue );
 		lineEdit->setText( QString::number( varValue ) );
+		return true;
 	}
 	auto varValueDouble = new_text.toDouble( &result );
 	if( result != false ) {
 		value->setVal( varValueDouble );
 		lineEdit->setText( QString::number( varValueDouble ) );
+		return true;
 	}
+	return false;
 }
 
 void IntWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -52,23 +55,23 @@ QString IntWidget::getPlaceholderText( ) const {
 std_shared_ptr< ITypeObject > IntWidget::getValue( ) const {
 	return value;
 }
-void IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+bool IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	ITypeObject *element = value.get( );
 	if( *element == nullptr )
-		return;
+		return false;
 	auto intTypeObject = qobject_cast< IntTypeObject * >( element );
 	if( intTypeObject ) {
 		auto val = intTypeObject->getVal( );
 		this->value->setVal( val );
 		lineEdit->setText( QString::number( val ) );
-		return;
+		return true;
 	}
 	auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
 	if( floatTypeObject ) {
 		auto val = floatTypeObject->getVal( );
 		this->value->setVal( val );
 		lineEdit->setText( QString::number( val ) );
-		return;
+		return true;
 	}
 	auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
 	if( stringTypeObject ) {
@@ -77,13 +80,14 @@ void IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		if( isOk ) {
 			this->value->setVal( converValue );
 			lineEdit->setText( QString::number( converValue ) );
-			return;
+			return true;
 		}
 		auto converDoubleValue = stringTypeObject->getString( ).toDouble( &isOk );
 		if( isOk ) {
 			this->value->setVal( converDoubleValue );
 			lineEdit->setText( QString::number( converDoubleValue ) );
-			return;
+			return true;
 		}
 	}
+	return false;
 }

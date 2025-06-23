@@ -17,7 +17,7 @@ public:
 	QString getText( ) const override {
 		return *text;
 	}
-	void setText( const QString &new_text ) const override;
+	bool setText( const QString &new_text ) const override;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override {
 		return *placeholder;

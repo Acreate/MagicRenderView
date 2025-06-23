@@ -13,7 +13,22 @@
 #include <qt/widget/nodeGraph.h>
 #include <qt/widget/nodeInfo.h>
 #include <qt/widget/nodeList.h>
+
+#include "../stack/varStack/base/baseVarStackEx.h"
+
+#include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
+	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
+	std_shared_ptr< ITypeObject > generateTubVar;
+
+	VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
+
+	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
+	//combinationWidget.show( );
+
+	setCentralWidget( vectorWidget );
+	return;
+
 	nodeGraph = new ScrollNodeGraph( this );
 	NodeGraph *graph = nodeGraph->getNodeGraph( );
 	graph->setMainWindow( this );

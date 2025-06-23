@@ -42,9 +42,10 @@ StringWidget::~StringWidget( ) {
 QString StringWidget::getText( ) const {
 	return textEdit->toPlainText( );
 }
-void StringWidget::setText( const QString &new_text ) const {
+bool StringWidget::setText( const QString &new_text ) const {
 	textEdit->setPlainText( new_text );
 	editString->setString( new_text );
+	return true;
 }
 
 void StringWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -56,10 +57,12 @@ QString StringWidget::getPlaceholderText( ) const {
 std_shared_ptr< ITypeObject > StringWidget::getValue( ) const {
 	return editString;
 }
-void StringWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+bool StringWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( *value != nullptr ) {
 		QString string = value->toString( );
 		editString->setString( string );
 		textEdit->setText( string );
+		return true;
 	}
+	return false;
 }

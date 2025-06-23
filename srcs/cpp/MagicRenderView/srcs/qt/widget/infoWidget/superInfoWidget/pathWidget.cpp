@@ -68,11 +68,12 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 QString PathWidget::getText( ) const {
 	return pathText->text( );
 }
-void PathWidget::setText( const QString &new_text ) const {
+bool PathWidget::setText( const QString &new_text ) const {
 	QFileInfo info( new_text + "/" );
 	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
 	pathText->setText( absoluteFilePath );
 	stringTypeObject->setString( absoluteFilePath );
+	return true;
 }
 
 void PathWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -84,11 +85,12 @@ QString PathWidget::getPlaceholderText( ) const {
 std_shared_ptr< ITypeObject > PathWidget::getValue( ) const {
 	return stringTypeObject;
 }
-void PathWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+bool PathWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( *value == nullptr )
-		return;
+		return false;
 	QFileInfo info( value->toString( ) + "/" );
 	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
 	pathText->setText( absoluteFilePath );
 	stringTypeObject->setString( absoluteFilePath );
+	return true;
 }

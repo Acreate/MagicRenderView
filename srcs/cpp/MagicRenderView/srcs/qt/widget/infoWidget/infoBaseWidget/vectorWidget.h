@@ -6,11 +6,9 @@
 class VectorWidget : public IInfoWidget{
 	Q_OBJECT;
 public:
-	VectorWidget( const std_function<std_shared_ptr<IInfoWidgetStack>()> &get_stack_function, QWidget *parent, const QString &title_msg )
-		: IInfoWidget( get_stack_function, parent, title_msg ) { }
+	VectorWidget( const std_function<std_shared_ptr<IInfoWidgetStack>()> &get_stack_function, QWidget *parent, const QString &title_msg );
 	QString getText( ) const override;
-	void setText( const QString &new_text ) const override;
-	void setTitle( const QString &new_title ) const override;
+	bool setText( const QString &new_text ) const override;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override;
 };

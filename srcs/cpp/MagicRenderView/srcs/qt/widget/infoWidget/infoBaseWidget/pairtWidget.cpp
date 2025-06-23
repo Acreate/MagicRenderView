@@ -18,7 +18,8 @@ PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 QString PairtWidget::getText( ) const {
 	return "";
 }
-void PairtWidget::setText( const QString &new_text ) const {
+bool PairtWidget::setText( const QString &new_text ) const {
+	return false;
 }
 
 void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -26,23 +27,23 @@ void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
 QString PairtWidget::getPlaceholderText( ) const {
 	return "";
 }
-void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+bool PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	auto typeObject = value.get( );
 	if( typeObject == nullptr )
-		return;
+		return false;
 	auto pairtTypeObject = qobject_cast< PairtTypeObject * >( typeObject );
 	if( pairtTypeObject == nullptr )
-		return;
+		return false;
 
 	auto first = pairtTypeObject->getFirst( );
 	auto firstPtr = first.get( );
 	if( *firstPtr == nullptr )
-		return;
+		return false;
 
 	auto scond = pairtTypeObject->getScond( );
 	auto scondPtr = scond.get( );
 	if( *scondPtr == nullptr )
-		return;
+		return false;
 
 	auto infoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 
@@ -63,7 +64,7 @@ void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	}
 
 	if( firstWidget == nullptr || scondWidget == nullptr )
-		return;
+		return false;
 	IInfoWidget **thisFirstWidget = this->first.get( );
 	IInfoWidget **thisScondWidget = this->scond.get( );
 	if( *thisFirstWidget )
@@ -75,6 +76,7 @@ void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 
 	mainLayout->addWidget( *thisFirstWidget );
 	mainLayout->addWidget( *thisScondWidget );
+	return true;
 }
 std_shared_ptr< ITypeObject > PairtWidget::getFirst( ) const {
 	if( *first == nullptr )

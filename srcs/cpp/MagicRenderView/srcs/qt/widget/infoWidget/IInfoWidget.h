@@ -22,7 +22,7 @@ public:
 	virtual QString getTitle( ) const;
 
 	virtual QString getText( ) const = 0;
-	virtual void setText( const QString &new_text ) const = 0;
+	virtual bool setText( const QString &new_text ) const = 0;
 	virtual void setTitle( const QString &new_title ) const;
 	virtual void setPlaceholderText( const QString &placeholder_text ) const = 0;
 	virtual QString getPlaceholderText( ) const = 0;
@@ -35,7 +35,7 @@ public:
 		return nullptr;
 	}
 	virtual std_shared_ptr<ITypeObject> getValue( ) const;
-	virtual void setValue( const std_shared_ptr< ITypeObject > &value ) const { }
+	virtual bool setValue( const std_shared_ptr< ITypeObject > &value ) const { }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

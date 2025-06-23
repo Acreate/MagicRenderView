@@ -1,15 +1,46 @@
 ﻿#include "./hexEditor.h"
 
 #include <qevent.h>
+
+#include "../../../../serialize/ISerialize.h"
 HexEditor::HexEditor( QWidget *parent ) : QTextEdit( parent ) {
 }
 
-void HexEditor::setHex( const QByteArray &hex_text ) {
+bool HexEditor::setHex( const QByteArray &hex_text ) {
 	currentText = hex_text;
 	auto cursor = textCursor( );
 	cursor.setPosition( currentText.length( ) );
 	setText( hex_text );
 	setTextCursor( cursor );
+	return true;
+}
+bool HexEditor::setHex( const std_vector< uchar > &data_vector ) {
+	size_t qsizetype = data_vector.size( );
+	QByteArray byteArray;
+	byteArray.resize( qsizetype );
+	auto copyTarget = byteArray.data( );
+	auto copySource = data_vector.data( );
+	for( size_t index = 0; index < qsizetype; ++index )
+		copyTarget[ index ] = copySource[ index ];
+	setHex( byteArray );
+	return true;
+}
+bool HexEditor::setHex( const std_vector< char > &data_vector ) {
+	size_t qsizetype = data_vector.size( );
+	QByteArray byteArray;
+	byteArray.resize( qsizetype );
+	auto copyTarget = byteArray.data( );
+	auto copySource = data_vector.data( );
+	for( size_t index = 0; index < qsizetype; ++index )
+		copyTarget[ index ] = copySource[ index ];
+	setHex( byteArray );
+	return true;
+}
+bool HexEditor::setHex( const int64_t &number_value ) {
+	return setHex( ISerialize::toData( number_value ) );
+}
+bool HexEditor::setHex( const double &number_value ) {
+	return setHex( ISerialize::toData( number_value ) );
 }
 bool HexEditor::setString( const QString &hex_text ) {
 	auto count = hex_text.length( );

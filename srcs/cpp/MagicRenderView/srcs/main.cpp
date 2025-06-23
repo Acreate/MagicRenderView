@@ -411,22 +411,9 @@ int main( int argc, char *argv[ ] ) {
 	checkSerializeVar( );
 #endif
 
-#define _testInfoWidget 
-#ifdef _testInfoWidget && _DEBUG
 
-	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
-	std_shared_ptr<ITypeObject> generateTubVar;
-
-	//VectorWidget vectorWidget( nullptr, nullptr, "数组" );
-	//vectorWidget.show( );
-
-	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
-	//combinationWidget.show( );
-
-#else
 	MainWindow mainwidget;
 	mainwidget.show( );
-#endif
 
 	return app.exec( );
 }
