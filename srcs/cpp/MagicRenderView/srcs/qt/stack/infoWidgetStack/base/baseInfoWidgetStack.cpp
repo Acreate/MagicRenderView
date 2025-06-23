@@ -20,7 +20,7 @@ BaseInfoWidgetStack::BaseInfoWidgetStack( const std_function< std_shared_ptr< II
 	emplace_back_InfoWidget( StringWidget, "文本", "字符串" );
 	emplace_back_InfoWidget( PathWidget, "路径" );
 	emplace_back_InfoWidget( IntWidget, "整数", "数字" );
-	emplace_back_InfoWidget( FloatWidget, "浮点", "数值" );
+	emplace_back_InfoWidget( FloatWidget, "浮点","浮点数", "数值" );
 	emplace_back_InfoWidget( VectorWidget, "列表" );
 	emplace_back_InfoWidget( DataWidget, "二进制", "数据" );
 	emplace_back_InfoWidget( CombinationWidget, "混合", "结构体" );

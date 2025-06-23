@@ -37,7 +37,7 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 
 	inputPath = new NodeInputLineText( "路径", this );
 	subPlan->appendInput( inputPath );
-	inputPath->getVarObject( )->setUiTypeName( { "路径", "文本" } );
+	inputPath->getVarObject( )->setUiTypeNames( { "路径", "文本" } );
 
 	emplace_back_ID( inputPath );
 

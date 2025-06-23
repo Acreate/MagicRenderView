@@ -2,11 +2,11 @@
 
 #include <QVBoxLayout>
 
-#include "../../../stack/infoWidgetStack/IInfoWidgetStack.h"
-#include "../../../stack/infoWidgetStack/base/baseInfoWidgetStack.h"
+#include <qt/stack/infoWidgetStack/IInfoWidgetStack.h>
+#include <qt/stack/infoWidgetStack/base/baseInfoWidgetStack.h>
 
-#include "../../../type/baseType/nullTypeObject.h"
-#include "../../../type/sequenceType/pairtTypeObject.h"
+#include <qt/type/sequenceType/pairtTypeObject.h>
+#include <qt/type/baseType/nullTypeObject.h>
 PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	IInfoWidget **infoWidget = new IInfoWidget *;
 	*infoWidget = nullptr;
@@ -46,7 +46,7 @@ void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 
 	auto infoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 
-	auto charses = firstPtr->getUiTypeName( );
+	auto charses = firstPtr->getUiTypeNames( );
 	IInfoWidget *firstWidget = nullptr;
 	for( auto uiType : charses ) {
 		firstWidget = infoWidgetStack->generateInfoWidget( uiType );
@@ -54,7 +54,7 @@ void PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 			break;
 	}
 
-	charses = scondPtr->getUiTypeName( );
+	charses = scondPtr->getUiTypeNames( );
 	IInfoWidget *scondWidget = nullptr;
 	for( auto uiType : charses ) {
 		scondWidget = infoWidgetStack->generateInfoWidget( uiType );
@@ -89,21 +89,26 @@ std_shared_ptr< ITypeObject > PairtWidget::getScond( ) const {
 	return ( *widget )->getValue( );
 }
 bool PairtWidget::setFirst( const std_shared_ptr< ITypeObject > &key ) const {
-	bool cond = firstVerify == nullptr;
+	bool cond = key == nullptr;
 	if( cond )
 		return false;
 	ITypeObject *element = key.get( );
-	if( firstVerify( element ) == false )
+	if( firstVerify && firstVerify( element ) == false )
 		return false;
 
-	auto charses = key->getUiTypeName( );
+	auto charses = key->getUiTypeNames( );
 	auto infoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	for( auto uiType : charses ) {
 		auto widgetStack = infoWidgetStack->generateInfoWidget( uiType );
 		if( widgetStack != nullptr ) {
 			IInfoWidget **infoWidget = first.get( );
 			widgetStack->setTitle( "键" );
-			mainLayout->replaceWidget( *infoWidget, widgetStack );
+			if( mainLayout->replaceWidget( *infoWidget, widgetStack ) == nullptr ) {
+				if( *scond.get( ) )
+					mainLayout->insertWidget( 1, widgetStack );
+				else
+					mainLayout->addWidget( widgetStack );
+			}
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;
@@ -113,20 +118,21 @@ bool PairtWidget::setFirst( const std_shared_ptr< ITypeObject > &key ) const {
 	return false;
 }
 bool PairtWidget::setScond( const std_shared_ptr< ITypeObject > &value ) const {
-	bool cond = scondVerify == nullptr;
+	bool cond = value == nullptr;
 	if( cond )
 		return false;
 	ITypeObject *element = value.get( );
-	if( scondVerify( element ) == false )
+	if( scondVerify && scondVerify( element ) == false )
 		return false;
-	auto charses = value->getUiTypeName( );
+	auto charses = value->getUiTypeNames( );
 	auto infoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	for( auto uiType : charses ) {
 		auto widgetStack = infoWidgetStack->generateInfoWidget( uiType );
 		if( widgetStack != nullptr ) {
 			IInfoWidget **infoWidget = scond.get( );
 			widgetStack->setTitle( "值" );
-			mainLayout->replaceWidget( *infoWidget, widgetStack );
+			if( mainLayout->replaceWidget( *infoWidget, widgetStack ) == nullptr )
+				mainLayout->addWidget( widgetStack );
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;

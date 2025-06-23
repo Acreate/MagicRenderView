@@ -283,10 +283,13 @@ public:
 	virtual std_vector< QString > getStackTypeNames( ) const;
 	/// @brief ui 类型名称
 	/// @return ui 类型名称列表
-	virtual const std_vector< QString > & getUiTypeName( ) const { return uiTypeName; }
+	virtual const std_vector< QString > & getUiTypeNames( ) const { return uiTypeName; }
 	/// @brief 配置ui类型名称
 	/// @param ui_type_name ui 列表
-	virtual void setUiTypeName( const std_vector< QString > &ui_type_name ) { uiTypeName = ui_type_name; }
+	virtual void setUiTypeNames( const std_vector< QString > &ui_type_name ) { uiTypeName = ui_type_name; }
+	/// @brief 配置ui类型名称
+	/// @param ui_type_name ui 列表
+	virtual void setUiTypeName( const QString &ui_type_name ) { uiTypeName.emplace_back( ui_type_name ); }
 	/// @brief 追加多个ui名称
 	/// @param ui_type_name ui 列表 
 	virtual void appendUiTypeName( const std_vector< QString > &ui_type_name ) { uiTypeName.append_range( ui_type_name ); }

@@ -414,9 +414,8 @@ int main( int argc, char *argv[ ] ) {
 #define _testInfoWidget 
 #ifdef _testInfoWidget && _DEBUG
 
-	PairtWidget pairtWidget( nullptr, nullptr, "键值对" );
-	pairtWidget.show( );
-	pairtWidget.setFirst( nullptr );
+	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
+	std_shared_ptr<ITypeObject> generateTubVar;
 
 	//VectorWidget vectorWidget( nullptr, nullptr, "数组" );
 	//vectorWidget.show( );

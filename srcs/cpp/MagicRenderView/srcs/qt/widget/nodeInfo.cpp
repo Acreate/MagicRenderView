@@ -62,7 +62,7 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 		std_vector< QString > types = typeObject->typeNames( );
 		// 字符串
 		if( tools::vector::has( types, stringTypeName ) == true ) {
-			std_vector< QString > uiTypeName = typeObject->getUiTypeName( );
+			std_vector< QString > uiTypeName = typeObject->getUiTypeNames( );
 			size_t uiTypeCount = uiTypeName.size( );
 			QString *uiTypeDataPtr = uiTypeName.data( );
 			size_t uiIndex = 0;

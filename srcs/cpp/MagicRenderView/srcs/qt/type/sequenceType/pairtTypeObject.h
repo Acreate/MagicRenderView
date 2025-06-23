@@ -1,6 +1,8 @@
 ﻿#ifndef PAIRTTYPEOBJECT_H_H_HEAD__FILE__
 #define PAIRTTYPEOBJECT_H_H_HEAD__FILE__
 #pragma once
+#include <regex>
+
 #include "alias/type_alias.h"
 
 #include "qt/type/ITypeObject.h"
@@ -14,7 +16,7 @@ public:
 	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr );
 	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
 	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
-
+	
 	Def_Clone_Move_override_function( PairtTypeObject );
 
 	PairtTypeObject & operator=( const PairtTypeObject &other );
