@@ -123,10 +123,10 @@ bool HexEditor::setString( const QString &hex_text ) {
 			return false;
 	}
 	currentText = hex_text;
-	auto cursor = textCursor( );
-	cursor.setPosition( count );
 	setText( hex_text );
 	update( );
+	auto cursor = textCursor( );
+	cursor.setPosition( count );
 	setTextCursor( cursor );
 	return true;
 }
