@@ -67,9 +67,12 @@ bool HexEditor::setString( const QString &hex_text ) {
 	return true;
 }
 void HexEditor::keyPressEvent( QKeyEvent *e ) {
+	QString inputString = e->text( );
+	inputString = inputString.trimmed( );
+	if( inputString.isEmpty( ) )
+		return;
 	auto cursor = textCursor( );
 	int anchor = cursor.anchor( );
-	QString inputString = e->text( );
 	bool isOk = false;
 	auto converInt = inputString.toInt( &isOk );
 	if( !isOk ) {
@@ -97,4 +100,31 @@ void HexEditor::keyReleaseEvent( QKeyEvent *e ) {
 	int key = e->key( );
 	if( key == Qt::Key_Escape || key == Qt::Key_Return )
 		emit editorFinish( currentText );
+	else if( key == Qt::Key_Backspace ) {
+		auto cursor = textCursor( );
+		int anchor = cursor.anchor( );
+		anchor -= 1;
+		currentText.erase( currentText.begin( ) + anchor );
+		setText( currentText );
+		cursor.setPosition( anchor );
+		setTextCursor( cursor );
+		return;
+	} else if( key == Qt::Key_Left ) {
+		auto cursor = textCursor( );
+		int anchor = cursor.anchor( );
+		anchor -= 1;
+		cursor.setPosition( anchor );
+		setTextCursor( cursor );
+		return;
+	} else if( key == Qt::Key_Right ) {
+		auto cursor = textCursor( );
+		int anchor = cursor.anchor( );
+		anchor += 1;
+		qsizetype count = currentText.size( ) + 1; // 指向末尾
+		if( anchor == count )
+			return;
+		cursor.setPosition( anchor );
+		setTextCursor( cursor );
+		return;
+	}
 }

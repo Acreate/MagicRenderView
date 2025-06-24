@@ -15,12 +15,6 @@ PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 	*infoWidget = nullptr;
 	scond.reset( infoWidget );
 }
-QString PairtWidget::getText( ) const {
-	return "";
-}
-bool PairtWidget::setText( const QString &new_text ) const {
-	return false;
-}
 
 void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
 }

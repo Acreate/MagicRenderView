@@ -32,7 +32,10 @@ QString DataWidget::getPlaceholderText( ) const {
 	return edit->placeholderText( );
 }
 std_shared_ptr< ITypeObject > DataWidget::getValue( ) const {
-	return dataTypeObject;
+	QString currentHexText = edit->getCurrentHexText( );
+	auto stringTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< StringTypeObject >( );
+	stringTypeObject->setString( currentHexText );
+	return stringTypeObject;
 }
 bool DataWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	ITypeObject *element = value.get( );

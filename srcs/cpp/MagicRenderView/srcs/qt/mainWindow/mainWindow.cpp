@@ -16,17 +16,20 @@
 
 #include "../stack/varStack/base/baseVarStackEx.h"
 
+#include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
 	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 	std_shared_ptr< ITypeObject > generateTubVar;
-
-	VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
+	IInfoWidget *central = nullptr;
+	DataWidget *dataWidget = new DataWidget( nullptr, this, "数据" );
+	//VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
 
 	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
 	//combinationWidget.show( );
-
-	setCentralWidget( vectorWidget );
+	central = dataWidget;
+	if( central )
+		setCentralWidget( central );
 	return;
 
 	nodeGraph = new ScrollNodeGraph( this );
@@ -134,6 +137,7 @@ void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
+	return;
 	auto thisSize = size( );
 	listBtn->move( 10, listBtn->height( ) );
 	infoBtn->move( thisSize.width( ) - listBtn->width( ) - 20, infoBtn->height( ) );

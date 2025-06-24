@@ -21,11 +21,11 @@ public:
 	IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	virtual QString getTitle( ) const;
 
-	virtual QString getText( ) const = 0;
-	virtual bool setText( const QString &new_text ) const = 0;
+	virtual QString getText( ) const;
+	virtual bool setText( const QString &new_text ) const;
 	virtual void setTitle( const QString &new_title ) const;
-	virtual void setPlaceholderText( const QString &placeholder_text ) const = 0;
-	virtual QString getPlaceholderText( ) const = 0;
+	virtual void setPlaceholderText( const QString &placeholder_text ) const;
+	virtual QString getPlaceholderText( ) const;
 
 	/// @brief 获取创建该变量的堆栈对象指针
 	/// @return 创建该变量的堆栈对象指针
@@ -34,8 +34,8 @@ public:
 			return getStackFunction( );
 		return nullptr;
 	}
-	virtual std_shared_ptr<ITypeObject> getValue( ) const;
-	virtual bool setValue( const std_shared_ptr< ITypeObject > &value ) const { }
+	virtual std_shared_ptr< ITypeObject > getValue( ) const;
+	virtual bool setValue( const std_shared_ptr< ITypeObject > &value ) const { return false; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
