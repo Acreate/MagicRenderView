@@ -32,10 +32,12 @@ QString DataWidget::getPlaceholderText( ) const {
 	return edit->placeholderText( );
 }
 std_shared_ptr< ITypeObject > DataWidget::getValue( ) const {
-	QString currentHexText = edit->getCurrentHexText( );
-	auto stringTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< StringTypeObject >( );
-	stringTypeObject->setString( currentHexText );
-	return stringTypeObject;
+	dataTypeObject->setValue( edit->toUcharVector( false ) );
+	return dataTypeObject;
+}
+std_shared_ptr< DataTypeObject > DataWidget::getValue( bool mod_is_suffix_data_var ) const {
+	dataTypeObject->setValue( edit->toUcharVector( mod_is_suffix_data_var ) );
+	return dataTypeObject;
 }
 bool DataWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	ITypeObject *element = value.get( );
@@ -54,4 +56,22 @@ bool DataWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( dataTypeObject )
 		return edit->setHex( dataTypeObject->getCharArray( ) );
 	return false;
+}
+bool DataWidget::setString( const QString &hex_text ) {
+	return edit->setString( hex_text );
+}
+bool DataWidget::setHex( const QByteArray &hex_text ) {
+	return edit->setHex( hex_text );
+}
+bool DataWidget::setHex( const std_vector< uchar > &data_vector ) {
+	return edit->setHex( data_vector );
+}
+bool DataWidget::setHex( const std_vector< char > &data_vector ) {
+	return edit->setHex( data_vector );
+}
+bool DataWidget::setHex( const int64_t &number_value ) {
+	return edit->setHex( number_value );
+}
+bool DataWidget::setHex( const double &number_value ) {
+	return edit->setHex( number_value );
 }

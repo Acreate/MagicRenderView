@@ -10,10 +10,10 @@ class DataTypeObject : public ITypeObject {
 protected:
 	std_shared_ptr< std_vector< uint8_t > > val;
 public:
-	DataTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< uint8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ),
+	DataTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< uint8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ),
 		val( new std_vector< uint8_t >( val ) ) {
 	}
-	DataTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< int8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+	DataTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< int8_t > &val, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( gener_var_stack, alias_type_name, parent ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
 		size_t count = val.size( );
@@ -26,7 +26,7 @@ public:
 			targetData[ count ] = data[ count ];
 		targetData[ 0 ] = data[ 0 ];
 	}
-	DataTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
+	DataTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *const parent = nullptr )
 		: ITypeObject( gener_var_stack, alias_type_name, parent ),
 		val( new std_vector< uint8_t >( ) ) {
 		currentTypeName.emplace_back( DataTypeObject::staticMetaObject.className( ) );
@@ -34,7 +34,7 @@ public:
 
 	Def_Clone_Move_override_function( DataTypeObject );
 
-	DataTypeObject & operator=( const DataTypeObject &other ) {
+	virtual DataTypeObject & operator=( const DataTypeObject &other ) {
 		if( this == nullptr || thisPtr == nullptr )
 			return *this;
 		auto typeObject = &other;
@@ -49,24 +49,24 @@ public:
 		return *this;
 	}
 
-	void append( int8_t data ) {
+	virtual void append( int8_t data ) {
 		val->emplace_back( data );
 	}
-	void append( int16_t data ) {
+	virtual void append( int16_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-	void append( int32_t data ) {
+	virtual void append( int32_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-	void append( int64_t data ) {
+	virtual void append( int64_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
@@ -74,43 +74,43 @@ public:
 			val->emplace_back( sourceData[ index ] );
 	}
 
-	void append( uint8_t data ) {
+	virtual void append( uint8_t data ) {
 		val->emplace_back( data );
 	}
-	void append( uint16_t data ) {
+	virtual void append( uint16_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-	void append( uint32_t data ) {
+	virtual void append( uint32_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-	void append( uint64_t data ) {
+	virtual void append( uint64_t data ) {
 		auto stdVector = toData( data );
 		size_t count = stdVector.size( );
 		auto sourceData = stdVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			val->emplace_back( sourceData[ index ] );
 	}
-	void clear( ) {
+	virtual void clear( ) {
 		val->clear( );
 	}
-	void resetSize( const size_t &new_size ) {
+	virtual void resetSize( const size_t &new_size ) {
 		val->resize( new_size );
 	}
-	size_t count( ) const {
+	virtual size_t count( ) const {
 		return val->size( );
 	}
-	std_vector< uint8_t > getCharArray( ) const {
+	virtual std_vector< uint8_t > getCharArray( ) const {
 		return *val;
 	}
-	std_vector< uchar > getUCharArray( ) const {
+	virtual std_vector< uchar > getUCharArray( ) const {
 		size_t count = val->size( );
 		if( count == 0 )
 			return { };
@@ -121,15 +121,63 @@ public:
 			data[ index ] = source[ index ];
 		return result;
 	}
-	uint8_t & operator[]( const size_t &index ) const {
+	virtual uint8_t & operator[]( const size_t &index ) const {
 		size_t count = val->size( );
-		uint8_t result = 0;
-		if( count == 0 )
-			return result;
 		auto source = val->data( );
+		if( count == 0 ) {
+			val->resize( 1 );
+			return source[ count ];
+		}
 		return source[ index ];
 	}
-
+	virtual void setValue( const std_vector< uchar > &data ) const {
+		auto copySourceCount = data.size( );
+		if( copySourceCount == 0 ) {
+			val->clear( );
+			return;
+		}
+		auto copySourcePtr = data.data( );
+		val->resize( copySourceCount );
+		auto targetSourcePtr = val->data( );
+		for( decltype(copySourceCount) index = 0; index < copySourceCount; ++index )
+			targetSourcePtr[ index ] = copySourcePtr[ index ];
+	}
+	virtual void setValue( const std_vector< char > &data ) const {
+		auto copySourceCount = data.size( );
+		if( copySourceCount == 0 ) {
+			val->clear( );
+			return;
+		}
+		auto copySourcePtr = data.data( );
+		val->resize( copySourceCount );
+		auto targetSourcePtr = val->data( );
+		for( decltype(copySourceCount) index = 0; index < copySourceCount; ++index )
+			targetSourcePtr[ index ] = copySourcePtr[ index ];
+	}
+	virtual void setValue( const std_shared_ptr< std_vector< char > > &data ) const {
+		auto copySourceCount = data->size( );
+		if( copySourceCount == 0 ) {
+			val->clear( );
+			return;
+		}
+		auto copySourcePtr = data->data( );
+		val->resize( copySourceCount );
+		auto targetSourcePtr = val->data( );
+		for( decltype(copySourceCount) index = 0; index < copySourceCount; ++index )
+			targetSourcePtr[ index ] = copySourcePtr[ index ];
+	}
+	virtual void setValue( const std_shared_ptr< std_vector< uint8_t > > &data ) const {
+		auto copySourceCount = data->size( );
+		if( copySourceCount == 0 ) {
+			val->clear( );
+			return;
+		}
+		auto copySourcePtr = data->data( );
+		val->resize( copySourceCount );
+		auto targetSourcePtr = val->data( );
+		for( decltype(copySourceCount) index = 0; index < copySourceCount; ++index )
+			targetSourcePtr[ index ] = copySourcePtr[ index ];
+	}
 	int compare( const ITypeObject &rhs ) const override {
 		decltype(this) result_ptr;
 		int result = comp( this, &rhs, result_ptr );

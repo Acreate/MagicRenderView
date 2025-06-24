@@ -19,6 +19,10 @@ public:
 	virtual bool setHex( const std_vector<char> &data_vector );
 	virtual bool setHex( const int64_t &number_value ) ;
 	virtual bool setHex( const double &number_value );
+	/// @brief 获取数据，对于单独的短位补齐策略，false 表示低位(f 补齐位 0x0f)，true 表示非补齐位( f 为 0xf0)
+	/// @param mod_is_suffix_data_var 短位补齐策略
+	/// @return 返回数据序列
+	virtual std_vector<uchar> toUcharVector(bool mod_is_suffix_data_var) const;
 protected:
 	void keyPressEvent( QKeyEvent *e ) override;
 	void leaveEvent( QEvent *event ) override;

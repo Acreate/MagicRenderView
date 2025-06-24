@@ -16,6 +16,8 @@
 
 #include "../stack/varStack/base/baseVarStackEx.h"
 
+#include "../type/baseType/dataTypeObject.h"
+
 #include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
@@ -23,6 +25,11 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	std_shared_ptr< ITypeObject > generateTubVar;
 	IInfoWidget *central = nullptr;
 	DataWidget *dataWidget = new DataWidget( nullptr, this, "数据" );
+	dataWidget->setText( "0203f" );
+	auto typeObject = dataWidget->getValue( true );
+	qDebug( ) << __LINE__ << " : " << typeObject->toString( );
+	typeObject = dataWidget->getValue( false );
+	qDebug( ) << __LINE__ << " : " << typeObject->toString( );
 	//VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
 
 	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
