@@ -17,26 +17,31 @@
 #include "../stack/varStack/base/baseVarStackEx.h"
 
 #include "../type/baseType/dataTypeObject.h"
+#include "../type/baseType/floatTypeObject.h"
+#include "../type/baseType/intTypeObject.h"
 
 #include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
 	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
 	std_shared_ptr< ITypeObject > generateTubVar;
-	IInfoWidget *central = nullptr;
-	DataWidget *dataWidget = new DataWidget( nullptr, this, "数据" );
-	dataWidget->setText( "0203f" );
-	auto typeObject = dataWidget->getValue( true );
-	qDebug( ) << __LINE__ << " : " << typeObject->toString( );
-	typeObject = dataWidget->getValue( false );
-	qDebug( ) << __LINE__ << " : " << typeObject->toString( );
-	//VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
+	IInfoWidget *central;
+
+	VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
+	generateTubVar = varStack->generateTVar< IntTypeObject >( );
+	generateTubVar->setUiTypeName( "整数" );
+	vectorWidget->append( generateTubVar );
+	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
+	generateTubVar->setUiTypeName( "浮点" );
+	vectorWidget->append( generateTubVar );
+	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
 
 	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
 	//combinationWidget.show( );
-	central = dataWidget;
+	central = vectorWidget;
 	if( central )
 		setCentralWidget( central );
+	setWindowToIndexScreenCentre( 0 );
 	return;
 
 	nodeGraph = new ScrollNodeGraph( this );
