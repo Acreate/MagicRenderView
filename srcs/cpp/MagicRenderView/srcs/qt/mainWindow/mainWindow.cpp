@@ -31,10 +31,10 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	CombinationWidget *vectorWidget = new CombinationWidget( nullptr, this, "结构体" );
 	generateTubVar = varStack->generateTVar< IntTypeObject >( );
 	generateTubVar->setUiTypeName( "整数" );
-	vectorWidget->append( generateTubVar );
+	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
 	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
 	generateTubVar->setUiTypeName( "浮点" );
-	vectorWidget->append( generateTubVar );
+	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
 	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
 
 	central = vectorWidget;
