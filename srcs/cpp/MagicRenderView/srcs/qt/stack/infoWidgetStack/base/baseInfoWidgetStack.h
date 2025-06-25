@@ -15,6 +15,7 @@ protected:
 public:
 	BaseInfoWidgetStack( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function );
 	IInfoWidget * generateInfoWidget( const QString &type_name, QWidget *parnet = nullptr ) const override;
+	IInfoWidget * generateInfoWidget( const std_shared_ptr<ITypeObject> &type_name, QWidget *parnet = nullptr ) const override;
 	std_vector<std_pairt<QString, std_vector<QString>>> permissionInfoWidget( ) const override;
 };
 
