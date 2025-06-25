@@ -2,6 +2,7 @@
 
 #include <QLineEdit>
 #include <QDoubleValidator>
+#include <QLabel>
 #include <QVBoxLayout>
 
 #include "../../../stack/varStack/IVarStack.h"
@@ -12,6 +13,7 @@
 #include "../../../type/baseType/stringTypeObject.h"
 FloatWidget::FloatWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	value = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< FloatTypeObject >( );
+	value->setUiTypeName( title_msg );
 	lineEdit = new QLineEdit( this );
 	lineEdit->setValidator( new QDoubleValidator( this ) );
 	mainLayout->addWidget( lineEdit );

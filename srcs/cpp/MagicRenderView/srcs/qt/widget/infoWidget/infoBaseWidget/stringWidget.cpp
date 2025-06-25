@@ -11,7 +11,7 @@
 #include <qt/type/baseType/stringTypeObject.h>
 StringWidget::StringWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	editString = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< StringTypeObject >( );
-
+	editString->setUiTypeName( title_msg );
 	QWidget *btnWidget = new QWidget( this );
 	QHBoxLayout *btnLayout = new QHBoxLayout( btnWidget );
 	mainLayout->addWidget( btnWidget );

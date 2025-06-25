@@ -20,6 +20,7 @@
 #include "../type/baseType/floatTypeObject.h"
 #include "../type/baseType/intTypeObject.h"
 
+#include "../widget/infoWidget/infoBaseWidget/combinationWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
@@ -27,7 +28,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	std_shared_ptr< ITypeObject > generateTubVar;
 	IInfoWidget *central;
 
-	VectorWidget *vectorWidget = new VectorWidget( nullptr, this, "数组" );
+	CombinationWidget *vectorWidget = new CombinationWidget( nullptr, this, "结构体" );
 	generateTubVar = varStack->generateTVar< IntTypeObject >( );
 	generateTubVar->setUiTypeName( "整数" );
 	vectorWidget->append( generateTubVar );
@@ -36,8 +37,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	vectorWidget->append( generateTubVar );
 	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
 
-	//CombinationWidget combinationWidget( nullptr, nullptr, "结构体" );
-	//combinationWidget.show( );
 	central = vectorWidget;
 	if( central )
 		setCentralWidget( central );

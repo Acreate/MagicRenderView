@@ -1,5 +1,6 @@
 ﻿#include "./dataWidget.h"
 
+#include <QLabel>
 #include <QTextEdit>
 #include <QVBoxLayout>
 
@@ -14,7 +15,7 @@
 #include "subWidget/hexEditor.h"
 DataWidget::DataWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	dataTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< DataTypeObject >( );
-
+	dataTypeObject->setUiTypeName( title_msg );
 	edit = new HexEditor( this );
 	mainLayout->addWidget( edit );
 }

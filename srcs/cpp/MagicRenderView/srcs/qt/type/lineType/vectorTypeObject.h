@@ -21,7 +21,7 @@ public:
 		return result;
 	}
 public:
-	VectorTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	VectorTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
 
 	Def_Clone_Move_override_function( VectorTypeObject );
 
@@ -43,7 +43,16 @@ public:
 	/// @param find_function 查找的函数，当返回 true 时，返回该匹配的元素
 	/// @return 失败返回空的序列容器
 	virtual std_vector< std_shared_ptr< ITypeObject > > findAll( const std_function< bool( std_shared_ptr< ITypeObject > & ) > &find_function ) const;
-
+	virtual void resize( const size_t &count ) {
+		vector->resize( count );
+	}
+	virtual std_shared_ptr< ITypeObject > * data( ) const {
+		return vector->data( );
+	}
+	virtual void setVectorTypeObject( const VectorTypeObject *vector_type_object ) const;
+	virtual void setVectorTypeObject( const std_shared_ptr< VectorTypeObject > &vector_type_object ) const {
+		setVectorTypeObject( vector_type_object.get( ) );
+	}
 	/// @brief 删除第一个元素
 	/// @return 成功返回 true
 	virtual bool removeStartElemt( );

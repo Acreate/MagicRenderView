@@ -14,6 +14,7 @@
 
 IntWidget::IntWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	value = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< IntTypeObject >( );
+	value->setUiTypeName( title_msg );
 	lineEdit = new QLineEdit( this );
 	lineEdit->setValidator( new QIntValidator( this ) );
 	mainLayout->addWidget( lineEdit );

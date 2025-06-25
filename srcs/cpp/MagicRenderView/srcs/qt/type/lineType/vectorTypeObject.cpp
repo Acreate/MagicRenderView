@@ -62,6 +62,14 @@ std_vector< std_shared_ptr< ITypeObject > > VectorTypeObject::findAll( const std
 			result.emplace_back( elemt );
 	return result;
 }
+void VectorTypeObject::setVectorTypeObject( const VectorTypeObject *vector_type_object ) const {
+	size_t count = vector_type_object->size( );
+	vector->resize( count );
+	auto typeObject = vector->data( );
+	auto sourcePtr = vector_type_object->data( );
+	for( size_t index = 0; index < count; ++index )
+		typeObject[ index ] = sourcePtr[ index ];
+}
 bool VectorTypeObject::removeStartElemt( ) {
 	if( vector->size( ) == 0 )
 		return false;

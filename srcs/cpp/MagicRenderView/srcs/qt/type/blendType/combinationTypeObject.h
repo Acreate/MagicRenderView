@@ -51,6 +51,8 @@ public:
 	virtual const std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > & getStructInfo( ) const {
 		return *dataStruct;
 	}
+	
+	void clear() const;
 	int compare( const ITypeObject &rhs ) const override;
 
 	size_t typeMemorySize( ) const override;

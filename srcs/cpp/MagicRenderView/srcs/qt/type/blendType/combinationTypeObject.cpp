@@ -213,7 +213,7 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 		count = count - stringDataSize - appendSize; // 减去用量
 		readDataPtr += stringDataSize;// 增加偏移
 
-		QString string(  QByteArray::fromHex( utf8) );
+		QString string( QByteArray::fromHex( utf8 ) );
 		std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > sharedPtr( new std_pairt< std_shared_ptr< ITypeObject >, QString > );
 		sharedPtr->first = typeObject;
 		sharedPtr->second = string;
@@ -223,6 +223,9 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	return resultSize;
 }
 
+void CombinationTypeObject::clear( ) const {
+	dataStruct->clear( );
+}
 int CombinationTypeObject::compare( const ITypeObject &rhs ) const {
 	decltype(this) result_ptr;
 	int result = comp( this, &rhs, result_ptr );

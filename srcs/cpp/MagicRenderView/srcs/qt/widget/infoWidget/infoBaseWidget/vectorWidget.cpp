@@ -12,6 +12,8 @@
 VectorWidget::VectorWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	thisConverObject = std_shared_ptr< VectorWidget >( this, [] ( VectorWidget *ptr ) {
 	} );
+	value = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< VectorTypeObject >( );
+	value->setUiTypeName( title_msg );
 }
 std_shared_ptr< ITypeObject > VectorWidget::atIndex( const size_t &index ) const {
 	auto infoWidgets = findChildren< IInfoWidget * >( );
@@ -49,34 +51,70 @@ bool VectorWidget::append( const std_shared_ptr< ITypeObject > &type_object ) {
 		auto infoWidget = instance->generateInfoWidget( uiName );
 		if( infoWidget == nullptr )
 			return false;
+		infoWidget->setValue( type_object );
 		mainLayout->addWidget( infoWidget );
 		return true;
 	}
 	return false;
 }
 std_vector< std_shared_ptr< ITypeObject > > VectorWidget::getVector( ) const {
-	std_vector< std_shared_ptr< ITypeObject > > result;
 	auto infoWidgets = findChildren< IInfoWidget * >( );
 	qsizetype count = infoWidgets.size( );
 	if( count == 0 )
-		return result;
+		return value.get( )->getVector( );
 	auto infoWidget = infoWidgets.data( );
-	result.resize( count );
-	auto data = result.data( );
+	value->resize( count );
+	auto data = value->data( );
 	for( decltype(count) index = 0; index < count; ++index )
 		data[ index ] = infoWidget[ index ]->getValue( );
-	return result;
+	return value.get( )->getVector( );
 }
 std_shared_ptr< ITypeObject > VectorWidget::getValue( ) const {
-	auto vectorTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< VectorTypeObject >( );
-	vectorTypeObject->setVector( getVector( ) );
-	return vectorTypeObject;
+	value->setVector( getVector( ) );
+	return value;
 }
 bool VectorWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+	auto instance = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	auto vectorTypeObject = qobject_cast< VectorTypeObject * >( value.get( ) );
-	if( vectorTypeObject == nullptr )
-		return false;
-	std_vector< std::shared_ptr< ITypeObject > > vector = vectorTypeObject->getVector( );
-	thisConverObject->setVector( vector );
+	if( vectorTypeObject != nullptr ) {
+		std_vector< std_pairt< std_shared_ptr< ITypeObject >, IInfoWidget * > > appendElement;
+		size_t count = vectorTypeObject->size( );
+		auto dataPtr = vectorTypeObject->data( );
+		size_t index = 0;
+		for( ; index < count; ++index ) {
+			auto typeObject = dataPtr[ index ];
+			IInfoWidget *infoWidget = instance->generateInfoWidget( typeObject );
+			if( infoWidget == nullptr )
+				continue;;
+			infoWidget->setValue( typeObject );
+			appendElement.emplace_back( typeObject, infoWidget );
+		}
+		count = appendElement.size( );
+		if( count == 0 )
+			return false;
+		auto infoWidgets = findChildren< IInfoWidget * >( );
+		for( auto widget : infoWidgets )
+			delete widget;
+		auto pair = appendElement.data( );
+		index = 0;
+		this->value->resize( count );
+		auto object = this->value->data( );
+
+		for( ; index < count; ++index ) {
+			object[ index ] = pair[ index ].first;
+			mainLayout->addWidget( pair[ index ].second );
+		}
+	} else {
+		auto infoWidget = instance->generateInfoWidget( value );
+		if( infoWidget == nullptr )
+			return false;
+		auto infoWidgets = findChildren< IInfoWidget * >( );
+		for( auto widget : infoWidgets )
+			delete widget;
+		mainLayout->addWidget( infoWidget );
+		infoWidget->setValue( value );
+		this->value->clear( );
+		this->value->append( value );
+	}
 	return true;
 }

@@ -3,10 +3,12 @@
 #pragma once
 #include "../IInfoWidget.h"
 
+class VectorTypeObject;
 class VectorWidget : public IInfoWidget {
 	Q_OBJECT;
 protected:
-	std_shared_ptr<VectorWidget> thisConverObject;
+	std_shared_ptr< VectorWidget > thisConverObject;
+	std_shared_ptr< VectorTypeObject > value;
 public:
 	VectorWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	/// @brief 获取下标值
@@ -22,12 +24,12 @@ public:
 	/// @brief 配置序列
 	/// @param vector 配置的序列
 	virtual void setVector( const std_vector< std_shared_ptr< ITypeObject > > &vector );
-	virtual bool append(const std_shared_ptr< ITypeObject >& type_object);
+	virtual bool append( const std_shared_ptr< ITypeObject > &type_object );
 	/// @brief 返回序列
 	/// @return 返回的序列
 	virtual std_vector< std_shared_ptr< ITypeObject > > getVector( ) const;
-	std_shared_ptr<ITypeObject> getValue( ) const override;
-	bool setValue( const std_shared_ptr<ITypeObject> &value ) const override;
+	std_shared_ptr< ITypeObject > getValue( ) const override;
+	bool setValue( const std_shared_ptr< ITypeObject > &value ) const override;
 };
 
 #endif // VECTORWIDGET_H_H_HEAD__FILE__

@@ -1,5 +1,6 @@
 ﻿#include "./pairtWidget.h"
 
+#include <QLabel>
 #include <QVBoxLayout>
 
 #include <qt/stack/infoWidgetStack/IInfoWidgetStack.h>
@@ -7,6 +8,9 @@
 
 #include <qt/type/sequenceType/pairtTypeObject.h>
 #include <qt/type/baseType/nullTypeObject.h>
+
+#include "../../../stack/varStack/IVarStack.h"
+#include "../../../stack/varStack/base/baseVarStackEx.h"
 PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	IInfoWidget **infoWidget = new IInfoWidget *;
 	*infoWidget = nullptr;
@@ -14,6 +18,9 @@ PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 	infoWidget = new IInfoWidget *;
 	*infoWidget = nullptr;
 	scond.reset( infoWidget );
+	pairtTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< PairtTypeObject >( );
+
+	pairtTypeObject->setUiTypeName( title_msg );
 }
 
 void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -71,6 +78,17 @@ bool PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	mainLayout->addWidget( *thisFirstWidget );
 	mainLayout->addWidget( *thisScondWidget );
 	return true;
+}
+std_shared_ptr< ITypeObject > PairtWidget::getValue( ) const {
+	if( *first )
+		pairtTypeObject->setFirst( ( *first )->getValue( ) );
+	else
+		pairtTypeObject->setFirst( std_shared_ptr< ITypeObject >( new NullTypeObject( ) ) );
+	if( *scond )
+		pairtTypeObject->setScond( ( *scond )->getValue( ) );
+	else
+		pairtTypeObject->setScond( std_shared_ptr< ITypeObject >( new NullTypeObject( ) ) );
+	return pairtTypeObject;
 }
 std_shared_ptr< ITypeObject > PairtWidget::getFirst( ) const {
 	if( *first == nullptr )
