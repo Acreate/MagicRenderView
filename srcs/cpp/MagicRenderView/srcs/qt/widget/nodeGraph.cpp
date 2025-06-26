@@ -122,8 +122,10 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
 	nodeMenu = new NodeAddMenu( this );
-	auto nodeAddMenu = INodeStack::getInstance< BaseNodeStack >( )->getMenu( );
+	auto nodeStack = INodeStack::getInstance< BaseNodeStack >( );
+	auto nodeAddMenu = new NodeAddMenu( this );
 	nodeAddMenu->setTitle( "标准节点" );
+	nodeAddMenu->appendNodeStackObjectPtrToMenuSubMenu( nodeStack );
 	nodeMenu->addMenu( nodeAddMenu );
 	setMouseTracking( true );
 	mouseEventStatus = MouseEventType::Init;

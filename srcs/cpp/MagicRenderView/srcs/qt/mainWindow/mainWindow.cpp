@@ -2,6 +2,7 @@
 
 #include <qguiapplication.h>
 #include <QMenuBar>
+#include <QProcess>
 #include <QFileDialog>
 #include <QPushButton>
 
@@ -15,7 +16,6 @@
 #include <qt/widget/nodeList.h>
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
-
 	nodeGraph = new ScrollNodeGraph( this );
 	NodeGraph *graph = nodeGraph->getNodeGraph( );
 	graph->setMainWindow( this );
@@ -109,7 +109,14 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 		}
 	} );
 	firstMenu->addSeparator( );
-	auto exitAction = firstMenu->addAction( "退出" );
+	auto exitAction = firstMenu->addAction( "重启" );
+	connect( exitAction, &QAction::triggered, []( ) {
+		QGuiApplication *application = qApp;
+		application->quit( );
+		QProcess::startDetached( application->applicationFilePath( ), application->arguments( ) );
+	} );
+	firstMenu->addSeparator( );
+	exitAction = firstMenu->addAction( "退出" );
 	connect( exitAction, &QAction::triggered, []( ) {
 		qApp->quit( );
 	} );

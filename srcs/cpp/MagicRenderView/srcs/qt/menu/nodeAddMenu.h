@@ -12,12 +12,14 @@ class NodeAddAction;
 
 class NodeAddMenu : public QMenu {
 	Q_OBJECT;
+protected:
+	std_vector<INodeStack*> menuSeed;
 public:
 	NodeAddMenu( QWidget *parent );
 	NodeAddMenu( const QString &title = "", QWidget *parent = nullptr )
 		: NodeAddMenu( parent ) { }
 	~NodeAddMenu( ) override;
-	virtual bool initMenu( INodeStack *node_stack );
+	virtual bool appendNodeStackObjectPtrToMenuSubMenu( INodeStack *node_stack );
 	void clearMenuActions( QMenu *menu );
 Q_SIGNALS:
 	/// @brief 选项被正式激活
@@ -30,7 +32,7 @@ public:
 		}
 	bool init( ) {
 		auto nodeGenerate = INodeStack::getInstance< TNodeGenerate >( );
-		return initMenu( nodeGenerate );
+		return appendNodeStackObjectPtrToMenuSubMenu( nodeGenerate );
 	}
 };
 

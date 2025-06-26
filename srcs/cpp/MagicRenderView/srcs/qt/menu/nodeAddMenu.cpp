@@ -6,19 +6,30 @@
 
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 
-bool NodeAddMenu::initMenu( INodeStack *node_stack ) {
+bool NodeAddMenu::appendNodeStackObjectPtrToMenuSubMenu( INodeStack *node_stack ) {
 	if( node_stack == nullptr )
 		return false;
 
 	// 开始清理子菜单
 	clearMenuActions( this );
-	QMenu *topMenu = new QMenu( this );
-	addMenu( topMenu );
-	QString stackTypeName = node_stack->getStackTypeNames( )[ 0 ];
-	topMenu->setTitle( stackTypeName );
-	auto pairs = node_stack->permissionNodeType( );
-	for( auto &[ key,value ] : pairs )
-		topMenu->addAction( new NodeAddAction( this, key ) );
+	if( tools::vector::has( menuSeed, node_stack ) == false )
+		menuSeed.emplace_back( node_stack );
+
+	size_t count = menuSeed.size( );
+	if( count == 0 )
+		return false;
+	auto nodeStackPtr = menuSeed.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		QMenu *topMenu = new QMenu( this );
+		addMenu( topMenu );
+		QString stackTypeName = nodeStackPtr[ index ]->getStackTypeNames( )[ 0 ];
+		topMenu->setTitle( stackTypeName );
+		auto pairs = nodeStackPtr[ index ]->permissionNodeType( );
+		for( auto &[ key,value ] : pairs )
+			topMenu->addAction( new NodeAddAction( this, key ) );
+	}
+
 	return true;
 }
 void NodeAddMenu::clearMenuActions( QMenu *menu ) {

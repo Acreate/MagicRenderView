@@ -27,7 +27,6 @@ BaseNodeStack::BaseNodeStack( const std_function< std_shared_ptr< INodeStack >( 
 	stackTypeNames.emplace_back( "基础节点" );
 	setObjectName( BaseNodeStack::staticMetaObject.className( ) );
 	emplace_back_NodeGenerate( NodeFileInfo, nullptr, Qt::WindowFlags(), "文件信息" );
-	menu->initMenu( this );
 }
 INodeWidget * BaseNodeStack::_newNode( const QString &type_name ) const {
 	size_t count = nodeGenerate->size( );
