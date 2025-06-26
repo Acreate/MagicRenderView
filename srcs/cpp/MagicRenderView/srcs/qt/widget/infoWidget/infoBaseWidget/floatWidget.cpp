@@ -26,17 +26,12 @@ FloatWidget::FloatWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 		emit valueChanged( );
 	} );
 }
-QString FloatWidget::getText( ) const {
-	return lineEdit->text( );
+double FloatWidget::getFloat( ) const {
+	return lineEdit->text( ).toDouble(  );
 }
-bool FloatWidget::setText( const QString &new_text ) const {
-	bool result = false;
-	auto numberValue = new_text.toDouble( &result );
-	if( result == false )
-		return false;
-	value->setVal( numberValue );
-	lineEdit->setText( QString::number( numberValue ) );
-	return true;
+void FloatWidget::setFloat( const double &new_value ) {
+	value->setVal( new_value );
+	lineEdit->setText( QString::number( new_value ) );
 }
 
 void FloatWidget::setPlaceholderText( const QString &placeholder_text ) const {

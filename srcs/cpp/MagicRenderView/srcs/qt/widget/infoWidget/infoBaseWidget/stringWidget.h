@@ -11,15 +11,14 @@ class StringWidget : public IInfoWidget {
 protected:
 	QTextEdit *textEdit;
 	std_shared_ptr< StringTypeObject > editString;
-
 public:
 	StringWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
-	~StringWidget() override;
-	QString getText( ) const override;
-	bool setText( const QString &new_text ) const override;
+	~StringWidget( ) override;
+	virtual QString getText( ) const;
+	virtual bool setText( const QString &new_text ) const;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override;
-	std_shared_ptr<ITypeObject> getValue( ) const override;
+	std_shared_ptr< ITypeObject > getValue( ) const override;
 	bool setValue( const std_shared_ptr< ITypeObject > &value ) const override;
 };
 

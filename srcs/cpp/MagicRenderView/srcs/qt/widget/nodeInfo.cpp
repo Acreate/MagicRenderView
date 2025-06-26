@@ -81,13 +81,19 @@ void NodeInfo::setNodeWidget( INodeWidget *node_widget ) {
 			}
 			if( uiIndex == uiTypeCount ) {
 				IInfoWidget *infoWidget = infoWidgetGen->generateInfoWidget( ErrorMsgWidget::staticMetaObject.className( ) );
-				if( infoWidget ) {
-					QString name = nodeComponent->getNodeComponentName( );
-					infoWidget->setTitle( name );
-					infoWidget->setText( "无法匹配对应的信息小窗口" );
-					infoWidget->setPlaceholderText( "或许可以增加基本变量类型，并且修改其 ui 类型来实现信息面板的创建项" );
-					mainLayout->addWidget( infoWidget );
+				if( infoWidget == nullptr )
+					continue;
+				mainLayout->addWidget( infoWidget );
+				QString name = nodeComponent->getNodeComponentName( );
+				infoWidget->setTitle( name );
+
+				ErrorMsgWidget *errorMsgWidget = qobject_cast< ErrorMsgWidget * >( infoWidget );
+				if( errorMsgWidget == nullptr ) {
+					infoWidget->setPlaceholderText( "无法匹配对应的信息小窗口，或许可以增加基本变量类型，并且修改其 ui 类型来实现信息面板的创建项" );
+					continue;
 				}
+				errorMsgWidget->setText( "无法匹配对应的信息小窗口" );
+				infoWidget->setPlaceholderText( "或许可以增加基本变量类型，并且修改其 ui 类型来实现信息面板的创建项" );
 			}
 		} else if( tools::vector::has( types, intTypeName ) == true ) {
 		} else if( tools::vector::has( types, floatTypeName ) == true ) {

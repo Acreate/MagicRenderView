@@ -21,9 +21,6 @@ protected:
 public:
 	IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	virtual QString getTitle( ) const;
-
-	virtual QString getText( ) const;
-	virtual bool setText( const QString &new_text ) const;
 	virtual void setTitle( const QString &new_title ) const;
 	virtual void setPlaceholderText( const QString &placeholder_text ) const;
 	virtual QString getPlaceholderText( ) const;

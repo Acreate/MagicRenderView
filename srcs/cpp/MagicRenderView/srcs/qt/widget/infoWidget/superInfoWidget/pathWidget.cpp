@@ -65,10 +65,10 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 		emit valueChanged( );
 	} );
 }
-QString PathWidget::getText( ) const {
+QString PathWidget::getPath( ) const {
 	return pathText->text( );
 }
-bool PathWidget::setText( const QString &new_text ) const {
+bool PathWidget::setPath( const QString &new_text ) const {
 	QFileInfo info( new_text + "/" );
 	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
 	pathText->setText( absoluteFilePath );

@@ -1,7 +1,6 @@
 ﻿#include "./dataWidget.h"
 
 #include <QLabel>
-#include <QTextEdit>
 #include <QVBoxLayout>
 
 #include <qt/stack/varStack/IVarStack.h>
@@ -22,9 +21,7 @@ DataWidget::DataWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 QString DataWidget::getText( ) const {
 	return edit->toPlainText( );
 }
-bool DataWidget::setText( const QString &new_text ) const {
-	return edit->setString( new_text );
-}
+
 
 void DataWidget::setPlaceholderText( const QString &placeholder_text ) const {
 	edit->setPlaceholderText( placeholder_text );

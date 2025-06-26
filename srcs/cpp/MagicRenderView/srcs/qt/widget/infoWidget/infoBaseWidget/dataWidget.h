@@ -13,12 +13,11 @@ protected:
 	std_shared_ptr< DataTypeObject > dataTypeObject;
 public:
 	DataWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
-	QString getText( ) const override;
-	bool setText( const QString &new_text ) const override;
+	virtual QString getText( ) const;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override;
 	std_shared_ptr< ITypeObject > getValue( ) const override;
-	
+
 	/// @brief 获取数据，对于单独的短位补齐策略，false 表示低位(f 补齐位 0x0f)，true 表示非补齐位( f 为 0xf0)
 	/// @param mod_is_suffix_data_var 短位补齐策略
 	/// @return 返回数据序列

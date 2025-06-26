@@ -14,10 +14,10 @@ protected:
 	std_shared_ptr< QString > placeholder;
 public:
 	ErrorMsgWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &error_msg );
-	QString getText( ) const override {
+	virtual QString getText( ) const {
 		return *text;
 	}
-	bool setText( const QString &new_text ) const override;
+	virtual bool setText( const QString &new_text ) const;
 	void setPlaceholderText( const QString &placeholder_text ) const override;
 	QString getPlaceholderText( ) const override {
 		return *placeholder;

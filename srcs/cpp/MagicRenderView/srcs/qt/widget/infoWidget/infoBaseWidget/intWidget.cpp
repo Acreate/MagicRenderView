@@ -27,24 +27,13 @@ IntWidget::IntWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) 
 		emit valueChanged( );
 	} );
 }
-QString IntWidget::getText( ) const {
-	return lineEdit->text( );
+int64_t IntWidget::getInt( ) const {
+	auto text = lineEdit->text( );
+	return text.toLongLong( );
 }
-bool IntWidget::setText( const QString &new_text ) const {
-	bool result = false;
-	auto varValue = new_text.toLongLong( &result );
-	if( result != false ) {
-		value->setVal( varValue );
-		lineEdit->setText( QString::number( varValue ) );
-		return true;
-	}
-	auto varValueDouble = new_text.toDouble( &result );
-	if( result != false ) {
-		value->setVal( varValueDouble );
-		lineEdit->setText( QString::number( varValueDouble ) );
-		return true;
-	}
-	return false;
+void IntWidget::setInt( const int64_t &new_value ) {
+	lineEdit->setText( QString::number( new_value ) );
+	value->setVal( new_value );
 }
 
 void IntWidget::setPlaceholderText( const QString &placeholder_text ) const {
