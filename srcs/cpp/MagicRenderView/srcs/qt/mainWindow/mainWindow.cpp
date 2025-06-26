@@ -14,57 +14,7 @@
 #include <qt/widget/nodeInfo.h>
 #include <qt/widget/nodeList.h>
 
-#include "../stack/varStack/base/baseVarStackEx.h"
-
-#include "../type/baseType/dataTypeObject.h"
-#include "../type/baseType/floatTypeObject.h"
-#include "../type/baseType/intTypeObject.h"
-#include "../type/lineType/vectorTypeObject.h"
-
-#include "../widget/infoWidget/infoBaseWidget/combinationWidget.h"
-#include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
-#include "../widget/infoWidget/infoBaseWidget/vectorWidget.h"
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
-	auto varStack = IVarStack::getInstance< BaseVarStackEx >( );
-	std_shared_ptr< ITypeObject > generateTubVar;
-	IInfoWidget *central;
-
-	CombinationWidget *vectorWidget = new CombinationWidget( nullptr, this, "结构体" );
-	generateTubVar = varStack->generateTVar< IntTypeObject >( );
-	generateTubVar->setUiTypeName( "整数" );
-	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
-	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
-	generateTubVar->setUiTypeName( "浮点" );
-	vectorWidget->append( generateTubVar );
-
-	auto uiTypeName = "不应该出现该节点";
-	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
-	vectorWidget->append( uiTypeName, generateTubVar );
-	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
-	vectorWidget->append( uiTypeName, generateTubVar );
-	vectorWidget->removeAll( uiTypeName );
-
-	uiTypeName = "重复节点";
-	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
-	vectorWidget->append( uiTypeName, generateTubVar );
-	generateTubVar = varStack->generateTVar< IntTypeObject >( );
-	vectorWidget->append( uiTypeName, generateTubVar );
-
-	auto vector = varStack->generateTVar< VectorTypeObject >( );
-	generateTubVar = varStack->generateTVar< IntTypeObject >( );
-	generateTubVar->setUiTypeName( "整数" );
-	vector->append( generateTubVar );
-	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
-	generateTubVar->setUiTypeName( "浮点" );
-	vector->append( generateTubVar );
-	vectorWidget->append( vector );
-	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
-
-	central = vectorWidget;
-	if( central )
-		setCentralWidget( central );
-	setWindowToIndexScreenCentre( 0 );
-	return;
 
 	nodeGraph = new ScrollNodeGraph( this );
 	NodeGraph *graph = nodeGraph->getNodeGraph( );
@@ -171,7 +121,6 @@ void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
-	return;
 	auto thisSize = size( );
 	listBtn->move( 10, listBtn->height( ) );
 	infoBtn->move( thisSize.width( ) - listBtn->width( ) - 20, infoBtn->height( ) );

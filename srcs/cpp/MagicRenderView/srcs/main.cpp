@@ -17,13 +17,6 @@
 #include "qt/type/lineType/vectorTypeObject.h"
 #include "qt/type/sequenceType/pairtTypeObject.h"
 #include "qt/stack/nodeStack/INodeStack.h"
-#include "qt/widget/infoWidget/infoBaseWidget/dataWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/combinationWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/floatWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/intWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/pairtWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/stringWidget.h"
-#include "qt/widget/infoWidget/infoBaseWidget/vectorWidget.h"
 
 /// @brief 检测到堆栈变量的生成
 void checkVarStack( ) {
