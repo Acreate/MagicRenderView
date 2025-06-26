@@ -3,6 +3,8 @@
 #pragma once
 #include "../IInfoWidget.h"
 
+
+
 class VectorTypeObject;
 class VectorWidget : public IInfoWidget {
 	Q_OBJECT;
@@ -11,6 +13,7 @@ protected:
 	std_shared_ptr< VectorTypeObject > value;
 public:
 	VectorWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
+
 	/// @brief 获取下标值
 	/// @param index 下标
 	/// @return 值，失败返回 NullTypeObject

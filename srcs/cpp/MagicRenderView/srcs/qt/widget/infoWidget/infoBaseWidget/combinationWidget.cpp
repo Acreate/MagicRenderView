@@ -15,6 +15,9 @@ bool CombinationWidget::remove( const QString &name ) {
 	return false;
 }
 bool CombinationWidget::append( const QString &name, const std_shared_ptr< ITypeObject > &value ) {
+	auto element = value.get( );
+	if( checkObj && checkObj( element ) == false )
+		return false;
 	return false;
 }
 std_shared_ptr< ITypeObject > CombinationWidget::atName( const QString &name ) const {
@@ -53,10 +56,12 @@ std_shared_ptr< ITypeObject > CombinationWidget::getValue( ) const {
 }
 bool CombinationWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	auto element = value.get( );
+	if( checkObj && checkObj( element ) == false )
+		return false;
 	auto combinationTypeObject = qobject_cast< CombinationTypeObject * >( element );
 	if( combinationTypeObject ) {
 		setMapValue( combinationTypeObject );
 		return true;
 	}
-	return IInfoWidget::setValue( value );
+	return true;
 }

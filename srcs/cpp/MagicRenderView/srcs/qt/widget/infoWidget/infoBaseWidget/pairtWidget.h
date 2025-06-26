@@ -18,10 +18,6 @@ protected:
 public:
 	PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 
-
-	void setPlaceholderText( const QString &placeholder_text ) const override;
-	QString getPlaceholderText( ) const override;
-
 	virtual const std_function< bool( const ITypeObject * ) > & getFirstVerify( ) const { return firstVerify; }
 	virtual void setFirstVerify( const std_function< bool( const ITypeObject * ) > &first_verify ) { firstVerify = first_verify; }
 	virtual const std_function< bool( const ITypeObject * ) > & getScondVerify( ) const { return scondVerify; }

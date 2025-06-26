@@ -45,6 +45,8 @@ void VectorWidget::setVector( const std_vector< std_shared_ptr< ITypeObject > > 
 		}
 }
 bool VectorWidget::append( const std_shared_ptr< ITypeObject > &type_object ) {
+	if( checkObj && checkObj( type_object.get( ) ) == false )
+		return false;
 	auto instance = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	auto uiTypeNames = type_object->getUiTypeNames( );
 	for( auto uiName : uiTypeNames ) {
@@ -74,6 +76,8 @@ std_shared_ptr< ITypeObject > VectorWidget::getValue( ) const {
 	return value;
 }
 bool VectorWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+	if( checkObj && checkObj( value.get( ) ) == false )
+		return false;
 	auto instance = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	auto vectorTypeObject = qobject_cast< VectorTypeObject * >( value.get( ) );
 	if( vectorTypeObject != nullptr ) {

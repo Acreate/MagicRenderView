@@ -23,13 +23,13 @@ PairtWidget::PairtWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 	pairtTypeObject->setUiTypeName( title_msg );
 }
 
-void PairtWidget::setPlaceholderText( const QString &placeholder_text ) const {
-}
-QString PairtWidget::getPlaceholderText( ) const {
-	return "";
-}
 bool PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
+	bool cond = value == nullptr;
+	if( cond )
+		return false;
 	auto typeObject = value.get( );
+	if( checkObj && checkObj( typeObject ) == false )
+		return false;
 	if( typeObject == nullptr )
 		return false;
 	auto pairtTypeObject = qobject_cast< PairtTypeObject * >( typeObject );
@@ -107,6 +107,8 @@ bool PairtWidget::setFirst( const std_shared_ptr< ITypeObject > &key ) const {
 	if( cond )
 		return false;
 	ITypeObject *element = key.get( );
+	if( checkObj && checkObj( element ) == false )
+		return false;
 	if( firstVerify && firstVerify( element ) == false )
 		return false;
 
@@ -136,6 +138,8 @@ bool PairtWidget::setScond( const std_shared_ptr< ITypeObject > &value ) const {
 	if( cond )
 		return false;
 	ITypeObject *element = value.get( );
+	if( checkObj && checkObj( element ) == false )
+		return false;
 	if( scondVerify && scondVerify( element ) == false )
 		return false;
 	auto charses = value->getUiTypeNames( );

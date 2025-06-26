@@ -12,6 +12,7 @@ class QLabel;
 class IInfoWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	std_function< bool( ITypeObject * ) > checkObj;
 	std_shared_ptr< IInfoWidgetStack > infoWidgetSharedStack;
 	std_function< std_shared_ptr< IInfoWidgetStack > ( ) > getStackFunction;
 protected:
@@ -26,7 +27,8 @@ public:
 	virtual void setTitle( const QString &new_title ) const;
 	virtual void setPlaceholderText( const QString &placeholder_text ) const;
 	virtual QString getPlaceholderText( ) const;
-
+	virtual const std_function< bool( ITypeObject * ) > & getCheckObj( ) const { return checkObj; }
+	virtual void setCheckObj( const std_function< bool( ITypeObject * ) > &check_obj ) { checkObj = check_obj; }
 	/// @brief 获取创建该变量的堆栈对象指针
 	/// @return 创建该变量的堆栈对象指针
 	virtual std_shared_ptr< IInfoWidgetStack > getStack( ) const {
