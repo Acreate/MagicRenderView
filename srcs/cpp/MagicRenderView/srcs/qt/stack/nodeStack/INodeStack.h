@@ -9,6 +9,7 @@ class NodeAddMenu;
 class INodeStack : public QObject {
 	Q_OBJECT;
 protected:
+	std_shared_ptr<INodeStack> INodeStackThis;
 	std_vector< QString > stackTypeNames;
 	std_function< std_shared_ptr< INodeStack >( ) > getStackFunction;
 	NodeAddMenu *menu;
@@ -29,6 +30,7 @@ public:
 	virtual NodeAddMenu * getMenu( ) const {
 		return menu;
 	}
+	virtual NodeAddMenu * getResetMenu( ) const;
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< INodeStack > > instanceVector;

@@ -18,6 +18,7 @@ public:
 		: NodeAddMenu( parent ) { }
 	~NodeAddMenu( ) override;
 	virtual bool initMenu( INodeStack *node_stack );
+	void clearMenuActions( QMenu *menu );
 Q_SIGNALS:
 	/// @brief 选项被正式激活
 	/// @param action 激活选项

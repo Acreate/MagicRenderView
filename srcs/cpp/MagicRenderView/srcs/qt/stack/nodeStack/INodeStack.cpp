@@ -8,10 +8,15 @@ std_vector< std_shared_ptr< INodeStack > > INodeStack::instanceVector;
 
 INodeStack::INodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function ): getStackFunction( get_stack_function ) {
 	menu = new NodeAddMenu( );
+	INodeStackThis = std_shared_ptr< INodeStack >( this, [] ( INodeStack * ) { } );
 }
 INodeStack::~INodeStack( ) {
 	if( menu )
 		delete menu;
+}
+NodeAddMenu * INodeStack::getResetMenu( ) const {
+	menu->initMenu( INodeStackThis.get( ) );
+	return getMenu( );
 }
 std_shared_ptr< INodeStack > INodeStack::getStdSharedPtrInstance( const QString &stack_name ) {
 	for( auto &ptr : instanceVector )
