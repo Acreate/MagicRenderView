@@ -15,21 +15,65 @@ CombinationWidget::CombinationWidget( const std_function< std_shared_ptr< IInfoW
 	value->setUiTypeName( title_msg );
 }
 bool CombinationWidget::remove( const QString &name ) {
+	auto infoWidgets = findChildren< IInfoWidget * >( );
+	for( auto windgetPtr : infoWidgets )
+		if( windgetPtr->getTitle( ) == name ) {
+			this->value->removeItem( name );
+			delete windgetPtr;
+			return true;
+		}
 	return false;
+}
+bool CombinationWidget::removeAll( const QString &name ) {
+	bool isRemove = remove( name );
+	if( isRemove == false )
+		return false;
+	do
+		isRemove = remove( name );
+	while( isRemove );
+	return true;
 }
 bool CombinationWidget::append( const QString &name, const std_shared_ptr< ITypeObject > &value ) {
 	auto element = value.get( );
 	if( checkObj && checkObj( element ) == false )
 		return false;
+
+	auto baseInfoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
+	auto names = element->getUiTypeNames( );
+	IInfoWidget *generateInfoWidget;
+	generateInfoWidget = baseInfoWidgetStack->generateInfoWidget( name );
+	if( generateInfoWidget == nullptr )
+		for( auto &uiName : names ) {
+			generateInfoWidget = baseInfoWidgetStack->generateInfoWidget( uiName );
+			if( generateInfoWidget != nullptr )
+				break;
+		}
+	if( generateInfoWidget == nullptr )
+		return false;
+	auto typeObject = this->value->getVarObject( name );
+	if( typeObject != nullptr ) {
+		remove( name );
+	}
+	this->value->setVarObject( value, name );
+	mainLayout->addWidget( generateInfoWidget );
+	generateInfoWidget->setValue( value );
+	generateInfoWidget->setTitle( name );
+	return true;
+}
+bool CombinationWidget::append( const std_shared_ptr< ITypeObject > &value ) {
+	auto element = value.get( );
+	if( checkObj && checkObj( element ) == false )
+		return false;
+
 	auto baseInfoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
 	auto names = element->getUiTypeNames( );
 	for( auto &uiName : names ) {
 		IInfoWidget *generateInfoWidget = baseInfoWidgetStack->generateInfoWidget( uiName );
 		if( generateInfoWidget ) {
-			this->value->setVarObject( value, name );
 			mainLayout->addWidget( generateInfoWidget );
 			generateInfoWidget->setValue( value );
-			generateInfoWidget->setTitle( name );
+			this->value->setVarObject( value, uiName );
+			generateInfoWidget->setTitle( uiName );
 			return true;
 		}
 	}

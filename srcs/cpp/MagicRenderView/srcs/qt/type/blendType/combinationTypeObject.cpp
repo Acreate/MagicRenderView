@@ -24,7 +24,7 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::removeEndElemnt( ) {
 	std_shared_ptr< ITypeObject > shared( new NullTypeObject( [] { return IVarStack::getInstance< BaseVarStackEx >( ); } ) ); // 返回一个空指针
 	return shared;
 }
-std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &&var_name ) {
+std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &var_name ) {
 	auto itorater = dataStruct->begin( );
 	auto end = dataStruct->end( );
 	for( ; itorater != end; ++itorater )

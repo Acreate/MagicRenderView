@@ -2,8 +2,7 @@
 
 #include "qt/stack/varStack/IVarStack.h"
 #include "qt/type/baseType/nullTypeObject.h"
-PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet ): PairtTypeObject( gener_var_stack, alias_type_name, parnet, nullptr, nullptr ) {
-}
+
 PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ): ITypeObject( gener_var_stack, alias_type_name, parent ),
 	first( first ), scond( scond ) {
 	if( this->first == nullptr )
@@ -11,8 +10,7 @@ PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr< IVarStack 
 	if( this->scond == nullptr )
 		this->scond = varStackSharedPtr.get( )->generateTVar< NullTypeObject >( );
 }
-PairtTypeObject::PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ) : PairtTypeObject( gener_var_stack, { }, nullptr, first, scond ) {
-}
+
 PairtTypeObject & PairtTypeObject::operator=( const PairtTypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )
 		return *this;

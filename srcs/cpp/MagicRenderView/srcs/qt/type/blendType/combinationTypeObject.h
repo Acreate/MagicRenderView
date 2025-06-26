@@ -33,7 +33,7 @@ public:
 
 	virtual std_shared_ptr< ITypeObject > removeEndElemnt( );
 
-	virtual std_shared_ptr< ITypeObject > removeItem( const QString &&var_name );
+	virtual std_shared_ptr< ITypeObject > removeItem( const QString &var_name );
 
 	virtual std_shared_ptr< ITypeObject > setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &var_name );
 	/// @brief 获取成员变量

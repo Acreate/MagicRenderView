@@ -35,10 +35,29 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
 	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
 	generateTubVar->setUiTypeName( "浮点" );
-	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
-	generateTubVar = varStack->generateTVar< VectorTypeObject >( );
-	generateTubVar->setUiTypeName( "数组" );
-	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
+	vectorWidget->append( generateTubVar );
+
+	auto uiTypeName = "不应该出现该节点";
+	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
+	vectorWidget->append( uiTypeName, generateTubVar );
+	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
+	vectorWidget->append( uiTypeName, generateTubVar );
+	vectorWidget->removeAll( uiTypeName );
+
+	uiTypeName = "重复节点";
+	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
+	vectorWidget->append( uiTypeName, generateTubVar );
+	generateTubVar = varStack->generateTVar< IntTypeObject >( );
+	vectorWidget->append( uiTypeName, generateTubVar );
+
+	auto vector = varStack->generateTVar< VectorTypeObject >( );
+	generateTubVar = varStack->generateTVar< IntTypeObject >( );
+	generateTubVar->setUiTypeName( "整数" );
+	vector->append( generateTubVar );
+	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
+	generateTubVar->setUiTypeName( "浮点" );
+	vector->append( generateTubVar );
+	vectorWidget->append( vector );
 	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
 
 	central = vectorWidget;
