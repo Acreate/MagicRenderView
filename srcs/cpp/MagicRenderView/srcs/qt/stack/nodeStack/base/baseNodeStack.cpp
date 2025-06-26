@@ -1,5 +1,7 @@
 ﻿#include "./baseNodeStack.h"
 
+#include "../../../menu/nodeAddMenu.h"
+
 #include "qt/node/nodeWidget/base/nodeFileInfo.h"
 
 #define emplace_back_NodeGenerate( type_, parent_, window_flags_, first_name_, ... ) \
@@ -22,9 +24,10 @@
 #define Type_to_QString( type_ ) QString( #type_)
 BaseNodeStack::BaseNodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function ) : INodeStack( get_stack_function ), nodeGenerate( new std_vector< generateNodePairt > ) {
 	stackTypeNames.clear( );
-	stackTypeNames.emplace_back( "常规节点" );
+	stackTypeNames.emplace_back( "基础节点" );
 	setObjectName( BaseNodeStack::staticMetaObject.className( ) );
 	emplace_back_NodeGenerate( NodeFileInfo, nullptr, Qt::WindowFlags(), "文件信息节点" );
+	menu->initMenu( this );
 }
 INodeWidget * BaseNodeStack::_newNode( const QString &type_name ) const {
 	size_t count = nodeGenerate->size( );

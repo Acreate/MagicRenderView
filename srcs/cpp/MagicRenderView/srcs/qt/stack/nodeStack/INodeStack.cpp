@@ -1,7 +1,18 @@
 ﻿#include "./INodeStack.h"
 
+#include <QMenu>
+
+#include "../../menu/nodeAddMenu.h"
+
 std_vector< std_shared_ptr< INodeStack > > INodeStack::instanceVector;
 
+INodeStack::INodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function ): getStackFunction( get_stack_function ) {
+	menu = new NodeAddMenu( );
+}
+INodeStack::~INodeStack( ) {
+	if( menu )
+		delete menu;
+}
 std_shared_ptr< INodeStack > INodeStack::getStdSharedPtrInstance( const QString &stack_name ) {
 	for( auto &ptr : instanceVector )
 		if( ptr->metaObject( )->className( ) == stack_name && qobject_cast< INodeStack * >( ptr.get( ) ) )
@@ -13,5 +24,5 @@ std_shared_ptr< INodeStack > INodeStack::getStdSharedPtrInstance( const QString 
 	return nullptr;
 }
 INodeStack * INodeStack::getInstance( const QString &stack_name ) {
-	return getStdSharedPtrInstance(stack_name).get(  );
+	return getStdSharedPtrInstance( stack_name ).get( );
 }

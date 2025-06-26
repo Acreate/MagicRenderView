@@ -6,13 +6,14 @@
 
 #include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
 
-bool NodeAddMenu::_initMenu( INodeStack *node_stack ) {
+bool NodeAddMenu::initMenu( INodeStack *node_stack ) {
 	if( node_stack == nullptr )
 		return false;
 
 	QMenu *topMenu = new QMenu( this );
 	addMenu( topMenu );
-	topMenu->setTitle( node_stack->getStackTypeNames( )[ 0 ] );
+	QString stackTypeName = node_stack->getStackTypeNames( )[ 0 ];
+	topMenu->setTitle( stackTypeName );
 	auto pairs = node_stack->permissionNodeType( );
 	for( auto &[ key,value ] : pairs )
 		topMenu->addAction( new NodeAddAction( this, key ) );

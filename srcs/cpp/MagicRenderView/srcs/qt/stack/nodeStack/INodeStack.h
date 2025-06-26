@@ -5,14 +5,16 @@
 #include "qt/node/nodeWidget/INodeWidget.h"
 #include "qt/type/ITypeObject.h"
 
+class NodeAddMenu;
 class INodeStack : public QObject {
 	Q_OBJECT;
 protected:
 	std_vector< QString > stackTypeNames;
 	std_function< std_shared_ptr< INodeStack >( ) > getStackFunction;
+	NodeAddMenu *menu;
 public:
-	INodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function )
-		: getStackFunction( get_stack_function ) { }
+	INodeStack( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function );
+	~INodeStack( ) override;
 	const std_vector< QString > & getStackTypeNames( ) const { return stackTypeNames; }
 	const std_function< std_shared_ptr< INodeStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 public:
@@ -24,6 +26,9 @@ public:
 	/// @brief 获取允许生成列表
 	/// @return 类名，别名列表
 	virtual std_vector< std_pairt< QString, std_vector< QString > > > permissionNodeType( ) const = 0;
+	virtual NodeAddMenu * getMenu( ) const {
+		return menu;
+	}
 protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< INodeStack > > instanceVector;

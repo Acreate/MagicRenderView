@@ -122,7 +122,9 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	selectNodeWidget = nullptr;
 	selectNodeComponent = nullptr;
 	nodeMenu = new NodeAddMenu( this );
-	nodeMenu->init< BaseNodeStack >( );
+	auto nodeAddMenu = INodeStack::getInstance< BaseNodeStack >( )->getMenu( );
+	nodeAddMenu->setTitle( "标准节点" );
+	nodeMenu->addMenu( nodeAddMenu );
 	setMouseTracking( true );
 	mouseEventStatus = MouseEventType::Init;
 
@@ -175,16 +177,7 @@ bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_n
 }
 
 void NodeGraph::updateMinSize( ) {
-	QWidget *widget;
-	QRect newRect;
-	auto mainWindow = getMainWindow( );
-	if( mainWindow == nullptr ) {
-		widget = qobject_cast< QWidget * >( parent( ) );
-		if( widget == nullptr )
-			widget = this;
-		newRect = widget->rect( );
-	} else
-		newRect = mainWindow->rect( );
+	QRect newRect = this->contentsRect( );
 	for( auto nodeWidgetPtr : nodeWidgets )
 		newRect = newRect.united( nodeWidgetPtr->geometry( ) );
 	QSize newSize = newRect.size( );

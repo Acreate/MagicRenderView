@@ -124,9 +124,7 @@ void MainWindow::resizeEvent( QResizeEvent *event ) {
 	auto thisSize = size( );
 	listBtn->move( 10, listBtn->height( ) );
 	infoBtn->move( thisSize.width( ) - listBtn->width( ) - 20, infoBtn->height( ) );
-
 	auto minWidth = thisSize.width( ) / 3;
-
 	auto geometry = listBtn->geometry( );
 	nodeList->setGeometry( geometry.x( ), geometry.y( ) + geometry.height( ), minWidth, thisSize.height( ) - geometry.height( ) - geometry.y( ) - 20 );
 	geometry = infoBtn->geometry( );
