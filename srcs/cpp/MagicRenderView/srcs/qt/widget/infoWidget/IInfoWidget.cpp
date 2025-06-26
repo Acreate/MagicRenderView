@@ -20,8 +20,7 @@ IInfoWidget::IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 	mainLayout = new QVBoxLayout( this );
 	mainLayout->setSpacing( 0 );
 	title = new QLabel( this );
-	mainLayout->addWidget( title );
-	mainLayout->setAlignment( title, Qt::AlignRight | Qt::AlignVCenter );
+	mainLayout->addWidget( title, 0, Qt::AlignRight | Qt::AlignVCenter );
 	title->setText( title_msg );
 }
 QString IInfoWidget::getTitle( ) const {

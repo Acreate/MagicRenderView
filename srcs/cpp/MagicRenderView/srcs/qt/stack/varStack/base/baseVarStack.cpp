@@ -13,27 +13,27 @@
 
 #define emplace_back_generateInfos(  element_, type_, ...  )\
 	element.first.first = type_::staticMetaObject.className( ) ;\
-	element.first.second = {__VA_ARGS__ };\
+	element.first.second = {#type_,__VA_ARGS__ };\
 	element_.second = [this]( )  {\
 		return  new type_(	[this]()  {\
 			return IVarStack::getInstance( this->metaObject(  )->className(  ) );\
-	}, std_vector< QString >( {type_::staticMetaObject.className( ),__VA_ARGS__} )) ;\
+	}, std_vector< QString >( {type_::staticMetaObject.className( ),#type_,__VA_ARGS__} )) ;\
 	};\
 	generateInfos.emplace_back( element )
 
 BaseVarStack::BaseVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ): IVarStack( get_stack_function_get_function, parent ) {
 	stackTypeNames.clear( );
 	stackTypeNames.emplace_back( BaseVarStack::staticMetaObject.className( ) );
-	
+
 	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;;
-	emplace_back_generateInfos(  element, IntTypeObject, "int" );
-	emplace_back_generateInfos(  element, FloatTypeObject, "float" );
-	emplace_back_generateInfos(  element, NullTypeObject, "nullptr" );
-	emplace_back_generateInfos(  element, DataTypeObject, "binary" );
-	emplace_back_generateInfos(  element, StringTypeObject, "string" );
-	emplace_back_generateInfos(  element, CombinationTypeObject, "struct" );
-	emplace_back_generateInfos(  element, VectorTypeObject, "array" );
-	emplace_back_generateInfos(  element, PairtTypeObject, "pairt" );
+	emplace_back_generateInfos( element, IntTypeObject, "int", "int_t", "char", "char_t", "size_t", "count" );
+	emplace_back_generateInfos( element, FloatTypeObject, "float", "double", "double_t", "float_t" );
+	emplace_back_generateInfos( element, NullTypeObject, "nullptr", "null", "null", "void", "NULL" );
+	emplace_back_generateInfos( element, DataTypeObject, "binary" );
+	emplace_back_generateInfos( element, StringTypeObject, "string", "text" );
+	emplace_back_generateInfos( element, CombinationTypeObject, "struct", "class" );
+	emplace_back_generateInfos( element, VectorTypeObject, "array", "vector" );
+	emplace_back_generateInfos( element, PairtTypeObject, "pairt", "map" );
 }
 ITypeObject * BaseVarStack::newVar( const QString &type_name ) const {
 	for( auto &element : generateInfos )

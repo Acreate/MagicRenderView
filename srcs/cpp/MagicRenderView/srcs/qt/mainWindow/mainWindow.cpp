@@ -19,6 +19,7 @@
 #include "../type/baseType/dataTypeObject.h"
 #include "../type/baseType/floatTypeObject.h"
 #include "../type/baseType/intTypeObject.h"
+#include "../type/lineType/vectorTypeObject.h"
 
 #include "../widget/infoWidget/infoBaseWidget/combinationWidget.h"
 #include "../widget/infoWidget/infoBaseWidget/dataWidget.h"
@@ -34,6 +35,9 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
 	generateTubVar = varStack->generateTVar< FloatTypeObject >( );
 	generateTubVar->setUiTypeName( "浮点" );
+	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
+	generateTubVar = varStack->generateTVar< VectorTypeObject >( );
+	generateTubVar->setUiTypeName( "数组" );
 	vectorWidget->append( generateTubVar->getUiTypeNames( )[ 0 ], generateTubVar );
 	qDebug( ) << __LINE__ << " : " << vectorWidget->getValue( )->toString( );
 

@@ -1,7 +1,10 @@
 ﻿#include "./combinationWidget.h"
 
 #include <QLabel>
+#include <QVBoxLayout>
 
+#include "../../../stack/infoWidgetStack/IInfoWidgetStack.h"
+#include "../../../stack/infoWidgetStack/base/baseInfoWidgetStack.h"
 #include "../../../stack/varStack/IVarStack.h"
 #include "../../../stack/varStack/base/baseVarStackEx.h"
 
@@ -18,13 +21,30 @@ bool CombinationWidget::append( const QString &name, const std_shared_ptr< IType
 	auto element = value.get( );
 	if( checkObj && checkObj( element ) == false )
 		return false;
+	auto baseInfoWidgetStack = IInfoWidgetStack::getInstance< BaseInfoWidgetStack >( );
+	auto names = element->getUiTypeNames( );
+	for( auto &uiName : names ) {
+		IInfoWidget *generateInfoWidget = baseInfoWidgetStack->generateInfoWidget( uiName );
+		if( generateInfoWidget ) {
+			this->value->setVarObject( value, name );
+			mainLayout->addWidget( generateInfoWidget );
+			generateInfoWidget->setValue( value );
+			generateInfoWidget->setTitle( name );
+			return true;
+		}
+	}
 	return false;
 }
 std_shared_ptr< ITypeObject > CombinationWidget::atName( const QString &name ) const {
-	return { };
+	auto var = this->value->getVarObject( name );
+	return var;
 }
 std_vector< std_pairt< QString, std_shared_ptr< ITypeObject > > > CombinationWidget::getMapValue( ) const {
-	return { };
+	auto pairs = value->getStructInfo( );
+	std_vector< std_pairt< QString, std_shared_ptr< ITypeObject > > > result;
+	for( auto sharedPtr : pairs )
+		result.emplace_back( sharedPtr->second, sharedPtr->first );
+	return result;
 }
 void CombinationWidget::setMapValue( const std_vector< std_pairt< QString, std_shared_ptr< ITypeObject > > > &value_std_vector ) const {
 	for( auto element : value_std_vector )
@@ -44,14 +64,6 @@ void CombinationWidget::setMapValue( const CombinationTypeObject *value_std_vect
 	}
 }
 std_shared_ptr< ITypeObject > CombinationWidget::getValue( ) const {
-	value->clear( );
-	auto infoWidgets = findChildren< IInfoWidget * >( );
-	for( auto infoWidget : infoWidgets ) {
-		auto stdShared = infoWidget->getValue( );
-		auto title = infoWidget->getTitle( );
-		value->setVarObject( stdShared, title );
-	}
-	value->appendUiTypeName( this->title->text( ) );
 	return value;
 }
 bool CombinationWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
