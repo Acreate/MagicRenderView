@@ -14,6 +14,7 @@ class IInfoWidget : public QWidget {
 protected:
 	std_function< bool( ITypeObject * ) > checkObj;
 	std_shared_ptr< IInfoWidgetStack > infoWidgetSharedStack;
+	std_shared_ptr< ITypeObject > synObjPtr;
 	std_function< std_shared_ptr< IInfoWidgetStack > ( ) > getStackFunction;
 protected:
 	QLabel *title;
@@ -35,6 +36,12 @@ public:
 	}
 	virtual std_shared_ptr< ITypeObject > getValue( ) const;
 	virtual bool setValue( const std_shared_ptr< ITypeObject > &value ) const { return false; }
+	virtual void setSynObj( const std_shared_ptr< ITypeObject > &value ) {
+		synObjPtr = value;
+	}
+	virtual std_shared_ptr< ITypeObject > getSynObj( ) const {
+		return synObjPtr;
+	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

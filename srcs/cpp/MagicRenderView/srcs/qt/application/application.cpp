@@ -1,5 +1,7 @@
 ﻿#include "application.h"
 
+#include <qboxlayout.h>
+
 #include "../node/nodeComponent/INodeComponent.h"
 #include "../node/nodeWidget/INodeWidget.h"
 
@@ -18,6 +20,30 @@ size_t Application::getID( const INodeWidget *node_widget ) {
 	return mainNodeGraph->getNodeWidgetID( node_widget );
 }
 
+std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
+	std_vector< QWidget * > result;
+	int count = main_widget->count( );
+	for( int index = 0; index < count; ++count ) {
+		auto layoutItem = main_widget->itemAt( index );
+		if( layoutItem->isEmpty( ) )
+			continue;
+		auto widget = layoutItem->widget( );
+		if( widget == nullptr )
+			continue;
+		result.emplace_back( widget );
+	}
+	return result;
+}
+void Application::deleteLayoutWidgets( QBoxLayout *main_widget ) {
+	int count = main_widget->count( );
+	for( int index = 0; index < count; ++index ) {
+		auto layoutItem = main_widget->itemAt( index );
+		auto widget = layoutItem->widget( );
+		if( widget == nullptr )
+			continue;
+		delete widget;
+	}
+}
 Application * Application::getApplicationInstancePtr( ) {
 	return qobject_cast< Application * >( qApp );
 }

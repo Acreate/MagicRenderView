@@ -43,14 +43,14 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 	connect( selectPath, &QPushButton::clicked, [ this] {
 		QFileInfo info( pathText->text( ) + "/" + appendPathText->text( ) );
 		pathText->setText( QDir::cleanPath( info.absoluteFilePath( ) ) );
-		appendPathText->clear( );
+		setPath( QDir::cleanPath( info.absoluteFilePath( ) ) );
 		emit pathText->editingFinished( );
 	} );
 
 	selectPath = new QPushButton( "清除路径", this );
 	mainLayout->addWidget( selectPath );
 	connect( selectPath, &QPushButton::clicked, [ this] {
-		pathText->clear( );
+		setPath( "" );
 	} );
 
 	connect( appendPathText, &QLineEdit::editingFinished, [this] {
@@ -58,10 +58,7 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 	} );
 
 	connect( pathText, &QLineEdit::editingFinished, [this] {
-		QFileInfo info( pathText->text( ) + "/" );
-		QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
-		pathText->setText( absoluteFilePath );
-		stringTypeObject->setString( absoluteFilePath );
+		setPath( pathText->text( ) );
 		emit valueChanged( );
 	} );
 }
@@ -73,6 +70,8 @@ bool PathWidget::setPath( const QString &new_text ) const {
 	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
 	pathText->setText( absoluteFilePath );
 	stringTypeObject->setString( absoluteFilePath );
+	if( *synObjPtr != nullptr )
+		*synObjPtr = *stringTypeObject;
 	return true;
 }
 
@@ -88,9 +87,5 @@ std_shared_ptr< ITypeObject > PathWidget::getValue( ) const {
 bool PathWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( *value == nullptr )
 		return false;
-	QFileInfo info( value->toString( ) + "/" );
-	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
-	pathText->setText( absoluteFilePath );
-	stringTypeObject->setString( absoluteFilePath );
-	return true;
+	return setPath( value->toString( ) );
 }

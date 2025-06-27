@@ -3,6 +3,9 @@
 #pragma once
 
 #include <QApplication>
+
+#include "../widget/infoWidget/IInfoWidget.h"
+class QBoxLayout;
 class INodeWidget;
 class INodeComponent;
 class NodeGraph;
@@ -12,6 +15,14 @@ protected:
 	/// @brief 渲染面板
 	static NodeGraph *mainNodeGraph;
 public:
+	/// @brief 获取布局当中所有的窗口
+	/// @param main_widget 布局
+	/// @return 窗口列表
+	static std_vector<QWidget*> getLayoutWidgets(QBoxLayout* main_widget);
+	/// @brief 删除所有布局当中的窗口
+	/// @param main_widget 布局
+	static void deleteLayoutWidgets(QBoxLayout* main_widget);
+	
 	/// @brief 获取实例指针
 	/// @return 成功返回 true
 	static Application* getApplicationInstancePtr();
