@@ -179,6 +179,11 @@ void checkNodeStack( ) {
 /// @brief 测试函数
 void checkFunction( ) {
 	qDebug( ) << "==========================";
+	if( Application::getApplicationInstancePtr( ) )
+		qDebug( ) << __LINE__ << " : " << "获取实例指针成功";
+	else
+		qDebug( ) << __LINE__ << " : " << "获取实例指针失败";
+
 	auto userFunctionDeclaration = UserFunctionDeclaration(
 		"file fileInfo(string,string); ",
 		[]( ) {
@@ -403,7 +408,6 @@ int main( int argc, char *argv[ ] ) {
 	checkTools( );
 	checkSerializeVar( );
 #endif
-
 
 	MainWindow mainwidget;
 	mainwidget.show( );

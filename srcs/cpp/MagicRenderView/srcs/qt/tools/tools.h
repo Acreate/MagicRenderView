@@ -81,6 +81,36 @@ namespace tools {
 	}
 	namespace vector {
 
+		/// @brief 遍历序列，根据函数返回决定是否结束遍历
+		/// @brief 在临时构成 find_unity_function 当中，使用该方式调用
+		/// @code tools::vector::forInVector<int>( { 1, 2, 3, 4 }, [] ( int &p ) {		return true;	} ); @endcode 
+		/// @tparam TUnity 遍历元素
+		/// @param vector 被遍历的迭代器
+		/// @param find_unity_function 结束决定函数
+		template< typename TUnity >
+		void forInVector( std_vector< TUnity > &vector, const std_function< bool( TUnity & ) > &find_unity_function ) {
+			size_t count = vector.size( ), index = 0;
+			TUnity *data = vector.data( );
+			for( ; index < count; ++index )
+				if( find_unity_function( data[ index ] ) )
+					break;
+		}
+
+		/// @brief 遍历序列，根据函数返回决定是否结束遍历
+		/// @brief 在临时构成 find_unity_function 当中，使用该方式调用
+		/// @code tools::vector::forInVector<int>( { 1, 2, 3, 4 }, [] (const int &p ) {		return true;	} ); @endcode 
+		/// @tparam TUnity 遍历元素
+		/// @param vector 被遍历的迭代器
+		/// @param find_unity_function 结束决定函数
+		template< typename TUnity >
+		void forInVector( const std_vector< TUnity > &vector, const std_function< bool( const TUnity & ) > &find_unity_function ) {
+			size_t count = vector.size( ), index = 0;
+			const TUnity *data = vector.data( );
+			for( ; index < count; ++index )
+				if( find_unity_function( data[ index ] ) )
+					break;
+		}
+
 		/// @brief 在序列中查找匹配的元素，并且返回该迭代器
 		/// @tparam TUnity 序列中的匹配类型的元素
 		/// @param begin 序列开始位置

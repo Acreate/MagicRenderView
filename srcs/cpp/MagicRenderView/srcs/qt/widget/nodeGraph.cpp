@@ -152,8 +152,10 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			tools::debug::printError( functionName );
 	} );
 	mousePosLabel = new QLabel( this );
-	mousePosLabel->setPixmap( QPixmap::fromImage( QImage( ":/images/add_node.png" ) ) );
-	mousePosLabel->hide( );
+	QImage image( ":/images/add_node.png" );
+	mousePosLabel->setPixmap( QPixmap::fromImage( image ) );
+	mousePosLabel->show( );
+	mousePosLabelHalfSize = image.size( ) / 2;
 	Application::setNewNodeGraph( this );
 }
 NodeGraph::~NodeGraph( ) {
@@ -203,14 +205,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						nodeMenu->show( );
 						break;
 					case Qt::LeftButton : // 配置位置
-						if( mousePosLabel->isHidden( ) ) {
-							mousePosLabel->show( );
-							mousePosLabel->move( currentMouseInWidgetPos );
-						} else if( mousePosLabel->geometry( ).contains( currentMouseInWidgetPos ) ) {
-							nodeMenu->move( cursorPos );
-							nodeMenu->show( );
-						} else
-							mousePosLabel->move( currentMouseInWidgetPos );
+						QPoint point( currentMouseInWidgetPos.x( ) - mousePosLabelHalfSize.width( ), currentMouseInWidgetPos.y( ) - mousePosLabelHalfSize.height( ) );
+						mousePosLabel->move( point );
 						mousePosLabel->raise( );
 						break;
 				}

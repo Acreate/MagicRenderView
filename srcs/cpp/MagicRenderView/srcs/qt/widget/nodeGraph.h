@@ -29,6 +29,8 @@ protected:
 	NodeAddMenu *nodeMenu;
 	/// @brief 用于显示鼠标位置
 	QLabel *mousePosLabel;
+	/// @brief 点击位置的绘制一半大小
+	QSize mousePosLabelHalfSize;
 	/// @brief 当前鼠标状态
 	MouseEventType mouseEventStatus;
 	// 鼠标全局位置

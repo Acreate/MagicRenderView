@@ -18,6 +18,9 @@ size_t Application::getID( const INodeWidget *node_widget ) {
 	return mainNodeGraph->getNodeWidgetID( node_widget );
 }
 
+Application * Application::getApplicationInstancePtr( ) {
+	return qobject_cast< Application * >( qApp );
+}
 void Application::setWindowToIndexScreenCentre( size_t index ) {
 	QWindowList windowList = qGuiApp->allWindows( );
 	for( QWindow *&win : windowList )
