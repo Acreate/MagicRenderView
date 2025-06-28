@@ -19,8 +19,10 @@ void IInfoWidget::synValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( *typeObject == nullptr )
 		return;
 	auto uiTypeNames = element->getUiTypeNames( );
+	auto getStackFunction = element->getGetStackFunction(  );
 	*element = *typeObject;
 	element->setUiTypeNames( uiTypeNames );
+	element->setGetStackFunction( getStackFunction );
 }
 IInfoWidget::IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): QWidget( parent ), getStackFunction( get_stack_function ) {
 	if( !getStackFunction )

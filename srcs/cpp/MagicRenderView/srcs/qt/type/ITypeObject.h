@@ -206,6 +206,8 @@ protected:
 	std_function< std_shared_ptr< IVarStack > ( ) > getStackFunction;
 public:
 	ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	virtual const std_function<std_shared_ptr<IVarStack>()> & getGetStackFunction( ) const { return getStackFunction; }
+	virtual void setGetStackFunction( const std_function<std_shared_ptr<IVarStack>()> &get_stack_function ) { getStackFunction = get_stack_function; }
 	ITypeObject( const ITypeObject &other );
 	virtual ITypeObject & operator=( const ITypeObject &other );
 	/// @brief 比较两个对象。并且返回
