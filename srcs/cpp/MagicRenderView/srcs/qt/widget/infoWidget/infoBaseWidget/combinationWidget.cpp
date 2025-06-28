@@ -20,6 +20,8 @@ bool CombinationWidget::remove( const QString &name ) {
 		if( windgetPtr->getTitle( ) == name ) {
 			this->value->removeItem( name );
 			delete windgetPtr;
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 	return false;
@@ -31,6 +33,8 @@ bool CombinationWidget::removeAll( const QString &name ) {
 	do
 		isRemove = remove( name );
 	while( isRemove );
+	synValue( );
+	emit valueChanged( );
 	return true;
 }
 bool CombinationWidget::append( const QString &name, const std_shared_ptr< ITypeObject > &value ) {
@@ -51,13 +55,14 @@ bool CombinationWidget::append( const QString &name, const std_shared_ptr< IType
 	if( generateInfoWidget == nullptr )
 		return false;
 	auto typeObject = this->value->getVarObject( name );
-	if( typeObject != nullptr ) {
+	if( typeObject != nullptr )
 		remove( name );
-	}
 	this->value->setVarObject( value, name );
 	mainLayout->addWidget( generateInfoWidget );
 	generateInfoWidget->setValue( value );
 	generateInfoWidget->setTitle( name );
+	synValue( );
+	emit valueChanged( );
 	return true;
 }
 bool CombinationWidget::append( const std_shared_ptr< ITypeObject > &value ) {
@@ -74,6 +79,8 @@ bool CombinationWidget::append( const std_shared_ptr< ITypeObject > &value ) {
 			generateInfoWidget->setValue( value );
 			this->value->setVarObject( value, uiName );
 			generateInfoWidget->setTitle( uiName );
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 	}
@@ -94,6 +101,8 @@ void CombinationWidget::setMapValue( const std_vector< std_pairt< QString, std_s
 	for( auto element : value_std_vector )
 		if( element.second != nullptr )
 			thisSharper->append( element.first, element.second );
+	synValue( );
+	emit valueChanged( );
 }
 void CombinationWidget::setMapValue( const std_shared_ptr< CombinationTypeObject > &value_std_vector ) const {
 	setMapValue( value_std_vector.get( ) );
@@ -106,6 +115,8 @@ void CombinationWidget::setMapValue( const CombinationTypeObject *value_std_vect
 			continue;
 		thisSharper->append( element->second, element->first );
 	}
+	synValue( );
+	emit valueChanged( );
 }
 std_shared_ptr< ITypeObject > CombinationWidget::getValue( ) const {
 	return value;
@@ -117,7 +128,9 @@ bool CombinationWidget::setValue( const std_shared_ptr< ITypeObject > &value ) c
 	auto combinationTypeObject = qobject_cast< CombinationTypeObject * >( element );
 	if( combinationTypeObject ) {
 		setMapValue( combinationTypeObject );
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
-	return true;
+	return false;
 }

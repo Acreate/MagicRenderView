@@ -23,8 +23,6 @@ public:
 	virtual INodeWidget * getNodeWidget( ) const {
 		return currentNodeWidget;
 	}
-	/// @brief 清空面板
-	virtual void clearInfoPanel( );
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
 	virtual void setMainWindow( MainWindow *const main_window ) { mainWindow = main_window; }
 };

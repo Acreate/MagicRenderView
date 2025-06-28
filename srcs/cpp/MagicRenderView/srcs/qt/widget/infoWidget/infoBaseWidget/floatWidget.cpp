@@ -23,15 +23,18 @@ FloatWidget::FloatWidget( const std_function< std_shared_ptr< IInfoWidgetStack >
 		auto varValue = lineEdit->text( ).toLongLong( &result );
 		if( result )
 			value->setVal( varValue );
+		synValue( );
 		emit valueChanged( );
 	} );
 }
 double FloatWidget::getFloat( ) const {
-	return lineEdit->text( ).toDouble(  );
+	return lineEdit->text( ).toDouble( );
 }
 void FloatWidget::setFloat( const double &new_value ) {
 	value->setVal( new_value );
 	lineEdit->setText( QString::number( new_value ) );
+	synValue( );
+	emit valueChanged( );
 }
 
 void FloatWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -53,6 +56,8 @@ bool FloatWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		auto val = intTypeObject->getVal( );
 		this->value->setVal( intTypeObject->getVal( ) );
 		lineEdit->setText( QString::number( val ) );
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
 	auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
@@ -60,6 +65,8 @@ bool FloatWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		auto val = floatTypeObject->getVal( );
 		this->value->setVal( val );
 		lineEdit->setText( QString::number( val ) );
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
 	auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
@@ -69,8 +76,10 @@ bool FloatWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		if( isOk ) {
 			this->value->setVal( converValue );
 			lineEdit->setText( QString::number( converValue ) );
+			synValue( );
+			emit valueChanged( );
+			return true;
 		}
-		return true;
 	}
 	return false;
 }

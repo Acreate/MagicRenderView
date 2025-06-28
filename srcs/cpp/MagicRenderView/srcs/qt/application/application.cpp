@@ -38,6 +38,8 @@ void Application::deleteLayoutWidgets( QBoxLayout *main_widget ) {
 	int count = main_widget->count( );
 	for( int index = 0; index < count; ++index ) {
 		auto layoutItem = main_widget->itemAt( index );
+		if( layoutItem == nullptr )
+			continue;
 		auto widget = layoutItem->widget( );
 		if( widget == nullptr )
 			continue;

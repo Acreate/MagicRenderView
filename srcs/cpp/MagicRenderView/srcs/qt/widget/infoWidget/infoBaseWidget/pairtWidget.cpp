@@ -77,6 +77,8 @@ bool PairtWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 
 	mainLayout->addWidget( *thisFirstWidget );
 	mainLayout->addWidget( *thisScondWidget );
+	synValue( );
+	emit valueChanged( );
 	return true;
 }
 std_shared_ptr< ITypeObject > PairtWidget::getValue( ) const {
@@ -128,6 +130,8 @@ bool PairtWidget::setFirst( const std_shared_ptr< ITypeObject > &key ) const {
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 	}
@@ -154,6 +158,8 @@ bool PairtWidget::setScond( const std_shared_ptr< ITypeObject > &value ) const {
 			if( *infoWidget )
 				delete *infoWidget;
 			*infoWidget = widgetStack;
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 	}

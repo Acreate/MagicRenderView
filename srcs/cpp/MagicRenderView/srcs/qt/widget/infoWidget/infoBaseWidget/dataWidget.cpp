@@ -22,7 +22,6 @@ QString DataWidget::getText( ) const {
 	return edit->toPlainText( );
 }
 
-
 void DataWidget::setPlaceholderText( const QString &placeholder_text ) const {
 	edit->setPlaceholderText( placeholder_text );
 }
@@ -42,34 +41,88 @@ bool DataWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 	if( *element == nullptr )
 		return false;
 	auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
-	if( stringTypeObject )
-		return edit->setHex( element->toString( ).toUtf8( ).toHex( ) );
+	if( stringTypeObject ) {
+		bool hex = edit->setHex( element->toString( ).toUtf8( ).toHex( ) );
+		if( hex ) {
+			synValue( );
+			emit valueChanged( );
+		}
+		return hex;
+	}
 	auto intTypeObject = qobject_cast< IntTypeObject * >( element );
-	if( intTypeObject )
-		return edit->setHex( intTypeObject->getVal( ) );
+	if( intTypeObject ) {
+		bool hex = edit->setHex( intTypeObject->getVal( ) );
+		if( hex ) {
+			synValue( );
+			emit valueChanged( );
+		}
+		return hex;
+	}
 	auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
-	if( floatTypeObject )
-		return edit->setHex( floatTypeObject->getVal( ) );
+	if( floatTypeObject ) {
+		bool hex = edit->setHex( floatTypeObject->getVal( ) );
+		if( hex ) {
+			synValue( );
+			emit valueChanged( );
+		}
+		return hex;
+	}
 	auto dataTypeObject = qobject_cast< DataTypeObject * >( element );
-	if( dataTypeObject )
-		return edit->setHex( dataTypeObject->getCharArray( ) );
+	if( dataTypeObject ) {
+		bool hex = edit->setHex( dataTypeObject->getCharArray( ) );
+		if( hex ) {
+			synValue( );
+			emit valueChanged( );
+		}
+		return hex;
+	}
 	return false;
 }
 bool DataWidget::setString( const QString &hex_text ) {
-	return edit->setString( hex_text );
+	bool string = edit->setString( hex_text );
+	if( string ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return string;
 }
 bool DataWidget::setHex( const QByteArray &hex_text ) {
-	return edit->setHex( hex_text );
+	bool hex = edit->setHex( hex_text );
+	if( hex ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return hex;
 }
 bool DataWidget::setHex( const std_vector< uchar > &data_vector ) {
-	return edit->setHex( data_vector );
+	bool hex = edit->setHex( data_vector );
+	if( hex ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return hex;
 }
 bool DataWidget::setHex( const std_vector< char > &data_vector ) {
-	return edit->setHex( data_vector );
+	bool hex = edit->setHex( data_vector );
+	if( hex ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return hex;
 }
 bool DataWidget::setHex( const int64_t &number_value ) {
-	return edit->setHex( number_value );
+	bool hex = edit->setHex( number_value );
+	if( hex ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return hex;
 }
 bool DataWidget::setHex( const double &number_value ) {
-	return edit->setHex( number_value );
+	bool hex = edit->setHex( number_value );
+	if( hex ) {
+		synValue( );
+		emit valueChanged( );
+	}
+	return hex;
 }

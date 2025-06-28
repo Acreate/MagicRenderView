@@ -11,6 +11,17 @@
 
 #include "../../type/baseType/nullTypeObject.h"
 
+void IInfoWidget::synValue( const std_shared_ptr< ITypeObject > &value ) const {
+	auto element = synObjPtr.get( );
+	if( *element == nullptr )
+		return;
+	auto typeObject = value.get( );
+	if( *typeObject == nullptr )
+		return;
+	auto uiTypeNames = element->getUiTypeNames( );
+	*element = *typeObject;
+	element->setUiTypeNames( uiTypeNames );
+}
 IInfoWidget::IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): QWidget( parent ), getStackFunction( get_stack_function ) {
 	if( !getStackFunction )
 		getStackFunction = [] {

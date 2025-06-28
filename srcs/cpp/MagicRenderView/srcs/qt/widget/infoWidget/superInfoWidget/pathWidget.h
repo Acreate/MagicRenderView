@@ -23,9 +23,6 @@ Q_SIGNALS:
 	/// @brief 路径修改完毕之后触发该信号
 	/// @param path 路径
 	void pathChanged( const QString &path );
-	/// @brief 路径追加名称后触发该信号
-	/// @param path 追加路径
-	void pathAppendNameChanged( const QString &path );
 
 };
 

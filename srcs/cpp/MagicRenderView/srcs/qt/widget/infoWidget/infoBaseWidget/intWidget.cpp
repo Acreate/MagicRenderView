@@ -24,6 +24,8 @@ IntWidget::IntWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) 
 		auto varValue = lineEdit->text( ).toLongLong( &result );
 		if( result )
 			value->setVal( varValue );
+
+		synValue( );
 		emit valueChanged( );
 	} );
 }
@@ -34,6 +36,8 @@ int64_t IntWidget::getInt( ) const {
 void IntWidget::setInt( const int64_t &new_value ) {
 	lineEdit->setText( QString::number( new_value ) );
 	value->setVal( new_value );
+	synValue( );
+	emit valueChanged( );
 }
 
 void IntWidget::setPlaceholderText( const QString &placeholder_text ) const {
@@ -54,6 +58,8 @@ bool IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		auto val = intTypeObject->getVal( );
 		this->value->setVal( val );
 		lineEdit->setText( QString::number( val ) );
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
 	auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
@@ -61,6 +67,9 @@ bool IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		auto val = floatTypeObject->getVal( );
 		this->value->setVal( val );
 		lineEdit->setText( QString::number( val ) );
+
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
 	auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
@@ -70,12 +79,16 @@ bool IntWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const {
 		if( isOk ) {
 			this->value->setVal( converValue );
 			lineEdit->setText( QString::number( converValue ) );
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 		auto converDoubleValue = stringTypeObject->getString( ).toDouble( &isOk );
 		if( isOk ) {
 			this->value->setVal( converDoubleValue );
 			lineEdit->setText( QString::number( converDoubleValue ) );
+			synValue( );
+			emit valueChanged( );
 			return true;
 		}
 	}

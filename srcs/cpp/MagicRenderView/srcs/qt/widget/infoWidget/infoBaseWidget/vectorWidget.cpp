@@ -120,5 +120,7 @@ bool VectorWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const 
 		this->value->clear( );
 		this->value->append( value );
 	}
+	synValue( );
+	emit valueChanged( );
 	return true;
 }

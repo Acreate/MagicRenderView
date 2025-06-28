@@ -19,6 +19,11 @@ protected:
 protected:
 	QLabel *title;
 	QVBoxLayout *mainLayout;
+protected:
+	virtual void synValue( const std_shared_ptr< ITypeObject > &value ) const;
+	virtual void synValue( ) const {
+		synValue( getValue( ) );
+	}
 public:
 	IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	virtual QString getTitle( ) const;
@@ -36,6 +41,7 @@ public:
 	}
 	virtual std_shared_ptr< ITypeObject > getValue( ) const;
 	virtual bool setValue( const std_shared_ptr< ITypeObject > &value ) const { return false; }
+
 	virtual void setSynObj( const std_shared_ptr< ITypeObject > &value ) {
 		synObjPtr = value;
 	}
@@ -46,7 +52,7 @@ protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
 	/// @brief 值修改完毕会触发该信号
-	void valueChanged( );
+	void valueChanged( ) const;
 };
 
 #endif // IINFOWIDGET_H_H_HEAD__FILE__

@@ -20,7 +20,9 @@ StringWidget::StringWidget( const std_function< std_shared_ptr< IInfoWidgetStack
 	btnLayout->addWidget( saveBtn );
 	saveBtn->setText( "保存" );
 	connect( saveBtn, &QPushButton::clicked, [this] {
-		editString->setString( textEdit->toPlainText( ) );
+		QString plainText = textEdit->toPlainText( );
+		editString->setString( plainText );
+		synValue( );
 		emit valueChanged( );
 	} );
 
@@ -30,6 +32,7 @@ StringWidget::StringWidget( const std_function< std_shared_ptr< IInfoWidgetStack
 	connect( clearBtn, &QPushButton::clicked, [this] {
 		textEdit->clear( );
 		editString->setString( "" );
+		synValue( );
 		emit valueChanged( );
 	} );
 
@@ -45,6 +48,8 @@ QString StringWidget::getText( ) const {
 bool StringWidget::setText( const QString &new_text ) const {
 	textEdit->setPlainText( new_text );
 	editString->setString( new_text );
+	synValue( );
+	emit valueChanged( );
 	return true;
 }
 
@@ -62,6 +67,8 @@ bool StringWidget::setValue( const std_shared_ptr< ITypeObject > &value ) const 
 		QString string = value->toString( );
 		editString->setString( string );
 		textEdit->setText( string );
+		synValue( );
+		emit valueChanged( );
 		return true;
 	}
 	return false;

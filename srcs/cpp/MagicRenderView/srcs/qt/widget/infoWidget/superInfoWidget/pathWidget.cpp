@@ -15,6 +15,7 @@
 #include "../../../type/baseType/stringTypeObject.h"
 PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg ): IInfoWidget( get_stack_function, parent, title_msg ) {
 	stringTypeObject = IVarStack::getInstance< BaseVarStackEx >( )->generateTVar< StringTypeObject >( );
+	stringTypeObject->setUiTypeName( title_msg );
 	QWidget *subItem = new QWidget( this );
 	mainLayout->addWidget( subItem );
 	QHBoxLayout *subItemLayout = new QHBoxLayout( subItem );
@@ -28,7 +29,7 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 		auto path = QFileDialog::getExistingDirectory( subItem, "路径", qApp->applicationDirPath( ) );
 		if( path.isEmpty( ) )
 			return;
-		pathText->setText( QDir::cleanPath( path ) );
+		setPath( QDir::cleanPath( path ) );
 	} );
 
 	subItem = new QWidget( this );
@@ -42,9 +43,7 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 	subItemLayout->addWidget( appendPathText, 99 );
 	connect( selectPath, &QPushButton::clicked, [ this] {
 		QFileInfo info( pathText->text( ) + "/" + appendPathText->text( ) );
-		pathText->setText( QDir::cleanPath( info.absoluteFilePath( ) ) );
 		setPath( QDir::cleanPath( info.absoluteFilePath( ) ) );
-		emit pathText->editingFinished( );
 	} );
 
 	selectPath = new QPushButton( "清除路径", this );
@@ -53,13 +52,8 @@ PathWidget::PathWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( 
 		setPath( "" );
 	} );
 
-	connect( appendPathText, &QLineEdit::editingFinished, [this] {
-		emit pathAppendNameChanged( QDir::cleanPath( appendPathText->text( ) ) );
-	} );
-
 	connect( pathText, &QLineEdit::editingFinished, [this] {
 		setPath( pathText->text( ) );
-		emit valueChanged( );
 	} );
 }
 QString PathWidget::getPath( ) const {
@@ -70,8 +64,8 @@ bool PathWidget::setPath( const QString &new_text ) const {
 	QString absoluteFilePath = QDir::cleanPath( info.absoluteFilePath( ) );
 	pathText->setText( absoluteFilePath );
 	stringTypeObject->setString( absoluteFilePath );
-	if( *synObjPtr != nullptr )
-		*synObjPtr = *stringTypeObject;
+	synValue( );
+	emit valueChanged( );
 	return true;
 }
 
