@@ -21,9 +21,6 @@ protected:
 	QVBoxLayout *mainLayout;
 protected:
 	virtual void synValue( const std_shared_ptr< ITypeObject > &value ) const;
-	virtual void synValue( ) const {
-		synValue( getValue( ) );
-	}
 public:
 	IInfoWidget( const std_function< std_shared_ptr< IInfoWidgetStack >( ) > &get_stack_function, QWidget *parent, const QString &title_msg );
 	virtual QString getTitle( ) const;
@@ -47,6 +44,9 @@ public:
 	}
 	virtual std_shared_ptr< ITypeObject > getSynObj( ) const {
 		return synObjPtr;
+	}
+	virtual void synValue( ) const {
+		synValue( getValue( ) );
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
