@@ -41,12 +41,8 @@ bool NodeLinkVector::emplace_back( const NodeLinkItem &item ) {
 	nodeLinkItems->emplace_back( item );
 	return true;
 }
-size_t NodeLinkVector::size( ) const {
-	std_lock_grad_mutex lockGradMutex( *mutex );
-	return nodeLinkItems->size( );
-}
 
-int NodeLinkVector::linkHasUnity( const INodeComponent *unity ) const {
+int NodeLinkVector::hasUnity( const INodeComponent *unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -59,7 +55,7 @@ int NodeLinkVector::linkHasUnity( const INodeComponent *unity ) const {
 	return 0;
 }
 
-int NodeLinkVector::linkHasUnity( const INodeWidget *unity ) const {
+int NodeLinkVector::hasUnity( const INodeWidget *unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -71,7 +67,7 @@ int NodeLinkVector::linkHasUnity( const INodeWidget *unity ) const {
 			return has;
 	return 0;
 }
-int NodeLinkVector::linkHasInputUnity( const INodeComponent *input_unity ) const {
+int NodeLinkVector::hasInputUnity( const INodeComponent *input_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -82,7 +78,7 @@ int NodeLinkVector::linkHasInputUnity( const INodeComponent *input_unity ) const
 			return true;
 	return false;
 }
-int NodeLinkVector::linkHasInputUnity( const INodeWidget *input_unity ) const {
+int NodeLinkVector::hasInputUnity( const INodeWidget *input_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -93,7 +89,7 @@ int NodeLinkVector::linkHasInputUnity( const INodeWidget *input_unity ) const {
 			return true;
 	return false;
 }
-int NodeLinkVector::linkHasOutputUnity( const INodeComponent *output_unity ) const {
+int NodeLinkVector::hasOutputUnity( const INodeComponent *output_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -104,7 +100,7 @@ int NodeLinkVector::linkHasOutputUnity( const INodeComponent *output_unity ) con
 			return true;
 	return false;
 }
-int NodeLinkVector::linkHasOutputUnity( const INodeWidget *output_unity ) const {
+int NodeLinkVector::hasOutputUnity( const INodeWidget *output_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -115,7 +111,7 @@ int NodeLinkVector::linkHasOutputUnity( const INodeWidget *output_unity ) const 
 			return true;
 	return false;
 }
-int NodeLinkVector::linkRemoveFirstInputItem( const INodeComponent *input_unity ) {
+int NodeLinkVector::removeFirstInputItem( const INodeComponent *input_unity ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	auto iterator = nodeLinkItems->begin( );
 	auto end = nodeLinkItems->end( );
@@ -126,7 +122,7 @@ int NodeLinkVector::linkRemoveFirstInputItem( const INodeComponent *input_unity 
 		}
 	return 0;
 }
-int NodeLinkVector::linkRemoveFirstOutputItem( const INodeComponent *output_unity ) {
+int NodeLinkVector::removeFirstOutputItem( const INodeComponent *output_unity ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	auto iterator = nodeLinkItems->begin( );
 	auto end = nodeLinkItems->end( );
@@ -137,7 +133,7 @@ int NodeLinkVector::linkRemoveFirstOutputItem( const INodeComponent *output_unit
 		}
 	return 0;
 }
-int NodeLinkVector::linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity ) {
+int NodeLinkVector::removeFirstItem( const INodeComponent *output_unity, const INodeComponent *input_unity ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	auto iterator = nodeLinkItems->begin( );
 	auto end = nodeLinkItems->end( );
@@ -148,9 +144,9 @@ int NodeLinkVector::linkRemoveFirstInputItem( const INodeComponent *output_unity
 		}
 	return 0;
 }
-std_vector< std_pairt< INodeWidget *, INodeComponent * > > NodeLinkVector::getOutLinkItems( const INodeComponent *input_unity ) {
+std_vector< NodeLinkItem > NodeLinkVector::getOutLinkItems( const INodeComponent *input_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
-	std_vector< std_pairt< INodeWidget *, INodeComponent * > > result;
+	std_vector< NodeLinkItem > result;
 
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
@@ -159,13 +155,13 @@ std_vector< std_pairt< INodeWidget *, INodeComponent * > > NodeLinkVector::getOu
 	for( size_t index = 0; index < count; ++index ) {
 		auto inputNodeComponentInfo = nodeLinkItem[ index ].getInputNodeComponentInfo( );
 		if( inputNodeComponentInfo.second == input_unity )
-			result.emplace_back( nodeLinkItem[ index ].getOutputNodeComponentInfo( ) );
+			result.emplace_back( nodeLinkItem[ index ] );
 	}
 	return result;
 }
-std_vector< std_pairt< INodeWidget *, INodeComponent * > > NodeLinkVector::getInLinkItems( const INodeComponent *ouutput_unity ) {
+std_vector< NodeLinkItem > NodeLinkVector::getInLinkItems( const INodeComponent *ouutput_unity ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
-	std_vector< std_pairt< INodeWidget *, INodeComponent * > > result;
+	std_vector< NodeLinkItem > result;
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 )
 		return result;
@@ -173,9 +169,38 @@ std_vector< std_pairt< INodeWidget *, INodeComponent * > > NodeLinkVector::getIn
 	for( size_t index = 0; index < count; ++index ) {
 		auto inputNodeComponentInfo = nodeLinkItem[ index ].getOutputNodeComponentInfo( );
 		if( inputNodeComponentInfo.second == ouutput_unity )
-			result.emplace_back( nodeLinkItem[ index ].getInputNodeComponentInfo( ) );
+			result.emplace_back( nodeLinkItem[ index ] );
 	}
 	return result;
+}
+std_mutex * NodeLinkVector::getMutex( ) const {
+	return mutex.get( );
+}
+bool NodeLinkVector::lockMutex( ) const {
+	if( mutex->try_lock( ) )
+		return true;
+	return true;
+}
+bool NodeLinkVector::unMutex( ) const {
+	if( mutex->try_lock( ) ) {
+		mutex.get( )->unlock( );
+		return true;
+	}
+	mutex.get( )->unlock( );
+	return true;
+}
+size_t NodeLinkVector::count( ) const {
+	return nodeLinkItems->size( );
+}
+NodeLinkItem * NodeLinkVector::data( ) const {
+	return nodeLinkItems->data( );
+}
+void NodeLinkVector::end( ) const {
+	mutex->unlock( );
+}
+std_pairt< std_vector< NodeLinkItem >::iterator, std_vector< NodeLinkItem >::iterator > NodeLinkVector::begin( ) const {
+	mutex->lock( );
+	return { nodeLinkItems->begin( ), nodeLinkItems->end( ) };
 }
 void NodeLinkVector::clear( ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );

@@ -15,12 +15,38 @@ protected:
 	/// @brief 输入链接项目
 	std_pairt< INodeWidget *, INodeComponent * > output_node_component_info;
 public:
-	NodeLinkItem( ) {
+	NodeLinkItem( ) : input_node_component_info( nullptr, nullptr ), output_node_component_info( nullptr, nullptr ) {
 	}
 	NodeLinkItem( const NodeLinkItem &other )
 		: QObject( other.parent( ) ),
 		input_node_component_info( other.input_node_component_info ),
 		output_node_component_info( other.output_node_component_info ) { }
+	/// @brief 对象是否为空（任意其中成员不为 nullptr，则整个对象不为空）
+	/// @return 空返回 true
+	virtual bool isEmpty( ) const {
+		if( input_node_component_info.first != nullptr )
+			return false;
+		if( input_node_component_info.second != nullptr )
+			return false;
+		if( output_node_component_info.first != nullptr )
+			return false;
+		if( output_node_component_info.second != nullptr )
+			return false;
+		return true;
+	}
+	/// @brief 是否有效（任意其中成员为 nullptr，则整个对象无效）
+	/// @return 有效返回 true
+	virtual bool isAalid( ) const {
+		if( input_node_component_info.first )
+			return false;
+		if( input_node_component_info.second )
+			return false;
+		if( output_node_component_info.first )
+			return false;
+		if( output_node_component_info.second )
+			return false;
+		return false;
+	}
 	/// @brief 校验是否存在指定组件
 	/// @param component 匹配的组件指针
 	/// @return 返回 1 表示存在输入，返回 -1 表示存在输出，返回 0 表示不存在组件

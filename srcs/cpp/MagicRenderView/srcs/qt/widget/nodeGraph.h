@@ -76,7 +76,6 @@ public:
 	virtual bool findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component );
 	/// @brief 更新渲染窗口的大小
 	virtual void updateMinSize( );
-	
 	/// @brief 实现序列化之后，调用该函数
 	/// @param over_widget_list 实现反序列化的节点
 	/// @param new_link_items_vector 新的连接列表

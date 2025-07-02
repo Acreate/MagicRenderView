@@ -99,18 +99,6 @@ inline static TUnity * getUnityFirst( const std_vector_pairt< TUnity *, size_t >
 	return nullptr;
 }
 
-template< typename TUnity >
-inline static bool hasUnity( const TUnity &unity, const std_vector< TUnity > &unity_vector ) {
-	auto count = unity_vector.size( );
-	if( count == 0 )
-		return false;
-	auto dataPtr = unity_vector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( dataPtr[ index ] == unity )
-			return true;
-	return false;
-}
-
 NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f ) {
 	activeNodeWidget = nullptr;
 	mainWindow = nullptr;
@@ -242,7 +230,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							break;
 						// 输入组件是否允许重复输入
 						if( selectNodeComponent->isOverlayMulVar( ) == false )
-							if( nodeLinkItems->linkHasInputUnity( selectNodeComponent ) && nodeLinkItems->linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
+							if( nodeLinkItems->hasInputUnity( selectNodeComponent ) && nodeLinkItems->removeFirstInputItem( selectNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + selectNodeWidget->getNodeTitle( ) + "->" + selectNodeComponent->getNodeComponentName( ) );
 						// 加入链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
@@ -268,7 +256,7 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							break;
 						// 是否允许重复输入
 						if( inputNodeComponent->isOverlayMulVar( ) == false )
-							if( nodeLinkItems->linkHasInputUnity( inputNodeComponent ) && nodeLinkItems->linkRemoveFirstInputItem( inputNodeComponent ) != 1 )
+							if( nodeLinkItems->hasInputUnity( inputNodeComponent ) && nodeLinkItems->removeFirstInputItem( inputNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + inputNodeWidget->getNodeTitle( ) + "->" + inputNodeComponent->getNodeComponentName( ) );
 						// 配置链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
@@ -286,8 +274,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	if( selectNodeComponent );
-	else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
+	if( selectNodeComponent ) {
+	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
 		QPoint point = currentMouseInWidgetPos - selectNodeWidgetOffset;
 		point.setX( std::max( 0, point.x( ) ) );
 		point.setY( std::max( 0, point.y( ) ) );
