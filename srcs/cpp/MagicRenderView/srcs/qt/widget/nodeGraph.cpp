@@ -9,6 +9,8 @@
 
 #include "../mainWindow/mainWindow.h"
 
+#include "../node/nodeLink/nodeLinkVector.h"
+
 #include "../stack/varStack/IVarStack.h"
 
 #include "qt/menu/action/nodeAddAction.h"
@@ -116,7 +118,7 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	nodeWidgetAdviseIDMutex = std_shared_ptr< std_mutex >( new std_mutex );
 
 	nodeWidgetID = std_shared_ptr< std_vector_pairt< INodeWidget *, size_t > >( new std_vector_pairt< INodeWidget *, size_t > );
-	nodeLinkItems = std_shared_ptr< std_vector< NodeLinkItem > >( new std_vector< NodeLinkItem > );
+	nodeLinkItems = std_shared_ptr< NodeLinkVector >( new NodeLinkVector );
 	nodeWidgetAdviseIDMutex->lock( );
 
 	selectNodeWidget = nullptr;
@@ -236,11 +238,11 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						if( nodeLinkItem.setOutput( outputNodeWidget, outputNodeComponent ) == false )
 							break;
 						// 是否已经存在重复链接
-						if( hasUnity( nodeLinkItem, *nodeLinkItems ) == true )
+						if( nodeLinkItems->hasItem( nodeLinkItem ) == true )
 							break;
 						// 输入组件是否允许重复输入
 						if( selectNodeComponent->isOverlayMulVar( ) == false )
-							if( linkHasInputUnity( selectNodeComponent ) && linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
+							if( nodeLinkItems->linkHasInputUnity( selectNodeComponent ) && nodeLinkItems->linkRemoveFirstInputItem( selectNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + selectNodeWidget->getNodeTitle( ) + "->" + selectNodeComponent->getNodeComponentName( ) );
 						// 加入链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
@@ -262,11 +264,11 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 						if( nodeLinkItem.setInput( inputNodeWidget, inputNodeComponent ) == false )
 							break;
 						// 是否已经存在重复链接
-						if( hasUnity( nodeLinkItem, *nodeLinkItems ) == true )
+						if( nodeLinkItems->hasItem( nodeLinkItem ) == true )
 							break;
 						// 是否允许重复输入
 						if( inputNodeComponent->isOverlayMulVar( ) == false )
-							if( linkHasInputUnity( inputNodeComponent ) && linkRemoveFirstInputItem( inputNodeComponent ) != 1 )
+							if( nodeLinkItems->linkHasInputUnity( inputNodeComponent ) && nodeLinkItems->linkRemoveFirstInputItem( inputNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + inputNodeWidget->getNodeTitle( ) + "->" + inputNodeComponent->getNodeComponentName( ) );
 						// 配置链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
@@ -295,99 +297,6 @@ void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	repaint( );
 }
 
-int NodeGraph::linkHasUnity( const INodeComponent *unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return 0;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	int has;
-	for( size_t index = 0; index < count; ++index )
-		if( ( has = nodeLinkItemDataPtr[ index ].has( unity ), has != 0 ) )
-			return has;
-	return 0;
-}
-
-int NodeGraph::linkHasUnity( const INodeWidget *unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return 0;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	int has;
-	for( size_t index = 0; index < count; ++index )
-		if( ( has = nodeLinkItemDataPtr[ index ].has( unity ), has != 0 ) )
-			return has;
-	return 0;
-}
-int NodeGraph::linkHasInputUnity( const INodeComponent *input_unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return false;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nodeLinkItemDataPtr[ index ].hasInput( input_unity ) )
-			return true;
-	return false;
-}
-int NodeGraph::linkHasInputUnity( const INodeWidget *input_unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return false;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nodeLinkItemDataPtr[ index ].hasInput( input_unity ) )
-			return true;
-	return false;
-}
-int NodeGraph::linkHasOutputUnity( const INodeComponent *output_unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return false;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nodeLinkItemDataPtr[ index ].hasOutput( output_unity ) )
-			return true;
-	return false;
-}
-int NodeGraph::linkHasOutputUnity( const INodeWidget *output_unity ) const {
-	size_t count = nodeLinkItems->size( );
-	if( count == 0 )
-		return false;
-	auto nodeLinkItemDataPtr = nodeLinkItems->data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nodeLinkItemDataPtr[ index ].hasOutput( output_unity ) )
-			return true;
-	return false;
-}
-int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *input_unity ) {
-	auto iterator = nodeLinkItems->begin( );
-	auto end = nodeLinkItems->end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->hasInput( input_unity ) ) {
-			nodeLinkItems->erase( iterator );
-			return 1;
-		}
-	return 0;
-}
-int NodeGraph::linkRemoveFirstOutputItem( const INodeComponent *output_unity ) {
-	auto iterator = nodeLinkItems->begin( );
-	auto end = nodeLinkItems->end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->hasOutput( output_unity ) ) {
-			nodeLinkItems->erase( iterator );
-			return 1;
-		}
-	return 0;
-}
-int NodeGraph::linkRemoveFirstInputItem( const INodeComponent *output_unity, const INodeComponent *input_unity ) {
-	auto iterator = nodeLinkItems->begin( );
-	auto end = nodeLinkItems->end( );
-	for( ; iterator != end; ++iterator )
-		if( iterator->hasInput( input_unity ) && iterator->hasOutput( output_unity ) ) {
-			nodeLinkItems->erase( iterator );
-			return 1;
-		}
-	return 0;
-}
 bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *, size_t > &over_widget_list, const std_vector< NodeLinkItem > &new_link_items_vector ) {
 	nodeWidgetIDMutex->lock( );
 	nodeWidgets.clear( );
@@ -516,8 +425,9 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 		mulStdData.append_range( result );
 	}
 	// 连接列表
-	auto linkItem = nodeLinkItems->data( );
-	size_t linkCount = nodeLinkItems->size( );
+	auto linkItemsVector = nodeLinkItems->toVector( );
+	auto linkItem = linkItemsVector.data( );
+	size_t linkCount = linkItemsVector.size( );
 	std_vector< uchar > linkBuff;
 	for( index = 0; index < linkCount; ++index ) {
 		size_t nodeWidgetId;
@@ -847,7 +757,8 @@ void NodeGraph::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	QPoint start, end;
-	for( auto item : *nodeLinkItems )
+
+	for( auto item : nodeLinkItems->toVector( ) )
 		if( item.getInputOutputPos( &start, &end ) )
 			painter.drawLine( start, end );
 	if( selectNodeComponent /* 绘制即时连线 */ ) {

@@ -1,5 +1,6 @@
 ﻿#include "qt/application/application.h"
 #include "qt/mainWindow/mainWindow.h"
+#include "qt/node/nodeLink/nodeLinkVector.h"
 
 #if _DEBUG
 
