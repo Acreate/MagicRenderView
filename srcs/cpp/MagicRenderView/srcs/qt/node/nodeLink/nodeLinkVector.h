@@ -11,7 +11,8 @@ class NodeLinkVector : public QObject {
 protected:
 	std_shared_ptr< std_mutex > mutex;
 	std_shared_ptr< std_vector< NodeLinkItem > > nodeLinkItems;
-	std_vector_pairt< INodeComponent *, INodeWidget * > nodeLinkStatus;
+	std_vector< INodeWidget * > nodeWidgetLinkStatus;
+	std_vector_pairt< INodeComponent *, INodeWidget * > nodeComponentLinkStatus;
 public:
 	NodeLinkVector( );
 	/// @brief 配置节点为可连接状态
@@ -66,6 +67,10 @@ public:
 	/// @param output_unity 检测的组件
 	/// @return 不存在返回 0
 	virtual int hasOutputUnity( const INodeWidget *output_unity ) const;
+	/// @brief 删除具备组件的所有项
+	/// @param unity 检测的组件
+	/// @return 不存在返回 0
+	virtual int removeNodeComponentItem( const INodeComponent *unity );
 	/// @brief 删除第一个具备组件的输入项
 	/// @param input_unity 检测的组件
 	/// @return 不存在返回 0

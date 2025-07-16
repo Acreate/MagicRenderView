@@ -113,8 +113,12 @@ public Q_SLOTS:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
+	/// @brief 组件被删除时触发该信号
+	/// @param send_obj_ptr 信号触发对象指针
+	/// @param delete_component 删除的组件
+	void compomentDelete( INodeWidget *send_obj_ptr, INodeComponent *delete_component );
 	/// @brief 该对象删除时触发信号
-	void thisNodeWidgetRemove( INodeWidget *send_obj_ptr );
+	void thisDelete( INodeWidget *send_obj_ptr );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息

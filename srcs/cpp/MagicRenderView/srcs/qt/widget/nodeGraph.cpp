@@ -137,8 +137,11 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			generateNode->connectNodeGraphWidget( this );
 			generateNode->show( );
 			nodeLinkItems->usRegNodeLinkStatus( generateNode );
-			connect( generateNode, &INodeWidget::thisNodeWidgetRemove, [this] ( INodeWidget *send_obj_ptr ) {
+			connect( generateNode, &INodeWidget::thisDelete, [this] ( INodeWidget *send_obj_ptr ) {
 				nodeLinkItems->unRegNodeLinkStatus( send_obj_ptr );
+			} );
+			connect( generateNode, &INodeWidget::compomentDelete, [this] ( INodeWidget *send_obj_ptr, INodeComponent *delete_component ) {
+				nodeLinkItems->removeNodeComponentItem( delete_component );
 			} );
 			updateMinSize( );
 			emit generateNodeWidget( this, generateNode, nodeWidgets );

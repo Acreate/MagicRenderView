@@ -124,7 +124,10 @@ public:
 	virtual bool isOverlayMulVar( ) const {
 		return false;
 	}
+	~INodeComponent() override;
 Q_SIGNALS:
+	/// @brief 控件大小被改变
+	void thisDelete( INodeComponent *component );
 	/// @brief 控件大小被改变
 	void changeSize( QSize new_size );
 	/// @brief 当通道发生改变时，相应该信号

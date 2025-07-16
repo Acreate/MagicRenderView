@@ -7,27 +7,41 @@ NodeLinkVector::NodeLinkVector( ) {
 }
 bool NodeLinkVector::usRegNodeLinkStatus( INodeWidget *node_widget ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
+	if( tools::vector::has( nodeWidgetLinkStatus, node_widget ) == true )
+		return true;
+	nodeWidgetLinkStatus.emplace_back( node_widget );
 	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
 	if( nodeComponents.size( ) == 0 )
 		return false;
 	for( auto &item : nodeComponents )
-		nodeLinkStatus.emplace_back( item, node_widget );
+		if( tools::vector::has( nodeComponentLinkStatus, { item, node_widget } ) == false )
+			nodeComponentLinkStatus.emplace_back( item, node_widget );
 	return true;
 }
 bool NodeLinkVector::unRegNodeLinkStatus( INodeWidget *node_widget ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 	bool result = true;
-	if( nodeLinkStatus.size( ) == 0 || nodeLinkItems->size( ) == 0 )
+	if( nodeComponentLinkStatus.size( ) == 0 || nodeLinkItems->size( ) == 0 )
 		return result;
+
+	auto nodeWidgetBegin = nodeWidgetLinkStatus.begin( );
+	auto nodeWidgetEnd = nodeWidgetLinkStatus.end( );
+	for( ; nodeWidgetBegin != nodeWidgetEnd; ++nodeWidgetBegin )
+		if( *nodeWidgetBegin == node_widget ) {
+			nodeWidgetLinkStatus.erase( nodeWidgetBegin );
+			break;
+		}
+	if( nodeWidgetBegin == nodeWidgetEnd )
+		return false;
 	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
 	if( nodeComponents.size( ) == 0 )
 		return result;
 	for( auto &item : nodeComponents ) {
-		auto iterator = nodeLinkStatus.begin( );
-		auto end = nodeLinkStatus.end( );
+		auto iterator = nodeComponentLinkStatus.begin( );
+		auto end = nodeComponentLinkStatus.end( );
 		for( ; iterator != end; ++iterator )
 			if( iterator->first == item && iterator->second == node_widget ) {
-				nodeLinkStatus.erase( iterator );
+				nodeComponentLinkStatus.erase( iterator );
 				while( true ) {
 					auto rmeoveIter = nodeLinkItems->begin( );
 					auto nodeComponentEnd = nodeLinkItems->end( );
@@ -83,7 +97,7 @@ bool NodeLinkVector::hasItem( const NodeLinkItem &item ) const {
 bool NodeLinkVector::emplace_back( const NodeLinkItem &item ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
 
-	size_t count = nodeLinkStatus.size( );
+	size_t count = nodeWidgetLinkStatus.size( );
 	if( count == 0 )
 		return false;
 	size_t regComponetCount = 0;
@@ -91,16 +105,16 @@ bool NodeLinkVector::emplace_back( const NodeLinkItem &item ) {
 	auto inputNodeComponentInfo = item.getInputNodeComponentInfo( );
 	auto outputNodeComponentInfo = item.getOutputNodeComponentInfo( );
 
-	auto pair = nodeLinkStatus.data( );
+	auto pair = nodeWidgetLinkStatus.data( );
 
 	for( index = 0; index < count && regComponetCount != 2; ++index ) {
 		auto iter = pair[ index ];
-		if( iter.first == inputNodeComponentInfo.second && iter.second == inputNodeComponentInfo.first ) {
+		if( iter == inputNodeComponentInfo.first ) {
 			++regComponetCount;
 			inputNodeComponentInfo.first = nullptr;
 			inputNodeComponentInfo.second = nullptr;
 			continue;
-		} else if( iter.first == outputNodeComponentInfo.second && iter.second == outputNodeComponentInfo.first ) {
+		} else if( iter == outputNodeComponentInfo.first ) {
 			++regComponetCount;
 			outputNodeComponentInfo.first = nullptr;
 			outputNodeComponentInfo.second = nullptr;
@@ -192,6 +206,23 @@ int NodeLinkVector::hasOutputUnity( const INodeWidget *output_unity ) const {
 		if( nodeLinkItemDataPtr[ index ].hasOutput( output_unity ) )
 			return true;
 	return false;
+}
+int NodeLinkVector::removeNodeComponentItem( const INodeComponent *unity ) {
+	std_lock_grad_mutex lockGradMutex( *mutex );
+	size_t result = 0;
+	while( true ) {
+		auto iterator = nodeLinkItems->begin( );
+		auto end = nodeLinkItems->end( );
+		for( ; iterator != end; ++iterator )
+			if( iterator->has( unity ) ) {
+				nodeLinkItems->erase( iterator );
+				break;
+			}
+		if( iterator == end )
+			break;
+	}
+
+	return result;
 }
 int NodeLinkVector::removeFirstInputItem( const INodeComponent *input_unity ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );

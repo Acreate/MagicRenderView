@@ -99,7 +99,7 @@ INodeComponent * INodeWidget::getComponetFromID( const size_t &id ) const {
 	return 0;
 }
 INodeWidget::~INodeWidget( ) {
-	emit thisNodeWidgetRemove( this );
+	emit thisDelete( this );
 }
 void INodeWidget::registerIDFinish( size_t id ) {
 	if( id == 0 )

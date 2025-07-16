@@ -46,6 +46,9 @@ bool INodeComponent::getComponentLinkPos( const INodeComponent *component, QPoin
 	}
 	return true;
 }
+INodeComponent::~INodeComponent( ) {
+	emit thisDelete( this );
+}
 
 void INodeComponent::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

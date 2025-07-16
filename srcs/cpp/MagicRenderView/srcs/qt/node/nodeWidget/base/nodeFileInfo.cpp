@@ -14,6 +14,9 @@
 #define emplace_back_ID( component_ptr_ ) \
 	component_ptr_->setParentNodeWidget( this ); \
 	componentID.emplace_back( component_ptr_,ID );\
+	connect( subPlan, &INodeComponent::thisDelete, [this] ( INodeComponent *component ) { \
+		emit compomentDelete( this, component ); \
+	} ); \
 	++ID
 
 NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
@@ -34,6 +37,7 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 	size_t ID = 1;
 
 	emplace_back_ID( subPlan );
+
 
 	inputPath = new NodeInputLineText( "路径", this );
 	subPlan->appendInput( inputPath );
