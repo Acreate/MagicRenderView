@@ -16,9 +16,11 @@ bool NodeLinkVector::usRegNodeLinkStatus( INodeWidget *node_widget ) {
 }
 bool NodeLinkVector::unRegNodeLinkStatus( INodeWidget *node_widget ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
-	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
 	bool result = true;
-	if( nodeComponents.size( ) == 0 || nodeLinkStatus.size( ) == 0 || nodeLinkItems->size( ) == 0 )
+	if( nodeLinkStatus.size( ) == 0 || nodeLinkItems->size( ) == 0 )
+		return result;
+	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
+	if( nodeComponents.size( ) == 0 )
 		return result;
 	for( auto &item : nodeComponents ) {
 		auto iterator = nodeLinkStatus.begin( );
@@ -80,17 +82,42 @@ bool NodeLinkVector::hasItem( const NodeLinkItem &item ) const {
 
 bool NodeLinkVector::emplace_back( const NodeLinkItem &item ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
-	// 配置不为空
-	if( item.isEmpty( ) )
+
+	size_t count = nodeLinkStatus.size( );
+	if( count == 0 )
+		return false;
+	size_t regComponetCount = 0;
+	size_t index = 0;
+	auto inputNodeComponentInfo = item.getInputNodeComponentInfo( );
+	auto outputNodeComponentInfo = item.getOutputNodeComponentInfo( );
+
+	auto pair = nodeLinkStatus.data( );
+
+	for( index = 0; index < count && regComponetCount != 2; ++index ) {
+		auto iter = pair[ index ];
+		if( iter.first == inputNodeComponentInfo.second && iter.second == inputNodeComponentInfo.first ) {
+			++regComponetCount;
+			inputNodeComponentInfo.first = nullptr;
+			inputNodeComponentInfo.second = nullptr;
+			continue;
+		} else if( iter.first == outputNodeComponentInfo.second && iter.second == outputNodeComponentInfo.first ) {
+			++regComponetCount;
+			outputNodeComponentInfo.first = nullptr;
+			outputNodeComponentInfo.second = nullptr;
+			continue;
+		}
+	}
+
+	if( regComponetCount != 2 ) // 没有注册组件
 		return false;
 
-	size_t count = nodeLinkItems->size( );
+	count = nodeLinkItems->size( );
 	if( count == 0 ) {
 		nodeLinkItems->emplace_back( item );
 		return true;
 	}
 	auto nodeLinkItemPtr = nodeLinkItems->data( );
-	for( size_t index = 0; index < count; ++index )
+	for( index = 0; index < count; ++index )
 		if( nodeLinkItemPtr[ index ] == item )
 			return false;
 	nodeLinkItems->emplace_back( item );
