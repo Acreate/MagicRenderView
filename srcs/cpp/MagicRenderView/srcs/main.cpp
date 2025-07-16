@@ -398,20 +398,28 @@ void checkSerializeVar( ) {
 	qDebug( ) << "==================";
 }
 
-#endif
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
-#if _DEBUG
 	checkVarStack( );
 	checkNodeStack( );
 	checkFunction( );
 	checkTools( );
 	checkSerializeVar( );
-#endif
 
 	MainWindow mainwidget;
 	mainwidget.show( );
 
 	return app.exec( );
 }
+#else
+int main( int argc, char *argv[ ] ) {
+	Application app( argc, argv );
+
+	MainWindow mainwidget;
+	mainwidget.show( );
+
+	return app.exec( );
+}
+
+#endif

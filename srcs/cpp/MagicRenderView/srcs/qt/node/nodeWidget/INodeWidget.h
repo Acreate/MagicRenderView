@@ -105,6 +105,7 @@ public:
 			result.emplace_back( pair[ index ].first );
 		return result;
 	}
+	~INodeWidget( ) override;
 public Q_SLOTS:
 	/// @brief 节点注册id完成
 	/// @param id 注册的id
@@ -112,6 +113,8 @@ public Q_SLOTS:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
+	/// @brief 该对象删除时触发信号
+	void thisNodeWidgetRemove( INodeWidget *send_obj_ptr );
 	/// @brief 执行错误时，产生该消息
 	/// @param send_obj_ptr 信号对象
 	/// @param msg 错误消息
@@ -152,7 +155,7 @@ Q_SIGNALS:
 	/// @param value_component 值被改变的组件
 	/// @param old_var_value 旧的变量值
 	/// @param new_var_value 新的变量值
-	void changedComponentValue( INodeComponent *value_component, const std_shared_ptr<ITypeObject>& old_var_value,  const std_shared_ptr<ITypeObject>& new_var_value );
+	void changedComponentValue( INodeComponent *value_component, const std_shared_ptr< ITypeObject > &old_var_value, const std_shared_ptr< ITypeObject > &new_var_value );
 };
 
 #endif // INODEWIDGET_H_H_HEAD__FILE__

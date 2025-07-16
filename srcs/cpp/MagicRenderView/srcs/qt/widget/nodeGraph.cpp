@@ -136,6 +136,10 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 			generateNode->setParent( this );
 			generateNode->connectNodeGraphWidget( this );
 			generateNode->show( );
+			nodeLinkItems->usRegNodeLinkStatus( generateNode );
+			connect( generateNode, &INodeWidget::thisNodeWidgetRemove, [this] ( INodeWidget *send_obj_ptr ) {
+				nodeLinkItems->unRegNodeLinkStatus( send_obj_ptr );
+			} );
 			updateMinSize( );
 			emit generateNodeWidget( this, generateNode, nodeWidgets );
 		} else
@@ -149,6 +153,8 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	Application::setNewNodeGraph( this );
 }
 NodeGraph::~NodeGraph( ) {
+	for( auto item : nodeWidgets )
+		delete item;
 }
 bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component ) {
 	size_t count = nodeWidgets.size( );
@@ -224,9 +230,6 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 							break;
 						// 配置输出位置
 						if( nodeLinkItem.setOutput( outputNodeWidget, outputNodeComponent ) == false )
-							break;
-						// 是否已经存在重复链接
-						if( nodeLinkItems->hasItem( nodeLinkItem ) == true )
 							break;
 						// 输入组件是否允许重复输入
 						if( selectNodeComponent->isOverlayMulVar( ) == false )

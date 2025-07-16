@@ -1,7 +1,57 @@
 ﻿#include "./nodeLinkVector.h"
+
+#include "../nodeWidget/INodeWidget.h"
 NodeLinkVector::NodeLinkVector( ) {
 	mutex.reset( new std_mutex );
 	nodeLinkItems.reset( new std_vector< NodeLinkItem > );
+}
+bool NodeLinkVector::usRegNodeLinkStatus( INodeWidget *node_widget ) {
+	std_lock_grad_mutex lockGradMutex( *mutex );
+	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
+	if( nodeComponents.size( ) == 0 )
+		return false;
+	for( auto &item : nodeComponents )
+		nodeLinkStatus.emplace_back( item, node_widget );
+	return true;
+}
+bool NodeLinkVector::unRegNodeLinkStatus( INodeWidget *node_widget ) {
+	std_lock_grad_mutex lockGradMutex( *mutex );
+	std_vector< INodeComponent * > nodeComponents = node_widget->getNodeComponents( );
+	bool result = true;
+	if( nodeComponents.size( ) == 0 || nodeLinkStatus.size( ) == 0 || nodeLinkItems->size( ) == 0 )
+		return result;
+	for( auto &item : nodeComponents ) {
+		auto iterator = nodeLinkStatus.begin( );
+		auto end = nodeLinkStatus.end( );
+		for( ; iterator != end; ++iterator )
+			if( iterator->first == item && iterator->second == node_widget ) {
+				nodeLinkStatus.erase( iterator );
+				while( true ) {
+					auto rmeoveIter = nodeLinkItems->begin( );
+					auto nodeComponentEnd = nodeLinkItems->end( );
+					for( ; rmeoveIter != nodeComponentEnd; ++rmeoveIter ) {
+						auto nodeComponentInfo = rmeoveIter->getInputNodeComponentInfo( );
+						if( nodeComponentInfo.first == node_widget && nodeComponentInfo.second == item ) {
+							nodeLinkItems->erase( rmeoveIter );
+							break;
+						}
+						nodeComponentInfo = rmeoveIter->getOutputNodeComponentInfo( );
+						if( nodeComponentInfo.first == node_widget && nodeComponentInfo.second == item ) {
+							nodeLinkItems->erase( rmeoveIter );
+							break;
+						}
+					}
+					if( rmeoveIter == nodeComponentEnd )
+						break; // 删除完毕
+				}
+				break;
+			}
+		if( iterator == end ) {
+			result = false;
+			break;
+		}
+	}
+	return result;
 }
 std_vector< NodeLinkItem > NodeLinkVector::toVector( ) const {
 	std_lock_grad_mutex lockGradMutex( *mutex );
@@ -27,8 +77,13 @@ bool NodeLinkVector::hasItem( const NodeLinkItem &item ) const {
 			return true;
 	return false;
 }
+
 bool NodeLinkVector::emplace_back( const NodeLinkItem &item ) {
 	std_lock_grad_mutex lockGradMutex( *mutex );
+	// 配置不为空
+	if( item.isEmpty( ) )
+		return false;
+
 	size_t count = nodeLinkItems->size( );
 	if( count == 0 ) {
 		nodeLinkItems->emplace_back( item );

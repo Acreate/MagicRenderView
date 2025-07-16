@@ -11,8 +11,17 @@ class NodeLinkVector : public QObject {
 protected:
 	std_shared_ptr< std_mutex > mutex;
 	std_shared_ptr< std_vector< NodeLinkItem > > nodeLinkItems;
+	std_vector_pairt< INodeComponent *, INodeWidget * > nodeLinkStatus;
 public:
 	NodeLinkVector( );
+	/// @brief 配置节点为可连接状态
+	/// @param node_widget 节点
+	/// @return 成功返回 true
+	virtual bool usRegNodeLinkStatus( INodeWidget *node_widget );
+	/// @brief 卸载节点可链接状态
+	/// @param node_widget 节点
+	/// @return 成功返回 true
+	virtual bool unRegNodeLinkStatus( INodeWidget *node_widget );
 	/// @brief 转换到标准序列对象，该方式为拷贝，返回对象不影响源对象
 	/// @return 标准序列对象
 	virtual std_vector< NodeLinkItem > toVector( ) const;
