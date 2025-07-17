@@ -11,14 +11,6 @@
 #include "qt/stack/varStack/base/baseVarStackEx.h"
 #include "qt/type/baseType/nullTypeObject.h"
 
-#define emplace_back_ID( component_ptr_ ) \
-	component_ptr_->setParentNodeWidget( this ); \
-	componentID.emplace_back( component_ptr_,ID );\
-	connect( subPlan, &INodeComponent::thisDelete, [this] ( INodeComponent *component ) { \
-		emit compomentDelete( this, component ); \
-	} ); \
-	++ID
-
 NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
 	std_lock_grad_mutex lockGradMutex( *componentIDMutex );
 	UserFunctionDeclaration *declaration;
@@ -36,42 +28,41 @@ NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) 
 	mainBoxLayout->addWidget( subPlan );
 	size_t ID = 1;
 
-	emplace_back_ID( subPlan );
-
+	emplace_back_ID( subPlan, ID );
 
 	inputPath = new NodeInputLineText( "路径", this );
 	subPlan->appendInput( inputPath );
 	inputPath->getVarObject( )->setUiTypeNames( { "路径", "文本" } );
 
-	emplace_back_ID( inputPath );
+	emplace_back_ID( inputPath, ID );
 
 	outAbsPath = new NodeInputLineText( "全路径", this );
 	subPlan->appendOutput( outAbsPath );
-	emplace_back_ID( outAbsPath );
+	emplace_back_ID( outAbsPath, ID );
 
 	outSize = new NodeInputLineText( "大小", this );
 	subPlan->appendOutput( outSize );
-	emplace_back_ID( outSize );
+	emplace_back_ID( outSize, ID );
 
 	outUserSize = new NodeInputLineText( "占用", this );
 	subPlan->appendOutput( outUserSize );
-	emplace_back_ID( outUserSize );
+	emplace_back_ID( outUserSize, ID );
 
 	outCreateFileTimeData = new NodeInputLineText( "创建日期", this );
 	subPlan->appendOutput( outCreateFileTimeData );
-	emplace_back_ID( outCreateFileTimeData );
+	emplace_back_ID( outCreateFileTimeData, ID );
 
 	outLastChangeFileTimeData = new NodeInputLineText( "最后更改日期", this );
 	subPlan->appendOutput( outLastChangeFileTimeData );
-	emplace_back_ID( outLastChangeFileTimeData );
+	emplace_back_ID( outLastChangeFileTimeData, ID );
 
 	outFileOwner = new NodeInputLineText( "拥有者", this );
 	subPlan->appendOutput( outFileOwner );
-	emplace_back_ID( outFileOwner );
+	emplace_back_ID( outFileOwner, ID );
 
 	outFileContent = new NodeInputLineText( "内容", this );
 	subPlan->appendOutput( outFileContent );
-	emplace_back_ID( outFileContent );
+	emplace_back_ID( outFileContent, ID );
 
 	mainBoxLayout->addSpacerItem( new QSpacerItem( 0, 100, QSizePolicy::Ignored, QSizePolicy::Expanding ) );
 	subPlan->repaint( );

@@ -36,6 +36,8 @@ protected: // ui
 	QLabel *title;
 	/// @brief 布局
 	QVBoxLayout *mainBoxLayout;
+protected:
+	void emplace_back_ID( INodeComponent *emplace_ptr, size_t &id );
 public:
 	/// @brief QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()
 	/// @param get_stack_function 节点生成函数
