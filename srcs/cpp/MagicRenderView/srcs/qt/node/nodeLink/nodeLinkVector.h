@@ -118,7 +118,10 @@ public:
 	/// 该调用会进行对象锁，如果需要结束迭代器并且进行解锁，应该使用 end()
 	/// @return 
 	virtual std_pairt< std_vector< NodeLinkItem >::iterator, std_vector< NodeLinkItem >::iterator > begin( ) const;
+	/// @brief 清理连接项
 	virtual void clear( );
+	/// @brief 重置对象
+	virtual void reset( );
 };
 
 #endif // NODELINKVECTOR_H_H_HEAD__FILE__

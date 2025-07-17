@@ -22,7 +22,7 @@
 template< typename TUnity >
 size_t randomId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
 	auto count = storage_vector.size( );
-	if( count == 0 ) {
+	if ( count == 0 ) {
 		storage_vector.emplace_back( request_ui_ptr, 1 );
 		return 1;
 	}
@@ -30,14 +30,14 @@ size_t randomId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *r
 	size_t max = 0;
 	max -= 1;
 
-	for( size_t adId = 1; adId < max; ++adId ) {
+	for ( size_t adId = 1; adId < max; ++adId ) {
 		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].second == adId )
+		for ( ; index < count; ++index )
+			if ( data[ index ].second == adId )
 				break;
-			else if( data[ index ].first == request_ui_ptr )
+			else if ( data[ index ].first == request_ui_ptr )
 				return data[ index ].second;
-		if( index == count ) {
+		if ( index == count ) {
 			storage_vector.emplace_back( request_ui_ptr, adId );
 			return adId;
 		}
@@ -51,8 +51,8 @@ size_t removeId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *r
 	size_t result = 0;
 	auto begin = storage_vector.begin( );
 	auto end = storage_vector.end( );
-	for( ; begin != end; ++begin )
-		if( begin->first == request_ui_ptr ) {
+	for ( ; begin != end; ++begin )
+		if ( begin->first == request_ui_ptr ) {
 			result = begin->second;
 			storage_vector.emplace( begin );
 			return result;
@@ -63,11 +63,11 @@ size_t removeId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *r
 template< typename TUnity >
 size_t getId( std_vector_pairt< TUnity *, size_t > &storage_vector, TUnity *request_ui_ptr ) {
 	auto count = storage_vector.size( );
-	if( count == 0 )
+	if ( count == 0 )
 		return 0;
 	auto data = storage_vector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ].first == request_ui_ptr )
+	for ( size_t index = 0; index < count; ++index )
+		if ( data[ index ].first == request_ui_ptr )
 			return data[ index ].second;
 	return 0;
 }
@@ -76,11 +76,11 @@ template< typename TUnity >
 inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &storage_vector, const TUnity *request_ui_ptr, size_t *result_scond ) {
 	*result_scond = 0;
 	auto count = storage_vector.size( );
-	if( count == 0 )
+	if ( count == 0 )
 		return false;
 	auto dataPtr = storage_vector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( dataPtr[ index ].first == request_ui_ptr ) {
+	for ( size_t index = 0; index < count; ++index )
+		if ( dataPtr[ index ].first == request_ui_ptr ) {
 			*result_scond = dataPtr[ index ].second;
 			return true;
 		}
@@ -90,11 +90,11 @@ inline static bool getUnitySecond( const std_vector_pairt< TUnity *, size_t > &s
 template< typename TUnity >
 inline static TUnity * getUnityFirst( const std_vector_pairt< TUnity *, size_t > &storage_vector, const size_t &scond ) {
 	auto count = storage_vector.size( );
-	if( count == 0 )
+	if ( count == 0 )
 		return nullptr;
 	auto dataPtr = storage_vector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( dataPtr[ index ].second == scond )
+	for ( size_t index = 0; index < count; ++index )
+		if ( dataPtr[ index ].second == scond )
 			return dataPtr[ index ].first;
 	return nullptr;
 }
@@ -124,12 +124,12 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 		auto instance = INodeStack::getInstance< BaseNodeStack >( );
 		QString functionName;
 		auto nodeAddAction = qobject_cast< NodeAddAction * >( action );
-		if( nodeAddAction )
+		if ( nodeAddAction )
 			functionName = nodeAddAction->getFunctionName( );
 		else
 			functionName = action->text( );
 		auto generateNode = instance->generateNode( functionName ); // 节点生成
-		if( generateNode ) {
+		if ( generateNode ) {
 			generateNode->hide( );
 			nodeWidgets.emplace_back( generateNode );
 			generateNode->move( currentMouseInWidgetPos );
@@ -156,20 +156,20 @@ NodeGraph::NodeGraph( QWidget *parent, Qt::WindowFlags f ): QWidget( parent, f )
 	Application::setNewNodeGraph( this );
 }
 NodeGraph::~NodeGraph( ) {
-	for( auto item : nodeWidgets )
+	for ( auto item : nodeWidgets )
 		delete item;
 }
 bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_node_widget, INodeComponent **result_node_component ) {
 	size_t count = nodeWidgets.size( );
-	if( count == 0 )
+	if ( count == 0 )
 		return false;
 	auto nodeWidgetVectDataPtr = nodeWidgets.data( );
 	INodeWidget *nodeWidgetPtr;
 	QRect geometry;
-	for( size_t index = 0; index < count; ++index ) {
+	for ( size_t index = 0; index < count; ++index ) {
 		nodeWidgetPtr = nodeWidgetVectDataPtr[ index ];
 		geometry = nodeWidgetPtr->geometry( );
-		if( geometry.contains( check_pos ) == false )
+		if ( geometry.contains( check_pos ) == false )
 			continue;
 		*result_node_widget = nodeWidgetPtr;
 		auto checkPos = check_pos - nodeWidgetPtr->pos( );
@@ -181,7 +181,7 @@ bool NodeGraph::findPosNodeInfo( const QPoint &check_pos, INodeWidget **result_n
 
 void NodeGraph::updateMinSize( ) {
 	QRect newRect = this->contentsRect( );
-	for( auto nodeWidgetPtr : nodeWidgets )
+	for ( auto nodeWidgetPtr : nodeWidgets )
 		newRect = newRect.united( nodeWidgetPtr->geometry( ) );
 	QSize newSize = newRect.size( );
 	setMinimumSize( newSize );
@@ -191,14 +191,14 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 	currentMouseInWidgetPos = event->pos( );
 	INodeComponent *inputNodeComponent = nullptr, *outputNodeComponent = nullptr;
 	INodeWidget *inputNodeWidget = nullptr, *outputNodeWidget = nullptr;
-	switch( mouseEventStatus ) {
+	switch ( mouseEventStatus ) {
 		// 在按下之后抬起事件
 		case MouseEventType::Press : {
-			if( selectNodeComponent == nullptr && selectNodeWidget == nullptr ) {
+			if ( selectNodeComponent == nullptr && selectNodeWidget == nullptr ) {
 				// 鼠标按键
 				Qt::MouseButton mouseButton = event->button( );
 
-				switch( mouseButton ) {
+				switch ( mouseButton ) {
 					case Qt::RightButton : // 使用配置的位置显示菜单
 						nodeMenu->move( cursorPos );
 						nodeMenu->show( );
@@ -212,63 +212,63 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 		}
 		case MouseEventType::Move :
-			if( selectNodeComponent ) {
+			if ( selectNodeComponent ) {
 				NodeLinkItem nodeLinkItem;
 				INodeComponent::Channel_Type componentChannel = selectNodeComponent->getComponentChannel( );
-				switch( componentChannel ) {
+				switch ( componentChannel ) {
 					case INodeComponent::Channel_Type::Normal_Default :
 						break;
 					case INodeComponent::Channel_Type::Input_Read :
 						// 允许配置输入
-						if( nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) == false )
+						if ( nodeLinkItem.setInput( selectNodeWidget, selectNodeComponent ) == false )
 							break;
 						// 查找输出目标
-						if( findPosNodeInfo( currentMouseInWidgetPos, &outputNodeWidget, &outputNodeComponent ) == false )
+						if ( findPosNodeInfo( currentMouseInWidgetPos, &outputNodeWidget, &outputNodeComponent ) == false )
 							break;
 						// 输出组件是否存在
-						if( !outputNodeComponent )
+						if ( !outputNodeComponent )
 							break;
 						// 获取输出组件的作为位置
-						if( outputNodeComponent->getComponentLinkPos( outputNodeComponent, selectNodeComponentPoint ) == false )
+						if ( outputNodeComponent->getComponentLinkPos( outputNodeComponent, selectNodeComponentPoint ) == false )
 							break;
 						// 配置输出位置
-						if( nodeLinkItem.setOutput( outputNodeWidget, outputNodeComponent ) == false )
+						if ( nodeLinkItem.setOutput( outputNodeWidget, outputNodeComponent ) == false )
 							break;
 						// 输入组件是否允许重复输入
-						if( selectNodeComponent->isOverlayMulVar( ) == false )
-							if( nodeLinkItems->hasInputUnity( selectNodeComponent ) && nodeLinkItems->removeFirstInputItem( selectNodeComponent ) != 1 )
+						if ( selectNodeComponent->isOverlayMulVar( ) == false )
+							if ( nodeLinkItems->hasInputUnity( selectNodeComponent ) && nodeLinkItems->removeFirstInputItem( selectNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + selectNodeWidget->getNodeTitle( ) + "->" + selectNodeComponent->getNodeComponentName( ) );
 						// 加入链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
 						break;
 					case INodeComponent::Channel_Type::Output_Write :
 						// 配置输出组件
-						if( nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) == false )
+						if ( nodeLinkItem.setOutput( selectNodeWidget, selectNodeComponent ) == false )
 							break;
 						// 查找输入组件
-						if( findPosNodeInfo( currentMouseInWidgetPos, &inputNodeWidget, &inputNodeComponent ) == false )
+						if ( findPosNodeInfo( currentMouseInWidgetPos, &inputNodeWidget, &inputNodeComponent ) == false )
 							break;
 						// 不存在输入组件
-						if( !inputNodeComponent )
+						if ( !inputNodeComponent )
 							break;
 						// 获取输入组件位置
-						if( inputNodeWidget->getComponentLinkPos( inputNodeComponent, selectNodeComponentPoint ) == false )
+						if ( inputNodeWidget->getComponentLinkPos( inputNodeComponent, selectNodeComponentPoint ) == false )
 							break;
 						// 配置输入组件
-						if( nodeLinkItem.setInput( inputNodeWidget, inputNodeComponent ) == false )
+						if ( nodeLinkItem.setInput( inputNodeWidget, inputNodeComponent ) == false )
 							break;
 						// 是否已经存在重复链接
-						if( nodeLinkItems->hasItem( nodeLinkItem ) == true )
+						if ( nodeLinkItems->hasItem( nodeLinkItem ) == true )
 							break;
 						// 是否允许重复输入
-						if( inputNodeComponent->isOverlayMulVar( ) == false )
-							if( nodeLinkItems->hasInputUnity( inputNodeComponent ) && nodeLinkItems->removeFirstInputItem( inputNodeComponent ) != 1 )
+						if ( inputNodeComponent->isOverlayMulVar( ) == false )
+							if ( nodeLinkItems->hasInputUnity( inputNodeComponent ) && nodeLinkItems->removeFirstInputItem( inputNodeComponent ) != 1 )
 								tools::debug::printError( "无法断开链接 : " + inputNodeWidget->getNodeTitle( ) + "->" + inputNodeComponent->getNodeComponentName( ) );
 						// 配置链接
 						nodeLinkItems->emplace_back( nodeLinkItem );
 						break;
 				}
-			} else if( selectNodeWidget )
+			} else if ( selectNodeWidget )
 				updateMinSize( );
 			break;
 	}
@@ -280,8 +280,8 @@ void NodeGraph::mouseReleaseEvent( QMouseEvent *event ) {
 void NodeGraph::mouseMoveEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
-	if( selectNodeComponent ) {
-	} else if( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
+	if ( selectNodeComponent ) {
+	} else if ( selectNodeWidget && geometry( ).contains( currentMouseInWidgetPos ) ) {
 		QPoint point = currentMouseInWidgetPos - selectNodeWidgetOffset;
 		point.setX( std::max( 0, point.x( ) ) );
 		point.setY( std::max( 0, point.y( ) ) );
@@ -297,15 +297,15 @@ bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *
 	auto data = nodeWidgetID->data( );
 	size_t count = nodeWidgetID->size( );
 	size_t index = 0;
-	for( ; index < count; ++index )
+	for ( ; index < count; ++index )
 		delete data[ index ].first;
 	nodeWidgetID->clear( );
-	nodeLinkItems->clear( );
+	nodeLinkItems->reset( );
 
 	size_t overCount = over_widget_list.size( );
 	auto ptrData = over_widget_list.data( );
 	index = 0;
-	for( ; index < overCount; ++index ) {
+	for ( ; index < overCount; ++index ) {
 		auto pair = ptrData[ index ];
 		nodeWidgetID->emplace_back( pair );
 		INodeWidget *nodeWidget = pair.first;
@@ -313,10 +313,10 @@ bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *
 		nodeWidgets.emplace_back( nodeWidget );
 		nodeWidget->setParent( this );
 	}
-	for( auto item : new_link_items_vector )
+	for ( auto item : new_link_items_vector )
 		nodeLinkItems->emplace_back( item );
 	nodeWidgetIDMutex->unlock( );
-	for( auto node : nodeWidgets )
+	for ( auto node : nodeWidgets )
 		node->show( );
 
 	updateMinSize( );
@@ -342,12 +342,12 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	INodeWidget **nodeWidgetDataPtr = nodeWidgets.data( );
 	size_t activeNodeCount = 0;
 	// 节点列表
-	for( ; nodeWidgetIndex < nodeWidgetCount; ++nodeWidgetIndex ) {
+	for ( ; nodeWidgetIndex < nodeWidgetCount; ++nodeWidgetIndex ) {
 		size_t activeComponentCount = 0;
 		INodeWidget *nodeWidget = nodeWidgetDataPtr[ nodeWidgetIndex ];
 		size_t nodeWidgetId;
 		::getUnitySecond( *nodeWidgetID, nodeWidget, &nodeWidgetId );
-		if( nodeWidgetId == 0 )
+		if ( nodeWidgetId == 0 )
 			continue; // 无效，则跳过这次
 		++activeNodeCount;
 
@@ -357,13 +357,13 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 		auto componentIDCount = componentId.size( );
 
 		std_vector< uint8_t > nodeCompoent;
-		for( index = 0; index < componentIDCount; ++index )
-			if( pairDataPtr[ index ].second == 0 )
+		for ( index = 0; index < componentIDCount; ++index )
+			if ( pairDataPtr[ index ].second == 0 )
 				continue;
-			else if( pairDataPtr[ index ].first->getVarObject( ) != nullptr ) {
+			else if ( pairDataPtr[ index ].first->getVarObject( ) != nullptr ) {
 				std_vector< uint8_t > componentResult;
 
-				if( pairDataPtr[ index ].first->getVarObject( )->serializeToVectorData( &componentResult ) == false ) {
+				if ( pairDataPtr[ index ].first->getVarObject( )->serializeToVectorData( &componentResult ) == false ) {
 					tools::debug::printError( "序列化失败 : " + nodeWidget->getNodeTitle( ) + " -> " + pairDataPtr[ index ].first->getNodeComponentName( ) );
 					nodeWidgetIDMutex->unlock( );
 					return false;
@@ -410,12 +410,12 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 		// 拷贝组件数据
 		data = nodeCompoent.data( );
 		auto mul = result.size( ) - ( lastPtr - result.data( ) );
-		if( mul < count ) {
+		if ( mul < count ) {
 			tools::debug::printError( "存储数量不足填充后续数据，请检查大小是否异常。( " + QString::number( mul ) + " < " + QString::number( count ) + " ) 判定成立" );
 			nodeWidgetIDMutex->unlock( );
 			return false;
 		}
-		for( index = 0; index < count; ++index )
+		for ( index = 0; index < count; ++index )
 			lastPtr[ index ] = data[ index ];
 		mulStdData.append_range( result );
 	}
@@ -424,7 +424,7 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	auto linkItem = linkItemsVector.data( );
 	size_t linkCount = linkItemsVector.size( );
 	std_vector< uchar > linkBuff;
-	for( index = 0; index < linkCount; ++index ) {
+	for ( index = 0; index < linkCount; ++index ) {
 		size_t nodeWidgetId;
 		std_vector< uchar > idBuff;
 		auto inputNodeComponentInfo = linkItem[ index ].getInputNodeComponentInfo( );
@@ -459,7 +459,7 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	lastPtr += sizeof mulCount;
 	// 拷贝数据
 	data = mulStdData.data( );
-	for( index = 0; index < mulCount; ++index )
+	for ( index = 0; index < mulCount; ++index )
 		lastPtr[ index ] = data[ index ];
 	lastPtr += index;
 	*( decltype(linkCount) * ) lastPtr = linkCount;
@@ -467,7 +467,7 @@ bool NodeGraph::serializeToVectorData( std_vector< uint8_t > *result_data_vector
 	*( decltype(linkBuffCount) * ) lastPtr = linkBuffCount;
 	lastPtr += sizeof linkBuffCount;
 	data = linkBuff.data( );
-	for( index = 0; index < linkBuffCount; ++index )
+	for ( index = 0; index < linkBuffCount; ++index )
 		lastPtr[ index ] = data[ index ];
 	count = result_data_vector->size( );
 	nodeWidgetIDMutex->unlock( );
@@ -478,20 +478,20 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 
 	auto cood = *read_data_vector != isBegEndian( );
 	size_t nodeWidgetCount = *( size_t * ) ( read_data_vector + 1 );
-	if( cood )
+	if ( cood )
 		ISerialize::converEndian( nodeWidgetCount );
 	// 数据头
 	size_t jumpCompCount = sizeof size_t + 1;
-	if( nodeWidgetCount == 0 ) {
+	if ( nodeWidgetCount == 0 ) {
 		nodeWidgetIDMutex->unlock( );
 		return sizeof jumpCompCount;
 	}
 	// 获取节点个数
 	auto lastPtr = read_data_vector + jumpCompCount;
 	size_t needCount = *( size_t * ) ( lastPtr );
-	if( cood )
+	if ( cood )
 		ISerialize::converEndian( needCount );
-	if( needCount > data_count ) {
+	if ( needCount > data_count ) {
 		tools::debug::printError( "参考数据不满足所需数据" );
 		nodeWidgetIDMutex->unlock( );
 		return 0;
@@ -521,34 +521,34 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 	std_shared_ptr< IVarStack > varStack;
 	std_vector_pairt< INodeWidget *, size_t > overNodeWidget;
 	auto surplus = data_count - jumpCompCount;
-	for( size_t serIndex = 0; serIndex < nodeWidgetCount; ++serIndex ) {
+	for ( size_t serIndex = 0; serIndex < nodeWidgetCount; ++serIndex ) {
 		useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
-		if( useCount == 0 ) {
+		if ( useCount == 0 ) {
 			tools::debug::printError( "无法从序列化中获取对象信息" );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		nodeStack = INodeStack::getInstance( stackNames[ 0 ] );
-		if( nodeStack == nullptr ) {
+		if ( nodeStack == nullptr ) {
 			tools::debug::printError( "无法匹配适应的节点生成器 : " + stackNames[ 0 ] );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		generateNode = nodeStack->generateNode( typeNames[ 0 ] );
-		if( generateNode == nullptr ) {
+		if ( generateNode == nullptr ) {
 			tools::debug::printError( "无法生成对应的节点 : " + typeNames[ 0 ] );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		inheritInfo = ISerialize::SerializeInfo::getMetaInheritInfo( generateNode->metaObject( ) );
 		inheritCount = inheritInfo.size( );
-		if( inheritCount != meteObjectNames.size( ) ) {
+		if ( inheritCount != meteObjectNames.size( ) ) {
 			tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
-		for( index = 0; index < inheritCount; ++index )
-			if( meteObjectNames[ index ] != inheritInfo[ index ] ) {
+		for ( index = 0; index < inheritCount; ++index )
+			if ( meteObjectNames[ index ] != inheritInfo[ index ] ) {
 				tools::debug::printError( "节点继承关系不匹配 : " + typeNames[ 0 ] );
 				nodeWidgetIDMutex->unlock( );
 				return 0;
@@ -559,8 +559,8 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 
 		auto pair = overNodeWidget.data( );
 		size_t pairCount = overNodeWidget.size( );
-		for( size_t pariIndex = 0; pariIndex < pairCount; ++pariIndex )
-			if( pair[ pariIndex ].second == id ) {
+		for ( size_t pariIndex = 0; pariIndex < pairCount; ++pariIndex )
+			if ( pair[ pariIndex ].second == id ) {
 				tools::debug::printError( "数据存在重复 ID : " + generateNode->getNodeTitle( ) + " => " + pair[ pariIndex ].first->getNodeTitle( ) );
 				nodeWidgetIDMutex->unlock( );
 				return 0;
@@ -578,74 +578,74 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 		componentCount = *( ( decltype(componentCount) * ) lastPtr );
 		lastPtr += sizeof componentCount;
 		surplus = data_count - ( lastPtr - read_data_vector );
-		if( componentCount == 0 )
+		if ( componentCount == 0 )
 			continue; // 组件为 0
 		id = *( ( decltype(id) * ) lastPtr );
 		lastPtr += sizeof id;
-		if( surplus < useCount ) {
+		if ( surplus < useCount ) {
 			tools::debug::printError( "数据量使用异常" );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 		surplus = data_count - ( lastPtr - read_data_vector );
-		if( id > surplus ) {
+		if ( id > surplus ) {
 			tools::debug::printError( "数据量无法配置节点组件信息" );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
-		if( id == 0 )
+		if ( id == 0 )
 			continue;
 		componentId = generateNode->getComponentID( );
 		componentIdCount = componentId.size( );
 		componentDataPtr = componentId.data( );
 		buffComponentId.clear( );
-		for( idIndex = 0; idIndex < componentIdCount; ++idIndex )
-			if( componentDataPtr[ idIndex ].second == 0 || componentDataPtr[ idIndex ].first->getVarObject( ) == nullptr )
+		for ( idIndex = 0; idIndex < componentIdCount; ++idIndex )
+			if ( componentDataPtr[ idIndex ].second == 0 || componentDataPtr[ idIndex ].first->getVarObject( ) == nullptr )
 				continue;
 			else
 				buffComponentId.emplace_back( componentDataPtr[ idIndex ] );
 
 		componentIdCount = buffComponentId.size( );
-		if( componentIdCount != componentCount ) {
+		if ( componentIdCount != componentCount ) {
 			tools::debug::printError( "节点组件不匹配，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常 ( " + QString::number( componentIdCount ) + " != " + QString::number( componentCount ) + " ) " );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
 
 		componentDataPtr = buffComponentId.data( );
-		for( idIndex = 0; idIndex < componentIdCount; ++idIndex ) {
+		for ( idIndex = 0; idIndex < componentIdCount; ++idIndex ) {
 			id = *( ( decltype(id) * ) lastPtr );
-			if( id == 0 ) {
+			if ( id == 0 ) {
 				tools::debug::printError( "组件id序列为 : 0 。出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
 				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 			lastPtr += sizeof id;
 			surplus = data_count - ( lastPtr - read_data_vector );
-			for( index = 0; index < componentIdCount; ++index )
-				if( componentDataPtr[ index ].second == id ) {
+			for ( index = 0; index < componentIdCount; ++index )
+				if ( componentDataPtr[ index ].second == id ) {
 					varObject = componentDataPtr[ index ].first->getVarObject( );
-					if( varObject != nullptr ) {
+					if ( varObject != nullptr ) {
 						useCount = ISerialize::SerializeInfo::getSerializeInfo( lastPtr, surplus, &beg, &stackNames, &meteObjectNames, &typeNames );
-						if( useCount == 0 ) {
+						if ( useCount == 0 ) {
 							tools::debug::printError( "组件id序列为 : " + QString::number( id ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
 							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						varStack = IVarStack::getInstance( stackNames[ 0 ] );
-						if( varStack == nullptr ) {
+						if ( varStack == nullptr ) {
 							tools::debug::printError( "无法找到匹配变量堆栈 : " + stackNames[ 0 ] );
 							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						varObject = varStack->generateVar( typeNames[ 0 ] );
-						if( varObject == nullptr ) {
+						if ( varObject == nullptr ) {
 							tools::debug::printError( "变量堆栈创建类型失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
 							nodeWidgetIDMutex->unlock( );
 							return 0;
 						}
 						useCount = varObject->serializeToObjectData( lastPtr, surplus );
-						if( useCount == 0 ) {
+						if ( useCount == 0 ) {
 							tools::debug::printError( "变量反序列化失败 : " + stackNames[ 0 ] + " ! " + typeNames[ 0 ] );
 							nodeWidgetIDMutex->unlock( );
 							return 0;
@@ -656,13 +656,13 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 					index = 0;
 					break;
 				}
-			if( index != 0 ) {
+			if ( index != 0 ) {
 				tools::debug::printError( "组件id序列为 : " + QString::number( id ) + " 出现异常，请检查节点 : " + generateNode->getNodeNames( )[ 0 ] + " 是否异常" );
 				nodeWidgetIDMutex->unlock( );
 				return 0;
 			}
 			size_t mod = lastPtr - read_data_vector;
-			if( data_count < mod ) {
+			if ( data_count < mod ) {
 				tools::debug::printError( "数据量使用异常" );
 				nodeWidgetIDMutex->unlock( );
 				return 0;
@@ -674,14 +674,14 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 	size_t linkDataCount = *( size_t * ) lastPtr;
 	lastPtr += sizeof size_t;
 	std_vector< NodeLinkItem > newLinkItemsVector;
-	if( linkCount != 0 && linkDataCount != 0 ) {
+	if ( linkCount != 0 && linkDataCount != 0 ) {
 		surplus = data_count - ( lastPtr - read_data_vector );
-		if( linkDataCount > surplus ) {
+		if ( linkDataCount > surplus ) {
 			tools::debug::printError( "数据量使用异常，剩余数据不足填充链表" );
 			nodeWidgetIDMutex->unlock( );
 			return 0;
 		}
-		for( index = 0; index < linkCount; ++index ) {
+		for ( index = 0; index < linkCount; ++index ) {
 			NodeLinkItem linkItem;
 			size_t inputWidgetID = *( size_t * ) lastPtr;
 			lastPtr += sizeof size_t;
@@ -701,8 +701,9 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 			linkItem.setOutput( inputLink, componetFromId );
 			newLinkItemsVector.emplace_back( linkItem );
 		}
-	} else if( linkDataCount == 0 && linkCount == 0 );
-	else if( linkDataCount == 0 || linkCount == 0 ) {
+	} else if ( linkDataCount == 0 && linkCount == 0 ) {
+
+	} else if ( linkDataCount == 0 || linkCount == 0 ) {
 		tools::debug::printError( "链接列表数据异常" );
 		nodeWidgetIDMutex->unlock( );
 		return 0;
@@ -716,7 +717,7 @@ size_t NodeGraph::serializeToObjectData( const uint8_t *read_data_vector, const 
 size_t NodeGraph::getNodeWidgetID( const INodeWidget *node_widget ) const {
 	std_lock_grad_mutex lockGradMutex( *nodeWidgetIDMutex );
 	size_t resultID = 0;
-	if( ::getUnitySecond( *nodeWidgetID, node_widget, &resultID ) )
+	if ( ::getUnitySecond( *nodeWidgetID, node_widget, &resultID ) )
 		return resultID;
 	return 0;
 }
@@ -732,14 +733,14 @@ void NodeGraph::mousePressEvent( QMouseEvent *event ) {
 	cursorPos = QCursor::pos( );
 	currentMouseInWidgetPos = event->pos( );
 	QRect geometry;
-	for( auto nodeWidget : nodeWidgets ) {
+	for ( auto nodeWidget : nodeWidgets ) {
 		geometry = nodeWidget->geometry( );
-		if( geometry.contains( currentMouseInWidgetPos ) == false )
+		if ( geometry.contains( currentMouseInWidgetPos ) == false )
 			continue;
 		selectNodeWidget = nodeWidget;
 		selectNodeWidgetOffset = currentMouseInWidgetPos - nodeWidget->pos( );
 		selectNodeComponent = nodeWidget->getPosNodeComponent( selectNodeWidgetOffset );
-		if( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
+		if ( selectNodeWidget->getComponentLinkPos( selectNodeComponent, selectNodeComponentPoint ) == false /* 没有找到可链接的组件 */ )
 			selectNodeComponent = nullptr;
 		auto old = activeNodeWidget;
 		activeNodeWidget = selectNodeWidget;
@@ -753,10 +754,10 @@ void NodeGraph::paintEvent( QPaintEvent *event ) {
 	QPainter painter( this );
 	QPoint start, end;
 
-	for( auto item : nodeLinkItems->toVector( ) )
-		if( item.getInputOutputPos( &start, &end ) )
+	for ( auto item : nodeLinkItems->toVector( ) )
+		if ( item.getInputOutputPos( &start, &end ) )
 			painter.drawLine( start, end );
-	if( selectNodeComponent /* 绘制即时连线 */ ) {
+	if ( selectNodeComponent /* 绘制即时连线 */ ) {
 		painter.drawLine( selectNodeComponentPoint, currentMouseInWidgetPos );
 	}
 }
@@ -767,14 +768,14 @@ size_t NodeGraph::registerID( INodeWidget *request_ui_ptr ) {
 }
 size_t NodeGraph::registerID( INodeWidget *request_ui_ptr, size_t advise_id ) {
 	size_t count = nodeWidgetID->size( );
-	if( count == 0 ) {
+	if ( count == 0 ) {
 		nodeWidgetID->emplace_back( request_ui_ptr, advise_id );
 		return advise_id;
 	}
 	auto data = nodeWidgetID->data( );
 	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ].second == advise_id )
+	for ( ; index < count; ++index )
+		if ( data[ index ].second == advise_id )
 			return 0;
 	nodeWidgetID->emplace_back( request_ui_ptr, advise_id );
 	return advise_id;
@@ -796,7 +797,7 @@ void NodeGraph::requestNodeWidgetID( INodeWidget *request_node_widget_ptr ) {
 	request_node_widget_ptr->registerIDFinish( id );
 }
 void NodeGraph::requestNodeWidgetAdviseID( INodeWidget *request_node_widget_ptr, size_t advise_id ) {
-	if( nodeWidgetAdviseIDMutex.get( )->try_lock( ) ) {
+	if ( nodeWidgetAdviseIDMutex.get( )->try_lock( ) ) {
 		advise_id = registerID( request_node_widget_ptr, advise_id );
 		nodeWidgetAdviseIDMutex->unlock( );
 		request_node_widget_ptr->registerIDFinish( advise_id );
