@@ -3,13 +3,13 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-#include "../../../stack/nodeStack/INodeStack.h"
+#include <qt/stack/nodeStack/INodeStack.h>
 
-#include "qt/functionDeclaration/userDef/userFunctionDeclaration.h"
-#include "qt/node/nodeComponent/base/nodeInputLineText.h"
-#include "qt/node/nodeComponent/base/nodePanel.h"
-#include "qt/stack/varStack/base/baseVarStackEx.h"
-#include "qt/type/baseType/nullTypeObject.h"
+#include <qt/functionDeclaration/userDef/userFunctionDeclaration.h>
+#include <qt/node/nodeComponent/base/nodeInputLineText.h>
+#include <qt/node/nodeComponent/base/nodePanel.h>
+#include <qt/stack/varStack/base/baseVarStackEx.h>
+#include <qt/type/baseType/nullTypeObject.h>
 
 NodeFileInfo::NodeFileInfo( const std_function< std_shared_ptr< INodeStack >( ) > &get_stack_function, const std_vector< QString > &node_widget_name_s, QWidget *parent, Qt::WindowFlags f ) : INodeWidget( get_stack_function, node_widget_name_s, nullptr, parent, f ) {
 	std_lock_grad_mutex lockGradMutex( *componentIDMutex );

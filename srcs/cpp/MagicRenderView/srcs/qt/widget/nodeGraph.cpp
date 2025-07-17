@@ -309,6 +309,7 @@ bool NodeGraph::overSerializeToObjectData( const std_vector_pairt< INodeWidget *
 		auto pair = ptrData[ index ];
 		nodeWidgetID->emplace_back( pair );
 		INodeWidget *nodeWidget = pair.first;
+		nodeLinkItems->usRegNodeLinkStatus( nodeWidget );
 		nodeWidgets.emplace_back( nodeWidget );
 		nodeWidget->setParent( this );
 	}
