@@ -1,5 +1,5 @@
 ﻿#include "./ISerialize.h"
-#include <qt/type/ITypeObject.h>
+#include <qt/types/ITypeObject.h>
 #include <QList>
 
 ISerialize::SerializeInfo::SerializeInfo( const uint8_t *data_ptr, const size_t &data_size ): data( data_size ) {

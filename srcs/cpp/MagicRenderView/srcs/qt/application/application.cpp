@@ -1,23 +1,13 @@
 ﻿#include "application.h"
 
+#include <QProcess>
 #include <qboxlayout.h>
-
-#include "../node/nodeComponent/INodeComponent.h"
-#include "../node/nodeWidget/INodeWidget.h"
-
-#include "../widget/nodeGraph.h"
 
 #include "qt/tools/tools.h"
 
-NodeGraph *Application::mainNodeGraph = nullptr;
+
 
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
-}
-
-size_t Application::getID( const INodeWidget *node_widget ) {
-	if( mainNodeGraph == nullptr )
-		return 0;
-	return mainNodeGraph->getNodeWidgetID( node_widget );
 }
 
 std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
@@ -55,23 +45,14 @@ void Application::setWindowToIndexScreenCentre( size_t index ) {
 		tools::ui::moveDisplayCenter( win, index );
 }
 
+void Application::resetApp( ) {
+	quit( );
+	QProcess::startDetached( applicationFilePath( ), arguments( ) );
+}
+void Application::quitApp( ) {
+	quit( );
+}
 bool Application::notify( QObject *object, QEvent *event ) {
-	if( mainNodeGraph == nullptr )
-		return QApplication::notify( object, event );
-	INodeComponent *nodeComponent;
-	INodeWidget *nodeWidget;
-	QEvent::Type eventType = event->type( );
-	switch( eventType ) {
-		case QEvent::Show :
-			nodeWidget = qobject_cast< INodeWidget * >( object );
-			if( nodeWidget ) {
-				if( mainNodeGraph->getNodeWidgetID( nodeWidget ) == 0 ) {
-					nodeWidget->hide( );
-					emit nodeWidget->requestNodeWidgetID( nodeWidget );
-				}
-				return QApplication::notify( object, event );
-			}
-			break;
-	}
+
 	return QApplication::notify( object, event );
 }

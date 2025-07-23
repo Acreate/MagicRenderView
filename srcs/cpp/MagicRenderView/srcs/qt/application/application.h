@@ -4,16 +4,13 @@
 
 #include <QApplication>
 
-#include "../widget/infoWidget/IInfoWidget.h"
+#include <alias/type_alias.h>
+
 class QBoxLayout;
-class INodeWidget;
-class INodeComponent;
-class NodeGraph;
+
 class Application : public QApplication {
 	Q_OBJECT;
-protected:
-	/// @brief 渲染面板
-	static NodeGraph *mainNodeGraph;
+
 public:
 	/// @brief 获取布局当中所有的窗口
 	/// @param main_widget 布局
@@ -31,15 +28,11 @@ public:
 	static void setWindowToIndexScreenCentre( size_t index );
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
-	/// @brief 配置渲染面板
-	/// @param node_graph 渲染面板
-	/// @return 旧的渲染面板
-	static NodeGraph * setNewNodeGraph( NodeGraph *node_graph ) {
-		auto oldNodeGraph = mainNodeGraph;
-		mainNodeGraph = node_graph;
-		return oldNodeGraph;
-	}
-	static size_t getID( const INodeWidget *node_widget );
+
+	/// @brief 重启应用
+	static void resetApp();
+	/// @brief 退出应用
+	static void quitApp();
 public:
 	bool notify( QObject *, QEvent * ) override;
 };
