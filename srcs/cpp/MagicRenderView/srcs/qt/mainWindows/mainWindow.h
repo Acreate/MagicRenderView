@@ -4,10 +4,14 @@
 
 #include <QMainWindow>
 
+class Application;
 class MainWidget;
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
 protected:
+	Application *appInstance;
+	/// @brief ini 关键字
+	QString keyFirst;
 	/// @brief 窗口的工具栏菜单
 	QMenuBar *mainMenuBar;
 	/// @brief 主要菜单
@@ -16,9 +20,9 @@ protected:
 	MainWidget *mainWidget;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	~MainWindow() override;
 	void setWindowToIndexScreenCentre( size_t index );
 protected:
-	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 };
 

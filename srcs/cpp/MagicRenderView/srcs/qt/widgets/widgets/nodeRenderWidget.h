@@ -10,5 +10,6 @@ public:
 	~NodeRenderWidget( ) override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void mouseMoveEvent( QMouseEvent *event ) override;
 };
 #endif // NODERENDERWIDGET_H_H_HEAD__FILE__

@@ -82,6 +82,47 @@ void Application::resetApp( ) {
 void Application::quitApp( ) {
 	quit( );
 }
+QString Application::normalKey( const QString &key ) {
+
+	QString result;
+	std_vector< QChar > charData;
+
+	qsizetype length = key.length( ), index = 0;
+	auto data = key.data( );
+	for( ; index < length; ++index )
+		if( data[ index ] == '/' || data[ index ] == '\\' ) {
+			charData.emplace_back( '/' );
+			for( ; index < length; ++index )
+				if( data[ index ] != '/' && data[ index ] != '\\' ) {
+					charData.emplace_back( data[ index ] );
+					break;
+				}
+		} else
+			charData.emplace_back( data[ index ] );
+	size_t count = charData.size( );
+
+	result = staticMetaObject.className( );
+	result.append( "/" );
+	if( charData[ count - 1 ] == "/" )
+		result.append( QString( charData.data( ), count ) );
+	else
+		result.append( QString( charData.data( ), count ) ).append( "/" );
+	return result;
+}
+QString Application::normalKey( const QString &key, QWidget *widget ) {
+	QString result = normalKey( key );
+	QString className = widget->metaObject( )->className( );
+	className.append( "/" );
+	if( result.endsWith( className ) == false )
+		result.append( className );
+	return result;
+}
+QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *widget ) {
+	auto appendStr = widget->objectName( );
+	if( appendStr.isEmpty( ) )
+		return normalKey( key, widget );
+	return normalKeyAppendEnd( key, widget, appendStr );
+}
 bool Application::notify( QObject *object, QEvent *event ) {
 
 	return QApplication::notify( object, event );

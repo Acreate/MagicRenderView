@@ -4,6 +4,7 @@
 #include <QMenuBar>
 #include <QProcess>
 #include <QFileDialog>
+#include <QMouseEvent>
 #include <QPushButton>
 
 #include <qt/tools/tools.h>
@@ -31,15 +32,32 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
-	mainWidget = new MainWidget( );
-	setCentralWidget( mainWidget );
 	setWindowToIndexScreenCentre( 0 );
+
+	appInstance = Application::getApplicationInstancePtr( );
+	keyFirst = "Application/MainWindow";
+
+	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
+	setMaximumSize( size );
+
+	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
+	move( point );
+
+	mainWidget = new MainWidget( this );
+	setCentralWidget( mainWidget );
+
+	setMouseTracking( true );
+	mainWidget->setMouseTracking( true );
+}
+MainWindow::~MainWindow( ) {
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) );
+	appInstance->syncAppValueIniFile( );
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
 }
-void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
-}
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
+	mainWidget->initWidgetListLayout( );
 }

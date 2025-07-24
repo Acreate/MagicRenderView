@@ -6,7 +6,7 @@
 
 #include <alias/type_alias.h>
 
-class WidgetStatus;
+class QVBoxLayout;
 class Application;
 class NodeScriptsScrollAreasWidget;
 class NodeListScrollAreasWidget;
@@ -22,19 +22,24 @@ protected:
 	NodeListScrollAreasWidget *nodeListWidget;
 	/// @brief 节点执行列表
 	NodeScriptsScrollAreasWidget *nodeScriptsWidget;
-	/// @brief 渲染窗口比例
-	WidgetStatus *nodeRenderStatus;
-	/// @brief 节点列表比例
-	WidgetStatus *nodeListStatus;
-	/// @brief 节点脚本比例
-	WidgetStatus *nodeScriptsSatatus;
+	/// @brief ini 关键字
+	QString keyFirst;
+	/// @brief 鼠标是否按下
+	bool mouseIsPress;
+	/// @brief 拖拽拉伸窗口大小
+	QWidget *dragWidgetSize;
+	/// @brief 当前鼠标图标
+	Qt::CursorShape cursorShape;
 public:
 	MainWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
+	/// @brief 初始化子窗口布局
+	virtual void initWidgetListLayout( );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-	void updateResize( );
-	void resizeEvent( QResizeEvent *event ) override;
+	void mouseMoveEvent( QMouseEvent *event ) override;
+	void mousePressEvent( QMouseEvent *event ) override;
+	void mouseReleaseEvent( QMouseEvent *event ) override;
 };
 
 #endif // MAINWIDGET_H_H_HEAD__FILE__

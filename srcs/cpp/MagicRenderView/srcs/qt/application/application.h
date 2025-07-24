@@ -29,6 +29,28 @@ public:
 	static void resetApp( );
 	/// @brief 退出应用
 	static void quitApp( );
+	/// @brief 标准化关键字
+	/// @param key 自定义关键字列表
+	/// @return 返回标准化后的关键字
+	static QString normalKey( const QString &key );
+	/// @brief 标准化关键字
+	/// @param key 自定义关键字列表
+	/// @param widget 关键字关联窗口
+	/// @return 返回标准化后的关键字
+	static QString normalKey( const QString &key, QWidget *widget );
+	/// @brief 标准化关键字，并且在标准化关键字后续增加一个自定义字符串
+	/// @param key 自定义关键字列表
+	/// @param widget 关键字关联窗口
+	/// @param append_str 追加的字符串
+	/// @return 返回标准化后的关键字
+	static QString normalKeyAppendEnd( const QString &key, QWidget *widget, const QString &append_str ) {
+		return normalKey( key, widget ).append( "/" ).append( append_str ).append( "/" );
+	}
+	/// @brief 标准化关键字，并且在末尾追加窗口名称
+	/// @param key 自定义关键字列表
+	/// @param widget 关键字关联窗口
+	/// @return 返回标准化后的关键字
+	static QString normalKeyAppendWidgetName( const QString &key, QWidget *widget );
 protected:
 	QSettings *settings;
 public:
