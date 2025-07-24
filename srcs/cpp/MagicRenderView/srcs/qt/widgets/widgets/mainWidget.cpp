@@ -17,9 +17,18 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
 
 	auto keyFirst = "Application/MainWindow/MainWidget";
-	nodeRenderStatus = new WidgetStatus( keyFirst, nodeRenderWidget, 8, true );
-	nodeListStatus = new WidgetStatus( keyFirst, nodeRenderWidget, 3, true );
-	nodeScriptsSatatus = new WidgetStatus( keyFirst, nodeRenderWidget, 3, true );
+	nodeScriptsWidget->show( );
+	nodeRenderWidget->show( );
+	nodeListWidget->show( );
+
+	QString normalKey = WidgetStatus::normalKeyAppendWidgetName( keyFirst, nodeRenderWidget );
+	nodeRenderStatus = new WidgetStatus( normalKey, nodeRenderWidget, 8 );
+
+	normalKey = WidgetStatus::normalKeyAppendWidgetName( keyFirst, nodeListWidget );
+	nodeListStatus = new WidgetStatus( normalKey, nodeListWidget, 3 );
+
+	normalKey = WidgetStatus::normalKeyAppendWidgetName( keyFirst, nodeScriptsWidget );
+	nodeScriptsSatatus = new WidgetStatus( normalKey, nodeScriptsWidget, 3 );
 
 	nodeRenderStatus->getAppIniValue( );
 	nodeListStatus->getAppIniValue( );
