@@ -2,7 +2,7 @@
 
 #include "../widgets/nodeRenderWidget.h"
 NodeRenderScrollAreasWidget::NodeRenderScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ) : QScrollArea( parent ) {
-	nodeRenderWidget = new NodeRenderWidget(this);
+	nodeRenderWidget = new NodeRenderWidget( this, flags );
 	setWidget( nodeRenderWidget );
 	setWidgetResizable( true );
 }

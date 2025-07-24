@@ -5,9 +5,38 @@
 
 #include "qt/tools/tools.h"
 
-
-
+#include <QSettings>
+#include <qfile.h>
+#include <qfileinfo.h>
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
+	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
+	settings = new QSettings( fileName, QSettings::IniFormat );
+	QFileInfo fileInfo( fileName );
+	if( fileInfo.exists( ) == false ) {
+		auto key = "settings";
+		settings->setValue( key, 0 );
+		settings->sync( );
+		if( fileInfo.exists( ) == false )
+			qDebug( ) << "不存在";
+		settings->remove( key );
+		settings->sync( );
+	}
+}
+Application::~Application( ) {
+	settings->sync( );
+	delete settings;
+}
+void Application::setValue( const QAnyStringView &key, const QVariant &value ) {
+	settings->setValue( key, value );
+}
+QVariant Application::value( const QAnyStringView &key, const QVariant &defaultValue ) const {
+	return settings->value( key, defaultValue );
+}
+QVariant Application::value( const QAnyStringView &key ) const {
+	return settings->value( key );
+}
+void Application::sync( ) const {
+	settings->sync( );
 }
 
 std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
