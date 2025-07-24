@@ -4,6 +4,7 @@
 WidgetStatus::WidgetStatus( const QString &key, QWidget *widget, size_t layout, bool is_show ): layout( layout ), widget( widget ), showStatus( is_show ) {
 	application = Application::getApplicationInstancePtr( );
 	std_vector< QChar > charData;
+
 	qsizetype length = key.length( ), index = 0;
 	auto data = key.data( );
 	for( ; index < length; ++index )
@@ -24,6 +25,10 @@ WidgetStatus::WidgetStatus( const QString &key, QWidget *widget, size_t layout, 
 		this->key.append( QString( charData.data( ), count ) );
 	else
 		this->key.append( QString( charData.data( ), count ) ).append( "/" );
+	QString className = widget->metaObject( )->className( );
+	className.append( "/" );
+	if( this->key.endsWith( className ) == false )
+		this->key.append( className );
 }
 void WidgetStatus::getAppIniValue( ) {
 	application->sync( );

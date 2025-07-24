@@ -22,7 +22,6 @@ protected:
 	QString key;
 public:
 	WidgetStatus( const QString &key, QWidget *widget, size_t layout, bool is_show );
-	virtual ~WidgetStatus( ) { }
 	virtual const QString & getKey( ) const { return key; }
 	virtual size_t getLayout( ) const { return layout; }
 	virtual void setLayout( const size_t layout ) { this->layout = layout; }

@@ -16,9 +16,10 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	nodeRenderWidget = new NodeRenderScrollAreasWidget( this );
 	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
 
-	nodeRenderStatus = new WidgetStatus( "Application/////MainWindow/MainWidget/NodeRenderScrollAreasWidget/////", nodeRenderWidget, 8, true );
-	nodeListStatus = new WidgetStatus( "Application/MainWindow/MainWidget/NodeListScrollAreasWidget", nodeRenderWidget, 3, true );
-	nodeScriptsSatatus = new WidgetStatus( "Application/MainWindow/MainWidget/NodeScriptsScrollAreasWidget", nodeRenderWidget, 3, true );
+	auto keyFirst = "Application/MainWindow/MainWidget";
+	nodeRenderStatus = new WidgetStatus( keyFirst, nodeRenderWidget, 8, true );
+	nodeListStatus = new WidgetStatus( keyFirst, nodeRenderWidget, 3, true );
+	nodeScriptsSatatus = new WidgetStatus( keyFirst, nodeRenderWidget, 3, true );
 
 	nodeRenderStatus->getAppIniValue( );
 	nodeListStatus->getAppIniValue( );
@@ -55,13 +56,13 @@ void MainWidget::updateResize( ) {
 	size_t nodeScriptsWidgetHeight = nodeScriptsSatatus->getLayout( );
 	size_t nodeRenderWidgetHeight = nodeRenderStatus->getLayout( );
 
-	if( nodeRenderWidget->isHidden( ) )
+	if( nodeRenderStatus->isShow( ) == false )
 		nodeRenderWidgetHeight = 0;
 
-	if( nodeListWidget->isHidden( ) )
+	if( nodeListStatus->isShow( ) == false )
 		nodeListWidgetHeight = 0;
 
-	if( nodeScriptsWidget->isHidden( ) )
+	if( nodeScriptsSatatus->isShow( ) == false )
 		nodeScriptsWidgetHeight = 0;
 
 	size_t mup = nodeRenderWidgetHeight + nodeListWidgetHeight + nodeScriptsWidgetHeight;
