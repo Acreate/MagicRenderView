@@ -16,26 +16,27 @@ Application::Application( int &argc, char **argv, int i ): QApplication( argc, a
 		auto key = "settings";
 		settings->setValue( key, 0 );
 		settings->sync( );
-		if( fileInfo.exists( ) == false )
-			qDebug( ) << "不存在";
 		settings->remove( key );
-		settings->sync( );
+		if( fileInfo.exists( ) == false )
+			qDebug( ) << "无法创建匹配的 ini 文件";
+		else
+			settings->sync( );
 	}
 }
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
 }
-void Application::setValue( const QAnyStringView &key, const QVariant &value ) {
+void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {
 	settings->setValue( key, value );
 }
-QVariant Application::value( const QAnyStringView &key, const QVariant &defaultValue ) const {
+QVariant Application::getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const {
 	return settings->value( key, defaultValue );
 }
-QVariant Application::value( const QAnyStringView &key ) const {
+QVariant Application::getAppIniValue( const QAnyStringView &key ) const {
 	return settings->value( key );
 }
-void Application::sync( ) const {
+void Application::syncAppValueIniFile( ) const {
 	settings->sync( );
 }
 

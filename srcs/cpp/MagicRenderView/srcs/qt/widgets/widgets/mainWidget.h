@@ -6,6 +6,7 @@
 
 #include <alias/type_alias.h>
 
+class WidgetStatus;
 class Application;
 class NodeScriptsScrollAreasWidget;
 class NodeListScrollAreasWidget;
@@ -22,11 +23,11 @@ protected:
 	/// @brief 节点执行列表
 	NodeScriptsScrollAreasWidget *nodeScriptsWidget;
 	/// @brief 渲染窗口比例
-	std_pairt< QString, size_t > renderLayout;
+	WidgetStatus *nodeRenderStatus;
 	/// @brief 节点列表比例
-	std_pairt< QString, size_t > nodeListLayout;
+	WidgetStatus *nodeListStatus;
 	/// @brief 节点脚本比例
-	std_pairt< QString, size_t > nodeScriptsLayout;
+	WidgetStatus *nodeScriptsSatatus;
 public:
 	MainWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

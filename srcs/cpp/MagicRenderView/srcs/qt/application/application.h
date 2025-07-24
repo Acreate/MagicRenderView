@@ -35,10 +35,10 @@ public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
 public:
-	void setValue( const QAnyStringView &key, const QVariant &value );
-	QVariant value( const QAnyStringView &key, const QVariant &defaultValue ) const;
-	QVariant value( const QAnyStringView &key ) const;
-	void sync( ) const;
+	void setAppIniValue( const QAnyStringView &key, const QVariant &value );
+	QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
+	QVariant getAppIniValue( const QAnyStringView &key ) const;
+	void syncAppValueIniFile( ) const;
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

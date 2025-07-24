@@ -4,6 +4,8 @@
 
 #include "../../application/application.h"
 
+#include "../../status/widgetStatus.h"
+
 #include "../scrollAreas/nodeListScrollAreasWidget.h"
 #include "../scrollAreas/nodeRenderScrollAreasWidget.h"
 #include "../scrollAreas/nodeScriptsScrollAreasWidget.h"
@@ -14,29 +16,28 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	nodeRenderWidget = new NodeRenderScrollAreasWidget( this );
 	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
 
-	renderLayout.first = "Application/MainWindow/MainWidget/NodeListScrollAreasWidget";
-	renderLayout.second = 8;
-	renderLayout.second = appInstance->value( renderLayout.first, renderLayout.second ).toLongLong( );
+	nodeRenderStatus = new WidgetStatus( "Application/////MainWindow/MainWidget/NodeRenderScrollAreasWidget/////", nodeRenderWidget, 8, true );
+	nodeListStatus = new WidgetStatus( "Application/MainWindow/MainWidget/NodeListScrollAreasWidget", nodeRenderWidget, 3, true );
+	nodeScriptsSatatus = new WidgetStatus( "Application/MainWindow/MainWidget/NodeScriptsScrollAreasWidget", nodeRenderWidget, 3, true );
 
-	nodeListLayout.first = "Application/MainWindow/MainWidget/NodeRenderScrollAreasWidget";
-	nodeListLayout.second = 3;
-	nodeListLayout.second = appInstance->value( nodeListLayout.first, nodeListLayout.second ).toLongLong( );
+	nodeRenderStatus->getAppIniValue( );
+	nodeListStatus->getAppIniValue( );
+	nodeScriptsSatatus->getAppIniValue( );
 
-	nodeScriptsLayout.first = "Application/MainWindow/MainWidget/NodeScriptsScrollAreasWidget";
-	nodeScriptsLayout.second = 3;
-	nodeScriptsLayout.second = appInstance->value( nodeScriptsLayout.first, nodeScriptsLayout.second ).toLongLong( );
-
-	nodeListWidget->show( );
-	nodeRenderWidget->show( );
-	nodeScriptsWidget->show( );
+	if( nodeListStatus->isShow( ) )
+		nodeListWidget->show( );
+	if( nodeRenderStatus->isShow( ) )
+		nodeRenderWidget->show( );
+	if( nodeScriptsSatatus->isShow( ) )
+		nodeScriptsWidget->show( );
 
 	updateResize( );
 }
 MainWidget::~MainWidget( ) {
-	appInstance->setValue( renderLayout.first, renderLayout.second );
-	appInstance->setValue( nodeListLayout.first, nodeListLayout.second );
-	appInstance->setValue( nodeScriptsLayout.first, nodeScriptsLayout.second );
-	appInstance->sync( );
+	nodeRenderStatus->setAppIniValue( );
+	nodeListStatus->setAppIniValue( );
+	nodeScriptsSatatus->setAppIniValue( );
+	appInstance->syncAppValueIniFile( );
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 
@@ -49,15 +50,30 @@ void MainWidget::updateResize( ) {
 	auto rect = contentsRect( );
 	int currentWidth = rect.width( );
 	int currentHeight = rect.height( );
-	int mulBase = currentHeight / ( renderLayout.second + nodeListLayout.second + nodeScriptsLayout.second );
+	size_t mulBase;
+	size_t nodeListWidgetHeight = nodeListStatus->getLayout( );
+	size_t nodeScriptsWidgetHeight = nodeScriptsSatatus->getLayout( );
+	size_t nodeRenderWidgetHeight = nodeRenderStatus->getLayout( );
 
-	int nodeListWidgetHeight = mulBase * nodeListLayout.second;
+	if( nodeRenderWidget->isHidden( ) )
+		nodeRenderWidgetHeight = 0;
+
+	if( nodeListWidget->isHidden( ) )
+		nodeListWidgetHeight = 0;
+
+	if( nodeScriptsWidget->isHidden( ) )
+		nodeScriptsWidgetHeight = 0;
+
+	size_t mup = nodeRenderWidgetHeight + nodeListWidgetHeight + nodeScriptsWidgetHeight;
+	if( mup == 0 )
+		return; // 没有显示的内容
+	mulBase = currentHeight / mup;
+	nodeListWidgetHeight = mulBase * nodeListWidgetHeight;
+	nodeScriptsWidgetHeight = mulBase * nodeScriptsWidgetHeight;
+	nodeRenderWidgetHeight = currentHeight - nodeListWidgetHeight - nodeScriptsWidgetHeight;
+
 	nodeListWidget->setFixedSize( currentWidth, nodeListWidgetHeight );
-
-	size_t nodeScriptsWidgetHeight = mulBase * nodeScriptsLayout.second;
 	nodeScriptsWidget->setFixedSize( currentWidth, nodeScriptsWidgetHeight );
-
-	size_t nodeRenderWidgetHeight = currentHeight - nodeListWidgetHeight - nodeScriptsWidgetHeight;
 	nodeRenderWidget->setFixedSize( currentWidth, nodeRenderWidgetHeight );
 
 	nodeRenderWidget->move( 0, 0 );
