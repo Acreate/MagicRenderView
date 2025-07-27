@@ -30,12 +30,18 @@ protected:
 	QWidget *dragWidgetSize;
 	/// @brief 当前鼠标图标
 	Qt::CursorShape cursorShape;
+protected:
+	/// @brief 初始化子窗口布局
+	void updateWidgetListLayout( const QSize &old_size, const QSize &current_size );
+	/// @brief 写入高度
+	void writeHeightIni( ) const;
+	/// @brief 写入显示状态
+	void writeShowIni( ) const;
 public:
 	MainWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
-	/// @brief 初始化子窗口布局
-	virtual void initWidgetListLayout( );
 protected:
+	void resizeEvent( QResizeEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;

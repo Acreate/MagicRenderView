@@ -38,14 +38,15 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	keyFirst = "Application/MainWindow";
 
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
-	setMaximumSize( size );
+	setBaseSize( size );
 
 	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
 	move( point );
 
 	mainWidget = new MainWidget( this );
 	setCentralWidget( mainWidget );
-
+	
+	
 	setMouseTracking( true );
 	mainWidget->setMouseTracking( true );
 }
@@ -59,5 +60,4 @@ void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
-	mainWidget->initWidgetListLayout( );
 }

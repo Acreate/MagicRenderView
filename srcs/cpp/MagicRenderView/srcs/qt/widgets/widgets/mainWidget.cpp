@@ -27,6 +27,16 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "show" ), true ).toBool( ) )
 		nodeListWidget->show( );
 
+	appInstance->syncAppValueIniFile( );
+
+	quint64 nodeScriptsHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "height" ), 50 ).toULongLong( );
+	nodeScriptsWidget->setFixedHeight( nodeScriptsHeight );
+	quint64 nodeListHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "height" ), 50 ).toULongLong( );
+	nodeListWidget->setFixedHeight( nodeListHeight );
+
+	quint64 nodeRenderWidgetHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "height" ), 100 ).toULongLong( );
+	nodeRenderWidget->setFixedHeight( nodeRenderWidgetHeight );
+
 	dragWidgetSize = nullptr;
 	mouseIsPress = false;
 	nodeScriptsWidget->setMouseTracking( true );
@@ -39,9 +49,42 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 }
 MainWidget::~MainWidget( ) {
 
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), nodeScriptsWidget->isHidden( ) == false );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "show" ), nodeRenderWidget->isHidden( ) == false );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "show" ), nodeListWidget->isHidden( ) == false );
+	writeShowIni( );
+	writeHeightIni( );
+	appInstance->syncAppValueIniFile( );
+}
+void MainWidget::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
+	updateWidgetListLayout( event->oldSize( ), event->size( ) );
+}
+void MainWidget::updateWidgetListLayout( const QSize &old_size, const QSize &current_size ) {
+
+	int newHeight = current_size.height( );
+
+	int nodeScriptsWidgetHeight = nodeScriptsWidget->height( );
+	int nodeRenderWidgetHeight = nodeRenderWidget->height( );
+	int nodeListWidgetHeight = nodeListWidget->height( );
+	int height = nodeRenderWidgetHeight + nodeScriptsWidgetHeight + nodeListWidgetHeight;
+
+	nodeScriptsWidgetHeight = nodeScriptsWidgetHeight * newHeight / height;
+	nodeListWidgetHeight = nodeListWidgetHeight * newHeight / height;
+
+	height = newHeight - nodeScriptsWidgetHeight - nodeListWidgetHeight;
+	auto width = current_size.width( );
+	nodeScriptsWidget->setFixedSize( width, nodeScriptsWidgetHeight );
+	nodeListWidget->setFixedSize( width, nodeListWidgetHeight );
+	nodeRenderWidget->setFixedSize( width, height );
+
+	nodeRenderWidget->move( 0, 0 );
+	height = nodeRenderWidget->height( );
+	nodeListWidget->move( 0, height );
+	height = height + nodeListWidget->height( );
+	nodeScriptsWidget->move( 0, height );
+
+	writeHeightIni( );
+	appInstance->syncAppValueIniFile( );
+}
+void MainWidget::writeHeightIni( ) const {
 
 	int nodeScriptsWidgetHeight = nodeScriptsWidget->height( );
 	int nodeRenderWidgetHeight = nodeRenderWidget->height( );
@@ -51,29 +94,11 @@ MainWidget::~MainWidget( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "height" ), nodeRenderWidgetHeight );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "height" ), nodeListWidgetHeight );
 
-	appInstance->syncAppValueIniFile( );
 }
-void MainWidget::initWidgetListLayout( ) {
-
-	auto size = this->contentsRect( ).size( );
-	double height = size.height( );
-	double mulBase = height / ( 8 + 3 + 3 );
-	auto width = mulBase * 3;
-
-	quint64 nodeScriptsHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "height" ), width ).toULongLong( );
-
-	quint64 nodeListHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "height" ), width ).toULongLong( );
-
-	height = height - nodeScriptsHeight - nodeListHeight;
-	width = size.width( );
-	nodeScriptsWidget->setFixedSize( width, nodeScriptsHeight );
-	nodeListWidget->setFixedSize( width, nodeListHeight );
-	nodeRenderWidget->setFixedSize( width, height );
-
-	nodeRenderWidget->move( 0, 0 );
-	nodeListWidget->move( 0, height );
-	width = height + nodeListWidget->height( );
-	nodeScriptsWidget->move( 0, width );
+void MainWidget::writeShowIni( ) const {
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), nodeScriptsWidget->isHidden( ) == false );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "show" ), nodeRenderWidget->isHidden( ) == false );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "show" ), nodeListWidget->isHidden( ) == false );
 }
 
 void MainWidget::paintEvent( QPaintEvent *event ) {
@@ -133,5 +158,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	if( cursorShape != Qt::ArrowCursor ) {
 		setCursor( Qt::ArrowCursor ); // 设置鼠标样式
 		cursorShape = Qt::ArrowCursor;
+		writeHeightIni( );
+		appInstance->syncAppValueIniFile( );
 	}
 }
