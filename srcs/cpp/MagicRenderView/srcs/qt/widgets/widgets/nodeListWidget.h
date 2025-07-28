@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class GridWidget;
 class QHBoxLayout;
 class QListWidget;
 class NodeListWidget : public QWidget {
@@ -12,7 +13,8 @@ protected:
 	QHBoxLayout *mainLayout;
 	/// @brief 节点类型
 	QListWidget *nodeTypeList;
-	
+	/// @brief 节点生成器列表
+	GridWidget* nodeGeneraterList;
 public:
 	NodeListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListWidget( ) override;

@@ -1,8 +1,18 @@
 ﻿#include "./nodeListWidget.h"
 
 #include <QPainter>
+#include <QListWidget>
+#include <qboxlayout.h>
+
+#include "gridWidget.h"
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
-	
+	mainLayout = new QHBoxLayout( this );
+	mainLayout->setSpacing( 0 );
+	mainLayout->setContentsMargins( 0, 0, 0, 0 );
+	nodeTypeList = new QListWidget( this );
+	nodeGeneraterList = new GridWidget( this );
+	mainLayout->addWidget( nodeTypeList, 2 );
+	mainLayout->addWidget( nodeGeneraterList, 8 );
 }
 NodeListWidget::~NodeListWidget( ) {
 }
