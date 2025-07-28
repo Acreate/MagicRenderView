@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-NodeRenderWidget::NodeRenderWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent ) {
+NodeRenderWidget::NodeRenderWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
 }
 NodeRenderWidget::~NodeRenderWidget( ) {
 }

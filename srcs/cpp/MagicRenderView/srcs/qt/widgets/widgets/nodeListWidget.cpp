@@ -1,7 +1,8 @@
 ﻿#include "./nodeListWidget.h"
 
 #include <QPainter>
-NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent ) {
+NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
+	
 }
 NodeListWidget::~NodeListWidget( ) {
 }

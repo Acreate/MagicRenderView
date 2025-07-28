@@ -80,9 +80,6 @@ void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 void MainWindow::changeEvent( QEvent *event ) {
 	QMainWindow::changeEvent( event );
 	QEvent::Type type = event->type( );
-	Qt::WindowStates flags;
-	QWindowStateChangeEvent *stateEvent;
-	QMoveEvent *widgetMove;
 	switch( type ) {
 		case QEvent::WindowStateChange :
 			Qt::WindowStates state = windowState( );

@@ -1,7 +1,7 @@
 ﻿#include "./nodeScriptsWidget.h"
 
 #include <QPainter>
-NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent ) {
+NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
 }
 NodeScriptsWidget::~NodeScriptsWidget( ) {
 }

@@ -9,7 +9,7 @@
 
 class INodeWidget;
 class StringTypeObject;
-class IFunctionDeclaration : public QObject, public ISerialize {
+class IFunctionDeclaration : public QObject {
 	Q_OBJECT;
 public:
 	using std_call = std_function< void( ) >;

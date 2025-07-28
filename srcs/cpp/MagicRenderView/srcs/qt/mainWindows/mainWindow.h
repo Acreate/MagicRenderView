@@ -27,7 +27,7 @@ public:
 	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
 protected:
-	void resizeEvent( QResizeEvent *event ) override;
+	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;
 	bool event( QEvent *event ) override;
 };
