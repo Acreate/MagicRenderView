@@ -40,24 +40,75 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
 	setBaseSize( size );
 
+	Qt::WindowStates windowStates( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), this->windowState( ).toInt( ) ).toInt( ) );
+	setWindowState( windowStates );
+	if( windowStates == Qt::WindowNoState || windowStates == Qt::WindowActive )
+		makePos = true;
+	else
+		makePos = false;
+
 	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
 	move( point );
-
+	oldPos = buffPos = point;
 	mainWidget = new MainWidget( this );
 	setCentralWidget( mainWidget );
-	
-	
+
 	setMouseTracking( true );
 	mainWidget->setMouseTracking( true );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) );
+	Qt::WindowStates windowState = this->windowState( );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), windowState.toInt( ) );
+	if( makePos ) {
+		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), buffPos );
+		qDebug( ) << __LINE__ << " " << "oldPos : " << oldPos << ", buffPos : " << buffPos << " , ( 录入 buffPos )";
+	} else {
+		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
+		qDebug( ) << __LINE__ << " " << "oldPos : " << oldPos << ", buffPos : " << buffPos << " , ( 录入 oldPos )";
+	}
+
 	appInstance->syncAppValueIniFile( );
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
 }
-void MainWindow::resizeEvent( QResizeEvent *event ) {
-	QMainWindow::resizeEvent( event );
+void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
+	QMainWindow::resizeEvent( resize_event );
+
+}
+void MainWindow::changeEvent( QEvent *event ) {
+	QMainWindow::changeEvent( event );
+	QEvent::Type type = event->type( );
+	Qt::WindowStates flags;
+	QWindowStateChangeEvent *stateEvent;
+	QMoveEvent *widgetMove;
+	switch( type ) {
+		case QEvent::WindowStateChange :
+			Qt::WindowStates state = windowState( );
+			auto newStateFlag = state == Qt::WindowNoState || state == Qt::WindowActive;
+			if( newStateFlag == false )
+				makePos = false;
+			else {
+				makePos = true;
+				oldPos = buffPos = this->pos( );
+			}
+			break;
+	}
+}
+
+bool MainWindow::event( QEvent *event ) {
+	QEvent::Type type = event->type( );
+	QMoveEvent *widgetMove;
+	QPoint point = this->pos( );
+	bool eventResult;
+	switch( type ) {
+		case QEvent::Move :
+			eventResult = QMainWindow::event( event );
+			widgetMove = static_cast< QMoveEvent * >( event );
+			if( widgetMove && makePos )
+				buffPos = point;
+			return eventResult;
+	}
+	return QMainWindow::event( event );
 }

@@ -18,12 +18,18 @@ protected:
 	QMenu *mainMenu;
 	/// @brief 主要
 	MainWidget *mainWidget;
+	/// @brief 记录窗口最大化，最小化，全屏之前的坐标位置
+	QPoint oldPos, buffPos;
+	/// @brief 是否记录坐标
+	bool makePos;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
-	~MainWindow() override;
+	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
+	void changeEvent( QEvent * ) override;
+	bool event( QEvent *event ) override;
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__
