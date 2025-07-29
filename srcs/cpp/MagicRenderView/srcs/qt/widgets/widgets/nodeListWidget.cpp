@@ -47,16 +47,14 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		auto lastChangeTime = result->append< IntTypeObject >( "lastChangeTime" );
 		lastChangeTime->setVal( fileInfo.lastModified( ).currentMSecsSinceEpoch( ) );
 
-		QString typeName = function_declaration_obj.getReturnType( );
-		QString name = function_declaration_obj.getDeclarationName( ) + ".result." + typeName;
+		QString name = function_declaration_obj.getReturnValueName( );
 		var_stack.setStorageVar( result, name );
 		return result;
 	} );
 	nodeGeneraterList->addNode( functionDeclaration );
 	IFunctionDeclaration::std_call call = functionDeclaration.getCallFcuntion( );
 	auto instance = IVarStack::getTUBPtrInstance< BaseVarStack >( );
-	auto stringTypeObject = instance->generateTVar< StringTypeObject >( );
-	instance->setStorageVar( stringTypeObject, "path" );
+	auto stringTypeObject = instance->appendStorageVar< StringTypeObject >( "path" );
 	stringTypeObject->setString( __FILE__ );
 	call( *instance, functionDeclaration );
 }

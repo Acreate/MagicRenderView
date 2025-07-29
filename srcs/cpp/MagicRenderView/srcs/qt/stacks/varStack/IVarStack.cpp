@@ -36,7 +36,7 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 			return typeObject;
 		}
 
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( [] {
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( this, [] {
 		return IVarStack::getInstance< BaseVarStack >( );
 	} ) );
 }
@@ -51,7 +51,7 @@ bool IVarStack::appendInstance( const std_shared_ptr< IVarStack > &append_unity 
 std_shared_ptr< IVarStack > IVarStack::getInstance( const QString &stack_name ) {
 	if( stack_name == BaseVarStack::staticMetaObject.className( ) )
 		return getInstance< BaseVarStack >( );
-	
+
 	std_shared_ptr< IVarStack > instance;
 	instance = getInstance< BaseVarStack >( );
 	for( auto &name : instance->getStackTypeNames( ) )

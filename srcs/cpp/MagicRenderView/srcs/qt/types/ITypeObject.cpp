@@ -2,7 +2,11 @@
 
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
-ITypeObject::ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+void ITypeObject::disconnectDestGen( QObject *ptr ) {
+	if( generateThisVarStackPtr == ptr )
+		generateThisVarStackPtr = nullptr;
+}
+ITypeObject::ITypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ), generateThisVarStackPtr( generate_this_var_stack_ptr_ptr ) {
 	if( !getStackFunction )
 		getStackFunction = [] {
 			return IVarStack::getInstance< BaseVarStack >( );
@@ -21,12 +25,16 @@ ITypeObject::ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > 
 				targetPtr[ index ] = trimmed;
 		}
 	}
+	if( generateThisVarStackPtr )
+		connect( generate_this_var_stack_ptr_ptr, &QObject::destroyed, this, &ITypeObject::disconnectDestGen );
 }
 ITypeObject::ITypeObject( const ITypeObject &other ): QObject( other.parent( ) ) {
 	currentTypeName = other.currentTypeName;
 	getStackFunction = other.getStackFunction;
 	thisPtr = other.thisPtr;
 	varStackSharedPtr = other.varStackSharedPtr;
+	generateThisVarStackPtr = other.generateThisVarStackPtr;
+	connect( generateThisVarStackPtr, &QObject::destroyed, this, &ITypeObject::disconnectDestGen );
 }
 ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )
@@ -40,6 +48,10 @@ ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 		getStackFunction = other.getStackFunction;
 		varStackSharedPtr = other.varStackSharedPtr;
 		uiTypeName = other.uiTypeName;
+		if( generateThisVarStackPtr )
+			disconnect( generateThisVarStackPtr, &QObject::destroyed, this, &ITypeObject::disconnectDestGen );
+		generateThisVarStackPtr = other.generateThisVarStackPtr;
+		connect( generateThisVarStackPtr, &QObject::destroyed, this, &ITypeObject::disconnectDestGen );
 	} else
 		thisPtr = nullptr;
 

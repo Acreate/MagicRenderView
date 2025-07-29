@@ -15,7 +15,7 @@
 	element.first.first = type_::staticMetaObject.className( ) ;\
 	element.first.second = {#type_,__VA_ARGS__ };\
 	element_.second = [this]( )  {\
-		auto typeObject = new type_(	[this]()  {\
+		auto typeObject = new type_(this,	[this]()  {\
 				return IVarStack::getInstance( this->metaObject(  )->className(  ) );\
 			}, std_vector< QString >( {type_::staticMetaObject.className( ),#type_,__VA_ARGS__} )) ;\
 		typeObject->setUiTypeNames( { type_::staticMetaObject.className( ) , #type_, __VA_ARGS__ } );\

@@ -8,9 +8,9 @@ class StringTypeObject : public ITypeObject {
 protected:
 	QString string;
 public:
-	StringTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
+	StringTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parnet ) {
 	}
-	StringTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const QString &rhs, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( gener_var_stack, alias_type_name, parnet ) {
+	StringTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const QString &rhs, const std_vector< QString > &alias_type_name = { }, QObject *parnet = nullptr ): ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parnet ) {
 		string = rhs;
 	}
 
@@ -47,7 +47,7 @@ public:
 		return *this;
 	}
 	virtual StringTypeObject operator+( const StringTypeObject &&rhs ) const {
-		StringTypeObject result( this->getStackFunction );
+		StringTypeObject result( generateThisVarStackPtr, this->getStackFunction );
 		result.string = string + rhs.string;
 		return result;
 	}

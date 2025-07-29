@@ -228,8 +228,11 @@ protected:
 	const ITypeObject *thisPtr;
 	std_shared_ptr< IVarStack > varStackSharedPtr;
 	std_function< std_shared_ptr< IVarStack > ( ) > getStackFunction;
+	IVarStack *generateThisVarStackPtr;
+protected:
+	void disconnectDestGen( QObject *ptr );
 public:
-	ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
+	ITypeObject( IVarStack *generate_this_var_stack_ptr_ptr = nullptr, const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
 	virtual const std_function< std_shared_ptr< IVarStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
 	virtual void setGetStackFunction( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function ) { getStackFunction = get_stack_function; }
 	ITypeObject( const ITypeObject &other );
@@ -259,7 +262,7 @@ public:
 	virtual std_vector< QString > typeNames( ) const {
 		return currentTypeName;
 	}
-
+	virtual IVarStack * getGenerateThisVarStackPtr( ) const { return generateThisVarStackPtr; }
 	/// @brief 比较 le 与 ri 变量类型，相等返回 0
 	/// @tparam TLeft 左侧配置类型
 	/// @tparam TRight 右侧配置类型

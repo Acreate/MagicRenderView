@@ -4,9 +4,11 @@
 #include "qt/types/baseType/nullTypeObject.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
 ITypeObject * VectorTypeObject::createType( const QString &type_name ) {
-	return getStackFunction()->generateUbVar( type_name );
+	if( generateThisVarStackPtr )
+		return generateThisVarStackPtr->generateUbVar( type_name );
+	return getStackFunction( )->generateUbVar( type_name );
 }
-VectorTypeObject::VectorTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
+VectorTypeObject::VectorTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 }
 VectorTypeObject & VectorTypeObject::operator=( const VectorTypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )
@@ -39,7 +41,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::operator[]( const size_t index )
 		return vector->at( index );
 	tools::debug::printError( "访问下标越界" );
 	auto newCall = [this] { return IVarStack::getInstance< BaseVarStack >( ); };
-	auto nullTypeObject = new NullTypeObject( newCall );
+	auto nullTypeObject = new NullTypeObject( generateThisVarStackPtr, newCall );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;
 }
@@ -54,6 +56,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::find( const std_function< bool( 
 		if( find_function( elemt ) )
 			return elemt;
 	NullTypeObject *nullTypeObject = new NullTypeObject(
+		generateThisVarStackPtr,
 		[] { return IVarStack::getInstance< BaseVarStack >( ); } );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;

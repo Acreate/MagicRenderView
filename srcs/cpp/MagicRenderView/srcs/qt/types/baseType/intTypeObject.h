@@ -11,10 +11,10 @@ protected:
 public:
 	operator_virtual_equ( IntTypeObject, val );
 public:
-	explicit IntTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), val( 0 ) {
+	explicit IntTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ), val( 0 ) {
 	}
-	explicit IntTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
-		: ITypeObject( gener_var_stack, alias_type_name, parent ), val( val ) {
+	explicit IntTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const int64_t val, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr )
+		: ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ), val( val ) {
 		currentTypeName.emplace_back( IntTypeObject::staticMetaObject.className( ) );
 	}
 	Def_Clone_Move_override_function( IntTypeObject );

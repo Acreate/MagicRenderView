@@ -13,10 +13,10 @@ protected:
 	std_shared_ptr< ITypeObject > first;
 	std_shared_ptr< ITypeObject > scond;
 public:
-	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): PairtTypeObject( gener_var_stack, alias_type_name, parnet, nullptr, nullptr ) {
+	PairtTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parnet = nullptr ): PairtTypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parnet, nullptr, nullptr ) {
 	}
-	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
-	PairtTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ): PairtTypeObject( gener_var_stack, { }, nullptr, first, scond ) { }
+	PairtTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond );
+	PairtTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_shared_ptr< ITypeObject > &first, const std_shared_ptr< ITypeObject > &scond ): PairtTypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, { }, nullptr, first, scond ) { }
 
 	Def_Clone_Move_override_function( PairtTypeObject );
 

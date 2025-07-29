@@ -219,6 +219,19 @@ public:
 			typeObject->setParent( parnet );
 		return typeObject;
 	}
+	
+	template< typename IType >
+		requires requires ( ITypeObject *c, IType *b ) {
+			c = b;
+		}
+	std_shared_ptr< IType > appendStorageVar( const QString &var_name ) {
+		ITypeObject *obj = _generateUBVar( IType::staticMetaObject.className( ) );
+		if( obj == nullptr )
+			return nullptr;
+		std_shared_ptr< IType > newType( ( IType * ) obj );
+		setStorageVar( newType, var_name );
+		return newType;
+	}
 };
 
 #endif // IVARSTACK_H_H_HEAD__FILE__

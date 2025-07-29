@@ -3,7 +3,9 @@
 #include "qt/stacks/varStack/base/baseVarStack.h"
 #include "qt/types/baseType/nullTypeObject.h"
 ITypeObject * CombinationTypeObject::createType( const QString &type_name ) {
-	return getStackFunction()->generateUbVar( type_name );
+	if( generateThisVarStackPtr )
+		return generateThisVarStackPtr->generateUbVar( type_name );
+	return getStackFunction( )->generateUbVar( type_name );
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::removeBeginElemnt( ) {
 	size_t count = dataStruct->size( );
@@ -24,7 +26,7 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::removeEndElemnt( ) {
 		dataStruct->erase( iterator );
 		return result;
 	}
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &var_name ) {
@@ -36,7 +38,7 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &
 			dataStruct->erase( itorater );
 			return result;
 		}
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &var_name ) {
@@ -51,14 +53,14 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::setVarObject( const std_sha
 	ptr->first = new_type;
 	ptr->second = var_name;
 	dataStruct->emplace_back( ptr );
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::getVarObject( const QString &var_name ) const {
 	for( auto pair : *dataStruct )
 		if( pair->second == var_name )
 			return pair->first;
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
 	return shared;
 }
 

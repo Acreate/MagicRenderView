@@ -12,7 +12,7 @@ class StringTypeObject;
 class IFunctionDeclaration : public QObject {
 	Q_OBJECT;
 public:
-	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, const IFunctionDeclaration &) >;
+	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, const IFunctionDeclaration & ) >;
 protected:
 	/// @brief 变量名称
 	std_vector< std_shared_ptr< std_pairt< QString, QString > > > paramInfo;
@@ -106,6 +106,11 @@ public:
 	}
 	/// @brief 获取返回类型
 	virtual const QString & getReturnType( ) const { return returnType; }
+	/// @brief 获取返回值变量的名称
+	/// @return 返回值变量的名称
+	virtual QString getReturnValueName( ) const {
+		return getDeclarationName( ) + ".result." + getReturnType( );;
+	}
 	/// @brief 获取函数名称
 	virtual const QString & getDeclarationName( ) const { return declarationName; }
 	/// @brief 获取属性

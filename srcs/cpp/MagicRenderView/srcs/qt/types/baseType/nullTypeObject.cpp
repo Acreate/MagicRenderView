@@ -2,7 +2,7 @@
 
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
-NullTypeObject::NullTypeObject( const std_function< std_shared_ptr< IVarStack >( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( gener_var_stack, alias_type_name, parent ) {
+NullTypeObject::NullTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack >( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ) {
 	thisPtr = nullptr;
 	if( gener_var_stack == nullptr ) {
 		getStackFunction = [] { return IVarStack::getInstance< BaseVarStack >( ); };
