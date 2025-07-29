@@ -1,7 +1,7 @@
 ﻿#include "./INodeGeneraterItem.h"
 
 INodeGeneraterItem::INodeGeneraterItem( const IFunctionDeclaration &function_declaration, QObject *parent ): QObject( parent ), functionDeclaration( function_declaration ) { }
-size_t INodeGeneraterItem::sortCount( ) const {
+size_t INodeGeneraterItem::sortCode( ) const {
 	return qHash( functionDeclaration.getFunctionDeclarationName( ) );
 }
 QWidget * INodeGeneraterItem::createListNodeWidget( ) const {

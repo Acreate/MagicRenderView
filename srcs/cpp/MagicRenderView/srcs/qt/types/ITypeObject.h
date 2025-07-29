@@ -194,6 +194,30 @@ virtual	Type & operator=( const double &right ) {\
 		type_::operator=( other );\
 	}
 
+#define Def_Base_Clone_Move_override_function(type_, base_)\
+	type_( const ITypeObject &other ) : base_(other) {\
+		if(this == nullptr|| thisPtr == nullptr ) \
+			return ;\
+		auto dataTypeObject = qobject_cast< const type_ * >( &other );\
+		if( dataTypeObject )\
+			type_::operator=( *dataTypeObject );\
+		else\
+			thisPtr = nullptr;\
+	}\
+	type_ & operator=( const ITypeObject &other ) override {\
+		if(this == nullptr|| thisPtr == nullptr ) \
+			return *this;\
+		auto dataTypeObject = qobject_cast< const type_ * >( &other );\
+		if( dataTypeObject )\
+			type_::operator=( *dataTypeObject );\
+		else\
+			thisPtr = nullptr;\
+		return *this;\
+	}\
+	type_( const type_ &other ) : base_(other){\
+		type_::operator=( other );\
+	}
+
 class IVarStack;
 class ITypeObject : public QObject, public ISerialize {
 	Q_OBJECT;
@@ -206,8 +230,8 @@ protected:
 	std_function< std_shared_ptr< IVarStack > ( ) > getStackFunction;
 public:
 	ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function = nullptr, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr );
-	virtual const std_function<std_shared_ptr<IVarStack>()> & getGetStackFunction( ) const { return getStackFunction; }
-	virtual void setGetStackFunction( const std_function<std_shared_ptr<IVarStack>()> &get_stack_function ) { getStackFunction = get_stack_function; }
+	virtual const std_function< std_shared_ptr< IVarStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
+	virtual void setGetStackFunction( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function ) { getStackFunction = get_stack_function; }
 	ITypeObject( const ITypeObject &other );
 	virtual ITypeObject & operator=( const ITypeObject &other );
 	/// @brief 比较两个对象。并且返回

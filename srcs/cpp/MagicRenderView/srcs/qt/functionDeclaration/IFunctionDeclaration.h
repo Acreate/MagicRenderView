@@ -12,7 +12,7 @@ class StringTypeObject;
 class IFunctionDeclaration : public QObject {
 	Q_OBJECT;
 public:
-	using std_call = std_function< void( ) >;
+	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, const IFunctionDeclaration &) >;
 protected:
 	/// @brief 变量名称
 	std_vector< std_shared_ptr< std_pairt< QString, QString > > > paramInfo;
@@ -32,7 +32,8 @@ protected:
 	/// @brief 使用声明初始化函数信息
 	bool _init( const QString &function_declaration_name );
 public:
-	IFunctionDeclaration( ) { }
+	IFunctionDeclaration( ) : IFunctionDeclaration( "", nullptr ) { }
+	IFunctionDeclaration( const QString &function_declaration_name ): IFunctionDeclaration( function_declaration_name, nullptr ) { };
 	IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function );
 
 	IFunctionDeclaration( const IFunctionDeclaration &other )
@@ -58,11 +59,6 @@ public:
 	/// @brief 使用声明初始化函数信息
 	virtual bool initDeclaration( const QString &function_declaration_name ) {
 		return _init( function_declaration_name );
-	}
-	/// @brief 调用一次函数
-	virtual void call( ) const {
-		if( callFcuntion )
-			callFcuntion( );
 	}
 	const std_call & getCallFcuntion( ) const { return callFcuntion; }
 	void setCallFcuntion( const std_call &call_fcuntion ) { callFcuntion = call_fcuntion; }

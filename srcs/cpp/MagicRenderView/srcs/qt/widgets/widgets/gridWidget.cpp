@@ -12,8 +12,8 @@ void GridWidget::updateLayout( ) {
 		delete mainLayout;
 
 	mainLayout = new QGridLayout( mainContentWidget );
-	std::sort( nodeGeneraterItems.begin( ), nodeGeneraterItems.end( ), [] ( const std::shared_ptr< INodeGeneraterItem > &item ) {
-		return item->sortCode( );
+	std::sort( nodeGeneraterItems.begin( ), nodeGeneraterItems.end( ), [] ( const std_pairt< std_shared_ptr< INodeGeneraterItem >, QWidget * > &left, const std_pairt< std_shared_ptr< INodeGeneraterItem >, QWidget * > &right ) {
+		return left.first->sortCode( ) > right.first->sortCode( );
 	} );
 	int currentRowCount = 0;
 	int currentColumnCount = 0;
@@ -73,6 +73,7 @@ bool GridWidget::addNode( const IFunctionDeclaration &function_declaration ) {
 	updateLayout( );
 	return true;
 }
+
 void GridWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	if( selectItem )

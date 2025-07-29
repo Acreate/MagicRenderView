@@ -1,11 +1,11 @@
 ﻿#include "ITypeObject.h"
 
 #include "qt/stacks/varStack/IVarStack.h"
-#include "qt/stacks/varStack/base/baseVarStackEx.h"
+#include "qt/stacks/varStack/base/baseVarStack.h"
 ITypeObject::ITypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ) {
 	if( !getStackFunction )
 		getStackFunction = [] {
-			return IVarStack::getInstance< BaseVarStackEx >( );
+			return IVarStack::getInstance< BaseVarStack >( );
 		};
 	varStackSharedPtr = getStackFunction( );
 	thisPtr = this;

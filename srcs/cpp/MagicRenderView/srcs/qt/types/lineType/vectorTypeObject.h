@@ -7,12 +7,13 @@
 #include "qt/tools/tools.h"
 #include "qt/types/ITypeObject.h"
 
-class BaseVarStackEx;
 class IVarStack;
 class VectorTypeObject : public ITypeObject {
 	Q_OBJECT;
 protected:
 	std_shared_ptr< std_vector< std_shared_ptr< ITypeObject > > > vector;
+protected:
+	virtual ITypeObject * createType( const QString &type_name );
 public:
 	operator std_vector< std_shared_ptr< ITypeObject > >( ) const {
 		std_vector< std_shared_ptr< ITypeObject > > result;
@@ -80,6 +81,19 @@ public:
 	QString toString( ) const override;
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
+
+	template< typename IType >
+		requires requires ( ITypeObject *c, IType *b ) {
+			c = b;
+		}
+	std_shared_ptr< IType > append( ) {
+		ITypeObject *obj = createType( IType::staticMetaObject.className( ) );
+		if( obj == nullptr )
+			return nullptr;
+		std_shared_ptr< IType > newType( ( IType * ) obj );
+		append( newType );
+		return newType;
+	}
 };
 
 #endif // VECTORTYPEOBJECT_H_H_HEAD__FILE__

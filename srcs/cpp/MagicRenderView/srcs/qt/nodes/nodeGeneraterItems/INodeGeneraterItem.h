@@ -12,6 +12,7 @@ protected:
 	IFunctionDeclaration functionDeclaration;
 public:
 	INodeGeneraterItem( const IFunctionDeclaration &function_declaration, QObject *parent = nullptr );
+	virtual size_t sortCode() const;
 	/// @brief 创建显示列表节点
 	/// @return 显示列表节点
 	QWidget * createListNodeWidget( ) const;

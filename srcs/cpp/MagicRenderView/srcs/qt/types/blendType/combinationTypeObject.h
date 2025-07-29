@@ -11,8 +11,10 @@ class CombinationTypeObject : public ITypeObject {
 protected:
 	/// @brief 数据结构
 	std_shared_ptr< std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > > dataStruct;
+protected:
+	virtual ITypeObject * createType( const QString &type_name );
 public:
-	CombinationTypeObject( const std_function< std_shared_ptr<IVarStack> ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
+	CombinationTypeObject( const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name = { }, QObject *parent = nullptr ) : ITypeObject( gener_var_stack, alias_type_name, parent ), dataStruct( new std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > >( ) ) {
 	}
 	Def_Clone_Move_override_function( CombinationTypeObject );
 	CombinationTypeObject & operator=( const CombinationTypeObject &other ) {
@@ -51,14 +53,27 @@ public:
 	virtual const std_vector< std_shared_ptr< std_pairt< std_shared_ptr< ITypeObject >, QString > > > & getStructInfo( ) const {
 		return *dataStruct;
 	}
-	
-	void clear() const;
+
+	void clear( ) const;
 	int compare( const ITypeObject &rhs ) const override;
 
 	size_t typeMemorySize( ) const override;
 	QString toString( ) const override;
 	bool serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const override;
 	size_t serializeToObjectData( const uint8_t *read_data_vector, const size_t data_count ) override;
+
+	template< typename IType >
+		requires requires ( ITypeObject *c, IType *b ) {
+			c = b;
+		}
+	std_shared_ptr< IType > append( const QString &var_name ) {
+		ITypeObject *obj = createType( IType::staticMetaObject.className( ) );
+		if( obj == nullptr )
+			return nullptr;
+		std_shared_ptr< IType > newType( ( IType * ) obj );
+		setVarObject( newType, var_name );
+		return newType;
+	}
 };
 
 #endif // COMBINATIONTYPEOBJECT_H_H_HEAD__FILE__

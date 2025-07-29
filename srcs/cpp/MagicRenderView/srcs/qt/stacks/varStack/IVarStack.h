@@ -12,11 +12,12 @@ class IVarStack : public QObject {
 	Q_OBJECT;
 protected:
 	/// @brief 仓库存储
-	std_vector_pairt< std_shared_ptr< ITypeObject >, QString > storage;
+	std_shared_ptr< std_vector_pairt< std_shared_ptr< ITypeObject >, QString > > storage;
 	std_vector< QString > stackTypeNames;
 	std_function< std_shared_ptr< IVarStack >( ) > getStackFunction;
 public:
-	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ) {
+	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ), storage( new std_vector_pairt< std_shared_ptr< ITypeObject >, QString > ) {
+
 	}
 public:
 	virtual const std_function< std_shared_ptr< IVarStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
@@ -27,7 +28,7 @@ public:
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
 	/// @return 被覆盖的对象
-	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name );
+	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) const;
 	/// @brief 获取存储的对象
 	/// @param storage_name 存储的对象名称 
 	/// @return 失败返回 nullptr
@@ -61,19 +62,10 @@ public:
 			TChild_Type::staticMetaObject.className( );
 			te = a;
 		}
-	static TChild_Type * getTUBPtrInstance( ) {
-		QString egName = TChild_Type::staticMetaObject.className( );
-		for( auto ptr : instanceVector )
-			if( ptr->metaObject( )->className( ) == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-				return ( TChild_Type * ) ptr.get( );
-			else
-				for( auto &typeName : ptr->getStackTypeNames( ) )
-					if( typeName == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-						return ( TChild_Type * ) ptr.get( );
-		TChild_Type * child = new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
-		std_shared_ptr< IVarStack > result( child );
-		instanceVector.emplace_back( result );
-		return child;
+	static std_shared_ptr< TChild_Type > getTUBPtrInstance( ) {
+		TChild_Type *child = new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
+		std_shared_ptr< TChild_Type > result( child );
+		return result;
 	}
 	/// @brief 获取类型实例
 	/// @tparam TChild_Type 类型
@@ -105,10 +97,6 @@ public:
 	/// @param stack_name 生成器名称
 	/// @return 失败返回 nullptr
 	static std_shared_ptr< IVarStack > getInstance( const QString &stack_name );
-	/// @brief 使用生成器名称获取生成器实例对象
-	/// @param stack_name 生成器名称
-	/// @return 失败返回 nullptr
-	static IVarStack* getTUBPtrInstance( const QString &stack_name );
 
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称
