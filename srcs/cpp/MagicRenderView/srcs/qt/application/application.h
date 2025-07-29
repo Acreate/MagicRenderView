@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <alias/type_alias.h>
 
+class MainWidget;
 class IFunStack;
 class QSettings;
 class QBoxLayout;
@@ -54,6 +55,7 @@ public:
 	static QString normalKeyAppendWidgetName( const QString &key, QWidget *widget );
 protected:
 	QSettings *settings;
+	MainWidget* mainWidget;
 	std_vector< std_shared_ptr< IFunStack > > funStacks;
 	std_shared_ptr< std_mutex > stdMutex;
 	std_shared_ptr< std_mutex > stdMutex_p;
@@ -89,10 +91,12 @@ public:
 		std_lock_grad_mutex lock( *stdMutex.get( ) );
 		return *stdMutex;
 	}
-	void setAppIniValue( const QAnyStringView &key, const QVariant &value );
-	QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
-	QVariant getAppIniValue( const QAnyStringView &key ) const;
-	void syncAppValueIniFile( ) const;
+	virtual void setAppIniValue( const QAnyStringView &key, const QVariant &value );
+	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
+	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
+	virtual void syncAppValueIniFile( ) const;
+	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+	virtual void setMainWidget( MainWidget * const main_widget ) { mainWidget = main_widget; }
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

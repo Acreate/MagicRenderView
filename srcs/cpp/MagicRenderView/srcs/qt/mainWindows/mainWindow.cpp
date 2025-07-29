@@ -52,9 +52,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( p
 	oldPos = buffPos = point;
 	mainWidget = new MainWidget( this );
 	setCentralWidget( mainWidget );
-
-	setMouseTracking( true );
-	mainWidget->setMouseTracking( true );
+	appInstance->setMainWidget( mainWidget );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );

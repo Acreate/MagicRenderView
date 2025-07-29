@@ -1,5 +1,6 @@
 ﻿#include "application.h"
 
+#include <QMouseEvent>
 #include <QProcess>
 #include <qboxlayout.h>
 
@@ -10,7 +11,10 @@
 #include <qfileinfo.h>
 
 #include "../stacks/funStack/IFunStack.h"
+
+#include "../widgets/widgets/mainWidget.h"
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
+	mainWidget = nullptr;
 	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
 	QFileInfo fileInfo( fileName );
@@ -210,5 +214,13 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 }
 bool Application::notify( QObject *object, QEvent *event ) {
 
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::MouseMove :
+			if( mainWidget == nullptr )
+				break;
+			mainWidget->mouseToPoint( mainWidget->mapFromGlobal( QCursor::pos( ) ) );
+			break;
+	}
 	return QApplication::notify( object, event );
 }

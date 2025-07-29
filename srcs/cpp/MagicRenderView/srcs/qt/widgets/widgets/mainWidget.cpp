@@ -39,19 +39,49 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 
 	dragWidgetSize = nullptr;
 	mouseIsPress = false;
-	nodeScriptsWidget->setMouseTracking( true );
-	nodeRenderWidget->setMouseTracking( true );
-	nodeListWidget->setMouseTracking( true );
-
-	nodeListWidget->widget( )->setMouseTracking( true );
-	nodeRenderWidget->widget( )->setMouseTracking( true );
-	nodeScriptsWidget->widget( )->setMouseTracking( true );
 }
 MainWidget::~MainWidget( ) {
 
 	writeShowIni( );
 	writeHeightIni( );
 	appInstance->syncAppValueIniFile( );
+}
+void MainWidget::mouseToPoint( const QPoint &point ) {
+	qDebug( ) << point;
+	int y = point.y( );
+	if( mouseIsPress == false ) {
+		auto nodeListWidgetPosY = nodeListWidget->pos( ).y( );
+		if( abs( y - nodeListWidgetPosY ) < 5 )
+			dragWidgetSize = nodeListWidget;
+		else {
+			nodeListWidgetPosY = nodeScriptsWidget->pos( ).y( );
+			if( abs( y - nodeListWidgetPosY ) < 5 )
+				dragWidgetSize = nodeScriptsWidget;
+			else
+				dragWidgetSize = nullptr;
+		}
+		if( dragWidgetSize && cursorShape != Qt::SizeVerCursor ) {
+			setCursor( Qt::SizeVerCursor ); // 设置鼠标样式
+			cursorShape = Qt::SizeVerCursor;
+		} else if( dragWidgetSize == nullptr && cursorShape != Qt::ArrowCursor ) {
+			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
+			cursorShape = Qt::ArrowCursor;
+		}
+	} else if( dragWidgetSize != nullptr ) {
+		if( dragWidgetSize == nodeListWidget ) {
+			nodeListWidget->move( 0, y ); // 移动到新位置
+			nodeRenderWidget->setFixedHeight( y );
+			auto newHeight = height( ) - y - nodeScriptsWidget->height( );
+			nodeListWidget->setFixedHeight( newHeight );
+		} else if( dragWidgetSize == nodeScriptsWidget ) {
+
+			nodeScriptsWidget->move( 0, y ); // 移动到新位置
+			auto newHeight = y - nodeRenderWidget->height( );
+			nodeListWidget->setFixedHeight( newHeight );
+			newHeight = height( ) - y;
+			nodeScriptsWidget->setFixedHeight( newHeight );
+		}
+	}
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
@@ -114,40 +144,6 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	// 检测子窗口拉伸功能
 	auto point = event->pos( );
 
-	int y = point.y( );
-	if( mouseIsPress == false ) {
-		auto nodeListWidgetPosY = nodeListWidget->pos( ).y( );
-		if( abs( y - nodeListWidgetPosY ) < 5 )
-			dragWidgetSize = nodeListWidget;
-		else {
-			nodeListWidgetPosY = nodeScriptsWidget->pos( ).y( );
-			if( abs( y - nodeListWidgetPosY ) < 5 )
-				dragWidgetSize = nodeScriptsWidget;
-			else
-				dragWidgetSize = nullptr;
-		}
-		if( dragWidgetSize && cursorShape != Qt::SizeVerCursor ) {
-			setCursor( Qt::SizeVerCursor ); // 设置鼠标样式
-			cursorShape = Qt::SizeVerCursor;
-		} else if( dragWidgetSize == nullptr && cursorShape != Qt::ArrowCursor ) {
-			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-			cursorShape = Qt::ArrowCursor;
-		}
-	} else if( dragWidgetSize != nullptr ) {
-		if( dragWidgetSize == nodeListWidget ) {
-			nodeListWidget->move( 0, y ); // 移动到新位置
-			nodeRenderWidget->setFixedHeight( y );
-			auto newHeight = height( ) - y - nodeScriptsWidget->height( );
-			nodeListWidget->setFixedHeight( newHeight );
-		} else if( dragWidgetSize == nodeScriptsWidget ) {
-
-			nodeScriptsWidget->move( 0, y ); // 移动到新位置
-			auto newHeight = y - nodeRenderWidget->height( );
-			nodeListWidget->setFixedHeight( newHeight );
-			newHeight = height( ) - y;
-			nodeScriptsWidget->setFixedHeight( newHeight );
-		}
-	}
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	mouseIsPress = true;
@@ -161,4 +157,12 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		writeHeightIni( );
 		appInstance->syncAppValueIniFile( );
 	}
+}
+bool MainWidget::event( QEvent *event ) {
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::MouseMove :
+			break;
+	}
+	return QWidget::event( event );
 }

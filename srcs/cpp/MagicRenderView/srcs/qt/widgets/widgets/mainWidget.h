@@ -40,12 +40,14 @@ protected:
 public:
 	MainWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
+	virtual void mouseToPoint( const QPoint &point );
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	bool event( QEvent *event ) override;
 };
 
 #endif // MAINWIDGET_H_H_HEAD__FILE__

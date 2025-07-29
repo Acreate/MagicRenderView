@@ -22,8 +22,6 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 	nodeGeneraterList = new GridWidget( this );
 	mainLayout->addWidget( nodeTypeList, 2 );
 	mainLayout->addWidget( nodeGeneraterList, 8 );
-	nodeTypeList->setMouseTracking( true );
-	nodeGeneraterList->setMouseTracking( true );
 }
 NodeListWidget::~NodeListWidget( ) {
 }
