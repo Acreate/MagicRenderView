@@ -22,6 +22,10 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 	nodeGeneraterList = new GridWidget( this );
 	mainLayout->addWidget( nodeTypeList, 2 );
 	mainLayout->addWidget( nodeGeneraterList, 8 );
+
+
+	// todo : 添加一个节点-案例-1
+	
 	IFunctionDeclaration functionDeclaration( "FileInfo openFile(string path);", [] ( const IVarStack &var_stack, const IFunctionDeclaration &function_declaration_obj ) ->std_shared_ptr< ITypeObject > {
 		auto paramInfos = function_declaration_obj.getParamInfos( );
 		size_t count = paramInfos.size( );
@@ -51,12 +55,16 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		var_stack.setStorageVar( result, name );
 		return result;
 	} );
-	nodeGeneraterList->addNode( functionDeclaration );
-	IFunctionDeclaration::std_call call = functionDeclaration.getCallFcuntion( );
+	
 	auto instance = IVarStack::getTUBPtrInstance< BaseVarStack >( );
 	auto stringTypeObject = instance->appendStorageVar< StringTypeObject >( "path" );
 	stringTypeObject->setString( __FILE__ );
+	IFunctionDeclaration::std_call call = functionDeclaration.getCallFcuntion( );
 	call( *instance, functionDeclaration );
+
+
+	
+	nodeGeneraterList->addNode( functionDeclaration );
 }
 NodeListWidget::~NodeListWidget( ) {
 }
