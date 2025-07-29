@@ -54,6 +54,7 @@ protected:
 	/// @brief 存储所有已经诞生的存储
 	static std_vector< std_shared_ptr< IVarStack > > instanceVector;
 public:
+	static bool init();
 	/// @brief 获取类型实例
 	/// @tparam TChild_Type 类型
 	/// @return 成功返回类型的实例

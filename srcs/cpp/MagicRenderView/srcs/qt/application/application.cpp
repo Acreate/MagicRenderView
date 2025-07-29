@@ -8,6 +8,8 @@
 #include <QSettings>
 #include <qfile.h>
 #include <qfileinfo.h>
+
+#include "../stacks/funStack/IFunStack.h"
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
 	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
@@ -22,21 +24,104 @@ Application::Application( int &argc, char **argv, int i ): QApplication( argc, a
 		else
 			settings->sync( );
 	}
+	stdMutex.reset( new std_mutex );
+	stdMutex_p.reset( new std_mutex );
 }
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
 }
+bool Application::appendFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack ) {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
+	auto name = new_function_stack->getName( );
+	auto className = new_function_stack->metaObject( )->className( );
+	for( auto &item : funStacks )
+		if( item->getName( ) == name && item->metaObject( )->className( ) == className )
+			return false;
+	funStacks.emplace_back( new_function_stack );
+	return true;
+}
+bool Application::removeFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack ) {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
+	auto removeExtent = new_function_stack.get( );
+	auto iterator = funStacks.begin( );
+	auto end = funStacks.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->get( ) == removeExtent ) {
+			funStacks.erase( iterator );
+			return true;
+		}
+	return false;
+}
+bool Application::removeFunctionStackAtType( const QString &function_stack_class_name, const QString &function_stack_name ) {
+
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
+	auto iterator = funStacks.begin( );
+	auto end = funStacks.end( );
+	for( ; iterator != end; ++iterator )
+		if( iterator->get( )->metaObject( )->className( ) == function_stack_class_name && iterator->get( )->getName( ) == function_stack_name ) {
+			funStacks.erase( iterator );
+			return true;
+		}
+	return false;
+
+	return false;
+}
+bool Application::removeFunctionStackAtType( const std_shared_ptr< IFunStack > &new_function_stack ) {
+	return removeFunctionStackAtType( new_function_stack->metaObject( )->className( ), new_function_stack->getName( ) );
+}
+std_vector< std_shared_ptr< IFunStack > > Application::removeFunctionStackAtClassName( const QString &function_stack_class_name ) {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
+	std_vector< std_shared_ptr< IFunStack > > result;
+
+	std::vector< std::shared_ptr< IFunStack > >::iterator iterator, end;
+	while( true ) {
+		iterator = funStacks.begin( );
+		end = funStacks.end( );
+		for( ; iterator != end; ++iterator )
+			if( iterator->get( )->metaObject( )->className( ) == function_stack_class_name ) {
+				result.emplace_back( *iterator );
+				funStacks.erase( iterator );
+				break;
+			}
+		if( iterator == end )
+			break;
+	}
+	return result;
+}
+std_vector< std_shared_ptr< IFunStack > > Application::removeFunctionStackAtStackName( const QString &function_stack_name ) {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
+	std_vector< std_shared_ptr< IFunStack > > result;
+
+	std::vector< std::shared_ptr< IFunStack > >::iterator iterator, end;
+	while( true ) {
+		iterator = funStacks.begin( );
+		end = funStacks.end( );
+		for( ; iterator != end; ++iterator )
+			if( iterator->get( )->getName( ) == function_stack_name ) {
+				result.emplace_back( *iterator );
+				funStacks.erase( iterator );
+				break;
+			}
+		if( iterator == end )
+			break;
+	}
+	return result;
+}
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	settings->setValue( key, value );
 }
 QVariant Application::getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	return settings->value( key, defaultValue );
 }
 QVariant Application::getAppIniValue( const QAnyStringView &key ) const {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	return settings->value( key );
 }
 void Application::syncAppValueIniFile( ) const {
+	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	settings->sync( );
 }
 

@@ -30,6 +30,7 @@ protected:
 	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;
 	bool event( QEvent *event ) override;
+	void mouseMoveEvent( QMouseEvent *event ) override;
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

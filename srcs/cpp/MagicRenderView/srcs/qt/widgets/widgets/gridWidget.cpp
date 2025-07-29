@@ -50,6 +50,7 @@ GridWidget::GridWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( pare
 		currentWidgetLayout->setMenuBar( menuBar );
 		menuBar->addAction( "数量" );
 	}
+	menuBar->setMouseTracking( true );
 	QScrollArea *scrollArea = new QScrollArea( this );
 	scrollArea->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 	currentWidgetLayout->addWidget( scrollArea );
@@ -60,6 +61,9 @@ GridWidget::GridWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( pare
 	mainContentWidget->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
 	mainLayout = new QGridLayout( mainContentWidget );
 	columnCount = 4;
+	setMouseTracking( true );
+	mainContentWidget->setMouseTracking( true );
+	scrollArea->setMouseTracking( true );
 }
 bool GridWidget::addNode( const IFunctionDeclaration &function_declaration ) {
 	if( function_declaration.isIsValid( ) == false )

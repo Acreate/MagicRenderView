@@ -40,6 +40,10 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 		return IVarStack::getInstance< BaseVarStack >( );
 	} ) );
 }
+bool IVarStack::init( ) {
+	getInstance<BaseVarStack>(  );
+	return true;
+}
 bool IVarStack::appendInstance( const std_shared_ptr< IVarStack > &append_unity ) {
 	auto egName = append_unity->metaObject( )->className( );
 	for( auto &ptr : instanceVector )

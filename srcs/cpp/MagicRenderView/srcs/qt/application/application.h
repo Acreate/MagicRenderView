@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <alias/type_alias.h>
 
+class IFunStack;
 class QSettings;
 class QBoxLayout;
 
@@ -53,10 +54,41 @@ public:
 	static QString normalKeyAppendWidgetName( const QString &key, QWidget *widget );
 protected:
 	QSettings *settings;
+	std_vector< std_shared_ptr< IFunStack > > funStacks;
+	std_shared_ptr< std_mutex > stdMutex;
+	std_shared_ptr< std_mutex > stdMutex_p;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
 public:
+	virtual bool appendFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack );
+
+	template< typename IType >
+		requires requires ( IFunStack *a, IType *b ) {
+			a = b;
+		}
+	bool appendFunctionStack( ) {
+		auto appenElem = std_shared_ptr< IType >( new IType );
+		return appendFunctionStack( appenElem );
+	}
+
+	virtual bool removeFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack );
+	virtual bool removeFunctionStackAtType( const QString &function_stack_class_name, const QString &function_stack_name );
+	virtual bool removeFunctionStackAtType( const std_shared_ptr< IFunStack > &new_function_stack );
+	virtual std_vector< std_shared_ptr< IFunStack > > removeFunctionStackAtClassName( const QString &function_stack_class_name );
+	virtual std_vector< std_shared_ptr< IFunStack > > removeFunctionStackAtStackName( const QString &function_stack_name );
+	virtual const std_vector< std_shared_ptr< IFunStack > > & getFunStacks( ) const {
+		std_lock_grad_mutex lock( *stdMutex.get( ) );
+		return funStacks;
+	}
+	virtual void setFunStacks( const std_vector< std_shared_ptr< IFunStack > > &fun_stacks ) {
+		std_lock_grad_mutex lock( *stdMutex.get( ) );
+		funStacks = fun_stacks;
+	}
+	virtual const std_mutex & getStdMutex( ) const {
+		std_lock_grad_mutex lock( *stdMutex.get( ) );
+		return *stdMutex;
+	}
 	void setAppIniValue( const QAnyStringView &key, const QVariant &value );
 	QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
 	QVariant getAppIniValue( const QAnyStringView &key ) const;
