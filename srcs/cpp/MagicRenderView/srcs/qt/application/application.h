@@ -55,7 +55,7 @@ public:
 	static QString normalKeyAppendWidgetName( const QString &key, QWidget *widget );
 protected:
 	QSettings *settings;
-	MainWidget* mainWidget;
+	MainWidget *mainWidget;
 	std_vector< std_shared_ptr< IFunStack > > funStacks;
 	std_shared_ptr< std_mutex > stdMutex;
 	std_shared_ptr< std_mutex > stdMutex_p;
@@ -64,14 +64,12 @@ public:
 	~Application( ) override;
 public:
 	virtual bool appendFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack );
-
-	template< typename IType >
-		requires requires ( IFunStack *a, IType *b ) {
+	template< typename IFunctionStack >
+		requires requires ( IFunStack *a, IFunctionStack *b ) {
 			a = b;
 		}
 	bool appendFunctionStack( ) {
-		auto appenElem = std_shared_ptr< IType >( new IType );
-		return appendFunctionStack( appenElem );
+		return appendFunctionStack( std_shared_ptr< IFunStack >( new IFunctionStack ) );
 	}
 
 	virtual bool removeFunctionStack( const std_shared_ptr< IFunStack > &new_function_stack );
@@ -96,7 +94,7 @@ public:
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
-	virtual void setMainWidget( MainWidget * const main_widget ) { mainWidget = main_widget; }
+	virtual void setMainWidget( MainWidget *const main_widget ) { mainWidget = main_widget; }
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

@@ -6,7 +6,6 @@
 
 #include "qt/serialize/ISerialize.h"
 #include "qt/types/ITypeObject.h"
-
 class INodeWidget;
 class StringTypeObject;
 class IFunctionDeclaration : public QObject {
