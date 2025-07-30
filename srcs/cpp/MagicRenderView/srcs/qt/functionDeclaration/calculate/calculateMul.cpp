@@ -87,5 +87,5 @@ namespace ifunction {
 		return;
 	}
 }
-CalculateMul::CalculateMul( ) : IFunctionDeclaration( "double mul(double[] div_var_list)", ifunction::mul ) {
+CalculateMul::CalculateMul( ) : IFunctionDeclaration( "double mul(double[] mul_var_list)", &ifunction::mul ) {
 }

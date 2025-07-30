@@ -6,7 +6,7 @@
 class FileDir : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	FileDir( );
 };
 
 #endif // FILEDIR_H_H_HEAD__FILE__

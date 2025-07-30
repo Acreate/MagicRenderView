@@ -6,7 +6,7 @@
 class StringAppend : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-
+	StringAppend( );
 };
 
 #endif // STRINGAPPEND_H_H_HEAD__FILE__

@@ -78,6 +78,6 @@ namespace ifunction {
 		return;
 	}
 }
-CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list)", ifunction::div ) {
+CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list)", &ifunction::div ) {
 
 }

@@ -6,7 +6,7 @@
 class StringMid : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-
+	StringMid( );
 };
 
 #endif // STRINGMID_H_H_HEAD__FILE__

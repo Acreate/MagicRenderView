@@ -6,6 +6,7 @@
 class StringToNumber : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
+	StringToNumber( );
 };
 
 #endif // STRINGTONUMBER_H_H_HEAD__FILE__

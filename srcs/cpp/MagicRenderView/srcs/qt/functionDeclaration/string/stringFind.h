@@ -6,7 +6,7 @@
 class StringFind : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	StringFind( );
 };
 
 #endif // STRINGFIND_H_H_HEAD__FILE__

@@ -72,4 +72,4 @@ namespace ifunction {
 		return;
 	}
 }
-CalculateSub::CalculateSub( ) : IFunctionDeclaration( "double sub(double[] add_var_list)", ifunction::sub ) { }
+CalculateSub::CalculateSub( ) : IFunctionDeclaration( "double sub(double[] sub_var_list)", &ifunction::sub ) { }

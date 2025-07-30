@@ -6,7 +6,7 @@
 class FileContent : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	FileContent( );
 };
 
 #endif // FILECONTENT_H_H_HEAD__FILE__

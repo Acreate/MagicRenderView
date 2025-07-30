@@ -51,4 +51,4 @@ namespace ifunction {
 		return;
 	}
 }
-CalculateAdd::CalculateAdd( ) : IFunctionDeclaration( "double add(double[] add_var_list)", ifunction::add ) { }
+CalculateAdd::CalculateAdd( ) : IFunctionDeclaration( "double add(double[] add_var_list)", &ifunction::add ) { }
