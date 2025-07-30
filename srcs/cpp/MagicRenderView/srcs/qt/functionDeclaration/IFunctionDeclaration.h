@@ -11,7 +11,7 @@ class StringTypeObject;
 class IFunctionDeclaration : public QObject {
 	Q_OBJECT;
 public:
-	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, const IFunctionDeclaration & ) >;
+	using std_call = std_function< void( const IVarStack &, const IFunctionDeclaration & ) >;
 protected:
 	/// @brief 变量名称
 	std_vector< std_shared_ptr< std_pairt< QString, QString > > > paramInfo;
@@ -31,8 +31,6 @@ protected:
 	/// @brief 使用声明初始化函数信息
 	bool _init( const QString &function_declaration_name );
 public:
-	IFunctionDeclaration( ) : IFunctionDeclaration( "", nullptr ) { }
-	IFunctionDeclaration( const QString &function_declaration_name ): IFunctionDeclaration( function_declaration_name, nullptr ) { };
 	IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function );
 
 	IFunctionDeclaration( const IFunctionDeclaration &other )

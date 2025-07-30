@@ -6,7 +6,7 @@
 class CalculateMul : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	CalculateMul( );
 };
 
 #endif // CALCULATEMUL_H_H_HEAD__FILE__

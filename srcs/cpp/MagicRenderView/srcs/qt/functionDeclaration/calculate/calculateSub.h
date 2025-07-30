@@ -6,7 +6,7 @@
 class CalculateSub : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	CalculateSub( );
 };
 
 #endif // CALCULATESUB_H_H_HEAD__FILE__
