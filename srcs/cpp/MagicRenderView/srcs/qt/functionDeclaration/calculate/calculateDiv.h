@@ -6,7 +6,7 @@
 class CalculateDiv : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	CalculateDiv( );
 };
 
 #endif // CALCULATEDIV_H_H_HEAD__FILE__

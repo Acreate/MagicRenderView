@@ -159,7 +159,7 @@ public:
 		requires requires ( ITypeObject *c, IType *b ) {
 			c = b;
 		}
-	std_shared_ptr< IType > appendStorageVar( const QString &var_name ) {
+	std_shared_ptr< IType > appendStorageVar( const QString &var_name ) const {
 		ITypeObject *obj = _generateUBVar( IType::staticMetaObject.className( ) );
 		if( obj == nullptr )
 			return nullptr;

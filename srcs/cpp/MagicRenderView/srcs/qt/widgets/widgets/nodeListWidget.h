@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class Application;
 class GridWidget;
 class QHBoxLayout;
 class QListWidget;
@@ -15,6 +16,8 @@ protected:
 	QListWidget *nodeTypeList;
 	/// @brief 节点生成器列表
 	GridWidget* nodeGeneraterList;
+	/// @brief 应用单例指针
+	Application *applicationInstancePtr;
 public:
 	NodeListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListWidget( ) override;

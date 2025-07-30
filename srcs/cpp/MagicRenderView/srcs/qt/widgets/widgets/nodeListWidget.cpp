@@ -7,12 +7,10 @@
 
 #include "gridWidget.h"
 
-#include "../../stacks/varStack/IVarStack.h"
-#include "../../stacks/varStack/base/baseVarStack.h"
+#include "../../application/application.h"
 
-#include "../../types/baseType/intTypeObject.h"
-#include "../../types/baseType/stringTypeObject.h"
-#include "../../types/blendType/combinationTypeObject.h"
+#include "../../stacks/funStack/IFunStack.h"
+#include "../../stacks/varStack/IVarStack.h"
 
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
 	mainLayout = new QHBoxLayout( this );
@@ -22,6 +20,16 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 	nodeGeneraterList = new GridWidget( this );
 	mainLayout->addWidget( nodeTypeList, 2 );
 	mainLayout->addWidget( nodeGeneraterList, 8 );
+
+	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	auto funStacks = applicationInstancePtr->getFunStacks( );
+
+	for( auto &item : funStacks ) {
+		IFunStack *element = item.get( );
+		QString typeName = element->metaObject( )->className( );
+		typeName.append( "/" ).append( element->getName( ) );
+		qDebug( ) << typeName;
+	}
 }
 NodeListWidget::~NodeListWidget( ) {
 }

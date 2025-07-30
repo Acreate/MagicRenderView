@@ -6,7 +6,7 @@
 class CalculateAdd : public IFunctionDeclaration {
 	Q_OBJECT;
 public:
-	
+	CalculateAdd( );
 };
 
 #endif // CALCULATEADD_H_H_HEAD__FILE__

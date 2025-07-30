@@ -2,8 +2,6 @@
 
 #include "../../application/application.h"
 
-#include "../../functionDeclaration/IFunctionDeclaration.h"
-
 #include "base/calculateFunStack.h"
 #include "base/fileFunStack.h"
 #include "base/stringFunStack.h"
