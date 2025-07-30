@@ -13,7 +13,7 @@ class IVarStack : public QObject {
 protected:
 	/// @brief 仓库存储
 	std_shared_ptr< std_vector_pairt< std_shared_ptr< ITypeObject >, QString > > storage;
-	std_vector< QString > stackTypeNames;
+	QString stackTypeName;
 	std_function< std_shared_ptr< IVarStack >( ) > getStackFunction;
 public:
 	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ), storage( new std_vector_pairt< std_shared_ptr< ITypeObject >, QString > ) {
@@ -21,8 +21,8 @@ public:
 	}
 public:
 	virtual const std_function< std_shared_ptr< IVarStack >( ) > & getGetStackFunction( ) const { return getStackFunction; }
-	virtual std_vector< QString > getStackTypeNames( ) const {
-		return stackTypeNames;
+	virtual const QString & getStackTypeName( ) const {
+		return stackTypeName;
 	}
 	/// @brief 存储类型，如果已经存在变量的名称，则返回该对象，并且使用新的覆盖对象
 	/// @param storage_obj 存储的对象
@@ -50,54 +50,8 @@ protected:
 	/// @param type_name 类型名称
 	/// @return 非安全指针对象
 	virtual ITypeObject * _generateUBVar( const QString &type_name ) const = 0;
-protected:
-	/// @brief 存储所有已经诞生的存储
-	static std_vector< std_shared_ptr< IVarStack > > instanceVector;
 public:
-	static bool init();
-	/// @brief 获取类型实例
-	/// @tparam TChild_Type 类型
-	/// @return 成功返回类型的实例
-	template< class TChild_Type >
-		requires requires ( TChild_Type *a, IVarStack *te ) {
-			TChild_Type::staticMetaObject.className( );
-			te = a;
-		}
-	static std_shared_ptr< TChild_Type > getTUBPtrInstance( ) {
-		TChild_Type *child = new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr );
-		std_shared_ptr< TChild_Type > result( child );
-		return result;
-	}
-	/// @brief 获取类型实例
-	/// @tparam TChild_Type 类型
-	/// @return 成功返回类型的实例
-	template< class TChild_Type >
-		requires requires ( TChild_Type *a, IVarStack *te ) {
-			TChild_Type::staticMetaObject.className( );
-			te = a;
-		}
-	static std_shared_ptr< IVarStack > getInstance( ) {
-		QString egName = TChild_Type::staticMetaObject.className( );
-		for( auto ptr : instanceVector )
-			if( ptr->metaObject( )->className( ) == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-				return ptr;
-			else
-				for( auto &typeName : ptr->getStackTypeNames( ) )
-					if( typeName == egName && qobject_cast< TChild_Type * >( ptr.get( ) ) )
-						return ptr;
-		std_shared_ptr< IVarStack > result( new TChild_Type( [] { return IVarStack::getInstance< TChild_Type >( ); }, nullptr ) );
-		instanceVector.emplace_back( result );
-		return result;
-	}
-	/// @brief 追加一个创建对象。\n
-	/// 使用 @code metaObject( )->className( ) @endcode 进行类型名称匹配，如果已经存在重复的类型名称，那么存储失败
-	/// @param append_unity 追加的对象指针
-	/// @return 成功返回 true
-	static bool appendInstance( const std_shared_ptr< IVarStack > &append_unity );
-	/// @brief 使用生成器名称获取生成器实例对象
-	/// @param stack_name 生成器名称
-	/// @return 失败返回 nullptr
-	static std_shared_ptr< IVarStack > getInstance( const QString &stack_name );
+	static bool init( );
 
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称
@@ -105,26 +59,6 @@ public:
 	/// @return 失败返回 nullptr
 	virtual ITypeObject * generateUbVar( const QString &type_name, QObject *parnet = nullptr ) const;
 
-	/// @brief 释放类型实例
-	/// @tparam TChild_Type 类型
-	/// @return 失败返回 nullptr，成功返回自动释放内存变量引用指针对象
-	template< class TChild_Type >
-		requires requires ( TChild_Type *a, IVarStack *te ) {
-			TChild_Type::staticMetaObject.className( );
-			te = a;
-		}
-	static std_shared_ptr< IVarStack > deleteInstance( ) {
-		QString egName = TChild_Type::staticMetaObject.className( );
-		auto iterator = instanceVector.begin( );
-		auto end = instanceVector.end( );
-		for( ; iterator != end; ++iterator )
-			if( iterator.operator*( )->metaObject( )->className( ) == egName ) {
-				auto varStack = *iterator;
-				instanceVector.erase( iterator );
-				return varStack;
-			}
-		return nullptr;
-	}
 	/// @brief 生成指定类型变量
 	/// @tparam TChild_Type 类型
 	/// @return 失败返回 nullptr，成功返回自动释放内存变量引用指针对象
@@ -220,7 +154,7 @@ public:
 			typeObject->setParent( parnet );
 		return typeObject;
 	}
-	
+
 	template< typename IType >
 		requires requires ( ITypeObject *c, IType *b ) {
 			c = b;

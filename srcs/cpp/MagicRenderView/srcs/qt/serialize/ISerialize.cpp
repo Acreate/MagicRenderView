@@ -82,12 +82,11 @@ std_vector< QString > ISerialize::SerializeInfo::getMetaInheritInfo( const QMeta
 	} while( true );
 	return result;
 }
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size ) {
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QString &stack_type_name, const QStringList &native_type_name, const size_t &append_size ) {
 	QStringList classNameList;
 
 	for( auto &str : native_type_name )
 		classNameList.append( str.toUtf8( ).toHex( ) );
-	QString classList = stack_type_name.join( "," ) + "![" + classNameList.join( ", " );
 
 	classNameList.clear( );
 	QString className = meta_object_ptr->className( );
@@ -100,12 +99,12 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 		classNameList.append( className.toUtf8( ).toHex( ) );
 	} while( true );
 
-	classList = classList + "]:{" + classNameList.join( "," ) + "}";
-	QByteArray utf8 = classList.toUtf8( );
+	auto stackTypeName = stack_type_name + "]:{" + classNameList.join( "," ) + "}";
+	QByteArray utf8 = stackTypeName.toUtf8( );
 	qint64 utfCount = utf8.size( );
 	auto type_name_date = utf8.data( );
 	type_size_t utfCharSize = utfCount * sizeof( type_name_date[ 0 ] );
-	
+
 	// 配置大小端
 	auto beg = isBegEndian( );
 	type_size_t vectorSize = sizeof( beg ) /* (大小端标识) */ + sizeof( utfCharSize ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof( vectorSize ) /* (字符串信息大小) */ + utfCharSize /* (媒体对象) */ + append_size /* (追加的大小) */;
@@ -145,18 +144,14 @@ uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > 
 	dataPtr += index;
 	return dataPtr;
 }
-uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size ) {
+uint8_t * ISerialize::converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QString &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size ) {
 	QStringList nativeTypeList, stackTypeList;
 	size_t count = native_type_name.size( );
 	auto data = native_type_name.data( );
 	for( size_t index = 0; index < count; ++index )
 		nativeTypeList.append( data[ index ] );
-	count = stack_type_name.size( );
-	data = stack_type_name.data( );
-	for( size_t index = 0; index < count; ++index )
-		stackTypeList.append( data[ index ] );
 
-	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stackTypeList, nativeTypeList, append_size );
+	return converQMetaObjectInfoToUInt8Vector( result_data, meta_object_ptr, stack_type_name, nativeTypeList, append_size );
 }
 uint8_t ISerialize::isBegEndian( ) {
 	static union {

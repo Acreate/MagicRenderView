@@ -1,10 +1,10 @@
 ﻿#include "IVarStack.h"
 
+#include "../../application/application.h"
+
 #include "base/baseVarStack.h"
 
 #include "qt/types/baseType/nullTypeObject.h"
-
-std_vector< std_shared_ptr< IVarStack > > IVarStack::instanceVector;
 
 std_shared_ptr< ITypeObject > IVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) const {
 	auto iterator = storage->begin( );
@@ -36,32 +36,12 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 			return typeObject;
 		}
 
-	return std_shared_ptr< ITypeObject >( new NullTypeObject( this, [] {
-		return IVarStack::getInstance< BaseVarStack >( );
-	} ) );
+	return std_shared_ptr< ITypeObject >( new NullTypeObject( this ) );
 }
 bool IVarStack::init( ) {
-	getInstance<BaseVarStack>(  );
+	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
+	applicationInstancePtr->appendVarStacks< BaseVarStack >( );
 	return true;
-}
-bool IVarStack::appendInstance( const std_shared_ptr< IVarStack > &append_unity ) {
-	auto egName = append_unity->metaObject( )->className( );
-	for( auto &ptr : instanceVector )
-		if( ptr->metaObject( )->className( ) == egName )
-			return false;
-	instanceVector.emplace_back( append_unity );
-	return true;
-}
-std_shared_ptr< IVarStack > IVarStack::getInstance( const QString &stack_name ) {
-	if( stack_name == BaseVarStack::staticMetaObject.className( ) )
-		return getInstance< BaseVarStack >( );
-
-	std_shared_ptr< IVarStack > instance;
-	instance = getInstance< BaseVarStack >( );
-	for( auto &name : instance->getStackTypeNames( ) )
-		if( name == stack_name )
-			return instance;
-	return nullptr;
 }
 ITypeObject * IVarStack::generateUbVar( const QString &type_name, QObject *parnet ) const {
 	ITypeObject *typeObject = _generateUBVar( type_name );

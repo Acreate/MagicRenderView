@@ -74,7 +74,7 @@ public:
 	/// @param native_type_name 多媒体对象变量别名
 	/// @param append_size 追加的大小
 	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QStringList &stack_type_name, const QStringList &native_type_name, const size_t &append_size );
+	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const QString &stack_type_name, const QStringList &native_type_name, const size_t &append_size );
 	/// @brief 返回值 -1 则为转换数据的最后一个数据
 	/// @brief 数据排列 : sizeof( uint8_t) /* (大小端标识) */ + sizeof( type_size_t ) /* (总体长度:大小端+type_size_t+QMetaObject+append_size) */ + sizeof(QMetaObject) /* (媒体对象) */ + append_size /* (追加的大小) */
 	/// @brief 转换多媒体数据，并且返回追加元素的首要下标
@@ -84,7 +84,7 @@ public:
 	/// @param native_type_name 多媒体对象变量别名
 	/// @param append_size 追加的大小
 	/// @return 最后转换元素位置的下一个元素
-	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector< uint8_t > *result_data, const QMetaObject *meta_object_ptr, const std_vector< QString > &stack_type_name, const std_vector< QString > &native_type_name, const size_t &append_size );
+	static uint8_t * converQMetaObjectInfoToUInt8Vector( std_vector<uint8_t> *result_data, const QMetaObject *meta_object_ptr, const QString &stack_type_name, const std_vector<QString> &native_type_name, const size_t &append_size );
 	/// @brief 是否大端
 	/// @return 返回 true 表示大端
 	static uint8_t isBegEndian( );

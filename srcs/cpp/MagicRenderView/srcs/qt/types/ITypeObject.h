@@ -309,7 +309,7 @@ public:
 	}
 	/// @brief 创建该变量的堆栈名称列表
 	/// @return 创建该变量的堆栈名称列表
-	virtual std_vector< QString > getStackTypeNames( ) const;
+	virtual const QString & getStackTypeName( ) const;
 	/// @brief ui 类型名称
 	/// @return ui 类型名称列表
 	virtual const std_vector< QString > & getUiTypeNames( ) const { return uiTypeName; }

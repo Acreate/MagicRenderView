@@ -8,7 +8,7 @@ size_t IntTypeObject::serializeToObjectData( const uint8_t *read_data_vector, co
 	// 获取值的长度
 	type_size_t valSize = sizeof( val );
 	auto nativeTypeName = typeNames( );
-	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeNames( ), nativeTypeName, valSize );
+	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( &resultData, object, getStackTypeName( ), nativeTypeName, valSize );
 
 	auto resultDataCount = resultData.size( );
 	if( resultDataCount > data_count /* 如果数据源小于当前序列化数据，则返回 */ ) {
@@ -41,7 +41,7 @@ size_t IntTypeObject::serializeToObjectData( const uint8_t *read_data_vector, co
 bool IntTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data_vector ) const {
 	auto object = metaObject( );
 	auto nativeTypeName = typeNames( );
-	auto stackTypeName = getStackTypeNames( );
+	auto stackTypeName = getStackTypeName( );
 	auto lastDataPtr = converQMetaObjectInfoToUInt8Vector( result_data_vector, object, stackTypeName, nativeTypeName, sizeof( val ) );
 	*( decltype(val) * ) lastDataPtr = val;
 	return result_data_vector->size( );

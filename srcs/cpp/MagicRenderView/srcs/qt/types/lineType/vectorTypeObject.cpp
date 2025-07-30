@@ -1,5 +1,7 @@
 ﻿#include "vectorTypeObject.h"
 
+#include "../../application/application.h"
+
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/types/baseType/nullTypeObject.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
@@ -40,7 +42,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::operator[]( const size_t index )
 	if( count > index )
 		return vector->at( index );
 	tools::debug::printError( "访问下标越界" );
-	auto newCall = [this] { return IVarStack::getInstance< BaseVarStack >( ); };
+	auto newCall = [this] { return std_shared_ptr< IVarStack >( new BaseVarStack ); };
 	auto nullTypeObject = new NullTypeObject( generateThisVarStackPtr, newCall );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;
@@ -57,7 +59,7 @@ std_shared_ptr< ITypeObject > VectorTypeObject::find( const std_function< bool( 
 			return elemt;
 	NullTypeObject *nullTypeObject = new NullTypeObject(
 		generateThisVarStackPtr,
-		[] { return IVarStack::getInstance< BaseVarStack >( ); } );
+		[] { return std_shared_ptr< IVarStack >( new BaseVarStack ); } );
 	std_shared_ptr< ITypeObject > shared( nullTypeObject ); // 返回一个空指针
 	return shared;
 }
@@ -207,7 +209,7 @@ bool VectorTypeObject::serializeToVectorData( std_vector< uint8_t > *result_data
 	}
 
 	size_t appendSize = sizeof( size_t );
-	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize + buffIndex );
+	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeName( ), typeNames( ), appendSize + buffIndex );
 	size_t resultSize = result_data_vector->size( );
 	if( resultSize == 0 )
 		return false;
@@ -224,7 +226,7 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	// 序列化序列成员
 	std_vector< uint8_t > result;
 	size_t appendSize = sizeof( size_t );
-	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize );
+	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeName( ), typeNames( ), appendSize );
 	size_t resultSize = result.size( );
 	if( resultSize == 0 || data_count < resultSize ) {
 		tools::debug::printError( "无法序列化该对象信息" );
@@ -265,14 +267,23 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	size_t count;
 	readDataPtr += appendSize;
 	count = data_count - ( readDataPtr - read_data_vector );
-
+	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
+	std_vector< std::shared_ptr< IVarStack > > findResults;
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
 		if( userDataCount == 0 ) {
 			tools::debug::printError( "无法从数据当中反序列化对象的成员类型信息" );
 			return 0;
 		}
-		varStack = IVarStack::getInstance( stackName[ 0 ] );
+		findResults = applicationInstancePtr->findVarStacksAtType( stackName[ 0 ] );
+		if( findResults.size( ) == 0 ) {
+			findResults = applicationInstancePtr->findVarStacksAtName( stackName[ 0 ] );
+			if( findResults.size( ) == 0 ) {
+				tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
+				return 0;
+			}
+		}
+		varStack = findResults[ 0 ];
 		if( varStack == nullptr ) {
 			tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
 			return 0;

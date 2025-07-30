@@ -1,5 +1,7 @@
 ﻿#include "ITypeObject.h"
 
+#include "../application/application.h"
+
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
 void ITypeObject::disconnectDestGen( QObject *ptr ) {
@@ -9,7 +11,7 @@ void ITypeObject::disconnectDestGen( QObject *ptr ) {
 ITypeObject::ITypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &get_stack_function_get_function, const std_vector< QString > &alias_type_name, QObject *parent ): QObject( parent ), getStackFunction( get_stack_function_get_function ), generateThisVarStackPtr( generate_this_var_stack_ptr_ptr ) {
 	if( !getStackFunction )
 		getStackFunction = [] {
-			return IVarStack::getInstance< BaseVarStack >( );
+			return std_shared_ptr< IVarStack >( new BaseVarStack );
 		};
 	varStackSharedPtr = getStackFunction( );
 	thisPtr = this;
@@ -57,9 +59,9 @@ ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 
 	return *this;
 }
-std_vector< QString > ITypeObject::getStackTypeNames( ) const {
+const QString & ITypeObject::getStackTypeName( ) const {
 	if( getStackFunction )
-		return getStackFunction( )->getStackTypeNames( );
+		return getStackFunction( )->getStackTypeName( );
 	return { };
 }
 bool equ( const ITypeObject &left, const void *right ) {

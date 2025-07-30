@@ -2,6 +2,8 @@
 
 #include <ranges>
 
+#include "../../../application/application.h"
+
 #include "qt/types/baseType/dataTypeObject.h"
 #include "qt/types/baseType/floatTypeObject.h"
 #include "qt/types/baseType/intTypeObject.h"
@@ -16,7 +18,12 @@
 	element.first.second = {#type_,__VA_ARGS__ };\
 	element_.second = [this]( )  {\
 		auto typeObject = new type_(this,	[this]()  {\
-				return IVarStack::getInstance( this->metaObject(  )->className(  ) );\
+				auto applicationInstancePtr = Application::getApplicationInstancePtr( );\
+			auto instances = applicationInstancePtr->findVarStacksAtType< BaseVarStack >( );\
+			for( auto &item : instances )\
+				if( item->getStackTypeName( ) == stackTypeName )\
+					return item;\
+			return std_shared_ptr<IVarStack>( new BaseVarStack( getStackFunction ));\
 			}, std_vector< QString >( {type_::staticMetaObject.className( ),#type_,__VA_ARGS__} )) ;\
 		typeObject->setUiTypeNames( { type_::staticMetaObject.className( ) , #type_, __VA_ARGS__ } );\
 		return  typeObject;\
@@ -24,8 +31,7 @@
 	generateInfos.emplace_back( element )
 
 BaseVarStack::BaseVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ): IVarStack( get_stack_function_get_function, parent ) {
-	stackTypeNames.clear( );
-	stackTypeNames.emplace_back( BaseVarStack::staticMetaObject.className( ) );
+	stackTypeName = "基本";
 
 	std_pairt< std_pairt< QString, std_vector< QString > >, std_function< ITypeObject *( ) > > element;
 	emplace_back_generateInfos( element, IntTypeObject, "int", "int_t", "char", "char_t", "size_t", "count", "整数", "计数", "字符" );

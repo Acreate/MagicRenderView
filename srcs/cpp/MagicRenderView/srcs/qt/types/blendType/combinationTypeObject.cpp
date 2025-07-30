@@ -1,5 +1,7 @@
 ﻿#include "combinationTypeObject.h"
 
+#include "../../application/application.h"
+
 #include "qt/stacks/varStack/base/baseVarStack.h"
 #include "qt/types/baseType/nullTypeObject.h"
 ITypeObject * CombinationTypeObject::createType( const QString &type_name ) {
@@ -26,7 +28,7 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::removeEndElemnt( ) {
 		dataStruct->erase( iterator );
 		return result;
 	}
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &var_name ) {
@@ -38,7 +40,7 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::removeItem( const QString &
 			dataStruct->erase( itorater );
 			return result;
 		}
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::setVarObject( const std_shared_ptr< ITypeObject > &new_type, const QString &var_name ) {
@@ -53,14 +55,14 @@ std_shared_ptr< ITypeObject > CombinationTypeObject::setVarObject( const std_sha
 	ptr->first = new_type;
 	ptr->second = var_name;
 	dataStruct->emplace_back( ptr );
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr ) ); // 返回一个空指针
 	return shared;
 }
 std_shared_ptr< ITypeObject > CombinationTypeObject::getVarObject( const QString &var_name ) const {
 	for( auto pair : *dataStruct )
 		if( pair->second == var_name )
 			return pair->first;
-	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr, [] { return IVarStack::getInstance< BaseVarStack >( ); } ) ); // 返回一个空指针
+	std_shared_ptr< ITypeObject > shared( new NullTypeObject( generateThisVarStackPtr ) ); // 返回一个空指针
 	return shared;
 }
 
@@ -121,7 +123,7 @@ bool CombinationTypeObject::serializeToVectorData( std_vector< uint8_t > *result
 	}
 
 	size_t appendSize = sizeof( size_t );
-	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize + buffIndex );
+	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( result_data_vector, metaObject( ), getStackTypeName( ), typeNames( ), appendSize + buffIndex );
 	size_t resultSize = result_data_vector->size( );
 	if( resultSize == 0 )
 		return false;
@@ -139,7 +141,7 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	std_vector< uint8_t > result;
 	//  sizeof( size_t )
 	size_t appendSize = sizeof( type_size_t );
-	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeNames( ), typeNames( ), appendSize );
+	auto lastPtr = ISerialize::converQMetaObjectInfoToUInt8Vector( &result, metaObject( ), getStackTypeName( ), typeNames( ), appendSize );
 	size_t resultSize = result.size( );
 	if( resultSize == 0 || data_count < resultSize ) {
 		tools::debug::printError( "无法序列化该对象信息" );
@@ -183,14 +185,23 @@ size_t CombinationTypeObject::serializeToObjectData( const uint8_t *read_data_ve
 	char *targetPtr;
 	readDataPtr += appendSize;
 	count = data_count - ( readDataPtr - read_data_vector );
-
+	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
+	std_vector< std::shared_ptr< IVarStack > > findResults;
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
 		if( userDataCount == 0 ) {
 			tools::debug::printError( "无法从数据当中反序列化对象的成员类型信息" );
 			return 0;
 		}
-		varStack = IVarStack::getInstance( stackName[ 0 ] );
+		findResults = applicationInstancePtr->findVarStacksAtType( stackName[ 0 ] );
+		if( findResults.size( ) == 0 ) {
+			findResults = applicationInstancePtr->findVarStacksAtName( stackName[ 0 ] );
+			if( findResults.size( ) == 0 ) {
+				tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
+				return 0;
+			}
+		}
+		varStack = findResults[ 0 ];
 		if( varStack == nullptr ) {
 			tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
 			return 0;
