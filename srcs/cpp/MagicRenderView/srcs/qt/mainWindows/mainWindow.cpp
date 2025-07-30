@@ -58,11 +58,11 @@ MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
 	Qt::WindowStates windowState = this->windowState( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), windowState.toInt( ) );
+
 	if( makePos )
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), buffPos );
 	else
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
-
 	appInstance->syncAppValueIniFile( );
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
