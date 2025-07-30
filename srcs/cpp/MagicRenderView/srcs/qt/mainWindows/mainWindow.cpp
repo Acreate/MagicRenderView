@@ -58,13 +58,10 @@ MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
 	Qt::WindowStates windowState = this->windowState( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), windowState.toInt( ) );
-	if( makePos ) {
+	if( makePos )
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), buffPos );
-		qDebug( ) << __LINE__ << " " << "oldPos : " << oldPos << ", buffPos : " << buffPos << " , ( 录入 buffPos )";
-	} else {
+	else
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
-		qDebug( ) << __LINE__ << " " << "oldPos : " << oldPos << ", buffPos : " << buffPos << " , ( 录入 oldPos )";
-	}
 
 	appInstance->syncAppValueIniFile( );
 }

@@ -41,14 +41,15 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	mouseIsPress = false;
 }
 MainWidget::~MainWidget( ) {
-
 	writeShowIni( );
 	writeHeightIni( );
 	appInstance->syncAppValueIniFile( );
 }
 void MainWidget::mouseToPoint( const QPoint &point ) {
-	qDebug( ) << point;
 	int y = point.y( );
+	int x = point.x( );
+	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
+		return;
 	if( mouseIsPress == false ) {
 		auto nodeListWidgetPosY = nodeListWidget->pos( ).y( );
 		if( abs( y - nodeListWidgetPosY ) < 5 )
