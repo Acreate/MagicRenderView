@@ -17,7 +17,7 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	nodeListWidget = new NodeListScrollAreasWidget( this );
 	nodeRenderWidget = new NodeRenderScrollAreasWidget( this );
 	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
-	
+
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), true ).toBool( ) )
@@ -66,7 +66,6 @@ void MainWidget::mouseToPoint( const QPoint &point ) {
 			setCursor( Qt::SizeVerCursor ); // 设置鼠标样式
 		else if( dragWidgetSize == nullptr && cursor( ) != Qt::ArrowCursor )
 			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-
 	} else if( dragWidgetSize != nullptr ) {
 		if( dragWidgetSize == nodeListWidget ) {
 			nodeListWidget->move( 0, y ); // 移动到新位置
