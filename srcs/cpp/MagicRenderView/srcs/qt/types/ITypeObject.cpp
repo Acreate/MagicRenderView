@@ -59,7 +59,7 @@ ITypeObject & ITypeObject::operator=( const ITypeObject &other ) {
 
 	return *this;
 }
-const QString & ITypeObject::getStackTypeName( ) const {
+QString ITypeObject::getStackTypeName( ) const {
 	if( getStackFunction )
 		return getStackFunction( )->getStackTypeName( );
 	return { };

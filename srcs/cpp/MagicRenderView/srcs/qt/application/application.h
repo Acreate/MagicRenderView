@@ -7,6 +7,7 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+class NodeListWidget;
 class IVarStack;
 class MainWidget;
 class IFunStack;
@@ -59,6 +60,7 @@ public:
 protected:
 	QSettings *settings;
 	MainWidget *mainWidget;
+	NodeListWidget *nodeListWidget;
 	std_vector< std_shared_ptr< IFunStack > > funStacks;
 	std_vector< std_shared_ptr< IVarStack > > varStacks;
 	std_shared_ptr< std_mutex > stdMutex;
@@ -140,6 +142,8 @@ public:
 	virtual void syncAppValueIniFile( ) const;
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 	virtual void setMainWidget( MainWidget *const main_widget ) { mainWidget = main_widget; }
+	virtual NodeListWidget * getNodeListWidget( ) const { return nodeListWidget; }
+	virtual void setNodeListWidget( NodeListWidget *const node_list_widget ) { nodeListWidget = node_list_widget; }
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

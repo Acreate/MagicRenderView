@@ -28,8 +28,6 @@ protected:
 	bool mouseIsPress;
 	/// @brief 拖拽拉伸窗口大小
 	QWidget *dragWidgetSize;
-	/// @brief 当前鼠标图标
-	Qt::CursorShape cursorShape;
 protected:
 	/// @brief 初始化子窗口布局
 	void updateWidgetListLayout( const QSize &old_size, const QSize &current_size );

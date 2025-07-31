@@ -106,5 +106,4 @@ bool MainWindow::event( QEvent *event ) {
 }
 void MainWindow::mouseMoveEvent( QMouseEvent *event ) {
 	QMainWindow::mouseMoveEvent( event );
-	qDebug( ) << event->pos( );
 }

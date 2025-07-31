@@ -14,8 +14,10 @@
 #include "../stacks/varStack/IVarStack.h"
 
 #include "../widgets/widgets/mainWidget.h"
+#include "../widgets/widgets/nodeListWidget.h"
 Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
+	nodeListWidget = nullptr;
 	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
 	QFileInfo fileInfo( fileName );
@@ -325,13 +327,14 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 	return normalKeyAppendEnd( key, widget, appendStr );
 }
 bool Application::notify( QObject *object, QEvent *event ) {
-
+	auto glbalPos = QCursor::pos( );
 	auto type = event->type( );
 	switch( type ) {
 		case QEvent::MouseMove :
-			if( mainWidget == nullptr )
-				break;
-			mainWidget->mouseToPoint( mainWidget->mapFromGlobal( QCursor::pos( ) ) );
+			if( mainWidget != nullptr )
+				mainWidget->mouseToPoint( mainWidget->mapFromGlobal( glbalPos ) );
+			if( nodeListWidget != nullptr )
+				nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) );
 			break;
 	}
 	return QApplication::notify( object, event );

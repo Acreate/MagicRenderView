@@ -17,7 +17,7 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 	nodeListWidget = new NodeListScrollAreasWidget( this );
 	nodeRenderWidget = new NodeRenderScrollAreasWidget( this );
 	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
-
+	
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), true ).toBool( ) )
@@ -39,6 +39,7 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( paren
 
 	dragWidgetSize = nullptr;
 	mouseIsPress = false;
+	appInstance->setNodeListWidget( nodeListWidget->getNodeListWidget( ) );
 }
 MainWidget::~MainWidget( ) {
 	writeShowIni( );
@@ -61,13 +62,11 @@ void MainWidget::mouseToPoint( const QPoint &point ) {
 			else
 				dragWidgetSize = nullptr;
 		}
-		if( dragWidgetSize && cursorShape != Qt::SizeVerCursor ) {
+		if( dragWidgetSize && cursor( ) != Qt::SizeVerCursor )
 			setCursor( Qt::SizeVerCursor ); // 设置鼠标样式
-			cursorShape = Qt::SizeVerCursor;
-		} else if( dragWidgetSize == nullptr && cursorShape != Qt::ArrowCursor ) {
+		else if( dragWidgetSize == nullptr && cursor( ) != Qt::ArrowCursor )
 			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-			cursorShape = Qt::ArrowCursor;
-		}
+
 	} else if( dragWidgetSize != nullptr ) {
 		if( dragWidgetSize == nodeListWidget ) {
 			nodeListWidget->move( 0, y ); // 移动到新位置
@@ -142,9 +141,6 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	// 检测子窗口拉伸功能
-	auto point = event->pos( );
-
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	mouseIsPress = true;
@@ -152,9 +148,8 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	mouseIsPress = false;
 	dragWidgetSize = nullptr;
-	if( cursorShape != Qt::ArrowCursor ) {
+	if( cursor( ) != Qt::ArrowCursor ) {
 		setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-		cursorShape = Qt::ArrowCursor;
 		writeHeightIni( );
 		appInstance->syncAppValueIniFile( );
 	}

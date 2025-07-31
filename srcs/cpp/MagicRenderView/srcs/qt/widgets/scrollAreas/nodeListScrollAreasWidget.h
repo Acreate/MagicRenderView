@@ -7,10 +7,11 @@ class NodeListWidget;
 class NodeListScrollAreasWidget : public QScrollArea {
 	Q_OBJECT;
 protected:
-	NodeListWidget* nodeListWidget;
+	NodeListWidget *nodeListWidget;
 public:
 	NodeListScrollAreasWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListScrollAreasWidget( ) override;
+	virtual NodeListWidget * getNodeListWidget( ) const { return nodeListWidget; }
 };
 
 #endif // NODELISTSCROLLAREASWIDGET_H_H_HEAD__FILE__
