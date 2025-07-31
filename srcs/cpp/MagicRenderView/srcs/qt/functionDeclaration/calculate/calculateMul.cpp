@@ -9,23 +9,23 @@
 
 namespace ifunction {
 
-	static void mul( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+	static std_shared_ptr< ITypeObject > mul( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
 
 		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
-			return;
+			return resultFloatTypeObject;
 		auto sharedPtr = paramInfos.data( )[ 0 ];
 		auto paramName = sharedPtr.get( )->second;
 		auto typeObject = var_stack.getStorageVar( paramName );
 		auto element = typeObject.get( );
 		auto vectorTypeObject = qobject_cast< VectorTypeObject * >( element );
 		if( *vectorTypeObject == nullptr )
-			return;
+			return resultFloatTypeObject;
 		size_t count = vectorTypeObject->count( );
 		if( count == 0 )
-			return;
+			return resultFloatTypeObject;
 
 		typeObject = vectorTypeObject->data( )[ 0 ];
 		element = typeObject.get( );
@@ -45,7 +45,7 @@ namespace ifunction {
 
 		if( count == 1 || var == 0 ) {
 			resultFloatTypeObject->setVal( var );
-			return;
+			return resultFloatTypeObject;
 		}
 		auto vectrPtr = vectorTypeObject->data( );
 		for( size_t index = 1; index < count; ++index ) {
@@ -84,7 +84,7 @@ namespace ifunction {
 			}
 		}
 		resultFloatTypeObject->setVal( var );
-		return;
+		return resultFloatTypeObject;
 	}
 }
 CalculateMul::CalculateMul( ) : IFunctionDeclaration( "double mul(double[] mul_var_list)", &ifunction::mul ) {

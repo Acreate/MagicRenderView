@@ -1,7 +1,7 @@
 ﻿#include "./fileDir.h"
 namespace ifunction {
-	static void fileDir( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-		return;
+	static std_shared_ptr< ITypeObject > fileDir( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+		return nullptr;
 	}
 }
-FileDir::FileDir( ): IFunctionDeclaration( "void fileDir(string path)", &ifunction::fileDir ) { }
+FileDir::FileDir( ): IFunctionDeclaration( "path fileDir(string path)", &ifunction::fileDir ) { }

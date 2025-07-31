@@ -105,3 +105,21 @@ void tools::debug::printError( const std::wstring &msg, size_t start_index, size
 	wss << data[ start_index ] << L"\n================";
 	qDebug( ) << QString::fromStdWString( wss.str( ) ).toStdString( ).c_str( );
 }
+QString tools::qstring::removeSpace( const QString &string ) {
+	qsizetype length = string.length( );
+	if( length == 0 )
+		return string;
+	QChar *buff = new QChar[ length ];
+	qsizetype buffIndex = 0;
+	qsizetype compIndex = 0;
+	auto data = string.data( );
+
+	for( ; compIndex < length; ++compIndex )
+		if( data[ compIndex ].isSpace( ) == false ) {
+			buff[ buffIndex ] = data[ compIndex ];
+			++buffIndex;
+		}
+	QString result( buff, buffIndex );
+	delete[] buff;
+	return result;
+}

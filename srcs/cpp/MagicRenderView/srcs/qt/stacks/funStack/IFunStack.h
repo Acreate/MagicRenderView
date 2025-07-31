@@ -42,6 +42,7 @@ public:
 			}
 		return result;
 	}
+	
 };
 
 #endif // IFUNSTACK_H_H_HEAD__FILE__

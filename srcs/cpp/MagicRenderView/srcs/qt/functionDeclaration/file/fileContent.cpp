@@ -1,7 +1,7 @@
 ﻿#include "./fileContent.h"
 namespace ifunction {
-	static void fileContent( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-		return;
+	static std_shared_ptr< ITypeObject > fileContent( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+		return nullptr;
 	}
 }
-FileContent::FileContent( ): IFunctionDeclaration( "void fileContent(string path)", &ifunction::fileContent ) { }
+FileContent::FileContent( ): IFunctionDeclaration( "file fileContent(string path)", &ifunction::fileContent ) { }

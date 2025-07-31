@@ -1,4 +1,4 @@
-﻿#include "./calculateDiv.h"
+﻿#include "./calculateIntAdd.h"
 
 #include "../../stacks/varStack/IVarStack.h"
 
@@ -7,11 +7,10 @@
 #include "../../types/baseType/stringTypeObject.h"
 #include "../../types/lineType/vectorTypeObject.h"
 namespace ifunction {
-
-	static std_shared_ptr< ITypeObject > div( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-
+	static std_shared_ptr< ITypeObject > intAdd( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
 		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
+		resultFloatTypeObject->setVal( var );
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
 			return resultFloatTypeObject;
@@ -26,51 +25,24 @@ namespace ifunction {
 		if( count == 0 )
 			return resultFloatTypeObject;
 
-		typeObject = vectorTypeObject->data( )[ 0 ];
-		element = typeObject.get( );
-		auto intTypeObject = qobject_cast< IntTypeObject * >( element );
-		if( intTypeObject )
-			var = intTypeObject->getVal( );
-		else {
-			auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
-			if( floatTypeObject )
-				var = floatTypeObject->getVal( );
-			else {
-				auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
-				if( stringTypeObject )
-					var = stringTypeObject->toString( ).toDouble( );
-			}
-		}
-
-		if( count == 1 || var == 0 ) {
-			resultFloatTypeObject->setVal( var );
-			return resultFloatTypeObject;
-		}
-
 		auto vectrPtr = vectorTypeObject->data( );
-		for( size_t index = 1; index < count; ++index ) {
+		for( size_t index = 0; index < count; ++index ) {
 			auto shared = vectrPtr[ index ];
 			element = shared.get( );
-			intTypeObject = qobject_cast< IntTypeObject * >( element );
+			auto intTypeObject = qobject_cast< IntTypeObject * >( element );
 			if( intTypeObject ) {
-				auto val = intTypeObject->getVal( );
-				if( val != 0 )
-					var = var / val;
+				var = var + intTypeObject->getVal( );
 				continue;
 			}
 			auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
 			if( floatTypeObject ) {
-				auto val = floatTypeObject->getVal( );
-				if( var != 0 )
-					var = var / val;
+				var = var + floatTypeObject->getVal( );
 				continue;
 			}
 
 			auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
 			if( stringTypeObject ) {
-				auto val = stringTypeObject->toString( ).toDouble( );
-				if( val != 0 )
-					var = var / val;
+				var = var + stringTypeObject->toString( ).toDouble( );
 				continue;
 			}
 		}
@@ -78,6 +50,4 @@ namespace ifunction {
 		return resultFloatTypeObject;
 	}
 }
-CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list)", &ifunction::div ) {
-
-}
+CalculateIntAdd::CalculateIntAdd( ): IFunctionDeclaration( "int add(int[] add_var_list)", &ifunction::intAdd ) { }

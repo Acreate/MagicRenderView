@@ -1,4 +1,4 @@
-﻿#include "./calculateSub.h"
+﻿#include "./calculateIntSub.h"
 
 #include "../../stacks/varStack/IVarStack.h"
 
@@ -8,23 +8,23 @@
 #include "../../types/lineType/vectorTypeObject.h"
 
 namespace ifunction {
-	static void sub( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+	static std_shared_ptr< ITypeObject > intSub( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
 		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
 		resultFloatTypeObject->setVal( var );
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
-			return;
+			return resultFloatTypeObject;
 		auto sharedPtr = paramInfos.data( )[ 0 ];
 		auto paramName = sharedPtr.get( )->second;
 		auto typeObject = var_stack.getStorageVar( paramName );
 		auto element = typeObject.get( );
 		auto vectorTypeObject = qobject_cast< VectorTypeObject * >( element );
 		if( *vectorTypeObject == nullptr )
-			return;
+			return resultFloatTypeObject;
 		size_t count = vectorTypeObject->count( );
 		if( count == 0 )
-			return;
+			return resultFloatTypeObject;
 
 		typeObject = vectorTypeObject->data( )[ 0 ];
 		element = typeObject.get( );
@@ -44,7 +44,7 @@ namespace ifunction {
 
 		if( count == 1 ) {
 			resultFloatTypeObject->setVal( var );
-			return;
+			return resultFloatTypeObject;
 		}
 
 		auto vectrPtr = vectorTypeObject->data( );
@@ -69,7 +69,7 @@ namespace ifunction {
 			}
 		}
 		resultFloatTypeObject->setVal( var );
-		return;
+		return resultFloatTypeObject;
 	}
 }
-CalculateSub::CalculateSub( ) : IFunctionDeclaration( "double sub(double[] sub_var_list)", &ifunction::sub ) { }
+CalculateIntSub::CalculateIntSub( ): IFunctionDeclaration( "int intSub(int[] sub_var_list)", &ifunction::intSub ) { }

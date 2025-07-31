@@ -4,6 +4,7 @@
 
 #include "base/calculateFunStack.h"
 #include "base/fileFunStack.h"
+#include "base/rebuilerFunStack.h"
 #include "base/stringFunStack.h"
 
 bool IFunStack::init( ) {
@@ -11,5 +12,6 @@ bool IFunStack::init( ) {
 	applicationInstancePtr->appendFunctionStack< CalculateFunStack >( );
 	applicationInstancePtr->appendFunctionStack< StringFunStack >( );
 	applicationInstancePtr->appendFunctionStack< FileFunStack >( );
+	applicationInstancePtr->appendFunctionStack< RebuilerFunStack >( );
 	return true;
 }

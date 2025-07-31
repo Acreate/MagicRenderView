@@ -1,7 +1,7 @@
 ﻿#include "./fileInfo.h"
 namespace ifunction {
-	static void fileInfo( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-		return;
+	static std_shared_ptr< ITypeObject > fileInfo( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+		return nullptr;
 	}
 }
-FileInfo::FileInfo( ): IFunctionDeclaration( "void fileInfo(string path)", &ifunction::fileInfo ) { }
+FileInfo::FileInfo( ): IFunctionDeclaration( "fileInfo fileInfo(string path)", &ifunction::fileInfo ) { }

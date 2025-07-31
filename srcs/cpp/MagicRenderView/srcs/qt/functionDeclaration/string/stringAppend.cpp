@@ -1,7 +1,7 @@
 ﻿#include "./stringAppend.h"
 namespace ifunction {
-	static void stringAppend( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-		return;
+	static std_shared_ptr< ITypeObject > stringAppend( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+		return nullptr;
 	}
 }
-StringAppend::StringAppend( ): IFunctionDeclaration("void stringAppend(string[] strings)", &ifunction::stringAppend ) { }
+StringAppend::StringAppend( ): IFunctionDeclaration( "string stringAppend(string[] strings)", &ifunction::stringAppend ) { }

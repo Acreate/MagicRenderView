@@ -7,6 +7,9 @@
 #include <alias/type_alias.h>
 
 namespace tools {
+	namespace qstring {
+		QString removeSpace(const QString& string);
+	}
 	namespace ui {
 		/// @brief 窗口移动到指定显示器当中
 		/// @param move_target 移动的窗口

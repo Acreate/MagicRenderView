@@ -23,6 +23,7 @@ protected:
 public:
 	std_shared_ptr< ITypeObject > generateVar( const QString &type_name ) const override;
 	std_vector< std_pairt< QString, std_vector< QString > > > permissionVarType( ) const override;
+	
 };
 
 #endif // BASESTACK_H_H_HEAD__FILE__

@@ -1,4 +1,4 @@
-﻿#include "./calculateAdd.h"
+﻿#include "./calculateFloatAdd.h"
 
 #include "../../stacks/varStack/IVarStack.h"
 
@@ -7,24 +7,23 @@
 #include "../../types/baseType/stringTypeObject.h"
 #include "../../types/lineType/vectorTypeObject.h"
 namespace ifunction {
-
-	static void add( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+	static std_shared_ptr< ITypeObject > floatAdd( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
 		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
 		resultFloatTypeObject->setVal( var );
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
-			return;
+			return resultFloatTypeObject;
 		auto sharedPtr = paramInfos.data( )[ 0 ];
 		auto paramName = sharedPtr.get( )->second;
 		auto typeObject = var_stack.getStorageVar( paramName );
 		auto element = typeObject.get( );
 		auto vectorTypeObject = qobject_cast< VectorTypeObject * >( element );
 		if( *vectorTypeObject == nullptr )
-			return;
+			return resultFloatTypeObject;
 		size_t count = vectorTypeObject->count( );
 		if( count == 0 )
-			return;
+			return resultFloatTypeObject;
 
 		auto vectrPtr = vectorTypeObject->data( );
 		for( size_t index = 0; index < count; ++index ) {
@@ -48,7 +47,7 @@ namespace ifunction {
 			}
 		}
 		resultFloatTypeObject->setVal( var );
-		return;
+		return resultFloatTypeObject;
 	}
 }
-CalculateAdd::CalculateAdd( ) : IFunctionDeclaration( "double add(double[] add_var_list)", &ifunction::add ) { }
+CalculateFloatAdd::CalculateFloatAdd( ): IFunctionDeclaration( "float floatAdd(float[] add_var_list)", &ifunction::floatAdd ) { }

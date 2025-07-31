@@ -4,7 +4,6 @@
 #include "../../../functionDeclaration/string/stringFind.h"
 #include "../../../functionDeclaration/string/stringMid.h"
 #include "../../../functionDeclaration/string/stringSplit.h"
-#include "../../../functionDeclaration/string/stringToNumber.h"
 StringFunStack::StringFunStack( ) {
 	name = "字符串";
 
@@ -12,5 +11,4 @@ StringFunStack::StringFunStack( ) {
 	functionList.emplace_back( std_shared_ptr< IFunctionDeclaration >( new StringFind ) );
 	functionList.emplace_back( std_shared_ptr< IFunctionDeclaration >( new StringMid ) );
 	functionList.emplace_back( std_shared_ptr< IFunctionDeclaration >( new StringSplit ) );
-	functionList.emplace_back( std_shared_ptr< IFunctionDeclaration >( new StringToNumber ) );
 }

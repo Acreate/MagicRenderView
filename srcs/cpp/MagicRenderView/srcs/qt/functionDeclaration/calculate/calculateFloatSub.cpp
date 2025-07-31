@@ -1,4 +1,4 @@
-﻿#include "./calculateDiv.h"
+﻿#include "./calculateFloatSub.h"
 
 #include "../../stacks/varStack/IVarStack.h"
 
@@ -6,12 +6,12 @@
 #include "../../types/baseType/intTypeObject.h"
 #include "../../types/baseType/stringTypeObject.h"
 #include "../../types/lineType/vectorTypeObject.h"
+
 namespace ifunction {
-
-	static std_shared_ptr< ITypeObject > div( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
-
+	static std_shared_ptr< ITypeObject > floatSub( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
 		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
+		resultFloatTypeObject->setVal( var );
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
 			return resultFloatTypeObject;
@@ -42,7 +42,7 @@ namespace ifunction {
 			}
 		}
 
-		if( count == 1 || var == 0 ) {
+		if( count == 1 ) {
 			resultFloatTypeObject->setVal( var );
 			return resultFloatTypeObject;
 		}
@@ -53,24 +53,18 @@ namespace ifunction {
 			element = shared.get( );
 			intTypeObject = qobject_cast< IntTypeObject * >( element );
 			if( intTypeObject ) {
-				auto val = intTypeObject->getVal( );
-				if( val != 0 )
-					var = var / val;
+				var = var - intTypeObject->getVal( );
 				continue;
 			}
 			auto floatTypeObject = qobject_cast< FloatTypeObject * >( element );
 			if( floatTypeObject ) {
-				auto val = floatTypeObject->getVal( );
-				if( var != 0 )
-					var = var / val;
+				var = var - floatTypeObject->getVal( );
 				continue;
 			}
 
 			auto stringTypeObject = qobject_cast< StringTypeObject * >( element );
 			if( stringTypeObject ) {
-				auto val = stringTypeObject->toString( ).toDouble( );
-				if( val != 0 )
-					var = var / val;
+				var = var - stringTypeObject->toString( ).toDouble( );
 				continue;
 			}
 		}
@@ -78,6 +72,4 @@ namespace ifunction {
 		return resultFloatTypeObject;
 	}
 }
-CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list)", &ifunction::div ) {
-
-}
+CalculateFloatSub::CalculateFloatSub( ): IFunctionDeclaration( "float floatSub(float[] sub_var_list)", &ifunction::floatSub ) { }
