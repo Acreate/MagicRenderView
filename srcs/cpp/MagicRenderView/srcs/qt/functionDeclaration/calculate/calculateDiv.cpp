@@ -8,16 +8,16 @@
 #include "../../types/lineType/vectorTypeObject.h"
 namespace ifunction {
 
-	static std_shared_ptr< ITypeObject > div( const IVarStack &var_stack, const IFunctionDeclaration &i_function_declaration ) {
+	static std_shared_ptr< ITypeObject > div( const IVarStack &global_var_stack, IVarStack &local_var_stack, const IFunctionDeclaration &i_function_declaration ) {
 
-		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
+		std_shared_ptr< FloatTypeObject > resultFloatTypeObject = local_var_stack.appendStorageVar< FloatTypeObject >( i_function_declaration.getReturnValueName( ) );
 		double var = 0;
 		auto paramInfos = i_function_declaration.getParamInfos( );
 		if( paramInfos.size( ) == 0 )
 			return resultFloatTypeObject;
 		auto sharedPtr = paramInfos.data( )[ 0 ];
 		auto paramName = sharedPtr.get( )->second;
-		auto typeObject = var_stack.getStorageVar( paramName );
+		auto typeObject = local_var_stack.getStorageVar( paramName );
 		auto element = typeObject.get( );
 		auto vectorTypeObject = qobject_cast< VectorTypeObject * >( element );
 		if( *vectorTypeObject == nullptr )
@@ -78,6 +78,6 @@ namespace ifunction {
 		return resultFloatTypeObject;
 	}
 }
-CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list)", &ifunction::div ) {
+CalculateDiv::CalculateDiv( ) : IFunctionDeclaration( "double div(double[] div_var_list);", &ifunction::div ) {
 
 }

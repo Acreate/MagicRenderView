@@ -39,26 +39,21 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	isValid = true;
 	auto declData = function_declaration_name.data( );
 	qsizetype declCount = function_declaration_name.length( );
-
+	qsizetype buffCount = declCount;
 	// 检查属性
 	qsizetype index = 0;
 	qsizetype end = 0;
 
-	// 排除末尾空格
-	for( ; declCount != 0; --declCount )
-		if( declData[ declCount ].isSpace( ) == false )
-			break;
-
-	// 找到 ;
-	for( ; declCount != 0; --declCount )
-		if( declData[ declCount ] != ';' )
+	// 找到 )
+	for( ; buffCount != 0; --buffCount )
+		if( declData[ buffCount ] == ')' )
 			break;
 	// 找到非空
 	for( ; index < declCount; ++index )
 		if( !declData[ index ].isSpace( ) )
 			break;
 
-	functionDeclarationName = QString( declData + index, declCount - index );
+	functionDeclarationName = QString( declData + index, buffCount - index + 1 );
 	if( declData[ index ] == '[' && !findPairt( declData, declCount, index + 1, '[', ']', end ) ) {
 		tools::debug::printError( "无法匹配的 []，将检查属性功能是否存在异常" );
 		isValid = false;

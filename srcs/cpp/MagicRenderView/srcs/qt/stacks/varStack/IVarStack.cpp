@@ -6,7 +6,7 @@
 
 #include "qt/types/baseType/nullTypeObject.h"
 
-std_shared_ptr< ITypeObject > IVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) const {
+std_shared_ptr< ITypeObject > IVarStack::setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) {
 	auto iterator = storage->begin( );
 	auto end = storage->end( );
 	for( ; iterator != end; ++iterator )

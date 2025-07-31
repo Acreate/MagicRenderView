@@ -16,7 +16,7 @@ protected:
 	QString stackTypeName;
 	std_function< std_shared_ptr< IVarStack >( ) > getStackFunction;
 public:
-	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), getStackFunction( get_stack_function_get_function ), storage( new std_vector_pairt< std_shared_ptr< ITypeObject >, QString > ) {
+	IVarStack( const std_function< std_shared_ptr< IVarStack >( ) > &get_stack_function_get_function, QObject *parent ) : QObject( parent ), storage( new std_vector_pairt< std_shared_ptr< ITypeObject >, QString > ), getStackFunction( get_stack_function_get_function ) {
 
 	}
 public:
@@ -28,7 +28,7 @@ public:
 	/// @param storage_obj 存储的对象
 	/// @param storage_name 存储的名称
 	/// @return 被覆盖的对象
-	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name ) const;
+	virtual std_shared_ptr< ITypeObject > setStorageVar( const std_shared_ptr< ITypeObject > &storage_obj, const QString &storage_name );
 	/// @brief 获取存储的对象
 	/// @param storage_name 存储的对象名称 
 	/// @return 失败返回 nullptr
@@ -159,7 +159,7 @@ public:
 		requires requires ( ITypeObject *c, IType *b ) {
 			c = b;
 		}
-	std_shared_ptr< IType > appendStorageVar( const QString &var_name ) const {
+	std_shared_ptr< IType > appendStorageVar( const QString &var_name ) {
 		ITypeObject *obj = _generateUBVar( IType::staticMetaObject.className( ) );
 		if( obj == nullptr )
 			return nullptr;

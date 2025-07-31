@@ -11,7 +11,7 @@ class StringTypeObject;
 class IFunctionDeclaration : public QObject {
 	Q_OBJECT;
 public:
-	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, const IFunctionDeclaration & ) >;
+	using std_call = std_function< std_shared_ptr< ITypeObject >( const IVarStack &, IVarStack &, const IFunctionDeclaration & ) >;
 protected:
 	/// @brief 变量名称
 	std_vector< std_shared_ptr< std_pairt< QString, QString > > > paramInfo;
