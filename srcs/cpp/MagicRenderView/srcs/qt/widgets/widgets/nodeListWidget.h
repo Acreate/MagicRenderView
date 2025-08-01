@@ -3,8 +3,14 @@
 #pragma once
 #include <QWidget>
 
+#include "../../../alias/type_alias.h"
+
 #include "../../tools/enum.h"
 
+class NodeGeneraterListWidget;
+class QScrollArea;
+class IFunStack;
+class QTreeWidgetItem;
 class Application;
 class GridWidget;
 class QHBoxLayout;
@@ -20,11 +26,14 @@ protected:
 	/// @brief 节点类型
 	QTreeWidget *nodeTypeList;
 	/// @brief 节点生成器列表
-	GridWidget *nodeGeneraterList;
+	NodeGeneraterListWidget *nodeGeneraterList;
 	/// @brief 鼠标是否按下
 	bool mouseIsPress;
 	/// @brief 拖拽的窗口
 	QWidget *dragWidgetSize;
+	/// @brief 选项绑定指针
+	std_vector_pairt< QTreeWidgetItem *, std_shared_ptr< IFunStack > > funStackBind;
+
 public:
 	NodeListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListWidget( ) override;
@@ -36,6 +45,8 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void updateWidgetListLayout( const QSize &old_size, const QSize &current_size );
 	void writeHeightIni( ) const;
+protected:
+	void itemDoubleClicked( QTreeWidgetItem *item, int column );
 };
 
 #endif // NODELISTWIDGET_H_H_HEAD__FILE__

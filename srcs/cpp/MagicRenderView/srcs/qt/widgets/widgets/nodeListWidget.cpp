@@ -6,7 +6,7 @@
 #include <QTreeWidget.h>
 #include <qevent.h>
 
-#include "gridWidget.h"
+#include "nodeGeneraterListWidget.h"
 
 #include "../../application/application.h"
 
@@ -15,29 +15,30 @@
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
 	mouseIsPress = false;
 	dragWidgetSize = nullptr;
-
 	keyFirst = "Application/MainWindow/MainWidget/NodeListWidget";
 
 	appInstance = Application::getApplicationInstancePtr( );
 
 	nodeTypeList = new QTreeWidget( this );
-	nodeGeneraterList = new GridWidget( this );
+	nodeGeneraterList = new NodeGeneraterListWidget( this );
 	appInstance->syncAppValueIniFile( );
 
-	quint64 nodeTypeListWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeList, "width" ), 30 ).toULongLong( );
-	nodeTypeList->setFixedWidth( nodeTypeListWidget );
+	quint64 nodeTypeListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeList, "width" ), 30 ).toULongLong( );
+	nodeTypeList->setFixedWidth( nodeTypeListWidth );
 
-	quint64 nodeGeneraterListWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), 80 ).toULongLong( );
-	nodeGeneraterList->setFixedWidth( nodeGeneraterListWidget );
+	quint64 nodeGeneraterListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), 80 ).toULongLong( );
+	nodeGeneraterList->setFixedWidth( nodeGeneraterListWidth );
+
+	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "showWidget" ), "" ).toString( );
 
 	auto funStacks = appInstance->getFunStacks( );
-
-	nodeTypeList->setColumnCount( 2 );
-	nodeTypeList->setHeaderLabels( { "名称", "说明" } );
+	nodeTypeList->setColumnCount( 3 );
+	nodeTypeList->setHeaderLabels( { "短名称", "全名称", "说明" } );
 	QTreeWidgetItem *topItem = new QTreeWidgetItem( nodeTypeList );
 	nodeTypeList->addTopLevelItem( topItem );
 	topItem->setText( 0, "标准" );
-	topItem->setText( 1, "软件自动生成节点" );
+	topItem->setText( 1, "软件常规节点生成器" );
+	topItem->setText( 2, "软件自动生成节点" );
 	for( auto &item : funStacks ) {
 		IFunStack *element = item.get( );
 		QString typeName = element->metaObject( )->className( );
@@ -47,7 +48,17 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		topItem->addChild( child );
 		child->setText( 0, name );
 		child->setText( 1, typeName );
+		child->setText( 2, typeName );
+
+		funStackBind.emplace_back( child, item );
+		nodeGeneraterList->appendCurrentFunStack( item );
+		if( showWidget.isEmpty( ) || showWidget != typeName )
+			continue;
+		nodeGeneraterList->setCurrentFunStack( item );
+		nodeTypeList->setCurrentItem( child );
 	}
+
+	connect( nodeTypeList, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
 }
 NodeListWidget::~NodeListWidget( ) {
 	writeHeightIni( );
@@ -126,4 +137,19 @@ void NodeListWidget::writeHeightIni( ) const {
 	int nodeGeneraterListWidth = nodeGeneraterList->width( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeList, "width" ), nodeTypeListWidth );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), nodeGeneraterListWidth );
+}
+void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
+	size_t count = funStackBind.size( );
+	if( count == 0 ) {
+		tools::debug::printError( "没有建立正确的绑定关系，生成窗口个数为 0" );
+		return;
+	}
+	auto data = funStackBind.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].first == item ) {
+			if( nodeGeneraterList->setCurrentFunStack( data[ index ].second ) == false )
+				tools::debug::printError( "对象并不在窗口当中，请添加到窗口队列当中" );
+			return;
+		}
+	tools::debug::printError( "没有找到匹配的窗口，请检查是否正确初始化窗口" );
 }
