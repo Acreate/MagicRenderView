@@ -8,7 +8,7 @@
 
 namespace tools {
 	namespace qstring {
-		QString removeSpace(const QString& string);
+		QString removeSpace( const QString &string );
 	}
 	namespace ui {
 		/// @brief 窗口移动到指定显示器当中

@@ -7,6 +7,8 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+
+
 class NodeListWidget;
 class IVarStack;
 class MainWidget;

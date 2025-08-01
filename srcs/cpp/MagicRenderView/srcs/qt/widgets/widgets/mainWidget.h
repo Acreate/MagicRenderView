@@ -6,6 +6,9 @@
 
 #include <alias/type_alias.h>
 
+#include "../../tools/enum.h"
+#include "../../tools/tools.h"
+
 class QVBoxLayout;
 class Application;
 class NodeScriptsScrollAreasWidget;
@@ -14,6 +17,14 @@ class NodeRenderScrollAreasWidget;
 class MainWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	/// @brief 当前鼠标
+	QCursor* currentCursor;
+	/// @brief 常规鼠标
+	QCursor nCursor;
+	/// @brief 垂直鼠标
+	QCursor vCursor;
+	/// @brief 水平鼠标
+	QCursor hCursor;
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief 节点渲染窗口
@@ -38,7 +49,10 @@ protected:
 public:
 	MainWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
-	virtual void mouseToPoint( const QPoint &point );
+	virtual QWidget * mouseToPoint( const QPoint &point );
+	virtual QCursor setNormalCursorShape( );
+	virtual QCursor setHCursorShape( );
+	virtual QCursor setVCursorShape( );
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;

@@ -328,13 +328,20 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 }
 bool Application::notify( QObject *object, QEvent *event ) {
 	auto glbalPos = QCursor::pos( );
+
 	auto type = event->type( );
 	switch( type ) {
 		case QEvent::MouseMove :
-			if( mainWidget != nullptr )
-				mainWidget->mouseToPoint( mainWidget->mapFromGlobal( glbalPos ) );
-			if( nodeListWidget != nullptr )
-				nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) );
+			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
+				mainWidget->setHCursorShape( );
+				break;
+			}
+			if( mainWidget != nullptr && mainWidget->mouseToPoint( mainWidget->mapFromGlobal( glbalPos ) ) ) {
+				mainWidget->setVCursorShape( );
+				break;
+			}
+			mainWidget->setNormalCursorShape( );
+
 			break;
 	}
 	return QApplication::notify( object, event );

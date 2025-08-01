@@ -78,26 +78,19 @@ void NodeListWidget::mousePressEvent( QMouseEvent *event ) {
 void NodeListWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	mouseIsPress = false;
-	if( cursor( ) != Qt::ArrowCursor )
-		setCursor( Qt::ArrowCursor );
 }
 
-void NodeListWidget::mouseToPoint( const QPoint &point ) {
+QWidget * NodeListWidget::mouseToPoint( const QPoint &point ) {
 	int y = point.y( );
 	int x = point.x( );
 	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
-		return;
+		return dragWidgetSize;
 	if( mouseIsPress == false ) {
 		auto nodeGeneraterListX = nodeGeneraterList->pos( ).x( );
 		if( abs( x - nodeGeneraterListX ) < 5 )
 			dragWidgetSize = nodeGeneraterList;
 		else
 			dragWidgetSize = nullptr;
-		if( dragWidgetSize && cursor( ) != Qt::SizeHorCursor )
-			setCursor( Qt::SizeHorCursor ); // 设置鼠标样式
-		else if( dragWidgetSize == nullptr && cursor( ) != Qt::ArrowCursor )
-			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-
 	} else if( dragWidgetSize != nullptr ) {
 		if( dragWidgetSize == nodeGeneraterList ) {
 			nodeGeneraterList->move( x, 0 ); // 移动到新位置
@@ -106,6 +99,7 @@ void NodeListWidget::mouseToPoint( const QPoint &point ) {
 			nodeGeneraterList->setFixedWidth( newWidth );
 		}
 	}
+	return dragWidgetSize;
 }
 void NodeListWidget::updateWidgetListLayout( const QSize &old_size, const QSize &current_size ) {
 
@@ -126,8 +120,6 @@ void NodeListWidget::updateWidgetListLayout( const QSize &old_size, const QSize 
 	nodeTypeList->move( 0, 0 );
 	width = nodeTypeList->width( );
 	nodeGeneraterList->move( width, 0 );
-	writeHeightIni( );
-	appInstance->syncAppValueIniFile( );
 }
 void NodeListWidget::writeHeightIni( ) const {
 	int nodeTypeListWidth = nodeTypeList->width( );

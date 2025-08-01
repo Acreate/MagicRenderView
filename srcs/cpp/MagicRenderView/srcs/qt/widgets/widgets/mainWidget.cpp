@@ -11,7 +11,9 @@
 #include "../scrollAreas/nodeScriptsScrollAreasWidget.h"
 
 MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
-
+	nCursor = QCursor( Qt::ArrowCursor );
+	vCursor = QCursor( Qt::SizeVerCursor );
+	hCursor = QCursor( Qt::SizeHorCursor );
 	appInstance = Application::getApplicationInstancePtr( );
 
 	nodeListWidget = new NodeListScrollAreasWidget( this );
@@ -46,11 +48,11 @@ MainWidget::~MainWidget( ) {
 	writeHeightIni( );
 	appInstance->syncAppValueIniFile( );
 }
-void MainWidget::mouseToPoint( const QPoint &point ) {
+QWidget * MainWidget::mouseToPoint( const QPoint &point ) {
 	int y = point.y( );
 	int x = point.x( );
 	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
-		return;
+		return nullptr;
 	if( mouseIsPress == false ) {
 		auto nodeListWidgetPosY = nodeListWidget->pos( ).y( );
 		if( abs( y - nodeListWidgetPosY ) < 5 )
@@ -62,10 +64,6 @@ void MainWidget::mouseToPoint( const QPoint &point ) {
 			else
 				dragWidgetSize = nullptr;
 		}
-		if( dragWidgetSize && cursor( ) != Qt::SizeVerCursor )
-			setCursor( Qt::SizeVerCursor ); // 设置鼠标样式
-		else if( dragWidgetSize == nullptr && cursor( ) != Qt::ArrowCursor )
-			setCursor( Qt::ArrowCursor ); // 设置鼠标样式
 	} else if( dragWidgetSize != nullptr ) {
 		if( dragWidgetSize == nodeListWidget ) {
 			nodeListWidget->move( 0, y ); // 移动到新位置
@@ -73,7 +71,6 @@ void MainWidget::mouseToPoint( const QPoint &point ) {
 			auto newHeight = height( ) - y - nodeScriptsWidget->height( );
 			nodeListWidget->setFixedHeight( newHeight );
 		} else if( dragWidgetSize == nodeScriptsWidget ) {
-
 			nodeScriptsWidget->move( 0, y ); // 移动到新位置
 			auto newHeight = y - nodeRenderWidget->height( );
 			nodeListWidget->setFixedHeight( newHeight );
@@ -81,6 +78,31 @@ void MainWidget::mouseToPoint( const QPoint &point ) {
 			nodeScriptsWidget->setFixedHeight( newHeight );
 		}
 	}
+	return dragWidgetSize;
+}
+QCursor MainWidget::setNormalCursorShape( ) {
+	QCursor *cursor = &nCursor;
+	if( cursor != currentCursor ) {
+		setCursor( *cursor );
+		currentCursor = cursor;
+	}
+	return *cursor;
+}
+QCursor MainWidget::setHCursorShape( ) {
+	QCursor *cursor = &hCursor;
+	if( cursor != currentCursor ) {
+		setCursor( *cursor );
+		currentCursor = cursor;
+	}
+	return *cursor;
+}
+QCursor MainWidget::setVCursorShape( ) {
+	QCursor *cursor = &vCursor;
+	if( cursor != currentCursor ) {
+		setCursor( *cursor );
+		currentCursor = cursor;
+	}
+	return *cursor;
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
@@ -109,9 +131,6 @@ void MainWidget::updateWidgetListLayout( const QSize &old_size, const QSize &cur
 	nodeListWidget->move( 0, height );
 	height = height + nodeListWidget->height( );
 	nodeScriptsWidget->move( 0, height );
-
-	writeHeightIni( );
-	appInstance->syncAppValueIniFile( );
 }
 void MainWidget::writeHeightIni( ) const {
 

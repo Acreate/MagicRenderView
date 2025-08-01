@@ -3,6 +3,8 @@
 #pragma once
 #include <QWidget>
 
+#include "../../tools/enum.h"
+
 class Application;
 class GridWidget;
 class QHBoxLayout;
@@ -22,11 +24,11 @@ protected:
 	/// @brief 鼠标是否按下
 	bool mouseIsPress;
 	/// @brief 拖拽的窗口
-	QWidget* dragWidgetSize;
+	QWidget *dragWidgetSize;
 public:
 	NodeListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListWidget( ) override;
-	virtual void mouseToPoint( const QPoint &point );
+	virtual QWidget * mouseToPoint( const QPoint &point );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

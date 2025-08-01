@@ -76,8 +76,6 @@ bool GridWidget::addNode( const IFunctionDeclaration &function_declaration ) {
 
 void GridWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( selectItem )
-		emit dragNode( selectItem );
 }
 void GridWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
