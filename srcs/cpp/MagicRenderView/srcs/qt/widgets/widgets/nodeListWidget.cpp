@@ -36,7 +36,9 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 	auto funStacks = appInstance->getFunStacks( );
 	nodeTypeList->setColumnCount( 3 );
 	nodeTypeList->setHeaderLabels( { "短名称", "全名称", "说明" } );
-	QTreeWidgetItem *topItem = new QTreeWidgetItem( nodeTypeList );
+
+	auto topItem = new QTreeWidgetItem( nodeTypeList );
+	topItemS.emplace_back( topItem );
 	nodeTypeList->addTopLevelItem( topItem );
 	topItem->setText( 0, "标准" );
 	topItem->setText( 1, "软件常规节点生成器" );
@@ -52,16 +54,16 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		child->setText( 1, typeName );
 		child->setText( 2, typeName );
 
-		funStackBind.emplace_back( child, item );
 		auto currentFunStack = nodeGeneraterList->appendFunStack( item );
-		child->setData( 0, 0, ( size_t ) currentFunStack );
+		funStackBind.emplace_back( child, currentFunStack );
+
 		if( showWidget.isEmpty( ) || showWidget != typeName )
 			continue;
 		if( nodeGeneraterList->setCurrentItem( currentFunStack ) == false )
 			tools::debug::printError( "初始化异常" );
 		nodeTypeList->setCurrentItem( child );
+		nodeGeneraterList->setCurrentItem( currentFunStack );
 	}
-
 	connect( nodeTypeList, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
 }
 NodeListWidget::~NodeListWidget( ) {
@@ -143,9 +145,24 @@ void NodeListWidget::writeHeightIni( ) const {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), nodeGeneraterListWidth );
 }
 void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
-	auto variant = item->data( 0, 0 );
-	NodeGeneraterItem *data = ( NodeGeneraterItem * ) variant.toULongLong( );
-	if( data == nullptr || nodeGeneraterList->setCurrentItem( data ) == false )
-		tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
 
+	// 检查看是否顶级
+	
+	size_t count = topItemS.size( );
+	auto data = topItemS.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ] == item )
+			return;
+
+	// 检查子级
+	
+	count = funStackBind.size( );
+	auto pair = funStackBind.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( pair[ index ].first == item )
+			if( nodeGeneraterList->setCurrentItem( pair[ index ].second ) == true )
+				return;
+			else
+				break;
+	tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
 }

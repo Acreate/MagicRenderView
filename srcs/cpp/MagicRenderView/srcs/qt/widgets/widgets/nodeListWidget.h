@@ -7,6 +7,7 @@
 
 #include "../../tools/enum.h"
 
+class NodeGeneraterItem;
 class NodeGeneraterListWidget;
 class QScrollArea;
 class IFunStack;
@@ -31,9 +32,10 @@ protected:
 	bool mouseIsPress;
 	/// @brief 拖拽的窗口
 	QWidget *dragWidgetSize;
+	/// @brief 树形结构的顶端选项
+	std_vector< QTreeWidgetItem * > topItemS;
 	/// @brief 选项绑定指针
-	std_vector_pairt< QTreeWidgetItem *, std_shared_ptr< IFunStack > > funStackBind;
-
+	std_vector_pairt< QTreeWidgetItem *, const NodeGeneraterItem * > funStackBind;
 public:
 	NodeListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeListWidget( ) override;
