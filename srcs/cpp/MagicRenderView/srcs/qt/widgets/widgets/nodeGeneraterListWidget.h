@@ -5,21 +5,26 @@
 #include <QWidget>
 
 #include "../../../alias/type_alias.h"
+class NodeGeneraterItem;
 class IFunStack;
 class QVBoxLayout;
 class NodeGeneraterListWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	QVBoxLayout *mainLayout;
-	std_shared_ptr< IFunStack > currentContentFunStack;
-	std_vector< std_shared_ptr< IFunStack > > funStacks;
+	NodeGeneraterItem *currentContentFunStack;
+	std_vector< NodeGeneraterItem * > funStackItemS;
 public:
 	NodeGeneraterListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
-	virtual bool setCurrentFunStack( const std_shared_ptr< IFunStack > &fun_stack );
+	virtual bool setCurrentItem( const NodeGeneraterItem *fun_stack );
+	virtual bool appendItem( NodeGeneraterItem *fun_stack );
+	virtual NodeGeneraterItem * appendFunStack( const std_shared_ptr< IFunStack > &fun_stack );
 	virtual bool setCurrentFunStackIndex( const size_t &fun_stack_index );
-	virtual std_shared_ptr< IFunStack > getCurrentFunStack( );
-	virtual std_shared_ptr< IFunStack > getCurrentFunStackIndex( );
-	virtual bool appendCurrentFunStack( const std_shared_ptr< IFunStack > &fun_stack );
+	virtual std_shared_ptr< IFunStack > getCurrentFunStack( ) const;
+	virtual size_t getCurrentFunStackIndex( ) const;
+	virtual size_t getCurrentFunStackCount( ) const {
+		return funStackItemS.size( );
+	}
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 };

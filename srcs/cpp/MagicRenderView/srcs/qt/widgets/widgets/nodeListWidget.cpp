@@ -51,10 +51,11 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		child->setText( 2, typeName );
 
 		funStackBind.emplace_back( child, item );
-		nodeGeneraterList->appendCurrentFunStack( item );
+		auto currentFunStack = nodeGeneraterList->appendFunStack( item );
 		if( showWidget.isEmpty( ) || showWidget != typeName )
 			continue;
-		nodeGeneraterList->setCurrentFunStack( item );
+		if( nodeGeneraterList->setCurrentItem( currentFunStack ) == false )
+			tools::debug::printError( "初始化异常" );
 		nodeTypeList->setCurrentItem( child );
 	}
 
@@ -139,17 +140,9 @@ void NodeListWidget::writeHeightIni( ) const {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), nodeGeneraterListWidth );
 }
 void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
-	size_t count = funStackBind.size( );
-	if( count == 0 ) {
-		tools::debug::printError( "没有建立正确的绑定关系，生成窗口个数为 0" );
-		return;
-	}
-	auto data = funStackBind.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ].first == item ) {
-			if( nodeGeneraterList->setCurrentFunStack( data[ index ].second ) == false )
-				tools::debug::printError( "对象并不在窗口当中，请添加到窗口队列当中" );
-			return;
-		}
-	tools::debug::printError( "没有找到匹配的窗口，请检查是否正确初始化窗口" );
+	auto variant = item->data( 0, 0 );
+	auto nodeGeneraterItem = qobject_cast< NodeGeneraterItem * >( ( QObject * ) variant.data( ) );
+	if( nodeGeneraterItem == nullptr || nodeGeneraterList->setCurrentItem( nodeGeneraterItem ) == false )
+		tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
+
 }
