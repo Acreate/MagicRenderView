@@ -16,15 +16,17 @@ protected:
 	std_vector< NodeGeneraterItem * > funStackItemS;
 public:
 	NodeGeneraterListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
-	virtual bool setCurrentItem( const NodeGeneraterItem *fun_stack );
-	virtual bool appendItem( NodeGeneraterItem *fun_stack );
-	virtual NodeGeneraterItem * appendFunStack( const std_shared_ptr< IFunStack > &fun_stack );
+	~NodeGeneraterListWidget( ) override;
+	virtual bool setCurrentItem( const NodeGeneraterItem *item );
+	virtual const NodeGeneraterItem * appendItem( const NodeGeneraterItem &item );
+	virtual const NodeGeneraterItem * appendFunStack( const std_shared_ptr< IFunStack > &fun_stack );
 	virtual bool setCurrentFunStackIndex( const size_t &fun_stack_index );
 	virtual std_shared_ptr< IFunStack > getCurrentFunStack( ) const;
 	virtual size_t getCurrentFunStackIndex( ) const;
 	virtual size_t getCurrentFunStackCount( ) const {
 		return funStackItemS.size( );
 	}
+	virtual const std_vector< NodeGeneraterItem * > & getFunStackItemS( ) const { return funStackItemS; }
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 };

@@ -4,7 +4,11 @@
 NodeGeneraterListWidget::NodeGeneraterListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	currentContentFunStack = nullptr;
 }
-bool NodeGeneraterListWidget::setCurrentItem( const NodeGeneraterItem *fun_stack ) {
+NodeGeneraterListWidget::~NodeGeneraterListWidget( ) {
+	for( auto item : funStackItemS )
+		delete item;
+}
+bool NodeGeneraterListWidget::setCurrentItem( const NodeGeneraterItem *item ) {
 	return false;
 }
 bool NodeGeneraterListWidget::setCurrentFunStackIndex( const size_t &fun_stack_index ) {
@@ -21,17 +25,11 @@ size_t NodeGeneraterListWidget::getCurrentFunStackIndex( ) const {
 			return index;
 	return count;
 }
-bool NodeGeneraterListWidget::appendItem( NodeGeneraterItem *fun_stack ) {
-	fun_stack->setParent( this );
+const NodeGeneraterItem * NodeGeneraterListWidget::appendItem( const NodeGeneraterItem &item ) {
 	return false;
 }
-NodeGeneraterItem * NodeGeneraterListWidget::appendFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
-	NodeGeneraterItem *generaterItem = new NodeGeneraterItem( fun_stack );
-	bool item = appendItem( generaterItem );
-	if( item )
-		return generaterItem;
-	delete generaterItem;
-	return nullptr;
+const NodeGeneraterItem * NodeGeneraterListWidget::appendFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
+	return appendItem( fun_stack );
 }
 void NodeGeneraterListWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

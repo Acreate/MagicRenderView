@@ -12,6 +12,8 @@
 
 #include "../../stacks/funStack/IFunStack.h"
 
+#include "../widgetItem/nodeGeneraterItem.h"
+
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
 	mouseIsPress = false;
 	dragWidgetSize = nullptr;
@@ -52,6 +54,7 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 
 		funStackBind.emplace_back( child, item );
 		auto currentFunStack = nodeGeneraterList->appendFunStack( item );
+		child->setData( 0, 0, ( size_t ) currentFunStack );
 		if( showWidget.isEmpty( ) || showWidget != typeName )
 			continue;
 		if( nodeGeneraterList->setCurrentItem( currentFunStack ) == false )
@@ -141,8 +144,8 @@ void NodeListWidget::writeHeightIni( ) const {
 }
 void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
 	auto variant = item->data( 0, 0 );
-	auto nodeGeneraterItem = qobject_cast< NodeGeneraterItem * >( ( QObject * ) variant.data( ) );
-	if( nodeGeneraterItem == nullptr || nodeGeneraterList->setCurrentItem( nodeGeneraterItem ) == false )
+	NodeGeneraterItem *data = ( NodeGeneraterItem * ) variant.toULongLong( );
+	if( data == nullptr || nodeGeneraterList->setCurrentItem( data ) == false )
 		tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
 
 }
