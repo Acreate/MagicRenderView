@@ -27,6 +27,8 @@ protected:
 	bool isValid;
 	/// @brief 调换函数
 	std_call callFcuntion;
+	/// @brief 函数说明
+	QImage *image = nullptr;
 protected:
 	/// @brief 使用声明初始化函数信息
 	bool _init( const QString &function_declaration_name );
@@ -117,6 +119,9 @@ public:
 	/// @brief 是否有效
 	/// @return 返回 false 表示无效声明
 	virtual bool isIsValid( ) const { return isValid; }
+	/// @brief 获取函数说明
+	/// @return 图型显示图片
+	virtual QImage * getImage( ) const { return image; }
 };
 
 #endif // IFUNCTIONDECLARATION_H_H_HEAD__FILE__

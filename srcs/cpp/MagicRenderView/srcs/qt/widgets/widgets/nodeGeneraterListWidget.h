@@ -13,7 +13,10 @@ class NodeGeneraterListWidget : public QWidget {
 protected:
 	QVBoxLayout *mainLayout;
 	NodeGeneraterItem *currentItem;
-	std_vector< NodeGeneraterItem * > funStackItemS;
+	std_vector< std_pairt< NodeGeneraterItem *, QWidget * > > funStackItemS;
+protected:
+	virtual const NodeGeneraterItem * setCurrentIndex( const size_t &fun_stack_index );
+	virtual std_pairt<NodeGeneraterItem *, QWidget *> generaterItemWidget( NodeGeneraterItem *node_item );
 public:
 	NodeGeneraterListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeGeneraterListWidget( ) override;
@@ -26,7 +29,12 @@ public:
 	virtual size_t getCurrentFunStackCount( ) const {
 		return funStackItemS.size( );
 	}
-	virtual const std_vector< NodeGeneraterItem * > & getFunStackItemS( ) const { return funStackItemS; }
+	virtual std_vector< NodeGeneraterItem * > getFunStackItemS( ) const {
+		std_vector< NodeGeneraterItem * > result;
+		for( auto &[ item, widget ] : funStackItemS )
+			result.emplace_back( item );
+		return result;
+	}
 	virtual NodeGeneraterItem * getCurrentItem( ) const { return currentItem; }
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
