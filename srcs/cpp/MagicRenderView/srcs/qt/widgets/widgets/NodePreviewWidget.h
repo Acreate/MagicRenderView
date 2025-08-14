@@ -3,10 +3,26 @@
 #pragma once
 
 #include <QWidget>
+#include <QLabel>
+#include "../../../alias/type_alias.h"
+class NodeFuncPreviewImageWidget;
+class IFunStack;
 class NodePreviewWidget : public QWidget {
 	Q_OBJECT;
+protected:
+	std_shared_ptr< IFunStack > funStack;
+	std_vector< NodeFuncPreviewImageWidget * > imageVector;
+	QSize imageSize;
 public:
 	NodePreviewWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	~NodePreviewWidget( ) override;
+protected:
+	void paintEvent( QPaintEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
+public:
+	virtual const std_shared_ptr< IFunStack > & getFunStack( ) const { return funStack; }
+	virtual bool setFunStack( const std_shared_ptr< IFunStack > &fun_stack );
+	virtual const QSize & getImageSize( ) const { return imageSize; }
 };
 
 #endif // NODEPREVIEWWIDGET_H_H_HEAD__FILE__
