@@ -4,6 +4,8 @@
 
 #include "../../stacks/funStack/IFunStack.h"
 
+#include "../scrollAreas/nodePreviewScrollAreasWidget.h"
+
 #include "../widgetItem/nodeGeneraterItem.h"
 const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t &fun_stack_index ) {
 	auto data = funStackItemS.data( );
@@ -11,34 +13,21 @@ const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t
 	// todo : 配置活动窗口
 	return currentItem;
 }
-std_pairt< NodeGeneraterItem *, QWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
+std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
 
-	std_pairt< NodeGeneraterItem *, QWidget * > result { nullptr, nullptr };
+	std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > result { nullptr, nullptr };
 	// 检测选项是否正确，正确生成窗口
 	if( node_item == nullptr )
 		return result;
 	// todo : 生成主要窗口
-	QWidget *widget = new QWidget( this );
+	NodePreviewScrollAreasWidget *widget = new NodePreviewScrollAreasWidget( this );
 	widget->hide( );
 
-	
-	
+	if( widget->setFunStack( node_item->getFunStack( ) ) == false )
+		return result;
+
 	result.first = node_item;
 	result.second = widget;
-
-	// 检查函数数量，填充函数功能到窗口
-	IFunStack *element = node_item->getFunStack( ).get( );
-	auto functionDeclarations = element->getGenerFunctions( );
-	size_t count = functionDeclarations.size( );
-	if( count == 0 )
-		return result;
-	auto declarationPtr = functionDeclarations.data( );
-	IFunctionDeclaration *functionElement;
-	size_t index = 0;
-	for( functionElement = declarationPtr[ index ].get( ); index < count; ++index, functionElement = declarationPtr[ index ].get( ) )
-		if( functionElement->isIsValid( ) == true ) {
-			// todo : 生成窗口控件
-		}
 
 	return result;
 }

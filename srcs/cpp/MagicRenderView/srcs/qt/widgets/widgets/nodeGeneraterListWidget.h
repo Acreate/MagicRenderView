@@ -5,6 +5,7 @@
 #include <QWidget>
 
 #include "../../../alias/type_alias.h"
+class NodePreviewScrollAreasWidget;
 class NodeGeneraterItem;
 class IFunStack;
 class QVBoxLayout;
@@ -13,10 +14,10 @@ class NodeGeneraterListWidget : public QWidget {
 protected:
 	QVBoxLayout *mainLayout;
 	NodeGeneraterItem *currentItem;
-	std_vector< std_pairt< NodeGeneraterItem *, QWidget * > > funStackItemS;
+	std_vector< std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > > funStackItemS;
 protected:
 	virtual const NodeGeneraterItem * setCurrentIndex( const size_t &fun_stack_index );
-	virtual std_pairt<NodeGeneraterItem *, QWidget *> generaterItemWidget( NodeGeneraterItem *node_item );
+	virtual std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > generaterItemWidget( NodeGeneraterItem *node_item );
 public:
 	NodeGeneraterListWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeGeneraterListWidget( ) override;
