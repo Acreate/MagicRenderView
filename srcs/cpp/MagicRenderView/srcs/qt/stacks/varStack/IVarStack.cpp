@@ -38,11 +38,7 @@ std_shared_ptr< ITypeObject > IVarStack::removeStorageVar( const QString &storag
 
 	return std_shared_ptr< ITypeObject >( new NullTypeObject( this ) );
 }
-bool IVarStack::init( ) {
-	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
-	applicationInstancePtr->appendVarStacks< BaseVarStack >( );
-	return true;
-}
+
 ITypeObject * IVarStack::generateUbVar( const QString &type_name, QObject *parnet ) const {
 	ITypeObject *typeObject = _generateUBVar( type_name );
 	if( typeObject )

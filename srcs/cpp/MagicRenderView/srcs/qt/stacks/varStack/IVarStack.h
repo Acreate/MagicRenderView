@@ -51,8 +51,6 @@ protected:
 	/// @return 非安全指针对象
 	virtual ITypeObject * _generateUBVar( const QString &type_name ) const = 0;
 public:
-	static bool init( );
-
 	/// @brief 生成不安全变量
 	/// @param type_name 变量类型名称
 	/// @param parnet qt 内存管理对象

@@ -2,6 +2,8 @@
 
 #include <ranges>
 
+#include "../../stackManagement.h"
+
 #include "../../../application/application.h"
 
 #include "qt/types/baseType/dataTypeObject.h"
@@ -19,7 +21,8 @@
 	element_.second = [this]( )  {\
 		auto typeObject = new type_(this,	[this]()  {\
 				auto applicationInstancePtr = Application::getApplicationInstancePtr( );\
-			auto instances = applicationInstancePtr->findVarStacksAtType< BaseVarStack >( );\
+			StackManagement *stackManagement = applicationInstancePtr->getStackManagement( );\
+			auto instances = stackManagement->findVarStacksAtType< BaseVarStack >( );\
 			for( auto &item : instances )\
 				if( item->getStackTypeName( ) == stackTypeName )\
 					return item;\

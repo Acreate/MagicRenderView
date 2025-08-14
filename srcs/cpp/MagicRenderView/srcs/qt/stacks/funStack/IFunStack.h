@@ -13,7 +13,6 @@ protected:
 	QString name;
 public:
 	IFunStack( ) { }
-	static bool init();
 	virtual const QString & getName( ) const { return name; }
 	/// @brief 获取函数对象
 	/// @return 函数对象列表

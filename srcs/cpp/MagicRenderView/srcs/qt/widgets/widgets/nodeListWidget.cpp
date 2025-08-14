@@ -10,6 +10,7 @@
 
 #include "../../application/application.h"
 
+#include "../../stacks/stackManagement.h"
 #include "../../stacks/funStack/IFunStack.h"
 
 #include "../widgetItem/nodeGeneraterItem.h"
@@ -33,7 +34,7 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 
 	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "showWidget" ), "" ).toString( );
 
-	auto funStacks = appInstance->getFunStacks( );
+	auto funStacks = appInstance->getStackManagement( )->getFunStacks( );
 	nodeTypeList->setColumnCount( 3 );
 	nodeTypeList->setHeaderLabels( { "短名称", "全名称", "说明" } );
 
@@ -147,7 +148,7 @@ void NodeListWidget::writeHeightIni( ) const {
 void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
 
 	// 检查看是否顶级
-	
+
 	size_t count = topItemS.size( );
 	auto data = topItemS.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -155,7 +156,7 @@ void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
 			return;
 
 	// 检查子级
-	
+
 	count = funStackBind.size( );
 	auto pair = funStackBind.data( );
 	for( size_t index = 0; index < count; ++index )

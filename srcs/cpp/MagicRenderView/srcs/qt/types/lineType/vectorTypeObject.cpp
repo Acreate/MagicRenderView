@@ -2,6 +2,10 @@
 
 #include "../../application/application.h"
 
+#include "../../stacks/stackManagement.h"
+
+#include "../../widgets/widgets/mainWidget.h"
+
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/types/baseType/nullTypeObject.h"
 #include "qt/stacks/varStack/base/baseVarStack.h"
@@ -269,15 +273,16 @@ size_t VectorTypeObject::serializeToObjectData( const uint8_t *read_data_vector,
 	count = data_count - ( readDataPtr - read_data_vector );
 	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
 	std_vector< std::shared_ptr< IVarStack > > findResults;
+	StackManagement *stackManagement = applicationInstancePtr->getStackManagement( );
 	for( index = 0; index < unitySize; ++index ) {
 		userDataCount = ISerialize::SerializeInfo::getSerializeInfo( readDataPtr, count, &en, &stackName, nullptr, &typeName );
 		if( userDataCount == 0 ) {
 			tools::debug::printError( "无法从数据当中反序列化对象的成员类型信息" );
 			return 0;
 		}
-		findResults = applicationInstancePtr->findVarStacksAtType( stackName[ 0 ] );
+		findResults = stackManagement->findVarStacksAtType( stackName[ 0 ] );
 		if( findResults.size( ) == 0 ) {
-			findResults = applicationInstancePtr->findVarStacksAtName( stackName[ 0 ] );
+			findResults = stackManagement->findVarStacksAtName( stackName[ 0 ] );
 			if( findResults.size( ) == 0 ) {
 				tools::debug::printError( "找不到创建该对象成员类型的匹配堆栈 : " + stackName[ 0 ] );
 				return 0;
