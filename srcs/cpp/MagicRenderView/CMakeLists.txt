@@ -8,6 +8,13 @@ message( "============ ${CURRENT_FOLDER}" )
 
 get_path_sources( project_src_file PATHS "${CMAKE_CURRENT_LIST_DIR}/srcs" LANGUAGES CXX C )
 
+qt_add_resources(
+    image_sources
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/resource.qrc"
+)
+
+list( APPEND project_src_file ${image_sources}  )
+
 set( app_run_bin "${Project_Run_Bin_Path}/${prject_name}" )
 set( app_static_lib_bin "${Project_Run_Static_Lib_Path}/${prject_name}" )
 set( app_pdb_bin "${Project_Run_Pbd_Path}/${prject_name}" )
@@ -102,14 +109,3 @@ qt_add_translations(
 copy_dir_path_cmake_file_command( "${copy_file_src_dir}" "${app_resouce_path}" )
 
 set_property( TARGET "${prject_name}" PROPERTY appResoucePath "${app_resouce_path}" )
-
-file( GLOB_RECURSE resource RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/" "qrc/*" )
-
-# # 添加 qt 资源(使用 ":/images/*" 访问)
-qt_add_resources(
-    "${prject_name}"
-    PREFIX "/"
-    BASE "qrc"
-    FILES
-    ${resource}
-)

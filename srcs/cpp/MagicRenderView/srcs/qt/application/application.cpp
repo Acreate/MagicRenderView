@@ -16,7 +16,7 @@
 
 #include "../widgets/widgets/mainWidget.h"
 #include "../widgets/widgets/nodeListWidget.h"
-Application::Application( int &argc, char **argv, int i ): QApplication( argc, argv, i ) {
+Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;
 	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
@@ -41,7 +41,7 @@ Application::~Application( ) {
 	delete stackManagement;
 }
 StackManagement * Application::getStackManagement( ) const {
-	if( stackManagement->init( ) == 0 )
+	if( stackManagement == nullptr || stackManagement->init( ) != 0 )
 		return nullptr;
 	return stackManagement;
 }

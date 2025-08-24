@@ -12,7 +12,11 @@ NodeFuncPreviewImageWidget::NodeFuncPreviewImageWidget( QWidget *parent, Qt::Win
 bool NodeFuncPreviewImageWidget::setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) {
 	auto element = function_declaration.get( );
 	auto image = element->getImage( );
-	QPixmap fromImage = QPixmap::fromImage( *image );
+	QPixmap fromImage;
+	if( image == nullptr || image->isNull( ) )
+		fromImage = QPixmap::fromImage( QImage( ":/function/normal.png" ) );
+	else
+		fromImage = QPixmap::fromImage( *image );
 	if( fromImage.isNull( ) )
 		return false;
 	label->setPixmap( fromImage );

@@ -36,7 +36,7 @@ inline bool findParams( const QChar *data_ptr, const qsizetype &data_count, cons
 }
 
 bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
-	isValid = true;
+
 	auto declData = function_declaration_name.data( );
 	qsizetype declCount = function_declaration_name.length( );
 	qsizetype buffCount = declCount;
@@ -56,7 +56,6 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	functionDeclarationName = QString( declData + index, buffCount - index + 1 );
 	if( declData[ index ] == '[' && !findPairt( declData, declCount, index + 1, '[', ']', end ) ) {
 		tools::debug::printError( "无法匹配的 []，将检查属性功能是否存在异常" );
-		isValid = false;
 		return false;
 	} else {
 		qint64 count = end - index;
@@ -89,7 +88,6 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	index = end + 1;
 	if( !findPairt( declData, declCount, index + 1, '(', ')', end ) ) {
 		tools::debug::printError( "无法匹配的 ( )，将检查属性功能是否存在异常" );
-		isValid = false;
 		return false;
 	}
 	qint64 n = end - index;
@@ -138,7 +136,15 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	}
 	return true;
 }
-IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function ) : callFcuntion( call_function ) {
-	if( _init( function_declaration_name ) )
+IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function ) : callFcuntion( call_function ), image( nullptr ), isValid( false ) {
+	if( _init( function_declaration_name ) == false )
 		return;
+	image = new QImage( );
+	bool isLoadOk = image->load( ":/function/normal.png" );
+	if( isLoadOk == false || image->isNull( ) ) {
+		delete image;
+		image = nullptr;
+		return;
+	}
+	isValid = true;
 }

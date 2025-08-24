@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ico/add_node.png</file>
+        <file>ico/info_node.png</file>
+        <file>ico/item_add.png</file>
+        <file>ico/item_sub.png</file>
+        <file>ico/item_vertical.png</file>
+        <file>ico/menu_button.png</file>
+        <file>ico/move_down.png</file>
+        <file>ico/move_left.png</file>
+        <file>ico/move_right.png</file>
+        <file>ico/move_top.png</file>
+        <file>ico/option.png</file>
+        <file>ico/orientation.png</file>
+        <file>ico/play_error.png</file>
+        <file>ico/play_invalid.png</file>
+        <file>ico/play_run.png</file>
+        <file>ico/remove_item.png</file>
+        <file>ico/vertical.png</file>
+        <file>function/normal.png</file>
+    </qresource>
+</RCC>
