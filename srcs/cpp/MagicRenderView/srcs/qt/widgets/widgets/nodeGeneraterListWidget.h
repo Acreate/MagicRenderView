@@ -25,7 +25,7 @@ public:
 	virtual const NodeGeneraterItem * appendItem( NodeGeneraterItem *item );
 	virtual const NodeGeneraterItem * appendFunStack( const std_shared_ptr< IFunStack > &fun_stack );
 	virtual const NodeGeneraterItem * setCurrentFunStackIndex( const size_t &fun_stack_index );
-	virtual std_shared_ptr< IFunStack > getCurrentFunStack( ) const;
+	virtual const IFunStack * getCurrentFunStack( ) const;
 	virtual size_t getCurrentFunStackIndex( ) const;
 	virtual size_t getCurrentFunStackCount( ) const {
 		return funStackItemS.size( );

@@ -10,9 +10,9 @@
 const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t &fun_stack_index ) {
 	auto data = funStackItemS.data( );
 	if( currentItem )
-		currentItem->getRenderWidget( )->hide( );
+		NodeGeneraterItemGenerater::getRenderWidget( currentItem )->hide( );
 	currentItem = data[ fun_stack_index ].first;
-	currentItem->getRenderWidget( )->show( );
+	NodeGeneraterItemGenerater::getRenderWidget( currentItem )->show( );
 	return currentItem;
 }
 std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
@@ -25,7 +25,7 @@ std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterLi
 	NodePreviewScrollAreasWidget *widget = new NodePreviewScrollAreasWidget( this );
 	widget->hide( );
 
-	if( widget->setFunStack( node_item->getFunStack( ) ) == false )
+	if( widget->setFunStack( NodeGeneraterItemGenerater::getFunStack( node_item ) ) == false )
 		return result;
 
 	result.first = node_item;
@@ -58,7 +58,7 @@ const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentFunStackIndex( cons
 		return nullptr;
 	return setCurrentIndex( fun_stack_index );
 }
-std_shared_ptr< IFunStack > NodeGeneraterListWidget::getCurrentFunStack( ) const {
+const IFunStack * NodeGeneraterListWidget::getCurrentFunStack( ) const {
 	if( currentItem == nullptr )
 		return nullptr;
 	return currentItem->getFunStack( );
@@ -79,13 +79,14 @@ const NodeGeneraterItem * NodeGeneraterListWidget::appendItem( NodeGeneraterItem
 	if( itemWidget.first == nullptr )
 		return nullptr;
 	funStackItemS.emplace_back( itemWidget );
-	item->setRenderWidget( itemWidget.second );
+	NodeGeneraterItemGenerater::setRenderWidget( item, itemWidget.second );
+
 	if( currentItem == nullptr )
 		setCurrentIndex( 0 );
 	return item;
 }
 const NodeGeneraterItem * NodeGeneraterListWidget::appendFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
-	return appendItem( new NodeGeneraterItem( fun_stack ) );
+	return appendItem( NodeGeneraterItemGenerater::generaterItem( fun_stack ) );
 }
 void NodeGeneraterListWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
