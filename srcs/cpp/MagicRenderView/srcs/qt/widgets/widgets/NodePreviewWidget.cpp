@@ -24,28 +24,11 @@ void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
 }
 void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	auto size = event->size( );
-	auto imageWidget = size.width( ) / 5;
-	double imageHeight = imageWidget * 1.8;
-	imageSize = QSize( imageWidget, imageHeight );
-	size_t count = imageVector.size( );
-	if( count == 0 )
-		return;
-	auto labelPtr = imageVector.data( );
-	int y = 25;
-	int x = 25;
-	size_t index = 0;
-	NodeFuncPreviewImageWidget *nodeFuncPreviewImageWidget = labelPtr[ index ];
-	nodeFuncPreviewImageWidget->setFixedSize( imageSize );
-	nodeFuncPreviewImageWidget->move( x, y );
-	for( index = 1; index < count; ++index ) {
-		x += 25;
-		if( index % 5 == 0 )
-			y = y + imageHeight + 25;
-		nodeFuncPreviewImageWidget = labelPtr[ index ];
-		nodeFuncPreviewImageWidget->setFixedSize( imageSize );
-		nodeFuncPreviewImageWidget->move( x, y );
-	}
+	imageSize = contentsRect( ).size( );
+}
+void NodePreviewWidget::showEvent( QShowEvent *event ) {
+	QWidget::showEvent( event );
+	imageSize = contentsRect( ).size( );
 }
 bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
 
@@ -70,7 +53,6 @@ bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stac
 				delete label;
 				continue;
 			}
-			label->setFixedSize( imageSize );
 			buff.emplace_back( label );
 		}
 	if( buff.size( ) == 0 )

@@ -19,6 +19,7 @@ public:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
 public:
 	virtual const std_shared_ptr< IFunStack > & getFunStack( ) const { return funStack; }
 	virtual bool setFunStack( const std_shared_ptr< IFunStack > &fun_stack );
