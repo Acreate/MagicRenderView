@@ -11,10 +11,12 @@ class NodeFuncPreviewImageWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
+	QImage renderImage;
 public:
 	NodeFuncPreviewImageWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual bool setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration );
+	virtual QImage getRenderImage( ) const { return renderImage; }
 protected:
 	void showEvent( QShowEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;

@@ -16,13 +16,16 @@ void NodeFuncPreviewImageWidget::showEvent( QShowEvent *event ) {
 }
 void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
+	QRect widgetRect = contentsRect( );
+	auto size = widgetRect.size( );
+	renderImage = QImage( size, QImage::Format_RGBA8888 );
+	renderImage.fill( 0 );
+	QPainter painter( &renderImage );
 	auto pen = painter.pen( );
 	int width = 5;
 	int widthEnd = 5 * 2;
 	pen.setWidth( width );
 	painter.setPen( pen );
-	auto size = contentsRect( ).size( );
 	auto rect = QRect( width, width, size.width( ) - widthEnd, size.height( ) - widthEnd );
 
 	painter.drawRect( rect );
@@ -30,6 +33,9 @@ void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
 	if( image == nullptr )
 		return;
 	painter.drawImage( rect, *image );
+
+	QPainter widgetPainter( this );
+	widgetPainter.drawImage( widgetRect, renderImage );
 }
 void NodeFuncPreviewImageWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
