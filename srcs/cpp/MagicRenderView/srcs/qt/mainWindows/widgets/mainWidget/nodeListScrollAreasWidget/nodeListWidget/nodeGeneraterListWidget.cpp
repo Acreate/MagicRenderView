@@ -1,5 +1,7 @@
 ﻿#include "./nodeGeneraterListWidget.h"
 
+#include <qevent.h>
+
 #include "nodeGeneraterItem.h"
 
 #include "nodeGeneraterListWidget/nodePreviewScrollAreasWidget.h"
@@ -9,7 +11,10 @@ const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t
 	if( currentItem )
 		NodeGeneraterItemGenerater::getRenderWidget( currentItem )->hide( );
 	currentItem = data[ fun_stack_index ].first;
-	NodeGeneraterItemGenerater::getRenderWidget( currentItem )->show( );
+	QWidget * renderWidget = NodeGeneraterItemGenerater::getRenderWidget( currentItem );
+	auto currentSize = contentsRect( ).size( );
+	renderWidget->setFixedSize( currentSize );
+	renderWidget->show( );
 	return currentItem;
 }
 std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
@@ -80,6 +85,7 @@ const NodeGeneraterItem * NodeGeneraterListWidget::appendItem( NodeGeneraterItem
 		return nullptr;
 	funStackItemS.emplace_back( itemWidget );
 	NodeGeneraterItemGenerater::setRenderWidget( item, itemWidget.second );
+	itemWidget.second->setFixedSize( contentsRect( ).size( ) );
 
 	if( currentItem == nullptr )
 		setCurrentIndex( 0 );
@@ -90,4 +96,8 @@ const NodeGeneraterItem * NodeGeneraterListWidget::appendFunStack( const std_sha
 }
 void NodeGeneraterListWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
+	if( currentItem == nullptr )
+		return;
+	auto currentSize = contentsRect( ).size( );
+	NodeGeneraterItemGenerater::getRenderWidget( currentItem )->setFixedSize( currentSize );
 }
