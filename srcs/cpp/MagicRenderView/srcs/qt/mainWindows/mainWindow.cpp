@@ -9,11 +9,11 @@
 
 #include <qt/tools/tools.h>
 
-#include "../application/application.h"
+#include <qt/application/application.h>
 
-#include "../widgets/widgets/mainWidget.h"
+#include "widgets/mainWidget.h"
 
-MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ): QMainWindow( parent, flags ) {
+MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
 	mainMenuBar = menuBar( );
 	if( mainMenuBar == nullptr )

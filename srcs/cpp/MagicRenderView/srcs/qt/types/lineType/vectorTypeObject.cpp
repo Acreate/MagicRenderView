@@ -1,10 +1,8 @@
 ﻿#include "vectorTypeObject.h"
 
-#include "../../application/application.h"
+#include <qt/application/application.h>
 
-#include "../../stacks/stackManagement.h"
-
-#include "../../widgets/widgets/mainWidget.h"
+#include <qt/stacks/stackManagement.h>
 
 #include "qt/stacks/varStack/IVarStack.h"
 #include "qt/types/baseType/nullTypeObject.h"
@@ -14,7 +12,7 @@ ITypeObject * VectorTypeObject::createType( const QString &type_name ) {
 		return generateThisVarStackPtr->generateUbVar( type_name );
 	return getStackFunction( )->generateUbVar( type_name );
 }
-VectorTypeObject::VectorTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ): ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
+VectorTypeObject::VectorTypeObject( IVarStack *generate_this_var_stack_ptr_ptr, const std_function< std_shared_ptr< IVarStack > ( ) > &gener_var_stack, const std_vector< QString > &alias_type_name, QObject *parent ) : ITypeObject( generate_this_var_stack_ptr_ptr, gener_var_stack, alias_type_name, parent ), vector( new std_vector< std_shared_ptr< ITypeObject > >( ) ) {
 }
 VectorTypeObject & VectorTypeObject::operator=( const VectorTypeObject &other ) {
 	if( this == nullptr || thisPtr == nullptr )

@@ -4,13 +4,13 @@
 #include <QMouseEvent>
 #include <qboxlayout.h>
 
-#include "../../application/application.h"
+#include <qt/application/application.h>
 
-#include "../scrollAreas/nodeListScrollAreasWidget.h"
-#include "../scrollAreas/nodeRenderScrollAreasWidget.h"
-#include "../scrollAreas/nodeScriptsScrollAreasWidget.h"
+#include "mainWidget/nodeListScrollAreasWidget.h"
+#include "mainWidget/nodeRenderScrollAreasWidget.h"
+#include "mainWidget/nodeScriptsScrollAreasWidget.h"
 
-MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
+MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	nCursor = QCursor( Qt::ArrowCursor );
 	vCursor = QCursor( Qt::SizeVerCursor );
 	hCursor = QCursor( Qt::SizeHorCursor );

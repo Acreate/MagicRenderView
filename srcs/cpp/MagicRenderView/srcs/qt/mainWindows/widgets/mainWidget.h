@@ -6,8 +6,6 @@
 
 #include <alias/type_alias.h>
 
-#include "../../tools/enum.h"
-#include "../../tools/tools.h"
 
 class QVBoxLayout;
 class Application;

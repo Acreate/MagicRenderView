@@ -10,12 +10,13 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
+#include "../mainWindows/widgets/mainWidget.h"
+#include "../mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget.h"
+
 #include "../stacks/stackManagement.h"
 #include "../stacks/funStack/IFunStack.h"
 #include "../stacks/varStack/IVarStack.h"
 
-#include "../widgets/scrollAreas/nodeListScrollAreasWidget/nodeListWidget.h"
-#include "../widgets/widgets/mainWidget.h"
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;
