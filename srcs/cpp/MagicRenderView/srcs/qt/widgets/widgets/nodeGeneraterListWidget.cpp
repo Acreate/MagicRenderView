@@ -37,10 +37,8 @@ NodeGeneraterListWidget::NodeGeneraterListWidget( QWidget *parent, Qt::WindowFla
 	currentItem = nullptr;
 }
 NodeGeneraterListWidget::~NodeGeneraterListWidget( ) {
-	for( auto item : funStackItemS ) {
+	for( auto item : funStackItemS )
 		delete item.first;
-		delete item.second;
-	}
 }
 bool NodeGeneraterListWidget::setCurrentItem( const NodeGeneraterItem *item ) {
 	size_t count = funStackItemS.size( );
