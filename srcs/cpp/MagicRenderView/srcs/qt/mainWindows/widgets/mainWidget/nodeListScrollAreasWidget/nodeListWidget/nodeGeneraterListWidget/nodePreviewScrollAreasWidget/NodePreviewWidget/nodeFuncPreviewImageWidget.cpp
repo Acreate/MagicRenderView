@@ -26,15 +26,7 @@ bool NodeFuncPreviewImageWidget::setFunctionDeclaration( const std_shared_ptr< I
 }
 void NodeFuncPreviewImageWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	auto object = parent( );
-	auto widget = qobject_cast< QWidget * >( object );
-	if( widget == nullptr )
-		return;
-	QSize size = widget->contentsRect( ).size( );
-	setFixedSize( size.height( ), ( double ) size.width( ) / 4.2 );
 }
 void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	painter.fillRect( contentsRect( ), Qt::black );
 }

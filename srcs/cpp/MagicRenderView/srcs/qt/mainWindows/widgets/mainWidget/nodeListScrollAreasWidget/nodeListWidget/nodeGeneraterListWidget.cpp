@@ -20,12 +20,9 @@ const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t
 std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
 
 	std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > result { nullptr, nullptr };
-	// 检测选项是否正确，正确生成窗口
 	if( node_item == nullptr )
 		return result;
-	// todo : 生成主要窗口
 	NodePreviewScrollAreasWidget *widget = new NodePreviewScrollAreasWidget( this );
-
 	if( widget->setFunStack( NodeGeneraterItemGenerater::getFunStack( node_item ) ) == false ) {
 		delete widget;
 		return result;

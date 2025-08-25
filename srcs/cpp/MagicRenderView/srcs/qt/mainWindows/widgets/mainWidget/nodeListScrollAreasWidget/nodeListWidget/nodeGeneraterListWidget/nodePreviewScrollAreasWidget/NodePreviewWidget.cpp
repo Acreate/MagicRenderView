@@ -19,16 +19,39 @@ NodePreviewWidget::~NodePreviewWidget( ) {
 	for( size_t index = 0; index < count; ++index )
 		delete labelPtr[ index ];
 }
+void NodePreviewWidget::shortFunctionNodeWidget( ) {
+	size_t count = imageVector.size( );
+	if( count == 0 )
+		return;
+	auto data = imageVector.data( );
+	auto rect = contentsRect( );
+	auto size = rect.size( );
+	double width = size.width( );
+	double height = size.height( );
+	QMargins margins = contentsMargins( );
+	int top = margins.top( );
+	int nextSpace = ( margins.left( ) + margins.right( ) ) / 2;
+	double widgetWidth = width / 4 - nextSpace;
+	size_t layout = 0;
+	for( size_t index = 0; index < count; ++index ) {
+		auto nodeFuncPreviewImageWidget = data[ index ];
+		nodeFuncPreviewImageWidget->move( ( widgetWidth + nextSpace ) * index, layout );
+		nodeFuncPreviewImageWidget->setFixedSize( widgetWidth, height );
+		if( index == 0 || index % 4 != 0 )
+			continue;
+		layout = layout + height + top;
+	}
+}
 void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	painter.fillRect( contentsRect( ), Qt::black );
 }
 void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
+	shortFunctionNodeWidget( );
 }
 void NodePreviewWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
+	shortFunctionNodeWidget( );
 }
 bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
 	// 检查函数数量，填充函数功能到窗口
