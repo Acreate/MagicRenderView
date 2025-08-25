@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <qevent.h>
+#include <qgridlayout.h>
 
 #include <qt/functionDeclaration/IFunctionDeclaration.h>
 
@@ -9,7 +10,8 @@
 
 #include "NodePreviewWidget/nodeFuncPreviewImageWidget.h"
 
-NodePreviewWidget::NodePreviewWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
+NodePreviewWidget::NodePreviewWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), mainLayout( nullptr ) {
+
 }
 NodePreviewWidget::~NodePreviewWidget( ) {
 	size_t count = imageVector.size( );
@@ -24,22 +26,20 @@ void NodePreviewWidget::shortFunctionNodeWidget( ) {
 	if( count == 0 )
 		return;
 	auto data = imageVector.data( );
-	auto rect = contentsRect( );
-	auto size = rect.size( );
-	double width = size.width( );
-	double height = size.height( );
-	QMargins margins = contentsMargins( );
-	int top = margins.top( );
-	int nextSpace = ( margins.left( ) + margins.right( ) ) / 2;
-	double widgetWidth = width / 4 - nextSpace;
-	size_t layout = 0;
-	for( size_t index = 0; index < count; ++index ) {
-		auto nodeFuncPreviewImageWidget = data[ index ];
-		nodeFuncPreviewImageWidget->move( ( widgetWidth + nextSpace ) * index, layout );
-		nodeFuncPreviewImageWidget->setFixedSize( widgetWidth, height );
-		if( index == 0 || index % 4 != 0 )
-			continue;
-		layout = layout + height + top;
+	if( mainLayout != nullptr )
+		delete mainLayout;
+	mainLayout = new QGridLayout( this );
+	
+	size_t layout = 0; // 层
+	size_t lineCount = 4; // 最大个数
+	auto previewImageWidget = data[ 0 ];
+	mainLayout->addWidget( previewImageWidget, 0, 0 );
+	for( size_t index = 1; index < count; ++index ) {
+		previewImageWidget = data[ index ];
+		size_t column = index % lineCount;
+		if( column == 0 )
+			++layout;
+		mainLayout->addWidget( previewImageWidget, layout, column );
 	}
 }
 void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
@@ -51,7 +51,6 @@ void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 }
 void NodePreviewWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	shortFunctionNodeWidget( );
 }
 bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
 	// 检查函数数量，填充函数功能到窗口
@@ -74,6 +73,7 @@ bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stac
 				delete label;
 				continue;
 			}
+			label->setFixedSize( 100, 200 );
 			buff.emplace_back( label );
 		}
 	if( buff.size( ) == 0 )
