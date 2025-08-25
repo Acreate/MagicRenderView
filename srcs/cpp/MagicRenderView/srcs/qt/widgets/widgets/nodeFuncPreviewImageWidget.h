@@ -15,6 +15,9 @@ public:
 	NodeFuncPreviewImageWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	virtual const std_shared_ptr< IFunctionDeclaration > & getFunctionDeclaration( ) const { return functionDeclaration; }
 	virtual bool setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration );
+protected:
+	void showEvent( QShowEvent *event ) override;
+	
 };
 
 #endif // NODEFUNCPREVIEWIMAGEWIDGET_H_H_HEAD__FILE__

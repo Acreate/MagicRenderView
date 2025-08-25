@@ -9,8 +9,10 @@
 #include "../widgetItem/nodeGeneraterItem.h"
 const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t &fun_stack_index ) {
 	auto data = funStackItemS.data( );
+	if( currentItem )
+		currentItem->getRenderWidget( )->hide( );
 	currentItem = data[ fun_stack_index ].first;
-	// todo : 配置活动窗口
+	currentItem->getRenderWidget( )->show( );
 	return currentItem;
 }
 std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterListWidget::generaterItemWidget( NodeGeneraterItem *node_item ) {
@@ -77,6 +79,7 @@ const NodeGeneraterItem * NodeGeneraterListWidget::appendItem( NodeGeneraterItem
 	if( itemWidget.first == nullptr )
 		return nullptr;
 	funStackItemS.emplace_back( itemWidget );
+	item->setRenderWidget( itemWidget.second );
 	if( currentItem == nullptr )
 		setCurrentIndex( 0 );
 	return item;

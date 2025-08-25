@@ -9,6 +9,7 @@
 #include "../../stacks/funStack/IFunStack.h"
 
 NodePreviewWidget::NodePreviewWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
+	hide( );
 }
 NodePreviewWidget::~NodePreviewWidget( ) {
 	size_t count = imageVector.size( );
@@ -24,14 +25,11 @@ void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
 }
 void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	imageSize = contentsRect( ).size( );
 }
 void NodePreviewWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	imageSize = contentsRect( ).size( );
 }
 bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stack ) {
-
 	// 检查函数数量，填充函数功能到窗口
 	IFunStack *element = fun_stack.get( );
 	auto functionDeclarations = element->getGenerFunctions( );
@@ -44,7 +42,6 @@ bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stac
 	std_vector< NodeFuncPreviewImageWidget * > buff;
 	for( functionElement = declarationPtr[ index ].get( ); index < count; ++index, functionElement = declarationPtr[ index ].get( ) )
 		if( functionElement->isIsValid( ) == true ) {
-
 			auto image = functionElement->getImage( );
 			if( image == nullptr )
 				continue;
@@ -63,6 +60,5 @@ bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stac
 		delete labelPtr[ index ];
 	funStack = fun_stack;
 	imageVector = buff;
-	repaint( );
 	return true;
 }

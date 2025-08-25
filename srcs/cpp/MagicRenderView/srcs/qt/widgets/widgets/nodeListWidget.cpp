@@ -15,7 +15,7 @@
 
 #include "../widgetItem/nodeGeneraterItem.h"
 
-NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
+NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	mouseIsPress = false;
 	dragWidgetSize = nullptr;
 	keyFirst = "Application/MainWindow/MainWidget/NodeListWidget";
@@ -65,6 +65,9 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ): QWidge
 		nodeTypeList->setCurrentItem( child );
 		nodeGeneraterList->setCurrentItem( currentFunStack );
 	}
+	NodeGeneraterItem * currentItem = nodeGeneraterList->getCurrentItem( );
+	if( currentItem == nullptr )
+		itemDoubleClicked( funStackBind[ 0 ].first, 0 );
 	connect( nodeTypeList, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
 }
 NodeListWidget::~NodeListWidget( ) {
