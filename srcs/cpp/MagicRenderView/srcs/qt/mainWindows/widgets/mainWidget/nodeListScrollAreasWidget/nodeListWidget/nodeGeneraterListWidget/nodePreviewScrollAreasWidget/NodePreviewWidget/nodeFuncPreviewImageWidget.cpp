@@ -6,21 +6,8 @@
 #include <qt/functionDeclaration/IFunctionDeclaration.h>
 
 NodeFuncPreviewImageWidget::NodeFuncPreviewImageWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
-	auto mainLayout = new QVBoxLayout( this );
-	label = new QLabel( this );
-	mainLayout->addWidget( label );
 }
 bool NodeFuncPreviewImageWidget::setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) {
-	auto element = function_declaration.get( );
-	auto image = element->getImage( );
-	QPixmap fromImage;
-	if( image == nullptr || image->isNull( ) )
-		fromImage = QPixmap::fromImage( QImage( ":/function/normal.png" ) );
-	else
-		fromImage = QPixmap::fromImage( *image );
-	if( fromImage.isNull( ) )
-		return false;
-	label->setPixmap( fromImage );
 	functionDeclaration = function_declaration;
 	return true;
 }
@@ -29,4 +16,22 @@ void NodeFuncPreviewImageWidget::showEvent( QShowEvent *event ) {
 }
 void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
+	QPainter painter( this );
+	auto pen = painter.pen( );
+	int width = 5;
+	int widthEnd = 5 * 2;
+	pen.setWidth( width );
+	painter.setPen( pen );
+	auto size = contentsRect( ).size( );
+	auto rect = QRect( width, width, size.width( ) - widthEnd, size.height( ) - widthEnd );
+
+	painter.drawRect( rect );
+	auto image = functionDeclaration->getImage( );
+	if( image == nullptr )
+		return;
+	painter.drawImage( rect, *image );
+}
+void NodeFuncPreviewImageWidget::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
+	repaint( );
 }

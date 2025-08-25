@@ -10,7 +10,6 @@ class IFunctionDeclaration;
 class NodeFuncPreviewImageWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	QLabel *label;
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
 public:
 	NodeFuncPreviewImageWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
@@ -19,6 +18,7 @@ public:
 protected:
 	void showEvent( QShowEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
 };
 
 #endif // NODEFUNCPREVIEWIMAGEWIDGET_H_H_HEAD__FILE__
