@@ -4,7 +4,8 @@
 
 #include <QWidget>
 
-#include "../../../alias/type_alias.h"
+#include <alias/type_alias.h>
+
 class NodePreviewScrollAreasWidget;
 class NodeGeneraterItem;
 class IFunStack;

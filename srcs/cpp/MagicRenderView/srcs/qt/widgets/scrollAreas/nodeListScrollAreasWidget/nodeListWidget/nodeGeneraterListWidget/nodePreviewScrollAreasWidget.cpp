@@ -1,10 +1,12 @@
 ﻿#include "./nodePreviewScrollAreasWidget.h"
 
-#include "../widgets/NodePreviewWidget.h"
-NodePreviewScrollAreasWidget::NodePreviewScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ): QScrollArea( parent ) {
+#include "nodePreviewScrollAreasWidget/NodePreviewWidget.h"
+
+NodePreviewScrollAreasWidget::NodePreviewScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ) : QScrollArea( parent ) {
 	nodePreviewWidget = new NodePreviewWidget( this, flags );
 	setWidget( nodePreviewWidget );
 	this->setWidgetResizable( true );
+	hide( );
 }
 NodePreviewScrollAreasWidget::~NodePreviewScrollAreasWidget( ) {
 }

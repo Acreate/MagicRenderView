@@ -1,12 +1,9 @@
 ﻿#include "./nodeGeneraterListWidget.h"
 
-#include "../../functionDeclaration/IFunctionDeclaration.h"
+#include "nodeGeneraterItem.h"
 
-#include "../../stacks/funStack/IFunStack.h"
+#include "nodeGeneraterListWidget/nodePreviewScrollAreasWidget.h"
 
-#include "../scrollAreas/nodePreviewScrollAreasWidget.h"
-
-#include "../widgetItem/nodeGeneraterItem.h"
 const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t &fun_stack_index ) {
 	auto data = funStackItemS.data( );
 	if( currentItem )
@@ -23,10 +20,11 @@ std_pairt< NodeGeneraterItem *, NodePreviewScrollAreasWidget * > NodeGeneraterLi
 		return result;
 	// todo : 生成主要窗口
 	NodePreviewScrollAreasWidget *widget = new NodePreviewScrollAreasWidget( this );
-	widget->hide( );
 
-	if( widget->setFunStack( NodeGeneraterItemGenerater::getFunStack( node_item ) ) == false )
+	if( widget->setFunStack( NodeGeneraterItemGenerater::getFunStack( node_item ) ) == false ) {
+		delete widget;
 		return result;
+	}
 
 	result.first = node_item;
 	result.second = widget;
@@ -37,8 +35,12 @@ NodeGeneraterListWidget::NodeGeneraterListWidget( QWidget *parent, Qt::WindowFla
 	currentItem = nullptr;
 }
 NodeGeneraterListWidget::~NodeGeneraterListWidget( ) {
-	for( auto item : funStackItemS )
+	for( auto item : funStackItemS ) {
+		auto renderWidget = NodeGeneraterItemGenerater::getRenderWidget( item.first );
+		if( renderWidget != item.second )
+			delete item.second;
 		delete item.first;
+	}
 }
 bool NodeGeneraterListWidget::setCurrentItem( const NodeGeneraterItem *item ) {
 	size_t count = funStackItemS.size( );

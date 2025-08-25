@@ -4,7 +4,8 @@
 
 #include <QWidget>
 #include <QLabel>
-#include "../../../alias/type_alias.h"
+
+#include <alias/type_alias.h>
 class NodeFuncPreviewImageWidget;
 class IFunStack;
 class NodePreviewWidget : public QWidget {

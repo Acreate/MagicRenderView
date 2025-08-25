@@ -14,8 +14,8 @@
 #include "../stacks/funStack/IFunStack.h"
 #include "../stacks/varStack/IVarStack.h"
 
+#include "../widgets/scrollAreas/nodeListScrollAreasWidget/nodeListWidget.h"
 #include "../widgets/widgets/mainWidget.h"
-#include "../widgets/widgets/nodeListWidget.h"
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;

@@ -1,15 +1,15 @@
 ﻿#include "./NodePreviewWidget.h"
 
+#include <QPainter>
 #include <qevent.h>
 
-#include "nodeFuncPreviewImageWidget.h"
+#include <qt/functionDeclaration/IFunctionDeclaration.h>
 
-#include "../../functionDeclaration/IFunctionDeclaration.h"
+#include <qt/stacks/funStack/IFunStack.h>
 
-#include "../../stacks/funStack/IFunStack.h"
+#include "NodePreviewWidget/nodeFuncPreviewImageWidget.h"
 
 NodePreviewWidget::NodePreviewWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
-	hide( );
 }
 NodePreviewWidget::~NodePreviewWidget( ) {
 	size_t count = imageVector.size( );
@@ -21,7 +21,8 @@ NodePreviewWidget::~NodePreviewWidget( ) {
 }
 void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-
+	QPainter painter( this );
+	painter.fillRect( contentsRect( ), Qt::black );
 }
 void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

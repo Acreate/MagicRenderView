@@ -3,7 +3,8 @@
 #pragma once
 #include <QLabel>
 #include <QWidget>
-#include "../../../alias/type_alias.h"
+
+#include <alias/type_alias.h>
 
 class IFunctionDeclaration;
 class NodeFuncPreviewImageWidget : public QWidget {
@@ -17,7 +18,7 @@ public:
 	virtual bool setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration );
 protected:
 	void showEvent( QShowEvent *event ) override;
-	
+	void paintEvent( QPaintEvent *event ) override;
 };
 
 #endif // NODEFUNCPREVIEWIMAGEWIDGET_H_H_HEAD__FILE__

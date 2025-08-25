@@ -4,7 +4,8 @@
 
 #include <QScrollArea>
 
-#include "../../../alias/type_alias.h"
+#include <alias/type_alias.h>
+
 class IFunStack;
 class NodePreviewWidget;
 class NodePreviewScrollAreasWidget : public QScrollArea {

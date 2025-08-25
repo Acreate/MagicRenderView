@@ -3,9 +3,7 @@
 #pragma once
 #include <QWidget>
 
-#include "../../../alias/type_alias.h"
-
-#include "../../tools/enum.h"
+#include <alias/type_alias.h>
 
 class NodeGeneraterItem;
 class NodeGeneraterListWidget;

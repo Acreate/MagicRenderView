@@ -1,8 +1,10 @@
 ﻿#include "./nodeFuncPreviewImageWidget.h"
 
+#include <QPainter>
 #include <qboxlayout.h>
 
-#include "../../functionDeclaration/IFunctionDeclaration.h"
+#include <qt/functionDeclaration/IFunctionDeclaration.h>
+
 NodeFuncPreviewImageWidget::NodeFuncPreviewImageWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	auto mainLayout = new QVBoxLayout( this );
 	label = new QLabel( this );
@@ -30,4 +32,9 @@ void NodeFuncPreviewImageWidget::showEvent( QShowEvent *event ) {
 		return;
 	QSize size = widget->contentsRect( ).size( );
 	setFixedSize( size.height( ), ( double ) size.width( ) / 4.2 );
+}
+void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+	QPainter painter( this );
+	painter.fillRect( contentsRect( ), Qt::black );
 }

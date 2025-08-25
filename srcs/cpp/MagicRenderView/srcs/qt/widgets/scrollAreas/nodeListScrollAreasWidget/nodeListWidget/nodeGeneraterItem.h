@@ -3,7 +3,7 @@
 #pragma once
 #include <QObject>
 
-#include "../../../alias/type_alias.h"
+#include <alias/type_alias.h>
 
 class NodeGeneraterListWidget;
 class IFunStack;

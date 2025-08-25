@@ -1,19 +1,18 @@
 ﻿#include "./nodeListWidget.h"
 
 #include <QPainter>
-#include <qboxlayout.h>
-#include <qfileinfo.h>
 #include <QTreeWidget.h>
+#include <qboxlayout.h>
 #include <qevent.h>
+#include <qfileinfo.h>
 
-#include "nodeGeneraterListWidget.h"
+#include <qt/application/application.h>
 
-#include "../../application/application.h"
+#include <qt/stacks/stackManagement.h>
 
-#include "../../stacks/stackManagement.h"
-#include "../../stacks/funStack/IFunStack.h"
+#include <qt/stacks/funStack/IFunStack.h>
 
-#include "../widgetItem/nodeGeneraterItem.h"
+#include "nodeListWidget/nodeGeneraterListWidget.h"
 
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	mouseIsPress = false;
@@ -65,7 +64,7 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidg
 		nodeTypeList->setCurrentItem( child );
 		nodeGeneraterList->setCurrentItem( currentFunStack );
 	}
-	NodeGeneraterItem * currentItem = nodeGeneraterList->getCurrentItem( );
+	NodeGeneraterItem *currentItem = nodeGeneraterList->getCurrentItem( );
 	if( currentItem == nullptr )
 		itemDoubleClicked( funStackBind[ 0 ].first, 0 );
 	connect( nodeTypeList, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );

@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "../widgets/nodeGeneraterListWidget.h"
+#include <qt/nodes/nodeWidget/INodeWidget.h>
 
 NodeGeneraterItem::NodeGeneraterItem( const std_shared_ptr< IFunStack > &fun_stack ) : funStack( fun_stack ) {
 	renderWidget = nullptr;
