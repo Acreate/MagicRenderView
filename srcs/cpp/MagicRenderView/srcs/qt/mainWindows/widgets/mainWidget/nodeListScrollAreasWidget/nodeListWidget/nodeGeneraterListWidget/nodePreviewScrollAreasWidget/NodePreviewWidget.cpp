@@ -47,7 +47,6 @@ void NodePreviewWidget::paintEvent( QPaintEvent *event ) {
 }
 void NodePreviewWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	shortFunctionNodeWidget( );
 }
 void NodePreviewWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
@@ -84,5 +83,6 @@ bool NodePreviewWidget::setFunStack( const std_shared_ptr< IFunStack > &fun_stac
 		delete labelPtr[ index ];
 	funStack = fun_stack;
 	imageVector = buff;
+	shortFunctionNodeWidget( );
 	return true;
 }
