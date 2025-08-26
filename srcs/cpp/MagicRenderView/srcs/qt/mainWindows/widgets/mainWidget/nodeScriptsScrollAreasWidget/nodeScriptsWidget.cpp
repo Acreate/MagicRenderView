@@ -1,7 +1,11 @@
 ﻿#include "./nodeScriptsWidget.h"
 
 #include <QPainter>
-NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ): QWidget( parent, flags ) {
+
+#include <qt/application/application.h>
+NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
+	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	connect( applicationInstancePtr, &Application::dragEventEnd, this, &NodeScriptsWidget::dragEventEnd );
 }
 NodeScriptsWidget::~NodeScriptsWidget( ) {
 }
@@ -17,4 +21,11 @@ void NodeScriptsWidget::paintEvent( QPaintEvent *event ) {
 	painter.setBrush( QColor( 0, 0, 0, 0 ) );
 	auto size = rect.size( );
 	painter.drawRect( width, width, size.width( ) - width * 2 - 1, size.height( ) - width * 2 - 1 );
+}
+void NodeScriptsWidget::dragEventEnd( Application *event_obj, QWidget *draw_widget ) {
+	auto point = QCursor::pos( );
+	auto fromGlobal = mapFromGlobal( point );
+	if( contentsRect( ).contains( fromGlobal ) == false )
+		return;
+	qDebug( ) << "处理范围";
 }

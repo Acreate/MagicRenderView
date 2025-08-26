@@ -192,6 +192,8 @@ bool Application::notify( QObject *object, QEvent *event ) {
 			break;
 		case QEvent::MouseButtonRelease :
 
+			if( dragFunctionPreviewWidget == nullptr )
+				break;
 			mutexPtr = stdMutexWidgetSelectLock.get( );
 			mutexPtr->lock( );
 			NodeFuncPreviewImageWidget *drawWidget = dragFunctionPreviewWidget;
