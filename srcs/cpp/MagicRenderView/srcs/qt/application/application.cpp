@@ -10,12 +10,11 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include "../mainWindows/widgets/mainWidget.h"
-#include "../mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget.h"
+#include <qt/mainWindows/widgets/mainWidget.h>
+#include <qt/mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget.h>
+#include <qt/mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget/nodeGeneraterListWidget/nodePreviewScrollAreasWidget/NodePreviewWidget/nodeFuncPreviewImageWidget.h>
 
-#include "../stacks/stackManagement.h"
-#include "../stacks/funStack/IFunStack.h"
-#include "../stacks/varStack/IVarStack.h"
+#include <qt/stacks/stackManagement.h>
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
@@ -34,6 +33,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 			settings->sync( );
 	}
 	stdMutex_p.reset( new std_mutex );
+	stdMutexWidgetSelectLock.reset( new std_mutex );
 	stackManagement = new StackManagement;
 }
 Application::~Application( ) {
@@ -62,6 +62,31 @@ QVariant Application::getAppIniValue( const QAnyStringView &key ) const {
 void Application::syncAppValueIniFile( ) const {
 	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	settings->sync( );
+}
+MainWidget * Application::getMainWidget( ) const {
+
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	return mainWidget;
+}
+void Application::setMainWidget( MainWidget *const main_widget ) {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	mainWidget = main_widget;
+}
+NodeListWidget * Application::getNodeListWidget( ) const {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	return nodeListWidget;
+}
+void Application::setNodeListWidget( NodeListWidget *const node_list_widget ) {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	nodeListWidget = node_list_widget;
+}
+NodeFuncPreviewImageWidget * Application::getDragFunctionPreviewWidget( ) const {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	return dragFunctionPreviewWidget;
+}
+void Application::setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget ) {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	dragFunctionPreviewWidget = drag_function_preview_widget;
 }
 
 std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
@@ -151,6 +176,7 @@ bool Application::notify( QObject *object, QEvent *event ) {
 	auto glbalPos = QCursor::pos( );
 
 	auto type = event->type( );
+	std::mutex *mutexPtr;
 	switch( type ) {
 		case QEvent::MouseMove :
 			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
@@ -163,6 +189,15 @@ bool Application::notify( QObject *object, QEvent *event ) {
 			}
 			mainWidget->setNormalCursorShape( );
 
+			break;
+		case QEvent::MouseButtonRelease :
+
+			mutexPtr = stdMutexWidgetSelectLock.get( );
+			mutexPtr->lock( );
+			NodeFuncPreviewImageWidget *drawWidget = dragFunctionPreviewWidget;
+			dragFunctionPreviewWidget = nullptr;
+			mutexPtr->unlock( );
+			dragEventEnd( this, drawWidget );
 			break;
 	}
 	return QApplication::notify( object, event );

@@ -7,6 +7,7 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+class NodeFuncPreviewImageWidget;
 class StackManagement;
 class NodeListWidget;
 class IVarStack;
@@ -62,23 +63,29 @@ protected:
 	QSettings *settings;
 	MainWidget *mainWidget;
 	NodeListWidget *nodeListWidget;
+	NodeFuncPreviewImageWidget *dragFunctionPreviewWidget;
 	StackManagement *stackManagement;
 	std_shared_ptr< std_mutex > stdMutex_p;
+	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
 public:
-	virtual StackManagement * getStackManagement() const;
+	virtual StackManagement * getStackManagement( ) const;
 	virtual void setAppIniValue( const QAnyStringView &key, const QVariant &value );
 	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
-	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
-	virtual void setMainWidget( MainWidget *const main_widget ) { mainWidget = main_widget; }
-	virtual NodeListWidget * getNodeListWidget( ) const { return nodeListWidget; }
-	virtual void setNodeListWidget( NodeListWidget *const node_list_widget ) { nodeListWidget = node_list_widget; }
+	virtual MainWidget * getMainWidget( ) const;
+	virtual void setMainWidget( MainWidget *const main_widget );
+	virtual NodeListWidget * getNodeListWidget( ) const;
+	virtual void setNodeListWidget( NodeListWidget *const node_list_widget );
+	virtual NodeFuncPreviewImageWidget * getDragFunctionPreviewWidget( ) const;
+	virtual void setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget );
 protected:
 	bool notify( QObject *, QEvent * ) override;
+Q_SIGNALS:
+	void dragEventEnd( Application *event_obj, QWidget *draw_widget );
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__

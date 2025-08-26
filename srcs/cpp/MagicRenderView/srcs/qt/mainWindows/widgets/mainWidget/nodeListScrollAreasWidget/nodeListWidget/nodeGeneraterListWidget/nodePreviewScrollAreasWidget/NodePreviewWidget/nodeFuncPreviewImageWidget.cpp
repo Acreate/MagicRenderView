@@ -5,7 +5,10 @@
 
 #include <qt/functionDeclaration/IFunctionDeclaration.h>
 
-NodeFuncPreviewImageWidget::NodeFuncPreviewImageWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
+#include <qt/application/application.h>
+
+NodeFuncPreviewImageWidget::NodeFuncPreviewImageWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), isPreeMouse( false ) {
+	applicationInstancePtr = Application::getApplicationInstancePtr( );
 }
 bool NodeFuncPreviewImageWidget::setFunctionDeclaration( const std_shared_ptr< IFunctionDeclaration > &function_declaration ) {
 	functionDeclaration = function_declaration;
@@ -40,4 +43,17 @@ void NodeFuncPreviewImageWidget::paintEvent( QPaintEvent *event ) {
 void NodeFuncPreviewImageWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	repaint( );
+}
+void NodeFuncPreviewImageWidget::mouseMoveEvent( QMouseEvent *event ) {
+	QWidget::mouseMoveEvent( event );
+	if( isPreeMouse )
+		applicationInstancePtr->setDragFunctionPreviewWidget( this );
+}
+void NodeFuncPreviewImageWidget::mousePressEvent( QMouseEvent *event ) {
+	QWidget::mousePressEvent( event );
+	isPreeMouse = true;
+}
+void NodeFuncPreviewImageWidget::mouseReleaseEvent( QMouseEvent *event ) {
+	QWidget::mouseReleaseEvent( event );
+	isPreeMouse = false;
 }
