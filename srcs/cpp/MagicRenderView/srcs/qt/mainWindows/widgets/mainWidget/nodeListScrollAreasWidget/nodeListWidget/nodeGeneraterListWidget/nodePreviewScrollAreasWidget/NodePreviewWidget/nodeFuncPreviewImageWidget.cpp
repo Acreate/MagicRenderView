@@ -46,8 +46,10 @@ void NodeFuncPreviewImageWidget::resizeEvent( QResizeEvent *event ) {
 }
 void NodeFuncPreviewImageWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( isPreeMouse )
+	if( isPreeMouse ) {
 		applicationInstancePtr->setDragFunctionPreviewWidget( this );
+		isPreeMouse = false;
+	}
 }
 void NodeFuncPreviewImageWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );

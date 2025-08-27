@@ -7,6 +7,8 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+class DragInfoWindow;
+class QLabel;
 class NodeFuncPreviewImageWidget;
 class StackManagement;
 class NodeListWidget;
@@ -65,6 +67,7 @@ protected:
 	NodeListWidget *nodeListWidget;
 	NodeFuncPreviewImageWidget *dragFunctionPreviewWidget;
 	StackManagement *stackManagement;
+	DragInfoWindow* drawShowImageInfoWidget;
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 public:

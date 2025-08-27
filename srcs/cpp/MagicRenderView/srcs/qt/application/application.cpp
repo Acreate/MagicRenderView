@@ -16,6 +16,8 @@
 
 #include <qt/stacks/stackManagement.h>
 
+#include <qt/mainWindows/dragInfoWindow.h>
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;
@@ -35,6 +37,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	stdMutex_p.reset( new std_mutex );
 	stdMutexWidgetSelectLock.reset( new std_mutex );
 	stackManagement = new StackManagement;
+	drawShowImageInfoWidget = new DragInfoWindow( );
+	drawShowImageInfoWidget->setFixedSize( 100, 200 );
 }
 Application::~Application( ) {
 	settings->sync( );
@@ -86,7 +90,11 @@ NodeFuncPreviewImageWidget * Application::getDragFunctionPreviewWidget( ) const 
 }
 void Application::setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget ) {
 	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	if( dragFunctionPreviewWidget == drag_function_preview_widget )
+		return;
 	dragFunctionPreviewWidget = drag_function_preview_widget;
+	drawShowImageInfoWidget->setDragFunctionPreviewWidget( drag_function_preview_widget );
+
 }
 
 std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
@@ -177,8 +185,16 @@ bool Application::notify( QObject *object, QEvent *event ) {
 
 	auto type = event->type( );
 	std::mutex *mutexPtr;
+	NodeFuncPreviewImageWidget *drawWidget;
 	switch( type ) {
+		case QEvent::MouseButtonPress :
+			break;
 		case QEvent::MouseMove :
+			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) ) {
+				if( drawShowImageInfoWidget->isHidden( ) )
+					drawShowImageInfoWidget->show( );
+				drawShowImageInfoWidget->move( glbalPos );
+			}
 			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
 				mainWidget->setHCursorShape( );
 				break;
@@ -188,7 +204,6 @@ bool Application::notify( QObject *object, QEvent *event ) {
 				break;
 			}
 			mainWidget->setNormalCursorShape( );
-
 			break;
 		case QEvent::MouseButtonRelease :
 
@@ -196,10 +211,15 @@ bool Application::notify( QObject *object, QEvent *event ) {
 				break;
 			mutexPtr = stdMutexWidgetSelectLock.get( );
 			mutexPtr->lock( );
-			NodeFuncPreviewImageWidget *drawWidget = dragFunctionPreviewWidget;
+			drawWidget = dragFunctionPreviewWidget;
 			dragFunctionPreviewWidget = nullptr;
+			drawShowImageInfoWidget->hide( );
 			mutexPtr->unlock( );
 			dragEventEnd( this, drawWidget );
+			break;
+		case QEvent::Quit :
+			delete drawShowImageInfoWidget;
+			drawShowImageInfoWidget = nullptr;
 			break;
 	}
 	return QApplication::notify( object, event );
