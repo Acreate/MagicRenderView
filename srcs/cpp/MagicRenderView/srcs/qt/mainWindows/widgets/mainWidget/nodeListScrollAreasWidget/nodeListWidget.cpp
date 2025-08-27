@@ -13,6 +13,7 @@
 #include <qt/stacks/funStack/IFunStack.h>
 
 #include "nodeListWidget/nodeGeneraterListWidget.h"
+#include "nodeListWidget/nodeTypeTreeListWidget.h"
 
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	mouseIsPress = false;
@@ -21,25 +22,25 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidg
 
 	appInstance = Application::getApplicationInstancePtr( );
 
-	nodeTypeList = new QTreeWidget( this );
-	nodeGeneraterList = new NodeGeneraterListWidget( this );
+	nodeTypeTreeListWidget = new NodeTypeTreeListWidget( this );
+	nodeGeneraterListWidget = new NodeGeneraterListWidget( this );
 	appInstance->syncAppValueIniFile( );
 
-	quint64 nodeTypeListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeList, "width" ), 30 ).toULongLong( );
-	nodeTypeList->setFixedWidth( nodeTypeListWidth );
+	quint64 nodeTypeListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeTreeListWidget, "width" ), 30 ).toULongLong( );
+	nodeTypeTreeListWidget->setFixedWidth( nodeTypeListWidth );
 
-	quint64 nodeGeneraterListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), 80 ).toULongLong( );
-	nodeGeneraterList->setFixedWidth( nodeGeneraterListWidth );
+	quint64 nodeGeneraterListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterListWidget, "width" ), 80 ).toULongLong( );
+	nodeGeneraterListWidget->setFixedWidth( nodeGeneraterListWidth );
 
-	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "showWidget" ), "" ).toString( );
+	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterListWidget, "showWidget" ), "" ).toString( );
 
 	auto funStacks = appInstance->getStackManagement( )->getFunStacks( );
-	nodeTypeList->setColumnCount( 3 );
-	nodeTypeList->setHeaderLabels( { "短名称", "全名称", "说明" } );
+	nodeTypeTreeListWidget->setColumnCount( 3 );
+	nodeTypeTreeListWidget->setHeaderLabels( { "短名称", "全名称", "说明" } );
 
-	auto topItem = new QTreeWidgetItem( nodeTypeList );
+	auto topItem = new QTreeWidgetItem( nodeTypeTreeListWidget );
 	topItemS.emplace_back( topItem );
-	nodeTypeList->addTopLevelItem( topItem );
+	nodeTypeTreeListWidget->addTopLevelItem( topItem );
 	topItem->setText( 0, "标准" );
 	topItem->setText( 1, "软件常规节点生成器" );
 	topItem->setText( 2, "软件自动生成节点" );
@@ -54,38 +55,27 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidg
 		child->setText( 1, typeName );
 		child->setText( 2, typeName );
 
-		auto currentFunStack = nodeGeneraterList->appendFunStack( item );
+		auto currentFunStack = nodeGeneraterListWidget->appendFunStack( item );
 		funStackBind.emplace_back( child, currentFunStack );
 
 		if( showWidget.isEmpty( ) || showWidget != typeName )
 			continue;
-		if( nodeGeneraterList->setCurrentItem( currentFunStack ) == false )
+		if( nodeGeneraterListWidget->setCurrentItem( currentFunStack ) == false )
 			tools::debug::printError( "初始化异常" );
-		nodeTypeList->setCurrentItem( child );
-		nodeGeneraterList->setCurrentItem( currentFunStack );
+		nodeTypeTreeListWidget->setCurrentItem( child );
+		nodeGeneraterListWidget->setCurrentItem( currentFunStack );
 	}
-	NodeGeneraterItem *currentItem = nodeGeneraterList->getCurrentItem( );
+	NodeGeneraterItem *currentItem = nodeGeneraterListWidget->getCurrentItem( );
 	if( currentItem == nullptr )
 		itemDoubleClicked( funStackBind[ 0 ].first, 0 );
-	connect( nodeTypeList, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
+	connect( nodeTypeTreeListWidget, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
 }
 NodeListWidget::~NodeListWidget( ) {
 	writeHeightIni( );
 	appInstance->syncAppValueIniFile( );
 }
 void NodeListWidget::paintEvent( QPaintEvent *event ) {
-
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	auto rect = contentsRect( );
-	painter.fillRect( rect, Qt::blue );
-	QPen pen( Qt::GlobalColor::black );
-	int width = 4;
-	pen.setWidth( width );
-	painter.setPen( pen );
-	painter.setBrush( QColor( 0, 0, 0, 0 ) );
-	auto size = rect.size( );
-	painter.drawRect( width, width, size.width( ) - width * 2 - 1, size.height( ) - width * 2 - 1 );
 }
 void NodeListWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
@@ -106,17 +96,17 @@ QWidget * NodeListWidget::mouseToPoint( const QPoint &point ) {
 	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
 		return dragWidgetSize;
 	if( mouseIsPress == false ) {
-		auto nodeGeneraterListX = nodeGeneraterList->pos( ).x( );
+		auto nodeGeneraterListX = nodeGeneraterListWidget->pos( ).x( );
 		if( abs( x - nodeGeneraterListX ) < 5 )
-			dragWidgetSize = nodeGeneraterList;
+			dragWidgetSize = nodeGeneraterListWidget;
 		else
 			dragWidgetSize = nullptr;
 	} else if( dragWidgetSize != nullptr ) {
-		if( dragWidgetSize == nodeGeneraterList ) {
-			nodeGeneraterList->move( x, 0 ); // 移动到新位置
-			nodeTypeList->setFixedWidth( x );
+		if( dragWidgetSize == nodeGeneraterListWidget ) {
+			nodeGeneraterListWidget->move( x, 0 ); // 移动到新位置
+			nodeTypeTreeListWidget->setFixedWidth( x );
 			auto newWidth = width( ) - x;
-			nodeGeneraterList->setFixedWidth( newWidth );
+			nodeGeneraterListWidget->setFixedWidth( newWidth );
 		}
 	}
 	return dragWidgetSize;
@@ -125,8 +115,8 @@ void NodeListWidget::updateWidgetListLayout( const QSize &old_size, const QSize 
 
 	int newWidth = current_size.width( );
 
-	int nodeTypeListWidth = nodeTypeList->width( );
-	int nodeGeneraterListWidth = nodeGeneraterList->width( );
+	int nodeTypeListWidth = nodeTypeTreeListWidget->width( );
+	int nodeGeneraterListWidth = nodeGeneraterListWidget->width( );
 
 	int width = nodeGeneraterListWidth + nodeTypeListWidth;
 
@@ -134,18 +124,18 @@ void NodeListWidget::updateWidgetListLayout( const QSize &old_size, const QSize 
 
 	width = newWidth - nodeTypeListWidth;
 	auto height = current_size.height( );
-	nodeTypeList->setFixedSize( nodeTypeListWidth, height );
-	nodeGeneraterList->setFixedSize( width, height );
+	nodeTypeTreeListWidget->setFixedSize( nodeTypeListWidth, height );
+	nodeGeneraterListWidget->setFixedSize( width, height );
 
-	nodeTypeList->move( 0, 0 );
-	width = nodeTypeList->width( );
-	nodeGeneraterList->move( width, 0 );
+	nodeTypeTreeListWidget->move( 0, 0 );
+	width = nodeTypeTreeListWidget->width( );
+	nodeGeneraterListWidget->move( width, 0 );
 }
 void NodeListWidget::writeHeightIni( ) const {
-	int nodeTypeListWidth = nodeTypeList->width( );
-	int nodeGeneraterListWidth = nodeGeneraterList->width( );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeList, "width" ), nodeTypeListWidth );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterList, "width" ), nodeGeneraterListWidth );
+	int nodeTypeListWidth = nodeTypeTreeListWidget->width( );
+	int nodeGeneraterListWidth = nodeGeneraterListWidget->width( );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeTreeListWidget, "width" ), nodeTypeListWidth );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterListWidget, "width" ), nodeGeneraterListWidth );
 }
 void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
 
@@ -163,7 +153,7 @@ void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
 	auto pair = funStackBind.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( pair[ index ].first == item )
-			if( nodeGeneraterList->setCurrentItem( pair[ index ].second ) == true )
+			if( nodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true )
 				return;
 			else
 				break;

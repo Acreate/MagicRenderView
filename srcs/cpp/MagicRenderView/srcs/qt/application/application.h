@@ -7,6 +7,7 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+class NodeScriptsWidget;
 class DragInfoWindow;
 class QLabel;
 class NodeFuncPreviewImageWidget;
@@ -65,6 +66,7 @@ protected:
 	QSettings *settings;
 	MainWidget *mainWidget;
 	NodeListWidget *nodeListWidget;
+	NodeScriptsWidget *nodeScriptsWidget;
 	NodeFuncPreviewImageWidget *dragFunctionPreviewWidget;
 	StackManagement *stackManagement;
 	DragInfoWindow* drawShowImageInfoWidget;
@@ -83,6 +85,8 @@ public:
 	virtual void setMainWidget( MainWidget *const main_widget );
 	virtual NodeListWidget * getNodeListWidget( ) const;
 	virtual void setNodeListWidget( NodeListWidget *const node_list_widget );
+	virtual NodeScriptsWidget * getNodeScriptsWidget( ) const;
+	virtual void setNodeScriptsWidget( NodeScriptsWidget * const node_scripts_widget );
 	virtual NodeFuncPreviewImageWidget * getDragFunctionPreviewWidget( ) const;
 	virtual void setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget );
 protected:

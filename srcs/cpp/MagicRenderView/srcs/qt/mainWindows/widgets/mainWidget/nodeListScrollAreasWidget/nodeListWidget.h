@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeTypeTreeListWidget;
 class NodeGeneraterItem;
 class NodeGeneraterListWidget;
 class QScrollArea;
@@ -23,9 +24,9 @@ protected:
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief 节点类型
-	QTreeWidget *nodeTypeList;
+	NodeTypeTreeListWidget *nodeTypeTreeListWidget;
 	/// @brief 节点生成器列表
-	NodeGeneraterListWidget *nodeGeneraterList;
+	NodeGeneraterListWidget *nodeGeneraterListWidget;
 	/// @brief 鼠标是否按下
 	bool mouseIsPress;
 	/// @brief 拖拽的窗口

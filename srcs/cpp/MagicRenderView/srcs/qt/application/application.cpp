@@ -18,9 +18,12 @@
 
 #include <qt/mainWindows/dragInfoWindow.h>
 
+#include <qt/mainWindows/widgets/mainWidget/nodeScriptsScrollAreasWidget/nodeScriptsWidget.h>
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;
+	nodeScriptsWidget = nullptr;
 	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
 	QFileInfo fileInfo( fileName );
@@ -83,6 +86,14 @@ NodeListWidget * Application::getNodeListWidget( ) const {
 void Application::setNodeListWidget( NodeListWidget *const node_list_widget ) {
 	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
 	nodeListWidget = node_list_widget;
+}
+NodeScriptsWidget * Application::getNodeScriptsWidget( ) const {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	return nodeScriptsWidget;
+}
+void Application::setNodeScriptsWidget( NodeScriptsWidget *const node_scripts_widget ) {
+	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
+	nodeScriptsWidget = node_scripts_widget;
 }
 NodeFuncPreviewImageWidget * Application::getDragFunctionPreviewWidget( ) const {
 	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
@@ -190,9 +201,12 @@ bool Application::notify( QObject *object, QEvent *event ) {
 		case QEvent::MouseButtonPress :
 			break;
 		case QEvent::MouseMove :
-			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) ) 
+			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) )
 				drawShowImageInfoWidget->move( glbalPos );
 			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
+				mainWidget->setHCursorShape( );
+				break;
+			} else if( nodeScriptsWidget != nullptr && nodeScriptsWidget->mouseToPoint( nodeScriptsWidget->mapFromGlobal( glbalPos ) ) ) {
 				mainWidget->setHCursorShape( );
 				break;
 			}

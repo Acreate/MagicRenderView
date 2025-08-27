@@ -6,9 +6,11 @@
 #include "widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget/nodeGeneraterListWidget/nodePreviewScrollAreasWidget/NodePreviewWidget/nodeFuncPreviewImageWidget.h"
 
 DragInfoWindow::DragInfoWindow( ) : QMainWindow( nullptr, Qt::FramelessWindowHint ) {
+	setAttribute( Qt::WA_TranslucentBackground );
 	draw = new QLabel( this );
 	draw->setFixedSize( 100, 200 );
 	draw->move( 0, 0 );
+	draw->setAttribute( Qt::WA_TranslucentBackground );
 	setContentsMargins( 0, 0, 0, 0 );
 	hide( );
 	auto oldLayout = layout( );
@@ -23,9 +25,10 @@ void DragInfoWindow::setDragFunctionPreviewWidget( const NodeFuncPreviewImageWid
 	QImage renderImage = drag_function_preview_widget->getRenderImage( );
 	QPixmap fromImage = QPixmap::fromImage( renderImage );
 	draw->setPixmap( fromImage );
-	show( );
 	move( QCursor::pos( ) );
 	isShowInfo = true;
+	setWindowOpacity( 0.8 );
+	show( );
 }
 void DragInfoWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
