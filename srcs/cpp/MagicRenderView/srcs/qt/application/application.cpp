@@ -190,11 +190,8 @@ bool Application::notify( QObject *object, QEvent *event ) {
 		case QEvent::MouseButtonPress :
 			break;
 		case QEvent::MouseMove :
-			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) ) {
-				if( drawShowImageInfoWidget->isHidden( ) )
-					drawShowImageInfoWidget->show( );
+			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) ) 
 				drawShowImageInfoWidget->move( glbalPos );
-			}
 			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
 				mainWidget->setHCursorShape( );
 				break;
