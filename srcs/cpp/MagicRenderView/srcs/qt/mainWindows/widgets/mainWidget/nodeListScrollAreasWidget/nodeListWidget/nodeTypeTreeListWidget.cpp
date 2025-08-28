@@ -18,7 +18,7 @@ NodeTypeTreeListWidget::NodeTypeTreeListWidget( NodeGeneraterListWidget *node_ge
 	appInstance = Application::getApplicationInstancePtr( );
 	appInstance->syncAppValueIniFile( );
 	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "showWidget" ), "" ).toString( );
-	initTopItem( appInstance->getStackManagement( )->getFunStacks( ));
+	initTopItem( appInstance->getStackManagement( )->getFunStacks( ) );
 }
 QTreeWidgetItem * NodeTypeTreeListWidget::initTopItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks ) {
 	topItem = new QTreeWidgetItem( this );
@@ -41,25 +41,18 @@ QTreeWidgetItem * NodeTypeTreeListWidget::initTopItem( const std_vector< std::sh
 		auto currentFunStack = bindNodeGeneraterListWidget->appendFunStack( item );
 		funStackBind.emplace_back( child, currentFunStack );
 	}
-	connect( this, &QTreeWidget::itemDoubleClicked, [this] ( QTreeWidgetItem *item, int column ) {
-		// 检查看是否顶级
-		if( topItem == item )
-			return;
-		// 检查子级
-		size_t count = funStackBind.size( );
-		auto pair = funStackBind.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( pair[ index ].first == item )
-				if( bindNodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true )
-					return;
-				else
-					break;
-		tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
+	connect( bindNodeGeneraterListWidget, &QObject::destroyed, [this]( ) {
+		this->disconnect( this, &QTreeWidget::itemDoubleClicked, this, &NodeTypeTreeListWidget::typeItemDoubleClicked );
+		bindNodeGeneraterListWidget = nullptr;
+		clear( );
 	} );
+	connect( this, &QTreeWidget::itemDoubleClicked, this, &NodeTypeTreeListWidget::typeItemDoubleClicked );
 	return topItem;
 }
 
 QTreeWidgetItem * NodeTypeTreeListWidget::appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks ) {
+	if( bindNodeGeneraterListWidget == nullptr )
+		return nullptr;
 	for( auto &item : fun_stacks ) {
 		IFunStack *element = item.get( );
 		QString typeName = element->metaObject( )->className( );
@@ -74,4 +67,44 @@ QTreeWidgetItem * NodeTypeTreeListWidget::appendItem( const std_vector< std::sha
 		funStackBind.emplace_back( child, currentFunStack );
 	}
 	return topItem;
+}
+void NodeTypeTreeListWidget::typeItemDoubleClicked( QTreeWidgetItem *item, int column ) {
+	// 显示对象已经失去控制
+	if( bindNodeGeneraterListWidget == nullptr )
+		return;
+	// 检查看是否顶级
+	if( topItem == item )
+		return;
+	// 检查子级
+	size_t count = funStackBind.size( );
+	auto pair = funStackBind.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( pair[ index ].first == item )
+			if( bindNodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true ) {
+				emit activeItem( pair[ index ] );
+				return;
+			} else
+				break;
+	tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
+}
+void NodeTypeTreeListWidget::selectTypeItem( QTreeWidgetItem *item ) {
+	// 显示对象已经失去控制
+	if( bindNodeGeneraterListWidget == nullptr )
+		return;
+	// 检查看是否顶级
+	if( topItem == item )
+		return;
+	// 检查子级
+	size_t count = funStackBind.size( );
+	auto pair = funStackBind.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( pair[ index ].first == item )
+			if( bindNodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true ) {
+				setCurrentItem( item );
+				scrollToItem( item );
+				emit activeItem( pair[ index ] );
+				return;
+			} else
+				break;
+	tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
 }

@@ -28,6 +28,8 @@ public:
 	NodeTypeTreeListWidget( NodeGeneraterListWidget *node_generater_list_widget, QWidget *parent = nullptr );
 	virtual QTreeWidgetItem * appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks );
 Q_SIGNALS:
+	void activeItem( const std_pairt< QTreeWidgetItem *, const NodeGeneraterItem * > &item );
+protected Q_SLOTS:
 	void typeItemDoubleClicked( QTreeWidgetItem *item, int column );
 };
 
