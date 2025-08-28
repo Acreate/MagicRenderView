@@ -22,8 +22,8 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidg
 
 	appInstance = Application::getApplicationInstancePtr( );
 
-	nodeTypeTreeListWidget = new NodeTypeTreeListWidget( this );
 	nodeGeneraterListWidget = new NodeGeneraterListWidget( this );
+	nodeTypeTreeListWidget = new NodeTypeTreeListWidget( nodeGeneraterListWidget, this );
 	appInstance->syncAppValueIniFile( );
 
 	quint64 nodeTypeListWidth = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeTreeListWidget, "width" ), 30 ).toULongLong( );
@@ -33,42 +33,6 @@ NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidg
 	nodeGeneraterListWidget->setFixedWidth( nodeGeneraterListWidth );
 
 	QString showWidget = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterListWidget, "showWidget" ), "" ).toString( );
-
-	auto funStacks = appInstance->getStackManagement( )->getFunStacks( );
-	nodeTypeTreeListWidget->setColumnCount( 3 );
-	nodeTypeTreeListWidget->setHeaderLabels( { "短名称", "全名称", "说明" } );
-
-	auto topItem = new QTreeWidgetItem( nodeTypeTreeListWidget );
-	topItemS.emplace_back( topItem );
-	nodeTypeTreeListWidget->addTopLevelItem( topItem );
-	topItem->setText( 0, "标准" );
-	topItem->setText( 1, "软件常规节点生成器" );
-	topItem->setText( 2, "软件自动生成节点" );
-	for( auto &item : funStacks ) {
-		IFunStack *element = item.get( );
-		QString typeName = element->metaObject( )->className( );
-		QString name = element->getName( );
-		typeName.append( "/" ).append( name );
-		QTreeWidgetItem *child = new QTreeWidgetItem( topItem );
-		topItem->addChild( child );
-		child->setText( 0, name );
-		child->setText( 1, typeName );
-		child->setText( 2, typeName );
-
-		auto currentFunStack = nodeGeneraterListWidget->appendFunStack( item );
-		funStackBind.emplace_back( child, currentFunStack );
-
-		if( showWidget.isEmpty( ) || showWidget != typeName )
-			continue;
-		if( nodeGeneraterListWidget->setCurrentItem( currentFunStack ) == false )
-			tools::debug::printError( "初始化异常" );
-		nodeTypeTreeListWidget->setCurrentItem( child );
-		nodeGeneraterListWidget->setCurrentItem( currentFunStack );
-	}
-	NodeGeneraterItem *currentItem = nodeGeneraterListWidget->getCurrentItem( );
-	if( currentItem == nullptr )
-		itemDoubleClicked( funStackBind[ 0 ].first, 0 );
-	connect( nodeTypeTreeListWidget, &QTreeWidget::itemDoubleClicked, this, &NodeListWidget::itemDoubleClicked );
 }
 NodeListWidget::~NodeListWidget( ) {
 	writeHeightIni( );
@@ -136,26 +100,4 @@ void NodeListWidget::writeHeightIni( ) const {
 	int nodeGeneraterListWidth = nodeGeneraterListWidget->width( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeTypeTreeListWidget, "width" ), nodeTypeListWidth );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeGeneraterListWidget, "width" ), nodeGeneraterListWidth );
-}
-void NodeListWidget::itemDoubleClicked( QTreeWidgetItem *item, int column ) {
-
-	// 检查看是否顶级
-
-	size_t count = topItemS.size( );
-	auto data = topItemS.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ] == item )
-			return;
-
-	// 检查子级
-
-	count = funStackBind.size( );
-	auto pair = funStackBind.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( pair[ index ].first == item )
-			if( nodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true )
-				return;
-			else
-				break;
-	tools::debug::printError( "没有建立正确的绑定关系，该对象无法正确识别" );
 }

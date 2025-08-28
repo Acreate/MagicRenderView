@@ -46,8 +46,6 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void updateWidgetListLayout( const QSize &old_size, const QSize &current_size );
 	void writeHeightIni( ) const;
-protected:
-	void itemDoubleClicked( QTreeWidgetItem *item, int column );
 };
 
 #endif // NODELISTWIDGET_H_H_HEAD__FILE__
