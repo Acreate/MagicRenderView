@@ -21,13 +21,13 @@ NodeTypeTreeListWidget::NodeTypeTreeListWidget( NodeGeneraterListWidget *node_ge
 	initTopItem( appInstance->getStackManagement( )->getFunStacks( ) );
 }
 QTreeWidgetItem * NodeTypeTreeListWidget::initTopItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks ) {
-	topItem = new QTreeWidgetItem( this );
+	auto topItem = new QTreeWidgetItem( this );
 
 	addTopLevelItem( topItem );
 	topItem->setText( 0, "标准" );
 	topItem->setText( 1, "软件常规节点生成器" );
 	topItem->setText( 2, "软件自动生成节点" );
-
+	topItemVector.emplace_back( topItem );
 	for( auto &item : fun_stacks ) {
 		IFunStack *element = item.get( );
 		QString typeName = element->metaObject( )->className( );
@@ -50,9 +50,16 @@ QTreeWidgetItem * NodeTypeTreeListWidget::initTopItem( const std_vector< std::sh
 	return topItem;
 }
 
-QTreeWidgetItem * NodeTypeTreeListWidget::appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks ) {
+QTreeWidgetItem * NodeTypeTreeListWidget::appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks, const QString &short_name, const QString &full_name, const QString &info ) {
 	if( bindNodeGeneraterListWidget == nullptr )
 		return nullptr;
+	auto topItem = new QTreeWidgetItem( this );
+
+	addTopLevelItem( topItem );
+	topItem->setText( 0, short_name );
+	topItem->setText( 1, full_name );
+	topItem->setText( 2, info );
+	topItemVector.emplace_back( topItem );
 	for( auto &item : fun_stacks ) {
 		IFunStack *element = item.get( );
 		QString typeName = element->metaObject( )->className( );
@@ -72,13 +79,17 @@ void NodeTypeTreeListWidget::typeItemDoubleClicked( QTreeWidgetItem *item, int c
 	// 显示对象已经失去控制
 	if( bindNodeGeneraterListWidget == nullptr )
 		return;
+	size_t count = topItemVector.size( );
+	size_t index = 0;
+	auto treeWidgetItemPtr = topItemVector.data( );
 	// 检查看是否顶级
-	if( topItem == item )
-		return;
+	for( index = 0; index < count; ++index )
+		if( treeWidgetItemPtr[ index ] == item )
+			return;
 	// 检查子级
-	size_t count = funStackBind.size( );
+	count = funStackBind.size( );
 	auto pair = funStackBind.data( );
-	for( size_t index = 0; index < count; ++index )
+	for( index = 0; index < count; ++index )
 		if( pair[ index ].first == item )
 			if( bindNodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true ) {
 				emit activeItem( pair[ index ] );
@@ -91,13 +102,17 @@ void NodeTypeTreeListWidget::selectTypeItem( QTreeWidgetItem *item ) {
 	// 显示对象已经失去控制
 	if( bindNodeGeneraterListWidget == nullptr )
 		return;
+	size_t count = topItemVector.size( );
+	size_t index = 0;
+	auto treeWidgetItemPtr = topItemVector.data( );
 	// 检查看是否顶级
-	if( topItem == item )
-		return;
+	for( index = 0; index < count; ++index )
+		if( treeWidgetItemPtr[ index ] == item )
+			return;
 	// 检查子级
-	size_t count = funStackBind.size( );
+	count = funStackBind.size( );
 	auto pair = funStackBind.data( );
-	for( size_t index = 0; index < count; ++index )
+	for( index = 0; index < count; ++index )
 		if( pair[ index ].first == item )
 			if( bindNodeGeneraterListWidget->setCurrentItem( pair[ index ].second ) == true ) {
 				setCurrentItem( item );

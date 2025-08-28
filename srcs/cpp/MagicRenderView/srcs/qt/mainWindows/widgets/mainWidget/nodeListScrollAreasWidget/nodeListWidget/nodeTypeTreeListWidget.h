@@ -17,7 +17,7 @@ protected:
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief 树形结构的顶端选项
-	QTreeWidgetItem *topItem;;
+	std_vector< QTreeWidgetItem * > topItemVector;
 	/// @brief 选项绑定指针
 	std_vector_pairt< QTreeWidgetItem *, const NodeGeneraterItem * > funStackBind;
 	/// @brief 绑定的生成列表窗口
@@ -26,11 +26,13 @@ protected:
 	QTreeWidgetItem * initTopItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks );
 public:
 	NodeTypeTreeListWidget( NodeGeneraterListWidget *node_generater_list_widget, QWidget *parent = nullptr );
-	virtual QTreeWidgetItem * appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks );
+	virtual QTreeWidgetItem * appendItem( const std_vector< std::shared_ptr< IFunStack > > &fun_stacks, const QString &short_name, const QString &full_name, const QString &info );
 Q_SIGNALS:
 	void activeItem( const std_pairt< QTreeWidgetItem *, const NodeGeneraterItem * > &item );
 protected Q_SLOTS:
 	void typeItemDoubleClicked( QTreeWidgetItem *item, int column );
+public Q_SLOTS:
+	void selectTypeItem( QTreeWidgetItem *item );
 };
 
 #endif // NODETYPETREELISTWIDGET_H_H_HEAD__FILE__
