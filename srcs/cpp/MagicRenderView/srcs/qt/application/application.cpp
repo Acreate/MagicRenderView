@@ -24,7 +24,9 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	mainWidget = nullptr;
 	nodeListWidget = nullptr;
 	nodeScriptsWidget = nullptr;
-	QString fileName = QCoreApplication::applicationDirPath( ) + "/" + applicationDisplayName( ) + ".ini";
+	QString displayName = applicationDisplayName( );
+	writeSettingPath = QCoreApplication::applicationDirPath( ) + "/" + displayName + "/progress/";
+	QString fileName = writeSettingPath + displayName + "/" + displayName + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
 	QFileInfo fileInfo( fileName );
 	if( fileInfo.exists( ) == false ) {

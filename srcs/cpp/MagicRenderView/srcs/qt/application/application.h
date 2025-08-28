@@ -69,13 +69,15 @@ protected:
 	NodeScriptsWidget *nodeScriptsWidget;
 	NodeFuncPreviewImageWidget *dragFunctionPreviewWidget;
 	StackManagement *stackManagement;
-	DragInfoWindow* drawShowImageInfoWidget;
+	DragInfoWindow *drawShowImageInfoWidget;
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
+	QString writeSettingPath;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
 public:
+	virtual const QString & getWriteSettingPath( ) const { return writeSettingPath; }
 	virtual StackManagement * getStackManagement( ) const;
 	virtual void setAppIniValue( const QAnyStringView &key, const QVariant &value );
 	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
@@ -86,7 +88,7 @@ public:
 	virtual NodeListWidget * getNodeListWidget( ) const;
 	virtual void setNodeListWidget( NodeListWidget *const node_list_widget );
 	virtual NodeScriptsWidget * getNodeScriptsWidget( ) const;
-	virtual void setNodeScriptsWidget( NodeScriptsWidget * const node_scripts_widget );
+	virtual void setNodeScriptsWidget( NodeScriptsWidget *const node_scripts_widget );
 	virtual NodeFuncPreviewImageWidget * getDragFunctionPreviewWidget( ) const;
 	virtual void setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget );
 protected:
