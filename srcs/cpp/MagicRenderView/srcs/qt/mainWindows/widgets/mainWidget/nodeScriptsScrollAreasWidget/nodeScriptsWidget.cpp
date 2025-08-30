@@ -98,10 +98,10 @@ void NodeScriptsWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	updateWidgetListLayout( event->oldSize( ), event->size( ) );
 }
-void NodeScriptsWidget::dragEventEnd( Application *event_obj, QWidget *draw_widget ) {
+void NodeScriptsWidget::dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget ) {
 	auto point = QCursor::pos( );
 	auto fromGlobal = mapFromGlobal( point );
 	if( contentsRect( ).contains( fromGlobal ) == false )
 		return;
-	// todo : 节点拖拽释放处理
+	// todo 节点拖拽释放处理
 }

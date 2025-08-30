@@ -94,7 +94,7 @@ public:
 protected:
 	bool notify( QObject *, QEvent * ) override;
 Q_SIGNALS:
-	void dragEventEnd( Application *event_obj, QWidget *draw_widget );
+	void dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget );
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__

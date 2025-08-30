@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class NodeFuncPreviewImageWidget;
 class NodeRunSequenceWidget;
 class NodeDefineVarWidget;
 class Application;
@@ -34,6 +35,6 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 protected Q_SLOTS :
-	void dragEventEnd( Application *event_obj, QWidget *draw_widget );
+	void dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget );
 };
 #endif // NODESCRIPTSWIDGET_H_H_HEAD__FILE__
