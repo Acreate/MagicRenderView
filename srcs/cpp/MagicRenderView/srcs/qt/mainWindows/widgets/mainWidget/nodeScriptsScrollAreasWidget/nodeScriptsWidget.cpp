@@ -67,21 +67,20 @@ void NodeScriptsWidget::updateWidgetListLayout( const QSize &old_size, const QSi
 
 	int newWidth = current_size.width( );
 
-	int nodeTypeListWidth = nodeRunSequenceWidget->width( );
-	int nodeGeneraterListWidth = nodeDefineVarWidget->width( );
+	int nodeRunSequenceWidth = nodeRunSequenceWidget->width( );
+	int nodeDefineVarWidth = nodeDefineVarWidget->width( );
 
-	int width = nodeGeneraterListWidth + nodeTypeListWidth;
+	int width = nodeDefineVarWidth + nodeRunSequenceWidth;
 
-	nodeTypeListWidth = nodeTypeListWidth * newWidth / width;
+	nodeRunSequenceWidth = nodeRunSequenceWidth * newWidth / width;
 
-	width = newWidth - nodeTypeListWidth;
+	width = newWidth - nodeRunSequenceWidth;
 	auto height = current_size.height( );
-	nodeDefineVarWidget->setFixedSize( nodeTypeListWidth, height );
-	nodeRunSequenceWidget->setFixedSize( width, height ); // nodeRunSequenceWidget
-
+	nodeDefineVarWidget->setFixedSize( width, height );
+	nodeRunSequenceWidget->setFixedSize( nodeRunSequenceWidth, height );
 	nodeDefineVarWidget->move( 0, 0 );
-	width = nodeDefineVarWidget->width( ); // nodeDefineVarWidget
-	nodeRunSequenceWidget->move( width, 0 ); // nodeRunSequenceWidget
+	width = nodeDefineVarWidget->width( ); 
+	nodeRunSequenceWidget->move( width, 0 ); 
 }
 
 void NodeScriptsWidget::paintEvent( QPaintEvent *event ) {

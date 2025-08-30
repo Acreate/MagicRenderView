@@ -66,16 +66,21 @@ QWidget * MainWidget::mouseToPoint( const QPoint &point ) {
 		}
 	} else if( dragWidgetSize != nullptr ) {
 		if( dragWidgetSize == nodeListWidget ) {
-			nodeListWidget->move( 0, y ); // 移动到新位置
-			nodeRenderWidget->setFixedHeight( y );
-			auto newHeight = height( ) - y - nodeScriptsWidget->height( );
-			nodeListWidget->setFixedHeight( newHeight );
+			if( y >= 50 ) {
+				nodeListWidget->move( 0, y ); // 移动到新位置
+				nodeRenderWidget->setFixedHeight( y );
+				auto newHeight = height( ) - y - nodeScriptsWidget->height( );
+				nodeListWidget->setFixedHeight( newHeight );
+			}
+
 		} else if( dragWidgetSize == nodeScriptsWidget ) {
-			nodeScriptsWidget->move( 0, y ); // 移动到新位置
-			auto newHeight = y - nodeRenderWidget->height( );
-			nodeListWidget->setFixedHeight( newHeight );
-			newHeight = height( ) - y;
-			nodeScriptsWidget->setFixedHeight( newHeight );
+			if( y >= ( nodeListWidget->pos( ).y( ) + 50 ) ) {
+				nodeScriptsWidget->move( 0, y ); // 移动到新位置
+				auto newHeight = y - nodeRenderWidget->height( );
+				nodeListWidget->setFixedHeight( newHeight );
+				newHeight = height( ) - y;
+				nodeScriptsWidget->setFixedHeight( newHeight );
+			}
 		}
 	}
 	return dragWidgetSize;
@@ -122,6 +127,7 @@ void MainWidget::updateWidgetListLayout( const QSize &old_size, const QSize &cur
 
 	height = newHeight - nodeScriptsWidgetHeight - nodeListWidgetHeight;
 	auto width = current_size.width( );
+
 	nodeScriptsWidget->setFixedSize( width, nodeScriptsWidgetHeight );
 	nodeListWidget->setFixedSize( width, nodeListWidgetHeight );
 	nodeRenderWidget->setFixedSize( width, height );
