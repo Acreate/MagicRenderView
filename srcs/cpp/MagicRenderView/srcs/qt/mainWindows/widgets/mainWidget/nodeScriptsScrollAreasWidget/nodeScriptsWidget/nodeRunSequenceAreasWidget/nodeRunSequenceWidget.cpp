@@ -61,9 +61,6 @@ NodeRunFunctionSequenceItemWidget * NodeRunSequenceWidget::setRunFunctionWidget(
 	connect( resultItem, &NodeRunFunctionSequenceItemWidget::shrinkage, [this, resultItem]( ) {
 		shrinkage( resultItem );
 	} );
-	connect( resultItem, &NodeRunFunctionSequenceItemWidget::thisObjectDestory, [this, resultItem]( ) {
-		removeItem( resultItem );
-	} );
 	// 更新面板
 	updateNodeWidget( );
 	return resultItem;

@@ -3,6 +3,6 @@ NodeRunFunctionSequenceItemWidget::NodeRunFunctionSequenceItemWidget( NodeRunSeq
 
 }
 NodeRunFunctionSequenceItemWidget::~NodeRunFunctionSequenceItemWidget( ) {
-	thisObjectDestory( this );
+	itemParent->removeItem( this );
 	disconnect( );
 }

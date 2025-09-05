@@ -33,9 +33,6 @@ Q_SIGNALS:
 	bool expandItem( );
 	/// @brief 收缩项
 	bool shrinkage( );
-	/// @brief 对象销毁时触发该消息
-	/// @param delete_obj_ptr 销毁指针
-	void thisObjectDestory(NodeRunFunctionSequenceItemWidget* delete_obj_ptr);
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEMWIDGET_H_H_HEAD__FILE__
