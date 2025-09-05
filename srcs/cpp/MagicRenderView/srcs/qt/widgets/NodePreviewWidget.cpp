@@ -8,7 +8,7 @@
 
 #include <qt/stacks/funStack/IFunStack.h>
 
-#include "NodePreviewWidget/nodeFuncPreviewImageWidget.h"
+#include "nodeFuncPreviewImageWidget.h"
 
 NodePreviewWidget::NodePreviewWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), mainLayout( nullptr ) {
 

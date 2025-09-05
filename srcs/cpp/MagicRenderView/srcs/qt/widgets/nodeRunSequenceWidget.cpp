@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "nodeRunSequenceWidget/nodeRunFunctionSequenceItemWidget.h"
+#include "nodeRunFunctionSequenceItemWidget.h"
 
 NodeRunSequenceWidget::NodeRunSequenceWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
 	currentEextendItem = nullptr;
@@ -14,7 +14,13 @@ NodeRunSequenceWidget::NodeRunSequenceWidget( QWidget *parent, Qt::WindowFlags f
 void NodeRunSequenceWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-	painter.fillRect( this->contentsRect( ), Qt::darkGray );
+	auto pen = painter.pen( );
+	int penWidth = 4;
+	pen.setWidth( penWidth );
+	penWidth *= 2;
+	pen.setColor( Qt::GlobalColor::darkBlue );
+	painter.setPen( pen );
+	painter.drawRect( 0, 0, width( ) - penWidth, height( ) - penWidth );
 }
 void NodeRunSequenceWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
@@ -82,7 +88,7 @@ void NodeRunSequenceWidget::updateNodeWidget( ) {
 		node->move( nodeRightXPos, 0 );
 		nodeRightXPos += itemWidth + itemSpaceWidth;
 	}
-	
+
 	updateExpandItem( );
 	// todo : 最小大小
 }
@@ -157,11 +163,7 @@ bool NodeRunSequenceWidget::expandItem( const NodeRunFunctionSequenceItemWidget 
 	currentEextendItem = controlItemWidget;
 	NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
 	itemChild->show( );
-	auto currentWidgetSize = this->size( );
-	int currentItemHeight = currentWidgetSize.height( );
-	itemChild->move( 0, currentItemHeight );
-	int height = currentEextendItem->size( ).height( );
-	itemChild->setFixedSize( currentWidgetSize.width( ), currentItemHeight - height );
+	updateExpandItem( );
 	// 触发信号
 	currentEextendItem->showStatusChange( currentEextendItem->showChildStatus );
 	return true;

@@ -1,6 +1,6 @@
 ﻿#include "./nodeListScrollAreasWidget.h"
 
-#include "nodeListScrollAreasWidget/nodeListWidget.h"
+#include "nodeListWidget.h"
 
 NodeListScrollAreasWidget::NodeListScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ) : QScrollArea( parent ) {
 	nodeListWidget = new NodeListWidget( this, flags );

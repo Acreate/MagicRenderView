@@ -1,5 +1,8 @@
 ﻿#include "./nodeRunSequenceAreasWidget.h"
-#include "nodeRunSequenceAreasWidget/nodeRunSequenceWidget.h"
+
+#include "nodeRunFunctionSequenceItemWidget.h"
+#include "nodeRunSequenceWidget.h"
+
 NodeRunSequenceAreasWidget::NodeRunSequenceAreasWidget( QWidget *parent ) : QScrollArea( parent ) {
 	mainWidget = new NodeRunSequenceWidget( this );
 	setWidget( mainWidget );

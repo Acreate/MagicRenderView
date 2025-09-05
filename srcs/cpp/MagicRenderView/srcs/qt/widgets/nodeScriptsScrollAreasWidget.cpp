@@ -1,6 +1,6 @@
 ﻿#include "./nodeScriptsScrollAreasWidget.h"
 
-#include "nodeScriptsScrollAreasWidget/nodeScriptsWidget.h"
+#include "NodeScriptsWidget.h"
 
 NodeScriptsScrollAreasWidget::NodeScriptsScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ) : QScrollArea( parent ) {
 	nodeScriptsWidget = new NodeScriptsWidget( this, flags );

@@ -10,15 +10,14 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include <qt/mainWindows/widgets/mainWidget.h>
-#include <qt/mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget.h>
-#include <qt/mainWindows/widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget/nodeGeneraterListWidget/nodePreviewScrollAreasWidget/NodePreviewWidget/nodeFuncPreviewImageWidget.h>
-
 #include <qt/stacks/stackManagement.h>
 
-#include <qt/mainWindows/dragInfoWindow.h>
+#include <qt/widgets/mainWidget.h>
+#include <qt/widgets/nodeScriptsWidget.h>
+#include <qt/widgets/nodeListWidget.h>
+#include <qt/widgets/nodeFuncPreviewImageWidget.h>
 
-#include <qt/mainWindows/widgets/mainWidget/nodeScriptsScrollAreasWidget/nodeScriptsWidget.h>
+#include <qt/windows/dragInfoWindow.h>
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	mainWidget = nullptr;

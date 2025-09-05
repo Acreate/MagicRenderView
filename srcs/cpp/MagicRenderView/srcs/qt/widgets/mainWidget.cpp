@@ -6,9 +6,9 @@
 
 #include <qt/application/application.h>
 
-#include "mainWidget/nodeListScrollAreasWidget.h"
-#include "mainWidget/nodeRenderScrollAreasWidget.h"
-#include "mainWidget/nodeScriptsScrollAreasWidget.h"
+#include "nodeListScrollAreasWidget.h"
+#include "nodeRenderScrollAreasWidget.h"
+#include "nodeScriptsScrollAreasWidget.h"
 
 MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	nCursor = QCursor( Qt::ArrowCursor );

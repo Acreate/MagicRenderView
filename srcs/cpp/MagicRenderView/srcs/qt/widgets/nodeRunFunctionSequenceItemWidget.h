@@ -3,8 +3,7 @@
 #pragma once
 #include <QWidget>
 
-#include "../nodeRunSequenceWidget.h"
-
+class IFunctionDeclaration;
 class NodeControlItemWidge;
 class NodeRunFunctionSequenceItemWidget : public QWidget {
 	Q_OBJECT;
@@ -55,7 +54,7 @@ Q_SIGNALS:
 	void doubleClick( );
 	/// @brief 子组件配置最小大小要求被改变
 	/// @param min_size 最小大小
-	void childReMinSize( const QSize& min_size );
+	void childReMinSize( const QSize &min_size );
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEMWIDGET_H_H_HEAD__FILE__

@@ -1,6 +1,6 @@
 ﻿#include "./nodePreviewScrollAreasWidget.h"
 
-#include "nodePreviewScrollAreasWidget/NodePreviewWidget.h"
+#include "NodePreviewWidget.h"
 
 NodePreviewScrollAreasWidget::NodePreviewScrollAreasWidget( QWidget *parent, Qt::WindowFlags flags ) : QScrollArea( parent ) {
 	nodePreviewWidget = new NodePreviewWidget( this, flags );

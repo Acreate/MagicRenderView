@@ -2,16 +2,16 @@
 
 #include <qevent.h>
 
-#include "nodeGeneraterItem.h"
+#include "nodePreviewScrollAreasWidget.h"
 
-#include "nodeGeneraterListWidget/nodePreviewScrollAreasWidget.h"
+#include <qt/items/nodeGeneraterItem.h>
 
 const NodeGeneraterItem * NodeGeneraterListWidget::setCurrentIndex( const size_t &fun_stack_index ) {
 	auto data = funStackItemS.data( );
 	if( currentItem )
 		NodeGeneraterItemGenerater::getRenderWidget( currentItem )->hide( );
 	currentItem = data[ fun_stack_index ].first;
-	QWidget * renderWidget = NodeGeneraterItemGenerater::getRenderWidget( currentItem );
+	QWidget *renderWidget = NodeGeneraterItemGenerater::getRenderWidget( currentItem );
 	auto currentSize = contentsRect( ).size( );
 	renderWidget->setFixedSize( currentSize );
 	renderWidget->show( );

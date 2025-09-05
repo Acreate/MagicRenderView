@@ -5,8 +5,9 @@
 
 #include <qt/application/application.h>
 
-#include "nodeScriptsWidget/nodeDefineVarWidget.h"
-#include "nodeScriptsWidget/nodeRunSequenceAreasWidget.h"
+#include "nodeDefineVarWidget.h"
+#include "nodeRunSequenceAreasWidget.h"
+
 NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 
 	mouseIsPress = false;

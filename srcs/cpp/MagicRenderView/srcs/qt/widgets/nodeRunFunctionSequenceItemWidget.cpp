@@ -5,6 +5,7 @@
 #include <qboxlayout.h>
 
 #include <qt/functionDeclaration/IFunctionDeclaration.h>
+#include <qt/widgets/nodeRunSequenceWidget.h>
 /// @brief 双击时钟
 std::chrono::system_clock::time_point NodeRunFunctionSequenceItemWidget::doubleClickClock = std::chrono::system_clock::now( );
 /// @brief 双击对象
@@ -32,6 +33,14 @@ NodeRunFunctionSequenceItemWidget::~NodeRunFunctionSequenceItemWidget( ) {
 }
 void NodeRunFunctionSequenceItemWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
+	QPainter painter( this );
+	auto pen = painter.pen( );
+	int penWidth = 4;
+	pen.setWidth( penWidth );
+	penWidth *= 2;
+	pen.setColor( Qt::GlobalColor::darkGray );
+	painter.setPen( pen );
+	painter.drawRect( 0, 0, width( ) - penWidth, height( ) - penWidth );
 }
 void NodeRunFunctionSequenceItemWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );

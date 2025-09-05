@@ -5,16 +5,16 @@
 
 #include <alias/type_alias.h>
 
-#include "nodeRunSequenceAreasWidget/nodeRunSequenceWidget/nodeRunFunctionSequenceItemWidget.h"
-
+class NodeRunFunctionSequenceItemWidget;
+class NodeRunSequenceWidget;
 class IFunctionDeclaration;
 class NodeScriptsWidget;
 class NodeRunSequenceAreasWidget : public QScrollArea {
 	Q_OBJECT;
 protected:
-	NodeRunSequenceWidget * mainWidget;
+	NodeRunSequenceWidget *mainWidget;
 public:
-	NodeRunSequenceAreasWidget(QWidget*parent);
+	NodeRunSequenceAreasWidget( QWidget *parent );
 	/// @brief 在指定位置配置节点窗口
 	/// @param generater_scripts_widget 调用窗口
 	/// @param function_declaration 绘制目标

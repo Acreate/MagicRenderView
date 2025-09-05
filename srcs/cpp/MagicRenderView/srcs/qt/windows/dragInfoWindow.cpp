@@ -1,9 +1,8 @@
 ﻿#include "./dragInfoWindow.h"
 
-#include <QLabel>
 #include <qgridlayout.h>
 
-#include "widgets/mainWidget/nodeListScrollAreasWidget/nodeListWidget/nodeGeneraterListWidget/nodePreviewScrollAreasWidget/NodePreviewWidget/nodeFuncPreviewImageWidget.h"
+#include <qt/widgets/nodeFuncPreviewImageWidget.h>
 
 DragInfoWindow::DragInfoWindow( ) : QMainWindow( nullptr, Qt::FramelessWindowHint ) {
 	setAttribute( Qt::WA_TranslucentBackground );

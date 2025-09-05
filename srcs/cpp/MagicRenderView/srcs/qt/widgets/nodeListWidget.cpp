@@ -8,12 +8,8 @@
 
 #include <qt/application/application.h>
 
-#include <qt/stacks/stackManagement.h>
-
-#include <qt/stacks/funStack/IFunStack.h>
-
-#include "nodeListWidget/nodeGeneraterListWidget.h"
-#include "nodeListWidget/nodeTypeTreeListWidget.h"
+#include "nodeGeneraterListWidget.h"
+#include "nodeTypeTreeListWidget.h"
 
 NodeListWidget::NodeListWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 	mouseIsPress = false;

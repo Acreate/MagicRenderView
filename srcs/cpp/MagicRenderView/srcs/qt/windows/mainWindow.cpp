@@ -11,7 +11,7 @@
 
 #include <qt/application/application.h>
 
-#include "widgets/mainWidget.h"
+#include <qt/widgets/mainWidget.h>
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
