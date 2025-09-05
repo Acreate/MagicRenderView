@@ -4,6 +4,7 @@
 
 #include "funStack/base/calculateFunStack.h"
 #include "funStack/base/fileFunStack.h"
+#include "funStack/base/logicFunStack.h"
 #include "funStack/base/rebuilerFunStack.h"
 #include "funStack/base/stringFunStack.h"
 
@@ -13,6 +14,8 @@ StackManagement::StackManagement( ) : stdMutex( new std_mutex ), initReady( fals
 size_t StackManagement::init( ) {
 	if( initReady == true )
 		return 0;
+	appendFunctionStack< LogicFunStack >( );
+	
 	appendFunctionStack< CalculateFunStack >( );
 	appendFunctionStack< StringFunStack >( );
 	appendFunctionStack< FileFunStack >( );

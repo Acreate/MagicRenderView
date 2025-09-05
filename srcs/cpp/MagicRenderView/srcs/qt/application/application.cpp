@@ -44,6 +44,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	stackManagement = new StackManagement;
 	drawShowImageInfoWidget = new DragInfoWindow( );
 	drawShowImageInfoWidget->setFixedSize( 100, 200 );
+	dragFunctionPreviewWidget = nullptr;
 }
 Application::~Application( ) {
 	settings->sync( );
