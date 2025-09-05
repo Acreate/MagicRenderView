@@ -9,6 +9,10 @@ class NodeRunFunctionSequenceItemWidget : public QWidget {
 	Q_OBJECT;
 public:
 	friend class NodeRunSequenceWidget;
+	/// @brief 双击时钟
+	static std::chrono::system_clock::time_point doubleClickClock;
+	/// @brief 双击对象
+	static NodeRunFunctionSequenceItemWidget* doubleClickObj;
 protected:
 	/// @brief 是否显示子节点
 	bool showChildStatus = false;
@@ -34,15 +38,18 @@ public:
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void mouseReleaseEvent( QMouseEvent *event ) override;
 public:
 Q_SIGNALS:
 	/// @brief 显示子节点
 	/// @param flag true 表示展开，false 表示收缩
 	void showStatusChange( bool flag );
 	/// @brief 展开选项
-	bool expandItem( );
+	void expandItem( );
 	/// @brief 收缩项
-	bool shrinkage( );
+	void shrinkage( );
+	/// @brief 双击
+	void doubleClick( );
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEMWIDGET_H_H_HEAD__FILE__

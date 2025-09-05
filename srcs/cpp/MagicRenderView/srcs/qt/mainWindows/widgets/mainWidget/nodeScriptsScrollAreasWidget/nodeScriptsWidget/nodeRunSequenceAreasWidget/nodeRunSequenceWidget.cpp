@@ -61,6 +61,7 @@ NodeRunFunctionSequenceItemWidget * NodeRunSequenceWidget::setRunFunctionWidget(
 	connect( resultItem, &NodeRunFunctionSequenceItemWidget::expandItem, [this, resultItem]( ) {
 		expandItem( resultItem );
 	} );
+	connect( resultItem, &NodeRunFunctionSequenceItemWidget::doubleClick, resultItem, &NodeRunFunctionSequenceItemWidget::expandItem );
 	connect( resultItem, &NodeRunFunctionSequenceItemWidget::shrinkage, [this, resultItem]( ) {
 		shrinkage( resultItem );
 	} );
