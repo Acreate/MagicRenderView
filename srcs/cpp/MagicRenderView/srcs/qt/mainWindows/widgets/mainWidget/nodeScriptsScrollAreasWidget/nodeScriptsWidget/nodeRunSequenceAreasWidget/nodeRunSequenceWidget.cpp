@@ -82,8 +82,9 @@ void NodeRunSequenceWidget::updateNodeWidget( ) {
 		node->move( nodeRightXPos, 0 );
 		nodeRightXPos += itemWidth + itemSpaceWidth;
 	}
-
+	
 	updateExpandItem( );
+	// todo : 最小大小
 }
 bool NodeRunSequenceWidget::shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget ) {
 	if( currentEextendItem != nullptr && hide_item_widget == nullptr )

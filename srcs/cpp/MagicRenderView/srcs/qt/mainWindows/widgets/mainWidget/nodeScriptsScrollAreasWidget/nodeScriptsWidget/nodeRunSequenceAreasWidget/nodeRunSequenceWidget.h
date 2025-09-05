@@ -53,6 +53,10 @@ protected:
 	virtual bool removeItem( const NodeRunFunctionSequenceItemWidget *remove_item_widget );
 	/// @brief 更新展开选项的大小
 	virtual void updateExpandItem( );
+Q_SIGNALS:
+	/// @brief 子组件配置最小大小要求被改变
+	/// @param min_size 最小大小
+	void childReMinSize( const QSize &min_size );
 };
 
 #endif // NODERUNSEQUENCEWIDGET_H_H_HEAD__FILE__

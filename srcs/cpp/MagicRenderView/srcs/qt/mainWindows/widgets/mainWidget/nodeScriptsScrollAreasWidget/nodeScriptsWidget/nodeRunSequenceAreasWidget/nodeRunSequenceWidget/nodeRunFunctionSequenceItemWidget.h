@@ -5,6 +5,7 @@
 
 #include "../nodeRunSequenceWidget.h"
 
+class NodeControlItemWidge;
 class NodeRunFunctionSequenceItemWidget : public QWidget {
 	Q_OBJECT;
 public:
@@ -12,13 +13,15 @@ public:
 	/// @brief 双击时钟
 	static std::chrono::system_clock::time_point doubleClickClock;
 	/// @brief 双击对象
-	static NodeRunFunctionSequenceItemWidget* doubleClickObj;
+	static NodeRunFunctionSequenceItemWidget *doubleClickObj;
 protected:
 	/// @brief 是否显示子节点
 	bool showChildStatus = false;
 	/// @brief 节点是否有效
 	bool itemActive = false;
+	/// @brief 父节点
 	NodeRunSequenceWidget *itemParent;
+	/// @brief 子节点
 	NodeRunSequenceWidget *itemChild;
 protected:
 	NodeRunFunctionSequenceItemWidget( NodeRunSequenceWidget *node_run_sequence_widget, const std::shared_ptr< IFunctionDeclaration > &function_declaration );
@@ -34,7 +37,7 @@ public:
 		return itemActive;
 	}
 	virtual NodeRunSequenceWidget * getItemChild( ) const {
-		return itemParent;
+		return itemChild;
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
@@ -50,6 +53,9 @@ Q_SIGNALS:
 	void shrinkage( );
 	/// @brief 双击
 	void doubleClick( );
+	/// @brief 子组件配置最小大小要求被改变
+	/// @param min_size 最小大小
+	void childReMinSize( const QSize& min_size );
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEMWIDGET_H_H_HEAD__FILE__
