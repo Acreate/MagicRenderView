@@ -6,7 +6,10 @@
 
 NodeRunSequenceWidget::NodeRunSequenceWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
 	currentEextendItem = nullptr;
-	itemSize = QSize( 50, 100 );
+	itemWidth = 200;
+	itemHeight = 100;
+	itemSpaceWidth = 20;
+	itemSpaceHeight = 20;
 }
 void NodeRunSequenceWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
@@ -18,46 +21,42 @@ void NodeRunSequenceWidget::resizeEvent( QResizeEvent *event ) {
 	updateExpandItem( );
 }
 NodeRunFunctionSequenceItemWidget * NodeRunSequenceWidget::setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point ) {
-	NodeRunFunctionSequenceItemWidget *posNode = nullptr;
-	NodeRunFunctionSequenceItemWidget *resultItem = nullptr;
+
+	// 转换到本地位置
 	QPoint fromGlobal = mapFromGlobal( glob_point );
-	int height = itemSize.height( );
-	int width = itemSize.width( );
-	int fromGlobalX = fromGlobal.x( );
 	// 是否匹配子节点
-	bool isChild = false;
-	if( fromGlobal.y( ) > height ) {
+	if( fromGlobal.y( ) > itemHeight ) {
 		if( currentEextendItem == nullptr )
 			return nullptr;
-		isChild = true;
+		NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
+		if( itemChild == nullptr || itemChild->isHidden( ) )
+			return nullptr;
+		return itemChild->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
 	}
+
+	NodeRunFunctionSequenceItemWidget *posNode = nullptr;
+	NodeRunFunctionSequenceItemWidget *resultItem = nullptr;
+	int fromGlobalX = fromGlobal.x( );
 	resultItem = new NodeRunFunctionSequenceItemWidget( this, function_declaration );
-	if( isChild ) {
-
-	} else {
-		// 匹配鼠标位置的项
-		auto iterator = topItem.begin( );
-		auto end = topItem.end( );
-
-		if( iterator != end ) {
-			int leftPos = 0;
-			for( posNode = *iterator; iterator != end; ++iterator, posNode = *iterator, leftPos = posNode->pos( ).y( ) + width )
-				if( leftPos > fromGlobalX )
-					break;
-			if( iterator == end ) {
-				// 末尾
-			} else {
-
-			}
-		}
-	}
-
 	if( resultItem->isItemActve( ) == false ) {
 		delete resultItem;
 		return nullptr;
 	}
-	// 配置插入位置
+	resultItem->setFixedSize( itemWidth, itemHeight );
+	// 匹配鼠标位置的项
+	auto begin = topItem.begin( );
+	auto iterator = begin;
+	auto end = topItem.end( );
 
+	if( iterator != end ) {
+		// 窗口的右侧坐标
+		int nodeRightXPos = 0;
+		for( ; iterator != end; ++iterator )
+			if( posNode = *iterator, nodeRightXPos = posNode->pos( ).x( ) + itemWidth, nodeRightXPos > fromGlobalX )
+				break;
+		topItem.insert( iterator, resultItem );
+	} else
+		topItem.emplace_back( resultItem );
 	// 链接信号
 	connect( resultItem, &NodeRunFunctionSequenceItemWidget::expandItem, [this, resultItem]( ) {
 		expandItem( resultItem );
@@ -68,8 +67,21 @@ NodeRunFunctionSequenceItemWidget * NodeRunSequenceWidget::setRunFunctionWidget(
 	// 更新面板
 	updateNodeWidget( );
 	return resultItem;
+
 }
 void NodeRunSequenceWidget::updateNodeWidget( ) {
+
+	auto iterator = topItem.begin( );
+	auto end = topItem.end( );
+	// 窗口的右侧坐标
+	int nodeRightXPos = 0;
+	for( ; iterator != end; ++iterator ) {
+		auto node = *iterator;
+		node->show( );
+		node->move( nodeRightXPos, 0 );
+		nodeRightXPos += itemWidth + itemSpaceWidth;
+	}
+
 	updateExpandItem( );
 }
 bool NodeRunSequenceWidget::shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget ) {
@@ -88,7 +100,6 @@ bool NodeRunSequenceWidget::shrinkage( const NodeRunFunctionSequenceItemWidget *
 			controlItemWidget = *( iterator++ );
 	while( controlItemWidget != hide_item_widget );
 
-	// todo : 收缩
 	auto itemChild = currentEextendItem->getItemChild( );
 	if( itemChild )
 		itemChild->hide( );
@@ -117,7 +128,7 @@ void NodeRunSequenceWidget::updateExpandItem( ) {
 		itemChild->show( );
 	auto currentWidgetSize = this->size( );
 	int currentItemHeight = currentWidgetSize.height( );
-	itemChild->move( 0, currentItemHeight );
+	itemChild->move( 0, currentItemHeight + itemSpaceHeight );
 	int height = currentEextendItem->size( ).height( );
 	itemChild->setFixedSize( currentWidgetSize.width( ), currentItemHeight - height );
 }
@@ -141,7 +152,6 @@ bool NodeRunSequenceWidget::expandItem( const NodeRunFunctionSequenceItemWidget 
 		if( shrinkage( currentEextendItem ) == false )
 			return false;
 
-	// todo : 展开
 	currentEextendItem = controlItemWidget;
 	NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
 	itemChild->show( );

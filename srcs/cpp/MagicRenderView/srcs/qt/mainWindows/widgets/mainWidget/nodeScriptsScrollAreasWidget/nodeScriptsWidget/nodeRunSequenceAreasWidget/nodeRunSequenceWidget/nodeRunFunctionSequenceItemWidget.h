@@ -19,6 +19,8 @@ protected:
 protected:
 	NodeRunFunctionSequenceItemWidget( NodeRunSequenceWidget *node_run_sequence_widget, const std::shared_ptr< IFunctionDeclaration > &function_declaration );
 public:
+	~NodeRunFunctionSequenceItemWidget( ) override;
+public:
 	virtual bool isShowChild( ) const {
 		if( itemChild == nullptr )
 			return false;
@@ -30,7 +32,9 @@ public:
 	virtual NodeRunSequenceWidget * getItemChild( ) const {
 		return itemParent;
 	}
-	~NodeRunFunctionSequenceItemWidget( ) override;
+protected:
+	void paintEvent( QPaintEvent *event ) override;
+public:
 Q_SIGNALS:
 	/// @brief 显示子节点
 	/// @param flag true 表示展开，false 表示收缩

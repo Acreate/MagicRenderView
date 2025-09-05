@@ -17,7 +17,14 @@ protected:
 	std_list< NodeRunFunctionSequenceItemWidget * > topItem;
 	/// @brief 当前展开的节点
 	NodeRunFunctionSequenceItemWidget *currentEextendItem;
-	QSize itemSize;
+	/// @brief 选项宽度
+	int itemWidth;
+	/// @brief 选项高度
+	int itemHeight;
+	/// @brief 选项间隔宽度
+	int itemSpaceWidth;
+	/// @brief 用于选项行空格
+	int itemSpaceHeight;
 public:
 	NodeRunSequenceWidget( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeRunSequenceWidget( ) override;
@@ -40,10 +47,10 @@ protected:
 	virtual bool expandItem( const NodeRunFunctionSequenceItemWidget *show_item_widget );
 	/// @brief 收缩项
 	/// @param hide_item_widget 收缩的项
-	virtual virtual bool shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget );
+	virtual bool shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget );
 	/// @brief 删除项
 	/// @param remove_item_widget 删除项项
-	virtual virtual bool removeItem( const NodeRunFunctionSequenceItemWidget *remove_item_widget );
+	virtual bool removeItem( const NodeRunFunctionSequenceItemWidget *remove_item_widget );
 	/// @brief 更新展开选项的大小
 	virtual void updateExpandItem( );
 };
