@@ -3,6 +3,10 @@
 #pragma once
 #include <QWidget>
 
+#include <alias/type_alias.h>
+
+class NodeRunSequenceAreasWidget;
+class IFunctionDeclaration;
 class NodeFuncPreviewImageWidget;
 class NodeRunSequenceWidget;
 class NodeDefineVarWidget;
@@ -20,7 +24,7 @@ protected:
 	/// @brief 变量定义窗口
 	NodeDefineVarWidget *nodeDefineVarWidget;
 	/// @brief 节点序列窗口
-	NodeRunSequenceWidget *nodeRunSequenceWidget;
+	NodeRunSequenceAreasWidget *nodeRunSequenceAreasWidget;
 public:
 	NodeScriptsWidget( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~NodeScriptsWidget( ) override;
@@ -35,6 +39,6 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 protected Q_SLOTS :
-	void dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget );
+	void dragEventEnd( Application *event_obj, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glbal_point );
 };
 #endif // NODESCRIPTSWIDGET_H_H_HEAD__FILE__

@@ -6,7 +6,7 @@
 #include <qt/application/application.h>
 
 #include "nodeScriptsWidget/nodeDefineVarWidget.h"
-#include "nodeScriptsWidget/nodeRunSequenceWidget.h"
+#include "nodeScriptsWidget/nodeRunSequenceAreasWidget.h"
 NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
 
 	mouseIsPress = false;
@@ -18,17 +18,17 @@ NodeScriptsWidget::NodeScriptsWidget( QWidget *parent, Qt::WindowFlags flags ) :
 	mouseIsPress = false;
 
 	nodeDefineVarWidget = new NodeDefineVarWidget( this );
-	nodeRunSequenceWidget = new NodeRunSequenceWidget( this );
+	nodeRunSequenceAreasWidget = new NodeRunSequenceAreasWidget( this );
 
 	applicationInstancePtr->syncAppValueIniFile( );
 
 	quint64 nodeDefineVarWidth = applicationInstancePtr->getAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeDefineVarWidget, "width" ), 30 ).toULongLong( );
 
-	quint64 nodeRunSequenceWidth = applicationInstancePtr->getAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeRunSequenceWidget, "width" ), 80 ).toULongLong( );
-	
-	nodeRunSequenceWidget->setFixedWidth( nodeRunSequenceWidth );
+	quint64 nodeRunSequenceWidth = applicationInstancePtr->getAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeRunSequenceAreasWidget, "width" ), 80 ).toULongLong( );
+
+	nodeRunSequenceAreasWidget->setFixedWidth( nodeRunSequenceWidth );
 	nodeDefineVarWidget->setFixedWidth( nodeDefineVarWidth );
-	
+
 	applicationInstancePtr->setNodeScriptsWidget( this );
 }
 NodeScriptsWidget::~NodeScriptsWidget( ) {
@@ -36,9 +36,9 @@ NodeScriptsWidget::~NodeScriptsWidget( ) {
 	applicationInstancePtr->syncAppValueIniFile( );
 }
 void NodeScriptsWidget::writeHeightIni( ) const {
-	int nodeRunSequenceWidth = nodeRunSequenceWidget->width( );
+	int nodeRunSequenceWidth = nodeRunSequenceAreasWidget->width( );
 	int nodeDefineVarWidth = nodeDefineVarWidget->width( );
-	applicationInstancePtr->setAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeRunSequenceWidget, "width" ), nodeRunSequenceWidth );
+	applicationInstancePtr->setAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeRunSequenceAreasWidget, "width" ), nodeRunSequenceWidth );
 	applicationInstancePtr->setAppIniValue( applicationInstancePtr->normalKeyAppendEnd( keyFirst, nodeDefineVarWidget, "width" ), nodeDefineVarWidth );
 }
 QWidget * NodeScriptsWidget::mouseToPoint( const QPoint &point ) {
@@ -46,18 +46,18 @@ QWidget * NodeScriptsWidget::mouseToPoint( const QPoint &point ) {
 	int x = point.x( );
 	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
 		return dragWidgetSize;
-	if( mouseIsPress == false ) { // nodeRunSequenceWidget -> nodeDefineVarWidget
-		auto nodeGeneraterListX = nodeRunSequenceWidget->pos( ).x( );
+	if( mouseIsPress == false ) { // nodeRunSequenceAreasWidget -> nodeDefineVarWidget
+		auto nodeGeneraterListX = nodeRunSequenceAreasWidget->pos( ).x( );
 		if( abs( x - nodeGeneraterListX ) < 5 )
-			dragWidgetSize = nodeRunSequenceWidget;
+			dragWidgetSize = nodeRunSequenceAreasWidget;
 		else
 			dragWidgetSize = nullptr;
 	} else if( dragWidgetSize != nullptr ) {
-		if( dragWidgetSize == nodeRunSequenceWidget ) {
-			nodeRunSequenceWidget->move( x, 0 ); // 移动到新位置
+		if( dragWidgetSize == nodeRunSequenceAreasWidget ) {
+			nodeRunSequenceAreasWidget->move( x, 0 ); // 移动到新位置
 			nodeDefineVarWidget->setFixedWidth( x );
 			auto newWidth = width( ) - x;
-			nodeRunSequenceWidget->setFixedWidth( newWidth );
+			nodeRunSequenceAreasWidget->setFixedWidth( newWidth );
 		}
 	}
 	return dragWidgetSize;
@@ -67,7 +67,7 @@ void NodeScriptsWidget::updateWidgetListLayout( const QSize &old_size, const QSi
 
 	int newWidth = current_size.width( );
 
-	int nodeRunSequenceWidth = nodeRunSequenceWidget->width( );
+	int nodeRunSequenceWidth = nodeRunSequenceAreasWidget->width( );
 	int nodeDefineVarWidth = nodeDefineVarWidget->width( );
 
 	int width = nodeDefineVarWidth + nodeRunSequenceWidth;
@@ -77,10 +77,10 @@ void NodeScriptsWidget::updateWidgetListLayout( const QSize &old_size, const QSi
 	width = newWidth - nodeRunSequenceWidth;
 	auto height = current_size.height( );
 	nodeDefineVarWidget->setFixedSize( width, height );
-	nodeRunSequenceWidget->setFixedSize( nodeRunSequenceWidth, height );
+	nodeRunSequenceAreasWidget->setFixedSize( nodeRunSequenceWidth, height );
 	nodeDefineVarWidget->move( 0, 0 );
-	width = nodeDefineVarWidget->width( ); 
-	nodeRunSequenceWidget->move( width, 0 ); 
+	width = nodeDefineVarWidget->width( );
+	nodeRunSequenceAreasWidget->move( width, 0 );
 }
 
 void NodeScriptsWidget::paintEvent( QPaintEvent *event ) {
@@ -98,10 +98,9 @@ void NodeScriptsWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	updateWidgetListLayout( event->oldSize( ), event->size( ) );
 }
-void NodeScriptsWidget::dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget ) {
-	auto point = QCursor::pos( );
-	auto fromGlobal = mapFromGlobal( point );
-	if( contentsRect( ).contains( fromGlobal ) == false )
+void NodeScriptsWidget::dragEventEnd( Application *event_obj, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glbal_point ) {
+	auto fromGlobal = nodeRunSequenceAreasWidget->mapFromGlobal( glbal_point );
+	if( nodeRunSequenceAreasWidget->contentsRect( ).contains( fromGlobal ) == false )
 		return;
-	// todo 节点拖拽释放处理
+	nodeRunSequenceAreasWidget->setRunFunctionWidget( this, function_declaration, glbal_point, fromGlobal );
 }

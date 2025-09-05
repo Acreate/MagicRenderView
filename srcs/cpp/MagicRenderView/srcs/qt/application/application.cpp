@@ -228,7 +228,7 @@ bool Application::notify( QObject *object, QEvent *event ) {
 			dragFunctionPreviewWidget = nullptr;
 			drawShowImageInfoWidget->hide( );
 			mutexPtr->unlock( );
-			dragEventEnd( this, drawWidget );
+			dragEventEnd( this, drawWidget->getFunctionDeclaration(  ), glbalPos );
 			break;
 		case QEvent::Quit :
 			delete drawShowImageInfoWidget;

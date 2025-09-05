@@ -7,6 +7,7 @@
 
 #include "../stacks/varStack/IVarStack.h"
 
+class IFunctionDeclaration;
 class NodeScriptsWidget;
 class DragInfoWindow;
 class QLabel;
@@ -94,7 +95,7 @@ public:
 protected:
 	bool notify( QObject *, QEvent * ) override;
 Q_SIGNALS:
-	void dragEventEnd( Application *event_obj, NodeFuncPreviewImageWidget *draw_widget );
+	void dragEventEnd( Application *event_obj, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glbal_point );
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__
