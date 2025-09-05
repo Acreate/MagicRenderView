@@ -136,7 +136,7 @@ bool IFunctionDeclaration::_init( const QString &function_declaration_name ) {
 	}
 	return true;
 }
-IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function ) : callFcuntion( call_function ), image( nullptr ), isValid( false ) {
+IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function ) : isValid( false ), callFcuntion( call_function ), image( nullptr ), isControlCode( false ) {
 	if( _init( function_declaration_name ) == false )
 		return;
 	image = new QImage( );

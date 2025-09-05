@@ -15,16 +15,22 @@ protected:
 	/// @brief 节点是否有效
 	bool itemActive = false;
 	NodeRunSequenceWidget *itemParent;
+	NodeRunSequenceWidget *itemChild;
 protected:
 	NodeRunFunctionSequenceItemWidget( NodeRunSequenceWidget *node_run_sequence_widget, const std::shared_ptr< IFunctionDeclaration > &function_declaration );
 public:
 	virtual bool isShowChild( ) const {
+		if( itemChild == nullptr )
+			return false;
 		return showChildStatus;
 	}
 	virtual bool isItemActve( ) const {
 		return itemActive;
 	}
-	~NodeRunFunctionSequenceItemWidget()override;
+	virtual NodeRunSequenceWidget * getItemChild( ) const {
+		return itemParent;
+	}
+	~NodeRunFunctionSequenceItemWidget( ) override;
 Q_SIGNALS:
 	/// @brief 显示子节点
 	/// @param flag true 表示展开，false 表示收缩

@@ -23,6 +23,7 @@ public:
 	~NodeRunSequenceWidget( ) override;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
 public:	/// @brief 在指定位置配置节点窗口
 	/// @param generater_scripts_widget 调用窗口
 	/// @param function_declaration 绘制目标
@@ -38,11 +39,13 @@ protected:
 	/// @param show_item_widget 选项
 	virtual bool expandItem( const NodeRunFunctionSequenceItemWidget *show_item_widget );
 	/// @brief 收缩项
-	/// @param show_item_widget 收缩的项
-	virtual virtual bool shrinkage( const NodeRunFunctionSequenceItemWidget *show_item_widget );
-	/// @brief 收缩项
-	/// @param show_item_widget 收缩的项
-	virtual virtual bool removeItem( const NodeRunFunctionSequenceItemWidget *show_item_widget );
+	/// @param hide_item_widget 收缩的项
+	virtual virtual bool shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget );
+	/// @brief 删除项
+	/// @param remove_item_widget 删除项项
+	virtual virtual bool removeItem( const NodeRunFunctionSequenceItemWidget *remove_item_widget );
+	/// @brief 更新展开选项的大小
+	virtual void updateExpandItem( );
 };
 
 #endif // NODERUNSEQUENCEWIDGET_H_H_HEAD__FILE__

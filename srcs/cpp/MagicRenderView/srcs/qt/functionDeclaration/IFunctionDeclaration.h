@@ -29,12 +29,14 @@ protected:
 	std_call callFcuntion;
 	/// @brief 函数说明
 	QImage *image = nullptr;
+	/// @brief 是否代表控制代码
+	bool isControlCode;
 protected:
 	/// @brief 使用声明初始化函数信息
 	bool _init( const QString &function_declaration_name );
 public:
 	IFunctionDeclaration( const QString &function_declaration_name, const std_call &call_function );
-
+	virtual bool isIsControlCode( ) const { return isControlCode; }
 	IFunctionDeclaration( const IFunctionDeclaration &other )
 		: paramInfo( other.paramInfo ),
 		returnType( other.returnType ),
