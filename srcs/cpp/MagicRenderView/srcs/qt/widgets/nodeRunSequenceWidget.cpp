@@ -2,6 +2,7 @@
 
 #include <QPainter>
 
+#include "nodeControlItemWidge.h"
 #include "nodeRunFunctionSequenceItemWidget.h"
 
 NodeRunSequenceWidget::NodeRunSequenceWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
@@ -34,10 +35,12 @@ NodeRunFunctionSequenceItemWidget * NodeRunSequenceWidget::setRunFunctionWidget(
 	if( fromGlobal.y( ) > itemHeight ) {
 		if( currentEextendItem == nullptr )
 			return nullptr;
-		NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
+		auto itemChild = currentEextendItem->getItemChild( );
 		if( itemChild == nullptr || itemChild->isHidden( ) )
 			return nullptr;
-		return itemChild->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
+		return nullptr;
+
+		//return itemChild->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
 	}
 
 	NodeRunFunctionSequenceItemWidget *posNode = nullptr;
@@ -81,16 +84,15 @@ void NodeRunSequenceWidget::updateNodeWidget( ) {
 	auto iterator = topItem.begin( );
 	auto end = topItem.end( );
 	// 窗口的右侧坐标
-	int nodeRightXPos = 0;
+	int nodeRightXPos = itemSpaceWidth;
 	for( ; iterator != end; ++iterator ) {
 		auto node = *iterator;
 		node->show( );
-		node->move( nodeRightXPos, 0 );
+		node->move( nodeRightXPos, itemSpaceHeight );
 		nodeRightXPos += itemWidth + itemSpaceWidth;
 	}
 
 	updateExpandItem( );
-	// todo : 最小大小
 }
 bool NodeRunSequenceWidget::shrinkage( const NodeRunFunctionSequenceItemWidget *hide_item_widget ) {
 	if( currentEextendItem != nullptr && hide_item_widget == nullptr )
@@ -129,14 +131,14 @@ bool NodeRunSequenceWidget::removeItem( const NodeRunFunctionSequenceItemWidget 
 void NodeRunSequenceWidget::updateExpandItem( ) {
 	if( currentEextendItem == nullptr )
 		return;
-	NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
+	auto itemChild = currentEextendItem->getItemChild( );
 	if( itemChild == nullptr )
 		return;
 	if( itemChild->isHidden( ) == false )
 		itemChild->show( );
 	auto currentWidgetSize = this->size( );
 	int currentItemHeight = currentWidgetSize.height( );
-	itemChild->move( 0, currentItemHeight + itemSpaceHeight );
+	itemChild->move( 0, currentItemHeight + itemSpaceHeight * 2 );
 	int height = currentEextendItem->size( ).height( );
 	itemChild->setFixedSize( currentWidgetSize.width( ), currentItemHeight - height );
 }
@@ -161,7 +163,7 @@ bool NodeRunSequenceWidget::expandItem( const NodeRunFunctionSequenceItemWidget 
 			return false;
 
 	currentEextendItem = controlItemWidget;
-	NodeRunSequenceWidget *itemChild = currentEextendItem->getItemChild( );
+	auto itemChild = currentEextendItem->getItemChild( );
 	itemChild->show( );
 	updateExpandItem( );
 	// 触发信号

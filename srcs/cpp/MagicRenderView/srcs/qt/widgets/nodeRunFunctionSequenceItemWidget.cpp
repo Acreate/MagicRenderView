@@ -6,6 +6,8 @@
 
 #include <qt/functionDeclaration/IFunctionDeclaration.h>
 #include <qt/widgets/nodeRunSequenceWidget.h>
+
+#include "nodeControlItemWidge.h"
 /// @brief 双击时钟
 std::chrono::system_clock::time_point NodeRunFunctionSequenceItemWidget::doubleClickClock = std::chrono::system_clock::now( );
 /// @brief 双击对象
@@ -15,14 +17,14 @@ NodeRunFunctionSequenceItemWidget::NodeRunFunctionSequenceItemWidget( NodeRunSeq
 	if( functionDeclaration->isIsControlCode( ) == false )
 		itemChild = nullptr;
 	else
-		itemChild = new NodeRunSequenceWidget( node_run_sequence_widget );
+		itemChild = new NodeControlItemWidge( node_run_sequence_widget );
 
 	auto oldLayout = layout( );
 	if( oldLayout )
 		delete oldLayout;
 	auto mainLayout = new QVBoxLayout( this );
 	auto title = new QLabel( this );
-	mainLayout->addWidget( title );
+	mainLayout->addWidget( title, 0, Qt::AlignTop | Qt::AlignHCenter );
 	title->setAlignment( Qt::AlignCenter );
 	title->setText( functionDeclaration->getDeclarationName( ) );
 	itemActive = true;

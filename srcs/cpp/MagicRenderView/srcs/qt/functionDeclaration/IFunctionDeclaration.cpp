@@ -140,7 +140,7 @@ IFunctionDeclaration::IFunctionDeclaration( const QString &function_declaration_
 	if( _init( function_declaration_name ) == false )
 		return;
 	image = new QImage( );
-	bool isLoadOk = image->load( ":/function/normal.png" );
+	bool isLoadOk = image->load( ":/function/function_normal.png" );
 	if( isLoadOk == false || image->isNull( ) ) {
 		delete image;
 		image = nullptr;

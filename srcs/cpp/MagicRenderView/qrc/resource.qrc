@@ -17,6 +17,8 @@
         <file>ico/play_run.png</file>
         <file>ico/remove_item.png</file>
         <file>ico/vertical.png</file>
-        <file>function/normal.png</file>
+        <file>function/function_control.png</file>
+        <file>function/function_function.png</file>
+        <file>function/function_normal.png</file>
     </qresource>
 </RCC>

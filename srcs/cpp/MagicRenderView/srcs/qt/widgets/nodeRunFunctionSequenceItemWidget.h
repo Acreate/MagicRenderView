@@ -21,7 +21,7 @@ protected:
 	/// @brief 父节点
 	NodeRunSequenceWidget *itemParent;
 	/// @brief 子节点
-	NodeRunSequenceWidget *itemChild;
+	NodeControlItemWidge *itemChild;
 protected:
 	NodeRunFunctionSequenceItemWidget( NodeRunSequenceWidget *node_run_sequence_widget, const std::shared_ptr< IFunctionDeclaration > &function_declaration );
 public:
@@ -35,7 +35,7 @@ public:
 	virtual bool isItemActve( ) const {
 		return itemActive;
 	}
-	virtual NodeRunSequenceWidget * getItemChild( ) const {
+	virtual NodeControlItemWidge * getItemChild( ) const {
 		return itemChild;
 	}
 protected:
