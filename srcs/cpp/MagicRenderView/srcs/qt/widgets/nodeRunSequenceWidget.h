@@ -31,7 +31,8 @@ public:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
-public:	/// @brief 在指定位置配置节点窗口
+public:
+	/// @brief 在指定位置配置节点窗口
 	/// @param generater_scripts_widget 调用窗口
 	/// @param function_declaration 绘制目标
 	/// @param glob_point 全局位置
@@ -41,6 +42,8 @@ public:	/// @brief 在指定位置配置节点窗口
 	/// @brief 重绘子窗口（脚本节点）
 	/// @return 重绘列表
 	virtual void updateNodeWidget( );
+	/// @brief 尝试检查节点使用大小，该方式触发 adviseSize 信号
+	virtual QSize checkNodeUseSize( );
 protected:
 	/// @brief 展开选项
 	/// @param show_item_widget 选项
@@ -56,7 +59,7 @@ protected:
 Q_SIGNALS:
 	/// @brief 子组件配置最小大小要求被改变
 	/// @param min_size 最小大小
-	void childReMinSize( const QSize &min_size );
+	void adviseSize( const QSize &min_size );
 };
 
 #endif // NODERUNSEQUENCEWIDGET_H_H_HEAD__FILE__

@@ -23,11 +23,26 @@ NodeRunFunctionSequenceItemWidget::NodeRunFunctionSequenceItemWidget( NodeRunSeq
 	if( oldLayout )
 		delete oldLayout;
 	auto mainLayout = new QVBoxLayout( this );
+
+	auto subLayout = new QHBoxLayout( );
+	mainLayout->addLayout( subLayout );
+
+	auto funType = new QLabel( this );
+	if( functionDeclaration->isIsControlCode( ) )
+		funType->setPixmap( QPixmap::fromImage( QImage( ":/function/function_control.png" ) ) );
+	else
+		funType->setPixmap( QPixmap::fromImage( QImage( ":/function/function_function.png" ) ) );
+	funType->setFixedHeight( 16 );
+	subLayout->addWidget( funType );
 	auto title = new QLabel( this );
-	mainLayout->addWidget( title, 0, Qt::AlignTop | Qt::AlignHCenter );
+	subLayout->addWidget( title );
+	subLayout->addSpacerItem( new QSpacerItem( 16, 16, QSizePolicy::Expanding, QSizePolicy::Minimum ) );
+
 	title->setAlignment( Qt::AlignCenter );
+	title->setFixedHeight( 16 );
 	title->setText( functionDeclaration->getDeclarationName( ) );
 	itemActive = true;
+	mainLayout->addSpacerItem( new QSpacerItem( 100, 200, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
 }
 NodeRunFunctionSequenceItemWidget::~NodeRunFunctionSequenceItemWidget( ) {
 	itemParent->removeItem( this );
