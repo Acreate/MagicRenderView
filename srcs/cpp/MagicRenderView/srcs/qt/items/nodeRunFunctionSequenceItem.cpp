@@ -99,15 +99,16 @@ NodeRunFunctionSequenceItem * NodeRunFunctionSequenceItem::setRunFunctionWidget(
 	auto mapFromGlobal = renderWidget->mapFromGlobal( glob_point );
 	QRect contentsRect = renderWidget->contentsRect( );
 	NodeRunFunctionSequenceItem *functionSequenceItem = nullptr;
-	if( contentsRect.contains( mapFromGlobal ) ) {
-		functionSequenceItem = renderWidget->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, mapFromGlobal );
-		if( functionSequenceItem )
-			return functionSequenceItem;
-	}
 	for( auto &item : subItems ) {
 		functionSequenceItem = item->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
 		if( functionSequenceItem )
 			return functionSequenceItem;
 	}
+	if( contentsRect.contains( mapFromGlobal ) ) {
+		functionSequenceItem = renderWidget->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, mapFromGlobal );
+		if( functionSequenceItem )
+			return functionSequenceItem;
+	}
+
 	return functionSequenceItem;
 }
