@@ -1,20 +1,22 @@
-﻿#ifndef NODERUNSEQUENCEAREASWIDGET_H_H_HEAD__FILE__
-#define NODERUNSEQUENCEAREASWIDGET_H_H_HEAD__FILE__
+﻿#ifndef NODERUNFUNCTIONSEQUENCEITEMRNDERWIDGET_H_H_HEAD__FILE__
+#define NODERUNFUNCTIONSEQUENCEITEMRNDERWIDGET_H_H_HEAD__FILE__
 #pragma once
-#include <QScrollArea>
+#include <QWidget>
 
 #include <alias/type_alias.h>
 
-class NodeRunFunctionSequenceItem;
-class NodeRunSequenceWidget;
 class IFunctionDeclaration;
 class NodeScriptsWidget;
-class NodeRunSequenceAreasWidget : public QScrollArea {
+class NodeRunFunctionSequenceItem;
+class NodeRunSequenceWidget;
+class NodeRunFunctionSequenceItemRnderWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	NodeRunSequenceWidget *mainWidget;
+	NodeRunSequenceWidget *runSequenceWidget;
+	NodeRunFunctionSequenceItem *runFunctionSequenceItem;
 public:
-	NodeRunSequenceAreasWidget( QWidget *parent );
+	NodeRunFunctionSequenceItemRnderWidget( ::NodeRunSequenceWidget *run_sequence_widget, ::NodeRunFunctionSequenceItem *run_function_sequence_item );
+public:
 	/// @brief 在指定位置配置节点窗口
 	/// @param generater_scripts_widget 调用窗口
 	/// @param function_declaration 绘制目标
@@ -24,4 +26,4 @@ public:
 	virtual NodeRunFunctionSequenceItem * setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point );
 };
 
-#endif // NODERUNSEQUENCEAREASWIDGET_H_H_HEAD__FILE__
+#endif // NODERUNFUNCTIONSEQUENCEITEMRNDERWIDGET_H_H_HEAD__FILE__
