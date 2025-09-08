@@ -2,12 +2,14 @@
 
 #include "../widgets/NodeRunSequenceItemFunctionWidget.h"
 #include "../widgets/NodeRunSequenceItemWidget.h"
+#include "../widgets/nodeRunSequenceWidget.h"
 NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, NodeRunFunctionSequenceItem *top_layer_item ) : topLayerItem( top_layer_item ), functionDeclaration( function_declaration ), runMainSequenceWidget( run_sequence_widget ) {
 	if( functionDeclaration )
 		renderCurrentNodeFunctionWidget = new NodeRunSequenceItemFunctionWidget( this );
 	else
 		renderCurrentNodeFunctionWidget = nullptr;
 	renderSubItemsNodeWidget = new NodeRunSequenceItemWidget( this );
+	renderSubItemsNodeWidget->setParent( runMainSequenceWidget );
 }
 NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 	if( topLayerItem != nullptr ) {
@@ -38,10 +40,8 @@ bool NodeRunFunctionSequenceItem::insertBefore( NodeRunFunctionSequenceItem *ins
 	auto end = topLayerItem->subItems.end( );
 	for( ; begin != end; ++begin )
 		if( *begin == this ) {
-			if( begin == end )
-				topLayerItem->subItems.insert( ++begin, insert_item );
-			else
-				topLayerItem->subItems.insert( begin, insert_item );
+			topLayerItem->subItems.insert( begin, insert_item );
+			insert_item->topLayerItem = topLayerItem;
 			emit topLayerItem->subItemChange( );
 			return true;
 		}
@@ -56,6 +56,7 @@ bool NodeRunFunctionSequenceItem::insertAfter( NodeRunFunctionSequenceItem *inse
 	for( ; begin != end; ++begin )
 		if( *begin == this ) {
 			topLayerItem->subItems.insert( ++begin, insert_item );
+			insert_item->topLayerItem = topLayerItem;
 			emit topLayerItem->subItemChange( );
 			return true;
 		}
@@ -65,6 +66,7 @@ bool NodeRunFunctionSequenceItem::insertFirst( NodeRunFunctionSequenceItem *inse
 	if( topLayerItem == nullptr )
 		return false;
 	topLayerItem->subItems.emplace_front( insert_item );
+	insert_item->topLayerItem = topLayerItem;
 	emit topLayerItem->subItemChange( );
 	return true;
 }
@@ -72,6 +74,7 @@ bool NodeRunFunctionSequenceItem::insertEnd( NodeRunFunctionSequenceItem *insert
 	if( topLayerItem == nullptr )
 		return false;
 	topLayerItem->subItems.emplace_back( insert_item );
+	insert_item->topLayerItem = topLayerItem;
 	emit topLayerItem->subItemChange( );
 	return true;
 }
@@ -91,15 +94,43 @@ bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_i
 					topLayerItem->subItems.erase( begin );
 					break;
 				}
+			insert_item->topLayerItem = topLayerItem;
 			emit topLayerItem->subItemChange( );
 			return true;
 		}
 	return false;
 }
 bool NodeRunFunctionSequenceItem::foreachSubLayerBeg( const foreachCallBack &foreach_call_brack ) {
-	auto iterator = subItems.begin( );
+	auto begin = subItems.begin( );
 	auto end = subItems.end( );
-	foreach_call_brack( iterator, end );
+	foreach_call_brack( begin, end );
 	return true;
 
+}
+NodeRunFunctionSequenceItem * NodeRunFunctionSequenceItem::insertNodeRender( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point ) {
+	if( renderSubItemsNodeWidget->isHidden( ) )
+		return nullptr;
+	auto contentsRect = renderSubItemsNodeWidget->contentsRect( );
+	auto mapFromGlobal = renderSubItemsNodeWidget->mapFromGlobal( glob_point );
+	auto begin = subItems.begin( );
+	auto end = subItems.end( );
+	if( contentsRect.contains( mapFromGlobal ) == true ) {
+		auto newItem = new NodeRunFunctionSequenceItem( runMainSequenceWidget, function_declaration, this );
+		int mapFromGlobalX = mapFromGlobal.x( );
+		// 匹配当前序列窗口
+		for( ; begin != end; ++begin )
+			if( ( *begin )->renderCurrentNodeFunctionWidget->x( ) >= mapFromGlobalX )
+				break;
+		subItems.insert( begin, newItem );
+		emit subItemChange( );
+		return newItem;
+	}
+
+	// 子序列
+	for( ; begin != end; ++begin ) {
+		auto item = begin.operator*( )->insertNodeRender( generater_scripts_widget, function_declaration, glob_point, set_point );
+		if( item != nullptr )
+			return item;
+	}
+	return nullptr;
 }

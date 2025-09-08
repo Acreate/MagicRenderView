@@ -11,6 +11,8 @@ protected:
 	 NodeRunFunctionSequenceItem *nodeRunFunctionSequenceItem ;
 public:
 	NodeRunSequenceItemFunctionWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item );
+protected:
+	void paintEvent( QPaintEvent *event ) override;
 };
 
 #endif // NODERUNSEQUENCEITEMFUNCTIONWIDGET_H_H_HEAD__FILE__

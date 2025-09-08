@@ -13,14 +13,6 @@ class NodeRunSequenceWidget : public QWidget {
 protected:
 	/// @brief 顶级选项
 	NodeRunFunctionSequenceItem *rootItem;
-	/// @brief 选项宽度
-	int itemWidth;
-	/// @brief 选项高度
-	int itemHeight;
-	/// @brief 选项间隔宽度
-	int itemSpaceWidth;
-	/// @brief 用于选项行空格
-	int itemSpaceHeight;
 public:
 	NodeRunSequenceWidget( QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~NodeRunSequenceWidget( ) override;
@@ -33,7 +25,7 @@ public:
 	/// @param generater_scripts_widget 调用窗口
 	/// @param function_declaration 绘制目标
 	/// @param glob_point 全局位置
-	/// @param set_point 绘制位置
+	/// @param set_point
 	/// @return 绘制生成的节点窗口
 	virtual NodeRunFunctionSequenceItem * setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point );
 };
