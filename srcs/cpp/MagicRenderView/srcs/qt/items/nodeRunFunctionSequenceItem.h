@@ -12,7 +12,7 @@ class NodeRunFunctionSequenceItem : public QObject {
 public:
 	friend class NodeRunSequenceWidget;
 	friend class NodeRunSequenceItemWidget;
-	friend class NodeRunFunctionSequenceItemRnderWidget;
+	friend class NodeRunSequenceItemFunctionWidget;
 	/// @brief 遍历函数
 	using foreachCallBack = std_function< void( std_list< NodeRunFunctionSequenceItem * >::iterator &beg, std_list< NodeRunFunctionSequenceItem * >::iterator &end ) >;
 protected:
@@ -23,7 +23,7 @@ protected:
 	/// @brief 函数定义
 	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
 	/// @brief 该节点的渲染 ui
-	NodeRunFunctionSequenceItemRnderWidget *renderCurrentNodeWidget;
+	NodeRunSequenceItemFunctionWidget *renderCurrentNodeFunctionWidget;
 	/// @brief 子节点的渲染 ui
 	NodeRunSequenceItemWidget *renderSubItemsNodeWidget;
 	/// @brief 顶层渲染容器
@@ -34,7 +34,7 @@ public:
 public:
 	/// @brief 获取渲染该项的渲染窗口
 	/// @return 窗口指针
-	virtual NodeRunFunctionSequenceItemRnderWidget * getRenderCurrentNodeWidget( ) const { return renderCurrentNodeWidget; }
+	virtual NodeRunSequenceItemFunctionWidget * getRenderCurrentNodeWidget( ) const { return renderCurrentNodeFunctionWidget; }
 	/// @brief 获取渲染子项的渲染窗口
 	/// @return 窗口指针
 	virtual NodeRunSequenceItemWidget * getRenderSubItemsNodeWidget( ) const { return renderSubItemsNodeWidget; }

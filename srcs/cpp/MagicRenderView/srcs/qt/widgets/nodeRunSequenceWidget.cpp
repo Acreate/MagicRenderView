@@ -4,7 +4,6 @@
 
 #include <qt/items/nodeRunFunctionSequenceItem.h>
 
-#include "NodeRunFunctionSequenceItemRnderWidget.h"
 
 NodeRunSequenceWidget::NodeRunSequenceWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
 	rootItem = new NodeRunFunctionSequenceItem( this );

@@ -1,12 +1,12 @@
 ﻿#include "./nodeRunFunctionSequenceItem.h"
 
-#include "../widgets/NodeRunFunctionSequenceItemRnderWidget.h"
+#include "../widgets/NodeRunSequenceItemFunctionWidget.h"
 #include "../widgets/NodeRunSequenceItemWidget.h"
 NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, NodeRunFunctionSequenceItem *top_layer_item ) : topLayerItem( top_layer_item ), functionDeclaration( function_declaration ), runMainSequenceWidget( run_sequence_widget ) {
 	if( functionDeclaration )
-		renderCurrentNodeWidget = new NodeRunFunctionSequenceItemRnderWidget( this );
+		renderCurrentNodeFunctionWidget = new NodeRunSequenceItemFunctionWidget( this );
 	else
-		renderCurrentNodeWidget = nullptr;
+		renderCurrentNodeFunctionWidget = nullptr;
 	renderSubItemsNodeWidget = new NodeRunSequenceItemWidget( this );
 }
 NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
@@ -21,13 +21,13 @@ NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 		emit topLayerItem->subItemChange( );
 		topLayerItem = nullptr;
 	}
-	if( renderCurrentNodeWidget )
-		delete renderCurrentNodeWidget;
+	if( renderCurrentNodeFunctionWidget )
+		delete renderCurrentNodeFunctionWidget;
 	for( auto &item : subItems ) {
 		item->topLayerItem = nullptr;
 		delete item;
 	}
-	if( renderCurrentNodeWidget )
+	if( renderCurrentNodeFunctionWidget )
 		delete renderSubItemsNodeWidget;
 	currentItemRemove( this );
 }
