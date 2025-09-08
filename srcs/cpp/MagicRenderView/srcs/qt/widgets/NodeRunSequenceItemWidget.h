@@ -7,6 +7,8 @@ class NodeRunSequenceWidget;
 class NodeRunSequenceItemWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	int minWidth;
+	int minHeight;
 	NodeRunFunctionSequenceItem *nodeRunFunctionSequenceItem;
 public:
 	NodeRunSequenceItemWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item );

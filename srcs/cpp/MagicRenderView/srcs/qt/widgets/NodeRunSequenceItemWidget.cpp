@@ -7,6 +7,16 @@
 
 #include "../items/nodeRunFunctionSequenceItem.h"
 NodeRunSequenceItemWidget::NodeRunSequenceItemWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item ) : QWidget( node_run_function_sequence_item->runMainSequenceWidget ), nodeRunFunctionSequenceItem( node_run_function_sequence_item ) {
+	minWidth = 100;
+	minHeight = 200;
+	int x = node_run_function_sequence_item->runMainSequenceWidget->width( );
+	int height = node_run_function_sequence_item->runMainSequenceWidget->height( );
+	if( x < minWidth )
+		x = minWidth;
+	if( height < minHeight )
+		height = minHeight;
+	nodeRunFunctionSequenceItem->runMainSequenceWidget->setMinimumSize( x, height );
+	setMinimumSize( x, height );
 	connect( node_run_function_sequence_item, &NodeRunFunctionSequenceItem::subItemChange, this, &NodeRunSequenceItemWidget::updateRenderItems );
 }
 void NodeRunSequenceItemWidget::paintEvent( QPaintEvent *event ) {
@@ -33,7 +43,10 @@ void NodeRunSequenceItemWidget::updateRenderItems( ) {
 		if( widgetHeith > height )
 			height = widgetHeith;
 	}
-	if( x < 5 )
-		x = 100;
-	setFixedSize( x, height );
+	if( x < minWidth )
+		x = minWidth;
+	if( height < minHeight )
+		height = minHeight;
+	nodeRunFunctionSequenceItem->runMainSequenceWidget->setMinimumSize( x, height );
+	setMinimumSize( x, height );
 }
