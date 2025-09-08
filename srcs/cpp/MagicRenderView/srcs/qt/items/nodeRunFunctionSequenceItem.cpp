@@ -9,7 +9,6 @@ NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget 
 	else
 		renderCurrentNodeFunctionWidget = nullptr;
 	renderSubItemsNodeWidget = new NodeRunSequenceItemWidget( this );
-	renderSubItemsNodeWidget->setParent( runMainSequenceWidget );
 }
 NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 	if( topLayerItem != nullptr ) {
@@ -86,14 +85,7 @@ bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_i
 	for( ; begin != end; ++begin )
 		if( *begin == this ) {
 			topLayerItem->subItems.insert( begin, insert_item );
-
-			begin = topLayerItem->subItems.begin( );
-			end = topLayerItem->subItems.end( );
-			for( ; begin != end; ++begin )
-				if( *begin == this ) {
-					topLayerItem->subItems.erase( begin );
-					break;
-				}
+			topLayerItem->subItems.erase( begin );
 			insert_item->topLayerItem = topLayerItem;
 			emit topLayerItem->subItemChange( );
 			return true;

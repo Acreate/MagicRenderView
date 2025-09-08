@@ -6,7 +6,7 @@
 #include "nodeRunSequenceWidget.h"
 
 #include "../items/nodeRunFunctionSequenceItem.h"
-NodeRunSequenceItemWidget::NodeRunSequenceItemWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item ) : nodeRunFunctionSequenceItem( node_run_function_sequence_item ) {
+NodeRunSequenceItemWidget::NodeRunSequenceItemWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item ) : QWidget( node_run_function_sequence_item->runMainSequenceWidget ), nodeRunFunctionSequenceItem( node_run_function_sequence_item ) {
 	connect( node_run_function_sequence_item, &NodeRunFunctionSequenceItem::subItemChange, this, &NodeRunSequenceItemWidget::updateRenderItems );
 }
 void NodeRunSequenceItemWidget::paintEvent( QPaintEvent *event ) {

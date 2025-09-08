@@ -4,9 +4,6 @@
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
-	
-
-	
 	if( app.getStackManagement( ) == nullptr ) {
 		tools::debug::printError( "无法初始化堆栈 : app.getStackManagement( ) == nullptr" );
 		return -1;
