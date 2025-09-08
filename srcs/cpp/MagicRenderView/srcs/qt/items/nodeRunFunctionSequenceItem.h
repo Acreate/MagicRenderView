@@ -7,28 +7,40 @@
 
 class NodeScriptsWidget;
 class IFunctionDeclaration;
-class NodeRunSequenceWidget;
-class NodeRunFunctionSequenceItemRnderWidget;
 class NodeRunFunctionSequenceItem : public QObject {
 	Q_OBJECT;
 public:
 	friend class NodeRunSequenceWidget;
+	friend class NodeRunSequenceItemWidget;
+	friend class NodeRunFunctionSequenceItemRnderWidget;
 	/// @brief 遍历函数
 	using foreachCallBack = std_function< void( std_list< NodeRunFunctionSequenceItem * >::iterator &beg, std_list< NodeRunFunctionSequenceItem * >::iterator &end ) >;
 protected:
+	/// @brief 子级项
 	std_list< NodeRunFunctionSequenceItem * > subItems;
+	/// @brief 上级项
 	NodeRunFunctionSequenceItem *topLayerItem;
-	NodeRunFunctionSequenceItemRnderWidget *renderWidget;
-	NodeRunSequenceWidget *runSequenceWidget;
+	/// @brief 函数定义
+	std_shared_ptr< IFunctionDeclaration > functionDeclaration;
+	/// @brief 该节点的渲染 ui
+	NodeRunFunctionSequenceItemRnderWidget *renderCurrentNodeWidget;
+	/// @brief 子节点的渲染 ui
+	NodeRunSequenceItemWidget *renderSubItemsNodeWidget;
+	/// @brief 顶层渲染容器
+	NodeRunSequenceWidget *runMainSequenceWidget;
 public:
-	NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, NodeRunFunctionSequenceItem *top_layer_item = nullptr );
+	NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration = nullptr, NodeRunFunctionSequenceItem *top_layer_item = nullptr );
 	~NodeRunFunctionSequenceItem( ) override;
 public:
-	/// @brief 获取渲染窗口
-	/// @return 队列窗口 ui 窗口
-	virtual NodeRunFunctionSequenceItemRnderWidget * getRenderWidget( ) const {
-		return renderWidget;
-	}
+	/// @brief 获取渲染该项的渲染窗口
+	/// @return 窗口指针
+	virtual NodeRunFunctionSequenceItemRnderWidget * getRenderCurrentNodeWidget( ) const { return renderCurrentNodeWidget; }
+	/// @brief 获取渲染子项的渲染窗口
+	/// @return 窗口指针
+	virtual NodeRunSequenceItemWidget * getRenderSubItemsNodeWidget( ) const { return renderSubItemsNodeWidget; }
+	/// @brief 获取顶级渲染窗口
+	/// @return 窗口指针
+	virtual NodeRunSequenceWidget * getMainRunSequenceWidget( ) const { return runMainSequenceWidget; }
 public:
 	/// @brief 在该节点之前插入一个节点
 	/// @param insert_item 插入的节点
@@ -63,16 +75,9 @@ public:
 			return topLayerItem->foreachSubLayerBeg( foreach_call_brack );
 		return false;
 	}
-	
-	/// @brief 在指定位置配置节点窗口
-	/// @param generater_scripts_widget 调用窗口
-	/// @param function_declaration 绘制目标
-	/// @param glob_point 全局位置
-	/// @param set_point 绘制位置
-	/// @return 绘制生成的节点窗口
-	virtual NodeRunFunctionSequenceItem * setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point );
 Q_SIGNALS:
-	void itemChange( );
+	void subItemChange( );
+	void currentItemRemove( NodeRunFunctionSequenceItem *remove_item_ptr );
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEM_H_H_HEAD__FILE__

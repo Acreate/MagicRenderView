@@ -1,8 +1,13 @@
 ﻿#include "./nodeRunFunctionSequenceItem.h"
 
 #include "../widgets/NodeRunFunctionSequenceItemRnderWidget.h"
-#include "../widgets/nodeRunSequenceWidget.h"
-NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, NodeRunFunctionSequenceItem *top_layer_item ) : runSequenceWidget( run_sequence_widget ), topLayerItem( top_layer_item ) {
+#include "../widgets/NodeRunSequenceItemWidget.h"
+NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget *run_sequence_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, NodeRunFunctionSequenceItem *top_layer_item ) : topLayerItem( top_layer_item ), functionDeclaration( function_declaration ), runMainSequenceWidget( run_sequence_widget ) {
+	if( functionDeclaration )
+		renderCurrentNodeWidget = new NodeRunFunctionSequenceItemRnderWidget( this );
+	else
+		renderCurrentNodeWidget = nullptr;
+	renderSubItemsNodeWidget = new NodeRunSequenceItemWidget( this );
 }
 NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 	if( topLayerItem != nullptr ) {
@@ -13,13 +18,18 @@ NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 				topLayerItem->subItems.erase( begin );
 				break;
 			}
-		emit topLayerItem->itemChange( );
+		emit topLayerItem->subItemChange( );
 		topLayerItem = nullptr;
 	}
+	if( renderCurrentNodeWidget )
+		delete renderCurrentNodeWidget;
 	for( auto &item : subItems ) {
 		item->topLayerItem = nullptr;
 		delete item;
 	}
+	if( renderCurrentNodeWidget )
+		delete renderSubItemsNodeWidget;
+	currentItemRemove( this );
 }
 bool NodeRunFunctionSequenceItem::insertBefore( NodeRunFunctionSequenceItem *insert_item ) {
 	if( topLayerItem == nullptr )
@@ -32,7 +42,7 @@ bool NodeRunFunctionSequenceItem::insertBefore( NodeRunFunctionSequenceItem *ins
 				topLayerItem->subItems.insert( ++begin, insert_item );
 			else
 				topLayerItem->subItems.insert( begin, insert_item );
-			emit topLayerItem->itemChange( );
+			emit topLayerItem->subItemChange( );
 			return true;
 		}
 	return false;
@@ -46,7 +56,7 @@ bool NodeRunFunctionSequenceItem::insertAfter( NodeRunFunctionSequenceItem *inse
 	for( ; begin != end; ++begin )
 		if( *begin == this ) {
 			topLayerItem->subItems.insert( ++begin, insert_item );
-			emit topLayerItem->itemChange( );
+			emit topLayerItem->subItemChange( );
 			return true;
 		}
 	return false;
@@ -55,14 +65,14 @@ bool NodeRunFunctionSequenceItem::insertFirst( NodeRunFunctionSequenceItem *inse
 	if( topLayerItem == nullptr )
 		return false;
 	topLayerItem->subItems.emplace_front( insert_item );
-	emit topLayerItem->itemChange( );
+	emit topLayerItem->subItemChange( );
 	return true;
 }
 bool NodeRunFunctionSequenceItem::insertEnd( NodeRunFunctionSequenceItem *insert_item ) {
 	if( topLayerItem == nullptr )
 		return false;
 	topLayerItem->subItems.emplace_back( insert_item );
-	emit topLayerItem->itemChange( );
+	emit topLayerItem->subItemChange( );
 	return true;
 }
 bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_item ) {
@@ -81,7 +91,7 @@ bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_i
 					topLayerItem->subItems.erase( begin );
 					break;
 				}
-			emit topLayerItem->itemChange( );
+			emit topLayerItem->subItemChange( );
 			return true;
 		}
 	return false;
@@ -92,23 +102,4 @@ bool NodeRunFunctionSequenceItem::foreachSubLayerBeg( const foreachCallBack &for
 	foreach_call_brack( iterator, end );
 	return true;
 
-}
-NodeRunFunctionSequenceItem * NodeRunFunctionSequenceItem::setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point ) {
-	if( renderWidget->isHidden( ) )
-		return nullptr;
-	auto mapFromGlobal = renderWidget->mapFromGlobal( glob_point );
-	QRect contentsRect = renderWidget->contentsRect( );
-	NodeRunFunctionSequenceItem *functionSequenceItem = nullptr;
-	for( auto &item : subItems ) {
-		functionSequenceItem = item->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
-		if( functionSequenceItem )
-			return functionSequenceItem;
-	}
-	if( contentsRect.contains( mapFromGlobal ) ) {
-		functionSequenceItem = renderWidget->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, mapFromGlobal );
-		if( functionSequenceItem )
-			return functionSequenceItem;
-	}
-
-	return functionSequenceItem;
 }

@@ -25,9 +25,7 @@ void NodeRunSequenceWidget::showEvent( QShowEvent *event ) {
 }
 NodeRunFunctionSequenceItem * NodeRunSequenceWidget::setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point ) {
 
-	auto nodeRunFunctionSequenceItem = rootItem->setRunFunctionWidget( generater_scripts_widget, function_declaration, glob_point, set_point );
-
-	return nodeRunFunctionSequenceItem;
+	return nullptr;
 }
 NodeRunSequenceWidget::~NodeRunSequenceWidget( ) {
 
