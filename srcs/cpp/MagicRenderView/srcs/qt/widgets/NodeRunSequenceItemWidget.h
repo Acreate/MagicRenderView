@@ -15,7 +15,11 @@ public:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
-	virtual void updateRenderItems();
+	virtual void updateRenderItems( );
+	virtual int getMinWidth( ) const { return minWidth; }
+	virtual int getMinHeight( ) const { return minHeight; }
+Q_SIGNALS:
+	void sequenceItemUpdate( NodeRunSequenceItemWidget *send_widget_ptr );
 };
 
 #endif // NODERUNSEQUENCEITEMWIDGET_H_H_HEAD__FILE__
