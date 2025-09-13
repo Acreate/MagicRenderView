@@ -37,6 +37,11 @@ void NodeRunSequenceWidget::itemThisWidgetCurrentItemDoubleClick( NodeRunSequenc
 	// todo 改变项显示子项目的能力
 	qDebug( ) << tools::debug::getFunctionName( ) << widget->isHidden( );
 }
+void NodeRunSequenceWidget::itemChange( NodeRunFunctionSequenceItem *item ) {
+	// todo 改变项显示子项目的能力
+	size_t count = item->subItems.size( );
+	qDebug( ) << tools::debug::getFunctionName( ) << " " << count;
+}
 NodeRunSequenceWidget::~NodeRunSequenceWidget( ) {
 
 	delete rootItem;

@@ -84,7 +84,7 @@ public:
 	/// @return 绘制生成的节点窗口
 	virtual NodeRunFunctionSequenceItem * insertNodeRender( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point );
 Q_SIGNALS:
-	void subItemChange( );
+	void subItemChange( NodeRunFunctionSequenceItem *item );
 	void currentItemRemove( NodeRunFunctionSequenceItem *remove_item_ptr );
 	void showSubItemWidget( NodeRunSequenceItemWidget *event_widget, bool is_show, NodeRunFunctionSequenceItem *item );
 	void showCurrentItemWidget( NodeRunSequenceItemFunctionWidget *event_widget, bool is_show, NodeRunFunctionSequenceItem *item );

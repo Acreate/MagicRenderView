@@ -9,6 +9,7 @@ NodeRunFunctionSequenceItem::NodeRunFunctionSequenceItem( NodeRunSequenceWidget 
 	else
 		renderCurrentNodeFunctionWidget = nullptr;
 	renderSubItemsNodeWidget = new NodeRunSequenceItemWidget( this );
+	connect( this, &NodeRunFunctionSequenceItem::subItemChange, run_sequence_widget, &NodeRunSequenceWidget::itemChange );
 }
 NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 	if( topLayerItem != nullptr ) {
@@ -19,7 +20,7 @@ NodeRunFunctionSequenceItem::~NodeRunFunctionSequenceItem( ) {
 				topLayerItem->subItems.erase( begin );
 				break;
 			}
-		emit topLayerItem->subItemChange( );
+		emit topLayerItem->subItemChange( topLayerItem );
 		topLayerItem = nullptr;
 	}
 	if( renderCurrentNodeFunctionWidget )
@@ -41,7 +42,7 @@ bool NodeRunFunctionSequenceItem::insertBefore( NodeRunFunctionSequenceItem *ins
 		if( *begin == this ) {
 			topLayerItem->subItems.insert( begin, insert_item );
 			insert_item->topLayerItem = topLayerItem;
-			emit topLayerItem->subItemChange( );
+			emit topLayerItem->subItemChange( topLayerItem );
 			return true;
 		}
 	return false;
@@ -56,7 +57,7 @@ bool NodeRunFunctionSequenceItem::insertAfter( NodeRunFunctionSequenceItem *inse
 		if( *begin == this ) {
 			topLayerItem->subItems.insert( ++begin, insert_item );
 			insert_item->topLayerItem = topLayerItem;
-			emit topLayerItem->subItemChange( );
+			emit topLayerItem->subItemChange( topLayerItem );
 			return true;
 		}
 	return false;
@@ -66,7 +67,7 @@ bool NodeRunFunctionSequenceItem::insertFirst( NodeRunFunctionSequenceItem *inse
 		return false;
 	topLayerItem->subItems.emplace_front( insert_item );
 	insert_item->topLayerItem = topLayerItem;
-	emit topLayerItem->subItemChange( );
+	emit topLayerItem->subItemChange( topLayerItem );
 	return true;
 }
 bool NodeRunFunctionSequenceItem::insertEnd( NodeRunFunctionSequenceItem *insert_item ) {
@@ -74,7 +75,7 @@ bool NodeRunFunctionSequenceItem::insertEnd( NodeRunFunctionSequenceItem *insert
 		return false;
 	topLayerItem->subItems.emplace_back( insert_item );
 	insert_item->topLayerItem = topLayerItem;
-	emit topLayerItem->subItemChange( );
+	emit topLayerItem->subItemChange( topLayerItem );
 	return true;
 }
 bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_item ) {
@@ -87,7 +88,7 @@ bool NodeRunFunctionSequenceItem::replace( NodeRunFunctionSequenceItem *insert_i
 			topLayerItem->subItems.insert( begin, insert_item );
 			topLayerItem->subItems.erase( begin );
 			insert_item->topLayerItem = topLayerItem;
-			emit topLayerItem->subItemChange( );
+			emit topLayerItem->subItemChange( topLayerItem );
 			return true;
 		}
 	return false;
@@ -114,7 +115,7 @@ NodeRunFunctionSequenceItem * NodeRunFunctionSequenceItem::insertNodeRender( Nod
 			if( ( *begin )->renderCurrentNodeFunctionWidget->x( ) >= mapFromGlobalX )
 				break;
 		subItems.insert( begin, newItem );
-		emit subItemChange( );
+		emit subItemChange( this );
 		return newItem;
 	}
 

@@ -33,6 +33,7 @@ public:
 	virtual void itemSubWidgetShowEvent( NodeRunSequenceItemWidget *widget, bool is_show, NodeRunFunctionSequenceItem *item );
 	virtual void itemThisWidgetShowEvent( NodeRunSequenceItemFunctionWidget *widget, bool is_show, NodeRunFunctionSequenceItem *item );
 	virtual void itemThisWidgetCurrentItemDoubleClick( NodeRunSequenceItemFunctionWidget *widget, NodeRunFunctionSequenceItem *item );
+	virtual void itemChange( NodeRunFunctionSequenceItem *item );
 };
 
 #endif // NODERUNSEQUENCEWIDGET_H_H_HEAD__FILE__
