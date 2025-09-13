@@ -13,6 +13,10 @@ class NodeScriptsWidget;
 class NodeRunSequenceWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	/// @brief 窗口缝隙
+	int space;
+	/// @brief 上下缝隙
+	int top;
 	/// @brief 顶级选项
 	NodeRunFunctionSequenceItem *rootItem;
 public:
