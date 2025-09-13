@@ -3,7 +3,9 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QScrollArea>
 
+class ItemWidget;
 class Application;
 class MainWidget;
 class MainWindow : public QMainWindow {
@@ -16,7 +18,9 @@ protected:
 	QMenuBar *mainMenuBar;
 	/// @brief 主要菜单
 	QMenu *mainMenu;
-	/// @brief 主要
+	/// @brief 主要滚动视窗
+	QScrollArea *mainScrollArea;
+	/// @brief 主要操作视窗
 	MainWidget *mainWidget;
 	/// @brief 记录窗口最大化，最小化，全屏之前的坐标位置
 	QPoint oldPos, buffPos;
@@ -31,6 +35,8 @@ protected:
 	void changeEvent( QEvent * ) override;
 	bool event( QEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
+public:
+	virtual void createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect );;
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

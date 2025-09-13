@@ -5,18 +5,7 @@
 #include <QApplication>
 #include <alias/type_alias.h>
 
-#include "../stacks/varStack/IVarStack.h"
-
-class IFunctionDeclaration;
-class NodeScriptsWidget;
-class DragInfoWindow;
 class QLabel;
-class NodeFuncPreviewImageWidget;
-class StackManagement;
-class NodeListWidget;
-class IVarStack;
-class MainWidget;
-class IFunStack;
 class QSettings;
 class QBoxLayout;
 
@@ -65,12 +54,6 @@ public:
 	static QString normalKeyAppendWidgetName( const QString &key, QWidget *widget );
 protected:
 	QSettings *settings;
-	MainWidget *mainWidget;
-	NodeListWidget *nodeListWidget;
-	NodeScriptsWidget *nodeScriptsWidget;
-	NodeFuncPreviewImageWidget *dragFunctionPreviewWidget;
-	StackManagement *stackManagement;
-	DragInfoWindow *drawShowImageInfoWidget;
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 	QString writeSettingPath;
@@ -79,23 +62,12 @@ public:
 	~Application( ) override;
 public:
 	virtual const QString & getWriteSettingPath( ) const { return writeSettingPath; }
-	virtual StackManagement * getStackManagement( ) const;
 	virtual void setAppIniValue( const QAnyStringView &key, const QVariant &value );
 	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
-	virtual MainWidget * getMainWidget( ) const;
-	virtual void setMainWidget( MainWidget *const main_widget );
-	virtual NodeListWidget * getNodeListWidget( ) const;
-	virtual void setNodeListWidget( NodeListWidget *const node_list_widget );
-	virtual NodeScriptsWidget * getNodeScriptsWidget( ) const;
-	virtual void setNodeScriptsWidget( NodeScriptsWidget *const node_scripts_widget );
-	virtual NodeFuncPreviewImageWidget * getDragFunctionPreviewWidget( ) const;
-	virtual void setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget );
 protected:
 	bool notify( QObject *, QEvent * ) override;
-Q_SIGNALS:
-	void dragEventEnd( Application *event_obj, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glbal_point );
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__

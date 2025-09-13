@@ -10,19 +10,9 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include <qt/stacks/stackManagement.h>
-
 #include <qt/widgets/mainWidget.h>
-#include <qt/widgets/nodeScriptsWidget.h>
-#include <qt/widgets/nodeListWidget.h>
-#include <qt/widgets/nodeFuncPreviewImageWidget.h>
-
-#include <qt/windows/dragInfoWindow.h>
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
-	mainWidget = nullptr;
-	nodeListWidget = nullptr;
-	nodeScriptsWidget = nullptr;
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
 	QString fileName = writeSettingPath + displayName + "/" + displayName + ".ini";
@@ -40,22 +30,11 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	}
 	stdMutex_p.reset( new std_mutex );
 	stdMutexWidgetSelectLock.reset( new std_mutex );
-	stackManagement = new StackManagement;
-	drawShowImageInfoWidget = new DragInfoWindow( );
-	drawShowImageInfoWidget->setFixedSize( 100, 200 );
-	dragFunctionPreviewWidget = nullptr;
 }
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
-	delete stackManagement;
 }
-StackManagement * Application::getStackManagement( ) const {
-	if( stackManagement == nullptr || stackManagement->init( ) != 0 )
-		return nullptr;
-	return stackManagement;
-}
-
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {
 	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	settings->setValue( key, value );
@@ -71,43 +50,6 @@ QVariant Application::getAppIniValue( const QAnyStringView &key ) const {
 void Application::syncAppValueIniFile( ) const {
 	std_lock_grad_mutex lock( *stdMutex_p.get( ) );
 	settings->sync( );
-}
-MainWidget * Application::getMainWidget( ) const {
-
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	return mainWidget;
-}
-void Application::setMainWidget( MainWidget *const main_widget ) {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	mainWidget = main_widget;
-}
-NodeListWidget * Application::getNodeListWidget( ) const {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	return nodeListWidget;
-}
-void Application::setNodeListWidget( NodeListWidget *const node_list_widget ) {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	nodeListWidget = node_list_widget;
-}
-NodeScriptsWidget * Application::getNodeScriptsWidget( ) const {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	return nodeScriptsWidget;
-}
-void Application::setNodeScriptsWidget( NodeScriptsWidget *const node_scripts_widget ) {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	nodeScriptsWidget = node_scripts_widget;
-}
-NodeFuncPreviewImageWidget * Application::getDragFunctionPreviewWidget( ) const {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	return dragFunctionPreviewWidget;
-}
-void Application::setDragFunctionPreviewWidget( NodeFuncPreviewImageWidget *const drag_function_preview_widget ) {
-	std_lock_grad_mutex lock( *stdMutexWidgetSelectLock.get( ) );
-	if( dragFunctionPreviewWidget == drag_function_preview_widget )
-		return;
-	dragFunctionPreviewWidget = drag_function_preview_widget;
-	drawShowImageInfoWidget->setDragFunctionPreviewWidget( drag_function_preview_widget );
-
 }
 
 std_vector< QWidget * > Application::getLayoutWidgets( QBoxLayout *main_widget ) {
@@ -194,48 +136,5 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 	return normalKeyAppendEnd( key, widget, appendStr );
 }
 bool Application::notify( QObject *object, QEvent *event ) {
-	auto glbalPos = QCursor::pos( );
-
-	auto type = event->type( );
-	std::mutex *mutexPtr;
-	NodeFuncPreviewImageWidget *drawWidget;
-	switch( type ) {
-		case QEvent::MouseButtonPress :
-			break;
-		case QEvent::MouseMove :
-			if( drawShowImageInfoWidget && drawShowImageInfoWidget->isIsShowInfo( ) )
-				drawShowImageInfoWidget->move( glbalPos );
-			if( nodeListWidget != nullptr && nodeListWidget->mouseToPoint( nodeListWidget->mapFromGlobal( glbalPos ) ) ) {
-				mainWidget->setHCursorShape( );
-				break;
-			} else if( nodeScriptsWidget != nullptr && nodeScriptsWidget->mouseToPoint( nodeScriptsWidget->mapFromGlobal( glbalPos ) ) ) {
-				mainWidget->setHCursorShape( );
-				break;
-			}
-			if( mainWidget != nullptr && mainWidget->mouseToPoint( mainWidget->mapFromGlobal( glbalPos ) ) ) {
-				mainWidget->setVCursorShape( );
-				break;
-			}
-			mainWidget->setNormalCursorShape( );
-			break;
-		case QEvent::MouseButtonRelease :
-
-			if( dragFunctionPreviewWidget == nullptr )
-				break;
-			mutexPtr = stdMutexWidgetSelectLock.get( );
-			mutexPtr->lock( );
-			drawWidget = dragFunctionPreviewWidget;
-			dragFunctionPreviewWidget = nullptr;
-			drawShowImageInfoWidget->hide( );
-			mutexPtr->unlock( );
-			dragEventEnd( this, drawWidget->getFunctionDeclaration( ), glbalPos );
-			break;
-		case QEvent::Quit :
-			if( drawShowImageInfoWidget == nullptr )
-				break;
-			delete drawShowImageInfoWidget;
-			drawShowImageInfoWidget = nullptr;
-			break;
-	}
 	return QApplication::notify( object, event );
 }

@@ -3,6 +3,7 @@
 #include <qguiapplication.h>
 #include <QMenuBar>
 #include <QProcess>
+#include <QScrollBar>
 #include <QFileDialog>
 #include <QMouseEvent>
 #include <QPushButton>
@@ -12,6 +13,8 @@
 #include <qt/application/application.h>
 
 #include <qt/widgets/mainWidget.h>
+
+#include "../widgets/itemWidget.h"
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -50,9 +53,13 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
 	move( point );
 	oldPos = buffPos = point;
-	mainWidget = new MainWidget( this );
-	setCentralWidget( mainWidget );
-	appInstance->setMainWidget( mainWidget );
+
+	mainScrollArea = new QScrollArea( this );
+	mainWidget = new MainWidget( mainScrollArea );
+	mainScrollArea->setWidget( mainWidget );
+	mainScrollArea->setWidgetResizable( true );
+	setCentralWidget( mainScrollArea );
+	connect( mainWidget, &MainWidget::s_signals_createNewItemWidget, this, &MainWindow::createNewItemWidget );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
@@ -70,7 +77,6 @@ void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );
-
 }
 void MainWindow::changeEvent( QEvent *event ) {
 	QMainWindow::changeEvent( event );
@@ -106,4 +112,8 @@ bool MainWindow::event( QEvent *event ) {
 }
 void MainWindow::mouseMoveEvent( QMouseEvent *event ) {
 	QMainWindow::mouseMoveEvent( event );
+}
+void MainWindow::createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect ) {
+	QPoint point = contents_rect.bottomRight( );
+	mainScrollArea->ensureVisible( point.x( ), point.y( ) );
 }

@@ -3,186 +3,91 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <qboxlayout.h>
+#include <qmenu.h>
 
 #include <qt/application/application.h>
 
-#include "nodeListScrollAreasWidget.h"
-#include "nodeRenderScrollAreasWidget.h"
-#include "nodeScriptsScrollAreasWidget.h"
+#include "itemWidget.h"
+
+#include "../tools/tools.h"
 
 MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
-	nCursor = QCursor( Qt::ArrowCursor );
-	vCursor = QCursor( Qt::SizeVerCursor );
-	hCursor = QCursor( Qt::SizeHorCursor );
 	appInstance = Application::getApplicationInstancePtr( );
-
-	nodeListWidget = new NodeListScrollAreasWidget( this );
-	nodeRenderWidget = new NodeRenderScrollAreasWidget( this );
-	nodeScriptsWidget = new NodeScriptsScrollAreasWidget( this );
 
 	keyFirst = "Application/MainWindow/MainWidget";
 
-	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), true ).toBool( ) )
-		nodeScriptsWidget->show( );
-	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "show" ), true ).toBool( ) )
-		nodeRenderWidget->show( );
-	if( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "show" ), true ).toBool( ) )
-		nodeListWidget->show( );
-
 	appInstance->syncAppValueIniFile( );
 
-	quint64 nodeScriptsHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "height" ), 50 ).toULongLong( );
-	nodeScriptsWidget->setFixedHeight( nodeScriptsHeight );
-	quint64 nodeListHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "height" ), 50 ).toULongLong( );
-	nodeListWidget->setFixedHeight( nodeListHeight );
-
-	quint64 nodeRenderWidgetHeight = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "height" ), 100 ).toULongLong( );
-	nodeRenderWidget->setFixedHeight( nodeRenderWidgetHeight );
-
-	dragWidgetSize = nullptr;
-	mouseIsPress = false;
-	appInstance->setNodeListWidget( nodeListWidget->getNodeListWidget( ) );
+	rightMouseBtnMenu = new QMenu( this );
+	auto addAction = rightMouseBtnMenu->addAction( "天才" );
+	connect( addAction, &QAction::triggered, this, &MainWidget::createNewItemWidget );
 }
 MainWidget::~MainWidget( ) {
-	writeShowIni( );
-	writeHeightIni( );
 	appInstance->syncAppValueIniFile( );
+	std_vector< ItemWidget * > buff( itemWidgets.begin( ), itemWidgets.end( ) );
+	itemWidgets.clear( );
+	size_t count = buff.size( );
+	auto data = buff.data( );
+	for( size_t index = 0; index < count; ++index )
+		delete data[ index ];
+
 }
-QWidget * MainWidget::mouseToPoint( const QPoint &point ) {
-	int y = point.y( );
-	int x = point.x( );
-	if( x < 0 || y < 0 || height( ) < y || width( ) < x )
-		return nullptr;
-	if( mouseIsPress == false ) {
-		auto nodeListWidgetPosY = nodeListWidget->pos( ).y( );
-		if( abs( y - nodeListWidgetPosY ) < 5 )
-			dragWidgetSize = nodeListWidget;
-		else {
-			nodeListWidgetPosY = nodeScriptsWidget->pos( ).y( );
-			if( abs( y - nodeListWidgetPosY ) < 5 )
-				dragWidgetSize = nodeScriptsWidget;
-			else
-				dragWidgetSize = nullptr;
-		}
-	} else if( dragWidgetSize != nullptr ) {
-		if( dragWidgetSize == nodeListWidget ) {
-			if( y >= 50 ) {
-				nodeListWidget->move( 0, y ); // 移动到新位置
-				nodeRenderWidget->setFixedHeight( y );
-				auto newHeight = height( ) - y - nodeScriptsWidget->height( );
-				nodeListWidget->setFixedHeight( newHeight );
+void MainWidget::clickItemWidget( ItemWidget *click_item_widget ) {
+	emit s_signals_clickItemWidget( click_item_widget );
+	qDebug( ) << tools::debug::getFunctionName( );
+}
+void MainWidget::doubleClickItemWidget( ItemWidget *double_click_item_widget ) {
+	emit s_signals_doubleClickItemWidget( double_click_item_widget );
+
+	qDebug( ) << tools::debug::getFunctionName( );
+}
+void MainWidget::createNewItemWidget( bool flage ) {
+	QObject *object = sender( );
+	auto action = qobject_cast< QAction * >( object );
+	if( action == nullptr )
+		return;
+	auto widget = new ItemWidget( this );
+	widget->setFixedSize( 100, 100 );
+	auto mapFromGlobal = this->mapFromGlobal( rightPos );
+	widget->move( mapFromGlobal );
+	widget->show( );
+	QRect geometry = widget->geometry( );
+	geometry.setHeight( geometry.height( ) + 10 );
+	geometry.setWidth( geometry.width( ) + 10 );
+	auto united = geometry.united( contentsRect( ) );
+	auto newSize = united.size( );
+	if( newSize != this->size( ) )
+		setMinimumSize( newSize );
+	// 存储窗口
+	itemWidgets.emplace_back( widget );
+	connect( widget, &ItemWidget::s_signals_deleteItemWidget, [this] ( ItemWidget *delete_obj_ptr ) {
+		auto iterator = itemWidgets.begin( );
+		auto end = itemWidgets.end( );
+		for( ; iterator != end; ++iterator )
+			if( *iterator == delete_obj_ptr ) {
+				itemWidgets.erase( iterator );
+				return;
 			}
+	} );
+	connect( widget, &ItemWidget::s_signals_clickItemWidget, this, &MainWidget::clickItemWidget );
+	connect( widget, &ItemWidget::s_signals_doubleClickItemWidget, this, &MainWidget::doubleClickItemWidget );
 
-		} else if( dragWidgetSize == nodeScriptsWidget ) {
-			if( y >= ( nodeListWidget->pos( ).y( ) + 50 ) ) {
-				nodeScriptsWidget->move( 0, y ); // 移动到新位置
-				auto newHeight = y - nodeRenderWidget->height( );
-				nodeListWidget->setFixedHeight( newHeight );
-				newHeight = height( ) - y;
-				nodeScriptsWidget->setFixedHeight( newHeight );
-			}
-		}
-	}
-	return dragWidgetSize;
+	emit s_signals_createNewItemWidget( widget, geometry, united );
 }
-QCursor MainWidget::setNormalCursorShape( ) {
-	QCursor *cursor = &nCursor;
-	if( cursor != currentCursor ) {
-		setCursor( *cursor );
-		currentCursor = cursor;
-	}
-	return *cursor;
-}
-QCursor MainWidget::setHCursorShape( ) {
-	QCursor *cursor = &hCursor;
-	if( cursor != currentCursor ) {
-		setCursor( *cursor );
-		currentCursor = cursor;
-	}
-	return *cursor;
-}
-QCursor MainWidget::setVCursorShape( ) {
-	QCursor *cursor = &vCursor;
-	if( cursor != currentCursor ) {
-		setCursor( *cursor );
-		currentCursor = cursor;
-	}
-	return *cursor;
-}
-void MainWidget::resizeEvent( QResizeEvent *event ) {
-	QWidget::resizeEvent( event );
-	updateWidgetListLayout( event->oldSize( ), event->size( ) );
-}
-void MainWidget::updateWidgetListLayout( const QSize &old_size, const QSize &current_size ) {
-
-	int newHeight = current_size.height( );
-
-	int nodeScriptsWidgetHeight = nodeScriptsWidget->height( );
-	int nodeRenderWidgetHeight = nodeRenderWidget->height( );
-	int nodeListWidgetHeight = nodeListWidget->height( );
-	int height = nodeRenderWidgetHeight + nodeScriptsWidgetHeight + nodeListWidgetHeight;
-
-	nodeScriptsWidgetHeight = nodeScriptsWidgetHeight * newHeight / height;
-	nodeListWidgetHeight = nodeListWidgetHeight * newHeight / height;
-
-	height = newHeight - nodeScriptsWidgetHeight - nodeListWidgetHeight;
-	auto width = current_size.width( );
-
-	nodeScriptsWidget->setFixedSize( width, nodeScriptsWidgetHeight );
-	nodeListWidget->setFixedSize( width, nodeListWidgetHeight );
-	nodeRenderWidget->setFixedSize( width, height );
-
-	nodeRenderWidget->move( 0, 0 );
-	height = nodeRenderWidget->height( );
-	nodeListWidget->move( 0, height );
-	height = height + nodeListWidget->height( );
-	nodeScriptsWidget->move( 0, height );
-}
-void MainWidget::writeHeightIni( ) const {
-
-	int nodeScriptsWidgetHeight = nodeScriptsWidget->height( );
-	int nodeRenderWidgetHeight = nodeRenderWidget->height( );
-	int nodeListWidgetHeight = nodeListWidget->height( );
-
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "height" ), nodeScriptsWidgetHeight );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "height" ), nodeRenderWidgetHeight );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "height" ), nodeListWidgetHeight );
-
-}
-void MainWidget::writeShowIni( ) const {
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeScriptsWidget, "show" ), nodeScriptsWidget->isHidden( ) == false );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeRenderWidget, "show" ), nodeRenderWidget->isHidden( ) == false );
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, nodeListWidget, "show" ), nodeListWidget->isHidden( ) == false );
-}
-
 void MainWidget::paintEvent( QPaintEvent *event ) {
-
 	QWidget::paintEvent( event );
-
 	QPainter painter( this );
 	painter.fillRect( contentsRect( ), Qt::darkGreen );
 }
-
-void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
-	QWidget::mouseMoveEvent( event );
-}
-void MainWidget::mousePressEvent( QMouseEvent *event ) {
-	mouseIsPress = true;
-}
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
-	mouseIsPress = false;
-	dragWidgetSize = nullptr;
-	if( cursor( ) != Qt::ArrowCursor ) {
-		setCursor( Qt::ArrowCursor ); // 设置鼠标样式
-		writeHeightIni( );
-		appInstance->syncAppValueIniFile( );
-	}
-}
-bool MainWidget::event( QEvent *event ) {
-	auto type = event->type( );
-	switch( type ) {
-		case QEvent::MouseMove :
+	QWidget::mouseReleaseEvent( event );
+	Qt::MouseButton mouseButton = event->button( );
+
+	rightPos = QCursor::pos( );
+	switch( mouseButton ) {
+		case Qt::RightButton :
+			rightMouseBtnMenu->move( rightPos );
+			rightMouseBtnMenu->show( );
 			break;
 	}
-	return QWidget::event( event );
 }
