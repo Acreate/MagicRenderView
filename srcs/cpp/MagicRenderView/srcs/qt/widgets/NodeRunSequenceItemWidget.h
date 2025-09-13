@@ -6,20 +6,16 @@ class NodeRunFunctionSequenceItem;
 class NodeRunSequenceWidget;
 class NodeRunSequenceItemWidget : public QWidget {
 	Q_OBJECT;
+public:
+	friend class NodeRunSequenceWidget;
 protected:
-	int minWidth;
-	int minHeight;
 	NodeRunFunctionSequenceItem *nodeRunFunctionSequenceItem;
 public:
 	NodeRunSequenceItemWidget( NodeRunFunctionSequenceItem *node_run_function_sequence_item );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-public:
-	virtual void updateRenderItems( );
-	virtual int getMinWidth( ) const { return minWidth; }
-	virtual int getMinHeight( ) const { return minHeight; }
-Q_SIGNALS:
-	void sequenceItemUpdate( NodeRunSequenceItemWidget *send_widget_ptr );
+	void showEvent( QShowEvent *event ) override;
+	void hideEvent( QHideEvent *event ) override;
 };
 
 #endif // NODERUNSEQUENCEITEMWIDGET_H_H_HEAD__FILE__

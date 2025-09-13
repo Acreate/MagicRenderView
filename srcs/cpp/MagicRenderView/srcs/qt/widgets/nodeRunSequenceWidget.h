@@ -5,6 +5,8 @@
 
 #include <alias/type_alias.h>
 
+class NodeRunSequenceItemWidget;
+class NodeRunSequenceItemFunctionWidget;
 class NodeRunFunctionSequenceItem;
 class IFunctionDeclaration;
 class NodeScriptsWidget;
@@ -28,6 +30,9 @@ public:
 	/// @param set_point
 	/// @return 绘制生成的节点窗口
 	virtual NodeRunFunctionSequenceItem * setRunFunctionWidget( NodeScriptsWidget *generater_scripts_widget, const std_shared_ptr< IFunctionDeclaration > &function_declaration, const QPoint &glob_point, const QPoint &set_point );
+	virtual void itemSubWidgetShowEvent( NodeRunSequenceItemWidget *widget, bool is_show, NodeRunFunctionSequenceItem *item );
+	virtual void itemThisWidgetShowEvent( NodeRunSequenceItemFunctionWidget *widget, bool is_show, NodeRunFunctionSequenceItem *item );
+	virtual void itemThisWidgetCurrentItemDoubleClick( NodeRunSequenceItemFunctionWidget *widget, NodeRunFunctionSequenceItem *item );
 };
 
 #endif // NODERUNSEQUENCEWIDGET_H_H_HEAD__FILE__

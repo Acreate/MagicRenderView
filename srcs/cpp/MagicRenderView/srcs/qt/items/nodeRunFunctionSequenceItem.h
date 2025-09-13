@@ -86,6 +86,9 @@ public:
 Q_SIGNALS:
 	void subItemChange( );
 	void currentItemRemove( NodeRunFunctionSequenceItem *remove_item_ptr );
+	void showSubItemWidget( NodeRunSequenceItemWidget *event_widget, bool is_show, NodeRunFunctionSequenceItem *item );
+	void showCurrentItemWidget( NodeRunSequenceItemFunctionWidget *event_widget, bool is_show, NodeRunFunctionSequenceItem *item );
+	void currentItemDoubleClick( NodeRunSequenceItemFunctionWidget *event_widget, NodeRunFunctionSequenceItem *item );
 };
 
 #endif // NODERUNFUNCTIONSEQUENCEITEM_H_H_HEAD__FILE__
