@@ -2,14 +2,21 @@
 
 #include <QPainter>
 #include <QMouseEvent>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <qboxlayout.h>
 #include <qmenu.h>
 
 #include <qt/application/application.h>
 
-#include "../items/nodeItem.h"
+#include "../items/nodeItemWidget.h"
 
-MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( parent, flags ) {
+MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+	scrollArea = scroll_area;
+	scrollArea->setWidgetResizable( true );
+	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 
 	keyFirst = "Application/MainWindow/MainWidget";
@@ -17,17 +24,51 @@ MainWidget::MainWidget( QWidget *parent, Qt::WindowFlags flags ) : QWidget( pare
 	appInstance->syncAppValueIniFile( );
 
 	rightMouseBtnMenu = new QMenu( this );
-	auto addAction = rightMouseBtnMenu->addAction( "天才" );
+
+	auto generateItems = NodeItemWidget::getGenerateItems( );
+	auto topPairPtr = generateItems.data( );
+	size_t count = generateItems.size( );
+	size_t index = 0;
+	QString *subPtr;
+	size_t subCount;
+	size_t subIndex;
+	QAction *action;
+	for( ; index < count; ++index ) {
+		auto subMenu = new QMenu( this );
+		auto &pair = topPairPtr[ index ];
+		auto &dirName = pair.first;
+		subMenu->setTitle( dirName );
+		rightMouseBtnMenu->addMenu( subMenu );
+		subCount = pair.second.size( );
+		subPtr = pair.second.data( );
+		subIndex = 0;
+		for( ; subIndex < subCount; ++subIndex ) {
+			auto &nodeName = subPtr[ subIndex ];
+			action = subMenu->addAction( nodeName );
+			connect( action, &QAction::triggered, [this, dirName, nodeName]( ) {
+				auto itemWidget = NodeItemWidget::generateNode( this, dirName, nodeName );
+				QPoint fromGlobal = mapFromGlobal( rightPos );
+				itemWidget->move( fromGlobal );
+				itemWidget->show( );
+				QRect geometry = itemWidget->geometry( );
+				auto size = geometry.united( contentsRect( ) ).size( );
+				if( this->size( ) != size )
+					this->setMinimumSize( size );
+				QPoint point = geometry.bottomRight( );
+				scrollArea->ensureVisible( point.x( ), point.y( ) );
+				itemWidgets.emplace_back( itemWidget );
+			} );
+		}
+	}
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
-	std_vector< decltype(itemWidgets)::value_type  > buff( itemWidgets.begin( ), itemWidgets.end( ) );
+	std_vector< decltype(itemWidgets)::value_type > buff( itemWidgets.begin( ), itemWidgets.end( ) );
 	itemWidgets.clear( );
 	size_t count = buff.size( );
 	auto data = buff.data( );
 	for( size_t index = 0; index < count; ++index )
 		delete data[ index ];
-
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

@@ -14,8 +14,6 @@
 
 #include <qt/widgets/mainWidget.h>
 
-
-
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
 	mainMenuBar = menuBar( );
@@ -55,9 +53,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	oldPos = buffPos = point;
 
 	mainScrollArea = new QScrollArea( this );
-	mainWidget = new MainWidget( mainScrollArea );
-	mainScrollArea->setWidget( mainWidget );
-	mainScrollArea->setWidgetResizable( true );
+	mainWidget = new MainWidget( mainScrollArea);
 	setCentralWidget( mainScrollArea );
 }
 MainWindow::~MainWindow( ) {
