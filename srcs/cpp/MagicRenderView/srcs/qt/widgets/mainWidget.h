@@ -6,8 +6,9 @@
 
 #include <alias/type_alias.h>
 
-class ProtItemWidget;
 class QScrollArea;
+class ProtOutputItemWidget;
+class ProtInputItemWidget;
 class NodeItemWidget;
 class QVBoxLayout;
 class Application;
@@ -30,8 +31,10 @@ protected:
 	QPoint globalReleasePos;
 	/// @brief 按下时当前窗口位置
 	QPoint fromGlobalReleasePoint;
-	/// @brief 按下时选中接口
-	ProtItemWidget *selectProtItemWidget;
+	/// @brief 按下时选中输入接口
+	ProtInputItemWidget *selectProtInputItemWidget;
+	/// @brief 按下时选中的输出接口
+	ProtOutputItemWidget *selectProtOutputItemWidget;
 	/// @brief 按下时选中节点
 	NodeItemWidget *selectNodeItemWidget;
 	/// @brief 激活的节点

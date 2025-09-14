@@ -6,9 +6,9 @@
 
 #include <alias/type_alias.h>
 
-#include "protItemWidget.h"
 
-class ProtItemWidget;
+class ProtOutputItemWidget;
+class ProtInputItemWidget;
 class MainWidget;
 enum class RunCode :size_t {
 	/// @brief 没有错误
@@ -97,9 +97,9 @@ protected:
 	/// @brief 需求选项
 	std_list< NodeItemWidget * > needNodeItems;
 	/// @brief 输入接口
-	std_vector< ProtItemWidget * > nodeProtInputItems;
+	std_vector< ProtInputItemWidget * > nodeProtInputItems;
 	/// @brief 输出接口
-	std_vector< ProtItemWidget * > nodeProtOutputItems;
+	std_vector< ProtOutputItemWidget * > nodeProtOutputItems;
 	/// @brief 输入接口锁
 	std_shared_ptr< std_mutex > protInputItemWidgetVectorMutex;
 	/// @brief 输出接口锁
@@ -120,11 +120,11 @@ public:
 	/// @brief 利用全局坐标匹配输入接口
 	/// @param globle_point 全局坐标
 	/// @return 返回输入接口
-	virtual ProtItemWidget * getProtInputItemWidget( const QPoint &globle_point ) const;
+	virtual ProtInputItemWidget * getProtInputItemWidget( const QPoint &globle_point ) const;
 	/// @brief 利用全局坐标匹配输出接口
 	/// @param globle_point 全局坐标
 	/// @return 返回输出接口
-	virtual ProtItemWidget * getProtOutputItemWidget( const QPoint &globle_point ) const;
+	virtual ProtOutputItemWidget * getProtOutputItemWidget( const QPoint &globle_point ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

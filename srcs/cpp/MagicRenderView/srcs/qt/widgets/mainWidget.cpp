@@ -61,7 +61,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 		}
 	}
 	selectNodeItemWidget = nullptr;
-	selectProtItemWidget = nullptr;
+	selectProtOutputItemWidget = nullptr;
+	selectProtInputItemWidget = nullptr;
 	activeNodeItemWidget = nullptr;
 }
 MainWidget::~MainWidget( ) {
@@ -84,7 +85,8 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 
 	globalReleasePos = QCursor::pos( );
 	fromGlobalReleasePoint = mapFromGlobal( globalReleasePos );
-	ProtItemWidget *protItemWidget = nullptr;
+	ProtInputItemWidget *protInputItemWidget = nullptr;
+	ProtOutputItemWidget *protOutputItemWidget = nullptr;
 	switch( mouseButton ) {
 		case Qt::RightButton :
 			rightMouseBtnMenu->move( globalReleasePos );
@@ -92,26 +94,36 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			break;
 		case Qt::LeftButton :
 			// 没有找到按下时的接口
-			if( selectProtItemWidget == nullptr || selectNodeItemWidget == nullptr )
+			if( selectNodeItemWidget == nullptr )
 				break;
-			for( auto &nodeItemWidge : itemWidgets )
-				if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
-					activeNodeItemWidget = nodeItemWidge;
-					if( protItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos ), protItemWidget ) {
-						selectProtItemWidget = protItemWidget;
-						selectNodeItemWidget = nodeItemWidge;
+			// 使用输入接口
+			if( selectProtInputItemWidget )
+				for( auto &nodeItemWidge : itemWidgets )
+					if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
+						activeNodeItemWidget = nodeItemWidge;
+						if( protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos ), protOutputItemWidget ) {
+							// todo : 选中输出接口
+						}
+						break;
 					}
-					break;
-				}
-
+			if( selectProtOutputItemWidget )
+				for( auto &nodeItemWidge : itemWidgets )
+					if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
+						activeNodeItemWidget = nodeItemWidge;
+						if( protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalReleasePos ), protInputItemWidget ) {
+							// todo : 选中输入接口
+						}
+						break;
+					}
 			break;
 	}
 	selectNodeItemWidget = nullptr;
-	selectProtItemWidget = nullptr;
+	selectProtOutputItemWidget = nullptr;
+	selectProtInputItemWidget = nullptr;
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( selectProtItemWidget == nullptr || selectNodeItemWidget == nullptr )
+	if( selectNodeItemWidget == nullptr )
 		return;
 
 }
@@ -121,19 +133,24 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 
 	globalPressPos = QCursor::pos( );
 	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
-	ProtItemWidget *protItemWidget = nullptr;
+	ProtInputItemWidget *protInputItemWidget = nullptr;
+	ProtOutputItemWidget *protOutputItemWidget = nullptr;
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			for( auto &nodeItemWidge : itemWidgets )
-				if( protItemWidget = nodeItemWidge->getProtOutputItemWidget( globalPressPos ), protItemWidget ) {
-					selectProtItemWidget = protItemWidget;
+				if( protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalPressPos ), protOutputItemWidget ) {
+					selectProtOutputItemWidget = protOutputItemWidget;
 					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
 					break;
 				}
-			if( protItemWidget == nullptr ) {
-				selectNodeItemWidget = nullptr;
-				selectProtItemWidget = nullptr;
-			}
+			if( protOutputItemWidget == nullptr )
+				break;
+			for( auto &nodeItemWidge : itemWidgets )
+				if( protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalPressPos ), protInputItemWidget ) {
+					selectProtInputItemWidget = protInputItemWidget;
+					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
+					break;
+				}
 			break;
 	}
 }

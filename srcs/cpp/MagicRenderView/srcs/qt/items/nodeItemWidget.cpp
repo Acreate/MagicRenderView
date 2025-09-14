@@ -3,6 +3,9 @@
 #include <QPainter>
 #include <qdir.h>
 #include <qfileinfo.h>
+
+#include "protInputItemWidget.h"
+#include "protOutputItemWidget.h"
 Imp_StaticMetaInfo( NodeItemWidget, QObject::tr( "NodeItemWidget" ) )
 
 std_vector< NodeItemWidget::generateItem > NodeItemWidget::generateItemVector;
@@ -109,7 +112,7 @@ std_vector< NodeItemWidget::generatePathClassInfo > NodeItemWidget::getGenerateI
 NodeItemWidget::NodeItemWidget( QWidget *parent ) : QWidget( parent ), protInputItemWidgetVectorMutex( new std_mutex ), protOutputItemWidgetVectorMutex( new std_mutex ) {
 
 }
-ProtItemWidget * NodeItemWidget::getProtInputItemWidget( const QPoint &globle_point ) const {
+ProtInputItemWidget * NodeItemWidget::getProtInputItemWidget( const QPoint &globle_point ) const {
 	std_lock_grad_mutex lockMutex( *protInputItemWidgetVectorMutex );
 	size_t count = nodeProtInputItems.size( );
 	auto data = nodeProtInputItems.data( );
@@ -118,7 +121,7 @@ ProtItemWidget * NodeItemWidget::getProtInputItemWidget( const QPoint &globle_po
 			return data[ index ];
 	return nullptr;
 }
-ProtItemWidget * NodeItemWidget::getProtOutputItemWidget( const QPoint &globle_point ) const {
+ProtOutputItemWidget * NodeItemWidget::getProtOutputItemWidget( const QPoint &globle_point ) const {
 	std_lock_grad_mutex lockMutex( *protOutputItemWidgetVectorMutex );
 	size_t count = nodeProtOutputItems.size( );
 	auto data = nodeProtOutputItems.data( );
