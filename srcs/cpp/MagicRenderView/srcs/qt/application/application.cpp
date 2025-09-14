@@ -12,6 +12,8 @@
 
 #include <qt/widgets/mainWidget.h>
 
+#include <qt/stack/stack.h>
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
@@ -30,6 +32,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	}
 	stdMutex_p.reset( new std_mutex );
 	stdMutexWidgetSelectLock.reset( new std_mutex );
+	stack = new Stack( );
 }
 Application::~Application( ) {
 	settings->sync( );

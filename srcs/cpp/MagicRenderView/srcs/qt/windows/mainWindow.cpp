@@ -14,7 +14,7 @@
 
 #include <qt/widgets/mainWidget.h>
 
-#include "../widgets/itemWidget.h"
+
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -59,7 +59,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	mainScrollArea->setWidget( mainWidget );
 	mainScrollArea->setWidgetResizable( true );
 	setCentralWidget( mainScrollArea );
-	connect( mainWidget, &MainWidget::s_signals_createNewItemWidget, this, &MainWindow::createNewItemWidget );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );

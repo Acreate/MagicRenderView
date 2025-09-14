@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <alias/type_alias.h>
 
+class Stack;
 class QLabel;
 class QSettings;
 class QBoxLayout;
@@ -57,6 +58,7 @@ protected:
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 	QString writeSettingPath;
+	Stack* stack;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -66,6 +68,8 @@ public:
 	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
+	virtual Stack * getStack( ) const { return stack; }
+	virtual void setStack( Stack * const stack ) { this->stack = stack; }
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };
