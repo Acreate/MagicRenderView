@@ -47,7 +47,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 			action = subMenu->addAction( nodeName );
 			connect( action, &QAction::triggered, [this, dirName, nodeName]( ) {
 				auto itemWidget = NodeItemWidget::generateNode( this, dirName, nodeName );
-				itemWidget->move( fromGlobal );
+				itemWidget->move( fromGlobalPressPoint );
 				itemWidget->show( );
 				QRect geometry = itemWidget->geometry( );
 				auto size = geometry.united( contentsRect( ) ).size( );
@@ -82,19 +82,32 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
 
-	globalPos = QCursor::pos( );
-	fromGlobal = mapFromGlobal( globalPos );
+	globalReleasePos = QCursor::pos( );
+	fromGlobalReleasePoint = mapFromGlobal( globalReleasePos );
+	ProtItemWidget *protItemWidget = nullptr;
 	switch( mouseButton ) {
 		case Qt::RightButton :
-			rightMouseBtnMenu->move( globalPos );
+			rightMouseBtnMenu->move( globalReleasePos );
 			rightMouseBtnMenu->show( );
 			break;
 		case Qt::LeftButton :
 			// 没有找到按下时的接口
 			if( selectProtItemWidget == nullptr || selectNodeItemWidget == nullptr )
 				break;
+			for( auto &nodeItemWidge : itemWidgets )
+				if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
+					activeNodeItemWidget = nodeItemWidge;
+					if( protItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos ), protItemWidget ) {
+						selectProtItemWidget = protItemWidget;
+						selectNodeItemWidget = nodeItemWidge;
+					}
+					break;
+				}
+
 			break;
 	}
+	selectNodeItemWidget = nullptr;
+	selectProtItemWidget = nullptr;
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
@@ -106,13 +119,13 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
 
-	globalPos = QCursor::pos( );
-	fromGlobal = mapFromGlobal( globalPos );
+	globalPressPos = QCursor::pos( );
+	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
 	ProtItemWidget *protItemWidget = nullptr;
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			for( auto &nodeItemWidge : itemWidgets )
-				if( protItemWidget = nodeItemWidge->getProtItemWidget( globalPos ), protItemWidget ) {
+				if( protItemWidget = nodeItemWidge->getProtOutputItemWidget( globalPressPos ), protItemWidget ) {
 					selectProtItemWidget = protItemWidget;
 					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
 					break;

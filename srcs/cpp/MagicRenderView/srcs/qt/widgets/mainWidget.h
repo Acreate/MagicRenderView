@@ -22,10 +22,14 @@ protected:
 	QString keyFirst;
 	/// @brief 鼠标右键菜单
 	QMenu *rightMouseBtnMenu;
-	/// @brief 全局位置
-	QPoint globalPos;
-	/// @brief 当前窗口位置
-	QPoint fromGlobal;
+	/// @brief 按下时全局位置
+	QPoint globalPressPos;
+	/// @brief 按下时当前窗口位置
+	QPoint fromGlobalPressPoint;
+	/// @brief 按下时全局位置
+	QPoint globalReleasePos;
+	/// @brief 按下时当前窗口位置
+	QPoint fromGlobalReleasePoint;
 	/// @brief 按下时选中接口
 	ProtItemWidget *selectProtItemWidget;
 	/// @brief 按下时选中节点

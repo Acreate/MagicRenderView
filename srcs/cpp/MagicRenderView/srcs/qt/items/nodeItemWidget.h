@@ -96,8 +96,14 @@ protected:
 	RunCode runCode;
 	/// @brief 需求选项
 	std_list< NodeItemWidget * > needNodeItems;
-	std_vector< ProtItemWidget * > nodeProtItems;
-	std_shared_ptr< std_mutex > protItemWidgetVectorMutex;
+	/// @brief 输入接口
+	std_vector< ProtItemWidget * > nodeProtInputItems;
+	/// @brief 输出接口
+	std_vector< ProtItemWidget * > nodeProtOutputItems;
+	/// @brief 输入接口锁
+	std_shared_ptr< std_mutex > protInputItemWidgetVectorMutex;
+	/// @brief 输出接口锁
+	std_shared_ptr< std_mutex > protOutputItemWidgetVectorMutex;
 protected:
 	NodeItemWidget( QWidget *parent );
 public:
@@ -111,10 +117,14 @@ public:
 	virtual const std_list< NodeItemWidget * > & getNeedNodeItems( ) const {
 		return needNodeItems;
 	}
-	/// @brief 利用全局坐标匹配接口
+	/// @brief 利用全局坐标匹配输入接口
 	/// @param globle_point 全局坐标
-	/// @return 返回接口
-	virtual ProtItemWidget * getProtItemWidget( const QPoint &globle_point ) const;
+	/// @return 返回输入接口
+	virtual ProtItemWidget * getProtInputItemWidget( const QPoint &globle_point ) const;
+	/// @brief 利用全局坐标匹配输出接口
+	/// @param globle_point 全局坐标
+	/// @return 返回输出接口
+	virtual ProtItemWidget * getProtOutputItemWidget( const QPoint &globle_point ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 };

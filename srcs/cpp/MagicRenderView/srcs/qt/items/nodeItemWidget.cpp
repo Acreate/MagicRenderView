@@ -106,13 +106,22 @@ std_vector< NodeItemWidget::generatePathClassInfo > NodeItemWidget::getGenerateI
 	}
 	return result;
 }
-NodeItemWidget::NodeItemWidget( QWidget *parent ) : QWidget( parent ), protItemWidgetVectorMutex( new std_mutex ) {
+NodeItemWidget::NodeItemWidget( QWidget *parent ) : QWidget( parent ), protInputItemWidgetVectorMutex( new std_mutex ), protOutputItemWidgetVectorMutex( new std_mutex ) {
 
 }
-ProtItemWidget * NodeItemWidget::getProtItemWidget( const QPoint &globle_point ) const {
-	std_lock_grad_mutex lockMutex( *protItemWidgetVectorMutex );
-	size_t count = nodeProtItems.size( );
-	auto data = nodeProtItems.data( );
+ProtItemWidget * NodeItemWidget::getProtInputItemWidget( const QPoint &globle_point ) const {
+	std_lock_grad_mutex lockMutex( *protInputItemWidgetVectorMutex );
+	size_t count = nodeProtInputItems.size( );
+	auto data = nodeProtInputItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ]->contentsRect( ).contains( data[ index ]->mapFromGlobal( globle_point ) ) )
+			return data[ index ];
+	return nullptr;
+}
+ProtItemWidget * NodeItemWidget::getProtOutputItemWidget( const QPoint &globle_point ) const {
+	std_lock_grad_mutex lockMutex( *protOutputItemWidgetVectorMutex );
+	size_t count = nodeProtOutputItems.size( );
+	auto data = nodeProtOutputItems.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ]->contentsRect( ).contains( data[ index ]->mapFromGlobal( globle_point ) ) )
 			return data[ index ];
