@@ -8,7 +8,7 @@
 class Stack : public QObject {
 	Q_OBJECT;
 public:
-	using TypeItemKey = const void *;
+	using TypeItemKey = void *;
 	using TypeItemVal = QString;
 	using TypeItem = std_pairt< TypeItemKey, TypeItemVal >;
 	using TypeItemArray = std_vector< TypeItem >;
@@ -41,11 +41,11 @@ public:
 		return isType( check_obj_ptr, typeid( TTypeNmae ).name( ) );
 	}
 	template< typename TTypeNmae >
-	void appendType( const TTypeNmae *check_obj_ptr ) {
+	void appendType( TTypeNmae *check_obj_ptr ) {
 		appendType( check_obj_ptr, typeid( TTypeNmae ).name( ) );
 	}
 	template< typename TTypeNmae >
-	std_vector< TTypeNmae * > getType( ) {
+	std_vector< TTypeNmae * > getTypes( ) {
 		auto typeName = typeid( TTypeNmae ).name( );
 		std_vector< TTypeNmae > result;
 		size_t count = typeNameMap.size( );
@@ -54,6 +54,17 @@ public:
 			if( data[ index ].second == typeName )
 				result.emplace_back( data[ index ].first );
 		return result;
+	}
+	template< typename TTypeNmae >
+	TTypeNmae * var_cast( const void *var_ptr ) {
+		auto typeName = typeid( TTypeNmae ).name( );
+
+		size_t count = typeNameMap.size( );
+		auto data = typeNameMap.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ].second == typeName && var_ptr == data[ index ].first )
+				return static_cast< TTypeNmae * >( data[ index ].first );
+		return nullptr;
 	}
 	virtual TypeItemVal typeName( const TypeItemKey *check_obj_ptr ) {
 		size_t count = typeNameMap.size( );
