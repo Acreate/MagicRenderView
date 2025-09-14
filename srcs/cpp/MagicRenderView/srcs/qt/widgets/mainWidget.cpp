@@ -47,7 +47,6 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 			action = subMenu->addAction( nodeName );
 			connect( action, &QAction::triggered, [this, dirName, nodeName]( ) {
 				auto itemWidget = NodeItemWidget::generateNode( this, dirName, nodeName );
-				QPoint fromGlobal = mapFromGlobal( rightPos );
 				itemWidget->move( fromGlobal );
 				itemWidget->show( );
 				QRect geometry = itemWidget->geometry( );
@@ -56,10 +55,14 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 					this->setMinimumSize( size );
 				QPoint point = geometry.bottomRight( );
 				scrollArea->ensureVisible( point.x( ), point.y( ) );
+				activeNodeItemWidget = itemWidget;
 				itemWidgets.emplace_back( itemWidget );
 			} );
 		}
 	}
+	selectNodeItemWidget = nullptr;
+	selectProtItemWidget = nullptr;
+	activeNodeItemWidget = nullptr;
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -79,11 +82,45 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
 
-	rightPos = QCursor::pos( );
+	globalPos = QCursor::pos( );
+	fromGlobal = mapFromGlobal( globalPos );
 	switch( mouseButton ) {
 		case Qt::RightButton :
-			rightMouseBtnMenu->move( rightPos );
+			rightMouseBtnMenu->move( globalPos );
 			rightMouseBtnMenu->show( );
+			break;
+		case Qt::LeftButton :
+			// 没有找到按下时的接口
+			if( selectProtItemWidget == nullptr || selectNodeItemWidget == nullptr )
+				break;
+			break;
+	}
+}
+void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
+	QWidget::mouseMoveEvent( event );
+	if( selectProtItemWidget == nullptr || selectNodeItemWidget == nullptr )
+		return;
+
+}
+void MainWidget::mousePressEvent( QMouseEvent *event ) {
+	QWidget::mousePressEvent( event );
+	Qt::MouseButton mouseButton = event->button( );
+
+	globalPos = QCursor::pos( );
+	fromGlobal = mapFromGlobal( globalPos );
+	ProtItemWidget *protItemWidget = nullptr;
+	switch( mouseButton ) {
+		case Qt::LeftButton :
+			for( auto &nodeItemWidge : itemWidgets )
+				if( protItemWidget = nodeItemWidge->getProtItemWidget( globalPos ), protItemWidget ) {
+					selectProtItemWidget = protItemWidget;
+					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
+					break;
+				}
+			if( protItemWidget == nullptr ) {
+				selectNodeItemWidget = nullptr;
+				selectProtItemWidget = nullptr;
+			}
 			break;
 	}
 }

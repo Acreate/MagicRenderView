@@ -106,6 +106,18 @@ std_vector< NodeItemWidget::generatePathClassInfo > NodeItemWidget::getGenerateI
 	}
 	return result;
 }
+NodeItemWidget::NodeItemWidget( QWidget *parent ) : QWidget( parent ), protItemWidgetVectorMutex( new std_mutex ) {
+
+}
+ProtItemWidget * NodeItemWidget::getProtItemWidget( const QPoint &globle_point ) const {
+	std_lock_grad_mutex lockMutex( *protItemWidgetVectorMutex );
+	size_t count = nodeProtItems.size( );
+	auto data = nodeProtItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ]->contentsRect( ).contains( data[ index ]->mapFromGlobal( globle_point ) ) )
+			return data[ index ];
+	return nullptr;
+}
 void NodeItemWidget::paintEvent( QPaintEvent *event ) {
 	QPainter painter( this );
 	painter.fillRect( contentsRect( ), Qt::blue );

@@ -6,6 +6,9 @@
 
 #include <alias/type_alias.h>
 
+#include "protItemWidget.h"
+
+class ProtItemWidget;
 class MainWidget;
 enum class RunCode :size_t {
 	/// @brief 没有错误
@@ -93,8 +96,10 @@ protected:
 	RunCode runCode;
 	/// @brief 需求选项
 	std_list< NodeItemWidget * > needNodeItems;
+	std_vector< ProtItemWidget * > nodeProtItems;
+	std_shared_ptr< std_mutex > protItemWidgetVectorMutex;
 protected:
-	NodeItemWidget(QWidget* parent) : QWidget( parent ){}
+	NodeItemWidget( QWidget *parent );
 public:
 	/// @brief 运行节点
 	/// @return 成功返回 true
@@ -106,9 +111,12 @@ public:
 	virtual const std_list< NodeItemWidget * > & getNeedNodeItems( ) const {
 		return needNodeItems;
 	}
+	/// @brief 利用全局坐标匹配接口
+	/// @param globle_point 全局坐标
+	/// @return 返回接口
+	virtual ProtItemWidget * getProtItemWidget( const QPoint &globle_point ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-	
 };
 
 #endif // NODEITEMWIDGET_H_H_HEAD__FILE__
