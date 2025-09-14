@@ -8,7 +8,7 @@ class WriteFileImage : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( WriteFileImage, NodeItemWidget );
 protected:
-	WriteFileImage( QWidget *parent ) : NodeItemWidget( parent ) { }
+	WriteFileImage( QWidget *parent );
 };
 
 #endif // WRITEFILEIMAGE_H_H_HEAD__FILE__

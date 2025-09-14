@@ -7,7 +7,7 @@ class ReadFileImage : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( ReadFileImage, NodeItemWidget );
 protected:
-	ReadFileImage( QWidget *parent ) : NodeItemWidget( parent ) { }
+	ReadFileImage( QWidget *parent );
 };
 
 #endif // READFILEIMAGE_H_H_HEAD__FILE__

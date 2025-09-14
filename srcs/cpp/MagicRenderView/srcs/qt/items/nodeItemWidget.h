@@ -6,7 +6,10 @@
 
 #include <alias/type_alias.h>
 
-
+class QSpacerItem;
+class QHBoxLayout;
+class QVBoxLayout;
+class QLabel;
 class ProtOutputItemWidget;
 class ProtInputItemWidget;
 class MainWidget;
@@ -91,7 +94,7 @@ public:
 		} );
 	}
 	static std_vector< generatePathClassInfo > getGenerateItems( );
-protected:
+private:
 	/// @brief 运行代码
 	RunCode runCode;
 	/// @brief 需求选项
@@ -104,9 +107,47 @@ protected:
 	std_shared_ptr< std_mutex > protInputItemWidgetVectorMutex;
 	/// @brief 输出接口锁
 	std_shared_ptr< std_mutex > protOutputItemWidgetVectorMutex;
+	/// @brief 标题
+	QLabel *titile;
+	/// @brief 主要布局
+	QVBoxLayout *mainLayout;
+	/// @brief 接口布局
+	QHBoxLayout *protItemLayout;
+	/// @brief 输入接口布局
+	QVBoxLayout *protInputItemLayout;
+	/// @brief 输出接口布局
+	QVBoxLayout *protOutputItemLayout;
+	/// @brief 输入接口空间占位项
+	QSpacerItem *protInputItemLayoutSpacerItem;
+	/// @brief 输出接口空间占位项
+	QSpacerItem *protOutputItemLayoutSpacerItem;
 protected:
 	NodeItemWidget( QWidget *parent );
+protected:
+	/// @brief 设置运行代码
+	/// @param run_code 新的运行代码
+	void setRunCode( RunCode run_code ) {
+		runCode = run_code;
+	}
+	void setNodeTitle( const QString &new_titile );
+	/// @brief 追加一个输入接口
+	/// @param prot_input_item_widget 输入的接口
+	/// @return 成功返回 true
+	bool appendProtInputItemWidget( ProtInputItemWidget *prot_input_item_widget );
+	/// @brief 追加一个输出接口
+	/// @param prot_output_item_widget 输出接口
+	/// @return 成功返回 true
+	bool appendProtOutputItemWidget( ProtOutputItemWidget *prot_output_item_widget );
+	/// @brief 删除一个输入接口
+	/// @param prot_input_item_widget 输入的接口
+	/// @return 成功返回 true
+	bool removeProtInputItemWidget( const ProtInputItemWidget *prot_input_item_widget );
+	/// @brief 删除一个输出接口
+	/// @param prot_output_item_widget 输出接口
+	/// @return 成功返回 true
+	bool removeProtOutputItemWidget( const ProtOutputItemWidget *prot_output_item_widget );
 public:
+	~NodeItemWidget( ) override;
 	/// @brief 运行节点
 	/// @return 成功返回 true
 	virtual RunCode getRunCode( ) const {

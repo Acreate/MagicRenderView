@@ -99,14 +99,16 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			for( auto &nodeItemWidge : itemWidgets )
 				if( nodeItemWidge->geometry( ).contains( fromGlobalReleasePoint ) ) {
 					activeNodeItemWidget = nodeItemWidge;
-					if( selectProtInputItemWidget )
+					if( selectProtInputItemWidget ) {
 						protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos );
-					else
+					} else {
 						protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalReleasePos );
+					}
 					break;
 				}
 			break;
 	}
+
 	selectNodeItemWidget = nullptr;
 	selectProtOutputItemWidget = nullptr;
 	selectProtInputItemWidget = nullptr;

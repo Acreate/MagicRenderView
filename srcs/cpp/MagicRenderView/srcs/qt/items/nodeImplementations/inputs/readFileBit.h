@@ -9,7 +9,7 @@ class ReadFileBit : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( ReadFileBit, NodeItemWidget );
 protected:
-	ReadFileBit( QWidget *parent ) : NodeItemWidget( parent ) { }
+	ReadFileBit( QWidget *parent );
 };
 
 #endif // READFILEBIT_H_H_HEAD__FILE__

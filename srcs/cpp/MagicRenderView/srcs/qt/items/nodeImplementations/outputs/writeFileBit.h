@@ -8,6 +8,6 @@ class WriteFileBit : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( WriteFileBit, NodeItemWidget );
 protected:
-	WriteFileBit( QWidget *parent ) : NodeItemWidget( parent ) { }
+	WriteFileBit( QWidget *parent );
 };
 #endif // WRITEFILEBIT_H_H_HEAD__FILE__

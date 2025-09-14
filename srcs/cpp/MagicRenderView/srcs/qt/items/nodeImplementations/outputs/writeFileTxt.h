@@ -10,6 +10,6 @@ class WriteFileTxt : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( WriteFileTxt, NodeItemWidget );
 protected:
-	WriteFileTxt(QWidget* parent) : NodeItemWidget( parent ){}
+	WriteFileTxt(QWidget* parent);
 };
 #endif // WRITEFILETXT_H_H_HEAD__FILE__
