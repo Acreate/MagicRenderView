@@ -9,7 +9,7 @@
 #include "protInputItemWidget.h"
 #include "protOutputItemWidget.h"
 
-Imp_StaticMetaInfo( NodeItemWidget, QObject::tr( "NodeItemWidget" ) )
+Imp_StaticMetaInfo( NodeItemWidget, QObject::tr( "NodeItemWidget" ), QObject::tr( "items" ) )
 
 std_vector< NodeItemWidget::generateItem > NodeItemWidget::generateItemVector;
 std_mutex NodeItemWidget::generateItemVectorMutex;
@@ -116,19 +116,9 @@ NodeItemWidget::NodeItemWidget( QWidget *parent ) : QWidget( parent ), protInput
 
 	titile = new QLabel( this );
 	titile->setText( getStaticMetaObjectName( ) );
-	mainLayout = new QVBoxLayout( this );
-	protItemLayout = new QHBoxLayout( );
-	protInputItemLayout = new QVBoxLayout( );
-	protOutputItemLayout = new QVBoxLayout( );
-	protItemLayout->addLayout( protInputItemLayout );
-	protItemLayout->addLayout( protOutputItemLayout );
-	mainLayout->addWidget( titile, 0, Qt::AlignCenter );
-	mainLayout->addLayout( protItemLayout );
-	protInputItemLayoutSpacerItem = new QSpacerItem( 100, 100, QSizePolicy::Expanding, QSizePolicy::Expanding );
-	protInputItemLayout->addSpacerItem( protInputItemLayoutSpacerItem );
-
-	protOutputItemLayoutSpacerItem = new QSpacerItem( 100, 100, QSizePolicy::Expanding, QSizePolicy::Expanding );
-	protOutputItemLayout->addSpacerItem( protOutputItemLayoutSpacerItem );
+	leftStartSpace = rightEndSpace = topSpace = boomSpace = 5;
+	midSpace = 10;
+	titile->move( 0, topSpace );
 }
 void NodeItemWidget::setNodeTitle( const QString &new_titile ) {
 	titile->setText( new_titile );
@@ -137,19 +127,14 @@ bool NodeItemWidget::appendProtInputItemWidget( ProtInputItemWidget *prot_input_
 	std_lock_grad_mutex lockMutex( *protInputItemWidgetVectorMutex );
 	nodeProtInputItems.emplace_back( prot_input_item_widget );
 	prot_input_item_widget->setParent( this );
-	int count = protInputItemLayout->count( );
-	int index = count - 1;
-	protInputItemLayout->insertWidget( index, prot_input_item_widget );
 	prot_input_item_widget->show( );
+
 	return true;
 }
 bool NodeItemWidget::appendProtOutputItemWidget( ProtOutputItemWidget *prot_output_item_widget ) {
 	std_lock_grad_mutex lockMutex( *protOutputItemWidgetVectorMutex );
 	nodeProtOutputItems.emplace_back( prot_output_item_widget );
 	prot_output_item_widget->setParent( this );
-	int count = protOutputItemLayout->count( );
-	int index = count - 1;
-	protOutputItemLayout->insertWidget( index, prot_output_item_widget );
 	prot_output_item_widget->show( );
 	return true;
 }
@@ -177,11 +162,54 @@ bool NodeItemWidget::removeProtOutputItemWidget( const ProtOutputItemWidget *pro
 		}
 	return false;
 }
+QSize NodeItemWidget::applyAdviseSizeToNodeItemWidget( ) {
+
+	auto protInputItemWidgetDataPtr = nodeProtInputItems.data( );
+	int inputHeight = titile->height( ) + topSpace;
+	int inputWidth = 0;
+	size_t count = nodeProtInputItems.size( );
+	size_t index = 0;
+	int width;
+
+	for( ; index < count; ++index ) {
+		inputHeight += topSpace;
+		protInputItemWidgetDataPtr[ index ]->move( leftStartSpace, inputHeight );
+		inputHeight += protInputItemWidgetDataPtr[ index ]->height( );
+		width = protInputItemWidgetDataPtr[ index ]->width( );
+		if( inputWidth < width )
+			inputWidth = width;
+	}
+
+	auto protOutputItemWidgetDataPtr = nodeProtOutputItems.data( );
+	int outputHeight = titile->height( ) + topSpace;
+	int outputWidth = 0;
+	count = nodeProtOutputItems.size( );
+	index = 0;
+
+	int maxWidth = inputWidth + midSpace + leftStartSpace;
+	for( ; index < count; ++index ) {
+		outputHeight += topSpace;
+		protOutputItemWidgetDataPtr[ index ]->move( maxWidth, outputHeight );
+		outputHeight += protOutputItemWidgetDataPtr[ index ]->height( );
+		width = protOutputItemWidgetDataPtr[ index ]->width( );
+		if( outputWidth < width )
+			outputWidth = width;
+	}
+	int maxHeight = outputHeight > inputHeight ? outputHeight : inputHeight;
+	maxWidth += outputWidth + rightEndSpace;
+	if( outputWidth == 0 )
+		maxWidth -= midSpace;
+	width = titile->width( ) + leftStartSpace + rightEndSpace;
+	maxWidth = maxWidth > width ? maxWidth : width;
+	maxHeight += boomSpace;
+	QSize result( maxWidth, maxHeight );
+	setFixedSize( result );
+	width = maxWidth - width;
+	width = width == 0 ? 0 : width / 2;
+	titile->move( width, topSpace );
+	return result;
+}
 NodeItemWidget::~NodeItemWidget( ) {
-	delete protInputItemLayout;
-	delete protOutputItemLayout;
-	delete protItemLayout;
-	delete mainLayout;
 }
 ProtInputItemWidget * NodeItemWidget::getProtInputItemWidget( const QPoint &globle_point ) const {
 	std_lock_grad_mutex lockMutex( *protInputItemWidgetVectorMutex );

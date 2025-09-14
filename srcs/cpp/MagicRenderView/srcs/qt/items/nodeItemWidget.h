@@ -53,20 +53,18 @@ public: \
 	QString getMetaObjectDir( ) override;\
 public:
 
-#define Imp_StaticMetaInfo( Imp_Class , Class_Translate ) \
+#define Imp_StaticMetaInfo( Imp_Class , Class_Translate,  Dir_Translate) \
 	QString Imp_Class::getStaticMetaObjectName( ) { \
 		return Class_Translate; \
 	} \
 	QString Imp_Class::getStaticMetaObjectDir( ) { \
-		QFileInfo fileInfo( __FILE__ ); \
-		auto dirName = fileInfo.dir( ).dirName( ); \
-		return dirName; \
+		return Dir_Translate; \
 	}\
 	QString Imp_Class::getMetaObjectName( ) {\
-		return Imp_Class::getStaticMetaObjectName( );\
+		return Class_Translate;\
 	}\
 	QString Imp_Class::getMetaObjectDir( ) {\
-		return Imp_Class::getStaticMetaObjectDir( );\
+		return Dir_Translate;\
 	}
 
 class NodeItemWidget : public QWidget {
@@ -109,18 +107,16 @@ private:
 	std_shared_ptr< std_mutex > protOutputItemWidgetVectorMutex;
 	/// @brief 标题
 	QLabel *titile;
-	/// @brief 主要布局
-	QVBoxLayout *mainLayout;
-	/// @brief 接口布局
-	QHBoxLayout *protItemLayout;
-	/// @brief 输入接口布局
-	QVBoxLayout *protInputItemLayout;
-	/// @brief 输出接口布局
-	QVBoxLayout *protOutputItemLayout;
-	/// @brief 输入接口空间占位项
-	QSpacerItem *protInputItemLayoutSpacerItem;
-	/// @brief 输出接口空间占位项
-	QSpacerItem *protOutputItemLayoutSpacerItem;
+	/// @brief 组件最左侧间隔
+	int leftStartSpace;
+	/// @brief 组件最右侧间隔
+	int rightEndSpace;
+	/// @brief 组件顶部间隔
+	int topSpace;
+	/// @brief 组件底部间隔
+	int boomSpace;
+	/// @brief 组件中间间隔
+	int midSpace;
 protected:
 	NodeItemWidget( QWidget *parent );
 protected:
@@ -146,6 +142,9 @@ protected:
 	/// @param prot_output_item_widget 输出接口
 	/// @return 成功返回 true
 	bool removeProtOutputItemWidget( const ProtOutputItemWidget *prot_output_item_widget );
+	/// @brief 获取建议大小
+	/// @return 建议大小
+	QSize applyAdviseSizeToNodeItemWidget( );
 public:
 	~NodeItemWidget( ) override;
 	/// @brief 运行节点

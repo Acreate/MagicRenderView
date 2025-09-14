@@ -6,8 +6,9 @@
 
 #include "../../protInputImplementations/inputFilePath.h"
 
-Imp_StaticMetaInfo( WriteFileImage, QObject::tr( "WriteFileImage" ) )
+Imp_StaticMetaInfo( WriteFileImage, QObject::tr( "WriteFileImage" ), QObject::tr( "outputs" )  )
 WriteFileImage::WriteFileImage( QWidget *parent ) : NodeItemWidget( parent ) {
 	setNodeTitle( getStaticMetaObjectName( ) );
 	appendProtInputItemWidget( new InputFilePath( ) );
+	applyAdviseSizeToNodeItemWidget(  );
 }
