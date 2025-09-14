@@ -47,7 +47,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 			action = subMenu->addAction( nodeName );
 			connect( action, &QAction::triggered, [this, dirName, nodeName]( ) {
 				auto itemWidget = NodeItemWidget::generateNode( this, dirName, nodeName );
-				itemWidget->move( fromGlobalPressPoint );
+				itemWidget->move( fromGlobalReleasePoint );
 				itemWidget->show( );
 				QRect geometry = itemWidget->geometry( );
 				auto size = geometry.united( contentsRect( ) ).size( );
@@ -96,25 +96,15 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			// 没有找到按下时的接口
 			if( selectNodeItemWidget == nullptr )
 				break;
-			// 使用输入接口
-			if( selectProtInputItemWidget )
-				for( auto &nodeItemWidge : itemWidgets )
-					if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
-						activeNodeItemWidget = nodeItemWidge;
-						if( protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos ), protOutputItemWidget ) {
-							// todo : 选中输出接口
-						}
-						break;
-					}
-			if( selectProtOutputItemWidget )
-				for( auto &nodeItemWidge : itemWidgets )
-					if( nodeItemWidge->contentsRect( ).contains( nodeItemWidge->mapFromGlobal( globalReleasePos ) ) ) {
-						activeNodeItemWidget = nodeItemWidge;
-						if( protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalReleasePos ), protInputItemWidget ) {
-							// todo : 选中输入接口
-						}
-						break;
-					}
+			for( auto &nodeItemWidge : itemWidgets )
+				if( nodeItemWidge->geometry( ).contains( fromGlobalReleasePoint ) ) {
+					activeNodeItemWidget = nodeItemWidge;
+					if( selectProtInputItemWidget )
+						protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalReleasePos );
+					else
+						protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalReleasePos );
+					break;
+				}
 			break;
 	}
 	selectNodeItemWidget = nullptr;
@@ -133,24 +123,17 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 
 	globalPressPos = QCursor::pos( );
 	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
-	ProtInputItemWidget *protInputItemWidget = nullptr;
-	ProtOutputItemWidget *protOutputItemWidget = nullptr;
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			for( auto &nodeItemWidge : itemWidgets )
-				if( protOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalPressPos ), protOutputItemWidget ) {
-					selectProtOutputItemWidget = protOutputItemWidget;
-					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
+				if( nodeItemWidge->geometry( ).contains( fromGlobalPressPoint ) ) {
+					selectNodeItemWidget = nodeItemWidge;
+					selectProtOutputItemWidget = nodeItemWidge->getProtOutputItemWidget( globalPressPos );
+					if( selectProtOutputItemWidget == nullptr )
+						selectProtInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalPressPos );
 					break;
 				}
-			if( protOutputItemWidget == nullptr )
-				break;
-			for( auto &nodeItemWidge : itemWidgets )
-				if( protInputItemWidget = nodeItemWidge->getProtInputItemWidget( globalPressPos ), protInputItemWidget ) {
-					selectProtInputItemWidget = protInputItemWidget;
-					activeNodeItemWidget = selectNodeItemWidget = nodeItemWidge;
-					break;
-				}
+
 			break;
 	}
 }
