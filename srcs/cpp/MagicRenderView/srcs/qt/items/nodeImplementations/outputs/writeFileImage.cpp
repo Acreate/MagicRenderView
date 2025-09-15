@@ -4,11 +4,15 @@
 #include <qdir.h>
 #include <qfileinfo.h>
 
-#include "../../protInputImplementations/inputFilePath.h"
+#include <qt/varType/varType.h>
 
-Imp_StaticMetaInfo( WriteFileImage, QObject::tr( "WriteFileImage" ), QObject::tr( "outputs" )  )
+#include <qt/items/protInputImplementations/inputFilePath.h>
+
+Imp_StaticMetaInfo( WriteFileImage, QObject::tr( "WriteFileImage" ), QObject::tr( "outputs" ) )
 WriteFileImage::WriteFileImage( QWidget *parent ) : NodeItemWidget( parent ) {
 	setNodeTitle( getStaticMetaObjectName( ) );
-	appendProtInputItemWidget( new InputFilePath( ) );
-	applyAdviseSizeToNodeItemWidget(  );
+	
+	var = VarType::templateVarType< QString >( this );
+	appendProtInputItemWidget( new InputFilePath( this, var ) );
+	applyAdviseSizeToNodeItemWidget( );
 }

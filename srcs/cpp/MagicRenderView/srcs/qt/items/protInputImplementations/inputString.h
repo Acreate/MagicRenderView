@@ -6,7 +6,7 @@
 class InputString : public ProtInputItemWidget {
 	Q_OBJECT;
 public:
-	InputString( );
+	InputString( QWidget *parent, VarType *bind_var );
 };
 
 #endif // INPUTSTRING_H_H_HEAD__FILE__

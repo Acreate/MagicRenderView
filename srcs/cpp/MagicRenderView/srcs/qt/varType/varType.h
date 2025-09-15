@@ -5,8 +5,9 @@
 
 #include <alias/type_alias.h>
 
-class VarType : public Type_Alias {
-	Def_Last_StaticMetaInfo( );
+class NodeItemWidget;
+class VarType : public QObject {
+	Q_OBJECT
 protected:
 	QString unityTypeName;
 	std_vector< std_shared_ptr< void > > varVector;
@@ -14,15 +15,13 @@ private:
 	VarType( const QString &unity_type_name ) {
 		unityTypeName = unity_type_name;
 	}
-	VarType( ) {
-		unityTypeName = typeid( *this ).name( );
-	}
+	VarType( NodeItemWidget *parent = nullptr );
+
+	static VarType * templateVarType( NodeItemWidget *parent, const QString &type_name );
 public:
 	template< typename TType_Name >
-	static std_shared_ptr< VarType > templateVarType( ) {
-		VarType *result = new VarType;
-		result->unityTypeName = typeid( TType_Name ).name( );
-		return std_shared_ptr< VarType >( result );
+	static VarType * templateVarType( const NodeItemWidget *parent ) {
+		return templateVarType( parent, typeid( TType_Name ).name( ) );
 	}
 public:
 	/// @brief 获取数组个数
@@ -155,8 +154,11 @@ public:
 		varVector.emplace_back( emplace );
 	}
 	~VarType( ) override {
+		emit deleteObjBefore( this );
 		varVector.clear( );
 	}
+Q_SIGNALS:
+	void deleteObjBefore( VarType *var_ptr );
 };
 
 #endif // VARTYPE_H_H_HEAD__FILE__

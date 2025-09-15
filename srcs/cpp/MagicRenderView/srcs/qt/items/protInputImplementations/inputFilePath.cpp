@@ -1,6 +1,4 @@
 ﻿#include "./inputFilePath.h"
 
 #include "../../varType/varType.h"
-InputFilePath::InputFilePath( ) {
-	var = VarType::templateVarType< QString >( );
-}
+InputFilePath::InputFilePath( QWidget *parent, VarType *bind_var ) : ProtInputItemWidget( parent, bind_var ) { }

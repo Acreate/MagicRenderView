@@ -6,7 +6,7 @@
 class InputFilePath : public ProtInputItemWidget {
 	Q_OBJECT;
 public:
-	InputFilePath( );
+	InputFilePath( QWidget *parent, VarType *bind_var );
 };
 
 #endif // INPUTFILEPATH_H_H_HEAD__FILE__

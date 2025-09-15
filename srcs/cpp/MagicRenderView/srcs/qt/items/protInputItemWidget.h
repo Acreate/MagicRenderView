@@ -9,15 +9,20 @@ class VarType;
 class ProtInputItemWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	std_shared_ptr< VarType > var;
+	VarType *var;
 public:
-	virtual const std_shared_ptr< VarType > & getVar( ) const {
+	virtual const VarType * getVar( ) const {
 		return var;
 	}
+	virtual void bindVar( VarType *bind_var );
 public:
-	ProtInputItemWidget( QWidget *parent = nullptr );
+	ProtInputItemWidget( QWidget *parent, VarType *bind_var = nullptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+protected Q_SLOTS:
+	virtual void releaseVarType( VarType *release_var_type );
+Q_SIGNALS:
+	void replaceVar( VarType *old_var, VarType *new_var );
 };
 
 #endif // PROTINPUTITEMWIDGET_H_H_HEAD__FILE__

@@ -4,9 +4,12 @@
 
 #include "../../nodeItemWidget.h"
 
+class VarType;
 class WriteFileImage : public NodeItemWidget {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeItemWidget );
+protected:
+	VarType *var;
 protected:
 	WriteFileImage( QWidget *parent );
 };

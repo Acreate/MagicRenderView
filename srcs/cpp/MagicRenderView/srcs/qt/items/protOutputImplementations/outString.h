@@ -6,7 +6,7 @@
 class OutString : public ProtOutputItemWidget {
 	Q_OBJECT;
 public:
-	OutString( );
+	OutString( QWidget *parent, const std_shared_ptr< VarType > &bind_var );
 };
 
 #endif // OUTSTRING_H_H_HEAD__FILE__

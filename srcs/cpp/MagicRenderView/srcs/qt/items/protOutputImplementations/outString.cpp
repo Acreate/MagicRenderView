@@ -1,6 +1,4 @@
 ﻿#include "./outString.h"
 
 #include <qt/varType/varType.h>
-OutString::OutString( ) {
-	var = VarType::templateVarType< QString >( );
-}
+OutString::OutString( QWidget *parent, const std_shared_ptr< VarType > &bind_var ) : ProtOutputItemWidget( parent, bind_var ) { }
