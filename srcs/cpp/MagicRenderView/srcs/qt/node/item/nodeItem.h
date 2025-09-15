@@ -21,14 +21,16 @@ protected:
 	/// @brief 绑定渲染
 	QImage nodePortRender;
 	/// @brief 相对节点的位置
-	QPoint pos;
+	QPoint nodePos;
+	/// @brief 节点大小
+	QSize nodeSize;
 protected:
 	NodeItem( QObject *parent ) : QObject( parent ) {
 
 	}
 public:
-	virtual const QPoint & getPos( ) const { return pos; }
-	virtual const QSize & getSize( ) const { return nodePortRender.size( ); }
+	virtual const QPoint & getPos( ) const { return nodePos; }
+	virtual const QSize & getSize( ) const { return nodeSize; }
 	virtual QRect geometry( ) const { return QRect( getPos( ), getSize( ) ); }
 };
 
