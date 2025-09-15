@@ -1,0 +1,16 @@
+﻿#ifndef STRAPPEND_H_H_HEAD__FILE__
+#define STRAPPEND_H_H_HEAD__FILE__
+#pragma once
+
+#include "../nodeItem.h"
+
+class StrAppend : public NodeItem {
+	Q_OBJECT;
+	Def_NodeItem_Last_StaticMetaInfo( );
+protected:
+	StrAppend( NodeItem_ParentPtr_Type *parent )
+		: NodeItem( parent ) {
+		nodeTitleName = getMetaObjectName( );
+	}
+};
+#endif // STRAPPEND_H_H_HEAD__FILE__

@@ -6,6 +6,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../node/item/nodeItem.h"
+
 class QScrollArea;
 class QVBoxLayout;
 class Application;
@@ -30,6 +32,8 @@ protected:
 	QPoint fromGlobalReleasePoint;
 	/// @brief 鼠标移动时的坐标位置
 	QPoint mouseMovePoint;
+	/// @brief 节点链表
+	std_list< NodeItem * > nodeItemList;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

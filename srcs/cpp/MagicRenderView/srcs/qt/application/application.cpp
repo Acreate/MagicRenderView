@@ -10,8 +10,23 @@
 #include <qt/widgets/mainWidget.h>
 
 #include "../node/generate/nodeItemGenerate.h"
+#include "../node/item/calculate/varAdd.h"
+#include "../node/item/calculate/varDiv.h"
+#include "../node/item/calculate/varMod.h"
+#include "../node/item/calculate/varMul.h"
+#include "../node/item/calculate/varSub.h"
 #include "../node/item/disk/readFile.h"
+#include "../node/item/disk/readImage.h"
 #include "../node/item/disk/writeFile.h"
+#include "../node/item/disk/writeImage.h"
+#include "../node/item/info/pathInfo.h"
+#include "../node/item/info/systemInfo.h"
+#include "../node/item/str/strAppend.h"
+#include "../node/item/str/strInsert.h"
+#include "../node/item/str/strRemove.h"
+#include "../node/item/str/strReplace.h"
+#include "../node/item/str/strSplit.h"
+#include "../node/item/str/strSub.h"
 
 #include "qt/tools/tools.h"
 
@@ -35,9 +50,40 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	stdMutexWidgetSelectLock.reset( new std_mutex );
 	stack = new Stack( );
 
-	// 初始化节点
+	/*
+	 * 初始化节点
+	 */
+	// todo : 磁盘节点
 	NodeItemGenerate::appendNodeItemInfo< WriteFile >( );
+	NodeItemGenerate::appendNodeItemInfo< WriteImage >( );
 	NodeItemGenerate::appendNodeItemInfo< ReadFile >( );
+	NodeItemGenerate::appendNodeItemInfo< ReadImage >( );
+	// todo : 信息节点
+	NodeItemGenerate::appendNodeItemInfo< PathInfo >( );
+	NodeItemGenerate::appendNodeItemInfo< SystemInfo >( );
+	// todo : 计算节点
+	NodeItemGenerate::appendNodeItemInfo< VarAdd >( );
+	NodeItemGenerate::appendNodeItemInfo< VarSub >( );
+	NodeItemGenerate::appendNodeItemInfo< VarMul >( );
+	NodeItemGenerate::appendNodeItemInfo< VarDiv >( );
+	NodeItemGenerate::appendNodeItemInfo< VarMod >( );
+	// todo : 字符串节点
+	NodeItemGenerate::appendNodeItemInfo< StrAppend >( );
+	NodeItemGenerate::appendNodeItemInfo< StrRemove >( );
+	NodeItemGenerate::appendNodeItemInfo< StrReplace >( );
+	NodeItemGenerate::appendNodeItemInfo< StrInsert >( );
+	NodeItemGenerate::appendNodeItemInfo< StrSplit >( );
+	NodeItemGenerate::appendNodeItemInfo< StrSub >( );
+	// todo : 图片特效节点
+
+	// todo : 视频操作节点
+
+	// todo : 视频特效节点
+
+	// todo : 音乐操作节点
+
+	// todo : 音乐特效节点
+	
 }
 Application::~Application( ) {
 	settings->sync( );

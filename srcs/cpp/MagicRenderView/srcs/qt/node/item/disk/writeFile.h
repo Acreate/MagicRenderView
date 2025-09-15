@@ -6,9 +6,8 @@
 class WriteFile : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
-public:
-	WriteFile( QObject *parent )
-		: NodeItem( parent ) { }
+protected:
+	WriteFile( NodeItem_ParentPtr_Type *parent );
 };
 
 #endif // WRITEFILE_H_H_HEAD__FILE__

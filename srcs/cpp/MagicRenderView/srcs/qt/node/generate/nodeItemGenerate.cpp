@@ -4,7 +4,7 @@
 
 NodeItemGenerate::NodeItemGenerateMetaInfoVector_Type NodeItemGenerate::nodeItemGenerateMetaInfos;
 NodeItemGenerate::DirClassItemMapVector_Type NodeItemGenerate::nodeItemDirClassMetaInfos;
-NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( ParentPtr_Type *parent, const NodeItemString_Type &dir_name, const NodeItemString_Type &item_name ) {
+NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( NodeItem_ParentPtr_Type *parent, const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name ) {
 	auto dirNameTrimmed = dir_name.trimmed( );
 	if( dirNameTrimmed.isEmpty( ) ) {
 		tools::debug::printError( "文件夹名称为空，不合法，直接返回" );
@@ -31,7 +31,7 @@ NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( ParentPtr_Ty
 		}
 	return nullptr;
 }
-bool NodeItemGenerate::appendNodeItemInfo( const NodeItemString_Type &dir_name, const NodeItemString_Type &item_name, const NodeItemGenerateFunction_Type &generate_function ) {
+bool NodeItemGenerate::appendNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function ) {
 
 	auto dirNameTrimmed = dir_name.trimmed( );
 	if( dirNameTrimmed.isEmpty( ) ) {
@@ -58,13 +58,25 @@ bool NodeItemGenerate::appendNodeItemInfo( const NodeItemString_Type &dir_name, 
 					return true;
 				}
 			NodeItemGenerateMateInfoPairt_Type info( itemNameTrimmed, generate_function );
-			nodeItemDirClassMetaInfos.emplace_back( dirNameTrimmed, itemNameTrimmed );
 			classNameMapVector.emplace_back( info );
+			// 匹配目录与类名映射
+
+			size_t count = nodeItemDirClassMetaInfos.size( );
+			auto pair = nodeItemDirClassMetaInfos.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( pair[ index ].first == dirNameTrimmed ) {
+					pair[ index ].second.emplace_back( itemNameTrimmed );
+					return true;
+				}
+
+			DirClassItemMap_Type dirClassItem( dirNameTrimmed, { itemNameTrimmed } );
+			nodeItemDirClassMetaInfos.emplace_back( dirClassItem );
 			return true; // 找到文件夹，但是找不到对应的类，应该直接返回空
 		}
-	nodeItemDirClassMetaInfos.emplace_back( dirNameTrimmed, itemNameTrimmed );
 	NodeItemGenerateMateInfoPairt_Type info( itemNameTrimmed, generate_function );
 	NodeItemGenerateDirMateInfoPairt_Type dirMateInfoPairt( dirNameTrimmed, { info } );
 	nodeItemGenerateMetaInfos.emplace_back( dirMateInfoPairt );
+	DirClassItemMap_Type dirClassItem( dirNameTrimmed, { itemNameTrimmed } );
+	nodeItemDirClassMetaInfos.emplace_back( dirClassItem );
 	return true;
 }

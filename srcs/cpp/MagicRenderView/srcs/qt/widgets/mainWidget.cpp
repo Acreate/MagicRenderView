@@ -9,6 +9,8 @@
 
 #include <qt/application/application.h>
 
+#include "../node/generate/nodeItemGenerate.h"
+
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
@@ -22,7 +24,20 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	appInstance->syncAppValueIniFile( );
 
 	rightMouseBtnMenu = new QMenu( this );
-
+	auto infos = NodeItemGenerate::getNodeItemDirClassMetaInfos( );
+	for( auto &item : infos ) {
+		QString dirName = item.first;
+		QMenu *dirMenu = rightMouseBtnMenu->addMenu( dirName );
+		for( auto &className : item.second ) {
+			auto addAction = dirMenu->addAction( className );
+			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
+				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
+				nodeItem->move( fromGlobalReleasePoint );
+				nodeItem->show( );
+				nodeItemList.emplace_back( nodeItem );
+			} );
+		}
+	}
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );

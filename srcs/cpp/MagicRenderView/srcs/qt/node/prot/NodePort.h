@@ -22,9 +22,8 @@ protected:
 	/// @brief 节点大小
 	QSize nodeSize;
 public:
-	NodePort( QObject *parent, VarType *bind_var ) : QObject( parent ), var( bind_var ) {
-		if( var )
-			connect( var, &VarType::deleteObjBefore, this, &NodePort::releaseVarType );
+	NodePort( QObject *parent ) : QObject( parent ), var( nullptr ) {
+
 	}
 	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
 	virtual const QPoint & getPos( ) const { return nodePos; }

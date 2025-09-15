@@ -2,9 +2,15 @@
 #define VARDIV_H_H_HEAD__FILE__
 #pragma once
 
+#include "../nodeItem.h"
 
-class VarDiv {
-
+class VarDiv : public NodeItem {
+	Q_OBJECT;
+	Def_NodeItem_Last_StaticMetaInfo( );
+protected:
+	VarDiv( NodeItem_ParentPtr_Type *parent )
+		: NodeItem( parent ) {
+		nodeTitleName = getMetaObjectName( );
+	}
 };
-
 #endif // VARDIV_H_H_HEAD__FILE__
