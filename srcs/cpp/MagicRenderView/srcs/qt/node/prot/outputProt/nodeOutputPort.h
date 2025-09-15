@@ -8,8 +8,9 @@ class NodeOutputPort : public NodePort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodePort );
 public:
-	NodeOutputPort( QObject *parent ) : NodePort( parent ) {
+	NodeOutputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
+	void updateProtLayout( ) override;
 };
 
 #endif // NODEOUTPUTPORT_H_H_HEAD__FILE__

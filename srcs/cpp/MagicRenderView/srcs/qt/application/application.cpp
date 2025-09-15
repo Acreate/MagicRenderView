@@ -46,10 +46,20 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 		else
 			settings->sync( );
 	}
+	/*
+	 * 锁
+	 */
 	stdMutex_p.reset( new std_mutex );
 	stdMutexWidgetSelectLock.reset( new std_mutex );
+	/*
+	 * 堆栈
+	 */
 	stack = new Stack( );
 
+	/*
+	 * 字体
+	 */
+	this->font.reset( new QFont( "" ) );
 	/*
 	 * 初始化节点
 	 */
@@ -83,7 +93,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	// todo : 音乐操作节点
 
 	// todo : 音乐特效节点
-	
+
 }
 Application::~Application( ) {
 	settings->sync( );

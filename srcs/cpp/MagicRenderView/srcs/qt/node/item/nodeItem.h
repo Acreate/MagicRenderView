@@ -23,6 +23,7 @@
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
+	friend class NodePort;
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -35,76 +36,50 @@ protected:
 	QPoint nodePos;
 	/// @brief 节点大小
 	QSize nodeSize;
-	/// @brief 是否渲染
-	bool needRender;
-	/// @brief 渲染目标
-	QWidget *nodeParent;
 	/// @brief 输出接口序列
 	std_vector< NodeInputPort * > nodeInputProtVector;
 	/// @brief 输出接口序列
 	std_vector< NodeOutputPort * > nodeOutputProtVector;
 protected:
-	NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ), nodeParent( parent ) {
-		if( parent == nullptr ) {
-			needRender = false;
-			tools::debug::printError( QObject::tr( "非法对象。该对象需要一个正确的父类 QWidget 对象" ) );
-			return;
-		}
-		needRender = true;
+	NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ) {
+
 		nodeTitleName = getMetaObjectName( );
 	}
 public:
 	virtual const NodeItemString_Type & getNodeTitleName( ) const { return nodeTitleName; }
 	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name ) { nodeTitleName = node_title_name; }
-	virtual void setWidgetParent( NodeItem_ParentPtr_Type *parent ) {
-		if( parent == nullptr ) {
-			tools::debug::printError( QObject::tr( "不可赋值父 QWidget 对象为 nullptr，该对象需要一个正确的父类 QWidget 对象" ) );
-			return;
-		}
-		if( nodeParent != nullptr ) {
-			auto newPos = nodeParent->mapToGlobal( nodePos );
-			nodeParent = parent;
-			nodePos = nodeParent->mapFromGlobal( newPos );
-			return;
-		}
-		nodeParent = parent;
-		nodePos = QPoint( 0, 0 );
-	}
-	virtual NodeItem_ParentPtr_Type * getWidgetParent( ) const {
-		return nodeParent;
-	}
+
 	virtual void move( const QPoint &point ) {
 		nodePos = point;
-		if( nodeParent == nullptr ) {
-			tools::debug::printError( QObject::tr( "不属性父 QWidget 对象为 nullptr，该对象需要一个正确的父类 QWidget 对象" ) );
-			return;
-		}
-		renderToWidget( );
 	}
 	virtual const QPoint & getPos( ) const { return nodePos; }
 	virtual const QSize & getSize( ) const { return nodeSize; }
 	virtual QRect geometry( ) const { return QRect( nodePos, nodeSize ); }
-	virtual void show( ) {
-		needRender = true;
-		if( nodeParent == nullptr ) {
-			tools::debug::printError( QObject::tr( "不属性父 QWidget 对象为 nullptr，该对象需要一个正确的父类 QWidget 对象" ) );
-			return;
-		}
-		renderToWidget( );
+	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
+	/// @brief 从父节点坐标转换到输入输出端口对象偏移坐标
+	/// @param src_pos 父窗口坐标
+	/// @return 输入输出端口对象的局部偏移坐标
+	virtual QPoint formParentWidgetPosToPortPos( const QPoint &src_pos ) {
+		return src_pos - nodePos;
 	}
-	virtual void hide( ) {
-		needRender = false;
+	/// @brief 测试指定坐标是否存在当前节点内
+	/// @param point 测试坐标
+	/// @return 在当前节点范围内，返回 true
+	virtual bool contains( const QPoint &point ) {
+		auto leftTop = point - nodePos;
+		int x = leftTop.x( );
+		if( x < 0 )
+			return false;
+		int y = leftTop.x( );
+		if( y < 0 )
+			return false;
+		if( x > nodeSize.width( ) )
+			return false;
+		if( y > nodeSize.height( ) )
+			return false;
+		return true;
 	}
-	virtual bool isNeedRender( ) const {
-		if( nodeParent )
-			return needRender;
-		return false;
-	}
-	/// @brief 渲染到目标
-	/// @return 成功返回 true
-	virtual bool renderToWidget( ) {
-		return isNeedRender( );
-	}
+protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
 	/// @return 成功返回 true
@@ -123,6 +98,24 @@ public:
 	virtual bool removeOutputProt( NodeOutputPort *output_port );
 	/// @brief 更新接口布局
 	virtual void updateProtLayout( );
+public:
+	/// @brief 从指定位置获取输出端口对象指针
+	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置
+	/// @return 成功返回输出端口，失败返回 nullptr
+	virtual NodeOutputPort * formPosNodeOutputPort( const QPoint &pos );
+	/// @brief 从布局存储序列获取输出端口对象指针
+	/// @param index 布局序列下标
+	/// @return 成功返回输出端口，失败返回 nullptr
+	virtual NodeOutputPort * formIndexNodeOutputPort( const size_t &index );
+	/// @brief 从指定位置获取输入端口对象指针
+	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置
+	/// @return 成功返回输入端口，失败返回 nullptr
+	virtual NodeInputPort * formPosNodeInputPort( const QPoint &pos );
+	/// @brief 从布局存储序列获取输入端口对象指针
+	/// @param index 布局序列下标
+	/// @return 成功返回输入端口，失败返回 nullptr
+	virtual NodeInputPort * formIndexNodeInputPort( const size_t &index );
+
 };
 
 #endif // NODEITEM_H_H_HEAD__FILE__

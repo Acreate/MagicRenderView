@@ -9,6 +9,8 @@
 
 #include <qt/varType/varType.h>
 
+#include "../item/nodeItem.h"
+
 class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
@@ -21,11 +23,26 @@ protected:
 	QPoint nodePos;
 	/// @brief 节点大小
 	QSize nodeSize;
+	/// @brief 标题
+	QString title;
+	/// @brief 父节点
+	NodeItem *parent;
 public:
-	NodePort( QObject *parent ) : QObject( parent ), var( nullptr ) {
-
+	NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
 	}
 	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
+	virtual void move( const QPoint &new_pos ) {
+		nodePos = new_pos;
+	}
+	virtual void move( const int &x, const int &y ) {
+		nodePos = QPoint( x, y );
+	}
+	virtual void moveX( const int &x ) {
+		nodePos.setX( x );
+	}
+	virtual void moveY( const int &y ) {
+		nodePos.setY( y );
+	}
 	virtual const QPoint & getPos( ) const { return nodePos; }
 	virtual const QSize & getSize( ) const { return nodeSize; }
 	virtual QRect geometry( ) const { return QRect( getPos( ), getSize( ) ); }
@@ -40,6 +57,13 @@ public:
 		if( bind_var )
 			connect( var, &VarType::deleteObjBefore, this, &NodePort::releaseVarType );
 		emit replaceVar( old, var );
+	}
+	virtual void updateProtLayout( ) = 0;
+	virtual QPoint converToNodeItemWidgetPos( ) const {
+		return nodePos + parent->nodePos;
+	}
+	virtual QRect converToNodeItemWidgetGeometry( ) const {
+		return QRect( nodePos + parent->nodePos, nodeSize );
 	}
 protected Q_SLOTS:
 	virtual void releaseVarType( VarType *release_var_type ) {

@@ -33,7 +33,6 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
 				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
 				nodeItem->move( fromGlobalReleasePoint );
-				nodeItem->show( );
 				nodeItemList.emplace_back( nodeItem );
 			} );
 		}

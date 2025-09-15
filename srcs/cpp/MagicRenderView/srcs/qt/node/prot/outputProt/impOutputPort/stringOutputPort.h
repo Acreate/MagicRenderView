@@ -3,13 +3,16 @@
 #pragma once
 #include "../nodeOutputPort.h"
 
+
+
 class StringOutputPort : public NodeOutputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeOutputPort );
 public:
-	StringOutputPort( QObject *parent )
-		: NodeOutputPort( parent ) { }
-
+	StringOutputPort( NodeItem *parent )
+		: NodeOutputPort( parent ) {
+		title = getMetaObjectName( );
+	}
 };
 
 #endif // STRINGOUTPUTPORT_H_H_HEAD__FILE__

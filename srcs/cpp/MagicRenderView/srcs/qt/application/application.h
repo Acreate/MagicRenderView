@@ -3,6 +3,9 @@
 #pragma once
 
 #include <QApplication>
+#include <qfont.h>
+#include <qfontmetrics.h>
+
 #include <alias/type_alias.h>
 
 class Stack;
@@ -58,7 +61,8 @@ protected:
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 	QString writeSettingPath;
-	Stack* stack;
+	Stack *stack;
+	std_shared_ptr< QFont > font;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -69,7 +73,11 @@ public:
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
 	virtual Stack * getStack( ) const { return stack; }
-	virtual void setStack( Stack * const stack ) { this->stack = stack; }
+	virtual void setStack( Stack *const stack ) { this->stack = stack; }
+	virtual const QFont & getFont( ) const { return *font; }
+	virtual void setFont( const QFont &new_font ) {
+		*font = new_font;
+	}
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };
