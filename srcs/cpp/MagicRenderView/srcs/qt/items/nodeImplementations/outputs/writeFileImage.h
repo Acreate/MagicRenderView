@@ -6,7 +6,7 @@
 
 class WriteFileImage : public NodeItemWidget {
 	Q_OBJECT;
-	Def_Last_StaticMetaInfo( WriteFileImage, NodeItemWidget );
+	Def_Last_Firend_StaticMetaInfo( NodeItemWidget );
 protected:
 	WriteFileImage( QWidget *parent );
 };

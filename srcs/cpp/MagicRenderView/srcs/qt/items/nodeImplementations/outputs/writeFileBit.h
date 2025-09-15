@@ -6,7 +6,7 @@
 
 class WriteFileBit : public NodeItemWidget {
 	Q_OBJECT;
-	Def_Last_StaticMetaInfo( WriteFileBit, NodeItemWidget );
+	Def_Last_Firend_StaticMetaInfo( NodeItemWidget );
 protected:
 	WriteFileBit( QWidget *parent );
 };

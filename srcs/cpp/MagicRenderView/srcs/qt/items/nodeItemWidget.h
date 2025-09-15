@@ -33,41 +33,7 @@ enum class RunCode :size_t {
 	Other_Error = ( ( size_t ) 0 - ( size_t ) 1 ),
 };
 
-#define Def_First_StaticMetaInfo(  ) \
-protected: \
-	static QString getStaticMetaObjectName( ); \
-	static QString getStaticMetaObjectDir( ); \
-public: \
-	virtual QString getMetaObjectName( ); \
-	virtual QString getMetaObjectDir( );\
-public:
-
-#define Def_Last_StaticMetaInfo( Imp_Class , Base_Iinterface_Class ) \
-public:\
-	friend class NodeItemWidget;\
-protected: \
-	static QString getStaticMetaObjectName( ); \
-	static QString getStaticMetaObjectDir( ); \
-public: \
-	QString getMetaObjectName( ) override; \
-	QString getMetaObjectDir( ) override;\
-public:
-
-#define Imp_StaticMetaInfo( Imp_Class , Class_Translate,  Dir_Translate) \
-	QString Imp_Class::getStaticMetaObjectName( ) { \
-		return Class_Translate; \
-	} \
-	QString Imp_Class::getStaticMetaObjectDir( ) { \
-		return Dir_Translate; \
-	}\
-	QString Imp_Class::getMetaObjectName( ) {\
-		return Class_Translate;\
-	}\
-	QString Imp_Class::getMetaObjectDir( ) {\
-		return Dir_Translate;\
-	}
-
-class NodeItemWidget : public QWidget {
+class NodeItemWidget : public QWidget, public Type_Alias {
 	Q_OBJECT;
 protected:
 	using generateFunction = std_function< NodeItemWidget*( QWidget * ) >;
@@ -77,7 +43,7 @@ protected:
 	using generateItem = std_pairt< QString, generateInfoVector >;
 	static std_vector< generateItem > generateItemVector;
 	static std_mutex generateItemVectorMutex;
-	Def_First_StaticMetaInfo( );
+	Def_Last_StaticMetaInfo( );
 protected:
 	static bool appendGenerate( const QString &dir_name, const QString &node_name, const generateFunction &generate_function );
 public:

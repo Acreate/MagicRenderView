@@ -5,6 +5,8 @@
 
 class OutString : public ProtOutputItemWidget {
 	Q_OBJECT;
+public:
+	OutString( );
 };
 
 #endif // OUTSTRING_H_H_HEAD__FILE__

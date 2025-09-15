@@ -5,6 +5,8 @@
 
 class InputString : public ProtInputItemWidget {
 	Q_OBJECT;
+public:
+	InputString( );
 };
 
 #endif // INPUTSTRING_H_H_HEAD__FILE__

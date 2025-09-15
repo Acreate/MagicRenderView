@@ -7,7 +7,7 @@
 
 class ReadFileTxt : public NodeItemWidget {
 	Q_OBJECT;
-	Def_Last_StaticMetaInfo( ReadFileTxt, NodeItemWidget );
+	Def_Last_Firend_StaticMetaInfo( NodeItemWidget );
 protected:
 	ReadFileTxt( QWidget *parent );
 };

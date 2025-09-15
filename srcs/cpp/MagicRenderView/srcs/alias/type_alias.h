@@ -56,6 +56,66 @@ using std_function = std::function< TFunction >;
 /// @brief 锁
 using std_mutex = std::mutex;
 /// @brief 自动锁
-using std_lock_grad_mutex = std::lock_guard<std_mutex>;
+using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 
+#ifdef Def_First_StaticMetaInfo
+#undef Def_First_StaticMetaInfo
+#endif
+
+#define Def_First_StaticMetaInfo(  ) \
+protected: \
+	static QString getStaticMetaObjectName( ); \
+	static QString getStaticMetaObjectDir( ); \
+public: \
+	virtual QString getMetaObjectName( ); \
+	virtual QString getMetaObjectDir( )
+
+#ifdef Def_Last_StaticMetaInfo
+#undef Def_Last_StaticMetaInfo
+#endif
+
+#define Def_Last_StaticMetaInfo(  ) \
+protected: \
+	static QString getStaticMetaObjectName( ); \
+	static QString getStaticMetaObjectDir( ); \
+public: \
+	QString getMetaObjectName( ) override; \
+	QString getMetaObjectDir( ) override
+
+#ifdef Def_Last_Firend_StaticMetaInfo
+#undef Def_Last_Firend_StaticMetaInfo
+#endif
+
+#define Def_Last_Firend_StaticMetaInfo( Friend_Class ) \
+public:\
+	friend class Friend_Class;\
+protected: \
+	static QString getStaticMetaObjectName( ); \
+	static QString getStaticMetaObjectDir( ); \
+public: \
+	QString getMetaObjectName( ) override; \
+	QString getMetaObjectDir( ) override
+#ifdef Imp_StaticMetaInfo
+#undef Imp_StaticMetaInfo
+#endif
+
+#define Imp_StaticMetaInfo( Imp_Class , Class_Translate,  Dir_Translate) \
+	QString Imp_Class::getStaticMetaObjectName( ) { \
+		return Class_Translate; \
+	} \
+	QString Imp_Class::getStaticMetaObjectDir( ) { \
+		return Dir_Translate; \
+	}\
+	QString Imp_Class::getMetaObjectName( ) {\
+		return Class_Translate;\
+	}\
+	QString Imp_Class::getMetaObjectDir( ) {\
+		return Dir_Translate;\
+	}
+
+class Type_Alias {
+	Def_First_StaticMetaInfo( );
+public:
+	virtual ~Type_Alias( ) { }
+};
 #endif // TYPE_ALIAS_H_H_HEAD__FILE__
