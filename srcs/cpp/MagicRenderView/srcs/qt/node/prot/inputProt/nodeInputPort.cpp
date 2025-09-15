@@ -24,5 +24,4 @@ void NodeInputPort::updateProtLayout( ) {
 	painter.drawText( icoWidth, drawHeight, title );
 	painter.end( );
 	nodeSize = QSize( imageWidth, fontHeight );
-	nodePortRender.save( "./NodeInputPort.png" );
 }
