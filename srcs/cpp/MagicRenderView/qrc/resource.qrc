@@ -20,5 +20,13 @@
         <file>function/function_control.png</file>
         <file>function/function_function.png</file>
         <file>function/function_normal.png</file>
+        <file>fonts/Alibaba-PuHuiTi-Bold.ttf</file>
+        <file>fonts/Alibaba-PuHuiTi-Heavy.ttf</file>
+        <file>fonts/Alibaba-PuHuiTi-Light.ttf</file>
+        <file>fonts/Alibaba-PuHuiTi-Medium.ttf</file>
+        <file>fonts/Alibaba-PuHuiTi-Regular.ttf</file>
+        <file>fonts/Law Policy for Alibaba Sans.pdf</file>
+        <file>fonts/阿里巴巴普惠体v1.10版本更新说明.txt</file>
+        <file>fonts/法务版权声明.pdf</file>
     </qresource>
 </RCC>

@@ -3,7 +3,10 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "../../application/application.h"
+#include <qt/application/application.h>
+#include <qt/node/prot/inputProt/nodeInputPort.h>
+#include <qt/node/prot/outputProt/nodeOutputPort.h>
+
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) )
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( input_prot );

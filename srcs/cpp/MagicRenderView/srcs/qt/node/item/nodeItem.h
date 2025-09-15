@@ -9,9 +9,6 @@
 
 #include <qt/tools/tools.h>
 
-#include "../prot/inputProt/nodeInputPort.h"
-#include "../prot/outputProt/nodeOutputPort.h"
-
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
 	friend class NodeItemGenerate
@@ -20,10 +17,11 @@
 	Def_Last_Firend_StaticMetaInfo( NodeItem );\
 	friend class NodeItemGenerate
 
+class NodeOutputPort;
+class NodeInputPort;
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
-	friend class NodePort;
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;

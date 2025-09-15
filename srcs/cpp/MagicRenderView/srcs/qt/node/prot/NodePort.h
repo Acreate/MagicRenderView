@@ -9,8 +9,7 @@
 
 #include <qt/varType/varType.h>
 
-#include "../item/nodeItem.h"
-
+class NodeItem;
 class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
@@ -28,8 +27,7 @@ protected:
 	/// @brief 父节点
 	NodeItem *parent;
 public:
-	NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
-	}
+	NodePort( NodeItem *parent );
 	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
 	virtual void move( const QPoint &new_pos ) {
 		nodePos = new_pos;
@@ -59,12 +57,8 @@ public:
 		emit replaceVar( old, var );
 	}
 	virtual void updateProtLayout( ) = 0;
-	virtual QPoint converToNodeItemWidgetPos( ) const {
-		return nodePos + parent->nodePos;
-	}
-	virtual QRect converToNodeItemWidgetGeometry( ) const {
-		return QRect( nodePos + parent->nodePos, nodeSize );
-	}
+	virtual QPoint converToNodeItemWidgetPos( ) const;
+	virtual QRect converToNodeItemWidgetGeometry( ) const;
 protected Q_SLOTS:
 	virtual void releaseVarType( VarType *release_var_type ) {
 		if( release_var_type == var )

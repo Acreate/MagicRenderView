@@ -9,8 +9,8 @@ void NodeInputPort::updateProtLayout( ) {
 	Application *applicationInstancePtr = Application::getApplicationInstancePtr( );
 	auto font = applicationInstancePtr->getFont( );
 	auto fontMetrics = QFontMetrics( font );
-	auto advance = fontMetrics.boundingRect( title );
-	int width = advance.width( ) + advance.y( );
+	QRect boundingRect = fontMetrics.boundingRect( title );
+	int width = boundingRect.width( ) + boundingRect.x( );
 	int drawHeight = fontMetrics.leading( );
 	int fontHeight = fontMetrics.height( ) + drawHeight;
 	drawHeight = fontHeight - fontMetrics.descent( ) - drawHeight;

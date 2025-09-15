@@ -2,6 +2,7 @@
 
 #include <QMouseEvent>
 #include <QProcess>
+#include <QFontDatabase>
 #include <QSettings>
 #include <qboxlayout.h>
 #include <qfile.h>
@@ -59,7 +60,15 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	/*
 	 * 字体
 	 */
-	this->font.reset( new QFont( "" ) );
+	int fontId = QFontDatabase::addApplicationFont( ":/fonts/Alibaba-PuHuiTi-Regular.ttf" );
+	if( fontId != -1 ) {
+		QString family = QFontDatabase::applicationFontFamilies( fontId ).at( 0 );
+		QApplication::setFont( QFont( family ) );
+		font.reset( new QFont( family ) );
+		font->setItalic( true );
+		font->setBold( true );
+	} else
+		font.reset( new QFont( "" ) );
 	/*
 	 * 初始化节点
 	 */
