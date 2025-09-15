@@ -15,12 +15,12 @@ private:
 	VarType( const QString &unity_type_name ) {
 		unityTypeName = unity_type_name;
 	}
-	VarType( NodeItemWidget *parent = nullptr );
+	VarType( QObject *parent = nullptr );
 
-	static VarType * templateVarType( NodeItemWidget *parent, const QString &type_name );
+	static VarType * templateVarType( QObject *parent, const QString &type_name );
 public:
 	template< typename TType_Name >
-	static VarType * templateVarType( const NodeItemWidget *parent ) {
+	static VarType * templateVarType( QObject *parent ) {
 		return templateVarType( parent, typeid( TType_Name ).name( ) );
 	}
 public:

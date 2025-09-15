@@ -7,9 +7,6 @@
 #include <alias/type_alias.h>
 
 class QScrollArea;
-class ProtOutputItemWidget;
-class ProtInputItemWidget;
-class NodeItemWidget;
 class QVBoxLayout;
 class Application;
 class MainWidget : public QWidget {
@@ -31,16 +28,8 @@ protected:
 	QPoint globalReleasePos;
 	/// @brief 按下时当前窗口位置
 	QPoint fromGlobalReleasePoint;
-	/// @brief 按下时选中输入接口
-	ProtInputItemWidget *selectProtInputItemWidget;
-	/// @brief 按下时选中的输出接口
-	ProtOutputItemWidget *selectProtOutputItemWidget;
-	/// @brief 按下时选中节点
-	NodeItemWidget *selectNodeItemWidget;
-	/// @brief 激活的节点
-	NodeItemWidget *activeNodeItemWidget;
-	/// @brief 窗口列表
-	std_list< NodeItemWidget * > itemWidgets;
+	/// @brief 鼠标移动时的坐标位置
+	QPoint mouseMovePoint;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

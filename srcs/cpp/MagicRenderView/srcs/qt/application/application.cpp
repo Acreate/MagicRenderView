@@ -6,16 +6,12 @@
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-
-#include <qt/items/nodeImplementations/inputs/readFileImage.h>
-#include <qt/items/nodeImplementations/outputs/writeFileImage.h>
 #include <qt/stack/stack.h>
 #include <qt/widgets/mainWidget.h>
 
-#include "../items/nodeImplementations/inputs/readFileBit.h"
-#include "../items/nodeImplementations/inputs/readFileTxt.h"
-#include "../items/nodeImplementations/outputs/writeFileBit.h"
-#include "../items/nodeImplementations/outputs/writeFileTxt.h"
+#include "../node/generate/nodeItemGenerate.h"
+#include "../node/item/disk/readFile.h"
+#include "../node/item/disk/writeFile.h"
 
 #include "qt/tools/tools.h"
 
@@ -40,12 +36,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	stack = new Stack( );
 
 	// 初始化节点
-	NodeItemWidget::appendGenerate< WriteFileImage >( );
-	NodeItemWidget::appendGenerate< WriteFileBit >( );
-	NodeItemWidget::appendGenerate< WriteFileTxt >( );
-	NodeItemWidget::appendGenerate< ReadFileImage >( );
-	NodeItemWidget::appendGenerate< ReadFileBit >( );
-	NodeItemWidget::appendGenerate< ReadFileTxt >( );
+	NodeItemGenerate::appendNodeItemInfo< WriteFile >( );
+	NodeItemGenerate::appendNodeItemInfo< ReadFile >( );
 }
 Application::~Application( ) {
 	settings->sync( );
