@@ -9,6 +9,8 @@
 
 #include <qt/tools/tools.h>
 
+#include "../prot/NodePort.h"
+
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
 	friend class NodeItemGenerate
@@ -30,33 +32,60 @@ private:
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
-	QImage nodePortRender;
+	QImage *nodeItemRender;
 	/// @brief 相对节点的位置
 	QPoint nodePos;
-	/// @brief 节点大小
-	QSize nodeSize;
+	/// @brief 节点宽度
+	int nodeItemWidth;
+	/// @brief 节点高度
+	int nodeItemHeith;
 	/// @brief 输出接口序列
 	std_vector< NodeInputPort * > nodeInputProtVector;
 	/// @brief 输出接口序列
 	std_vector< NodeOutputPort * > nodeOutputProtVector;
 	/// @brief 输入组件缓存
-	QImage inputBuff;
+	QImage *inputBuff;
 	/// @brief 输出组件缓存
-	QImage outputBuff;
+	QImage *outputBuff;
 	/// @brief 标题缓存
-	QImage titleBuff;
+	QImage *titleBuff;
+
+	/// @brief 输入面板高度
+	int inputBuffHeight;
+	/// @brief 输入面板宽度
+	int inputBuffWidth;
+	/// @brief 输出面板高度
+	int outputBuffHeight;
+	/// @brief 输出面板宽度
+	int outputBuffWidth;
+	/// @brief 标题高度
+	int titleHeight;
+	/// @brief 标题宽度
+	int titleWidth;
+	/// @brief 上下端口之间的空间大小
+	int portSpace;
+	/// @brief 标题到端口的空间大小
+	int titleToPortSpace;
+	/// @brief 输入输入端口之间的空间大小
+	int midPortSpace;
+	/// @brief 边缘底部空间大小
+	int borderBoomSpace;
+	/// @brief 边缘空间左侧空间大小
+	int borderLeftSpace;
+	/// @brief 边缘右侧空间大小
+	int borderRightSpace;
+	/// @brief 边缘顶端空间大小
+	int borderTopSpace;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 protected:
 	NodeItem( NodeItem_ParentPtr_Type *parent );
 public:
+	~NodeItem( ) override;
 	/// @brief 初始化接口选项
 	/// @return 成功返回 true
-	virtual bool intPortItems( ) {
-		setNodeTitleName( getMetaObjectName(  ) );
-		return true;
-	}
+	virtual bool intPortItems( );
 	virtual const NodeItemString_Type & getNodeTitleName( ) const { return nodeTitleName; }
 	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name );
 
@@ -64,9 +93,9 @@ public:
 		nodePos = point;
 	}
 	virtual const QPoint & getPos( ) const { return nodePos; }
-	virtual const QSize & getSize( ) const { return nodeSize; }
-	virtual QRect geometry( ) const { return QRect( nodePos, nodeSize ); }
-	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
+	virtual QSize getSize( ) const { return { nodeItemWidth, nodeItemHeith }; }
+	virtual QRect geometry( ) const { return QRect( nodePos, QSize { nodeItemWidth, nodeItemHeith } ); }
+	virtual QImage * getNodeItemRender( ) const { return nodeItemRender; }
 	/// @brief 从父节点坐标转换到输入输出端口对象偏移坐标
 	/// @param src_pos 父窗口坐标
 	/// @return 输入输出端口对象的局部偏移坐标
@@ -84,9 +113,9 @@ public:
 		int y = leftTop.x( );
 		if( y < 0 )
 			return false;
-		if( x > nodeSize.width( ) )
+		if( x > nodeItemWidth )
 			return false;
-		if( y > nodeSize.height( ) )
+		if( y > nodeItemHeith )
 			return false;
 		return true;
 	}
@@ -108,7 +137,16 @@ protected:
 	/// @return 成功返回 true
 	virtual bool removeOutputProt( NodeOutputPort *output_port );
 	/// @brief 更新接口布局
-	virtual void updateProtLayout( );
+	virtual bool updateProtLayout( );
+	/// @brief 更新输入端布局
+	/// @return 成功返回 true
+	virtual bool updateInputLayout( );
+	/// @brief 更新输出端布局
+	/// @return 成功返回 true
+	virtual bool updateOutputLayout( );
+	/// @brief 更新标题布局
+	/// @return 成功返回 true
+	virtual bool updateTitleLayout( );
 public:
 	/// @brief 从指定位置获取输出端口对象指针
 	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置

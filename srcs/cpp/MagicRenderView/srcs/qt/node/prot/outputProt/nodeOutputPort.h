@@ -10,7 +10,7 @@ class NodeOutputPort : public NodePort {
 public:
 	NodeOutputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
-	void updateProtLayout( ) override;
+	bool updateProtLayout( ) override;
 };
 
 #endif // NODEOUTPUTPORT_H_H_HEAD__FILE__

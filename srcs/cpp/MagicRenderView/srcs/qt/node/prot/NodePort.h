@@ -9,6 +9,7 @@
 
 #include <qt/varType/varType.h>
 
+class Application;
 class NodeItem;
 class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
@@ -17,7 +18,7 @@ protected:
 	/// @brief 绑定变量
 	VarType *var;
 	/// @brief 绑定渲染
-	QImage nodePortRender;
+	QImage *nodePortRender;
 	/// @brief 相对节点的位置
 	QPoint nodePos;
 	/// @brief 节点大小
@@ -26,9 +27,19 @@ protected:
 	QString title;
 	/// @brief 父节点
 	NodeItem *parent;
+	/// @brief 引用对象指针
+	Application *applicationInstancePtr;
 public:
 	NodePort( NodeItem *parent );
-	virtual const QImage & getNodePortRender( ) const { return nodePortRender; }
+	~NodePort( ) override;
+	virtual bool renderLayout( const QString &ico_path, bool ico_is_end );
+	virtual QImage * getNodePortRender( ) const { return nodePortRender; }
+	virtual int height( ) const {
+		return nodeSize.height( );
+	}
+	virtual int width( ) const {
+		return nodeSize.width( );
+	}
 	virtual void move( const QPoint &new_pos ) {
 		nodePos = new_pos;
 	}
@@ -56,7 +67,7 @@ public:
 			connect( var, &VarType::deleteObjBefore, this, &NodePort::releaseVarType );
 		emit replaceVar( old, var );
 	}
-	virtual void updateProtLayout( ) = 0;
+	virtual bool updateProtLayout( ) = 0;
 	virtual QPoint converToNodeItemWidgetPos( ) const;
 	virtual QRect converToNodeItemWidgetGeometry( ) const;
 protected Q_SLOTS:

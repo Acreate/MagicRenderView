@@ -54,7 +54,7 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	auto end = nodeItemList.end( );
 	for( ; iterator != end; ++iterator ) {
 		NodeItem *nodeItem = *iterator;
-		painter.drawImage( nodeItem->getPos( ), nodeItem->getNodePortRender( ) );
+		painter.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
 	}
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {

@@ -111,7 +111,7 @@ public: \
 	}\
 	QString Imp_Class::getMetaObjectDir( ) {\
 		return Dir_Translate;\
-	}
+	}class Imp_Class
 
 class Type_Alias {
 	Def_First_StaticMetaInfo( );

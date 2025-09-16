@@ -14,7 +14,7 @@ protected:
 public:
 	NodeInputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
-	void updateProtLayout( ) override;
+	bool updateProtLayout( ) override;
 	virtual void linkOutputPort( NodeOutputPort *output_port ) = 0;
 };
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__

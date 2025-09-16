@@ -1,8 +1,61 @@
 ﻿#include "./NodePort.h"
+
+#include <QPainter>
+
 #include <qt/node/item/nodeItem.h>
 
-Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) )
-NodePort::NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
+#include "../../application/application.h"
+
+Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
+NodePort::NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
+	applicationInstancePtr = Application::getApplicationInstancePtr( );
+}
+NodePort::~NodePort( ) {
+	delete nodePortRender;
+}
+bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
+	auto font = applicationInstancePtr->getFont( );
+	auto fontMetrics = QFontMetrics( font );
+	QRect boundingRect = fontMetrics.boundingRect( title );
+	int width = boundingRect.width( ) + boundingRect.x( );
+	int drawHeight = fontMetrics.leading( );
+	int fontHeight = fontMetrics.height( ) + drawHeight;
+	drawHeight = fontHeight - fontMetrics.descent( ) - drawHeight;
+	QImage ico;
+	if( ico.load( ico_path ) == false || ico.isNull( ) ) {
+		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
+		return false;
+	}
+	if( ico.height( ) != fontHeight ) {
+		ico = ico.scaledToHeight( fontHeight );
+		if( ico.isNull( ) ) {
+			tools::debug::printError( "适配图标失败[" + getMetaObjectName( ) + "]" );
+			return false;
+		}
+	}
+
+	int icoWidth = ico.width( );
+	int imageWidth = width + icoWidth;
+	*nodePortRender = nodePortRender->scaled( imageWidth, fontHeight );
+
+	nodePortRender->fill( 0 );
+	QPainter painter( nodePortRender );
+	painter.setFont( font );
+	if( ico_is_end ) {
+		painter.drawImage( width, 0, ico );
+		painter.drawText( 0, drawHeight, title );
+	} else {
+		painter.drawImage( 0, 0, ico );
+		painter.drawText( icoWidth, drawHeight, title );
+	}
+
+	painter.end( );
+	if( nodePortRender->isNull( ) ) {
+		tools::debug::printError( "渲染标题失败[" + getMetaObjectName( ) + "]" );
+		return false;
+	}
+	nodeSize = QSize( imageWidth, fontHeight );
+	return true;
 }
 QPoint NodePort::converToNodeItemWidgetPos( ) const {
 	return nodePos + parent->getPos( );
