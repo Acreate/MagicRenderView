@@ -269,8 +269,8 @@ bool NodeItem::updateOutputLayout( ) {
 		auto &pair = drawPortDataPtr[ index ];
 		NodeOutputPort *nodeOutputPort = pair.first;
 		auto nodePortRender = nodeOutputPort->getNodePortRender( );
-		painter.drawImage( 0, width, *nodePortRender );
-		pair.second.first = 0;
+		pair.second.first = outputBuffWidth - nodePortRender->width( );
+		painter.drawImage( pair.second.first, width, *nodePortRender );
 		pair.second.second = width;
 		width += nodePortRender->height( ) + portSpace;
 	}
