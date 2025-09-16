@@ -34,7 +34,7 @@ NodeItem::~NodeItem( ) {
 bool NodeItem::getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
 		if( inputPortPtr == input_port_ptr ) {
-			result_pos = QPoint { pos.first + borderLeftSpace + nodePosX, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY };
+			result_pos = QPoint { pos.first + borderLeftSpace + nodePosX + inputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + inputPortPtr->height( ) / 2 };
 			return true;
 		}
 	return false;
@@ -42,7 +42,7 @@ bool NodeItem::getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoi
 bool NodeItem::getOutputPortPos( const TNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ onputPortPtr, pos ] : nodeOutputProtVector )
 		if( onputPortPtr == output_port_ptr ) {
-			result_pos = QPoint { pos.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + outputBuffWidth, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY };
+			result_pos = QPoint { pos.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + onputPortPtr->width( ) - onputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + output_port_ptr->height( ) / 2 };
 			return true;
 		}
 	return false;

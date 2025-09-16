@@ -19,7 +19,7 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 	QRect boundingRect = fontMetrics.boundingRect( title );
 	int width = boundingRect.width( ) + boundingRect.x( );
 	int drawHeight = fontMetrics.leading( );
-	portItemHeith = fontMetrics.height( ) + drawHeight;
+	icoItemHeith = portItemHeith = fontMetrics.height( ) + drawHeight;
 	drawHeight = portItemHeith - fontMetrics.descent( ) - drawHeight;
 	QImage ico;
 	if( ico.load( ico_path ) == false || ico.isNull( ) ) {
@@ -34,8 +34,8 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 		}
 	}
 
-	int icoWidth = ico.width( );
-	portItemWidth = width + icoWidth;
+	icoItemWidth = ico.width( );
+	portItemWidth = width + icoItemWidth;
 	*nodePortRender = nodePortRender->scaled( portItemWidth, portItemHeith );
 
 	nodePortRender->fill( 0 );
@@ -46,7 +46,7 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 		painter.drawText( 0, drawHeight, title );
 	} else {
 		painter.drawImage( 0, 0, ico );
-		painter.drawText( icoWidth, drawHeight, title );
+		painter.drawText( icoItemWidth, drawHeight, title );
 	}
 
 	painter.end( );

@@ -23,6 +23,10 @@ protected:
 	int portItemWidth;
 	/// @brief 端口高度
 	int portItemHeith;
+	/// @brief 图标宽度
+	int icoItemWidth;
+	/// @brief 图标高度
+	int icoItemHeith;
 	/// @brief 标题
 	QString title;
 	/// @brief 父节点
@@ -32,6 +36,8 @@ protected:
 public:
 	NodePort( NodeItem *parent );
 	~NodePort( ) override;
+	virtual int getIcoWidth( ) const { return icoItemWidth; }
+	virtual int getIcoHeith( ) const { return icoItemHeith; }
 	virtual const QString & getTitle( ) const { return title; }
 	virtual void setTitle( const QString &title ) { this->title = title; }
 	virtual bool renderLayout( const QString &ico_path, bool ico_is_end );
