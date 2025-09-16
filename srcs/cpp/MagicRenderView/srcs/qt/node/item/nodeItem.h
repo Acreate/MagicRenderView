@@ -99,6 +99,8 @@ protected:
 	NodeItem( NodeItem_ParentPtr_Type *parent );
 public:
 	~NodeItem( ) override;
+	virtual bool getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
+	virtual bool getOutputPortPos( TNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -146,6 +148,11 @@ public:
 	virtual void move( const QPoint &point ) {
 		nodePosX = point.x( );
 		nodePosY = point.y( );
+	}
+
+	virtual void move( int x, int y ) {
+		nodePosX = x;
+		nodePosY = y;
 	}
 	virtual QPoint getPos( ) const { return QPoint( nodePosX, nodePosY ); }
 	virtual QSize getSize( ) const { return { nodeItemWidth, nodeItemHeith }; }

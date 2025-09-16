@@ -2,6 +2,7 @@
 #define MAINWIDGET_H_H_HEAD__FILE__
 #pragma once
 
+#include <QPainterPath>
 #include <QWidget>
 
 #include <alias/type_alias.h>
@@ -26,6 +27,8 @@ protected:
 	QPoint globalPressPos;
 	/// @brief 按下时当前窗口位置
 	QPoint fromGlobalPressPoint;
+	/// @brief 多用途位置信息
+	QPoint modPoint;
 	/// @brief 按下时全局位置
 	QPoint globalReleasePos;
 	/// @brief 按下时当前窗口位置
@@ -34,6 +37,18 @@ protected:
 	QPoint mouseMovePoint;
 	/// @brief 节点链表
 	std_list< NodeItem * > nodeItemList;
+	/// @brief 选中的输入端口
+	NodeInputPort *selectInputPort;
+	/// @brief 选中的输出端口
+	NodeOutputPort *selectOutputPort;
+	/// @brief 选中的节点
+	NodeItem *selectItem;
+	/// @brief 激活的节点
+	NodeItem *activeItem;
+	/// @brief 拖拽项
+	NodeItem *dragItem;
+	/// @brief 绘制连线
+	QPainterPath painterDrawLinePath;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

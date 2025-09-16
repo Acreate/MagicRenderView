@@ -31,6 +31,22 @@ NodeItem::~NodeItem( ) {
 	delete outputBuff;
 	delete titleBuff;
 }
+bool NodeItem::getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
+	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
+		if( inputPortPtr == input_port_ptr ) {
+			result_pos = QPoint { pos.first + borderLeftSpace + nodePosX, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY };
+			return true;
+		}
+	return false;
+}
+bool NodeItem::getOutputPortPos( const TNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const {
+	for( auto &[ onputPortPtr, pos ] : nodeOutputProtVector )
+		if( onputPortPtr == output_port_ptr ) {
+			result_pos = QPoint { pos.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + outputBuffWidth, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY };
+			return true;
+		}
+	return false;
+}
 NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 
 	// 任意一个坐标超出范围，即可判定非法
@@ -76,14 +92,11 @@ NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const 
 		return nullptr;
 
 	auto data = nodeInputProtVector.data( );
-	--count;
 	do
 
-		if( y > ( data[ count ].second.second + borderLeftSpace ) )
+		if( --count, y > ( data[ count ].second.second + drawY ) )
 			return data[ count ].first;
-		else
-			--count;
-	while( count != 0 );
+	while( count > 0 );
 
 	return data[ 0 ].first;
 }
@@ -109,18 +122,19 @@ NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) 
 
 	auto data = nodeOutputProtVector.data( );
 	drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
-	--count;
 	do
-		if( y > ( data[ count ].second.second + drawX ) )
+		if( --count, y > ( data[ count ].second.second + drawY ) )
 			return data[ count ].first;
-		else
-			--count;
-	while( count != 0 );
+	while( count > 0 );
 
 	return data[ 0 ].first;
 }
 bool NodeItem::intPortItems( ) {
 	setNodeTitleName( getMetaObjectName( ) );
+	updateTitleLayout( );
+	updateInputLayout( );
+	updateOutputLayout( );
+	integrateLayout( );
 	return true;
 }
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {

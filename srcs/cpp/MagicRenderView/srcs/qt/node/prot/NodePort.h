@@ -32,6 +32,8 @@ protected:
 public:
 	NodePort( NodeItem *parent );
 	~NodePort( ) override;
+	virtual const QString & getTitle( ) const { return title; }
+	virtual void setTitle( const QString &title ) { this->title = title; }
 	virtual bool renderLayout( const QString &ico_path, bool ico_is_end );
 	virtual QImage * getNodePortRender( ) const { return nodePortRender; }
 	virtual int height( ) const {
