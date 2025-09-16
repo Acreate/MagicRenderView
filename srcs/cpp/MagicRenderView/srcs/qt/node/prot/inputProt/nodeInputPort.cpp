@@ -9,5 +9,5 @@
 Imp_StaticMetaInfo( NodeInputPort, QObject::tr( "NodeInputPort" ), QObject::tr( "inputProt" ) );
 
 bool NodeInputPort::updateProtLayout( ) {
-	return renderLayout( ":/ico/info_node.png", false );
+	return renderLayout( false );
 }

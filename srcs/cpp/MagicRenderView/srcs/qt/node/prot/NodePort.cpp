@@ -7,13 +7,24 @@
 #include "../../application/application.h"
 
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
-NodePort::NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
+NodePort::NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
+		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
+	icoItemHeith = ico->height( );
+	icoItemWidth = ico->width( );
 }
 NodePort::~NodePort( ) {
 	delete nodePortRender;
+	delete ico;
 }
-bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
+void NodePort::setIco( const QString &new_ico_path ) {
+	auto load = QImage( new_ico_path );
+	if( load.isNull( ) )
+		return;
+	setIco( load );
+}
+bool NodePort::renderLayout( bool ico_is_end ) {
 	auto font = applicationInstancePtr->getFont( );
 	auto fontMetrics = QFontMetrics( font );
 	QRect boundingRect = fontMetrics.boundingRect( title );
@@ -21,20 +32,16 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 	int drawHeight = fontMetrics.leading( );
 	icoItemHeith = portItemHeith = fontMetrics.height( ) + drawHeight;
 	drawHeight = portItemHeith - fontMetrics.descent( ) - drawHeight;
-	QImage ico;
-	if( ico.load( ico_path ) == false || ico.isNull( ) ) {
-		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
-		return false;
-	}
-	if( ico.height( ) != portItemHeith ) {
-		ico = ico.scaledToHeight( portItemHeith );
-		if( ico.isNull( ) ) {
+
+	if( ico->height( ) != portItemHeith ) {
+		*ico = ico->scaledToHeight( portItemHeith );
+		if( ico->isNull( ) ) {
 			tools::debug::printError( "适配图标失败[" + getMetaObjectName( ) + "]" );
 			return false;
 		}
 	}
 
-	icoItemWidth = ico.width( );
+	icoItemWidth = ico->width( );
 	portItemWidth = width + icoItemWidth;
 	*nodePortRender = nodePortRender->scaled( portItemWidth, portItemHeith );
 
@@ -42,10 +49,10 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 	QPainter painter( nodePortRender );
 	painter.setFont( font );
 	if( ico_is_end ) {
-		painter.drawImage( width, 0, ico );
+		painter.drawImage( width, 0, *ico );
 		painter.drawText( 0, drawHeight, title );
 	} else {
-		painter.drawImage( 0, 0, ico );
+		painter.drawImage( 0, 0, *ico );
 		painter.drawText( icoItemWidth, drawHeight, title );
 	}
 

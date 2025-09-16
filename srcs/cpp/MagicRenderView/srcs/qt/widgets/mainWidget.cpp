@@ -99,9 +99,6 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	mouseMovePoint = event->pos( );
 	if( dragItem )
 		dragItem->move( mouseMovePoint - modPoint );
-	else {
-	}
-
 	update( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
@@ -112,7 +109,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
-			for( auto &item : nodeItemList ) {
+			for( NodeItem *item : nodeItemList ) {
 				QPoint itemPos = item->getPos( );
 				modPoint = fromGlobalPressPoint - itemPos;
 				NodeItem::Click_Type pointType = item->relativePointType( modPoint );
@@ -120,16 +117,16 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					continue;
 				if( pointType == NodeItem::Click_Type::OutputPort ) {
 					selectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
-					if( selectOutputPort ) {
+					if( selectOutputPort )
 						item->getOutputPortPos( selectOutputPort, modPoint );
-						qDebug( ) << "-> " << item->getNodeTitleName( ) << " 输出接口 : " << selectOutputPort->getTitle( );
-					}
+					else
+						dragItem = item;
 				} else if( pointType == NodeItem::Click_Type::InputPort ) {
 					selectInputPort = item->getNodeInputAtRelativePointType( modPoint );
-					if( selectInputPort ) {
+					if( selectInputPort )
 						item->getInputPortPos( selectInputPort, modPoint );
-						qDebug( ) << "-> " << item->getNodeTitleName( ) << " 输入接口 : " << selectInputPort->getTitle( );
-					}
+					else
+						dragItem = item;
 				} else
 					dragItem = item;
 				activeItem = selectItem = item;

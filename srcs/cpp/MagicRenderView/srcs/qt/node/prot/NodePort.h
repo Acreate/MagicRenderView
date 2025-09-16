@@ -19,6 +19,8 @@ protected:
 	VarType *var;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
+	/// @brief 图标
+	QImage *ico;
 	/// @brief 端口宽度
 	int portItemWidth;
 	/// @brief 端口高度
@@ -40,7 +42,16 @@ public:
 	virtual int getIcoHeith( ) const { return icoItemHeith; }
 	virtual const QString & getTitle( ) const { return title; }
 	virtual void setTitle( const QString &title ) { this->title = title; }
-	virtual bool renderLayout( const QString &ico_path, bool ico_is_end );
+	virtual QImage * getIco( ) const {
+		return ico;
+	}
+	virtual void setIco( const QImage &new_ico ) {
+		*ico = new_ico;
+		icoItemHeith = ico->height( );
+		icoItemWidth = ico->width( );
+	}
+	virtual void setIco( const QString &new_ico_path );
+	virtual bool renderLayout( bool ico_is_end );
 	virtual QImage * getNodePortRender( ) const { return nodePortRender; }
 	virtual int height( ) const {
 		return portItemHeith;

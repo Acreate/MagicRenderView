@@ -47,8 +47,6 @@ protected:
 	NodeItem *activeItem;
 	/// @brief 拖拽项
 	NodeItem *dragItem;
-	/// @brief 绘制连线
-	QPainterPath painterDrawLinePath;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
