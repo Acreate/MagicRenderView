@@ -19,10 +19,6 @@ protected:
 	VarType *var;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
-	/// @brief 相对于父窗口的 X 位置
-	int portPosX;
-	/// @brief 相对于父窗口的 Y 位置
-	int portPosY;
 	/// @brief 端口宽度
 	int portItemWidth;
 	/// @brief 端口高度
@@ -44,23 +40,8 @@ public:
 	virtual int width( ) const {
 		return portItemWidth;
 	}
-	virtual void move( const QPoint &new_pos ) {
-		portPosX = new_pos.x( );
-		portPosY = new_pos.y( );
-	}
-	virtual void move( const int &x, const int &y ) {
-		portPosX = x;
-		portPosY = y;
-	}
-	virtual void moveX( const int &x ) {
-		portPosX = x;
-	}
-	virtual void moveY( const int &y ) {
-		portPosY = y;
-	}
-	virtual QPoint getPos( ) const { return QPoint( portPosX, portPosY ); }
 	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
-	virtual QRect geometry( ) const { return QRect( portPosX, portPosY, portItemWidth, portItemHeith ); }
+
 	virtual const VarType * getVar( ) const {
 		return var;
 	}

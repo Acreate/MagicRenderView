@@ -24,16 +24,100 @@ NodeItem::NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ), nodeI
 	titleHeight = 0;
 	titleWidth = 0;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
-
-	QDir dir( "./images/" );
-	if( dir.exists( ) == false )
-		dir.mkpath( dir.absolutePath( ) );
 }
 NodeItem::~NodeItem( ) {
 	delete nodeItemRender;
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
+}
+NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
+
+	// 任意一个坐标超出范围，即可判定非法
+	if( x < 0 || y < 0 || x > nodeItemWidth || y > nodeItemHeith )
+		return Click_Type::None;
+	int drawX = borderLeftSpace;
+	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
+	if( x > drawX && y > drawY ) { // 需要匹配是否输入和输出节点
+		drawX += inputBuffWidth;
+		// 判定输入
+		if( x < drawX )
+			return Click_Type::InputPort;
+		drawX += midPortSpace;
+		// 判定中间
+		if( x < drawX )
+			return Click_Type::Space;
+		drawX += outputBuffWidth;
+		// 判定输出
+		if( x < drawX )
+			return Click_Type::OutputPort;
+
+	} else
+		return Click_Type::Title;
+	return Click_Type::Space;
+}
+NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
+	size_t count = nodeInputProtVector.size( );
+	if( count == 0 )
+		return nullptr;
+	int drawX = borderLeftSpace;
+
+	if( x < drawX )
+		return nullptr;
+	drawX += inputBuffWidth;
+	if( x > drawX )
+		return nullptr;
+
+	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
+	if( y < drawY )
+		return nullptr;
+	drawY += inputBuffHeight;
+	if( y > drawY )
+		return nullptr;
+
+	auto data = nodeInputProtVector.data( );
+	--count;
+	do
+
+		if( y > ( data[ count ].second.second + borderLeftSpace ) )
+			return data[ count ].first;
+		else
+			--count;
+	while( count != 0 );
+
+	return data[ 0 ].first;
+}
+NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) const {
+
+	size_t count = nodeOutputProtVector.size( );
+	if( count == 0 )
+		return nullptr;
+	int drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
+
+	if( x < drawX )
+		return nullptr;
+	drawX += outputBuffWidth;
+	if( x > drawX )
+		return nullptr;
+
+	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
+	if( y < drawY )
+		return nullptr;
+	drawY += outputBuffHeight;
+	if( y > drawY )
+		return nullptr;
+
+	auto data = nodeOutputProtVector.data( );
+	drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
+	--count;
+	do
+		if( y > ( data[ count ].second.second + drawX ) )
+			return data[ count ].first;
+		else
+			--count;
+	while( count != 0 );
+
+	return data[ 0 ].first;
 }
 bool NodeItem::intPortItems( ) {
 	setNodeTitleName( getMetaObjectName( ) );
@@ -44,7 +128,7 @@ void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {
 }
 
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
-	nodeInputProtVector.emplace_back( input_prot );
+	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;
 }
 bool NodeItem::removeInputProt( NodeInputPort *input_prot ) {
@@ -53,7 +137,7 @@ bool NodeItem::removeInputProt( NodeInputPort *input_prot ) {
 		return false;
 	auto data = nodeInputProtVector.data( );
 	for( ; index < count; ++index )
-		if( data[ index ] == input_prot ) {
+		if( data[ index ].first == input_prot ) {
 			nodeInputProtVector.erase( nodeInputProtVector.begin( ) + index );
 			return true;
 		}
@@ -61,7 +145,7 @@ bool NodeItem::removeInputProt( NodeInputPort *input_prot ) {
 }
 bool NodeItem::appendOutputProt( NodeOutputPort *output_prot ) {
 
-	nodeOutputProtVector.emplace_back( output_prot );
+	nodeOutputProtVector.emplace_back( TPortWidgetPort< TNodePortOutputPortPtr >( output_prot, { 0, 0 } ) );
 
 	return true;
 }
@@ -72,7 +156,7 @@ bool NodeItem::removeOutputProt( NodeOutputPort *output_port ) {
 		return false;
 	auto data = nodeOutputProtVector.data( );
 	for( ; index < count; ++index )
-		if( data[ index ] == output_port ) {
+		if( data[ index ].first == output_port ) {
 			nodeOutputProtVector.erase( nodeOutputProtVector.begin( ) + index );
 			return true;
 		}
@@ -86,7 +170,7 @@ bool NodeItem::updateInputLayout( ) {
 	size_t drawCount = nodeInputProtVector.size( ), index = 0;
 	auto drawPortDataPtr = nodeInputProtVector.data( );
 	for( ; index < drawCount; ++index ) {
-		NodeInputPort *nodeInputPort = drawPortDataPtr[ index ];
+		NodeInputPort *nodeInputPort = drawPortDataPtr[ index ].first;
 		if( nodeInputPort->updateProtLayout( ) == false )
 			return false;
 		QImage *nodePortRender = nodeInputPort->getNodePortRender( );
@@ -112,8 +196,12 @@ bool NodeItem::updateInputLayout( ) {
 	QPainter painter( inputBuff );
 	width = 0; // 充当临时 y 坐标
 	for( index = 0; index < drawCount; ++index ) {
-		auto nodePortRender = drawPortDataPtr[ index ]->getNodePortRender( );
+		auto &pair = drawPortDataPtr[ index ];
+		NodeInputPort *nodeInputPort = pair.first;
+		auto nodePortRender = nodeInputPort->getNodePortRender( );
 		painter.drawImage( 0, width, *nodePortRender );
+		pair.second.first = 0;
+		pair.second.second = width;
 		width += nodePortRender->height( ) + portSpace;
 	}
 	painter.end( );
@@ -127,7 +215,7 @@ bool NodeItem::updateOutputLayout( ) {
 	size_t drawCount = nodeOutputProtVector.size( ), index = 0;
 	auto drawPortDataPtr = nodeOutputProtVector.data( );
 	for( ; index < drawCount; ++index ) {
-		NodeOutputPort *nodeOutputPort = drawPortDataPtr[ index ];
+		NodeOutputPort *nodeOutputPort = drawPortDataPtr[ index ].first;
 		if( nodeOutputPort->updateProtLayout( ) == false )
 			return false;
 		QImage *nodePortRender = nodeOutputPort->getNodePortRender( );
@@ -154,8 +242,12 @@ bool NodeItem::updateOutputLayout( ) {
 	QPainter painter( outputBuff );
 	width = 0; // 充当临时 y 坐标
 	for( index = 0; index < drawCount; ++index ) {
-		auto nodePortRender = drawPortDataPtr[ index ]->getNodePortRender( );
+		auto &pair = drawPortDataPtr[ index ];
+		NodeOutputPort *nodeOutputPort = pair.first;
+		auto nodePortRender = nodeOutputPort->getNodePortRender( );
 		painter.drawImage( 0, width, *nodePortRender );
+		pair.second.first = 0;
+		pair.second.second = width;
 		width += nodePortRender->height( ) + portSpace;
 	}
 	painter.end( );
@@ -229,36 +321,16 @@ bool NodeItem::integrateLayout( ) {
 
 	return true;
 }
-NodeOutputPort * NodeItem::formPosNodeOutputPort( const QPoint &pos ) {
 
-	size_t count = nodeOutputProtVector.size( ), index = 0;
-	if( count == 0 )
-		return nullptr;
-	auto data = nodeOutputProtVector.data( );
-	for( ; index < count; ++index )
-		if( data[ index ]->getPos( ) == pos )
-			return data[ index ];
-	return nullptr;
-}
 NodeOutputPort * NodeItem::formIndexNodeOutputPort( const size_t &index ) {
 	size_t count = nodeOutputProtVector.size( );
 	if( count < index )
-		return nodeOutputProtVector.data( )[ index ];
-	return nullptr;
-}
-NodeInputPort * NodeItem::formPosNodeInputPort( const QPoint &pos ) {
-	size_t count = nodeInputProtVector.size( ), index = 0;
-	if( count == 0 )
-		return nullptr;
-	auto data = nodeInputProtVector.data( );
-	for( ; index < count; ++index )
-		if( data[ index ]->getPos( ) == pos )
-			return data[ index ];
+		return nodeOutputProtVector.data( )[ index ].first;
 	return nullptr;
 }
 NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 	size_t count = nodeInputProtVector.size( );
 	if( count < index )
-		return nodeInputProtVector.data( )[ index ];
+		return nodeInputProtVector.data( )[ index ].first;
 	return nullptr;
 }

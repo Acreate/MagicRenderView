@@ -89,7 +89,8 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
-
+			for( auto &item : nodeItemList )
+				qDebug( ) << item->relativePointType( fromGlobalPressPoint - item->getPos( ) );
 			break;
 	}
 }

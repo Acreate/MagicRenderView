@@ -26,8 +26,22 @@ class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
 public:
+	enum class Click_Type {
+		None, // 没有
+		Space, // 空白
+		Title, // 标题
+		InputPort, // 输入
+		OutputPort, // 输出
+	};
+	Q_ENUM( Click_Type )
+public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
+	using TNodePortInputPortPtr = NodeInputPort *;
+	using TNodePortOutputPortPtr = NodeOutputPort *;
+	using TNodeProtPoint = std::pair< int, int >;
+	template< typename TPortTypePtr >
+	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
 private:
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
@@ -42,9 +56,9 @@ private:
 	/// @brief 节点高度
 	int nodeItemHeith;
 	/// @brief 输出接口序列
-	std_vector< NodeInputPort * > nodeInputProtVector;
+	std_vector< TPortWidgetPort< TNodePortInputPortPtr > > nodeInputProtVector;
 	/// @brief 输出接口序列
-	std_vector< NodeOutputPort * > nodeOutputProtVector;
+	std_vector< TPortWidgetPort< TNodePortOutputPortPtr > > nodeOutputProtVector;
 	/// @brief 输入组件缓存
 	QImage *inputBuff;
 	/// @brief 输出组件缓存
@@ -85,6 +99,44 @@ protected:
 	NodeItem( NodeItem_ParentPtr_Type *parent );
 public:
 	~NodeItem( ) override;
+	/// @brief 从相对坐标获取类型
+	/// @param point 基于该节点的相对位置
+	/// @return 类型
+	virtual Click_Type relativePointType( const QPoint &point ) const {
+		return relativePointType( point.x( ), point.y( ) );
+	}
+
+	/// @brief 从相对坐标获取类型
+	/// @param x 基于该节点的 x 相对位置
+	/// @param y 基于该节点的 y 相对位置
+	/// @return 类型
+	virtual Click_Type relativePointType( int x, int y ) const;
+
+	/// @brief 从相对坐标获输入接口
+	/// @param point 基于该节点的相对位置
+	/// @return 类型
+	virtual TNodePortInputPortPtr getNodeInputAtRelativePointType( const QPoint &point ) const {
+		return getNodeInputAtRelativePointType( point.x( ), point.y( ) );
+	}
+
+	/// @brief 从相对坐标获取输入接口
+	/// @param x 基于该节点的 x 相对位置
+	/// @param y 基于该节点的 y 相对位置
+	/// @return 类型
+	virtual TNodePortInputPortPtr getNodeInputAtRelativePointType( int x, int y ) const;
+
+	/// @brief 从相对坐标获输出接口
+	/// @param point 基于该节点的相对位置
+	/// @return 类型
+	virtual TNodePortOutputPortPtr getNodeOutputPortAtRelativePointType( const QPoint &point ) const {
+		return getNodeOutputPortAtRelativePointType( point.x( ), point.y( ) );
+	}
+
+	/// @brief 从相对坐标获取输出接口
+	/// @param x 基于该节点的 x 相对位置
+	/// @param y 基于该节点的 y 相对位置
+	/// @return 类型
+	virtual TNodePortOutputPortPtr getNodeOutputPortAtRelativePointType( int x, int y ) const;
 	/// @brief 初始化接口选项
 	/// @return 成功返回 true
 	virtual bool intPortItems( );
@@ -123,19 +175,19 @@ protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
 	/// @return 成功返回 true
-	virtual bool appendInputProt( NodeInputPort *input_prot );
+	virtual bool appendInputProt( TNodePortInputPortPtr input_prot );
 	/// @brief 删除输入接口
 	/// @param input_prot 输入接口对象指针 
 	/// @return 成功返回 true
-	virtual bool removeInputProt( NodeInputPort *input_prot );
+	virtual bool removeInputProt( TNodePortInputPortPtr input_prot );
 	/// @brief 增加一个输出接口
 	/// @param output_prot 输出接口对象指针
 	/// @return 成功返回 true
-	virtual bool appendOutputProt( NodeOutputPort *output_prot );
+	virtual bool appendOutputProt( TNodePortOutputPortPtr output_prot );
 	/// @brief 删除输出接口
 	/// @param output_port 
 	/// @return 成功返回 true
-	virtual bool removeOutputProt( NodeOutputPort *output_port );
+	virtual bool removeOutputProt( TNodePortOutputPortPtr output_port );
 	/// @brief 更新输入端布局
 	/// @return 成功返回 true
 	virtual bool updateInputLayout( );
@@ -149,22 +201,14 @@ protected:
 	/// @return 成功返回 true
 	virtual bool integrateLayout( );
 public:
-	/// @brief 从指定位置获取输出端口对象指针
-	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置
-	/// @return 成功返回输出端口，失败返回 nullptr
-	virtual NodeOutputPort * formPosNodeOutputPort( const QPoint &pos );
 	/// @brief 从布局存储序列获取输出端口对象指针
 	/// @param index 布局序列下标
 	/// @return 成功返回输出端口，失败返回 nullptr
-	virtual NodeOutputPort * formIndexNodeOutputPort( const size_t &index );
-	/// @brief 从指定位置获取输入端口对象指针
-	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置
-	/// @return 成功返回输入端口，失败返回 nullptr
-	virtual NodeInputPort * formPosNodeInputPort( const QPoint &pos );
+	virtual TNodePortOutputPortPtr formIndexNodeOutputPort( const size_t &index );
 	/// @brief 从布局存储序列获取输入端口对象指针
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
-	virtual NodeInputPort * formIndexNodeInputPort( const size_t &index );
+	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
 
 };
 
