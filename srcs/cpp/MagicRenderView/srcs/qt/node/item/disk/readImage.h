@@ -10,7 +10,6 @@ class ReadImage : public NodeItem {
 protected:
 	ReadImage( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // READIMAGE_H_H_HEAD__FILE__

@@ -10,7 +10,6 @@ class WriteImage : public NodeItem {
 protected:
 	WriteImage( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // WRITEIMAGE_H_H_HEAD__FILE__

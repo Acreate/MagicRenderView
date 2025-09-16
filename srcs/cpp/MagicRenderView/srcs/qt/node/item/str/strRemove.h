@@ -10,7 +10,6 @@ class StrRemove : public NodeItem {
 protected:
 	StrRemove( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // STRREMOVE_H_H_HEAD__FILE__

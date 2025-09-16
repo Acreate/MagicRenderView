@@ -10,7 +10,6 @@ class SystemInfo : public NodeItem {
 protected:
 	SystemInfo( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // SYSTEMINFO_H_H_HEAD__FILE__

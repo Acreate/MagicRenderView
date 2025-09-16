@@ -32,8 +32,13 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 			auto addAction = dirMenu->addAction( className );
 			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
 				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
+				if( nodeItem->intPortItems( ) == false ) {
+					delete nodeItem;
+					return;
+				}
 				nodeItem->move( fromGlobalReleasePoint );
 				nodeItemList.emplace_back( nodeItem );
+				update( );
 			} );
 		}
 	}
@@ -45,7 +50,12 @@ MainWidget::~MainWidget( ) {
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-
+	auto iterator = nodeItemList.begin( );
+	auto end = nodeItemList.end( );
+	for( ; iterator != end; ++iterator ) {
+		NodeItem *nodeItem = *iterator;
+		painter.drawImage( nodeItem->getPos( ), nodeItem->getNodePortRender( ) );
+	}
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );

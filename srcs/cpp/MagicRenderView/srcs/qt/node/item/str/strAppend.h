@@ -10,7 +10,6 @@ class StrAppend : public NodeItem {
 protected:
 	StrAppend( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // STRAPPEND_H_H_HEAD__FILE__

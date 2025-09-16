@@ -17,6 +17,7 @@
 	Def_Last_Firend_StaticMetaInfo( NodeItem );\
 	friend class NodeItemGenerate
 
+class Application;
 class NodeOutputPort;
 class NodeInputPort;
 class NodeItem : public QObject, public Type_Alias {
@@ -25,7 +26,7 @@ class NodeItem : public QObject, public Type_Alias {
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
-protected:
+private:
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -38,14 +39,26 @@ protected:
 	std_vector< NodeInputPort * > nodeInputProtVector;
 	/// @brief 输出接口序列
 	std_vector< NodeOutputPort * > nodeOutputProtVector;
+	/// @brief 输入组件缓存
+	QImage inputBuff;
+	/// @brief 输出组件缓存
+	QImage outputBuff;
+	/// @brief 标题缓存
+	QImage titleBuff;
 protected:
-	NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ) {
-
-		nodeTitleName = getMetaObjectName( );
-	}
+	/// @brief 应用类指针
+	Application *applicationInstancePtr;
+protected:
+	NodeItem( NodeItem_ParentPtr_Type *parent );
 public:
+	/// @brief 初始化接口选项
+	/// @return 成功返回 true
+	virtual bool intPortItems( ) {
+		setNodeTitleName( getMetaObjectName(  ) );
+		return true;
+	}
 	virtual const NodeItemString_Type & getNodeTitleName( ) const { return nodeTitleName; }
-	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name ) { nodeTitleName = node_title_name; }
+	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name );
 
 	virtual void move( const QPoint &point ) {
 		nodePos = point;

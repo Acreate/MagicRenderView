@@ -10,7 +10,6 @@ class VarDiv : public NodeItem {
 protected:
 	VarDiv( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // VARDIV_H_H_HEAD__FILE__

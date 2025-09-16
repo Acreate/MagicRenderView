@@ -10,7 +10,6 @@ class VarMul : public NodeItem {
 protected:
 	VarMul( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // VARMUL_H_H_HEAD__FILE__

@@ -10,7 +10,6 @@ class StrSub : public NodeItem {
 protected:
 	StrSub( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // STRSUB_H_H_HEAD__FILE__

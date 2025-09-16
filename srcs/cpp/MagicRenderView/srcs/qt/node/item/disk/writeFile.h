@@ -8,6 +8,7 @@ class WriteFile : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	WriteFile( NodeItem_ParentPtr_Type *parent );
+
 };
 
 #endif // WRITEFILE_H_H_HEAD__FILE__

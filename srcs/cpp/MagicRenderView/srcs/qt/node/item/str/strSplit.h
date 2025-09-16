@@ -10,7 +10,6 @@ class StrSplit : public NodeItem {
 protected:
 	StrSplit( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // STRSPLIT_H_H_HEAD__FILE__

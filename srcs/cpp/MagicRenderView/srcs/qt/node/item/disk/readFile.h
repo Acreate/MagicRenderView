@@ -9,5 +9,7 @@ class ReadFile : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	ReadFile( NodeItem_ParentPtr_Type *parent );
+public:
+	bool intPortItems( ) override;
 };
 #endif // READFILE_H_H_HEAD__FILE__

@@ -9,8 +9,7 @@ class StrInsert : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	StrInsert( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
+		: NodeItem( parent ){
 	}
 };
 #endif // STRINSERT_H_H_HEAD__FILE__

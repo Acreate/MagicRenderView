@@ -10,7 +10,6 @@ class VarAdd : public NodeItem {
 protected:
 	VarAdd( NodeItem_ParentPtr_Type *parent )
 		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
 	}
 };
 #endif // VARADD_H_H_HEAD__FILE__

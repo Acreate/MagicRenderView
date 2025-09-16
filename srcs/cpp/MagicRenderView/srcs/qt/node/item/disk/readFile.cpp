@@ -5,11 +5,13 @@
 
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) )
 ReadFile::ReadFile( NodeItem_ParentPtr_Type *parent ) : NodeItem( parent ) {
-	nodeTitleName = getMetaObjectName( );
+}
+bool ReadFile::intPortItems( ) {
+	setNodeTitleName(getMetaObjectName( ));
 	StringInputPort *inputPort = new StringInputPort( this );
 	StringOutputPort *outputPort = new StringOutputPort( this );
 	appendInputProt( inputPort );
 	appendOutputProt( outputPort );
-	inputPort->updateProtLayout( );
-	outputPort->updateProtLayout( );
+	updateProtLayout( );
+	return true;
 }

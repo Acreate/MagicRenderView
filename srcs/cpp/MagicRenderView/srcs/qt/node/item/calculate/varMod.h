@@ -9,8 +9,7 @@ class VarMod : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	VarMod( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent )  {
-		nodeTitleName = getMetaObjectName( );
+		: NodeItem( parent ) {
 	}
 };
 #endif // VARMOD_H_H_HEAD__FILE__

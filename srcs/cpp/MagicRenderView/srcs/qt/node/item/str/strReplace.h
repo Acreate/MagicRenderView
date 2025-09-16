@@ -9,8 +9,7 @@ class StrReplace : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	StrReplace( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
-		nodeTitleName = getMetaObjectName( );
+		: NodeItem( parent ){
 	}
 };
 #endif // STRREPLACE_H_H_HEAD__FILE__
