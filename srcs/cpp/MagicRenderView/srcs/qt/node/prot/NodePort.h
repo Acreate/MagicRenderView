@@ -19,10 +19,14 @@ protected:
 	VarType *var;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
-	/// @brief 相对节点的位置
-	QPoint nodePos;
-	/// @brief 节点大小
-	QSize nodeSize;
+	/// @brief 相对于父窗口的 X 位置
+	int portPosX;
+	/// @brief 相对于父窗口的 Y 位置
+	int portPosY;
+	/// @brief 端口宽度
+	int portItemWidth;
+	/// @brief 端口高度
+	int portItemHeith;
 	/// @brief 标题
 	QString title;
 	/// @brief 父节点
@@ -35,26 +39,28 @@ public:
 	virtual bool renderLayout( const QString &ico_path, bool ico_is_end );
 	virtual QImage * getNodePortRender( ) const { return nodePortRender; }
 	virtual int height( ) const {
-		return nodeSize.height( );
+		return portItemHeith;
 	}
 	virtual int width( ) const {
-		return nodeSize.width( );
+		return portItemWidth;
 	}
 	virtual void move( const QPoint &new_pos ) {
-		nodePos = new_pos;
+		portPosX = new_pos.x( );
+		portPosY = new_pos.y( );
 	}
 	virtual void move( const int &x, const int &y ) {
-		nodePos = QPoint( x, y );
+		portPosX = x;
+		portPosY = y;
 	}
 	virtual void moveX( const int &x ) {
-		nodePos.setX( x );
+		portPosX = x;
 	}
 	virtual void moveY( const int &y ) {
-		nodePos.setY( y );
+		portPosY = y;
 	}
-	virtual const QPoint & getPos( ) const { return nodePos; }
-	virtual const QSize & getSize( ) const { return nodeSize; }
-	virtual QRect geometry( ) const { return QRect( getPos( ), getSize( ) ); }
+	virtual QPoint getPos( ) const { return QPoint( portPosX, portPosY ); }
+	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
+	virtual QRect geometry( ) const { return QRect( portPosX, portPosY, portItemWidth, portItemHeith ); }
 	virtual const VarType * getVar( ) const {
 		return var;
 	}
@@ -68,8 +74,6 @@ public:
 		emit replaceVar( old, var );
 	}
 	virtual bool updateProtLayout( ) = 0;
-	virtual QPoint converToNodeItemWidgetPos( ) const;
-	virtual QRect converToNodeItemWidgetGeometry( ) const;
 protected Q_SLOTS:
 	virtual void releaseVarType( VarType *release_var_type ) {
 		if( release_var_type == var )

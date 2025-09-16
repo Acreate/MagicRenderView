@@ -78,54 +78,7 @@ bool NodeItem::removeOutputProt( NodeOutputPort *output_port ) {
 		}
 	return false;
 }
-bool NodeItem::updateProtLayout( ) {
-	if( updateInputLayout( ) == false )
-		return false;
-	if( updateOutputLayout( ) == false )
-		return false;
-	if( updateTitleLayout( ) == false )
-		return false;
 
-	// 输入与输入端高度比较，获取最大高度
-	nodeItemHeith = inputBuffHeight > outputBuffHeight ? inputBuffHeight : outputBuffHeight;
-	// 得到输入输出端的面板宽度
-	nodeItemWidth = outputBuffWidth + inputBuffWidth + midPortSpace;
-	// 面板宽度与标题宽度比较，获取最大值
-	nodeItemWidth = titleWidth > nodeItemWidth ? titleWidth : nodeItemWidth;
-
-	nodeItemHeith += titleHeight + titleToPortSpace + borderBoomSpace + borderTopSpace;
-	nodeItemWidth += borderLeftSpace + borderRightSpace;
-
-	*nodeItemRender = nodeItemRender->scaled( nodeItemWidth, nodeItemHeith );
-	if( nodeItemRender->isNull( ) ) {
-		tools::debug::printError( "节点渲染适配大小失败[" + getStaticMetaObjectName( ) + "]" );
-		return false;
-	}
-	nodeItemRender->fill( 0 );
-
-	QPainter painter( nodeItemRender );
-	// 绘制标题
-	int drawX = ( nodeItemWidth - titleWidth ) / 2;
-	int drawY = borderTopSpace;
-	painter.drawImage( drawX, drawY, *titleBuff );
-	// 绘制左侧面板
-	drawX = borderLeftSpace;
-	drawY = borderTopSpace + titleHeight + titleToPortSpace;
-	painter.drawImage( drawX, drawY, *inputBuff );
-	// 绘制右侧面板
-	drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
-	drawY = borderTopSpace + titleHeight + titleToPortSpace;
-	painter.drawImage( drawX, drawY, *outputBuff );
-	// 绘制边缘
-	auto pen = painter.pen( );
-	pen.setColor( Qt::GlobalColor::darkYellow );
-	pen.setWidth( 2 );
-	painter.setPen( pen );
-	painter.drawRect( 0, 0, nodeItemWidth, nodeItemHeith );
-	painter.end( );
-
-	return true;
-}
 bool NodeItem::updateInputLayout( ) {
 
 	int width;
@@ -232,6 +185,48 @@ bool NodeItem::updateTitleLayout( ) {
 	painter.setFont( font );
 	painter.drawText( 0, titleHeight, nodeTitleName );
 	painter.end( );
+	return true;
+}
+bool NodeItem::integrateLayout( ) {
+
+	// 输入与输入端高度比较，获取最大高度
+	nodeItemHeith = inputBuffHeight > outputBuffHeight ? inputBuffHeight : outputBuffHeight;
+	// 得到输入输出端的面板宽度
+	nodeItemWidth = outputBuffWidth + inputBuffWidth + midPortSpace;
+	// 面板宽度与标题宽度比较，获取最大值
+	nodeItemWidth = titleWidth > nodeItemWidth ? titleWidth : nodeItemWidth;
+
+	nodeItemHeith += titleHeight + titleToPortSpace + borderBoomSpace + borderTopSpace;
+	nodeItemWidth += borderLeftSpace + borderRightSpace;
+
+	*nodeItemRender = nodeItemRender->scaled( nodeItemWidth, nodeItemHeith );
+	if( nodeItemRender->isNull( ) ) {
+		tools::debug::printError( "节点渲染适配大小失败[" + getStaticMetaObjectName( ) + "]" );
+		return false;
+	}
+	nodeItemRender->fill( 0 );
+
+	QPainter painter( nodeItemRender );
+	// 绘制标题
+	int drawX = ( nodeItemWidth - titleWidth ) / 2;
+	int drawY = borderTopSpace;
+	painter.drawImage( drawX, drawY, *titleBuff );
+	// 绘制左侧面板
+	drawX = borderLeftSpace;
+	drawY = borderTopSpace + titleHeight + titleToPortSpace;
+	painter.drawImage( drawX, drawY, *inputBuff );
+	// 绘制右侧面板
+	drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
+	drawY = borderTopSpace + titleHeight + titleToPortSpace;
+	painter.drawImage( drawX, drawY, *outputBuff );
+	// 绘制边缘
+	auto pen = painter.pen( );
+	pen.setColor( Qt::GlobalColor::darkYellow );
+	pen.setWidth( 2 );
+	painter.setPen( pen );
+	painter.drawRect( 0, 0, nodeItemWidth, nodeItemHeith );
+	painter.end( );
+
 	return true;
 }
 NodeOutputPort * NodeItem::formPosNodeOutputPort( const QPoint &pos ) {

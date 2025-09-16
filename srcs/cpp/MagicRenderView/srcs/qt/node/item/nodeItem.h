@@ -33,8 +33,10 @@ private:
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
 	QImage *nodeItemRender;
-	/// @brief 相对节点的位置
-	QPoint nodePos;
+	/// @brief 相对于父窗口的 X 位置
+	int nodePosX;
+	/// @brief 相对于父窗口的 Y 位置
+	int nodePosY;
 	/// @brief 节点宽度
 	int nodeItemWidth;
 	/// @brief 节点高度
@@ -90,32 +92,30 @@ public:
 	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name );
 
 	virtual void move( const QPoint &point ) {
-		nodePos = point;
+		nodePosX = point.x( );
+		nodePosY = point.y( );
 	}
-	virtual const QPoint & getPos( ) const { return nodePos; }
+	virtual QPoint getPos( ) const { return QPoint( nodePosX, nodePosY ); }
 	virtual QSize getSize( ) const { return { nodeItemWidth, nodeItemHeith }; }
-	virtual QRect geometry( ) const { return QRect( nodePos, QSize { nodeItemWidth, nodeItemHeith } ); }
+	virtual QRect geometry( ) const { return QRect( nodePosX, nodePosY, nodeItemWidth, nodeItemHeith ); }
 	virtual QImage * getNodeItemRender( ) const { return nodeItemRender; }
-	/// @brief 从父节点坐标转换到输入输出端口对象偏移坐标
-	/// @param src_pos 父窗口坐标
-	/// @return 输入输出端口对象的局部偏移坐标
-	virtual QPoint formParentWidgetPosToPortPos( const QPoint &src_pos ) {
-		return src_pos - nodePos;
-	}
+	virtual int getNodePosX( ) const { return nodePosX; }
+	virtual void setNodePosX( const int node_pos_x ) { nodePosX = node_pos_x; }
+	virtual int getNodePosY( ) const { return nodePosY; }
+	virtual void setNodePosY( const int node_pos_y ) { nodePosY = node_pos_y; }
 	/// @brief 测试指定坐标是否存在当前节点内
 	/// @param point 测试坐标
 	/// @return 在当前节点范围内，返回 true
 	virtual bool contains( const QPoint &point ) {
-		auto leftTop = point - nodePos;
-		int x = leftTop.x( );
-		if( x < 0 )
+		int x = point.x( );
+		if( x < nodePosX )
 			return false;
-		int y = leftTop.x( );
-		if( y < 0 )
+		int y = point.x( );
+		if( y < nodePosY )
 			return false;
-		if( x > nodeItemWidth )
+		if( x > ( nodeItemWidth + nodePosX ) )
 			return false;
-		if( y > nodeItemHeith )
+		if( y > ( nodeItemHeith + nodePosY ) )
 			return false;
 		return true;
 	}
@@ -136,8 +136,6 @@ protected:
 	/// @param output_port 
 	/// @return 成功返回 true
 	virtual bool removeOutputProt( NodeOutputPort *output_port );
-	/// @brief 更新接口布局
-	virtual bool updateProtLayout( );
 	/// @brief 更新输入端布局
 	/// @return 成功返回 true
 	virtual bool updateInputLayout( );
@@ -147,6 +145,9 @@ protected:
 	/// @brief 更新标题布局
 	/// @return 成功返回 true
 	virtual bool updateTitleLayout( );
+	/// @brief 合并布局-此选项并不更新组件布局
+	/// @return 成功返回 true
+	virtual bool integrateLayout( );
 public:
 	/// @brief 从指定位置获取输出端口对象指针
 	/// @param pos 基于 NodeItem::getPos( ) 所偏移的位置

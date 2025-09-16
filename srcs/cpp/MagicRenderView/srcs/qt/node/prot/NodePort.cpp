@@ -19,15 +19,15 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 	QRect boundingRect = fontMetrics.boundingRect( title );
 	int width = boundingRect.width( ) + boundingRect.x( );
 	int drawHeight = fontMetrics.leading( );
-	int fontHeight = fontMetrics.height( ) + drawHeight;
-	drawHeight = fontHeight - fontMetrics.descent( ) - drawHeight;
+	portItemHeith = fontMetrics.height( ) + drawHeight;
+	drawHeight = portItemHeith - fontMetrics.descent( ) - drawHeight;
 	QImage ico;
 	if( ico.load( ico_path ) == false || ico.isNull( ) ) {
 		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
 		return false;
 	}
-	if( ico.height( ) != fontHeight ) {
-		ico = ico.scaledToHeight( fontHeight );
+	if( ico.height( ) != portItemHeith ) {
+		ico = ico.scaledToHeight( portItemHeith );
 		if( ico.isNull( ) ) {
 			tools::debug::printError( "适配图标失败[" + getMetaObjectName( ) + "]" );
 			return false;
@@ -35,8 +35,8 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 	}
 
 	int icoWidth = ico.width( );
-	int imageWidth = width + icoWidth;
-	*nodePortRender = nodePortRender->scaled( imageWidth, fontHeight );
+	portItemWidth = width + icoWidth;
+	*nodePortRender = nodePortRender->scaled( portItemWidth, portItemHeith );
 
 	nodePortRender->fill( 0 );
 	QPainter painter( nodePortRender );
@@ -54,12 +54,5 @@ bool NodePort::renderLayout( const QString &ico_path, bool ico_is_end ) {
 		tools::debug::printError( "渲染标题失败[" + getMetaObjectName( ) + "]" );
 		return false;
 	}
-	nodeSize = QSize( imageWidth, fontHeight );
 	return true;
-}
-QPoint NodePort::converToNodeItemWidgetPos( ) const {
-	return nodePos + parent->getPos( );
-}
-QRect NodePort::converToNodeItemWidgetGeometry( ) const {
-	return QRect( nodePos + parent->getPos( ), nodeSize );
 }

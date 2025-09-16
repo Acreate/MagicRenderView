@@ -12,6 +12,9 @@ bool ReadFile::intPortItems( ) {
 	StringOutputPort *outputPort = new StringOutputPort( this );
 	appendInputProt( inputPort );
 	appendOutputProt( outputPort );
-	updateProtLayout( );
+	updateTitleLayout( );
+	updateInputLayout( );
+	updateOutputLayout( );
+	integrateLayout( );
 	return true;
 }
