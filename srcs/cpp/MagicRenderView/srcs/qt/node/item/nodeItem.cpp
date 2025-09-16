@@ -73,60 +73,70 @@ NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 	return Click_Type::Space;
 }
 NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
+	// 数组数量为 0，直接返回
 	size_t count = nodeInputProtVector.size( );
 	if( count == 0 )
 		return nullptr;
+	// x 需要大于左侧边缘
 	int drawX = borderLeftSpace;
-
 	if( x < drawX )
 		return nullptr;
+	// x 不能超过输入端宽度
 	drawX += inputBuffWidth;
 	if( x > drawX )
 		return nullptr;
-
+	// y 需要大于 顶部边缘、标题与端口之间留白与标题高度的和
 	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	if( y < drawY )
 		return nullptr;
+	// y 不能超出输入端高度
 	drawY += inputBuffHeight;
 	if( y > drawY )
 		return nullptr;
 
 	auto data = nodeInputProtVector.data( );
+	drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	do
-
+		// 从末尾开始判定，如果当前 y 大于端口的 y 所在，则返回这个
 		if( --count, y > ( data[ count ].second.second + drawY ) )
 			return data[ count ].first;
 	while( count > 0 );
-
+	// 最后返回
 	return data[ 0 ].first;
 }
 NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) const {
 
+	// 数组数量为 0，直接返回
 	size_t count = nodeOutputProtVector.size( );
 	if( count == 0 )
 		return nullptr;
+	// x 需要大于 输入端，左侧留白，两端之间留白的和
 	int drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
 
 	if( x < drawX )
 		return nullptr;
+	// 如果大于整个节点宽度
 	drawX += outputBuffWidth;
 	if( x > drawX )
 		return nullptr;
 
+	// y 需要大于 标题，顶端留白，端口与标题两者之间留白的和
 	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	if( y < drawY )
 		return nullptr;
+	// 如果大于整个节点高度
 	drawY += outputBuffHeight;
 	if( y > drawY )
 		return nullptr;
 
 	auto data = nodeOutputProtVector.data( );
-	drawX = borderLeftSpace + inputBuffWidth + midPortSpace;
+	drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	do
+		// 从末尾开始判定，如果当前 y 大于端口的 y 所在，则返回这个
 		if( --count, y > ( data[ count ].second.second + drawY ) )
 			return data[ count ].first;
 	while( count > 0 );
-
+	// 最后返回
 	return data[ 0 ].first;
 }
 bool NodeItem::intPortItems( ) {
