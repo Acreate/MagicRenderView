@@ -3,7 +3,6 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QScrollArea>
-#include <QScrollBar>
 #include <qboxlayout.h>
 #include <qmenu.h>
 
