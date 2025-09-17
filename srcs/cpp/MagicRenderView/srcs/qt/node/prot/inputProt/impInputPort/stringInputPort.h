@@ -11,7 +11,9 @@ public:
 		: NodeInputPort( parent ) {
 		title = getMetaObjectName( );
 	}
-	void linkOutputPort( NodeOutputPort *output_port ) override{}
+	void linkOutputPort( NodeOutputPort *output_port ) override {
+		linkOutputVector.emplace_back( output_port );
+	}
 };
 
 #endif // STRINGINPUTPORT_H_H_HEAD__FILE__

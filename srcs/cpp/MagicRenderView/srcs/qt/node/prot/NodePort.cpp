@@ -7,7 +7,7 @@
 #include "../../application/application.h"
 
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
-NodePort::NodePort( NodeItem *parent ) : QObject( parent ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ) {
+NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
 		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
@@ -18,6 +18,7 @@ NodePort::~NodePort( ) {
 	delete nodePortRender;
 	delete ico;
 }
+
 void NodePort::setIco( const QString &new_ico_path ) {
 	auto load = QImage( new_ico_path );
 	if( load.isNull( ) )

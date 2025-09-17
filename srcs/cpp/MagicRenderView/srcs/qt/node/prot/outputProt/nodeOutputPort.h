@@ -11,6 +11,8 @@ public:
 	NodeOutputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
 	bool updateProtLayout( ) override;
+	
+	bool getPos( QPoint &result_pos ) const override;
 };
 
 #endif // NODEOUTPUTPORT_H_H_HEAD__FILE__

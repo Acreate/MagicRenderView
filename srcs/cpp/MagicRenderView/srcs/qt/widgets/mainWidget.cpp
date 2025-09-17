@@ -57,12 +57,24 @@ MainWidget::~MainWidget( ) {
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
+	QPainterPath painterPath;
 	auto iterator = nodeItemList.begin( );
 	auto end = nodeItemList.end( );
 	for( ; iterator != end; ++iterator ) {
 		NodeItem *nodeItem = *iterator;
 		painter.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+		auto pairs = nodeItem->getLinkPort( );
+		for( auto &item : pairs ) {
+			int first = item.first.second.first;
+			int second = item.first.second.second;
+			int x = item.second.second.first;
+			int y = item.second.second.second;
+			
+			painterPath.moveTo( first, second );
+			painterPath.lineTo( x, y );
+		}
 	}
+	painter.drawPath( painterPath );
 	// 不在拖拽情况下，绘制动态线
 	if( dragItem == nullptr && selectItem )
 		painter.drawLine( modPoint, mouseMovePoint );
@@ -72,7 +84,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 
 	globalReleasePos = QCursor::pos( );
-	fromGlobalReleasePoint = mapFromGlobal( globalReleasePos );
+	fromGlobalReleasePoint = event->pos( );
 
 	switch( mouseButton ) {
 		case Qt::RightButton :
@@ -80,14 +92,36 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			rightMouseBtnMenu->show( );
 			break;
 		case Qt::LeftButton :
+			for( NodeItem *item : nodeItemList ) {
+				QPoint itemPos = item->getPos( );
+				modPoint = fromGlobalReleasePoint - itemPos;
+				NodeItem::Click_Type pointType = item->relativePointType( modPoint );
+				if( pointType == NodeItem::Click_Type::None )
+					continue;
+				if( selectItem == item )
+					break;
 
+				if( selectOutputPort == nullptr && pointType == NodeItem::Click_Type::OutputPort ) {
+					selectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
+					if( selectOutputPort )
+						if( selectOutputPort->getPos( modPoint ) == false )
+							selectOutputPort = nullptr;
+
+				} else if( selectInputPort == nullptr && pointType == NodeItem::Click_Type::InputPort ) {
+					selectInputPort = item->getNodeInputAtRelativePointType( modPoint );
+					if( selectInputPort )
+						if( selectInputPort->getPos( modPoint ) == false )
+							selectInputPort = nullptr;
+				}
+				activeItem = item;
+				break;
+			}
 			break;
 	}
 	if( selectInputPort && selectOutputPort )
 		selectInputPort->linkOutputPort( selectOutputPort );
 	selectInputPort = nullptr;
 	selectOutputPort = nullptr;
-	activeItem = nullptr;
 	selectItem = nullptr;
 	dragItem = nullptr;
 	update( );
@@ -106,7 +140,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 
 	globalPressPos = QCursor::pos( );
-	fromGlobalPressPoint = mapFromGlobal( globalPressPos );
+	fromGlobalPressPoint = event->pos( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			for( NodeItem *item : nodeItemList ) {
@@ -117,16 +151,16 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					continue;
 				if( pointType == NodeItem::Click_Type::OutputPort ) {
 					selectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
-					if( selectOutputPort )
-						item->getOutputPortPos( selectOutputPort, modPoint );
-					else
+					if( selectOutputPort == nullptr )
 						dragItem = item;
+					if( selectOutputPort->getPos( modPoint ) == false )
+						break;
 				} else if( pointType == NodeItem::Click_Type::InputPort ) {
 					selectInputPort = item->getNodeInputAtRelativePointType( modPoint );
-					if( selectInputPort )
-						item->getInputPortPos( selectInputPort, modPoint );
-					else
+					if( selectInputPort == nullptr )
 						dragItem = item;
+					else if( selectInputPort->getPos( modPoint ) == false )
+						break;
 				} else
 					dragItem = item;
 				activeItem = selectItem = item;

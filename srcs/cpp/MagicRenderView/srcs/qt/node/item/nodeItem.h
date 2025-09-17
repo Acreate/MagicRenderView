@@ -39,6 +39,8 @@ public:
 	using NodeItemString_Type = QString;
 	using TNodePortInputPortPtr = NodeInputPort *;
 	using TNodePortOutputPortPtr = NodeOutputPort *;
+	using TConstNodePortInputPortPtr = const NodeInputPort *;
+	using TConstNodePortOutputPortPtr = const NodeOutputPort *;
 	using TNodeProtPoint = std::pair< int, int >;
 	template< typename TPortTypePtr >
 	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
@@ -99,8 +101,8 @@ protected:
 	NodeItem( NodeItem_ParentPtr_Type *parent );
 public:
 	~NodeItem( ) override;
-	virtual bool getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
-	virtual bool getOutputPortPos( TNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
+	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
+	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -113,7 +115,9 @@ public:
 	/// @param y 基于该节点的 y 相对位置
 	/// @return 类型
 	virtual Click_Type relativePointType( int x, int y ) const;
-
+	/// @brief 获取链接
+	/// @return 链接键值对
+	virtual std_vector< std_pairt< TPortWidgetPort< TNodePortOutputPortPtr >, TPortWidgetPort< TNodePortInputPortPtr > > > getLinkPort( ) const;
 	/// @brief 从相对坐标获输入接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -186,7 +190,7 @@ protected:
 	/// @brief 删除输入接口
 	/// @param input_prot 输入接口对象指针 
 	/// @return 成功返回 true
-	virtual bool removeInputProt( TNodePortInputPortPtr input_prot );
+	virtual bool removeInputProt( TConstNodePortInputPortPtr input_prot );
 	/// @brief 增加一个输出接口
 	/// @param output_prot 输出接口对象指针
 	/// @return 成功返回 true
@@ -194,7 +198,7 @@ protected:
 	/// @brief 删除输出接口
 	/// @param output_port 
 	/// @return 成功返回 true
-	virtual bool removeOutputProt( TNodePortOutputPortPtr output_port );
+	virtual bool removeOutputProt( TConstNodePortOutputPortPtr output_port );
 	/// @brief 更新输入端布局
 	/// @return 成功返回 true
 	virtual bool updateInputLayout( );

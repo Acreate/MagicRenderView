@@ -31,7 +31,7 @@ NodeItem::~NodeItem( ) {
 	delete outputBuff;
 	delete titleBuff;
 }
-bool NodeItem::getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
+bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
 		if( inputPortPtr == input_port_ptr ) {
 			result_pos = QPoint { pos.first + borderLeftSpace + nodePosX + inputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + inputPortPtr->height( ) / 2 };
@@ -39,7 +39,7 @@ bool NodeItem::getInputPortPos( const TNodePortInputPortPtr input_port_ptr, QPoi
 		}
 	return false;
 }
-bool NodeItem::getOutputPortPos( const TNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const {
+bool NodeItem::getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ onputPortPtr, pos ] : nodeOutputProtVector )
 		if( onputPortPtr == output_port_ptr ) {
 			result_pos = QPoint { pos.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + onputPortPtr->width( ) - onputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + output_port_ptr->height( ) / 2 };
@@ -71,6 +71,29 @@ NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 	} else
 		return Click_Type::Title;
 	return Click_Type::Space;
+}
+std_vector< std_pairt< NodeItem::TPortWidgetPort< NodeOutputPort * >, NodeItem::TPortWidgetPort< NodeInputPort * > > > NodeItem::getLinkPort( ) const {
+	std_vector< std_pairt< NodeItem::TPortWidgetPort< NodeOutputPort * >, NodeItem::TPortWidgetPort< NodeInputPort * > > > result;
+	size_t inputCount = nodeInputProtVector.size( );
+	auto inputVectorPtr = nodeInputProtVector.data( );
+
+	QPoint outPos, inPos;
+	for( size_t inputIndex = 0; inputIndex < inputCount; ++inputIndex ) {
+		auto &inputPortPirt = inputVectorPtr[ inputIndex ];
+		auto &linkNodeOutputPorts = inputPortPirt.first->getLinkOutputVector( );
+		size_t linkOutputCount = linkNodeOutputPorts.size( );
+		if( linkOutputCount == 0 )
+			continue;
+		// 输入端坐标
+		if( inputPortPirt.first->getPos( inPos ) == false )
+			continue;
+		auto linkOutputVectPtr = linkNodeOutputPorts.data( );
+		NodeItem::TPortWidgetPort< NodeInputPort * > inputPortWidgetInfo( inputVectorPtr[ inputIndex ].first, { inPos.x( ), inPos.y( ) } );
+		for( size_t linkOutputIndex = 0; linkOutputIndex < linkOutputCount; ++linkOutputIndex )
+			if( linkOutputVectPtr[ linkOutputIndex ]->getPos( outPos ) )
+				result.emplace_back( NodeItem::TPortWidgetPort< NodeOutputPort * >( linkOutputVectPtr[ linkOutputIndex ], { outPos.x( ), outPos.y( ) } ), inputPortWidgetInfo );
+	}
+	return result;
 }
 NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
 	// 数组数量为 0，直接返回
@@ -155,7 +178,7 @@ bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;
 }
-bool NodeItem::removeInputProt( NodeInputPort *input_prot ) {
+bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
 	size_t count = nodeInputProtVector.size( ), index = 0;
 	if( count == 0 )
 		return false;
@@ -173,7 +196,7 @@ bool NodeItem::appendOutputProt( NodeOutputPort *output_prot ) {
 
 	return true;
 }
-bool NodeItem::removeOutputProt( NodeOutputPort *output_port ) {
+bool NodeItem::removeOutputProt( TConstNodePortOutputPortPtr output_port ) {
 
 	size_t count = nodeOutputProtVector.size( ), index = 0;
 	if( count == 0 )

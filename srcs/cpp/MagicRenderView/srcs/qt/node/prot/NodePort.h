@@ -32,12 +32,13 @@ protected:
 	/// @brief 标题
 	QString title;
 	/// @brief 父节点
-	NodeItem *parent;
+	NodeItem *parentItem;
 	/// @brief 引用对象指针
 	Application *applicationInstancePtr;
 public:
-	NodePort( NodeItem *parent );
+	NodePort( NodeItem *parent_item );
 	~NodePort( ) override;
+	virtual bool getPos( QPoint &result_pos ) const = 0;
 	virtual int getIcoWidth( ) const { return icoItemWidth; }
 	virtual int getIcoHeith( ) const { return icoItemHeith; }
 	virtual const QString & getTitle( ) const { return title; }

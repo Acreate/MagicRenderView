@@ -16,5 +16,8 @@ public:
 	}
 	bool updateProtLayout( ) override;
 	virtual void linkOutputPort( NodeOutputPort *output_port ) = 0;
+	virtual const std_vector<NodeOutputPort *> & getLinkOutputVector( ) const { return linkOutputVector; }
+	
+	bool getPos( QPoint &result_pos ) const override;
 };
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__
