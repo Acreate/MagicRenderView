@@ -82,5 +82,6 @@ protected Q_SLOTS:
 	}
 Q_SIGNALS:
 	void replaceVar( VarType *old_var, VarType *new_var );
+	void releaseThiNodeProt(NodePort* release_ptr);
 };
 #endif // NODEPORT_H_H_HEAD__FILE__

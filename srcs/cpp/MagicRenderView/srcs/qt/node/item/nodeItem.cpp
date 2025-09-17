@@ -26,7 +26,7 @@ NodeItem::NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ), nodeI
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 }
 NodeItem::~NodeItem( ) {
-
+	emit releaseThiNodeItem( this );
 	size_t index = 0;
 	size_t count = nodeInputProtVector.size( );
 	auto inputVectorPtr = nodeInputProtVector.data( );

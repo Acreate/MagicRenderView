@@ -15,8 +15,10 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), var( nullp
 	icoItemWidth = ico->width( );
 }
 NodePort::~NodePort( ) {
+	emit releaseThiNodeProt( this );
 	delete nodePortRender;
 	delete ico;
+
 }
 
 void NodePort::setIco( const QString &new_ico_path ) {

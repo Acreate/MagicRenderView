@@ -46,7 +46,7 @@ public:
 	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
 private:
 	/// @brief 该节点的变量
-	std_vector<VarType*> varVector;
+	std_vector< VarType * > varVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -222,7 +222,8 @@ public:
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
-
+Q_SIGNALS:
+	void releaseThiNodeItem( NodeItem *release_node_item );
 };
 
 #endif // NODEITEM_H_H_HEAD__FILE__

@@ -8,6 +8,8 @@
 class NodeItemWidget;
 class VarType : public QObject {
 	Q_OBJECT
+public:
+	friend class VarTypeGenerate;
 protected:
 	QString unityTypeName;
 	std_vector< std_shared_ptr< void > > varVector;
@@ -16,13 +18,8 @@ private:
 		unityTypeName = unity_type_name;
 	}
 	VarType( QObject *parent = nullptr );
-
-	static VarType * templateVarType( QObject *parent, const QString &type_name );
 public:
-	template< typename TType_Name >
-	static VarType * templateVarType( QObject *parent ) {
-		return templateVarType( parent, typeid( TType_Name ).name( ) );
-	}
+
 public:
 	/// @brief 获取数组个数
 	/// @return 个数

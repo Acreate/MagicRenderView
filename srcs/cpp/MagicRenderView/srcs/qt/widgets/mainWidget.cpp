@@ -39,6 +39,17 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 				}
 				nodeItem->move( fromGlobalReleasePoint );
 				nodeItemList.emplace_back( nodeItem );
+
+				connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
+					auto iterator = nodeItemList.begin( );
+					auto end = nodeItemList.end( );
+					for( ; iterator != end; ++iterator )
+						if( *iterator == release_Item ) {
+							nodeItemList.erase( iterator );
+							break;
+						}
+				} );
+
 				renderWidgetActiveItem = nodeItem;
 
 				ensureVisibleToItemNode( nodeItem );
@@ -54,7 +65,14 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
-
+	auto iterator = nodeItemList.begin( );
+	auto end = nodeItemList.end( );
+	std_vector< NodeItem * > buff( iterator, end );
+	nodeItemList.clear( );
+	size_t count = buff.size( );
+	auto vectorDataPtr = buff.data( );
+	for( size_t index = 0; index < count; ++index )
+		delete vectorDataPtr[ index ];
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
