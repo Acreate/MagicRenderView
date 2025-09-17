@@ -56,6 +56,9 @@ protected:
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
+	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
+	/// @param targetItemNode 目标节点
+	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

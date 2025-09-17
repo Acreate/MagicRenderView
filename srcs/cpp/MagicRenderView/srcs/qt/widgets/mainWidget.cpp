@@ -41,6 +41,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 				nodeItem->move( fromGlobalReleasePoint );
 				nodeItemList.emplace_back( nodeItem );
 				renderWidgetActiveItem = nodeItem;
+
+				ensureVisibleToItemNode( nodeItem );
 				update( );
 			} );
 		}
@@ -79,6 +81,14 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	// 不在拖拽情况下，绘制动态线
 	if( leftMouseBtnDragItem == nullptr && leftMouseBtnSelectItem )
 		painter.drawLine( modPoint, mouseMovePoint );
+}
+void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
+	auto geometry = targetItemNode->geometry( );
+	auto newSize = contentsRect( ).united( geometry ).size( );
+	if( size( ) != newSize )
+		setMinimumSize( newSize );
+	auto targetSize = geometry.bottomRight( );
+	scrollArea->ensureVisible( targetSize.x( ), targetSize.y( ) );
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
@@ -158,6 +168,8 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	}
 	if( leftMouseBtnSelectInputPort && leftMouseBtnSelectOutputPort )
 		leftMouseBtnSelectInputPort->linkOutputPort( leftMouseBtnSelectOutputPort );
+	else if( leftMouseBtnDragItem ) // 拖拽完毕
+		ensureVisibleToItemNode( leftMouseBtnDragItem );
 	leftMouseBtnSelectInputPort = nullptr;
 	leftMouseBtnSelectOutputPort = nullptr;
 	leftMouseBtnSelectItem = nullptr;
