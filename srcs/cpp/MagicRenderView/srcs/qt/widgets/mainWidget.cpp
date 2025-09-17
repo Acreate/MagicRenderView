@@ -24,11 +24,12 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 
 	appInstance->syncAppValueIniFile( );
 
-	rightMouseBtnMenu = new QMenu( this );
+	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
+	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
 	auto infos = NodeItemGenerate::getNodeItemDirClassMetaInfos( );
 	for( auto &item : infos ) {
 		QString dirName = item.first;
-		QMenu *dirMenu = rightMouseBtnMenu->addMenu( dirName );
+		QMenu *dirMenu = rightMouseBtnCreateNodeItemMenu->addMenu( dirName );
 		for( auto &className : item.second ) {
 			auto addAction = dirMenu->addAction( className );
 			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
@@ -39,16 +40,16 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 				}
 				nodeItem->move( fromGlobalReleasePoint );
 				nodeItemList.emplace_back( nodeItem );
-				activeItem = nodeItem;
+				renderWidgetActiveItem = nodeItem;
 				update( );
 			} );
 		}
 	}
-	selectInputPort = nullptr;
-	selectOutputPort = nullptr;
-	activeItem = nullptr;
-	selectItem = nullptr;
-	dragItem = nullptr;
+	leftMouseBtnSelectInputPort = nullptr;
+	leftMouseBtnSelectOutputPort = nullptr;
+	renderWidgetActiveItem = nullptr;
+	leftMouseBtnSelectItem = nullptr;
+	leftMouseBtnDragItem = nullptr;
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -69,14 +70,14 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 			int second = item.first.second.second;
 			int x = item.second.second.first;
 			int y = item.second.second.second;
-			
+
 			painterPath.moveTo( first, second );
 			painterPath.lineTo( x, y );
 		}
 	}
 	painter.drawPath( painterPath );
 	// 不在拖拽情况下，绘制动态线
-	if( dragItem == nullptr && selectItem )
+	if( leftMouseBtnDragItem == nullptr && leftMouseBtnSelectItem )
 		painter.drawLine( modPoint, mouseMovePoint );
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
@@ -85,11 +86,48 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 
 	globalReleasePos = QCursor::pos( );
 	fromGlobalReleasePoint = event->pos( );
-
 	switch( mouseButton ) {
 		case Qt::RightButton :
-			rightMouseBtnMenu->move( globalReleasePos );
-			rightMouseBtnMenu->show( );
+			rightMouseBtnSelectItem = nullptr;
+			rightMouseBtnSelectPort = nullptr;
+			for( NodeItem *item : nodeItemList ) {
+				QPoint itemPos = item->getPos( );
+				modPoint = fromGlobalReleasePoint - itemPos;
+				NodeItem::Click_Type pointType = item->relativePointType( modPoint );
+				if( pointType != NodeItem::Click_Type::None )
+					rightMouseBtnSelectItem = item; // 选中了非空白处
+				else
+					continue; // 空白处，则跳过循环
+				if( pointType == NodeItem::Click_Type::InputPort )
+					rightMouseBtnSelectPort = item->getNodeInputAtRelativePointType( modPoint );
+				if( rightMouseBtnSelectPort == nullptr )
+					break; // 无法获取正确的输入接口
+				rightMouseBtnRemoveOutPortMenu->clear( );
+				auto &nodeOutputPorts = rightMouseBtnSelectPort->getLinkOutputVector( );
+				size_t count = nodeOutputPorts.size( );
+				if( count == 0 )
+					break;
+				size_t index = 0;
+				auto nodeOutputPortVectorPtr = nodeOutputPorts.data( );
+				for( ; index < count; ++index ) {
+					NodeOutputPort *nodeOutputPort = nodeOutputPortVectorPtr[ index ];
+					auto addAction = rightMouseBtnRemoveOutPortMenu->addAction( "删除 [ " + nodeOutputPort->getTitle( ) + " ] 输入接口" );
+					connect( addAction, &QAction::triggered, [this, nodeOutputPort]( ) {
+						if( rightMouseBtnSelectPort == nullptr )
+							return;
+						rightMouseBtnSelectPort->disLinkOutputPor( nodeOutputPort );
+						update( );
+					} );
+				}
+				// 显示删除定义菜单
+				rightMouseBtnRemoveOutPortMenu->move( globalReleasePos );
+				rightMouseBtnRemoveOutPortMenu->show( );
+				break;
+			}
+			if( rightMouseBtnSelectItem )
+				break; // 如果命中的是面板，而非窗口空白，则跳过
+			rightMouseBtnCreateNodeItemMenu->move( globalReleasePos );
+			rightMouseBtnCreateNodeItemMenu->show( );
 			break;
 		case Qt::LeftButton :
 			for( NodeItem *item : nodeItemList ) {
@@ -98,41 +136,41 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				NodeItem::Click_Type pointType = item->relativePointType( modPoint );
 				if( pointType == NodeItem::Click_Type::None )
 					continue;
-				if( selectItem == item )
+				if( leftMouseBtnSelectItem == item )
 					break;
 
-				if( selectOutputPort == nullptr && pointType == NodeItem::Click_Type::OutputPort ) {
-					selectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
-					if( selectOutputPort )
-						if( selectOutputPort->getPos( modPoint ) == false )
-							selectOutputPort = nullptr;
+				if( leftMouseBtnSelectOutputPort == nullptr && pointType == NodeItem::Click_Type::OutputPort ) {
+					leftMouseBtnSelectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
+					if( leftMouseBtnSelectOutputPort )
+						if( leftMouseBtnSelectOutputPort->getPos( modPoint ) == false )
+							leftMouseBtnSelectOutputPort = nullptr;
 
-				} else if( selectInputPort == nullptr && pointType == NodeItem::Click_Type::InputPort ) {
-					selectInputPort = item->getNodeInputAtRelativePointType( modPoint );
-					if( selectInputPort )
-						if( selectInputPort->getPos( modPoint ) == false )
-							selectInputPort = nullptr;
+				} else if( leftMouseBtnSelectInputPort == nullptr && pointType == NodeItem::Click_Type::InputPort ) {
+					leftMouseBtnSelectInputPort = item->getNodeInputAtRelativePointType( modPoint );
+					if( leftMouseBtnSelectInputPort )
+						if( leftMouseBtnSelectInputPort->getPos( modPoint ) == false )
+							leftMouseBtnSelectInputPort = nullptr;
 				}
-				activeItem = item;
+				renderWidgetActiveItem = item;
 				break;
 			}
 			break;
 	}
-	if( selectInputPort && selectOutputPort )
-		selectInputPort->linkOutputPort( selectOutputPort );
-	selectInputPort = nullptr;
-	selectOutputPort = nullptr;
-	selectItem = nullptr;
-	dragItem = nullptr;
+	if( leftMouseBtnSelectInputPort && leftMouseBtnSelectOutputPort )
+		leftMouseBtnSelectInputPort->linkOutputPort( leftMouseBtnSelectOutputPort );
+	leftMouseBtnSelectInputPort = nullptr;
+	leftMouseBtnSelectOutputPort = nullptr;
+	leftMouseBtnSelectItem = nullptr;
+	leftMouseBtnDragItem = nullptr;
 	update( );
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( selectItem == nullptr )
+	if( leftMouseBtnSelectItem == nullptr )
 		return;
 	mouseMovePoint = event->pos( );
-	if( dragItem )
-		dragItem->move( mouseMovePoint - modPoint );
+	if( leftMouseBtnDragItem )
+		leftMouseBtnDragItem->move( mouseMovePoint - modPoint );
 	update( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
@@ -150,20 +188,20 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				if( pointType == NodeItem::Click_Type::None )
 					continue;
 				if( pointType == NodeItem::Click_Type::OutputPort ) {
-					selectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
-					if( selectOutputPort == nullptr )
-						dragItem = item;
-					if( selectOutputPort->getPos( modPoint ) == false )
+					leftMouseBtnSelectOutputPort = item->getNodeOutputPortAtRelativePointType( modPoint );
+					if( leftMouseBtnSelectOutputPort == nullptr )
+						leftMouseBtnDragItem = item;
+					if( leftMouseBtnSelectOutputPort->getPos( modPoint ) == false )
 						break;
 				} else if( pointType == NodeItem::Click_Type::InputPort ) {
-					selectInputPort = item->getNodeInputAtRelativePointType( modPoint );
-					if( selectInputPort == nullptr )
-						dragItem = item;
-					else if( selectInputPort->getPos( modPoint ) == false )
+					leftMouseBtnSelectInputPort = item->getNodeInputAtRelativePointType( modPoint );
+					if( leftMouseBtnSelectInputPort == nullptr )
+						leftMouseBtnDragItem = item;
+					else if( leftMouseBtnSelectInputPort->getPos( modPoint ) == false )
 						break;
 				} else
-					dragItem = item;
-				activeItem = selectItem = item;
+					leftMouseBtnDragItem = item;
+				renderWidgetActiveItem = leftMouseBtnSelectItem = item;
 				break;
 			}
 			break;

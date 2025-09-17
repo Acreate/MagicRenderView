@@ -26,10 +26,33 @@ NodeItem::NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ), nodeI
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 }
 NodeItem::~NodeItem( ) {
+
+	size_t index = 0;
+	size_t count = nodeInputProtVector.size( );
+	auto inputVectorPtr = nodeInputProtVector.data( );
+	for( ; index < count; ++index )
+		delete inputVectorPtr[ index ].first;
+	nodeInputProtVector.clear( );
+
+	index = 0;
+	count = nodeOutputProtVector.size( );
+	auto outputVectorPtr = nodeOutputProtVector.data( );
+	for( ; index < count; ++index )
+		delete outputVectorPtr[ index ].first;
+	nodeOutputProtVector.clear( );
+
+	index = 0;
+	count = varVector.size( );
+	auto varVectorPtr = varVector.data( );
+	for( ; index < count; ++index )
+		delete varVectorPtr[ index ];
+	varVector.clear( );
+
 	delete nodeItemRender;
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
+
 }
 bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )

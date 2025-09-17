@@ -21,8 +21,8 @@ protected:
 	Application *appInstance;
 	/// @brief ini 关键字
 	QString keyFirst;
-	/// @brief 鼠标右键菜单
-	QMenu *rightMouseBtnMenu;
+	/// @brief 用于创建节点的菜单-鼠标右键对应空白即可弹出
+	QMenu *rightMouseBtnCreateNodeItemMenu;
 	/// @brief 按下时全局位置
 	QPoint globalPressPos;
 	/// @brief 按下时当前窗口位置
@@ -37,16 +37,22 @@ protected:
 	QPoint mouseMovePoint;
 	/// @brief 节点链表
 	std_list< NodeItem * > nodeItemList;
-	/// @brief 选中的输入端口
-	NodeInputPort *selectInputPort;
-	/// @brief 选中的输出端口
-	NodeOutputPort *selectOutputPort;
-	/// @brief 选中的节点
-	NodeItem *selectItem;
-	/// @brief 激活的节点
-	NodeItem *activeItem;
-	/// @brief 拖拽项
-	NodeItem *dragItem;
+	/// @brief 鼠标左键选中的输入端口
+	NodeInputPort *leftMouseBtnSelectInputPort;
+	/// @brief 鼠标左键选中的输出端口
+	NodeOutputPort *leftMouseBtnSelectOutputPort;
+	/// @brief 鼠标左键选中的节点
+	NodeItem *leftMouseBtnSelectItem;
+	/// @brief 窗口当时激活的节点
+	NodeItem *renderWidgetActiveItem;
+	/// @brief 鼠标左键拖拽项
+	NodeItem *leftMouseBtnDragItem;
+	/// @brief 鼠标右键选中项
+	NodeItem *rightMouseBtnSelectItem;
+	/// @brief 鼠标右键选中节点
+	NodeInputPort *rightMouseBtnSelectPort;
+	/// @brief 用于操作删除输出接口的菜单-鼠标右键命中输入接口是弹出
+	QMenu *rightMouseBtnRemoveOutPortMenu;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

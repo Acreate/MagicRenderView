@@ -45,6 +45,8 @@ public:
 	template< typename TPortTypePtr >
 	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
 private:
+	/// @brief 该节点的变量
+	std_vector<VarType*> varVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
