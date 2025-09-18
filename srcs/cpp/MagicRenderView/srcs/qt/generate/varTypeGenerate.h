@@ -31,17 +31,7 @@ private:
 					delete varType;
 					return nullptr;
 				}
-				varType->unitySer = [] ( const void *p, std::vector< uint8_t > &vector ) ->size_t {
-					return BinGenerate::toVectortBin< TTBase >( *( ( const TTBase * ) p ), vector );
-				};
-				varType->unitySerRes = [] ( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) ->void * {
-					TTBase *result = new TTBase( );
-					result_use_data_count = BinGenerate::fillObjPtr< TTBase >( result, source_data_ptr, source_data_count );
-					if( result_use_data_count != 0 )
-						return result;
-					delete result;
-					return nullptr;
-				};
+			
 				return varType;
 			};
 		}

@@ -5,6 +5,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../generate/binGenerate.h"
+
 class NodeItemWidget;
 class VarType : public QObject {
 	Q_OBJECT
@@ -18,6 +20,10 @@ protected:
 	QString unityTypeName;
 	/// @brief 单元变量存储序列
 	std_vector< void * > varVector;
+	/// @brief 单元创建器
+	std_function< void *( ) > createFunction = nullptr;
+	/// @brief 拷贝函数
+	std_function< bool( void *, void * ) > copyFunction = nullptr;
 	/// @brief 单元删除器
 	std_function< void( void *delete_obj_ptr ) > releaseFunction = nullptr;
 	/// @brief 单元序列化
@@ -29,7 +35,65 @@ private:
 		unityTypeName = unity_type_name;
 	}
 	VarType( QObject *parent = nullptr );
+public:
+	VarType( const VarType &other )
+		: QObject( other.parent( ) ),
+		generateCode( other.generateCode ),
+		unityTypeName( other.unityTypeName ),
+		createFunction( other.createFunction ),
+		copyFunction( other.copyFunction ),
+		releaseFunction( other.releaseFunction ),
+		unitySer( other.unitySer ),
+		unitySerRes( other.unitySerRes ) {
 
+		if( createFunction == nullptr || copyFunction == nullptr )
+			return;
+		size_t count = other.varVector.size( );
+		if( count == 0 )
+			return;
+		auto data = other.varVector.data( );
+		varVector.resize( count );
+		auto fillPtr = varVector.data( );
+		for( size_t index = 0; index < count; ++index ) {
+			auto ptr = createFunction( );
+			copyFunction( ptr, data[ index ] );
+			fillPtr[ index ] = ptr;
+		}
+	}
+	VarType & operator=( const VarType &other ) {
+		if( this == &other )
+			return *this;
+		setParent( other.parent( ) );
+		generateCode = other.generateCode;
+		unityTypeName = other.unityTypeName;
+		releaseFunction = other.releaseFunction;
+		unitySer = other.unitySer;
+		unitySerRes = other.unitySerRes;
+		createFunction = other.createFunction;
+		copyFunction = other.copyFunction;
+
+		auto fillPtr = varVector.data( );
+		size_t count = varVector.size( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			releaseFunction( fillPtr[ index ] );
+		varVector.clear( );
+		if( createFunction == nullptr || copyFunction == nullptr )
+			return *this;
+		count = other.varVector.size( );
+		if( count == 0 )
+			return *this;
+		auto data = other.varVector.data( );
+		varVector.resize( count );
+		fillPtr = varVector.data( );
+		for( index = 0; index < count; ++index ) {
+			auto ptr = createFunction( );
+			copyFunction( ptr, data[ index ] );
+			fillPtr[ index ] = ptr;
+		}
+		return *this;
+	}
+private:
 	template< typename TType_Name >
 	bool init( ) {
 		if( typeid( TType_Name ).name( ) != unityTypeName )
@@ -37,7 +101,23 @@ private:
 		releaseFunction = [] ( void *p ) {
 			delete ( TType_Name * ) p;
 		};
-		return releaseFunction != nullptr;
+		createFunction = []( )->void * { return new TType_Name( ); };
+		copyFunction = [] ( void *left_ptr, void *right_ptr )->bool {
+			*( TType_Name * ) left_ptr = *( TType_Name * ) right_ptr;
+			return true;
+		};
+		unitySer = [] ( const void *p, std::vector< uint8_t > &vector ) ->size_t {
+			return BinGenerate::toVectortBin< TType_Name >( *( ( const TType_Name * ) p ), vector );
+		};
+		unitySerRes = [this] ( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) ->void * {
+			TType_Name *result = ( TType_Name * ) createFunction( );
+			result_use_data_count = BinGenerate::fillObjPtr< TType_Name >( result, source_data_ptr, source_data_count );
+			if( result_use_data_count != 0 )
+				return result;
+			delete result;
+			return nullptr;
+		};
+		return true;
 	}
 public:
 	/// @brief 数据转换到二进制
@@ -164,9 +244,13 @@ public:
 	}
 	template< typename TType_Name >
 	void appendUnity( const TType_Name &emplace_var ) {
+		if( createFunction == nullptr )
+			return;;
 		if( typeid( TType_Name ).name( ) != unityTypeName )
 			return;
-		TType_Name *appendU = new TType_Name( );
+		TType_Name *appendU = ( TType_Name * ) createFunction( );
+		if( appendU == nullptr )
+			return;
 		*appendU = emplace_var;
 		varVector.emplace_back( appendU );
 	}
