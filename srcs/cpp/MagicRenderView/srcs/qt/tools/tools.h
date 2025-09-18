@@ -7,9 +7,11 @@
 #include <alias/type_alias.h>
 
 namespace tools {
-	namespace qstring {
-		QString removeSpace( const QString &string );
+	namespace qstr {
+		using qstring_t = QString;
+		qstring_t removeSpace( const qstring_t &string );
 	}
+
 	namespace ui {
 		/// @brief 窗口移动到指定显示器当中
 		/// @param move_target 移动的窗口
@@ -282,6 +284,7 @@ namespace tools {
 		}
 
 	}
+	class Serialize;
 }
 
 #endif // TOOLS_H_H_HEAD__FILE__

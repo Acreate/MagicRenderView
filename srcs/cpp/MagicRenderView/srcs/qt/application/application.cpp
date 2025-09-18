@@ -10,7 +10,8 @@
 #include <qt/stack/stack.h>
 #include <qt/widgets/mainWidget.h>
 
-#include "../node/generate/nodeItemGenerate.h"
+#include "../generate/nodeItemGenerate.h"
+
 #include "../node/item/calculate/varAdd.h"
 #include "../node/item/calculate/varDiv.h"
 #include "../node/item/calculate/varMod.h"

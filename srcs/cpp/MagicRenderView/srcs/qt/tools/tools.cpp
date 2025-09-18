@@ -6,6 +6,7 @@
 #include <QWindow>
 #include <stacktrace>
 #include <filesystem>
+#include <QByteArray>
 
 int tools::ui::moveDisplayCenter( QWidget *move_target, size_t display_target ) {
 	QList< QScreen * > screens = qGuiApp->screens( );
@@ -105,7 +106,7 @@ void tools::debug::printError( const std::wstring &msg, size_t start_index, size
 	wss << data[ start_index ] << L"\n================";
 	qDebug( ) << QString::fromStdWString( wss.str( ) ).toStdString( ).c_str( );
 }
-QString tools::qstring::removeSpace( const QString &string ) {
+QString tools::qstr::removeSpace( const QString &string ) {
 	qsizetype length = string.length( );
 	if( length == 0 )
 		return string;

@@ -1,6 +1,5 @@
 ﻿#include "./nodeItemGenerate.h"
 
-#include "../../tools/tools.h"
 
 NodeItemGenerate::NodeItemGenerateMetaInfoVector_Type NodeItemGenerate::nodeItemGenerateMetaInfos;
 NodeItemGenerate::DirClassItemMapVector_Type NodeItemGenerate::nodeItemDirClassMetaInfos;

@@ -8,7 +8,8 @@
 
 #include <qt/application/application.h>
 
-#include "../node/generate/nodeItemGenerate.h"
+#include "../generate/nodeItemGenerate.h"
+
 #include "../node/prot/inputProt/nodeInputPort.h"
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {

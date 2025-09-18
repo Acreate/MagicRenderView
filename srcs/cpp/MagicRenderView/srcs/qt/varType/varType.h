@@ -11,15 +11,41 @@ class VarType : public QObject {
 public:
 	friend class VarTypeGenerate;
 protected:
+	/// @brief 生成代码
+	size_t generateCode;
+	/// @brief 单元类型名称
 	QString unityTypeName;
-	std_vector< std_shared_ptr< void > > varVector;
+	/// @brief 单元变量存储序列
+	std_vector< void * > varVector;
+	/// @brief 单元删除器
+	std_function< void( void *delete_obj_ptr ) > releaseFunction = nullptr;
+	/// @brief 单元序列化
+	std_function< size_t( const void *, std_vector< uint8_t > & ) > unitySer = nullptr;
+	/// @brief 单元反序列化
+	std_function< void*( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) > unitySerRes = nullptr;
 private:
 	VarType( const QString &unity_type_name ) {
 		unityTypeName = unity_type_name;
 	}
 	VarType( QObject *parent = nullptr );
-public:
 
+	template< typename TType_Name >
+	bool init( ) {
+		if( typeid( TType_Name ).name( ) != unityTypeName )
+			return false;
+		releaseFunction = [] ( void *p ) {
+			delete ( TType_Name * ) p;
+		};
+		return releaseFunction != nullptr;
+	}
+public:
+	/// @brief 数据转换到二进制
+	/// @return 二进制数据
+	virtual std_vector< uint8_t > toBin( ) const;
+	/// @brief 从二进制数据加载到该对象
+	/// @param bin 二进制数据
+	/// @return 使用数据量
+	virtual size_t loadBin( const std_vector< uint8_t > &bin );
 public:
 	/// @brief 获取数组个数
 	/// @return 个数
@@ -35,11 +61,12 @@ public:
 	/// @tparam TType_Name 类型
 	/// @return 无法匹配类型返回 nullptr
 	template< typename TType_Name >
-	TType_Name * data( ) const {
-		if( typeid( TType_Name ).name( ) != unityTypeName )
+	TType_Name * const* data( ) const {
+		auto name = typeid( TType_Name ).name( );
+		if( name != unityTypeName )
 			return nullptr;
 		auto data = varVector.data( );
-		return ( TType_Name * ) data;
+		return ( TType_Name * const* ) data;
 	}
 	/// @brief 获取指定下标位置的数据
 	/// @tparam TType_Name 类型
@@ -54,7 +81,7 @@ public:
 		if( count <= index )
 			return false;
 		auto data = varVector.data( );
-		*result_var = *( TType_Name * ) data;
+		*result_var = **( ( ( TType_Name * const* ) data ) + index );
 		return true;
 	}
 
@@ -71,7 +98,7 @@ public:
 		if( count <= index )
 			return false;
 		auto data = varVector.data( );
-		*( ( TType_Name * ) data[ index ].get( ) ) = *set_var;
+		*( ( ( TType_Name * const* ) data )[ index ] ) = *set_var;
 		return true;
 	}
 
@@ -90,7 +117,7 @@ public:
 			get_index = get_index - 1;
 		else
 			get_index = index;
-		*result_var = *( ( TType_Name * ) ( ( varVector.data( )[ get_index ] ).get( ) ) );
+		*result_var = **( ( ( TType_Name * const* ) varVector.data( ) ) + get_index );
 		return true;
 	}
 	/// @brief 获取指定下标位置的数据
@@ -115,18 +142,13 @@ public:
 			return false;
 		get_index = varVector.size( );
 		if( get_index == 0 ) {
-			TType_Name *appendU = new TType_Name( );
-			*appendU = set_var;
-			std_shared_ptr< void > emplace( appendU, [appendU] ( void *p ) {
-				delete appendU;
-			} );
-			varVector.emplace_back( emplace );
+			appendUnity< TType_Name >( set_var );
 			return get_index;
 		} else if( get_index <= index )
 			get_index = get_index - 1;
 		else
 			get_index = index;
-		*( ( TType_Name * ) ( varVector.data( )[ get_index ] ).get( ) ) = set_var;
+		**( ( ( TType_Name * const* ) varVector.data( ) ) + get_index ) = set_var;
 		return get_index;
 	}
 	/// @brief 配置边缘元素值
@@ -145,13 +167,30 @@ public:
 			return;
 		TType_Name *appendU = new TType_Name( );
 		*appendU = emplace_var;
-		std_shared_ptr< void > emplace( appendU, [appendU] ( void *p ) {
-			delete appendU;
-		} );
-		varVector.emplace_back( emplace );
+		varVector.emplace_back( appendU );
+	}
+	virtual void appendUnity( const std::string &emplace_var ) {
+		appendUnity< QString >( QString::fromStdString( emplace_var ) );
+	}
+	virtual void appendUnity( const std::wstring &emplace_var ) {
+		appendUnity< QString >( QString::fromStdWString( emplace_var ) );
+	}
+	virtual void appendUnity( const char *emplace_var ) {
+		appendUnity< QString >( emplace_var );
+	}
+	virtual void appendUnity( const wchar_t *emplace_var ) {
+		appendUnity< QString >( QString::fromStdWString( emplace_var ) );
+	}
+	virtual void appendUnity( const QString &emplace_var ) {
+		appendUnity< QString >( emplace_var );
 	}
 	~VarType( ) override {
 		emit deleteObjBefore( this );
+		auto ptr = varVector.data( );
+		size_t count = varVector.size( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			releaseFunction( ptr[ index ] );
 		varVector.clear( );
 	}
 Q_SIGNALS:

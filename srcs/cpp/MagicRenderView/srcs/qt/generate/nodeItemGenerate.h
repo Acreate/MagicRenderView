@@ -4,9 +4,10 @@
 
 #include <alias/type_alias.h>
 
-#include "../item/nodeItem.h"
+#include "../node/item/nodeItem.h"
+
 /// @brief 节点生成器
-class NodeItemGenerate {
+class NodeItemGenerate final {
 public:
 	/// @brief 节点指针类型
 	using NodeItem_Type = NodeItem;
