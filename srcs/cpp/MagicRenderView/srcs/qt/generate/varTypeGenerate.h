@@ -8,15 +8,14 @@
 class QString;
 class QObject;
 class VarTypeGenerate final {
-	friend class VarType;
 public:
 	static bool isLittleEndian( );
 	/// @brief 获取数据当中的类名称信息{内名称信息长度(size_t 类型),类名称信息内容(QByteArray 类型-utf8编码)}
+	/// @param result_type_info 类名称信息
 	/// @param source_data_ptr 源
 	/// @param source_count 源数据上限
-	/// @return 类名称信息
-	static QString getMetaInfo(const uint8_t* source_data_ptr, const size_t& source_count);
-private:
+	/// @return 数据使用量
+	static size_t getMetaInfo( QString *result_type_info, const uint8_t *source_data_ptr, const size_t &source_count );
 	static size_t toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_bin_data_vector );
 	static size_t toVectorUInt8Data( const QString &var_type, std_vector< uint8_t > &result_bin_data_vector );
 	static size_t toVectorUInt8Data( const uint8_t &var_type, std_vector< uint8_t > &result_bin_data_vector );
@@ -56,7 +55,7 @@ public:
 	template< typename TBaseType >
 	static size_t toVectortBin( const TBaseType &var_type, std_vector< uint8_t > &result_bin_data_vector ) {
 		/*
-		 * todo : 对象类型信息
+		 * 对象类型信息
 		 */
 		QString typeName = typeid( TBaseType ).name( );
 		std_vector< uint8_t > typeNameVector;
@@ -64,20 +63,20 @@ public:
 		std_vector< uint8_t > typeNameVectorCountVector;
 		VarTypeGenerate::toVectorUInt8Data( dataCount, typeNameVectorCountVector );
 		/*
-		 * todo : 对象存储信息
+		 * 对象存储信息
 		 */
 		std_vector< uint8_t > varDataVector;
 		dataCount = VarTypeGenerate::toVectorUInt8Data( var_type, varDataVector );
 		std_vector< uint8_t > varDataVectorCountVector;
 		VarTypeGenerate::toVectorUInt8Data( dataCount, varDataVectorCountVector );
 		/*
-		 * todo : 总长度 = 对象类型信息长度+对象存储信息长度
+		 * 总长度 = 对象类型信息长度+对象存储信息长度
 		 */
 		dataCount = typeNameVectorCountVector.size( ) + typeNameVector.size( ) + varDataVectorCountVector.size( ) + varDataVector.size( );
 		std_vector< uint8_t > dataCountVector;
 		VarTypeGenerate::toVectorUInt8Data( dataCount, dataCountVector );
 		/*
-		* todo : 存储到返回
+		* 存储到返回
 		*/
 		result_bin_data_vector.clear( );
 		// 总长
@@ -101,7 +100,7 @@ public:
 	template< typename TBaseType >
 	static size_t fillObjPtr( TBaseType *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 		/*
-		 * todo : 总数量
+		 * 总数量
 		 */
 		// 从数据当中获取长度
 		size_t minCount = *( size_t * ) source_data_ptr;
@@ -116,7 +115,7 @@ public:
 		// 移动到对象类型信息起始位置
 		source_data_ptr += size_tTypeSize;
 		/*
-		 * todo : 校对对象类型信息
+		 * 校对对象类型信息
 		 */
 		// 获取对象类型信息长度
 		size_t typeNameSize = *( size_t * ) source_data_ptr;
@@ -131,7 +130,7 @@ public:
 		// 指向对象存储信息
 		source_data_ptr += typeNameSize;
 		/*
-		 * todo : 校对对象存储信息
+		 * 校对对象存储信息
 		 */
 		validSourceDataCount = *( size_t * ) source_data_ptr;
 		source_data_ptr += size_tTypeSize;

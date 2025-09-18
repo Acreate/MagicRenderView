@@ -12,13 +12,12 @@ bool VarTypeGenerate::isLittleEndian( ) {
 	// 小端：返回 1，说明数据的低字节在内存的低地址存放
 	return un.c == 1;
 }
-QString VarTypeGenerate::getMetaInfo( const uint8_t *source_data_ptr, const size_t &source_count ) {
+size_t VarTypeGenerate::getMetaInfo( QString *result_type_info, const uint8_t *source_data_ptr, const size_t &source_count ) {
 	size_t metaCount = *( size_t * ) source_data_ptr;
 	size_t sizeSize = sizeof( size_t );
 	source_data_ptr += sizeSize;
-	QString result;
-	toObj( &result, source_data_ptr, metaCount );
-	return result;
+	toObj( result_type_info, source_data_ptr, metaCount );
+	return metaCount + sizeSize;
 }
 size_t VarTypeGenerate::toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_mirror_image_bin_vector ) {
 	result_mirror_image_bin_vector.resize( source_ptr_count );
