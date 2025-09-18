@@ -11,6 +11,11 @@ class VarTypeGenerate final {
 	friend class VarType;
 public:
 	static bool isLittleEndian( );
+	/// @brief 获取数据当中的类名称信息{内名称信息长度(size_t 类型),类名称信息内容(QByteArray 类型-utf8编码)}
+	/// @param source_data_ptr 源
+	/// @param source_count 源数据上限
+	/// @return 类名称信息
+	static QString getMetaInfo(const uint8_t* source_data_ptr, const size_t& source_count);
 private:
 	static size_t toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_bin_data_vector );
 	static size_t toVectorUInt8Data( const QString &var_type, std_vector< uint8_t > &result_bin_data_vector );
