@@ -12,16 +12,16 @@ std_vector< uint8_t > VarType::toBin( ) const {
 
 	// 成员类型信息
 	std_vector< uint8_t > unityTypeNameVector;
-	VarTypeGenerate::toVectorUInt8Data( unityTypeName, unityTypeNameVector );
+	BinGenerate::toVectorUInt8Data( unityTypeName, unityTypeNameVector );
 	size_t unityTypeNameVectorCount = unityTypeNameVector.size( );
 	std_vector< uint8_t > unityTypeNameVectorCountVector;
-	VarTypeGenerate::toVectorUInt8Data( unityTypeNameVectorCount, unityTypeNameVectorCountVector );
+	BinGenerate::toVectorUInt8Data( unityTypeNameVectorCount, unityTypeNameVectorCountVector );
 	resultBuff.append_range( unityTypeNameVectorCountVector );
 	resultBuff.append_range( unityTypeNameVector );
 
 	size_t serVarCount = varVector.size( );
 	std_vector< uint8_t > serVarCountVector;
-	VarTypeGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
+	BinGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
 	resultBuff.append_range( serVarCountVector );
 	auto dataPtr = varVector.data( );
 	std_vector< uint8_t > serVarVector;
@@ -31,7 +31,7 @@ std_vector< uint8_t > VarType::toBin( ) const {
 
 	std_vector< uint8_t > result;
 	serVarCount = resultBuff.size( );
-	VarTypeGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
+	BinGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
 	result.append_range( serVarCountVector );
 	result.append_range( resultBuff );
 	return result;
@@ -39,7 +39,7 @@ std_vector< uint8_t > VarType::toBin( ) const {
 size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	if( unitySerRes == nullptr )
 		return 0;
-	// todo : 反序列化成员
+	// 反序列化成员
 	auto sourcePtr = bin.data( );
 	auto sourceCount = bin.size( );
 	size_t size_tTypeSize = sizeof( size_t );
@@ -56,7 +56,7 @@ size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	size_t metaSize = *( size_t * ) sourcePtr;
 	sourcePtr += size_tTypeSize;
 	QString loadMetaInfo;
-	VarTypeGenerate::toObj( &loadMetaInfo, sourcePtr, metaSize );
+	BinGenerate::toObj( &loadMetaInfo, sourcePtr, metaSize );
 	if( loadMetaInfo != unityTypeName )
 		return 0;
 	sourcePtr += metaSize;

@@ -282,7 +282,67 @@ namespace tools {
 			*result_index = 0;
 			return false;
 		}
+		/// @brief 获取不重复的元素
+		/// @tparam TUnity 元素类型
+		/// @param source_vector 匹配序列
+		/// @return 不重复的序列
+		template< typename TUnity >
+		std_vector< TUnity > removeRepetition( const std_vector< TUnity > &source_vector ) {
+			auto count = source_vector.size( );
+			if( count == 0 )
+				return source_vector;
+			std_vector< TUnity > result;
+			size_t index = 0;
+			size_t subIndex = 0;
+			size_t subCount = 0;
+			const TUnity *data = source_vector.data( );
+			TUnity *subData;
 
+			for( ; index < count; ++index ) {
+				for( ; subIndex < subCount; ++subIndex )
+					if( data[ index ] == subData[ subIndex ] )
+						break;
+				if( subIndex < subCount )
+					continue;
+				result.emplace_back( data[ index ] );
+				subCount = result.size( );
+				subIndex = 0;
+				subData = result.data( );
+			}
+			return result;
+		}
+
+		/// @brief 获取不重复的元素
+		/// @tparam TUnity 元素类型
+		/// @param source_vector 匹配序列
+		/// @param get_comp_unity 用于获取重复元素的函数调用
+		/// @return 不重复的序列
+		template< typename TCompUnity, typename TUnity >
+		std_vector< TUnity > removeRepetition( const std_vector< TUnity > &source_vector, const std_function< TCompUnity ( const TUnity & ) > &get_comp_unity ) {
+			auto count = source_vector.size( );
+			if( count == 0 )
+				return source_vector;
+			std_vector< TUnity > result;
+			size_t index = 0;
+			size_t subIndex = 0;
+			size_t subCount = 0;
+			const TUnity *data = source_vector.data( );
+			TUnity *subData;
+
+			for( ; index < count; ++index ) {
+				TCompUnity compUnity = get_comp_unity( data[ index ] );
+				for( ; subIndex < subCount; ++subIndex )
+					if( compUnity == get_comp_unity( subData[ subIndex ] ) )
+						break;
+				if( subIndex < subCount )
+					continue;
+				result.emplace_back( data[ index ] );
+				subCount = result.size( );
+				subIndex = 0;
+				subData = result.data( );
+			}
+			return result;
+		}
 	}
 	class Serialize;
 }

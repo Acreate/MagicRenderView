@@ -10,6 +10,7 @@ class VarType : public QObject {
 	Q_OBJECT
 public:
 	friend class VarTypeGenerate;
+	friend class VarTypeGenerateItem;
 protected:
 	/// @brief 生成代码
 	size_t generateCode;

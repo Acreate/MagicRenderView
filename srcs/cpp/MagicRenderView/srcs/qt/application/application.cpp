@@ -11,6 +11,7 @@
 #include <qt/widgets/mainWidget.h>
 
 #include "../generate/nodeItemGenerate.h"
+#include "../generate/varTypeGenerate.h"
 
 #include "../node/item/calculate/varAdd.h"
 #include "../node/item/calculate/varDiv.h"
@@ -104,6 +105,19 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 
 	// todo : 音乐特效节点
 
+	// todo : VarType 支持变量
+	VarTypeGenerate::appendType< QString >( );
+	VarTypeGenerate::appendType< uint8_t >( );
+	VarTypeGenerate::appendType< uint16_t >( );
+	VarTypeGenerate::appendType< uint32_t >( );
+	VarTypeGenerate::appendType< uint64_t >( );
+	VarTypeGenerate::appendType< int8_t >( );
+	VarTypeGenerate::appendType< int16_t >( );
+	VarTypeGenerate::appendType< int32_t >( );
+	VarTypeGenerate::appendType< int64_t >( );
+	VarTypeGenerate::appendType< float_t >( );
+	VarTypeGenerate::appendType< double_t >( );
+	VarTypeGenerate::appendType< QString >( );
 }
 Application::~Application( ) {
 	settings->sync( );
