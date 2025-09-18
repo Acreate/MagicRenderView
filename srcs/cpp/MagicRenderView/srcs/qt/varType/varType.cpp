@@ -9,7 +9,16 @@ std_vector< uint8_t > VarType::toBin( ) const {
 	std_vector< uint8_t > resultBuff;
 	if( unitySer == nullptr )
 		return resultBuff;
-	// todo : 序列化成员
+
+	// 成员类型信息
+	std_vector< uint8_t > unityTypeNameVector;
+	VarTypeGenerate::toVectorUInt8Data( unityTypeName, unityTypeNameVector );
+	size_t unityTypeNameVectorCount = unityTypeNameVector.size( );
+	std_vector< uint8_t > unityTypeNameVectorCountVector;
+	VarTypeGenerate::toVectorUInt8Data( unityTypeNameVectorCount, unityTypeNameVectorCountVector );
+	resultBuff.append_range( unityTypeNameVectorCountVector );
+	resultBuff.append_range( unityTypeNameVector );
+
 	size_t serVarCount = varVector.size( );
 	std_vector< uint8_t > serVarCountVector;
 	VarTypeGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
@@ -17,9 +26,9 @@ std_vector< uint8_t > VarType::toBin( ) const {
 	auto dataPtr = varVector.data( );
 	std_vector< uint8_t > serVarVector;
 	for( size_t index = 0; index < serVarCount; ++index )
-		if( unitySer( dataPtr[ index ], serVarVector ) != 0 ) {
+		if( unitySer( dataPtr[ index ], serVarVector ) != 0 )
 			resultBuff.append_range( serVarVector );
-		}
+
 	std_vector< uint8_t > result;
 	serVarCount = resultBuff.size( );
 	VarTypeGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
@@ -36,15 +45,22 @@ size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	size_t size_tTypeSize = sizeof( size_t );
 	if( sourceCount < size_tTypeSize )
 		return 0;
-
 	// 获取需要长度
 	size_t needSize = *( size_t * ) sourcePtr;
 	size_t modSize = sourceCount - size_tTypeSize;
 	if( needSize > modSize )
 		return 0;
 	auto orgPtr = sourcePtr;
-	// 调到个数
 	sourcePtr += size_tTypeSize;
+	// 匹配类型信息
+	size_t metaSize = *( size_t * ) sourcePtr;
+	sourcePtr += size_tTypeSize;
+	QString loadMetaInfo;
+	VarTypeGenerate::toObj( &loadMetaInfo, sourcePtr, metaSize );
+	if( loadMetaInfo != unityTypeName )
+		return 0;
+	sourcePtr += metaSize;
+	// 调到个数
 	size_t serVarCount = *( size_t * ) sourcePtr;
 	size_t useCount = 0;
 	// 释放仓库
