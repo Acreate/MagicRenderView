@@ -13,7 +13,7 @@ class QString;
 class QObject;
 
 class VarTypeGenerate final {
-public:
+private:
 	friend class VarTypeGenerateItem;
 	using generate_function = std_function< VarType *( QObject *, const QString & ) >;
 private:
@@ -27,12 +27,10 @@ private:
 		static VarTypeGenerate::generate_function createVarTypeGenerateFunction( ) {
 			return [] ( QObject *parent, const QString &type_name ) ->VarType * {
 				VarType *varType = VarTypeGenerate::templateVarType( parent, type_name );
-				if( varType->init< TTBase >( ) == false ) {
-					delete varType;
-					return nullptr;
-				}
-			
-				return varType;
+				if( varType->init< TTBase >( ) == true )
+					return varType;
+				delete varType;
+				return nullptr;
 			};
 		}
 	};
