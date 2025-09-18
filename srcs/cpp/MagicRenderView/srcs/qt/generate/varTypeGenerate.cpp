@@ -21,7 +21,6 @@ size_t VarTypeGenerate::getMetaInfo( QString *result_type_info, const uint8_t *s
 }
 size_t VarTypeGenerate::toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_mirror_image_bin_vector ) {
 	result_mirror_image_bin_vector.resize( source_ptr_count );
-	size_t count = result_mirror_image_bin_vector.size( );
 	auto pasteTargetDataPtr = result_mirror_image_bin_vector.data( );
 	auto copyTargetDataPtr = ( const uint8_t * ) source_ptr;
 	for( size_t index = 0; index < source_ptr_count; ++index )

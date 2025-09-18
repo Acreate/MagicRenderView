@@ -21,6 +21,10 @@ int main( int argc, char *argv[ ] ) {
 
 	delete templateVarType;
 	delete templateVarType2;
+
+	size_t metaInfo = VarTypeGenerate::setMetaInfo< QString >( bin );
+	VarTypeGenerate::getMetaInfo( &string, bin.data( ), bin.size( ) );
+	qDebug( ) << string;
 	return 0;
 
 	MainWindow mainwidget;

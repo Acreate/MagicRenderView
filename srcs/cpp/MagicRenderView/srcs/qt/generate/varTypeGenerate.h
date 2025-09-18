@@ -16,6 +16,23 @@ public:
 	/// @param source_count 源数据上限
 	/// @return 数据使用量
 	static size_t getMetaInfo( QString *result_type_info, const uint8_t *source_data_ptr, const size_t &source_count );
+	/// @brief 类型转换到元信息
+	/// @tparam TType 类型
+	/// @param set_vector 返回二进制 
+	/// @return 转换个数
+	template< typename TType >
+	static size_t setMetaInfo( std_vector< uint8_t > &set_vector ) {
+		QString typeInfo = typeid( TType ).name( );
+		std_vector< uint8_t > typeNameVector;
+		toVectorUInt8Data( typeInfo, typeNameVector );
+		size_t count = typeNameVector.size( );
+		std_vector< uint8_t > countVector;
+		toVectorUInt8Data( count, countVector );
+		set_vector.clear( );
+		set_vector.append_range( countVector );
+		set_vector.append_range( typeNameVector );
+		return set_vector.size( );
+	}
 	static size_t toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_bin_data_vector );
 	static size_t toVectorUInt8Data( const QString &var_type, std_vector< uint8_t > &result_bin_data_vector );
 	static size_t toVectorUInt8Data( const uint8_t &var_type, std_vector< uint8_t > &result_bin_data_vector );
