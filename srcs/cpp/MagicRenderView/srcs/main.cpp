@@ -1,6 +1,6 @@
 ﻿#include "qt/application/application.h"
-#include "qt/generate/varTypeGenerate.h"
 #include "qt/windows/mainWindow.h"
+
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 	MainWindow mainwidget;

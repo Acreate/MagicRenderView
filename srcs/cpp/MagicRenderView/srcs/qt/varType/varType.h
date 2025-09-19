@@ -107,7 +107,7 @@ private:
 			return true;
 		};
 		unitySer = [] ( const void *p, std::vector< uint8_t > &vector ) ->size_t {
-			return BinGenerate::toVectortBin< TType_Name >( *( ( const TType_Name * ) p ), vector );
+			return BinGenerate::toVectorBin< TType_Name >( *( ( const TType_Name * ) p ), vector );
 		};
 		unitySerRes = [this] ( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) ->void * {
 			TType_Name *result = ( TType_Name * ) createFunction( );

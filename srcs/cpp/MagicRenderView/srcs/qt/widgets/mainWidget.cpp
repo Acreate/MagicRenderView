@@ -272,52 +272,11 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	}
 }
 size_t MainWidget::supportInfoToBin( ) {
-
-	supportNodeBin.clear( );
-	supportVarTypeBin.clear( );
 	supportBin.clear( );
-	std_vector< uint8_t > foreachBuff;
-	size_t index = 0;
-	size_t vectorCount = 0;
-	size_t count = supportNodeName.size( );
-	auto data = supportNodeName.data( );
-	std_vector< uint8_t > strBuff;
+	BinGenerate::toVectorBin( supportNodeName, supportNodeBin );
+	BinGenerate::toVectorBin( supporVarType, supportVarTypeBin );
 	std_vector< uint8_t > countBuff;
-	BinGenerate::toVectorUInt8Data( count, countBuff );
-	foreachBuff.append_range( countBuff );
-
-	for( ; index < count; ++index ) {
-		BinGenerate::toVectorUInt8Data( data[ index ], strBuff );
-		vectorCount = strBuff.size( );
-		BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
-		foreachBuff.append_range( countBuff );
-		foreachBuff.append_range( strBuff );
-	}
-	vectorCount = foreachBuff.size( );
-	BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
-	supportNodeBin.append_range( countBuff );
-	supportNodeBin.append_range( foreachBuff );
-
-	foreachBuff.clear(  );
-	index = 0;
-	vectorCount = 0;
-	count = supporVarType.size( );
-	data = supporVarType.data( );
-	BinGenerate::toVectorUInt8Data( count, countBuff );
-	foreachBuff.append_range( countBuff );
-	for( ; index < count; ++index ) {
-		BinGenerate::toVectorUInt8Data( data[ index ], strBuff );
-		vectorCount = strBuff.size( );
-		BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
-		foreachBuff.append_range( countBuff );
-		foreachBuff.append_range( strBuff );
-	}
-	vectorCount = foreachBuff.size( );
-	BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
-	supportVarTypeBin.append_range( countBuff );
-	supportVarTypeBin.append_range( foreachBuff );
-
-	vectorCount = supportVarTypeBin.size( ) + supportNodeBin.size( );
+	auto vectorCount = supportVarTypeBin.size( ) + supportNodeBin.size( );
 	BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
 	supportBin.append_range( countBuff );
 	supportBin.append_range( supportNodeBin );

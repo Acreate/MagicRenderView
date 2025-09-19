@@ -199,7 +199,7 @@ public:
 	/// @param result_bin_data_vector 返回的二进制数据
 	/// @return 失败返回 false
 	template< typename TBaseType >
-	static size_t toVectortBin( const TBaseType &var_type, std_vector< uint8_t > &result_bin_data_vector ) {
+	static size_t toVectorBin( const TBaseType &var_type, std_vector< uint8_t > &result_bin_data_vector ) {
 		/*
 		 * 对象类型信息
 		 */
@@ -237,6 +237,7 @@ public:
 		result_bin_data_vector.append_range( varDataVector );
 		return true;
 	}
+
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
 	/// @param var_type 被填充对象指针
@@ -284,6 +285,89 @@ public:
 
 		return minCount;
 	}
+	/// @brief 数组转换到二进制序列
+	/// @tparam TVectorIteratorType 数组元素类型
+	/// @param obj 转换的数组
+	/// @param result_bin 返回的二进制序列
+	/// @return 序列个数
+	template< typename TVectorIteratorType >
+	static size_t toVectorBin( const std_vector< TVectorIteratorType > &obj, std_vector< uint8_t > &result_bin ) {
+
+		std_vector< uint8_t > resultBinBuff;
+		QString typeName = typeid( std_vector< TVectorIteratorType > ).name( );
+		std_vector< uint8_t > nameBin;
+		BinGenerate::toVectorUInt8Data( typeName, nameBin );
+		std_vector< uint8_t > nameCountBin;
+		BinGenerate::toVectorUInt8Data( nameBin.size( ), nameCountBin );
+		resultBinBuff.append_range( nameCountBin );
+		resultBinBuff.append_range( nameBin );
+		auto count = obj.size( );
+		BinGenerate::toVectorUInt8Data( count, nameCountBin );
+		resultBinBuff.append_range( nameCountBin );
+		size_t index = 0;
+		auto data = obj.data( );
+		for( ; index < count; ++index ) {
+			BinGenerate::toVectorUInt8Data( data[ index ], nameBin );
+			nameCountBin.clear( );
+			BinGenerate::toVectorUInt8Data( nameBin.size( ), nameCountBin );
+			resultBinBuff.append_range( nameCountBin );
+			resultBinBuff.append_range( nameBin );
+		}
+
+		BinGenerate::toVectorUInt8Data( resultBinBuff.size( ), nameCountBin );
+		result_bin.clear( );
+		result_bin.append_range( nameCountBin );
+		result_bin.append_range( resultBinBuff );
+		return result_bin.size( );
+	}
+
+	/// @brief 对象直接填充二进制-数组
+	/// @tparam TVectorIteratorType 填充类型
+	/// @param var_type 被填充对象指针
+	/// @param source_data_ptr 匹配数据
+	/// @param source_data_count 匹配数据的总个数
+	/// @return 失败返回 false
+	template< typename TVectorIteratorType >
+	static size_t fillObjPtr( std_vector< TVectorIteratorType > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+		size_t minCount = *( size_t * ) source_data_ptr;
+		size_t size_tTypeSize = sizeof( size_t );
+		if( source_data_count < size_tTypeSize )
+			return 0;
+		size_t validSourceDataCount = source_data_count - size_tTypeSize;
+		if( minCount > validSourceDataCount )
+			return 0;
+		source_data_ptr += size_tTypeSize;
+
+		std_vector< uint8_t > resultBinBuff;
+		QString typeName = typeid( std_vector< TVectorIteratorType > ).name( );
+		std_vector< uint8_t > nameBin;
+		BinGenerate::toVectorUInt8Data( typeName, nameBin );
+		std_vector< uint8_t > nameCountBin;
+		size_t count = nameBin.size( ), index = 0;
+		BinGenerate::toVectorUInt8Data( count, nameCountBin );
+		resultBinBuff.append_range( nameCountBin );
+		resultBinBuff.append_range( nameBin );
+		count = resultBinBuff.size( );
+		auto data = resultBinBuff.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != source_data_ptr[ index ] )
+				return 0;
+		source_data_ptr = source_data_ptr + count;
+		count = *( size_t * ) source_data_ptr;
+		source_data_ptr += size_tTypeSize;
+		var_type->resize( count );
+		auto pastDataPtr = var_type->data( );
+		for( index = 0; index < count; ++index ) {
+			TVectorIteratorType var;
+			validSourceDataCount = *( size_t * ) source_data_ptr;
+			source_data_ptr += size_tTypeSize;
+			BinGenerate::toObj( &var, source_data_ptr, validSourceDataCount );
+			pastDataPtr[ index ] = var;
+			source_data_ptr += validSourceDataCount;
+		}
+		return minCount;
+	}
+
 };
 
 #endif // BINGENERATE_H_H_HEAD__FILE__
