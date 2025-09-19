@@ -17,6 +17,10 @@ class MainWidget : public QWidget {
 protected:
 	/// @brief 数据化的支持对象（节点与数据类型）
 	std_vector< uint8_t > supportBin;
+	/// @brief 数据化支持的节点内容
+	std_vector< uint8_t > supportNodeBin;
+	/// @brief 数据化支持的类型内容
+	std_vector< uint8_t > supportVarTypeBin;
 	/// @brief 支持节点
 	std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > supportNode;
 	/// @brief 支持节点的名称
@@ -74,13 +78,23 @@ public:
 	virtual std_vector< uint8_t > getSupportBin( ) const {
 		return supportBin;
 	}
+	/// @brief 获取支持节点名称的二进制数据
+	/// @return 节点支持的二进制数据
+	virtual std_vector< uint8_t > getSupportNodeNmaeBin( ) const {
+		return supportNodeBin;
+	}
+	/// @brief 获取支持类型名称的二进制数据
+	/// @return 类型名称的二进制数据
+	virtual std_vector< uint8_t > getSupportVarTypeNameBin( ) const {
+		return supportVarTypeBin;
+	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
 protected:
-	virtual size_t supportInfoToBin() ;
+	virtual size_t supportInfoToBin( );
 };
 
 #endif // MAINWIDGET_H_H_HEAD__FILE__
