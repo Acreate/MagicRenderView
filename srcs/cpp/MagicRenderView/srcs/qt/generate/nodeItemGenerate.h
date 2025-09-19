@@ -44,6 +44,11 @@ private:
 	/// @return 添加失败返回 false
 	static bool appendNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function );
 public:
+	/// @brief 获取支持的节点列表
+	/// @return 支持的节点列表
+	static DirClassItemMapVector_Type getSupperTyeNodes( ) {
+		return nodeItemDirClassMetaInfos;
+	}
 	/// @brief 创建节点对象
 	/// @param parent 节点对象依赖父节点
 	/// @param dir_name 节点目录
@@ -75,11 +80,6 @@ public:
 		return NodeItemGenerate::appendNodeItemInfo( TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ), [] ( NodeItem_ParentPtr_Type *parent ) {
 			return new TItemType( parent );
 		} );
-	}
-	/// @brief 获取节点生成器当中的目录与类型映射信息
-	/// @return 节点生成器当中的目录与类型映射信息序列
-	static const DirClassItemMapVector_Type & getNodeItemDirClassMetaInfos( ) {
-		return nodeItemDirClassMetaInfos;
 	}
 };
 

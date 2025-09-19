@@ -15,6 +15,14 @@ class Application;
 class MainWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	/// @brief 数据化的支持对象（节点与数据类型）
+	std_vector< uint8_t > supportBin;
+	/// @brief 支持节点
+	std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > supportNode;
+	/// @brief 支持节点的名称
+	std_vector< QString > supportNodeName;
+	/// @brief 支持类型
+	std_vector< QString > supporVarType;
 	/// @brief 当前窗口的滚动页面
 	QScrollArea *scrollArea;
 	/// @brief 应用实例
@@ -59,11 +67,20 @@ public:
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
+	/// @brief 更新支持内容
+	virtual void updateSupport( );
+	/// @brief 获取经过二进制化的支持数据
+	/// @return 经过二进制化的支持是数据
+	virtual std_vector< uint8_t > getSupportBin( ) const {
+		return supportBin;
+	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
+protected:
+	virtual size_t supportInfoToBin() ;
 };
 
 #endif // MAINWIDGET_H_H_HEAD__FILE__

@@ -9,6 +9,7 @@
 #include <qt/application/application.h>
 
 #include "../generate/nodeItemGenerate.h"
+#include "../generate/varTypeGenerate.h"
 
 #include "../node/prot/inputProt/nodeInputPort.h"
 
@@ -23,46 +24,15 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	appInstance->syncAppValueIniFile( );
+	rightMouseBtnRemoveOutPortMenu = nullptr;
+	rightMouseBtnCreateNodeItemMenu = nullptr;
 
-	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
-	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
-	auto infos = NodeItemGenerate::getNodeItemDirClassMetaInfos( );
-	for( auto &item : infos ) {
-		QString dirName = item.first;
-		QMenu *dirMenu = rightMouseBtnCreateNodeItemMenu->addMenu( dirName );
-		for( auto &className : item.second ) {
-			auto addAction = dirMenu->addAction( className );
-			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
-				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
-				if( nodeItem->intPortItems( ) == false ) {
-					delete nodeItem;
-					return;
-				}
-				nodeItem->move( fromGlobalReleasePoint );
-				nodeItemList.emplace_back( nodeItem );
-
-				connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
-					auto iterator = nodeItemList.begin( );
-					auto end = nodeItemList.end( );
-					for( ; iterator != end; ++iterator )
-						if( *iterator == release_Item ) {
-							nodeItemList.erase( iterator );
-							break;
-						}
-				} );
-
-				renderWidgetActiveItem = nodeItem;
-
-				ensureVisibleToItemNode( nodeItem );
-				update( );
-			} );
-		}
-	}
 	leftMouseBtnSelectInputPort = nullptr;
 	leftMouseBtnSelectOutputPort = nullptr;
 	renderWidgetActiveItem = nullptr;
 	leftMouseBtnSelectItem = nullptr;
 	leftMouseBtnDragItem = nullptr;
+	updateSupport( );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -108,6 +78,68 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 	auto targetSize = geometry.bottomRight( );
 	scrollArea->ensureVisible( targetSize.x( ), targetSize.y( ) );
 }
+void MainWidget::updateSupport( ) {
+	size_t count = supportNode.size( );
+	if( count > 0 ) {
+		rightMouseBtnRemoveOutPortMenu->hide( );
+		rightMouseBtnCreateNodeItemMenu->hide( );
+
+		for( auto &[ dirMenu, pairs ] : supportNode ) {
+			for( auto &[ nodeNameAction, nodeName ] : pairs )
+				delete nodeNameAction;
+			delete dirMenu;
+		}
+
+		delete rightMouseBtnRemoveOutPortMenu;
+		delete rightMouseBtnCreateNodeItemMenu;
+		supportNode.clear( );
+		supportNodeName.clear( );
+		supporVarType.clear( );
+	}
+	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
+	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
+	auto infos = NodeItemGenerate::getSupperTyeNodes( );
+	for( auto &item : infos ) {
+		QString dirName = item.first;
+		QMenu *dirMenu = rightMouseBtnCreateNodeItemMenu->addMenu( dirName );
+		std_vector_pairt< QAction *, QString > pairs;
+		for( auto &className : item.second ) {
+			if( className.isEmpty( ) )
+				continue;
+			auto addAction = dirMenu->addAction( className );
+			auto joint = dirName.isEmpty( ) ? className : dirName + "/" + className;
+			supportNodeName.emplace_back( joint );
+			pairs.emplace_back( addAction, joint );
+			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
+				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
+				if( nodeItem->intPortItems( ) == false ) {
+					delete nodeItem;
+					return;
+				}
+				nodeItem->move( fromGlobalReleasePoint );
+				nodeItemList.emplace_back( nodeItem );
+
+				connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
+					auto iterator = nodeItemList.begin( );
+					auto end = nodeItemList.end( );
+					for( ; iterator != end; ++iterator )
+						if( *iterator == release_Item ) {
+							nodeItemList.erase( iterator );
+							break;
+						}
+				} );
+
+				renderWidgetActiveItem = nodeItem;
+
+				ensureVisibleToItemNode( nodeItem );
+				update( );
+			} );
+		}
+		supportNode.emplace_back( dirMenu, pairs );
+	}
+	supporVarType = VarTypeGenerate::supportTypes( );
+}
+
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
@@ -236,4 +268,11 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 			}
 			break;
 	}
+}
+size_t MainWidget::supportInfoToBin( ) {
+
+	//	std_vector< QString > supportNodeName; // todo : 序列化
+	//	std_vector< QString > supporVarType; // todo : 序列化
+	
+	return 0;
 }

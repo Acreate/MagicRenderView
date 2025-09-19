@@ -50,7 +50,7 @@ public:
 	}
 	/// @brief 获取类型支持列表
 	/// @return 列表
-	static std_vector< QString > supperTypes( ) {
+	static std_vector< QString > supportTypes( ) {
 		size_t count = generates.size( );
 		std_vector< QString > result( count );
 		if( count == 0 )
