@@ -107,11 +107,11 @@ private:
 			return true;
 		};
 		unitySer = [] ( const void *p, std::vector< uint8_t > &vector ) ->size_t {
-			return BinGenerate::toVectorBin< TType_Name >( *( ( const TType_Name * ) p ), vector );
+			return BinGenerate::toVectorUInt8Data< TType_Name >( *( ( const TType_Name * ) p ), vector );
 		};
 		unitySerRes = [this] ( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) ->void * {
 			TType_Name *result = ( TType_Name * ) createFunction( );
-			result_use_data_count = BinGenerate::fillObjPtr< TType_Name >( result, source_data_ptr, source_data_count );
+			result_use_data_count = BinGenerate::toObj< TType_Name >( result, source_data_ptr, source_data_count );
 			if( result_use_data_count != 0 )
 				return result;
 			delete result;

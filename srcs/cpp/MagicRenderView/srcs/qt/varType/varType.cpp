@@ -19,8 +19,12 @@ std_vector< uint8_t > VarType::toBin( ) const {
 	resultBuff.append_range( unityTypeNameVectorCountVector );
 	resultBuff.append_range( unityTypeNameVector );
 
-	size_t serVarCount = varVector.size( );
+	size_t serVarCount = generateCode;
 	std_vector< uint8_t > serVarCountVector;
+	BinGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
+	resultBuff.append_range( serVarCountVector );
+
+	serVarCount = varVector.size( );
 	BinGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
 	resultBuff.append_range( serVarCountVector );
 	auto dataPtr = varVector.data( );
@@ -30,6 +34,7 @@ std_vector< uint8_t > VarType::toBin( ) const {
 			resultBuff.append_range( serVarVector );
 
 	std_vector< uint8_t > result;
+
 	serVarCount = resultBuff.size( );
 	BinGenerate::toVectorUInt8Data( serVarCount, serVarCountVector );
 	result.append_range( serVarCountVector );
@@ -60,6 +65,10 @@ size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	if( loadMetaInfo != unityTypeName )
 		return 0;
 	sourcePtr += metaSize;
+	// 生成码
+	generateCode = *( size_t * ) sourcePtr;
+
+	sourcePtr += size_tTypeSize;
 	// 调到个数
 	size_t serVarCount = *( size_t * ) sourcePtr;
 	size_t useCount = 0;
@@ -70,13 +79,16 @@ size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	for( ; index < varCount; ++index )
 		releaseFunction( data[ index ] );
 	varVector.clear( );
+	varVector.resize( serVarCount, nullptr );
+	data = varVector.data( );
 	// 偏移到数据
 	sourcePtr += size_tTypeSize;
 	for( ; index < serVarCount; ++index ) {
 		void *serRes = unitySerRes( sourcePtr + useCount, modSize, useCount );
 		if( serRes == nullptr )
 			break;
-		varVector.emplace_back( serRes );
+		data[ index ] = serRes;
+
 		if( modSize < useCount )
 			break;
 		modSize -= useCount;
