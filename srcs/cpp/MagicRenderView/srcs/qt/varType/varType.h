@@ -36,63 +36,10 @@ private:
 	}
 	VarType( QObject *parent = nullptr );
 public:
-	VarType( const VarType &other )
-		: QObject( other.parent( ) ),
-		generateCode( other.generateCode ),
-		unityTypeName( other.unityTypeName ),
-		createFunction( other.createFunction ),
-		copyFunction( other.copyFunction ),
-		releaseFunction( other.releaseFunction ),
-		unitySer( other.unitySer ),
-		unitySerRes( other.unitySerRes ) {
-
-		if( createFunction == nullptr || copyFunction == nullptr )
-			return;
-		size_t count = other.varVector.size( );
-		if( count == 0 )
-			return;
-		auto data = other.varVector.data( );
-		varVector.resize( count );
-		auto fillPtr = varVector.data( );
-		for( size_t index = 0; index < count; ++index ) {
-			auto ptr = createFunction( );
-			copyFunction( ptr, data[ index ] );
-			fillPtr[ index ] = ptr;
-		}
-	}
-	VarType & operator=( const VarType &other ) {
-		if( this == &other )
-			return *this;
-		setParent( other.parent( ) );
-		generateCode = other.generateCode;
-		unityTypeName = other.unityTypeName;
-		releaseFunction = other.releaseFunction;
-		unitySer = other.unitySer;
-		unitySerRes = other.unitySerRes;
-		createFunction = other.createFunction;
-		copyFunction = other.copyFunction;
-
-		auto fillPtr = varVector.data( );
-		size_t count = varVector.size( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			releaseFunction( fillPtr[ index ] );
-		varVector.clear( );
-		if( createFunction == nullptr || copyFunction == nullptr )
-			return *this;
-		count = other.varVector.size( );
-		if( count == 0 )
-			return *this;
-		auto data = other.varVector.data( );
-		varVector.resize( count );
-		fillPtr = varVector.data( );
-		for( index = 0; index < count; ++index ) {
-			auto ptr = createFunction( );
-			copyFunction( ptr, data[ index ] );
-			fillPtr[ index ] = ptr;
-		}
-		return *this;
-	}
+	virtual size_t getGenerateCode( ) const { return generateCode; }
+	virtual size_t resetToGenerateCode( );
+	VarType( const VarType &other ) = delete;
+	VarType & operator=( const VarType &other ) = delete;
 private:
 	template< typename TType_Name >
 	bool init( ) {

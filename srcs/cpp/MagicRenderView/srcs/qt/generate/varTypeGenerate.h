@@ -3,11 +3,11 @@
 #pragma once
 #include <alias/type_alias.h>
 
-#include <qt/varType/varType.h>
-
 #include "binGenerate.h"
 
 #include "../tools/tools.h"
+
+#include "../varType/varType.h"
 
 class QString;
 class QObject;
@@ -79,7 +79,14 @@ public:
 			}
 		return nullptr;
 	}
-
+	/// @brief 获取 var_type_ptr 的原本生成代码
+	/// @param var_type_ptr 获取的对象指针
+	/// @return 生成代码，失败返回 0
+	static size_t genVarTypeCode( const VarType *var_type_ptr );
+	/// @brief 获取生成代码指向的对象
+	/// @param var_type_generate_code 生成代码
+	/// @return 指向对象，失败返回 nullptr
+	static VarType * genVarTypObjPtr( const size_t &var_type_generate_code );
 };
 
 #endif // VARTYPEGENERATE_H_H_HEAD__FILE__

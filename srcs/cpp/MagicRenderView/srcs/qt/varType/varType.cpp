@@ -5,6 +5,10 @@
 VarType::VarType( QObject *parent ) : QObject( parent ) {
 	unityTypeName = typeid( *this ).name( );
 }
+size_t VarType::resetToGenerateCode( ) {
+	generateCode = VarTypeGenerate::genVarTypeCode( this );
+	return generateCode;
+}
 std_vector< uint8_t > VarType::toBin( ) const {
 	std_vector< uint8_t > resultBuff;
 	if( unitySer == nullptr )
