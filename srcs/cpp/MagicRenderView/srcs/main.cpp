@@ -2,11 +2,9 @@
 #include "qt/generate/varTypeGenerate.h"
 #include "qt/windows/mainWindow.h"
 
-int main( int argc, char *argv[ ] ) {
-	Application app( argc, argv );
-
+int testQStringSerialization() {
+	
 	std_vector< uint8_t > buff;
-
 	QString ceshi1 = "QString 12345";
 	QString ceshi2;
 	BinGenerate::toBin( ceshi1, buff );
@@ -79,6 +77,9 @@ int main( int argc, char *argv[ ] ) {
 	}
 	qDebug( ) << "--------------";
 	return 0;
+}
+int main( int argc, char *argv[ ] ) {
+	Application app( argc, argv );
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );
