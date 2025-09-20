@@ -197,40 +197,44 @@ public:
 		private:
 			QString unityTypeName;
 			void *ptr = nullptr;
-			const void *constPtr = nullptr;
+			bool isConst;
 		public:
+			virtual void clear( ) {
+				unityTypeName.clear( );
+				ptr = nullptr;
+			}
 			template< typename TClassName >
 			void init( TClassName &unity ) {
 				unityTypeName = typeid( TClassName ).name( );
-				ptr = &unity;
+				ptr = ( void * ) &unity;
+				isConst = true;
 			}
 			template< typename TClassName >
-			void initConst( const TClassName &unity ) {
+			void init( const TClassName &unity ) {
 				unityTypeName = typeid( const TClassName ).name( );
-				constPtr = &unity;
+				ptr = ( void * ) &unity;
+				isConst = true;
 			}
 			template< typename TClassName >
 			void init( TClassName *unity ) {
 				unityTypeName = typeid( TClassName ).name( );
-				ptr = unity;
+				ptr = ( void * ) unity;
+				isConst = true;
 			}
 			template< typename TClassName >
-			void initConst( const TClassName *unity ) {
+			void init( const TClassName *unity ) {
 				unityTypeName = typeid( const TClassName ).name( );
-				constPtr = unity;
+				ptr = ( void * ) unity;
+				isConst = true;
 			}
 			template< typename TClassName >
-			TClassName * get( ) const {
-				if( unityTypeName == typeid( TClassName ).name( ) )
-					return ( TClassName * ) ptr;
-				return nullptr;
-			};
-			template< typename TClassName >
-			const TClassName * getConst( ) const {
-				if( unityTypeName == typeid( const TClassName ).name( ) )
-					return ( const TClassName * ) constPtr;
-				return nullptr;
-			};
+			TClassName * get( bool &is_const ) const {
+				if( unityTypeName != typeid( TClassName ).name( ) )
+					return nullptr;
+				is_const = isConst;
+				return ( TClassName * ) ptr;
+
+			}
 
 			virtual ~Unity( ) = default;
 		};
@@ -241,41 +245,44 @@ public:
 		private:
 			QString unityTypeName;
 			void *ptr = nullptr;
-			const void *constPtr = nullptr;
+			bool isConst;
 		public:
+			virtual void clear( ) {
+				unityTypeName.clear( );
+				ptr = nullptr;
+			}
 			template< typename TClassName >
 			void init( std_vector< TClassName > &vector ) {
 				unityTypeName = typeid( std_vector< TClassName > ).name( );
-				ptr = &vector;
+				ptr = ( void * ) &vector;
+				isConst = false;
 			}
 			template< typename TClassName >
-			void initConst( const std_vector< TClassName > &vector ) {
+			void init( const std_vector< TClassName > &vector ) {
 				unityTypeName = typeid( const std_vector< TClassName > ).name( );
-				constPtr = &vector;
+				ptr = ( void * ) &vector;
+				isConst = true;
 			}
 			template< typename TClassName >
 			void init( std_vector< TClassName > *vector ) {
 				unityTypeName = typeid( std_vector< TClassName > ).name( );
-				ptr = vector;
+				ptr = ( void * ) vector;
+				isConst = false;
 			}
 			template< typename TClassName >
-			void initConst( const std_vector< TClassName > *vector ) {
+			void init( const std_vector< TClassName > *vector ) {
 				unityTypeName = typeid( const std_vector< TClassName > ).name( );
-				constPtr = vector;
+				ptr = ( void * ) vector;
+				isConst = true;
 			}
 			template< typename TClassName >
-			std_vector< TClassName > * get( ) const {
-				if( unityTypeName == typeid( std_vector< TClassName > ).name( ) )
-					return ( std_vector< TClassName > * ) ptr;
-				return nullptr;
-			};
-			template< typename TClassName >
-			const std_vector< TClassName > * getConst( ) const {
-				if( unityTypeName == typeid( const std_vector< TClassName > ).name( ) )
-					return ( const std_vector< TClassName > * ) constPtr;
-				return nullptr;
-			};
+			std_vector< TClassName > * get( bool &is_const ) const {
+				if( unityTypeName != typeid( std_vector< TClassName > ).name( ) )
+					return nullptr;
+				is_const = isConst;
+				return ( std_vector< TClassName > * ) ptr;
 
+			}
 			virtual ~UnityVector( ) = default;
 		};
 		class UnityPtrVector {
@@ -284,40 +291,44 @@ public:
 		protected:
 			QString unityTypeName;
 			void *ptr = nullptr;
-			const void *constPtr = nullptr;
+			bool isConst;
 		public:
+			virtual void clear( ) {
+				unityTypeName.clear( );
+				ptr = nullptr;
+				isConst = false;
+			}
 			template< typename TClassName >
 			void init( std_vector< TClassName * > &vector ) {
 				unityTypeName = typeid( std_vector< TClassName * > ).name( );
-				ptr = &vector;
+				ptr = ( void * ) &vector;
+				isConst = false;
 			}
 			template< typename TClassName >
-			void initConst( const std_vector< TClassName * > &vector ) {
-				unityTypeName = typeid( const std_vector< TClassName * > ).name( );
-				constPtr = &vector;
+			void init( const std_vector< TClassName * > &vector ) {
+				unityTypeName = typeid( std_vector< TClassName * > ).name( );
+				ptr = ( void * ) &vector;
+				isConst = true;
 			}
 			template< typename TClassName >
 			void init( std_vector< TClassName * > *vector ) {
 				unityTypeName = typeid( std_vector< TClassName * > ).name( );
-				ptr = vector;
+				ptr = ( void * ) vector;
+				isConst = false;
 			}
 			template< typename TClassName >
-			void initConst( const std_vector< TClassName * > *vector ) {
+			void init( const std_vector< TClassName * > *vector ) {
 				unityTypeName = typeid( const std_vector< TClassName * > ).name( );
-				constPtr = vector;
+				ptr = ( void * ) vector;
+				isConst = true;
 			}
 			template< typename TClassName >
-			std_vector< TClassName * > * get( ) const {
-				if( unityTypeName == typeid( std_vector< TClassName * > ).name( ) )
-					return ( std_vector< TClassName * > * ) ptr;
-				return nullptr;
-			};
-			template< typename TClassName >
-			const std_vector< TClassName * > * getConst( ) const {
-				if( unityTypeName == typeid( const std_vector< TClassName * > ).name( ) )
-					return ( const std_vector< TClassName * > * ) constPtr;
-				return nullptr;
-			};
+			std_vector< TClassName * > * get( bool &is_const ) const {
+				if( unityTypeName != typeid( std_vector< TClassName * > ).name( ) )
+					return nullptr;
+				is_const = isConst;
+				return ( std_vector< TClassName * > * ) ptr;
+			}
 			virtual ~UnityPtrVector( ) = default;
 		};
 	protected:
@@ -337,6 +348,207 @@ public:
 
 		}
 		virtual ~BinGenerateItem( ) { }
+	protected:
+		template< typename TPtrType >
+		size_t fillBinTemplate( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			std_vector< uint8_t > resultBuff;
+			std_vector< uint8_t > countBuff;
+			std_vector< uint8_t > nameBuff;
+			size_t count = serialization.fillBinVector( typeName, nameBuff );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			resultBuff.append_range( nameBuff );
+			count = serialization.fillBinVector( *dataPtr, nameBuff );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			resultBuff.append_range( nameBuff );
+			count = resultBuff.size( );
+			serialization.fillBinVector( count, countBuff );
+			result_bin_data_vector.clear( );
+			result_bin_data_vector.append_range( countBuff );
+			result_bin_data_vector.append_range( resultBuff );
+			return result_bin_data_vector.size( );
+		}
+		template< typename TPtrType >
+		size_t fillObjTemplate( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( menorySize > mod )
+				return 0;
+			auto offset = source_ptr + count;
+			count = serialization.fillObjVector( &menorySize, offset, mod );
+			offset = offset + count;
+			mod -= count;
+			if( menorySize > mod )
+				return 0;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			count = serialization.fillObjVector( &menorySize, offset, mod );
+			mod -= count;
+			offset += count;
+			count = serialization.fillObjVector( dataPtr, offset, mod );
+			return offset - source_ptr + count;
+		}
+		template< typename TPtrType >
+		size_t fillBinTemplate( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			std_vector< uint8_t > resultBuff;
+			std_vector< uint8_t > countBuff;
+			std_vector< uint8_t > nameBuff;
+			size_t count = serialization.fillBinVector( typeName, nameBuff );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			resultBuff.append_range( nameBuff );
+			count = dataPtr->size( );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			size_t index = 0;
+			auto data = dataPtr->data( );
+			auto unity = unitySharedPtr.get( );
+			for( ; index < count; ++index ) {
+				unity->init( data[ index ] );
+				this->fillBin( unity, nameBuff );
+				resultBuff.append_range( nameBuff );
+			}
+			count = resultBuff.size( );
+			serialization.fillBinVector( count, countBuff );
+			result_bin_data_vector.clear( );
+			result_bin_data_vector.append_range( countBuff );
+			result_bin_data_vector.append_range( resultBuff );
+			return 0;
+		}
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			count = serialization.fillObjVector( &menorySize, offset, mod );
+			offset = offset + count;
+			mod -= count;
+			if( menorySize > mod )
+				return 0;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			dataPtr->resize( vectorCount );
+			auto data = dataPtr->data( );
+			size_t index = 0;
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				TPtrType var;
+				unitySharedPtr->init( var );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				data[ index ] = var;
+			}
+			return offset - source_ptr;
+		}
+		template< typename TPtrType >
+		size_t fillBinTemplate( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			std_vector< uint8_t > resultBuff;
+			std_vector< uint8_t > countBuff;
+			std_vector< uint8_t > nameBuff;
+			size_t count = serialization.fillBinVector( typeName, nameBuff );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			resultBuff.append_range( nameBuff );
+			count = dataPtr->size( );
+			serialization.fillBinVector( count, countBuff );
+			resultBuff.append_range( countBuff );
+			size_t index = 0;
+			auto data = dataPtr->data( );
+			auto unity = unitySharedPtr.get( );
+			for( ; index < count; ++index ) {
+				unity->init( *data[ index ] );
+				this->fillBin( unity, nameBuff );
+				resultBuff.append_range( nameBuff );
+			}
+			count = resultBuff.size( );
+			serialization.fillBinVector( count, countBuff );
+			result_bin_data_vector.clear( );
+			result_bin_data_vector.append_range( countBuff );
+			result_bin_data_vector.append_range( resultBuff );
+			return 0;
+		}
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			count = serialization.fillObjVector( &menorySize, offset, mod );
+			offset = offset + count;
+			mod -= count;
+			if( menorySize > mod )
+				return 0;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			size_t index = 0;
+			count = dataPtr->size( );
+			auto data = dataPtr->data( );
+			for( ; index < count; ++index ) delete data[ index ];
+			dataPtr->resize( vectorCount );
+			data = dataPtr->data( );
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				auto var = new TPtrType;
+				unity->init( var );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				data[ index ] = var;
+			}
+			return offset - source_ptr;
+		}
 	};
 protected:
 	static std_vector< std_pairt< QString, std_shared_ptr< BinGenerateItem > > > binGenerateItems;
@@ -366,7 +578,6 @@ public:
 		binGenerateItems.emplace_back( ptr->typeName, std_shared_ptr< BinGenerateItem >( ptr ) );
 		return true;
 	}
-protected:
 public:
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
@@ -375,37 +586,20 @@ public:
 	/// @return 失败返回 false
 	template< typename TBaseType >
 	static size_t toBin( const TBaseType &var_type, std_vector< uint8_t > &result_bin_data_vector ) {
-		/*
-		 * 对象类型信息
-		 */
-		std_vector< uint8_t > typeNameVector;
 		QString typeName = typeid( TBaseType ).name( );
-		BinGenerate::fillBin( typeName, typeNameVector );
-		/*
-		 * 对象存储信息
-		 */
-		std_vector< uint8_t > varDataVector;
-		BinGenerate::fillBin( var_type, varDataVector );
-		std_vector< uint8_t > varDataVectorCountVector;
-		BinGenerate::fillBin( varDataVector.size( ), varDataVectorCountVector );
-		/*
-		 * 总长度 = 对象类型信息长度+对象存储信息长度
-		 */
-		std_vector< uint8_t > dataCountVector;
-		BinGenerate::fillBin( typeNameVector.size( ) + varDataVectorCountVector.size( ) + varDataVector.size( ), dataCountVector );
-		/*
-		* 存储到返回
-		*/
-		result_bin_data_vector.clear( );
-		// 总长
-		result_bin_data_vector.append_range( dataCountVector );
-		// 变量类型信息内容
-		result_bin_data_vector.append_range( typeNameVector );
-		// 变量存储信息长度
-		result_bin_data_vector.append_range( varDataVectorCountVector );
-		// 变量存储信息内容
-		result_bin_data_vector.append_range( varDataVector );
-		return result_bin_data_vector.size( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::Unity unity;
+				unity.init( var_type );
+				binGenerateItem->fillBin( &unity, result_bin_data_vector );
+				return result_bin_data_vector.size( );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 
 	/// @brief 数组转换到二进制序列
@@ -415,30 +609,20 @@ public:
 	/// @return 序列个数
 	template< typename TVectorIteratorType >
 	static size_t toBin( const std_vector< TVectorIteratorType > &obj, std_vector< uint8_t > &result_bin ) {
-
-		std_vector< uint8_t > resultBinBuff;
-		std_vector< uint8_t > nameBin;
-		std_vector< uint8_t > nameCountBin;
-
-		QString typeName = typeid( std_vector< TVectorIteratorType > ).name( );
-		BinGenerate::fillBin( typeName, nameBin );
-
-		resultBinBuff.append_range( nameBin );
-		auto count = obj.size( );
-		BinGenerate::fillBin( count, nameBin );
-		resultBinBuff.append_range( nameBin );
+		QString typeName = typeid( TVectorIteratorType ).name( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
 		size_t index = 0;
-		auto data = obj.data( );
-		for( ; index < count; ++index ) {
-			BinGenerate::toBin( data[ index ], nameBin );
-			resultBinBuff.append_range( nameBin );
-		}
-
-		BinGenerate::fillBin( resultBinBuff.size( ), nameCountBin );
-		result_bin.clear( );
-		result_bin.append_range( nameCountBin );
-		result_bin.append_range( resultBinBuff );
-		return result_bin.size( );
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::UnityVector unity;
+				unity.init( obj );
+				binGenerateItem->fillBin( &unity, result_bin );
+				return result_bin.size( );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 	/// @brief 数组转换到二进制序列
 	/// @tparam TVectorIteratorType 数组元素类型
@@ -447,30 +631,20 @@ public:
 	/// @return 序列个数
 	template< typename TVectorIteratorType >
 	static size_t toBin( const std_vector< TVectorIteratorType * > &obj, std_vector< uint8_t > &result_bin ) {
-
-		std_vector< uint8_t > resultBinBuff;
-		std_vector< uint8_t > nameBin;
-		std_vector< uint8_t > nameCountBin;
-
-		QString typeName = typeid( std_vector< TVectorIteratorType > ).name( );
-		BinGenerate::fillBin( typeName, nameBin );
-
-		resultBinBuff.append_range( nameBin );
-		auto count = obj.size( );
-		BinGenerate::fillBin( count, nameCountBin );
-		resultBinBuff.append_range( nameCountBin );
+		QString typeName = typeid( TVectorIteratorType ).name( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
 		size_t index = 0;
-		auto data = obj.data( );
-		for( ; index < count; ++index ) {
-			BinGenerate::toBin( *data[ index ], nameBin );
-			resultBinBuff.append_range( nameBin );
-		}
-
-		BinGenerate::fillBin( resultBinBuff.size( ), nameCountBin );
-		result_bin.clear( );
-		result_bin.append_range( nameCountBin );
-		result_bin.append_range( resultBinBuff );
-		return result_bin.size( );
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::UnityPtrVector unity;
+				unity.init( obj );
+				binGenerateItem->fillBin( &unity, result_bin );
+				return result_bin.size( );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
@@ -480,39 +654,19 @@ public:
 	/// @return 失败返回 false
 	template< typename TBaseType >
 	static size_t toObj( TBaseType *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
-		/*
-		 * 总数量
-		 */
-		// 从数据当中获取长度
-		size_t minCount;
-		auto offsetPtr = source_data_ptr + BinGenerate::fillObj( &minCount, source_data_ptr, source_data_count );
-		size_t validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		if( minCount > validSourceDataCount ) {
-			tools::debug::printError( "需求存储元素数量不匹配" );
-			return 0;// 无法满足数据需求
-		}
-
-		/*
-		 * 校对对象类型信息
-		 */
-		// 获取对象类型信息长度
-		QString typeName;
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		offsetPtr += BinGenerate::fillObj( &typeName, offsetPtr, validSourceDataCount );
-
-		// 获取参数当中的类型
-		QString paramTypeName = typeid( TBaseType ).name( );
-		if( paramTypeName != typeName ) {
-			tools::debug::printError( "类型名称不匹配" );
-			return 0; // 类型名称不匹配
-		}
-		/*
-		 * 校对对象存储信息
-		 */
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		offsetPtr += BinGenerate::fillObj( &validSourceDataCount, offsetPtr, validSourceDataCount );
-		offsetPtr += BinGenerate::fillObj( var_type, offsetPtr, validSourceDataCount );
-		return offsetPtr - source_data_ptr;
+		QString typeName = typeid( TBaseType ).name( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::Unity unity;
+				unity.init( var_type );
+				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -523,39 +677,20 @@ public:
 	/// @return 失败返回 false
 	template< typename TVectorIteratorType >
 	static size_t toObj( std_vector< TVectorIteratorType > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
-		size_t minCount = *( size_t * ) source_data_ptr;
 
-		auto offsetPtr = BinGenerate::fillObj( &minCount, source_data_ptr, source_data_count ) + source_data_ptr;
-
-		size_t validSourceDataCount = source_data_count - ( offsetPtr - source_data_ptr );
-		if( minCount > validSourceDataCount ) {
-			tools::debug::printError( "需求存储元素数量不匹配" );
-			return 0;// 无法满足数据需求
-		}
-		std_vector< uint8_t > resultBinBuff;
-		QString typeName = typeid( std_vector< TVectorIteratorType > ).name( );
-
-		QString loadTypeName;
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		offsetPtr += BinGenerate::fillObj( &loadTypeName, offsetPtr, validSourceDataCount );
-		if( loadTypeName != typeName ) {
-			tools::debug::printError( "类型名称不匹配" );
-			return 0;
-		}
-
-		size_t count;
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		offsetPtr += BinGenerate::fillObj( &count, offsetPtr, validSourceDataCount );
-
-		var_type->resize( count );
-		auto pastDataPtr = var_type->data( );
-		for( size_t index = 0; index < count; ++index ) {
-			TVectorIteratorType var;
-			validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-			offsetPtr += BinGenerate::toObj( &var, offsetPtr, validSourceDataCount );
-			pastDataPtr[ index ] = var;
-		}
-		return offsetPtr - source_data_ptr;
+		QString typeName = typeid( TVectorIteratorType ).name( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::UnityVector unity;
+				unity.init( var_type );
+				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -566,36 +701,20 @@ public:
 	/// @return 失败返回 false
 	template< typename TVectorIteratorType >
 	static size_t toObj( std_vector< TVectorIteratorType * > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
-		size_t minCount;
-		auto offsetPtr = BinGenerate::fillObj( &minCount, source_data_ptr, source_data_count ) + source_data_ptr;
 
-		size_t validSourceDataCount = source_data_count - ( offsetPtr - source_data_ptr );
-		if( minCount > validSourceDataCount ) {
-			tools::debug::printError( "需求存储元素数量不匹配" );
-			return 0;// 无法满足数据需求
-		}
-
-		QString typeName = typeid( std_vector< TVectorIteratorType * > ).name( );
-		QString loadTypeName;
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		offsetPtr += BinGenerate::fillObj( &loadTypeName, offsetPtr, validSourceDataCount );
-		if( loadTypeName != typeName ) {
-			tools::debug::printError( "类型名称不匹配" );
-			return 0;
-		}
-
-		validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-		size_t count;
-		offsetPtr += BinGenerate::fillObj( &count, offsetPtr, validSourceDataCount );
-		var_type->resize( count );
-		auto pastDataPtr = var_type->data( );
-		for( size_t index = 0; index < count; ++index ) {
-			TVectorIteratorType *var = new TVectorIteratorType( );
-			validSourceDataCount = source_data_count - ( source_data_ptr - offsetPtr );
-			offsetPtr += BinGenerate::toObj( var, offsetPtr, validSourceDataCount );
-			pastDataPtr[ index ] = var;
-		}
-		return offsetPtr - source_data_ptr;
+		QString typeName = typeid( TVectorIteratorType ).name( );
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].first == typeName ) {
+				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
+				BinGenerateItem::UnityPtrVector unity;
+				unity.init( var_type );
+				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+			}
+		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
+		return 0;
 	}
 };
 
