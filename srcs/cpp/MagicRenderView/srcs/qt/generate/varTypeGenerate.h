@@ -40,6 +40,17 @@ private:
 		return { typeid( TTBase ).name( ), VarTypeGenerateItem::createVarTypeGenerateFunction< TTBase >( ) };
 	}
 public:
+	static size_t toBin( const VarType *obj_ptr, std_vector< uint8_t > &result_bin_vector );
+	static size_t toObj( VarType *obj_ptr, const std_vector< uint8_t > &result_bin_vector );
+	template< typename TTBase >
+	static VarType * toObj( QObject *parent, const std_vector< uint8_t > &result_bin_vector, size_t &result_use_count ) {
+		auto resultVarType = VarTypeGenerate::templateVarType< TTBase >( parent );
+		result_use_count = VarTypeGenerate::toObj( resultVarType, result_use_count );
+		if( result_use_count != 0 )
+			return resultVarType;
+		delete resultVarType;
+		return nullptr;
+	}
 	template< typename TTBase >
 	static size_t appendType( ) {
 		generates.emplace_back( mkVarTypeGeneratePair< TTBase >( ) );
@@ -86,7 +97,7 @@ public:
 	/// @brief 获取生成代码指向的对象
 	/// @param var_type_generate_code 生成代码
 	/// @return 指向对象，失败返回 nullptr
-	static VarType * genVarTypObjPtr( const size_t &var_type_generate_code );
+	static VarType * fromGenerateCodeGetVarTypObjPtr( const size_t &var_type_generate_code );
 };
 
 #endif // VARTYPEGENERATE_H_H_HEAD__FILE__

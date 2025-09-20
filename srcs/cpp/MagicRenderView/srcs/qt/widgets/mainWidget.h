@@ -88,6 +88,7 @@ public:
 	virtual std_vector< uint8_t > getSupportVarTypeNameBin( ) const {
 		return supportVarTypeBin;
 	}
+	
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

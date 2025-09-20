@@ -66,7 +66,6 @@ private:
 		};
 		return true;
 	}
-public:
 	/// @brief 数据转换到二进制
 	/// @return 二进制数据
 	virtual std_vector< uint8_t > toBin( ) const;

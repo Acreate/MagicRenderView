@@ -36,6 +36,8 @@ private:
 	static NodeItemGenerateMetaInfoVector_Type nodeItemGenerateMetaInfos;
 	/// @brief 节点目录与节点类名称映射列表
 	static DirClassItemMapVector_Type nodeItemDirClassMetaInfos;
+	/// @brief 保存生成的节点
+	static std_vector< NodeItem_Type * > generateNodeItems;
 private:
 	/// @brief 追加一个节点生成器
 	/// @param dir_name 目录名称
@@ -43,7 +45,18 @@ private:
 	/// @param generate_function 生成调用函数
 	/// @return 添加失败返回 false
 	static bool appendNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function );
+	/// @brief 建立信号链接
+	/// @param sender_obj 信号对象指针
+	static void cnnectSignal( NodeItem_Type *sender_obj );
 public:
+	/// @brief 获取生成代码
+	/// @param sender_obj 生成代码对象 
+	/// @return 对象的生成代码
+	static size_t getGenerateCode( NodeItem_Type *sender_obj );
+	/// @brief 从生成代码当中获取对象指针
+	/// @param code 生成代码
+	/// @return 对象指针
+	static NodeItem_Type * fromGenerateCodeGetNodeItemPtr(const size_t& code );
 	/// @brief 获取支持的节点列表
 	/// @return 支持的节点列表
 	static DirClassItemMapVector_Type getSupperTyeNodes( ) {

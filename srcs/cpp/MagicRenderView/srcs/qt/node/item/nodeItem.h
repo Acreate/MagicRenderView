@@ -45,6 +45,8 @@ public:
 	template< typename TPortTypePtr >
 	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
 private:
+	/// @brief 生成编号
+	size_t generateCode;
 	/// @brief 该节点的变量
 	std_vector< VarType * > varVector;
 	/// @brief 节点标题名称
@@ -224,6 +226,8 @@ public:
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
+public: // 二进制相关
+	
 };
 
 #endif // NODEITEM_H_H_HEAD__FILE__

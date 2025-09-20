@@ -32,6 +32,13 @@ VarType * VarTypeGenerate::templateVarType( QObject *parent, const QString &type
 	vars.pop_back( );
 	return nullptr;
 }
+size_t VarTypeGenerate::toBin( const VarType *obj_ptr, std_vector< uint8_t > &result_bin_vector ) {
+	result_bin_vector = obj_ptr->toBin( );
+	return result_bin_vector.size( );
+}
+size_t VarTypeGenerate::toObj( VarType *obj_ptr, const std_vector< uint8_t > &result_bin_vector ) {
+	return obj_ptr->loadBin( result_bin_vector );
+}
 size_t VarTypeGenerate::genVarTypeCode( const VarType *var_type_ptr ) {
 	size_t count = vars.size( );
 	auto data = vars.data( );
@@ -40,11 +47,12 @@ size_t VarTypeGenerate::genVarTypeCode( const VarType *var_type_ptr ) {
 			return index + 1;
 	return 0;
 }
-VarType * VarTypeGenerate::genVarTypObjPtr( const size_t &var_type_generate_code ) {
+VarType * VarTypeGenerate::fromGenerateCodeGetVarTypObjPtr( const size_t &var_type_generate_code ) {
 	size_t count = vars.size( );
 	auto data = vars.data( );
-	if( var_type_generate_code < count )
-		return data[ var_type_generate_code ]; // 优先返回
+	size_t codeInde = var_type_generate_code - 1;
+	if( codeInde < count )
+		return data[ codeInde ]; // 优先返回
 	// 次要返回
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ]->generateCode == var_type_generate_code )
