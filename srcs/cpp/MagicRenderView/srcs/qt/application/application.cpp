@@ -31,6 +31,19 @@
 #include "../node/item/str/strSplit.h"
 #include "../node/item/str/strSub.h"
 
+#include "../serialization/float32Serialization.h"
+#include "../serialization/float64Serialization.h"
+#include "../serialization/int16Serialization.h"
+#include "../serialization/int32Serialization.h"
+#include "../serialization/int64Serialization.h"
+#include "../serialization/qstringSerialization.h"
+#include "../serialization/stdStringSerialization.h"
+#include "../serialization/stdWStringSerialization.h"
+#include "../serialization/uint16Serialization.h"
+#include "../serialization/uint32Serialization.h"
+#include "../serialization/uint64Serialization.h"
+#include "../serialization/uint8Serialization.h"
+
 #include "qt/tools/tools.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
@@ -118,6 +131,19 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	VarTypeGenerate::appendType< float_t >( );
 	VarTypeGenerate::appendType< double_t >( );
 	VarTypeGenerate::appendType< QString >( );
+	// todo : 序列化支持
+	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
+	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
+	BinGenerate::appendBinGenerateItem< Int64Serialization >( );
+	BinGenerate::appendBinGenerateItem< Uint8Serialization >( );
+	BinGenerate::appendBinGenerateItem< Uint16Serialization >( );
+	BinGenerate::appendBinGenerateItem< Uint32Serialization >( );
+	BinGenerate::appendBinGenerateItem< Uint64Serialization >( );
+	BinGenerate::appendBinGenerateItem< Float32Serialization >( );
+	BinGenerate::appendBinGenerateItem< Float64Serialization >( );
+	BinGenerate::appendBinGenerateItem< QStringSerialization >( );
+	BinGenerate::appendBinGenerateItem< StdStringSerialization >( );
+	BinGenerate::appendBinGenerateItem< StdWStringSerialization >( );
 }
 Application::~Application( ) {
 	settings->sync( );
