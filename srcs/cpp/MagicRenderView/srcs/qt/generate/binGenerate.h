@@ -47,6 +47,7 @@ public:
 		// 小端：返回 1，说明数据的低字节在内存的低地址存放
 		return un.c == 1;
 	}
+public:
 	static size_t toVectorUInt8Data( const void *source_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_mirror_image_bin_vector ) {
 		result_mirror_image_bin_vector.resize( source_ptr_count );
 		auto pasteTargetDataPtr = result_mirror_image_bin_vector.data( );
@@ -192,7 +193,7 @@ public:
 		memcpy( target_var_ptr, source_ptr, checkCount );
 		return checkCount;
 	}
-
+public:
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
 	/// @param var_type 填充内容

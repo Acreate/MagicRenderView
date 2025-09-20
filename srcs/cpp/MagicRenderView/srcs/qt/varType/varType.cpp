@@ -94,8 +94,10 @@ size_t VarType::loadBin( const uint8_t *result_bin_data, const size_t &result_bi
 		if( modSize < useCount )
 			break;
 		result_bin_data += useCount;
-		modSize -= useCount;
+		if( result_bin_data < orgPtr )
+			break;
+		modSize = result_bin_count - ( result_bin_data - orgPtr );
 	}
 
-	return result_bin_data - orgPtr;
+	return modSize;
 }
