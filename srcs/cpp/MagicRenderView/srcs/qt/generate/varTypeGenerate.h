@@ -39,18 +39,13 @@ private:
 	static std_pairt< QString, VarTypeGenerate::generate_function > mkVarTypeGeneratePair( ) {
 		return { typeid( TTBase ).name( ), VarTypeGenerateItem::createVarTypeGenerateFunction< TTBase >( ) };
 	}
+	/// @brief 建立信号链接
+	/// @param sender_obj 信号对象指针
+	static void cnnectSignal( VarType *sender_obj );
 public:
 	static size_t toBin( const VarType *obj_ptr, std_vector< uint8_t > &result_bin_vector );
-	static size_t toObj( VarType *obj_ptr, const std_vector< uint8_t > &result_bin_vector );
-	template< typename TTBase >
-	static VarType * toObj( QObject *parent, const std_vector< uint8_t > &result_bin_vector, size_t &result_use_count ) {
-		auto resultVarType = VarTypeGenerate::templateVarType< TTBase >( parent );
-		result_use_count = VarTypeGenerate::toObj( resultVarType, result_use_count );
-		if( result_use_count != 0 )
-			return resultVarType;
-		delete resultVarType;
-		return nullptr;
-	}
+	static VarType * toObj( size_t &reseult_use_count, const uint8_t *result_bin_data, const size_t &result_bin_count );
+
 	template< typename TTBase >
 	static size_t appendType( ) {
 		generates.emplace_back( mkVarTypeGeneratePair< TTBase >( ) );
@@ -73,23 +68,11 @@ public:
 		return result;
 	}
 	template< typename TType_Name >
-	static VarType * templateVarType( QObject *parent ) {
-		size_t count = generates.size( );
-		if( count == 0 )
-			return nullptr;
+	static VarType * templateVarType( QObject *parent = nullptr ) {
 		QString generateTypeName = typeid( TType_Name ).name( );
-		auto data = generates.data( );
-
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ].first == generateTypeName ) {
-				auto &function = data[ index ].second;
-				VarType *varType = function( parent, generateTypeName );
-				if( varType == nullptr )
-					return nullptr;
-				return varType;
-			}
-		return nullptr;
+		return craeteVarType( generateTypeName, parent );
 	}
+	static VarType * craeteVarType( const QString &generateTypeName, QObject *parent = nullptr );
 	/// @brief 获取 var_type_ptr 的原本生成代码
 	/// @param var_type_ptr 获取的对象指针
 	/// @return 生成代码，失败返回 0

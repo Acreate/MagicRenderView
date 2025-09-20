@@ -54,13 +54,26 @@ private:
 			return true;
 		};
 		unitySer = [] ( const void *p, std::vector< uint8_t > &vector ) ->size_t {
-			return BinGenerate::toVectorUInt8Data< TType_Name >( *( ( const TType_Name * ) p ), vector );
+			std_vector< uint8_t > buff;
+			BinGenerate::toVectorUInt8Data< TType_Name >( *( ( const TType_Name * ) p ), vector );
+			size_t count = vector.size( );
+			BinGenerate::toVectorUInt8Data( count, buff );
+			buff.append_range( vector );
+			vector = buff;
+			return buff.size( );
 		};
 		unitySerRes = [this] ( const uint8_t *source_data_ptr, const size_t &source_data_count, size_t &result_use_data_count ) ->void * {
+			size_t count = *( size_t * ) source_data_ptr;
+			size_t modSize = source_data_count - count;
+			if( count > modSize )
+				return nullptr;
+			source_data_ptr += sizeof( size_t );
 			TType_Name *result = ( TType_Name * ) createFunction( );
-			result_use_data_count = BinGenerate::toObj< TType_Name >( result, source_data_ptr, source_data_count );
-			if( result_use_data_count != 0 )
+			result_use_data_count = BinGenerate::toObj< TType_Name >( result, source_data_ptr, count );
+			if( result_use_data_count != 0 ) {
+				result_use_data_count += sizeof( size_t );
 				return result;
+			}
 			delete result;
 			return nullptr;
 		};
@@ -70,9 +83,10 @@ private:
 	/// @return 二进制数据
 	virtual std_vector< uint8_t > toBin( ) const;
 	/// @brief 从二进制数据加载到该对象
-	/// @param bin 二进制数据
+	/// @param result_bin_data
+	/// @param result_bin_count
 	/// @return 使用数据量
-	virtual size_t loadBin( const std_vector< uint8_t > &bin );
+	virtual size_t loadBin( const uint8_t *result_bin_data, const size_t &result_bin_count );
 public:
 	/// @brief 获取数组个数
 	/// @return 个数

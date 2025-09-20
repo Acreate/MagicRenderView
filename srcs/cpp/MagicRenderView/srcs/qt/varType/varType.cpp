@@ -45,36 +45,34 @@ std_vector< uint8_t > VarType::toBin( ) const {
 	result.append_range( resultBuff );
 	return result;
 }
-size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
+size_t VarType::loadBin( const uint8_t *result_bin_data, const size_t &result_bin_count ) {
 	if( unitySerRes == nullptr )
 		return 0;
 	// 反序列化成员
-	auto sourcePtr = bin.data( );
-	auto sourceCount = bin.size( );
 	size_t size_tTypeSize = sizeof( size_t );
-	if( sourceCount < size_tTypeSize )
+	if( result_bin_count < size_tTypeSize )
 		return 0;
 	// 获取需要长度
-	size_t needSize = *( size_t * ) sourcePtr;
-	size_t modSize = sourceCount - size_tTypeSize;
+	size_t needSize = *( size_t * ) result_bin_data;
+	size_t modSize = result_bin_count - size_tTypeSize;
 	if( needSize > modSize )
 		return 0;
-	auto orgPtr = sourcePtr;
-	sourcePtr += size_tTypeSize;
+	auto orgPtr = result_bin_data;
+	result_bin_data += size_tTypeSize;
 	// 匹配类型信息
-	size_t metaSize = *( size_t * ) sourcePtr;
-	sourcePtr += size_tTypeSize;
+	size_t metaSize = *( size_t * ) result_bin_data;
+	result_bin_data += size_tTypeSize;
 	QString loadMetaInfo;
-	BinGenerate::toObj( &loadMetaInfo, sourcePtr, metaSize );
+	BinGenerate::toObj( &loadMetaInfo, result_bin_data, metaSize );
 	if( loadMetaInfo != unityTypeName )
 		return 0;
-	sourcePtr += metaSize;
+	result_bin_data += metaSize;
 	// 生成码
-	generateCode = *( size_t * ) sourcePtr;
+	generateCode = *( size_t * ) result_bin_data;
 
-	sourcePtr += size_tTypeSize;
+	result_bin_data += size_tTypeSize;
 	// 调到个数
-	size_t serVarCount = *( size_t * ) sourcePtr;
+	size_t serVarCount = *( size_t * ) result_bin_data;
 	size_t useCount = 0;
 	// 释放仓库
 	size_t varCount = varVector.size( );
@@ -86,17 +84,18 @@ size_t VarType::loadBin( const std_vector< uint8_t > &bin ) {
 	varVector.resize( serVarCount, nullptr );
 	data = varVector.data( );
 	// 偏移到数据
-	sourcePtr += size_tTypeSize;
+	result_bin_data += size_tTypeSize;
 	for( ; index < serVarCount; ++index ) {
-		void *serRes = unitySerRes( sourcePtr + useCount, modSize, useCount );
+		void *serRes = unitySerRes( result_bin_data, modSize, useCount );
 		if( serRes == nullptr )
 			break;
 		data[ index ] = serRes;
 
 		if( modSize < useCount )
 			break;
+		result_bin_data += useCount;
 		modSize -= useCount;
 	}
 
-	return sourcePtr - orgPtr;
+	return result_bin_data - orgPtr;
 }

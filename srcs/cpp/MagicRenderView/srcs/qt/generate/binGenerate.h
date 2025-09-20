@@ -283,7 +283,7 @@ public:
 		source_data_ptr += size_tTypeSize;
 		BinGenerate::toObj( var_type, source_data_ptr, validSourceDataCount );
 
-		return minCount;
+		return minCount + size_tTypeSize;
 	}
 	/// @brief 数组转换到二进制序列
 	/// @tparam TVectorIteratorType 数组元素类型
