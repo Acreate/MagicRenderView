@@ -1,7 +1,7 @@
 ﻿#include "./uint64Serialization.h"
 
 size_t Uint64Serialization::fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	auto dataPtr = var_type->getConst< uint64_t >( );
+	auto dataPtr = var_type->getConst< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 
@@ -26,7 +26,7 @@ size_t Uint64Serialization::fillBin( const Unity *var_type, std_vector< uint8_t 
 	return result_bin_data_vector.size( );
 }
 size_t Uint64Serialization::fillObj( Unity *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-	auto dataPtr = target_var_ptr->get< uint64_t >( );
+	auto dataPtr = target_var_ptr->get< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 	size_t menorySize;
@@ -49,7 +49,7 @@ size_t Uint64Serialization::fillObj( Unity *target_var_ptr, const uint8_t *sourc
 	return offset - source_ptr + count;
 }
 size_t Uint64Serialization::fillBin( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	const std_vector< uint64_t > *dataPtr = var_type->getConst< uint64_t >( );
+	auto dataPtr = var_type->getConst< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 
@@ -64,7 +64,7 @@ size_t Uint64Serialization::fillBin( const UnityVector *var_type, std_vector< ui
 	serialization.fillBinVector( count, countBuff );
 	resultBuff.append_range( countBuff );
 	size_t index = 0;
-	const uint64_t *data = dataPtr->data( );
+	auto data = dataPtr->data( );
 	for( ; index < count; ++index ) {
 		Unity unity;
 		unity.init( data[ index ] );
@@ -79,7 +79,7 @@ size_t Uint64Serialization::fillBin( const UnityVector *var_type, std_vector< ui
 	return 0;
 }
 size_t Uint64Serialization::fillObj( UnityVector *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-	std_vector< uint64_t > *dataPtr = target_var_ptr->get< uint64_t >( );
+	auto dataPtr = target_var_ptr->get< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 
@@ -103,11 +103,13 @@ size_t Uint64Serialization::fillObj( UnityVector *target_var_ptr, const uint8_t 
 	offset += count;
 
 	dataPtr->resize( vectorCount );
-	uint64_t *data = dataPtr->data( );
+	auto data = dataPtr->data( );
 	size_t index = 0;
+	auto unity = unitySharedPtr.get( );
 	for( ; index < vectorCount; ++index ) {
-		uint64_t var;
-		count = serialization.fillObjVector( &var, offset, mod );
+		t_current_type var;
+		unitySharedPtr->init( var );
+		count = this->fillObj( unity, offset, mod );
 		mod -= count;
 		offset += count;
 		data[ index ] = var;
@@ -116,7 +118,7 @@ size_t Uint64Serialization::fillObj( UnityVector *target_var_ptr, const uint8_t 
 	return offset - source_ptr;
 }
 size_t Uint64Serialization::fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	const std_vector< uint64_t * > *dataPtr = var_type->getConst< uint64_t >( );
+	auto dataPtr = var_type->getConst< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 
@@ -131,11 +133,11 @@ size_t Uint64Serialization::fillBin( const UnityPtrVector *var_type, std_vector<
 	serialization.fillBinVector( count, countBuff );
 	resultBuff.append_range( countBuff );
 	size_t index = 0;
-	uint64_t *const*data = dataPtr->data( );
+	auto data = dataPtr->data( );
+	auto unity = unitySharedPtr.get( );
 	for( ; index < count; ++index ) {
-		Unity unity;
-		unity.init( *data[ index ] );
-		this->fillBin( &unity, nameBuff );
+		unity->init( *data[ index ] );
+		this->fillBin( unity, nameBuff );
 		resultBuff.append_range( nameBuff );
 	}
 	count = resultBuff.size( );
@@ -147,7 +149,7 @@ size_t Uint64Serialization::fillBin( const UnityPtrVector *var_type, std_vector<
 
 }
 size_t Uint64Serialization::fillObj( UnityPtrVector *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-	std_vector< uint64_t * > *dataPtr = target_var_ptr->get< uint64_t >( );
+	auto dataPtr = target_var_ptr->get< t_current_type >( );
 	if( dataPtr == nullptr )
 		return 0;
 
@@ -172,20 +174,21 @@ size_t Uint64Serialization::fillObj( UnityPtrVector *target_var_ptr, const uint8
 
 	size_t index = 0;
 	count = dataPtr->size( );
-	uint64_t **data = dataPtr->data( );
+	auto data = dataPtr->data( );
 	for( ; index < count; ++index )
 		delete data[ index ];
 
 	dataPtr->resize( vectorCount );
 	data = dataPtr->data( );
+	auto unity = unitySharedPtr.get( );
 	for( ; index < vectorCount; ++index ) {
-		uint64_t *var = new uint64_t;
-		count = serialization.fillObjVector( var, offset, mod );
+		auto var = new t_current_type;
+		unity->init( var );
+		count = this->fillObj( unity, offset, mod );
 		mod -= count;
 		offset += count;
 		data[ index ] = var;
 	}
 
 	return offset - source_ptr;
-	return 0;
 }

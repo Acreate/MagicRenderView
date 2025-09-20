@@ -5,9 +5,10 @@
 
 class StdWStringSerialization : public BinGenerate::BinGenerateItem {
 
+	using t_current_type = std::wstring;
 public:
 	StdWStringSerialization( ) {
-		typeName = typeid( std::wstring ).name( );
+		typeName = typeid( t_current_type ).name( );
 	}
 	size_t fillBin( const Unity *var_type, std_vector<uint8_t> &result_bin_data_vector ) const override;
 	size_t fillObj( Unity *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const override;

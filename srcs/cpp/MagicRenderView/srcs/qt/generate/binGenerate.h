@@ -210,6 +210,16 @@ public:
 				constPtr = &unity;
 			}
 			template< typename TClassName >
+			void init( TClassName *unity ) {
+				unityTypeName = typeid( TClassName ).name( );
+				ptr = unity;
+			}
+			template< typename TClassName >
+			void initConst( const TClassName *unity ) {
+				unityTypeName = typeid( const TClassName ).name( );
+				constPtr = unity;
+			}
+			template< typename TClassName >
 			TClassName * get( ) const {
 				if( unityTypeName == typeid( TClassName ).name( ) )
 					return ( TClassName * ) ptr;
@@ -242,6 +252,16 @@ public:
 			void initConst( const std_vector< TClassName > &vector ) {
 				unityTypeName = typeid( const std_vector< TClassName > ).name( );
 				constPtr = &vector;
+			}
+			template< typename TClassName >
+			void init( std_vector< TClassName > *vector ) {
+				unityTypeName = typeid( std_vector< TClassName > ).name( );
+				ptr = vector;
+			}
+			template< typename TClassName >
+			void initConst( const std_vector< TClassName > *vector ) {
+				unityTypeName = typeid( const std_vector< TClassName > ).name( );
+				constPtr = vector;
 			}
 			template< typename TClassName >
 			std_vector< TClassName > * get( ) const {
@@ -277,6 +297,16 @@ public:
 				constPtr = &vector;
 			}
 			template< typename TClassName >
+			void init( std_vector< TClassName * > *vector ) {
+				unityTypeName = typeid( std_vector< TClassName * > ).name( );
+				ptr = vector;
+			}
+			template< typename TClassName >
+			void initConst( const std_vector< TClassName * > *vector ) {
+				unityTypeName = typeid( const std_vector< TClassName * > ).name( );
+				constPtr = vector;
+			}
+			template< typename TClassName >
 			std_vector< TClassName * > * get( ) const {
 				if( unityTypeName == typeid( std_vector< TClassName * > ).name( ) )
 					return ( std_vector< TClassName * > * ) ptr;
@@ -294,6 +324,7 @@ public:
 		static Serialization serialization;
 	protected:
 		QString typeName;
+		std_shared_ptr< Unity > unitySharedPtr;
 	public:
 		virtual size_t fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
 		virtual size_t fillObj( Unity *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
@@ -302,7 +333,7 @@ public:
 		virtual size_t fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
 		virtual size_t fillObj( UnityPtrVector *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
 	public:
-		BinGenerateItem( ) {
+		BinGenerateItem( ) : unitySharedPtr( new Unity ) {
 
 		}
 		virtual ~BinGenerateItem( ) { }
