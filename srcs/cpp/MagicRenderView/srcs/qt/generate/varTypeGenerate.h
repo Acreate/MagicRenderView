@@ -43,8 +43,8 @@ private:
 	/// @param sender_obj 信号对象指针
 	static void cnnectSignal( VarType *sender_obj );
 public:
-	static size_t toBin( const VarType *obj_ptr, std_vector< uint8_t > &result_bin_vector );
-	static VarType * toObj( size_t &reseult_use_count, const uint8_t *result_bin_data, const size_t &result_bin_count );
+	static std_vector< uint8_t > toBin( const VarType *obj_ptr );
+	static VarType * toObj( size_t &reseult_use_count, const uint8_t *source_bin_data_ptr, const size_t &source_bin_data_count );
 
 	template< typename TTBase >
 	static size_t appendType( ) {

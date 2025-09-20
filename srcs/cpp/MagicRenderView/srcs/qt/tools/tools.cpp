@@ -99,11 +99,13 @@ void tools::debug::printError( const std::wstring &msg, size_t start_index, size
 		count -= last_remove_count;
 	stringStreamType wss;
 	auto appName = qApp->applicationDisplayName( ).toStdWString( );
-	wss << L"================\t" << appName << " !\n" << msg << L"\n" << L"-----------\n";
+	wss << L"\n================\t" << appName << " !\t============\n" << msg << L"\n" << L"---------------------------------\n";
 	stringType *data = wstringVector.data( );
 	for( ; start_index < count; ++start_index )
 		wss << data[ start_index ] << L'\n';
-	wss << data[ start_index ] << L"\n================";
+	if( start_index < count )
+		wss << data[ start_index ] << L'\n';
+	wss << L"================================================\n";
 	qDebug( ) << QString::fromStdWString( wss.str( ) ).toStdString( ).c_str( );
 }
 QString tools::qstr::removeSpace( const QString &string ) {

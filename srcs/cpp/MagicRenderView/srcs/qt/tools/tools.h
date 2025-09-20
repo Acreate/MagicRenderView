@@ -72,16 +72,13 @@ namespace tools {
 		/// @param msg 信息
 		/// @param start_index 堆栈-0 为本函数调用
 		/// @param last_remove_count 末尾移除个数
-		void printError( const std::wstring &msg, size_t start_index, size_t last_remove_count );
+		void printError( const std::wstring &msg, size_t start_index = 1, size_t last_remove_count = 0 );
 		/// @brief 输出错误信息
 		/// @param msg 信息
-		inline void printError( const std::wstring &msg ) {
-			printError( msg, 2, 1 );
-		}
-		/// @brief 输出错误信息
-		/// @param msg 信息
-		inline void printError( const QString &msg ) {
-			printError( msg.toStdWString( ), 2, 1 );
+		/// @param start_index 堆栈-0 为本函数调用
+		/// @param last_remove_count 末尾移除个数
+		inline void printError( const QString &msg, size_t start_index = 2, size_t last_remove_count = 0 ) {
+			printError( msg.toStdWString( ), start_index, last_remove_count );
 		}
 	}
 	namespace vector {

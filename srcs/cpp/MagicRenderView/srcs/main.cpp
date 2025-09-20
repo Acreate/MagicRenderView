@@ -5,24 +5,65 @@
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
+	std_vector< uint8_t > buff;
+
+	QString ceshi1 = "QString 12345";
+	QString ceshi2;
+	BinGenerate::toBin( ceshi1, buff );
+	BinGenerate::toObj( &ceshi2, buff.data( ), buff.size( ) );
+	qDebug( ) << "--------------";
+	qDebug( ) << ceshi1;
+	qDebug( ) << ceshi2;
+	qDebug( ) << "--------------";
+	//return 0;
+	std_vector< QString > ceshiv1;
+	ceshiv1.emplace_back( "std_vector< QString > 123123" );
+	ceshiv1.emplace_back( "std_vector< QString > 778" );
+	ceshiv1.emplace_back( "std_vector< QString > 90" );
+	std_vector< QString > ceshiv2;
+	BinGenerate::toBin( ceshiv1, buff );
+	BinGenerate::toObj( &ceshiv2, buff.data( ), buff.size( ) );
+	qDebug( ) << "--------------";
+	qDebug( ) << ceshiv1;
+	qDebug( ) << ceshiv2;
+	qDebug( ) << "--------------";
+	std_vector< QString * > ceshivp1;
+	ceshivp1.emplace_back( new QString( "std_vector< QString * > 123123" ) );
+	ceshivp1.emplace_back( new QString( "std_vector< QString * > 778" ) );
+	ceshivp1.emplace_back( new QString( "std_vector< QString * > 90" ) );
+	std_vector< QString * > ceshivp2;
+	BinGenerate::toBin( ceshivp1, buff );
+	BinGenerate::toObj( &ceshivp2, buff.data( ), buff.size( ) );
+	qDebug( ) << "--------------";
+	for( auto item : ceshivp1 )
+		qDebug( ) << *item;
+	for( auto item : ceshivp2 )
+		qDebug( ) << *item;
+	qDebug( ) << "--------------";
+
+	/*return 0;*/
 	auto mkVarTypeGeneratePair = VarTypeGenerate::templateVarType< QString >( );
 	mkVarTypeGeneratePair->appendUnity( "first" );
 	mkVarTypeGeneratePair->appendUnity( "mid" );
 	mkVarTypeGeneratePair->appendUnity( "end" );
 	auto data = mkVarTypeGeneratePair->data< QString >( );
 	size_t count = mkVarTypeGeneratePair->size( );
-	if( data == nullptr )
+	if( data == nullptr ) {
+		tools::debug::printError( "无法追加元素" );
 		return 0;
+	}
 	qDebug( ) << "--------------";
 	qDebug( ) << "\rtype::" << mkVarTypeGeneratePair->getUnityTypeName( );
 	for( size_t index = 0; index < count; ++index )
 		qDebug( ) << *data[ index ];
 	qDebug( ) << "--------------";
-	std_vector< uint8_t > buff;
-	VarTypeGenerate::toBin( mkVarTypeGeneratePair, buff );
+
+	buff = VarTypeGenerate::toBin( mkVarTypeGeneratePair );
 	auto var = VarTypeGenerate::toObj( count, buff.data( ), buff.size( ) );
-	if( var == nullptr )
+	if( var == nullptr ) {
+		tools::debug::printError( "加载对象失败" );
 		return 0;
+	}
 	qDebug( ) << "--------------";
 	qDebug( ) << "\rtype::" << var->getUnityTypeName( );
 	data = var->data< QString >( );

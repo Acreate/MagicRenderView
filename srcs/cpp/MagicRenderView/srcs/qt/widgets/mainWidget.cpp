@@ -273,11 +273,11 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 }
 size_t MainWidget::supportInfoToBin( ) {
 	supportBin.clear( );
-	BinGenerate::toVectorUInt8Data( supportNodeName, supportNodeBin );
-	BinGenerate::toVectorUInt8Data( supporVarType, supportVarTypeBin );
+	BinGenerate::toBin( supportNodeName, supportNodeBin );
+	BinGenerate::toBin( supporVarType, supportVarTypeBin );
 	std_vector< uint8_t > countBuff;
 	auto vectorCount = supportVarTypeBin.size( ) + supportNodeBin.size( );
-	BinGenerate::toVectorUInt8Data( vectorCount, countBuff );
+	BinGenerate::toBin( vectorCount, countBuff );
 	supportBin.append_range( countBuff );
 	supportBin.append_range( supportNodeBin );
 	supportBin.append_range( supportVarTypeBin );
