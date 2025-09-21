@@ -8,6 +8,8 @@
 
 /// @brief 节点生成器
 class NodeItemGenerate final {
+private:
+	friend class NodeWidgetSerialization;
 public:
 	/// @brief 节点指针类型
 	using NodeItem_Type = NodeItem;

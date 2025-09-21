@@ -25,6 +25,8 @@ class NodeInputPort;
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
+private:
+	friend class NodeWidgetSerialization;
 public:
 	enum class Click_Type {
 		None, // 没有

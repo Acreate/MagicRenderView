@@ -30,6 +30,7 @@
 #include "../node/item/str/strSplit.h"
 #include "../node/item/str/strSub.h"
 
+#include "../serialization/app/nodeWidgetSerialization.h"
 #include "../serialization/base/float32Serialization.h"
 #include "../serialization/base/float64Serialization.h"
 #include "../serialization/base/int16Serialization.h"
@@ -142,12 +143,13 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	BinGenerate::appendBinGenerateItem< UInt64Serialization >( );
 	BinGenerate::appendBinGenerateItem< Float32Serialization >( );
 	BinGenerate::appendBinGenerateItem< Float64Serialization >( );
+	BinGenerate::appendBinGenerateItem< StdStringSerialization >( );
+	BinGenerate::appendBinGenerateItem< StdWStringSerialization >( );
 	BinGenerate::appendBinGenerateItem< QStringSerialization >( );
 	BinGenerate::appendBinGenerateItem< QColorSerializtion >( );
 	BinGenerate::appendBinGenerateItem< QImageSerialization >( );
 	BinGenerate::appendBinGenerateItem< QByteArraySerialization >( );
-	BinGenerate::appendBinGenerateItem< StdStringSerialization >( );
-	BinGenerate::appendBinGenerateItem< StdWStringSerialization >( );
+	BinGenerate::appendBinGenerateItem< NodeWidgetSerialization >( );
 }
 Application::~Application( ) {
 	settings->sync( );

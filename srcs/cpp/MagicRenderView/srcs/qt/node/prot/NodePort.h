@@ -14,6 +14,8 @@ class NodeItem;
 class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
+private:
+	friend class NodeWidgetSerialization;
 protected:
 	/// @brief 绑定变量
 	VarType *var;
