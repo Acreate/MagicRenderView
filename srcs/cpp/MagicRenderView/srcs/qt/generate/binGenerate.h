@@ -235,6 +235,12 @@ public:
 				return ( TClassName * ) ptr;
 
 			}
+			template< typename TClassName >
+			TClassName * get( ) const {
+				if( unityTypeName != typeid( TClassName ).name( ) )
+					return nullptr;
+				return ( TClassName * ) ptr;
+			}
 
 			virtual ~Unity( ) = default;
 		};
@@ -358,11 +364,9 @@ public:
 			std_vector< uint8_t > resultBuff;
 			std_vector< uint8_t > countBuff;
 			std_vector< uint8_t > nameBuff;
-			size_t count = serialization.fillBinVector( typeName, nameBuff );
-			serialization.fillBinVector( count, countBuff );
-			resultBuff.append_range( countBuff );
+			serialization.fillBinVector( typeName, nameBuff );
 			resultBuff.append_range( nameBuff );
-			count = serialization.fillBinVector( *dataPtr, nameBuff );
+			size_t count = serialization.fillBinVector( *dataPtr, nameBuff );
 			serialization.fillBinVector( count, countBuff );
 			resultBuff.append_range( countBuff );
 			resultBuff.append_range( nameBuff );
@@ -377,7 +381,7 @@ public:
 		size_t fillObjTemplate( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
 			bool isConst;
 			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr )
+			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
 			size_t menorySize;
 			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
@@ -385,13 +389,8 @@ public:
 			if( menorySize > mod )
 				return 0;
 			auto offset = source_ptr + count;
-			count = serialization.fillObjVector( &menorySize, offset, mod );
-			offset = offset + count;
-			mod -= count;
-			if( menorySize > mod )
-				return 0;
 			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
+			count = serialization.fillObjVector( &converTypeName, offset, mod );
 			if( converTypeName != typeName )
 				return 0;
 			mod -= count;
@@ -401,6 +400,81 @@ public:
 			offset += count;
 			count = serialization.fillObjVector( dataPtr, offset, mod );
 			return offset - source_ptr + count;
+		}
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			dataPtr->resize( vectorCount );
+			auto data = dataPtr->data( );
+			size_t index = 0;
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				TPtrType var;
+				unitySharedPtr->init( var );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				data[ index ] = var;
+			}
+			return offset - source_ptr;
+		}
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			size_t index = 0;
+			count = dataPtr->size( );
+			auto data = dataPtr->data( );
+			for( ; index < count; ++index ) delete data[ index ];
+			dataPtr->resize( vectorCount );
+			data = dataPtr->data( );
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				auto var = new TPtrType;
+				unity->init( var );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				data[ index ] = var;
+			}
+			return offset - source_ptr;
 		}
 		template< typename TPtrType >
 		size_t fillBinTemplate( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
@@ -434,47 +508,6 @@ public:
 			return 0;
 		}
 		template< typename TPtrType >
-		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr )
-				return 0;
-			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
-			auto mod = source_ptr_count - count;
-			if( mod < menorySize )
-				return 0;
-			auto offset = source_ptr + count;
-			count = serialization.fillObjVector( &menorySize, offset, mod );
-			offset = offset + count;
-			mod -= count;
-			if( menorySize > mod )
-				return 0;
-			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
-			if( converTypeName != typeName )
-				return 0;
-			mod -= count;
-			offset += count;
-			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
-			mod -= count;
-			offset += count;
-			dataPtr->resize( vectorCount );
-			auto data = dataPtr->data( );
-			size_t index = 0;
-			auto unity = unitySharedPtr.get( );
-			for( ; index < vectorCount; ++index ) {
-				TPtrType var;
-				unitySharedPtr->init( var );
-				count = this->fillObj( unity, offset, mod );
-				mod -= count;
-				offset += count;
-				data[ index ] = var;
-			}
-			return offset - source_ptr;
-		}
-		template< typename TPtrType >
 		size_t fillBinTemplate( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
 			bool isConst;
 			auto dataPtr = var_type->get< TPtrType >( isConst );
@@ -504,50 +537,6 @@ public:
 			result_bin_data_vector.append_range( countBuff );
 			result_bin_data_vector.append_range( resultBuff );
 			return 0;
-		}
-		template< typename TPtrType >
-		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr )
-				return 0;
-			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
-			auto mod = source_ptr_count - count;
-			if( mod < menorySize )
-				return 0;
-			auto offset = source_ptr + count;
-			count = serialization.fillObjVector( &menorySize, offset, mod );
-			offset = offset + count;
-			mod -= count;
-			if( menorySize > mod )
-				return 0;
-			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, menorySize );
-			if( converTypeName != typeName )
-				return 0;
-			mod -= count;
-			offset += count;
-			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
-			mod -= count;
-			offset += count;
-			size_t index = 0;
-			count = dataPtr->size( );
-			auto data = dataPtr->data( );
-			for( ; index < count; ++index ) delete data[ index ];
-			dataPtr->resize( vectorCount );
-			data = dataPtr->data( );
-			auto unity = unitySharedPtr.get( );
-			for( ; index < vectorCount; ++index ) {
-				auto var = new TPtrType;
-				unity->init( var );
-				count = this->fillObj( unity, offset, mod );
-				mod -= count;
-				offset += count;
-				data[ index ] = var;
-			}
-			return offset - source_ptr;
 		}
 	};
 protected:
@@ -700,6 +689,9 @@ public:
 	/// @return 失败返回 false
 	template< typename TVectorIteratorType >
 	static size_t toObj( std_vector< TVectorIteratorType * > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+
+		if( source_data_count == 0 || source_data_ptr == nullptr )
+			return 0;
 
 		QString typeName = typeid( TVectorIteratorType ).name( );
 		size_t count = binGenerateItems.size( );

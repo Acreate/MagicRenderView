@@ -13,7 +13,10 @@ class QScrollArea;
 class QVBoxLayout;
 class Application;
 class MainWidget : public QWidget {
+
 	Q_OBJECT;
+private:
+	friend class NodeWidgetSerialization;
 protected:
 	/// @brief 数据化的支持对象（节点与数据类型）
 	std_vector< uint8_t > supportBin;
@@ -88,7 +91,6 @@ public:
 	virtual std_vector< uint8_t > getSupportVarTypeNameBin( ) const {
 		return supportVarTypeBin;
 	}
-	
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
