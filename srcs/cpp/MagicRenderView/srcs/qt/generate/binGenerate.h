@@ -605,6 +605,23 @@ public:
 			tools::debug::printError( QString( "[%1]{%2} 类未实现匹配的序列化功能" ).arg( typeName ).arg( hashCode ) );
 		return binGenerateItem;
 	}
+
+	/// @brief 对象直接填充二进制
+	/// @tparam TBaseType 填充类型
+	/// @param var_type 填充内容
+	/// @param result_bin_data_vector 返回的二进制数据
+	/// @return 失败返回 false
+	template< typename TBaseType >
+	static size_t toBin( TBaseType *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
+		BinGenerateItem::Unity unity;
+		unity.init( var_type );
+		binGenerateItem->fillBin( &unity, result_bin_data_vector );
+		return result_bin_data_vector.size( );
+	}
+
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
 	/// @param var_type 填充内容

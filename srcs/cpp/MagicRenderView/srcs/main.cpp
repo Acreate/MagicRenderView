@@ -1,5 +1,6 @@
 ﻿#include "qt/application/application.h"
 #include "qt/generate/varTypeGenerate.h"
+#include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
 
 int testQStringSerialization( ) {
@@ -175,11 +176,6 @@ void testQtSerialization( ) {
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
-	testQStringSerialization( );
-	testIntSerialization( );
-	testQtSerialization( );
-	return 0;
-
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );
