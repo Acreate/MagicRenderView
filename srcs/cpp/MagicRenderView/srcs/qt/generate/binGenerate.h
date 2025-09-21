@@ -338,11 +338,11 @@ public:
 		std_shared_ptr< Unity > unitySharedPtr;
 	public:
 		virtual size_t fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( Unity *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
+		virtual size_t fillObj( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
 		virtual size_t fillBin( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( UnityVector *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
+		virtual size_t fillObj( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
 		virtual size_t fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( UnityPtrVector *target_var_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
+		virtual size_t fillObj( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
 	public:
 		BinGenerateItem( ) : unitySharedPtr( new Unity ) {
 

@@ -2,8 +2,8 @@
 #include "qt/generate/varTypeGenerate.h"
 #include "qt/windows/mainWindow.h"
 
-int testQStringSerialization() {
-	
+int testQStringSerialization( ) {
+
 	std_vector< uint8_t > buff;
 	QString ceshi1 = "QString 12345";
 	QString ceshi2;
@@ -78,8 +78,29 @@ int testQStringSerialization() {
 	qDebug( ) << "--------------";
 	return 0;
 }
+
+class first {
+	using new_type = int32_t;
+public:
+	first( ) {
+
+	}
+	virtual void print( ) {
+		qDebug( ) << typeid( new_type ).name( );
+	}
+};
+class scond : public first {
+	using new_type = first;
+public:
+	scond( ) = default;
+};
+
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
+
+	scond scond;
+	scond.print( );
+	return 0;
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );
