@@ -16,23 +16,6 @@
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
-	mainMenuBar = menuBar( );
-	if( mainMenuBar == nullptr )
-		mainMenuBar = new QMenuBar( this );
-
-	mainMenu = new QMenu( "应用", this );
-	mainMenuBar->addMenu( mainMenu );
-
-	QAction *action;
-	action = mainMenu->addAction( "重启" );
-	connect( action, &QAction::triggered, [this]( ) {
-		Application::getApplicationInstancePtr( )->resetApp( );
-	} );
-	action = mainMenu->addAction( "退出" );
-	connect( action, &QAction::triggered, [this]( ) {
-		Application::getApplicationInstancePtr( )->quitApp( );
-	} );
-
 	setWindowToIndexScreenCentre( 0 );
 
 	appInstance = Application::getApplicationInstancePtr( );
@@ -53,8 +36,71 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	oldPos = buffPos = point;
 
 	mainScrollArea = new QScrollArea( this );
-	mainWidget = new MainWidget( mainScrollArea);
+	mainWidget = new MainWidget( mainScrollArea );
 	setCentralWidget( mainScrollArea );
+
+	mainMenuBar = menuBar( );
+	if( mainMenuBar == nullptr )
+		mainMenuBar = new QMenuBar( this );
+
+	mainMenu = new QMenu( "应用", this );
+	mainMenuBar->addMenu( mainMenu );
+
+	QAction *action;
+	
+	mainMenu->addSeparator( );
+	action = mainMenu->addAction( "保存..." );
+	connect( action, &QAction::triggered, [this]( ) {
+		QString workPath = QDir::currentPath( );
+		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
+		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+		QString saveFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview)" );
+		if( saveFileName.isEmpty( ) )
+			return;
+		qsizetype lastIndexOf = workPath.lastIndexOf( "/" );
+		auto fileName = workPath.mid( lastIndexOf + 1 );
+		lastIndexOf = fileName.lastIndexOf( "." );
+		if( lastIndexOf == -1 )
+			saveFileName.append( ".mr" );
+		appInstance->setAppIniValue( normalKey, workPath );
+		std_vector< uint8_t > saveBin;
+		if( mainWidget->objToBin( saveBin ) == 0 )
+			return;
+
+		QFile file( saveFileName );
+		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+			file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+			return;
+		}
+	} );
+
+	action = mainMenu->addAction( "加载..." );
+	connect( action, &QAction::triggered, [this]( ) {
+		QString workPath = QDir::currentPath( );
+		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
+		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+		QString loadFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
+		if( loadFileName.isEmpty( ) )
+			return;
+		appInstance->setAppIniValue( normalKey, workPath );
+		QFile file( loadFileName );
+		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+			QByteArray byteArray = file.readAll( );
+			mainWidget->loadBin( byteArray );
+			return;
+		}
+	} );
+	
+	mainMenu->addSeparator( );
+	action = mainMenu->addAction( "重启" );
+	connect( action, &QAction::triggered, [this]( ) {
+		Application::getApplicationInstancePtr( )->resetApp( );
+	} );
+	action = mainMenu->addAction( "退出" );
+	connect( action, &QAction::triggered, [this]( ) {
+		Application::getApplicationInstancePtr( )->quitApp( );
+	} );
+
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
@@ -69,6 +115,27 @@ MainWindow::~MainWindow( ) {
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
+}
+void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode ) {
+	mainWidget->ensureVisibleToItemNode( targetItemNode );
+}
+void MainWindow::updateMainWidgetSupport( ) {
+	mainWidget->updateSupport( );
+}
+const std_vector< uint8_t > & MainWindow::getMainWidgetSupportBin( ) const {
+	return mainWidget->getSupportBin( );
+}
+const std_vector< uint8_t > & MainWindow::getMainWidgetSupportNodeNmaeBin( ) const {
+	return mainWidget->getSupportNodeNmaeBin( );
+}
+const std_vector< uint8_t > & MainWindow::getMainWidgetSupportVarTypeNameBin( ) const {
+	return mainWidget->getSupportVarTypeNameBin( );
+}
+size_t MainWindow::objMainWidgetToBin( std_vector< uint8_t > &result_vector ) const {
+	return mainWidget->objToBin( result_vector );
+}
+size_t MainWindow::loadMainWidgetBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
+	return mainWidget->loadBin( bin_data_ptr, bin_data_count );
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );

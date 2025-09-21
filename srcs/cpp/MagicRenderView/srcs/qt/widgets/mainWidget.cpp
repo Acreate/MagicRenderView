@@ -33,6 +33,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	renderWidgetActiveItem = nullptr;
 	leftMouseBtnSelectItem = nullptr;
 	leftMouseBtnDragItem = nullptr;
+	isSerialization = true;
 	updateSupport( );
 }
 MainWidget::~MainWidget( ) {
@@ -45,6 +46,43 @@ MainWidget::~MainWidget( ) {
 	auto vectorDataPtr = buff.data( );
 	for( size_t index = 0; index < count; ++index )
 		delete vectorDataPtr[ index ];
+}
+
+size_t MainWidget::objToBin( std_vector< uint8_t > &result_vector ) const {
+	return BinGenerate::toBin( this, result_vector );
+}
+size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
+	return BinGenerate::toObj( this, bin_data_ptr, bin_data_count );
+}
+
+NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
+	if( isSerialization ) // 序列化时，停止相应
+		return nullptr;
+	auto nodeItem = NodeItemGenerate::createNodeItem( this, dir_name, node_name );
+	if( nodeItem->intPortItems( ) == false ) {
+		delete nodeItem;
+		return nullptr;
+	}
+	isSerialization = true;
+	nodeItem->move( fromGlobalReleasePoint );
+	nodeItemList.emplace_back( nodeItem );
+
+	connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
+		auto iterator = nodeItemList.begin( );
+		auto end = nodeItemList.end( );
+		for( ; iterator != end; ++iterator )
+			if( *iterator == release_Item ) {
+				nodeItemList.erase( iterator );
+				break;
+			}
+	} );
+
+	renderWidgetActiveItem = nodeItem;
+
+	ensureVisibleToItemNode( nodeItem );
+	update( );
+	isSerialization = false;
+	return nodeItem;
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
@@ -111,41 +149,20 @@ void MainWidget::updateSupport( ) {
 			auto joint = dirName.isEmpty( ) ? className : dirName + "/" + className;
 			supportNodeName.emplace_back( joint );
 			pairs.emplace_back( addAction, joint );
-			connect( addAction, &QAction::triggered, [this, dirName, className]( ) {
-				auto nodeItem = NodeItemGenerate::createNodeItem( this, dirName, className );
-				if( nodeItem->intPortItems( ) == false ) {
-					delete nodeItem;
-					return;
-				}
-				nodeItem->move( fromGlobalReleasePoint );
-				nodeItemList.emplace_back( nodeItem );
-
-				connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
-					auto iterator = nodeItemList.begin( );
-					auto end = nodeItemList.end( );
-					for( ; iterator != end; ++iterator )
-						if( *iterator == release_Item ) {
-							nodeItemList.erase( iterator );
-							break;
-						}
-				} );
-
-				renderWidgetActiveItem = nodeItem;
-
-				ensureVisibleToItemNode( nodeItem );
-				update( );
-			} );
+			connect( addAction, &QAction::triggered, this, &MainWidget::createNodeItem );
 		}
 		supportNode.emplace_back( dirMenu, pairs );
 	}
 	supporVarType = VarTypeGenerate::supportTypes( );
 	supportInfoToBin( );
+	isSerialization = false;
 }
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-
+	if( isSerialization )
+		return;
 	globalReleasePos = QCursor::pos( );
 	fromGlobalReleasePoint = event->pos( );
 	switch( mouseButton ) {
@@ -230,7 +247,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( leftMouseBtnSelectItem == nullptr )
+	if( leftMouseBtnSelectItem == nullptr || isSerialization )
 		return;
 	mouseMovePoint = event->pos( );
 	if( leftMouseBtnDragItem )
@@ -240,7 +257,8 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-
+	if( isSerialization )
+		return;
 	globalPressPos = QCursor::pos( );
 	fromGlobalPressPoint = event->pos( );
 	switch( mouseButton ) {
