@@ -15,6 +15,7 @@ class QObject;
 class VarTypeGenerate final {
 private:
 	friend class NodeWidgetSerialization;
+	friend class NodeItemSerialization;
 private:
 	friend class VarTypeGenerateItem;
 	using generate_function = std_function< VarType *( QObject *, const QString & ) >;

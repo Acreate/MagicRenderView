@@ -341,6 +341,7 @@ public:
 		static Serialization serialization;
 	protected:
 		QString typeName;
+		size_t typeHasCode;
 		std_shared_ptr< Unity > unitySharedPtr;
 	public:
 		virtual size_t fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
@@ -349,8 +350,19 @@ public:
 		virtual size_t fillObj( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
 		virtual size_t fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
 		virtual size_t fillObj( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
+		virtual bool isSerializationType( const QString &check_type_name, const size_t &type_has_code = 0 ) const {
+			bool cond = typeName == check_type_name;
+			if( cond && typeHasCode != 0 )
+				return type_has_code == typeHasCode;
+			return cond;
+		}
+		template< typename TType >
+		bool isSerializationType( ) const {
+			auto &typeInfo = typeid( TType );
+			return isSerializationType( typeInfo.name( ), typeInfo.hash_code( ) );
+		}
 	public:
-		BinGenerateItem( ) : unitySharedPtr( new Unity ) {
+		BinGenerateItem( ) : typeName( "" ), typeHasCode( 0 ), unitySharedPtr( new Unity ) {
 
 		}
 		virtual ~BinGenerateItem( ) { }
@@ -540,7 +552,7 @@ public:
 		}
 	};
 protected:
-	static std_vector< std_pairt< QString, std_shared_ptr< BinGenerateItem > > > binGenerateItems;
+	static std_vector< std_shared_ptr< BinGenerateItem > > binGenerateItems;
 public:
 	template< typename TType >
 		requires requires ( BinGenerateItem *ptr, TType *org_ptr ) {
@@ -559,14 +571,40 @@ public:
 		auto data = binGenerateItems.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ].first == ptr->typeName ) {
-				data[ index ].second = std_shared_ptr< BinGenerateItem >( ptr );
+			if( data[ index ].get( )->isSerializationType( ptr->typeName ) ) {
+				data[ index ] = std_shared_ptr< BinGenerateItem >( ptr );
 				return true;
 			}
-		binGenerateItems.emplace_back( ptr->typeName, std_shared_ptr< BinGenerateItem >( ptr ) );
+		binGenerateItems.emplace_back( std_shared_ptr< BinGenerateItem >( ptr ) );
 		return true;
 	}
 public:
+	/// @brief 检索匹配类型名称，返回匹配的序列化项
+	/// @param check_type_name 类型名称
+	/// @param type_has_code 类型哈希
+	/// @return 匹配的序列化项
+	static BinGenerateItem * getBinGenerateItemPtr( const QString &check_type_name, const size_t &type_has_code ) {
+		size_t count = binGenerateItems.size( );
+		auto data = binGenerateItems.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].get( )->isSerializationType( check_type_name, type_has_code ) )
+				return data[ index ].get( );
+		return nullptr;
+	}
+	/// @brief 检索匹配类型名称，返回匹配的序列化项
+	/// @tparam TBaseType 填充类型
+	/// @return 失败返回 nullptr
+	template< typename TBaseType >
+	static BinGenerateItem * getBinGenerateItemPtr( ) {
+		auto &typeInfo = typeid( TBaseType );
+		QString typeName = typeInfo.name( );
+		size_t hashCode = typeInfo.hash_code( );
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr( typeName, hashCode );
+		if( binGenerateItem == nullptr )
+			tools::debug::printError( QString( "[%1]{%2} 类未实现匹配的序列化功能" ).arg( typeName ).arg( hashCode ) );
+		return binGenerateItem;
+	}
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
 	/// @param var_type 填充内容
@@ -574,20 +612,13 @@ public:
 	/// @return 失败返回 false
 	template< typename TBaseType >
 	static size_t toBin( const TBaseType &var_type, std_vector< uint8_t > &result_bin_data_vector ) {
-		QString typeName = typeid( TBaseType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::Unity unity;
-				unity.init( var_type );
-				binGenerateItem->fillBin( &unity, result_bin_data_vector );
-				return result_bin_data_vector.size( );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
+		BinGenerateItem::Unity unity;
+		unity.init( var_type );
+		binGenerateItem->fillBin( &unity, result_bin_data_vector );
+		return result_bin_data_vector.size( );
 	}
 
 	/// @brief 数组转换到二进制序列
@@ -597,20 +628,13 @@ public:
 	/// @return 序列个数
 	template< typename TVectorIteratorType >
 	static size_t toBin( const std_vector< TVectorIteratorType > &obj, std_vector< uint8_t > &result_bin ) {
-		QString typeName = typeid( TVectorIteratorType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::UnityVector unity;
-				unity.init( obj );
-				binGenerateItem->fillBin( &unity, result_bin );
-				return result_bin.size( );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
+		BinGenerateItem::UnityVector unity;
+		unity.init( obj );
+		binGenerateItem->fillBin( &unity, result_bin );
+		return result_bin.size( );
 	}
 	/// @brief 数组转换到二进制序列
 	/// @tparam TVectorIteratorType 数组元素类型
@@ -619,20 +643,13 @@ public:
 	/// @return 序列个数
 	template< typename TVectorIteratorType >
 	static size_t toBin( const std_vector< TVectorIteratorType * > &obj, std_vector< uint8_t > &result_bin ) {
-		QString typeName = typeid( TVectorIteratorType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::UnityPtrVector unity;
-				unity.init( obj );
-				binGenerateItem->fillBin( &unity, result_bin );
-				return result_bin.size( );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
+		BinGenerateItem::UnityPtrVector unity;
+		unity.init( obj );
+		binGenerateItem->fillBin( &unity, result_bin );
+		return result_bin.size( );
 	}
 	/// @brief 对象直接填充二进制
 	/// @tparam TBaseType 填充类型
@@ -642,19 +659,12 @@ public:
 	/// @return 失败返回 false
 	template< typename TBaseType >
 	static size_t toObj( TBaseType *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
-		QString typeName = typeid( TBaseType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::Unity unity;
-				unity.init( var_type );
-				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
+		BinGenerateItem::Unity unity;
+		unity.init( var_type );
+		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -665,20 +675,13 @@ public:
 	/// @return 失败返回 false
 	template< typename TVectorIteratorType >
 	static size_t toObj( std_vector< TVectorIteratorType > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
+		if( binGenerateItem == nullptr )
+			return 0;
 
-		QString typeName = typeid( TVectorIteratorType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::UnityVector unity;
-				unity.init( var_type );
-				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem::UnityVector unity;
+		unity.init( var_type );
+		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -690,22 +693,12 @@ public:
 	template< typename TVectorIteratorType >
 	static size_t toObj( std_vector< TVectorIteratorType * > *var_type, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 
-		if( source_data_count == 0 || source_data_ptr == nullptr )
+		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
+		if( binGenerateItem == nullptr )
 			return 0;
-
-		QString typeName = typeid( TVectorIteratorType ).name( );
-		size_t count = binGenerateItems.size( );
-		auto data = binGenerateItems.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first == typeName ) {
-				BinGenerateItem *binGenerateItem = data[ index ].second.get( );
-				BinGenerateItem::UnityPtrVector unity;
-				unity.init( var_type );
-				return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
-			}
-		tools::debug::printError( QString( "[%1] 类未实现匹配的序列化功能" ).arg( typeName ) );
-		return 0;
+		BinGenerateItem::UnityPtrVector unity;
+		unity.init( var_type );
+		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
 	}
 };
 

@@ -27,6 +27,7 @@ class NodeItem : public QObject, public Type_Alias {
 	Def_NodeItem_StaticMetaInfo( );
 private:
 	friend class NodeWidgetSerialization;
+	friend class NodeItemSerialization;
 public:
 	enum class Click_Type {
 		None, // 没有

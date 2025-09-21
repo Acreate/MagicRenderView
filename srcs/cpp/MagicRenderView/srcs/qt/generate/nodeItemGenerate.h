@@ -10,6 +10,7 @@
 class NodeItemGenerate final {
 private:
 	friend class NodeWidgetSerialization;
+	friend class NodeItemSerialization;
 public:
 	/// @brief 节点指针类型
 	using NodeItem_Type = NodeItem;

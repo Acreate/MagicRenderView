@@ -17,6 +17,7 @@ class MainWidget : public QWidget {
 	Q_OBJECT;
 private:
 	friend class NodeWidgetSerialization;
+	friend class NodeItemSerialization;
 protected:
 	/// @brief 数据化的支持对象（节点与数据类型）
 	std_vector< uint8_t > supportBin;
