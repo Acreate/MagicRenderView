@@ -31,18 +31,23 @@
 #include "../node/item/str/strSplit.h"
 #include "../node/item/str/strSub.h"
 
-#include "../serialization/float32Serialization.h"
-#include "../serialization/float64Serialization.h"
-#include "../serialization/int16Serialization.h"
-#include "../serialization/int32Serialization.h"
-#include "../serialization/int64Serialization.h"
-#include "../serialization/qstringSerialization.h"
-#include "../serialization/stdStringSerialization.h"
-#include "../serialization/stdWStringSerialization.h"
-#include "../serialization/uint16Serialization.h"
-#include "../serialization/uint32Serialization.h"
-#include "../serialization/uint64Serialization.h"
-#include "../serialization/uint8Serialization.h"
+#include "../serialization/base/float32Serialization.h"
+#include "../serialization/base/float64Serialization.h"
+#include "../serialization/base/int16Serialization.h"
+#include "../serialization/base/int32Serialization.h"
+#include "../serialization/base/int64Serialization.h"
+#include "../serialization/base/uint16Serialization.h"
+#include "../serialization/base/uint32Serialization.h"
+#include "../serialization/base/uint64Serialization.h"
+#include "../serialization/base/uint8Serialization.h"
+#include "../serialization/cppStd/stdStringSerialization.h"
+#include "../serialization/cppStd/stdWStringSerialization.h"
+#include "../serialization/qt/qColorSerializtion.h"
+#include "../serialization/qt/qimageSerializtion.h"
+#include "../serialization/qt/qrgbSerializtion.h"
+#include "../serialization/qt/qstringSerialization.h"
+#include "../serialization/qt/qwidgetSerializtion.h"
+#include "../serialization/qt/qwindowSerializtion.h"
 
 #include "qt/tools/tools.h"
 
@@ -135,13 +140,18 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int64Serialization >( );
-	BinGenerate::appendBinGenerateItem< Uint8Serialization >( );
-	BinGenerate::appendBinGenerateItem< Uint16Serialization >( );
-	BinGenerate::appendBinGenerateItem< Uint32Serialization >( );
-	BinGenerate::appendBinGenerateItem< Uint64Serialization >( );
+	BinGenerate::appendBinGenerateItem< UInt8Serialization >( );
+	BinGenerate::appendBinGenerateItem< UInt16Serialization >( );
+	BinGenerate::appendBinGenerateItem< UInt32Serialization >( );
+	BinGenerate::appendBinGenerateItem< UInt64Serialization >( );
 	BinGenerate::appendBinGenerateItem< Float32Serialization >( );
 	BinGenerate::appendBinGenerateItem< Float64Serialization >( );
 	BinGenerate::appendBinGenerateItem< QStringSerialization >( );
+	BinGenerate::appendBinGenerateItem< QRgbSerializtion >( );
+	BinGenerate::appendBinGenerateItem< QColorSerializtion >( );
+	BinGenerate::appendBinGenerateItem< QimageSerializtion >( );
+	BinGenerate::appendBinGenerateItem< QWindowSerializtion >( );
+	BinGenerate::appendBinGenerateItem< QWidgetSerializtion >( );
 	BinGenerate::appendBinGenerateItem< StdStringSerialization >( );
 	BinGenerate::appendBinGenerateItem< StdWStringSerialization >( );
 }

@@ -555,7 +555,6 @@ protected:
 public:
 	template< typename TType >
 		requires requires ( BinGenerateItem *ptr, TType *org_ptr ) {
-			std::is_pointer_v< BinGenerateItem >;
 			typeid( TType ) != typeid( BinGenerateItem );
 			ptr = org_ptr;
 		}
