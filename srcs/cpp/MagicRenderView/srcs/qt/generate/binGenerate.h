@@ -222,9 +222,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillUnityBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			ConverPtr( dataPtr, var_type, const TPtrType * );
-			if( dataPtr == nullptr )
+			if( var_type == nullptr )
 				return 0;
+			ConverPtr( dataPtr, var_type, const TPtrType * );
 			std_vector< uint8_t > resultBuff;
 			std_vector< uint8_t > countBuff;
 			std_vector< uint8_t > nameBuff;
@@ -243,9 +243,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillVectorBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			ConverPtr( dataPtr, var_type, const std_vector< TPtrType > * );
-			if( dataPtr == nullptr )
+			if( var_type == nullptr )
 				return 0;
+			ConverPtr( dataPtr, var_type, const std_vector< TPtrType > * );
 			std_vector< uint8_t > resultBuff;
 			std_vector< uint8_t > nameBuff;
 			size_t count = fillBinVector( bin_generate_item->typeName, nameBuff );
@@ -268,9 +268,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillPtrVectorBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			ConverPtr( dataPtr, var_type, const std_vector< TPtrType * > * );
-			if( dataPtr == nullptr )
+			if( var_type == nullptr )
 				return 0;
+			ConverPtr( dataPtr, var_type, const std_vector< TPtrType * > * );
 			std_vector< uint8_t > resultBuff;
 			std_vector< uint8_t > nameBuff;
 			size_t count = fillBinVector( bin_generate_item->typeName, nameBuff );
@@ -293,9 +293,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillUnityObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			ConverPtr( dataPtr, var_type, TPtrType * );
-			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+			if( var_type == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
+			ConverPtr( dataPtr, var_type, TPtrType * );
 			size_t menorySize;
 			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;
@@ -316,9 +316,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillVectorObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			ConverPtr( dataPtr, var_type, std_vector< TPtrType > * );
-			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+			if( var_type == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
+			ConverPtr( dataPtr, var_type, std_vector< TPtrType > * );
 			size_t menorySize;
 			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;
@@ -348,9 +348,9 @@ public:
 		}
 		template< typename TPtrType >
 		size_t fillPtrVectorObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			ConverPtr( dataPtr, var_type, std_vector< TPtrType * > * );
-			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+			if( var_type == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
+			ConverPtr( dataPtr, var_type, std_vector< TPtrType * > * );
 			size_t menorySize;
 			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;

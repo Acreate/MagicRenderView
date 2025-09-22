@@ -5,9 +5,9 @@ NodeWidgetSerialization::NodeWidgetSerialization( ) : BinGenerateItem( ) {
 }
 size_t NodeWidgetSerialization::fillUnityBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
 
-	ConverPtr( mainWidget, var_type, t_current_type* );
-	if( mainWidget == nullptr )
+	if( var_type == nullptr )
 		return 0;
+	ConverPtr( mainWidget, var_type, t_current_type* );
 	// 开始序列化
 	mainWidget->isSerialization = true;
 	std_vector< uint8_t > resultBuff;
@@ -34,12 +34,10 @@ size_t NodeWidgetSerialization::fillUnityBin( const void *var_type, std_vector< 
 	return 0;
 }
 size_t NodeWidgetSerialization::fillUnityObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
-	if( source_ptr_count == 0 || source_ptr == nullptr )
+	if( source_ptr_count == 0 || source_ptr == nullptr|| var_type == nullptr )
 		return 0;
 
 	ConverPtr( mainWidget, var_type, t_current_type* );
-	if( mainWidget == nullptr )
-		return 0;
 
 	size_t needCount;
 	size_t count = serialization.fillObjVector( &needCount, source_ptr, source_ptr_count );

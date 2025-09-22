@@ -4,9 +4,9 @@ QByteArraySerialization::QByteArraySerialization( ) : BinGenerateItem( ) {
 }
 size_t QByteArraySerialization::fillUnityBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
 
-	ConverPtr( byteArray, var_type, t_current_type* );
-	if( byteArray == nullptr )
+	if( var_type == nullptr )
 		return 0;
+	ConverPtr( byteArray, var_type, t_current_type* );
 	std_vector< uint8_t > resultBuff;
 
 	std_vector< uint8_t > varBuff;
@@ -31,11 +31,9 @@ size_t QByteArraySerialization::fillUnityBin( const void *var_type, std_vector< 
 	return result_bin_data_vector.size( );
 }
 size_t QByteArraySerialization::fillUnityObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
-	if( source_ptr_count == 0 || source_ptr == nullptr )
+	if( var_type == nullptr || source_ptr_count == 0 || source_ptr == nullptr )
 		return 0;
 	ConverPtr( byteArray, var_type, t_current_type* );
-	if( byteArray == nullptr )
-		return 0;
 	size_t needCount;
 	size_t count = serialization.fillObjVector( &needCount, source_ptr, source_ptr_count );
 	size_t mod = source_ptr_count - count;
