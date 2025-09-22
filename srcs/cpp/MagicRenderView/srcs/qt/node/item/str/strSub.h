@@ -8,8 +8,8 @@ class StrSub : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrSub( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	StrSub(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // STRSUB_H_H_HEAD__FILE__

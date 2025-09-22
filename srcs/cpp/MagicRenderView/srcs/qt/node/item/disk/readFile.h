@@ -8,8 +8,8 @@ class ReadFile : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	ReadFile( NodeItem_ParentPtr_Type *parent );
+	ReadFile( );
 public:
-	bool intPortItems( ) override;
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // READFILE_H_H_HEAD__FILE__

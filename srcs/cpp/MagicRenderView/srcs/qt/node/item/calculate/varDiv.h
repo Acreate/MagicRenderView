@@ -8,8 +8,8 @@ class VarDiv : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarDiv( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	VarDiv( )
+		: NodeItem(  ) {
 	}
 };
 #endif // VARDIV_H_H_HEAD__FILE__

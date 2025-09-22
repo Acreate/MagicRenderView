@@ -8,8 +8,8 @@ class VarMod : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarMod( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	VarMod(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // VARMOD_H_H_HEAD__FILE__

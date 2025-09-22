@@ -50,7 +50,7 @@ public:
 	static VarType * toObj( size_t &reseult_use_count, const uint8_t *source_bin_data_ptr, const size_t &source_bin_data_count );
 
 	template< typename TTBase >
-	static size_t appendType( ) {
+	static size_t appendTypeGenerate( ) {
 		generates.emplace_back( mkVarTypeGeneratePair< TTBase >( ) );
 		generates = tools::vector::removeRepetition< QString, std_pairt< QString, VarTypeGenerate::generate_function > >( generates, [] ( const std::pair< QString, VarTypeGenerate::generate_function > &pair ) {
 			return pair.first;

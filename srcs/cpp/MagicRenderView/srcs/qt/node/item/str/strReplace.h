@@ -8,8 +8,8 @@ class StrReplace : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrReplace( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ){
+	StrReplace(  )
+		: NodeItem(  ){
 	}
 };
 #endif // STRREPLACE_H_H_HEAD__FILE__

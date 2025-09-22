@@ -1,7 +1,7 @@
 ﻿#include "./mainWidget.h"
 
-#include <QPainter>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QScrollArea>
 #include <qboxlayout.h>
 #include <qfile.h>
@@ -9,12 +9,13 @@
 
 #include <qt/application/application.h>
 
-#include "../generate/nodeItemGenerate.h"
-#include "../generate/varTypeGenerate.h"
+#include <qt/generate/nodeItemGenerate.h>
+#include <qt/generate/varTypeGenerate.h>
 
-#include "../node/prot/inputProt/nodeInputPort.h"
+#include <qt/node/prot/inputProt/nodeInputPort.h>
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+	nodeItemGenerateCode = 1;
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -58,16 +59,26 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
 	if( isSerialization ) // 序列化时，停止相应
 		return nullptr;
-	auto nodeItem = NodeItemGenerate::createNodeItem( this, dir_name, node_name );
-	if( nodeItem->intPortItems( ) == false ) {
+	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
+	if( appendNodeItem( nodeItem ) == 0 ) {
 		delete nodeItem;
 		return nullptr;
 	}
+	return nodeItem;
+}
+size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
+	if( isSerialization ) // 序列化时，停止相应
+		return 0;
+	new_node_item->setMainWidget( this );
+	if( new_node_item->intPortItems( this ) == false )
+		return 0;
+	new_node_item->generateCode = nodeItemGenerateCode;
+	++nodeItemGenerateCode;
 	isSerialization = true;
-	nodeItem->move( fromGlobalReleasePoint );
-	nodeItemList.emplace_back( nodeItem );
+	new_node_item->move( fromGlobalReleasePoint );
+	nodeItemList.emplace_back( new_node_item );
 
-	connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
+	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
 		auto iterator = nodeItemList.begin( );
 		auto end = nodeItemList.end( );
 		for( ; iterator != end; ++iterator )
@@ -77,12 +88,12 @@ NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &n
 			}
 	} );
 
-	renderWidgetActiveItem = nodeItem;
+	renderWidgetActiveItem = new_node_item;
 
-	ensureVisibleToItemNode( nodeItem );
+	ensureVisibleToItemNode( new_node_item );
 	update( );
 	isSerialization = false;
-	return nodeItem;
+	return new_node_item->generateCode;
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

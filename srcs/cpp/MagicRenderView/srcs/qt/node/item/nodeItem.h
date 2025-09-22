@@ -28,6 +28,7 @@ class NodeItem : public QObject, public Type_Alias {
 private:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
+	friend class MainWidget;
 public:
 	enum class Click_Type {
 		None, // 没有
@@ -105,9 +106,10 @@ protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 protected:
-	NodeItem( NodeItem_ParentPtr_Type *parent );
+	NodeItem(  );
 public:
 	~NodeItem( ) override;
+	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
 	/// @brief 从相对坐标获取类型
@@ -152,7 +154,7 @@ public:
 	virtual TNodePortOutputPortPtr getNodeOutputPortAtRelativePointType( int x, int y ) const;
 	/// @brief 初始化接口选项
 	/// @return 成功返回 true
-	virtual bool intPortItems( );
+	virtual bool intPortItems( MainWidget *parent );
 	virtual const NodeItemString_Type & getNodeTitleName( ) const { return nodeTitleName; }
 	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name );
 
@@ -230,7 +232,7 @@ public:
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关
-	
+
 };
 
 #endif // NODEITEM_H_H_HEAD__FILE__

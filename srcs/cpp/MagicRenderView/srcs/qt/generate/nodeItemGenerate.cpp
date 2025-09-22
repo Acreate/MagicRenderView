@@ -41,7 +41,7 @@ NodeItemGenerate::NodeItem_Type * NodeItemGenerate::fromGenerateCodeGetNodeItemP
 	return nullptr;
 }
 
-NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( NodeItem_ParentPtr_Type *parent, const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name ) {
+NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem(  const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name ) {
 
 	NodeItemGenerate::NodeItem_Type *result = nullptr;
 	auto dirNameTrimmed = dir_name.trimmed( );
@@ -65,7 +65,7 @@ NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( NodeItem_Par
 			auto classNameMapVectorDataPtr = classNameMapVector.data( );
 			for( ; classNameMapVectorIndex < classNameMapVectorCount; ++classNameMapVectorIndex )
 				if( classNameMapVectorDataPtr[ classNameMapVectorIndex ].first == itemNameTrimmed ) {
-					result = classNameMapVectorDataPtr[ classNameMapVectorIndex ].second( parent );
+					result = classNameMapVectorDataPtr[ classNameMapVectorIndex ].second(  );
 					if( result ) {
 						size_t count = generateNodeItems.size( );
 						if( count > 0 ) {
@@ -94,7 +94,7 @@ NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( NodeItem_Par
 		}
 	return result;
 }
-bool NodeItemGenerate::appendNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function ) {
+bool NodeItemGenerate::appendGenerateNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function ) {
 
 	auto dirNameTrimmed = dir_name.trimmed( );
 	if( dirNameTrimmed.isEmpty( ) ) {

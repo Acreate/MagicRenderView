@@ -8,8 +8,8 @@ class StrInsert : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrInsert( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ){
+	StrInsert(  )
+		: NodeItem(  ){
 	}
 };
 #endif // STRINSERT_H_H_HEAD__FILE__

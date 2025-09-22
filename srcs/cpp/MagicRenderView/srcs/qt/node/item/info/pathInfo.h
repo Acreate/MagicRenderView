@@ -8,8 +8,8 @@ class PathInfo : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	PathInfo( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	PathInfo()
+		: NodeItem(  ) {
 	}
 };
 #endif // PATHINFO_H_H_HEAD__FILE__

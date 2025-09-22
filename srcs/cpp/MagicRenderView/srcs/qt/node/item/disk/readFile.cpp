@@ -4,9 +4,9 @@
 #include "../../prot/outputProt/impOutputPort/stringOutputPort.h"
 
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
-ReadFile::ReadFile( NodeItem_ParentPtr_Type *parent ) : NodeItem( parent ) {
+ReadFile::ReadFile(  ) : NodeItem(  ) {
 }
-bool ReadFile::intPortItems( ) {
+bool ReadFile::intPortItems( MainWidget *parent ) {
 	setNodeTitleName( getMetaObjectName( ) );
 	StringInputPort *inputPort = new StringInputPort( this );
 	inputPort->setTitle( "文件路径" );

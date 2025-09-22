@@ -8,8 +8,10 @@
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 #include <qt/node/prot/outputProt/nodeOutputPort.h>
 
+#include "../../widgets/mainWidget.h"
+
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
-NodeItem::NodeItem( NodeItem_ParentPtr_Type *parent ) : QObject( parent ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ) {
+NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ) {
 	midPortSpace = 5 * 3;
 	borderTopSpace = 5;
 	borderRightSpace = 5;
@@ -53,6 +55,9 @@ NodeItem::~NodeItem( ) {
 	delete outputBuff;
 	delete titleBuff;
 
+}
+void NodeItem::setMainWidget( MainWidget *parent ) {
+	setParent( parent );
 }
 bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
@@ -185,7 +190,10 @@ NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) 
 	// 最后返回
 	return data[ 0 ].first;
 }
-bool NodeItem::intPortItems( ) {
+bool NodeItem::intPortItems( MainWidget *parent ) {
+	if( parent == nullptr )
+		return false;
+	setMainWidget( parent );
 	setNodeTitleName( getMetaObjectName( ) );
 	updateTitleLayout( );
 	updateInputLayout( );

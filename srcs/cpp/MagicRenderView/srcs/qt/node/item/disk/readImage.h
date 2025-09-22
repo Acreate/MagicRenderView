@@ -8,8 +8,8 @@ class ReadImage : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	ReadImage( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	ReadImage(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // READIMAGE_H_H_HEAD__FILE__

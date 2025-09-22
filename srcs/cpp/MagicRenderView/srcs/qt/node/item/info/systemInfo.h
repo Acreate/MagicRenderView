@@ -8,8 +8,8 @@ class SystemInfo : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	SystemInfo( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	SystemInfo(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // SYSTEMINFO_H_H_HEAD__FILE__

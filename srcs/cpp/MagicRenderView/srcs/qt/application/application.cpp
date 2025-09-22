@@ -30,6 +30,7 @@
 #include "../node/item/str/strSplit.h"
 #include "../node/item/str/strSub.h"
 
+#include "../serialization/app/nodeItemSerialization.h"
 #include "../serialization/app/nodeWidgetSerialization.h"
 #include "../serialization/base/float32Serialization.h"
 #include "../serialization/base/float64Serialization.h"
@@ -90,26 +91,26 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	 * 初始化节点
 	 */
 	// todo : 磁盘节点
-	NodeItemGenerate::appendNodeItemInfo< WriteFile >( );
-	NodeItemGenerate::appendNodeItemInfo< WriteImage >( );
-	NodeItemGenerate::appendNodeItemInfo< ReadFile >( );
-	NodeItemGenerate::appendNodeItemInfo< ReadImage >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< WriteFile >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< WriteImage >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< ReadFile >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< ReadImage >( );
 	// todo : 信息节点
-	NodeItemGenerate::appendNodeItemInfo< PathInfo >( );
-	NodeItemGenerate::appendNodeItemInfo< SystemInfo >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< PathInfo >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< SystemInfo >( );
 	// todo : 计算节点
-	NodeItemGenerate::appendNodeItemInfo< VarAdd >( );
-	NodeItemGenerate::appendNodeItemInfo< VarSub >( );
-	NodeItemGenerate::appendNodeItemInfo< VarMul >( );
-	NodeItemGenerate::appendNodeItemInfo< VarDiv >( );
-	NodeItemGenerate::appendNodeItemInfo< VarMod >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< VarAdd >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< VarSub >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< VarMul >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< VarDiv >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< VarMod >( );
 	// todo : 字符串节点
-	NodeItemGenerate::appendNodeItemInfo< StrAppend >( );
-	NodeItemGenerate::appendNodeItemInfo< StrRemove >( );
-	NodeItemGenerate::appendNodeItemInfo< StrReplace >( );
-	NodeItemGenerate::appendNodeItemInfo< StrInsert >( );
-	NodeItemGenerate::appendNodeItemInfo< StrSplit >( );
-	NodeItemGenerate::appendNodeItemInfo< StrSub >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrAppend >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrRemove >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrReplace >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrInsert >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrSplit >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StrSub >( );
 	// todo : 图片特效节点
 
 	// todo : 视频操作节点
@@ -121,18 +122,18 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	// todo : 音乐特效节点
 
 	// todo : VarType 支持变量
-	VarTypeGenerate::appendType< QString >( );
-	VarTypeGenerate::appendType< uint8_t >( );
-	VarTypeGenerate::appendType< uint16_t >( );
-	VarTypeGenerate::appendType< uint32_t >( );
-	VarTypeGenerate::appendType< uint64_t >( );
-	VarTypeGenerate::appendType< int8_t >( );
-	VarTypeGenerate::appendType< int16_t >( );
-	VarTypeGenerate::appendType< int32_t >( );
-	VarTypeGenerate::appendType< int64_t >( );
-	VarTypeGenerate::appendType< float_t >( );
-	VarTypeGenerate::appendType< double_t >( );
-	VarTypeGenerate::appendType< QString >( );
+	VarTypeGenerate::appendTypeGenerate< QString >( );
+	VarTypeGenerate::appendTypeGenerate< uint8_t >( );
+	VarTypeGenerate::appendTypeGenerate< uint16_t >( );
+	VarTypeGenerate::appendTypeGenerate< uint32_t >( );
+	VarTypeGenerate::appendTypeGenerate< uint64_t >( );
+	VarTypeGenerate::appendTypeGenerate< int8_t >( );
+	VarTypeGenerate::appendTypeGenerate< int16_t >( );
+	VarTypeGenerate::appendTypeGenerate< int32_t >( );
+	VarTypeGenerate::appendTypeGenerate< int64_t >( );
+	VarTypeGenerate::appendTypeGenerate< float_t >( );
+	VarTypeGenerate::appendTypeGenerate< double_t >( );
+	VarTypeGenerate::appendTypeGenerate< QString >( );
 	// todo : 序列化支持
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
@@ -150,6 +151,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	BinGenerate::appendBinGenerateItem< QImageSerialization >( );
 	BinGenerate::appendBinGenerateItem< QByteArraySerialization >( );
 	BinGenerate::appendBinGenerateItem< NodeWidgetSerialization >( );
+	BinGenerate::appendBinGenerateItem< NodeItemSerialization >( );
 }
 Application::~Application( ) {
 	settings->sync( );

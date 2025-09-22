@@ -17,6 +17,7 @@ class NodePort : public QObject, public Type_Alias {
 private:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
+	friend class MainWidget;
 protected:
 	/// @brief 绑定变量
 	VarType *var;

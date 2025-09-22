@@ -7,7 +7,7 @@ class WriteFile : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	WriteFile( NodeItem_ParentPtr_Type *parent );
+	WriteFile(  );
 
 };
 

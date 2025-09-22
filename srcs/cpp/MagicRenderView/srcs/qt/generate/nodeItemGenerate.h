@@ -19,7 +19,7 @@ public:
 	/// @brief 父对象指针类型
 	using NodeItem_ParentPtr_Type = NodeItem_Type::NodeItem_ParentPtr_Type;
 	/// @brief 节点创建函数指针类型
-	using NodeItemGenerateCall_Type = NodeItem_Type *( NodeItem_ParentPtr_Type * );
+	using NodeItemGenerateCall_Type = NodeItem_Type *( );
 	/// @brief 节点创建函数调用类型
 	using NodeItemGenerateFunction_Type = std_function< NodeItemGenerateCall_Type >;
 	/// @brief 节点名称创建信息类型
@@ -47,7 +47,7 @@ private:
 	/// @param item_name 节点名称
 	/// @param generate_function 生成调用函数
 	/// @return 添加失败返回 false
-	static bool appendNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function );
+	static bool appendGenerateNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function );
 	/// @brief 建立信号链接
 	/// @param sender_obj 信号对象指针
 	static void cnnectSignal( NodeItem_Type *sender_obj );
@@ -59,42 +59,40 @@ public:
 	/// @brief 从生成代码当中获取对象指针
 	/// @param code 生成代码
 	/// @return 对象指针
-	static NodeItem_Type * fromGenerateCodeGetNodeItemPtr(const size_t& code );
+	static NodeItem_Type * fromGenerateCodeGetNodeItemPtr( const size_t &code );
 	/// @brief 获取支持的节点列表
 	/// @return 支持的节点列表
 	static DirClassItemMapVector_Type getSupperTyeNodes( ) {
 		return nodeItemDirClassMetaInfos;
 	}
 	/// @brief 创建节点对象
-	/// @param parent 节点对象依赖父节点
 	/// @param dir_name 节点目录
 	/// @param item_name 节点名称
 	/// @return 失败返回 nullptr
-	static NodeItem_Type * createNodeItem( NodeItem_ParentPtr_Type *parent, const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name );
+	static NodeItem_Type * createNodeItem( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name );
 	/// @brief 生成节点
 	/// @tparam TItemType 生成的节点类型
-	/// @param parent 生成节点关联父对象
 	/// @return 失败返回 nullptr
 	template< typename TItemType >
-		requires requires ( NodeItem_String_Type name, NodeItem_Type *item, NodeItem_ParentPtr_Type *parent ) {
+		requires requires ( NodeItem_String_Type name, NodeItem_Type *item ) {
 			name = TItemType::getStaticMetaObjectName( );
 			name = TItemType::getStaticMetaObjectDir( );
-			item = new TItemType( parent );
+			item = new TItemType( );
 		}
-	static NodeItem_Type * createNodeItem( NodeItem_ParentPtr_Type *parent ) {
-		return NodeItemGenerate::createNodeItem( parent, TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ) );
+	static NodeItem_Type * createNodeItem( ) {
+		return NodeItemGenerate::createNodeItem( TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ) );
 	}
 	/// @brief 追加节点生成器
 	/// @tparam TItemType 追加的节点类型
 	template< typename TItemType >
-		requires requires ( NodeItem_String_Type name, NodeItem_Type *item, NodeItem_ParentPtr_Type *parent ) {
+		requires requires ( NodeItem_String_Type name, NodeItem_Type *item ) {
 			name = TItemType::getStaticMetaObjectName( );
 			name = TItemType::getStaticMetaObjectDir( );
-			item = new TItemType( parent );
+			item = new TItemType( );
 		}
-	static bool appendNodeItemInfo( ) {
-		return NodeItemGenerate::appendNodeItemInfo( TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ), [] ( NodeItem_ParentPtr_Type *parent ) {
-			return new TItemType( parent );
+	static bool appendGenerateNodeItemInfo( ) {
+		return NodeItemGenerate::appendGenerateNodeItemInfo( TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ), []( ) {
+			return new TItemType( );
 		} );
 	}
 };

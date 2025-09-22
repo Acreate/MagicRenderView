@@ -8,8 +8,8 @@ class VarMul : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarMul( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	VarMul( )
+		: NodeItem(  ) {
 	}
 };
 #endif // VARMUL_H_H_HEAD__FILE__

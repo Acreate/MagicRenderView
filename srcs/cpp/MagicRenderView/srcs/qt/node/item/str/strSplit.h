@@ -8,8 +8,8 @@ class StrSplit : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrSplit( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	StrSplit(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // STRSPLIT_H_H_HEAD__FILE__

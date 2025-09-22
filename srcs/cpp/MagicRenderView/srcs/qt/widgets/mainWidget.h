@@ -19,6 +19,8 @@ private:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 protected:
+	/// @brief 节点生成代码
+	size_t nodeItemGenerateCode;
 	/// @brief 数据化的支持对象（节点与数据类型）
 	std_vector< uint8_t > supportBin;
 	/// @brief 数据化支持的节点内容
@@ -126,7 +128,11 @@ public:
 	/// @param dir_name 目录名称
 	/// @param node_name 节点名称
 	/// @return 失败返回 nullptr
-	virtual NodeItem* createNodeItem(const QString& dir_name, const QString& node_name);
+	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name );
+	/// @brief 根据节点目录与节点名称创建节点
+	/// @param new_node_item 追加的节点项
+	/// @return 返回窗口节点代码，失败返回 0
+	virtual size_t appendNodeItem( NodeItem *new_node_item );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

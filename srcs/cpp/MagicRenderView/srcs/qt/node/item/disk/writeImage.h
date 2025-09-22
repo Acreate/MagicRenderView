@@ -8,8 +8,8 @@ class WriteImage : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	WriteImage( NodeItem_ParentPtr_Type *parent )
-		: NodeItem( parent ) {
+	WriteImage(  )
+		: NodeItem(  ) {
 	}
 };
 #endif // WRITEIMAGE_H_H_HEAD__FILE__
