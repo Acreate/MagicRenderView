@@ -7,8 +7,7 @@
 
 #include <alias/type_alias.h>
 
-#include <qt/varType/varType.h>
-
+class VarType;
 class Application;
 class NodeItem;
 class NodePort : public QObject, public Type_Alias {
@@ -69,15 +68,7 @@ public:
 	virtual const VarType * getVar( ) const {
 		return var;
 	}
-	virtual void bindVar( VarType *bind_var ) {
-		auto old = var;
-		var = bind_var;
-		if( old )
-			old->disconnect( this );
-		if( bind_var )
-			connect( var, &VarType::deleteObjBefore, this, &NodePort::releaseVarType );
-		emit replaceVar( old, var );
-	}
+	virtual void bindVar( VarType *bind_var );
 	virtual bool updateProtLayout( ) = 0;
 protected Q_SLOTS:
 	virtual void releaseVarType( VarType *release_var_type ) {

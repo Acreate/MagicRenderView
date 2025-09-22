@@ -5,11 +5,46 @@
 #include <alias/type_alias.h>
 
 #include "../tools/tools.h"
-
+#define ConverPtr(left, right, __type) __type left = (__type)right
 class BinGenerate final {
 public:
-	class BinGenerateItem;
-	class Serialization final {
+	class Serialization;
+	class BinGenerateItem {
+	public:
+		friend class BinGenerate;
+	protected:
+		static Serialization serialization;
+	protected:
+		QString typeName;
+		size_t typeHasCode;
+	public:
+		virtual size_t fillUnityBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) = 0;
+		virtual size_t fillUnityObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) = 0;
+		virtual size_t fillVectorBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) = 0;
+		virtual size_t fillVectorObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) = 0;
+		virtual size_t fillPtrVectorBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) = 0;
+		virtual size_t fillPtrVectorObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) = 0;
+		virtual bool getNewObj( void **new_set_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) =0;
+		virtual bool removeNewObj( void *new_set_ptr ) = 0;
+		virtual bool isSerializationType( const QString &check_type_name, const size_t &type_has_code = 0 ) const {
+			bool cond = typeName == check_type_name;
+			if( cond && typeHasCode != 0 )
+				return type_has_code == typeHasCode;
+			return cond;
+		}
+		template< typename TType >
+		bool isSerializationType( ) const {
+			auto &typeInfo = typeid( TType );
+			return isSerializationType( typeInfo.name( ), typeInfo.hash_code( ) );
+		}
+	public:
+		BinGenerateItem( ) : typeName( "" ), typeHasCode( 0 ) {
+
+		}
+		virtual ~BinGenerateItem( ) { }
+	protected:
+	};
+	class Serialization {
 		friend class BinGenerate::BinGenerateItem;
 		Serialization( ) = default;
 		Serialization( const Serialization &other ) = delete;
@@ -185,448 +220,170 @@ public:
 			// 小端：返回 1，说明数据的低字节在内存的低地址存放
 			return un.c == 1;
 		}
-	};
-
-	class BinGenerateItem {
-	public:
-		friend class BinGenerate;
-
-		class Unity {
-		public:
-			friend class BinGenerate;
-		private:
-			QString unityTypeName;
-			void *ptr = nullptr;
-			bool isConst;
-		public:
-			virtual void clear( ) {
-				unityTypeName.clear( );
-				ptr = nullptr;
-			}
-			template< typename TClassName >
-			void init( TClassName &unity ) {
-				unityTypeName = typeid( TClassName ).name( );
-				ptr = ( void * ) &unity;
-				isConst = true;
-			}
-			template< typename TClassName >
-			void init( const TClassName &unity ) {
-				unityTypeName = typeid( const TClassName ).name( );
-				ptr = ( void * ) &unity;
-				isConst = true;
-			}
-			template< typename TClassName >
-			void init( TClassName *unity ) {
-				unityTypeName = typeid( TClassName ).name( );
-				ptr = ( void * ) unity;
-				isConst = true;
-			}
-			template< typename TClassName >
-			void init( const TClassName *unity ) {
-				unityTypeName = typeid( const TClassName ).name( );
-				ptr = ( void * ) unity;
-				isConst = true;
-			}
-			template< typename TClassName >
-			TClassName * get( bool &is_const ) const {
-				if( unityTypeName != typeid( TClassName ).name( ) )
-					return nullptr;
-				is_const = isConst;
-				return ( TClassName * ) ptr;
-
-			}
-			template< typename TClassName >
-			TClassName * get( ) const {
-				if( unityTypeName != typeid( TClassName ).name( ) )
-					return nullptr;
-				return ( TClassName * ) ptr;
-			}
-
-			virtual ~Unity( ) = default;
-		};
-
-		class UnityVector {
-		public:
-			friend class BinGenerate;
-		private:
-			QString unityTypeName;
-			void *ptr = nullptr;
-			bool isConst;
-		public:
-			virtual void clear( ) {
-				unityTypeName.clear( );
-				ptr = nullptr;
-			}
-			template< typename TClassName >
-			void init( std_vector< TClassName > &vector ) {
-				unityTypeName = typeid( std_vector< TClassName > ).name( );
-				ptr = ( void * ) &vector;
-				isConst = false;
-			}
-			template< typename TClassName >
-			void init( const std_vector< TClassName > &vector ) {
-				unityTypeName = typeid( const std_vector< TClassName > ).name( );
-				ptr = ( void * ) &vector;
-				isConst = true;
-			}
-			template< typename TClassName >
-			void init( std_vector< TClassName > *vector ) {
-				unityTypeName = typeid( std_vector< TClassName > ).name( );
-				ptr = ( void * ) vector;
-				isConst = false;
-			}
-			template< typename TClassName >
-			void init( const std_vector< TClassName > *vector ) {
-				unityTypeName = typeid( const std_vector< TClassName > ).name( );
-				ptr = ( void * ) vector;
-				isConst = true;
-			}
-			template< typename TClassName >
-			std_vector< TClassName > * get( bool &is_const ) const {
-				if( unityTypeName != typeid( std_vector< TClassName > ).name( ) )
-					return nullptr;
-				is_const = isConst;
-				return ( std_vector< TClassName > * ) ptr;
-
-			}
-			virtual ~UnityVector( ) = default;
-		};
-		class UnityPtrVector {
-		public:
-			friend class BinGenerate;
-		protected:
-			QString unityTypeName;
-			void *ptr = nullptr;
-			bool isConst;
-		public:
-			virtual void clear( ) {
-				unityTypeName.clear( );
-				ptr = nullptr;
-				isConst = false;
-			}
-			template< typename TClassName >
-			void init( std_vector< TClassName * > &vector ) {
-				unityTypeName = typeid( std_vector< TClassName * > ).name( );
-				ptr = ( void * ) &vector;
-				isConst = false;
-			}
-			template< typename TClassName >
-			void init( const std_vector< TClassName * > &vector ) {
-				unityTypeName = typeid( std_vector< TClassName * > ).name( );
-				ptr = ( void * ) &vector;
-				isConst = true;
-			}
-			template< typename TClassName >
-			void init( std_vector< TClassName * > *vector ) {
-				unityTypeName = typeid( std_vector< TClassName * > ).name( );
-				ptr = ( void * ) vector;
-				isConst = false;
-			}
-			template< typename TClassName >
-			void init( const std_vector< TClassName * > *vector ) {
-				unityTypeName = typeid( const std_vector< TClassName * > ).name( );
-				ptr = ( void * ) vector;
-				isConst = true;
-			}
-			template< typename TClassName >
-			std_vector< TClassName * > * get( bool &is_const ) const {
-				if( unityTypeName != typeid( std_vector< TClassName * > ).name( ) )
-					return nullptr;
-				is_const = isConst;
-				return ( std_vector< TClassName * > * ) ptr;
-			}
-			virtual ~UnityPtrVector( ) = default;
-		};
-	protected:
-		static Serialization serialization;
-	protected:
-		QString typeName;
-		size_t typeHasCode;
-		std_shared_ptr< Unity > unitySharedPtr;
-	public:
-		virtual size_t fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
-		virtual size_t fillBin( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
-		virtual size_t fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const = 0;
-		virtual size_t fillObj( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const = 0;
-		virtual bool isSerializationType( const QString &check_type_name, const size_t &type_has_code = 0 ) const {
-			bool cond = typeName == check_type_name;
-			if( cond && typeHasCode != 0 )
-				return type_has_code == typeHasCode;
-			return cond;
-		}
-		template< typename TType >
-		bool isSerializationType( ) const {
-			auto &typeInfo = typeid( TType );
-			return isSerializationType( typeInfo.name( ), typeInfo.hash_code( ) );
-		}
-	public:
-		BinGenerateItem( ) : typeName( "" ), typeHasCode( 0 ), unitySharedPtr( new Unity ) {
-
-		}
-		virtual ~BinGenerateItem( ) { }
-	protected:
 		template< typename TPtrType >
-		size_t fillBinTemplate( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
+		size_t fillUnityBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			ConverPtr( dataPtr, var_type, const TPtrType * );
 			if( dataPtr == nullptr )
 				return 0;
 			std_vector< uint8_t > resultBuff;
 			std_vector< uint8_t > countBuff;
 			std_vector< uint8_t > nameBuff;
-			serialization.fillBinVector( typeName, nameBuff );
+			fillBinVector( bin_generate_item->typeName, nameBuff );
 			resultBuff.append_range( nameBuff );
-			size_t count = serialization.fillBinVector( *dataPtr, nameBuff );
-			serialization.fillBinVector( count, countBuff );
+			size_t count = fillBinVector( *dataPtr, nameBuff );
+			fillBinVector( count, countBuff );
 			resultBuff.append_range( countBuff );
 			resultBuff.append_range( nameBuff );
 			count = resultBuff.size( );
-			serialization.fillBinVector( count, countBuff );
+			fillBinVector( count, countBuff );
 			result_bin_data_vector.clear( );
 			result_bin_data_vector.append_range( countBuff );
 			result_bin_data_vector.append_range( resultBuff );
 			return result_bin_data_vector.size( );
 		}
 		template< typename TPtrType >
-		size_t fillObjTemplate( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
+		size_t fillVectorBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			ConverPtr( dataPtr, var_type, const std_vector< TPtrType > * );
+			if( dataPtr == nullptr )
+				return 0;
+			std_vector< uint8_t > resultBuff;
+			std_vector< uint8_t > nameBuff;
+			size_t count = fillBinVector( bin_generate_item->typeName, nameBuff );
+			resultBuff.append_range( nameBuff );
+			count = dataPtr->size( );
+			fillBinVector( count, nameBuff );
+			resultBuff.append_range( nameBuff );
+			size_t index = 0;
+			auto data = dataPtr->data( );
+			for( ; index < count; ++index ) {
+				bin_generate_item->fillUnityBin( data + index, nameBuff );
+				resultBuff.append_range( nameBuff );
+			}
+			count = resultBuff.size( );
+			fillBinVector( count, nameBuff );
+			result_bin_data_vector.clear( );
+			result_bin_data_vector.append_range( nameBuff );
+			result_bin_data_vector.append_range( resultBuff );
+			return result_bin_data_vector.size( );
+		}
+		template< typename TPtrType >
+		size_t fillPtrVectorBin( BinGenerateItem *bin_generate_item, const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
+			ConverPtr( dataPtr, var_type, const std_vector< TPtrType * > * );
+			if( dataPtr == nullptr )
+				return 0;
+			std_vector< uint8_t > resultBuff;
+			std_vector< uint8_t > nameBuff;
+			size_t count = fillBinVector( bin_generate_item->typeName, nameBuff );
+			resultBuff.append_range( nameBuff );
+			count = dataPtr->size( );
+			fillBinVector( count, nameBuff );
+			resultBuff.append_range( nameBuff );
+			size_t index = 0;
+			auto data = dataPtr->data( );
+			for( ; index < count; ++index ) {
+				bin_generate_item->fillUnityBin( *( data + index ), nameBuff );
+				resultBuff.append_range( nameBuff );
+			}
+			count = resultBuff.size( );
+			fillBinVector( count, nameBuff );
+			result_bin_data_vector.clear( );
+			result_bin_data_vector.append_range( nameBuff );
+			result_bin_data_vector.append_range( resultBuff );
+			return result_bin_data_vector.size( );
+		}
+		template< typename TPtrType >
+		size_t fillUnityObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			ConverPtr( dataPtr, var_type, TPtrType * );
 			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
 			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;
 			if( menorySize > mod )
 				return 0;
 			auto offset = source_ptr + count;
 			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, mod );
-			if( converTypeName != typeName )
+			count = fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != bin_generate_item->typeName )
 				return 0;
 			mod -= count;
 			offset += count;
-			count = serialization.fillObjVector( &menorySize, offset, mod );
+			count = fillObjVector( &menorySize, offset, mod );
 			mod -= count;
 			offset += count;
-			count = serialization.fillObjVector( dataPtr, offset, mod );
+			count = fillObjVector( dataPtr, offset, mod );
 			return offset - source_ptr + count;
 		}
 		template< typename TPtrType >
-		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
+		size_t fillVectorObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			ConverPtr( dataPtr, var_type, std_vector< TPtrType > * );
 			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
 			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;
 			if( mod < menorySize )
 				return 0;
 			auto offset = source_ptr + count;
 			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, mod );
-			if( converTypeName != typeName )
+			count = fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != bin_generate_item->typeName )
 				return 0;
+
 			mod -= count;
 			offset += count;
 			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			count = fillObjVector( &vectorCount, offset, mod );
 			mod -= count;
 			offset += count;
 			dataPtr->resize( vectorCount );
 			auto data = dataPtr->data( );
 			size_t index = 0;
-			auto unity = unitySharedPtr.get( );
 			for( ; index < vectorCount; ++index ) {
-				TPtrType var;
-				unitySharedPtr->init( var );
-				count = this->fillObj( unity, offset, mod );
+				count = bin_generate_item->fillUnityObj( data + index, offset, mod );
 				mod -= count;
 				offset += count;
-				data[ index ] = var;
 			}
 			return offset - source_ptr;
 		}
 		template< typename TPtrType >
-		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
+		size_t fillPtrVectorObj( BinGenerateItem *bin_generate_item, void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+			ConverPtr( dataPtr, var_type, std_vector< TPtrType * > * );
 			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
 				return 0;
 			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			size_t count = fillObjVector( &menorySize, source_ptr, source_ptr_count );
 			auto mod = source_ptr_count - count;
 			if( mod < menorySize )
 				return 0;
 			auto offset = source_ptr + count;
 			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, mod );
-			if( converTypeName != typeName )
+			count = fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != bin_generate_item->typeName )
 				return 0;
 			mod -= count;
 			offset += count;
 			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			count = fillObjVector( &vectorCount, offset, mod );
 			mod -= count;
 			offset += count;
-			size_t index = 0;
-			count = dataPtr->size( );
-			auto data = dataPtr->data( );
-			for( ; index < count; ++index ) delete data[ index ];
 			dataPtr->resize( vectorCount );
-			data = dataPtr->data( );
-			auto unity = unitySharedPtr.get( );
+			TPtrType **data = dataPtr->data( );
+			size_t index = 0;
 			for( ; index < vectorCount; ++index ) {
-				auto var = new TPtrType;
-				unity->init( var );
-				count = this->fillObj( unity, offset, mod );
+				bin_generate_item->getNewObj( ( void ** ) ( data + index ), offset, mod );
+				auto varType = *( data + index );
+				count = bin_generate_item->fillUnityObj( varType, offset, mod );
+				if( count == 0 ) {
+					for( ; count < index; ++count )
+						bin_generate_item->removeNewObj( *( data + index ) );
+					dataPtr->clear( );
+					return 0;
+				}
 				mod -= count;
 				offset += count;
-				data[ index ] = var;
 			}
 			return offset - source_ptr;
-		}
-		template< typename TPtrType >
-		using TFGenerateObjFunction = std_function< std_shared_ptr< TPtrType >( const size_t &, const size_t &, UnityVector *, Unity *, const uint8_t *, const size_t & ) >;
-		template< typename TPtrType >
-		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count, const TFGenerateObjFunction< TPtrType > &generate_obj_function ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 || generate_obj_function == nullptr )
-				return 0;
-			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
-			auto mod = source_ptr_count - count;
-			if( mod < menorySize )
-				return 0;
-			auto offset = source_ptr + count;
-			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, mod );
-			if( converTypeName != typeName )
-				return 0;
-			mod -= count;
-			offset += count;
-			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
-			mod -= count;
-			offset += count;
-			size_t index = 0;
-			auto unity = unitySharedPtr.get( );
-			for( ; index < vectorCount; ++index ) {
-				auto generateObjFunction = generate_obj_function( index, vectorCount, var_type, unity, offset, mod );
-				unitySharedPtr->init( generateObjFunction.get( ) );
-				count = this->fillObj( unity, offset, mod );
-				mod -= count;
-				offset += count;
-				dataPtr->emplace_back( *( generateObjFunction.get( ) ) );
-			}
-			return offset - source_ptr;
-		}
-		template< typename TPtrType >
-		using TFGeneratePtrFunction = std_function< TPtrType*( const size_t &, const size_t &, UnityPtrVector *, Unity *, const uint8_t *, const size_t & ) >;
-		template< typename TPtrType >
-		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count, const TFGeneratePtrFunction< TPtrType > &generate_ptr_function ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
-				return 0;
-			size_t menorySize;
-			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
-			auto mod = source_ptr_count - count;
-			if( mod < menorySize )
-				return 0;
-			auto offset = source_ptr + count;
-			QString converTypeName;
-			count = serialization.fillObjVector( &converTypeName, offset, mod );
-			if( converTypeName != typeName )
-				return 0;
-			mod -= count;
-			offset += count;
-			size_t vectorCount;
-			count = serialization.fillObjVector( &vectorCount, offset, mod );
-			mod -= count;
-			offset += count;
-			size_t index = 0;
-			count = dataPtr->size( );
-			auto data = dataPtr->data( );
-			for( ; index < count; ++index )
-				delete data[ index ];
-			dataPtr->resize( vectorCount );
-			data = dataPtr->data( );
-			auto unity = unitySharedPtr.get( );
-			for( ; index < vectorCount; ++index ) {
-				auto var = generate_ptr_function( index, vectorCount, var_type, unity, offset, mod );
-				unity->init( var );
-				count = this->fillObj( unity, offset, mod );
-				mod -= count;
-				offset += count;
-				data[ index ] = var;
-			}
-			return offset - source_ptr;
-		}
-		template< typename TPtrType >
-		size_t fillBinTemplate( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr )
-				return 0;
-			std_vector< uint8_t > resultBuff;
-			std_vector< uint8_t > countBuff;
-			std_vector< uint8_t > nameBuff;
-			size_t count = serialization.fillBinVector( typeName, nameBuff );
-			serialization.fillBinVector( count, countBuff );
-			resultBuff.append_range( countBuff );
-			resultBuff.append_range( nameBuff );
-			count = dataPtr->size( );
-			serialization.fillBinVector( count, countBuff );
-			resultBuff.append_range( countBuff );
-			size_t index = 0;
-			auto data = dataPtr->data( );
-			auto unity = unitySharedPtr.get( );
-			for( ; index < count; ++index ) {
-				unity->init( data[ index ] );
-				this->fillBin( unity, nameBuff );
-				resultBuff.append_range( nameBuff );
-			}
-			count = resultBuff.size( );
-			serialization.fillBinVector( count, countBuff );
-			result_bin_data_vector.clear( );
-			result_bin_data_vector.append_range( countBuff );
-			result_bin_data_vector.append_range( resultBuff );
-			return 0;
-		}
-		template< typename TPtrType >
-		size_t fillBinTemplate( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-			bool isConst;
-			auto dataPtr = var_type->get< TPtrType >( isConst );
-			if( dataPtr == nullptr )
-				return 0;
-			std_vector< uint8_t > resultBuff;
-			std_vector< uint8_t > countBuff;
-			std_vector< uint8_t > nameBuff;
-			size_t count = serialization.fillBinVector( typeName, nameBuff );
-			serialization.fillBinVector( count, countBuff );
-			resultBuff.append_range( countBuff );
-			resultBuff.append_range( nameBuff );
-			count = dataPtr->size( );
-			serialization.fillBinVector( count, countBuff );
-			resultBuff.append_range( countBuff );
-			size_t index = 0;
-			auto data = dataPtr->data( );
-			auto unity = unitySharedPtr.get( );
-			for( ; index < count; ++index ) {
-				unity->init( *data[ index ] );
-				this->fillBin( unity, nameBuff );
-				resultBuff.append_range( nameBuff );
-			}
-			count = resultBuff.size( );
-			serialization.fillBinVector( count, countBuff );
-			result_bin_data_vector.clear( );
-			result_bin_data_vector.append_range( countBuff );
-			result_bin_data_vector.append_range( resultBuff );
-			return 0;
 		}
 	};
 protected:
@@ -694,9 +451,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::Unity unity;
-		unity.init( var_type );
-		binGenerateItem->fillBin( &unity, result_bin_data_vector );
+		binGenerateItem->fillUnityBin( var_type, result_bin_data_vector );
 		return result_bin_data_vector.size( );
 	}
 
@@ -710,9 +465,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::Unity unity;
-		unity.init( var_type );
-		binGenerateItem->fillBin( &unity, result_bin_data_vector );
+		binGenerateItem->fillUnityBin( &var_type, result_bin_data_vector );
 		return result_bin_data_vector.size( );
 	}
 
@@ -726,9 +479,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::UnityVector unity;
-		unity.init( obj );
-		binGenerateItem->fillBin( &unity, result_bin );
+		binGenerateItem->fillVectorBin( &obj, result_bin );
 		return result_bin.size( );
 	}
 	/// @brief 数组转换到二进制序列
@@ -741,9 +492,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::UnityPtrVector unity;
-		unity.init( obj );
-		binGenerateItem->fillBin( &unity, result_bin );
+		binGenerateItem->fillPtrVectorBin( &obj, result_bin );
 		return result_bin.size( );
 	}
 	/// @brief 对象直接填充二进制
@@ -757,9 +506,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TBaseType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::Unity unity;
-		unity.init( var_type );
-		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+		return binGenerateItem->fillUnityObj( var_type, source_data_ptr, source_data_count );
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -774,9 +521,7 @@ public:
 		if( binGenerateItem == nullptr )
 			return 0;
 
-		BinGenerateItem::UnityVector unity;
-		unity.init( var_type );
-		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+		return binGenerateItem->fillVectorObj( var_type, source_data_ptr, source_data_count );
 	}
 
 	/// @brief 对象直接填充二进制-数组
@@ -791,9 +536,7 @@ public:
 		BinGenerateItem *binGenerateItem = getBinGenerateItemPtr< TVectorIteratorType >( );
 		if( binGenerateItem == nullptr )
 			return 0;
-		BinGenerateItem::UnityPtrVector unity;
-		unity.init( var_type );
-		return binGenerateItem->fillObj( &unity, source_data_ptr, source_data_count );
+		return binGenerateItem->fillPtrVectorObj( var_type, source_data_ptr, source_data_count );
 	}
 };
 

@@ -9,7 +9,6 @@
 
 #include <qt/tools/tools.h>
 
-#include "../prot/NodePort.h"
 
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
@@ -19,6 +18,7 @@
 	Def_Last_Firend_StaticMetaInfo( NodeItem );\
 	friend class NodeItemGenerate
 
+class VarType;
 class Application;
 class NodeOutputPort;
 class NodeInputPort;

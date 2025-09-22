@@ -1,9 +1,8 @@
 ﻿#include "./qImageSerialization.h"
 #include <QBuffer>
-size_t QImageSerialization::fillBin( const Unity *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	// return fillBinTemplate< t_current_type >( var_type, result_bin_data_vector );
+size_t QImageSerialization::fillUnityBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
 
-	t_current_type *image = var_type->get< t_current_type >( );
+	ConverPtr( image, var_type, const t_current_type* );
 	if( image == nullptr || image->isNull( ) == true )
 		return 0;
 
@@ -30,12 +29,12 @@ size_t QImageSerialization::fillBin( const Unity *var_type, std_vector< uint8_t 
 	result_bin_data_vector.append_range( resultBuff );
 	return result_bin_data_vector.size( );
 }
-size_t QImageSerialization::fillObj( Unity *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
+size_t QImageSerialization::fillUnityObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
 
 	if( source_ptr_count == 0 || source_ptr == nullptr )
 		return 0;
 
-	QImage *image = var_type->get< t_current_type >( );
+	ConverPtr( image, var_type, t_current_type* );
 	if( image == nullptr )
 		return 0;
 
@@ -61,21 +60,23 @@ size_t QImageSerialization::fillObj( Unity *var_type, const uint8_t *source_ptr,
 	offsetPtr += count;
 	return offsetPtr - source_ptr;
 }
-size_t QImageSerialization::fillBin( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	return fillBinTemplate< t_current_type >( var_type, result_bin_data_vector );
+size_t QImageSerialization::fillVectorBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
+	return serialization.fillVectorBin< t_current_type >( this, var_type, result_bin_data_vector );
 }
-size_t QImageSerialization::fillObj( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-	if( source_ptr_count == 0 || source_ptr == nullptr )
-		return 0;
-
-	return fillObjTemplate< t_current_type >( var_type, source_ptr, source_ptr_count );
+size_t QImageSerialization::fillVectorObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
+	return serialization.fillVectorObj< t_current_type >( this, var_type, source_ptr, source_ptr_count );
 }
-size_t QImageSerialization::fillBin( const UnityPtrVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
-	return fillBinTemplate< t_current_type >( var_type, result_bin_data_vector );
+size_t QImageSerialization::fillPtrVectorBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {
+	return serialization.fillPtrVectorBin< t_current_type >( this, var_type, result_bin_data_vector );
 }
-size_t QImageSerialization::fillObj( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) const {
-	if( source_ptr_count == 0 || source_ptr == nullptr )
-		return 0;
-
-	return fillObjTemplate< t_current_type >( var_type, source_ptr, source_ptr_count );
+size_t QImageSerialization::fillPtrVectorObj( void *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
+	return serialization.fillPtrVectorObj< t_current_type >( this, var_type, source_ptr, source_ptr_count );
+}
+bool QImageSerialization::getNewObj( void **new_set_ptr, const uint8_t *source_ptr, const size_t &source_ptr_count ) {
+	*new_set_ptr = new t_current_type;
+	return true;
+}
+bool QImageSerialization::removeNewObj( void *new_set_ptr ) {
+	delete ( t_current_type * ) new_set_ptr;
+	return true;
 }

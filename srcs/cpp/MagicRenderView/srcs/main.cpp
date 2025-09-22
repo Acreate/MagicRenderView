@@ -1,4 +1,6 @@
-﻿#include "qt/application/application.h"
+﻿#include <qfile.h>
+
+#include "qt/application/application.h"
 #include "qt/generate/varTypeGenerate.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
@@ -10,8 +12,9 @@ int testQStringSerialization( ) {
 	QString ceshi2;
 	BinGenerate::toBin( ceshi1, buff );
 	BinGenerate::toObj( &ceshi2, buff.data( ), buff.size( ) );
-	qDebug( ) << "--------------";
+	qDebug( ) << "------	QString		--------";
 	qDebug( ) << ceshi1;
+	qDebug( ) << "-----		反序列输出";
 	qDebug( ) << ceshi2;
 	qDebug( ) << "--------------";
 	//return 0;
@@ -22,8 +25,9 @@ int testQStringSerialization( ) {
 	std_vector< QString > ceshiv2;
 	BinGenerate::toBin( ceshiv1, buff );
 	BinGenerate::toObj( &ceshiv2, buff.data( ), buff.size( ) );
-	qDebug( ) << "--------------";
+	qDebug( ) << "------	std_vector< QString >	--------";
 	qDebug( ) << ceshiv1;
+	qDebug( ) << "-----		反序列输出";
 	qDebug( ) << ceshiv2;
 	qDebug( ) << "--------------";
 	std_vector< QString * > ceshivp1;
@@ -33,9 +37,10 @@ int testQStringSerialization( ) {
 	std_vector< QString * > ceshivp2;
 	BinGenerate::toBin( ceshivp1, buff );
 	BinGenerate::toObj( &ceshivp2, buff.data( ), buff.size( ) );
-	qDebug( ) << "--------------";
+	qDebug( ) << "------	std_vector< QString * >	--------";
 	for( auto item : ceshivp1 )
 		qDebug( ) << *item;
+	qDebug( ) << "-----		反序列输出";
 	for( auto item : ceshivp2 )
 		qDebug( ) << *item;
 	qDebug( ) << "--------------";
@@ -51,7 +56,7 @@ int testQStringSerialization( ) {
 		tools::debug::printError( "无法追加元素" );
 		return 0;
 	}
-	qDebug( ) << "--------------";
+	qDebug( ) << "------	 VarTypeGenerate::templateVarType< QString >	--------";
 	qDebug( ) << "\rtype::" << mkVarTypeGeneratePair->getUnityTypeName( );
 	for( size_t index = 0; index < count; ++index )
 		qDebug( ) << *data[ index ];
@@ -65,6 +70,7 @@ int testQStringSerialization( ) {
 	}
 	qDebug( ) << "--------------";
 	qDebug( ) << "\rtype::" << var->getUnityTypeName( );
+	qDebug( ) << "-----		反序列输出";
 	data = var->data< QString >( );
 	if( data == nullptr )
 		return 0;
@@ -90,6 +96,7 @@ void testIntSerialization( ) {
 	BinGenerate::toObj( &ceshi2, buff.data( ), buff.size( ) );
 	qDebug( ) << "--------------";
 	qDebug( ) << ceshi1;
+	qDebug( ) << "-----		反序列输出";
 	qDebug( ) << ceshi2;
 	qDebug( ) << "--------------";
 	//return 0;
@@ -102,6 +109,7 @@ void testIntSerialization( ) {
 	BinGenerate::toObj( &ceshiv2, buff.data( ), buff.size( ) );
 	qDebug( ) << "--------------";
 	qDebug( ) << ceshiv1;
+	qDebug( ) << "-----		反序列输出";
 	qDebug( ) << ceshiv2;
 	qDebug( ) << "--------------";
 	std_vector< uint16_t * > ceshivp1;
@@ -114,6 +122,7 @@ void testIntSerialization( ) {
 	qDebug( ) << "--------------";
 	for( auto item : ceshivp1 )
 		qDebug( ) << *item;
+	qDebug( ) << "-----		反序列输出";
 	for( auto item : ceshivp2 )
 		qDebug( ) << *item;
 	qDebug( ) << "--------------";
@@ -133,10 +142,10 @@ void testIntSerialization( ) {
 	qDebug( ) << "\rtype::" << mkVarTypeGeneratePair->getUnityTypeName( );
 	for( size_t index = 0; index < count; ++index )
 		qDebug( ) << *data[ index ];
-	qDebug( ) << "--------------";
 
 	buff = VarTypeGenerate::toBin( mkVarTypeGeneratePair );
 	auto var = VarTypeGenerate::toObj( count, buff.data( ), buff.size( ) );
+	qDebug( ) << "-----		反序列输出";
 	if( var == nullptr ) {
 		tools::debug::printError( "加载对象失败" );
 		return;
@@ -168,14 +177,25 @@ void testQtSerialization( ) {
 
 	QImage image;
 	image.load( ":/ico/play_error.png" );
+	QFile::remove( "./image1.png" );
 	image.save( "./image1.png" );
 	BinGenerate::toBin( image, buff );
 	QImage image2;
 	BinGenerate::toObj( &image2, buff.data( ), buff.size( ) );
+	QFile::remove( "./image2.png" );
 	image2.save( "./image2.png" );
+}
+void test( ) {
+
+	testQStringSerialization( );
+	testIntSerialization( );
+	testQtSerialization( );
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
+
+	test( );
+
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );
