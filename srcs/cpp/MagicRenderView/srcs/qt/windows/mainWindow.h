@@ -19,8 +19,6 @@ protected:
 	QString keyFirst;
 	/// @brief 窗口的工具栏菜单
 	QMenuBar *mainMenuBar;
-	/// @brief 主要菜单
-	QMenu *mainMenu;
 	/// @brief 主要滚动视窗
 	QScrollArea *mainScrollArea;
 	/// @brief 主要操作视窗

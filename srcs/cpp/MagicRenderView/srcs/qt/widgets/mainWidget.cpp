@@ -149,7 +149,7 @@ void MainWidget::updateSupport( ) {
 			auto joint = dirName.isEmpty( ) ? className : dirName + "/" + className;
 			supportNodeName.emplace_back( joint );
 			pairs.emplace_back( addAction, joint );
-			connect( addAction, &QAction::triggered, this, &MainWidget::createNodeItem );
+			connect( addAction, &QAction::triggered, [this, dirName, className]( ) { MainWidget::createNodeItem( dirName, className ); } );
 		}
 		supportNode.emplace_back( dirMenu, pairs );
 	}

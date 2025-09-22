@@ -43,26 +43,25 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	if( mainMenuBar == nullptr )
 		mainMenuBar = new QMenuBar( this );
 
-	mainMenu = new QMenu( "应用", this );
-	mainMenuBar->addMenu( mainMenu );
+	QMenu *currentMenu = new QMenu( "文件", this );
+	mainMenuBar->addMenu( currentMenu );
 
-	QAction *action;
-	
-	mainMenu->addSeparator( );
-	action = mainMenu->addAction( "保存..." );
-	connect( action, &QAction::triggered, [this]( ) {
+	QAction *currentAction;
+
+	currentAction = currentMenu->addAction( "保存..." );
+	connect( currentAction, &QAction::triggered, [this]( ) {
 		QString workPath = QDir::currentPath( );
 		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
 		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 		QString saveFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview)" );
 		if( saveFileName.isEmpty( ) )
 			return;
-		qsizetype lastIndexOf = workPath.lastIndexOf( "/" );
-		auto fileName = workPath.mid( lastIndexOf + 1 );
+		qsizetype lastIndexOf = saveFileName.lastIndexOf( "/" );
+		auto fileName = saveFileName.mid( lastIndexOf + 1 );
 		lastIndexOf = fileName.lastIndexOf( "." );
 		if( lastIndexOf == -1 )
 			saveFileName.append( ".mr" );
-		appInstance->setAppIniValue( normalKey, workPath );
+		appInstance->setAppIniValue( normalKey, saveFileName );
 		std_vector< uint8_t > saveBin;
 		if( mainWidget->objToBin( saveBin ) == 0 )
 			return;
@@ -74,15 +73,15 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		}
 	} );
 
-	action = mainMenu->addAction( "加载..." );
-	connect( action, &QAction::triggered, [this]( ) {
+	currentAction = currentMenu->addAction( "加载..." );
+	connect( currentAction, &QAction::triggered, [this]( ) {
 		QString workPath = QDir::currentPath( );
 		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
 		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 		QString loadFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
 		if( loadFileName.isEmpty( ) )
 			return;
-		appInstance->setAppIniValue( normalKey, workPath );
+		appInstance->setAppIniValue( normalKey, loadFileName );
 		QFile file( loadFileName );
 		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
 			QByteArray byteArray = file.readAll( );
@@ -90,14 +89,16 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			return;
 		}
 	} );
-	
-	mainMenu->addSeparator( );
-	action = mainMenu->addAction( "重启" );
-	connect( action, &QAction::triggered, [this]( ) {
+
+	currentMenu = new QMenu( "配置", this );
+	mainMenuBar->addMenu( currentMenu );
+	currentMenu = currentMenu->addMenu( "重启&&退出" );
+	currentAction = currentMenu->addAction( "重启" );
+	connect( currentAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->resetApp( );
 	} );
-	action = mainMenu->addAction( "退出" );
-	connect( action, &QAction::triggered, [this]( ) {
+	currentAction = currentMenu->addAction( "退出" );
+	connect( currentAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 

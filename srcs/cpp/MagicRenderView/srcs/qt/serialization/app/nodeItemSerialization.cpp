@@ -1,4 +1,6 @@
 ﻿#include "./nodeItemSerialization.h"
+#include <qt/node/item/nodeItem.h>
+#include <qt/node/prot/NodePort.h>
 NodeItemSerialization::NodeItemSerialization( ) {
 	auto &typeInfo = typeid( t_current_type );
 	typeName = typeInfo.name( );

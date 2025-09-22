@@ -489,6 +489,84 @@ public:
 			return offset - source_ptr;
 		}
 		template< typename TPtrType >
+		using TFGenerateObjFunction = std_function< std_shared_ptr< TPtrType >( const size_t &, const size_t &, UnityVector *, Unity *, const uint8_t *, const size_t & ) >;
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count, const TFGenerateObjFunction< TPtrType > &generate_obj_function ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 || generate_obj_function == nullptr )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			size_t index = 0;
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				auto generateObjFunction = generate_obj_function( index, vectorCount, var_type, unity, offset, mod );
+				unitySharedPtr->init( generateObjFunction.get( ) );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				dataPtr->emplace_back( *( generateObjFunction.get( ) ) );
+			}
+			return offset - source_ptr;
+		}
+		template< typename TPtrType >
+		using TFGeneratePtrFunction = std_function< TPtrType*( const size_t &, const size_t &, UnityPtrVector *, Unity *, const uint8_t *, const size_t & ) >;
+		template< typename TPtrType >
+		size_t fillObjTemplate( UnityPtrVector *var_type, const uint8_t *source_ptr, const size_t &source_ptr_count, const TFGeneratePtrFunction< TPtrType > &generate_ptr_function ) const {
+			bool isConst;
+			auto dataPtr = var_type->get< TPtrType >( isConst );
+			if( dataPtr == nullptr || source_ptr == nullptr || source_ptr_count == 0 )
+				return 0;
+			size_t menorySize;
+			size_t count = serialization.fillObjVector( &menorySize, source_ptr, source_ptr_count );
+			auto mod = source_ptr_count - count;
+			if( mod < menorySize )
+				return 0;
+			auto offset = source_ptr + count;
+			QString converTypeName;
+			count = serialization.fillObjVector( &converTypeName, offset, mod );
+			if( converTypeName != typeName )
+				return 0;
+			mod -= count;
+			offset += count;
+			size_t vectorCount;
+			count = serialization.fillObjVector( &vectorCount, offset, mod );
+			mod -= count;
+			offset += count;
+			size_t index = 0;
+			count = dataPtr->size( );
+			auto data = dataPtr->data( );
+			for( ; index < count; ++index )
+				delete data[ index ];
+			dataPtr->resize( vectorCount );
+			data = dataPtr->data( );
+			auto unity = unitySharedPtr.get( );
+			for( ; index < vectorCount; ++index ) {
+				auto var = generate_ptr_function( index, vectorCount, var_type, unity, offset, mod );
+				unity->init( var );
+				count = this->fillObj( unity, offset, mod );
+				mod -= count;
+				offset += count;
+				data[ index ] = var;
+			}
+			return offset - source_ptr;
+		}
+		template< typename TPtrType >
 		size_t fillBinTemplate( const UnityVector *var_type, std_vector< uint8_t > &result_bin_data_vector ) const {
 			bool isConst;
 			auto dataPtr = var_type->get< TPtrType >( isConst );
