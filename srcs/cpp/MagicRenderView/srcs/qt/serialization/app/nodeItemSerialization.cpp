@@ -4,6 +4,8 @@
 
 #include <qt/generate/nodeItemGenerate.h>
 
+#include "../../node/prot/outputProt/nodeOutputPort.h"
+
 NodeItemSerialization::NodeItemSerialization( ) {
 	auto &typeInfo = typeid( t_current_type );
 	typeName = typeInfo.name( );
@@ -41,9 +43,11 @@ size_t NodeItemSerialization::fillUnityBin( const void *var_type, std_vector< ui
 	auto data = dataPtr->linkCode.data( );
 	for( ; index < count; ++index ) {
 		auto &pair = data[ index ];
-		serialization.fillBinVector( pair.first, buff );
+		serialization.fillBinVector( pair.first->generateCode, buff );
 		resultBuff.append_range( buff );
-		serialization.fillBinVector( pair.second, buff );
+		serialization.fillBinVector( pair.second->generateCode, buff );
+		resultBuff.append_range( buff );
+		serialization.fillBinVector( pair.second->varCode, buff );
 		resultBuff.append_range( buff );
 	}
 
@@ -81,9 +85,11 @@ size_t NodeItemSerialization::fillUnityObj( void *var_type, const uint8_t *sourc
 	size_t index = 0;
 	auto data = dataPtr->linkCode.data( );
 	for( ; index < needCount; ++index ) {
-		count = serialization.fillObjVector( &data[ index ].first, offsetPtr, mod );
+		count = serialization.fillObjVector( &data[ index ].first->generateCode, offsetPtr, mod );
 		Next_Ptr( offsetPtr, mod, count );
-		count = serialization.fillObjVector( &data[ index ].second, offsetPtr, mod );
+		count = serialization.fillObjVector( &data[ index ].second->generateCode, offsetPtr, mod );
+		Next_Ptr( offsetPtr, mod, count );
+		count = serialization.fillObjVector( &data[ index ].second->varCode, offsetPtr, mod );
 		Next_Ptr( offsetPtr, mod, count );
 	}
 	return offsetPtr - source_ptr;

@@ -9,7 +9,6 @@
 
 #include <qt/tools/tools.h>
 
-
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
 	friend class NodeItemGenerate
@@ -107,7 +106,7 @@ private:
 	/// @brief 边缘顶端空间大小
 	int borderTopSpace;
 	/// @brief 链接到该节点的映射列表
-	std_vector< std_pairt< size_t, size_t > > linkCode;
+	std_vector< std_pairt< NodeItem *, NodeOutputPort * > > linkCode;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;

@@ -8,7 +8,7 @@
 
 #include <qt/varType/varType.h>
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
-NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), var( nullptr ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
+NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ),  nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
 		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
@@ -66,13 +66,4 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 		return false;
 	}
 	return true;
-}
-void NodePort::bindVar( VarType *bind_var ) {
-	auto old = var;
-	var = bind_var;
-	if( old )
-		old->disconnect( this );
-	if( bind_var )
-		connect( var, &VarType::deleteObjBefore, this, &NodePort::releaseVarType );
-	emit replaceVar( old, var );
 }

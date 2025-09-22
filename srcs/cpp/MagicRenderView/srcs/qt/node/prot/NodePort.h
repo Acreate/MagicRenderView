@@ -18,8 +18,9 @@ private:
 	friend class NodeItemSerialization;
 	friend class MainWidget;
 protected:
+	size_t generateCode;
 	/// @brief 绑定变量
-	VarType *var;
+	size_t varCode;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
 	/// @brief 图标
@@ -64,19 +65,9 @@ public:
 		return portItemWidth;
 	}
 	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
-
-	virtual const VarType * getVar( ) const {
-		return var;
-	}
-	virtual void bindVar( VarType *bind_var );
 	virtual bool updateProtLayout( ) = 0;
-protected Q_SLOTS:
-	virtual void releaseVarType( VarType *release_var_type ) {
-		if( release_var_type == var )
-			bindVar( nullptr );
-	}
+
 Q_SIGNALS:
-	void replaceVar( VarType *old_var, VarType *new_var );
 	void releaseThiNodeProt(NodePort* release_ptr);
 };
 #endif // NODEPORT_H_H_HEAD__FILE__
