@@ -34,9 +34,7 @@ size_t QColorSerializtion::fillUnityBin( const void *var_type, std_vector< uint8
 	resultBuff.append_range( countBuff );
 	resultBuff.append_range( varBuff );
 
-	serialization.fillBinVector( resultBuff.size( ), countBuff );
-	result_bin_data_vector.clear( );
-	result_bin_data_vector.append_range( countBuff );
+	serialization.fillBinVector( resultBuff.size( ), result_bin_data_vector );
 	result_bin_data_vector.append_range( resultBuff );
 
 	return resultBuff.size( );

@@ -22,10 +22,14 @@ class VarType;
 class Application;
 class NodeOutputPort;
 class NodeInputPort;
+class NodeWidgetSerialization;
+class NodeItemSerialization;
+class MainWidget;
+
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
-private:
+public:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
@@ -102,11 +106,13 @@ private:
 	int borderRightSpace;
 	/// @brief 边缘顶端空间大小
 	int borderTopSpace;
+	/// @brief 链接到该节点的映射列表
+	std_vector< std_pairt< size_t, size_t > > linkCode;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 protected:
-	NodeItem(  );
+	NodeItem( );
 public:
 	~NodeItem( ) override;
 	virtual void setMainWidget( MainWidget *parent );

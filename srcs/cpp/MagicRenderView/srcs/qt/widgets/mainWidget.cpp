@@ -34,7 +34,6 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	renderWidgetActiveItem = nullptr;
 	leftMouseBtnSelectItem = nullptr;
 	leftMouseBtnDragItem = nullptr;
-	isSerialization = true;
 	updateSupport( );
 }
 MainWidget::~MainWidget( ) {
@@ -57,26 +56,22 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 }
 
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
-	if( isSerialization ) // 序列化时，停止相应
-		return nullptr;
 	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
 	if( appendNodeItem( nodeItem ) == 0 ) {
 		delete nodeItem;
 		return nullptr;
 	}
+	nodeItem->move( fromGlobalReleasePoint );
 	return nodeItem;
 }
 size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
-	if( isSerialization ) // 序列化时，停止相应
-		return 0;
+
 	new_node_item->setMainWidget( this );
 	if( new_node_item->intPortItems( this ) == false )
 		return 0;
-	new_node_item->generateCode = nodeItemGenerateCode;
-	++nodeItemGenerateCode;
-	isSerialization = true;
-	new_node_item->move( fromGlobalReleasePoint );
 	nodeItemList.emplace_back( new_node_item );
+	if( new_node_item->generateCode == 0 )
+		new_node_item->generateCode = nodeItemList.size( );
 
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
 		auto iterator = nodeItemList.begin( );
@@ -92,7 +87,6 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 
 	ensureVisibleToItemNode( new_node_item );
 	update( );
-	isSerialization = false;
 	return new_node_item->generateCode;
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
@@ -166,14 +160,11 @@ void MainWidget::updateSupport( ) {
 	}
 	supporVarType = VarTypeGenerate::supportTypes( );
 	supportInfoToBin( );
-	isSerialization = false;
 }
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-	if( isSerialization )
-		return;
 	globalReleasePos = QCursor::pos( );
 	fromGlobalReleasePoint = event->pos( );
 	switch( mouseButton ) {
@@ -258,8 +249,6 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( leftMouseBtnSelectItem == nullptr || isSerialization )
-		return;
 	mouseMovePoint = event->pos( );
 	if( leftMouseBtnDragItem )
 		leftMouseBtnDragItem->move( mouseMovePoint - modPoint );
@@ -268,8 +257,6 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-	if( isSerialization )
-		return;
 	globalPressPos = QCursor::pos( );
 	fromGlobalPressPoint = event->pos( );
 	switch( mouseButton ) {

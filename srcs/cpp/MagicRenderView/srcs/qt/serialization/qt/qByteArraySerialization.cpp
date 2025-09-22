@@ -24,9 +24,7 @@ size_t QByteArraySerialization::fillUnityBin( const void *var_type, std_vector< 
 		targetPtr[ index ] = sourcePtr[ index ];
 	resultBuff.append_range( varBuff );
 
-	serialization.fillBinVector( resultBuff.size( ), varBuff );
-	result_bin_data_vector.clear( );
-	result_bin_data_vector.append_range( varBuff );
+	serialization.fillBinVector( resultBuff.size( ), result_bin_data_vector );
 	result_bin_data_vector.append_range( resultBuff );
 	return result_bin_data_vector.size( );
 }

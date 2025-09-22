@@ -67,8 +67,8 @@ protected: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
 public: \
-	virtual QString getMetaObjectName( ); \
-	virtual QString getMetaObjectDir( )
+	virtual QString getMetaObjectName( ) const; \
+	virtual QString getMetaObjectDir( ) const
 
 #ifdef Def_Last_StaticMetaInfo
 #undef Def_Last_StaticMetaInfo
@@ -79,8 +79,8 @@ protected: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
 public: \
-	QString getMetaObjectName( ) override; \
-	QString getMetaObjectDir( ) override
+	QString getMetaObjectName( ) const override; \
+	QString getMetaObjectDir( ) const override
 
 #ifdef Def_Last_Firend_StaticMetaInfo
 #undef Def_Last_Firend_StaticMetaInfo
@@ -93,8 +93,8 @@ protected: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
 public: \
-	QString getMetaObjectName( ) override; \
-	QString getMetaObjectDir( ) override
+	QString getMetaObjectName( ) const override; \
+	QString getMetaObjectDir( ) const override
 #ifdef Imp_StaticMetaInfo
 #undef Imp_StaticMetaInfo
 #endif
@@ -106,10 +106,10 @@ public: \
 	QString Imp_Class::getStaticMetaObjectDir( ) { \
 		return Dir_Translate; \
 	}\
-	QString Imp_Class::getMetaObjectName( ) {\
+	QString Imp_Class::getMetaObjectName( ) const {\
 		return Class_Translate;\
 	}\
-	QString Imp_Class::getMetaObjectDir( ) {\
+	QString Imp_Class::getMetaObjectDir( ) const {\
 		return Dir_Translate;\
 	}class Imp_Class
 

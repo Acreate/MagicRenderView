@@ -78,7 +78,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		QString workPath = QDir::currentPath( );
 		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
 		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
-		QString loadFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
+		QString loadFileName = QFileDialog::getOpenFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
 		if( loadFileName.isEmpty( ) )
 			return;
 		appInstance->setAppIniValue( normalKey, loadFileName );

@@ -6,6 +6,42 @@
 
 #include "../tools/tools.h"
 #define ConverPtr(left, right, __type) __type left = (__type)right
+
+#define Fill_Obj_CheckMemoryType(conver_type, obj_ptr_name, any_ptr_name, source_data_ptr_name, source_ptr_count, need_count_name, count_name, source_data_count_mod_name, offset_ptr_name, comp_type_name, get_type_name, quit_run_code)\
+	if( any_ptr_name == nullptr || source_data_ptr_name == nullptr || source_ptr_count == 0 )\
+		quit_run_code;\
+	size_t need_count_name;\
+	auto count_name = serialization.fillObjVector( &need_count_name, source_data_ptr_name, source_ptr_count );\
+	size_t source_data_count_mod_name = source_ptr_count - count_name;\
+	if( need_count_name > source_data_count_mod_name )\
+		quit_run_code;\
+	auto offset_ptr_name = source_data_ptr_name + count_name;\
+	QString get_type_name;\
+	count_name = serialization.fillObjVector( &get_type_name, offset_ptr_name, source_data_count_mod_name );\
+	if( comp_type_name != get_type_name )\
+		quit_run_code;\
+	offset_ptr_name += count_name;\
+	source_data_count_mod_name -= count_name;\
+	ConverPtr( obj_ptr_name, any_ptr_name, conver_type )
+
+#define Ctreate_Obj_CheckMemoryType( source_data_ptr_name, source_ptr_count, need_count_name, count_name, source_data_count_mod_name, offset_ptr_name, comp_type_name, get_type_name, quit_run_code)\
+	if(  source_data_ptr_name == nullptr || source_ptr_count == 0 )\
+		quit_run_code;\
+	size_t need_count_name;\
+	auto count_name = serialization.fillObjVector( &need_count_name, source_data_ptr_name, source_ptr_count );\
+	size_t source_data_count_mod_name = source_ptr_count - count_name;\
+	if( need_count_name > source_data_count_mod_name )\
+		quit_run_code;\
+	auto offset_ptr_name = source_data_ptr_name + count_name;\
+	QString get_type_name;\
+	count_name = serialization.fillObjVector( &get_type_name, offset_ptr_name, source_data_count_mod_name );\
+	if( comp_type_name != get_type_name )\
+		quit_run_code;\
+	offset_ptr_name += count_name;\
+	source_data_count_mod_name -= count_name
+#define Next_Ptr( source_data_ptr, source_data_count, user_data_count ) \
+		source_data_ptr += user_data_count; \
+		source_data_count -= user_data_count
 class BinGenerate final {
 public:
 	class Serialization;
@@ -235,9 +271,7 @@ public:
 			resultBuff.append_range( countBuff );
 			resultBuff.append_range( nameBuff );
 			count = resultBuff.size( );
-			fillBinVector( count, countBuff );
-			result_bin_data_vector.clear( );
-			result_bin_data_vector.append_range( countBuff );
+			fillBinVector( count, result_bin_data_vector );
 			result_bin_data_vector.append_range( resultBuff );
 			return result_bin_data_vector.size( );
 		}
@@ -260,9 +294,7 @@ public:
 				resultBuff.append_range( nameBuff );
 			}
 			count = resultBuff.size( );
-			fillBinVector( count, nameBuff );
-			result_bin_data_vector.clear( );
-			result_bin_data_vector.append_range( nameBuff );
+			fillBinVector( count, result_bin_data_vector );
 			result_bin_data_vector.append_range( resultBuff );
 			return result_bin_data_vector.size( );
 		}
@@ -285,9 +317,7 @@ public:
 				resultBuff.append_range( nameBuff );
 			}
 			count = resultBuff.size( );
-			fillBinVector( count, nameBuff );
-			result_bin_data_vector.clear( );
-			result_bin_data_vector.append_range( nameBuff );
+			fillBinVector( count, result_bin_data_vector );
 			result_bin_data_vector.append_range( resultBuff );
 			return result_bin_data_vector.size( );
 		}

@@ -71,8 +71,6 @@ protected:
 	NodeInputPort *rightMouseBtnSelectPort;
 	/// @brief 用于操作删除输出接口的菜单-鼠标右键命中输入接口是弹出
 	QMenu *rightMouseBtnRemoveOutPortMenu;
-	/// @brief 对象是否在序列化
-	bool isSerialization;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
