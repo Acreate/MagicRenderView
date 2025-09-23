@@ -5,6 +5,9 @@
 #include "../../generate/varGenerate.h"
 #include "intType.h"
 #include "stringType.h"
+#include <QDebug>
+
+#include "../../tools/tools.h"
 FloatType operator+( FloatType &i, const StringType &i2 ) {
 	FloatType result;
 	bool isOk = false;
@@ -50,6 +53,12 @@ FloatType operator/( FloatType &i, const StringType &i2 ) {
 	if( toDouble != 0 )
 		*result.var = *i.var / toDouble;
 	return result;
+}
+FloatType::FloatType( QObject *parent ) : BaseVarType( parent, std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) ) ), var( new t_current_type( ) ) {
+}
+FloatType::FloatType( ) : FloatType( nullptr ) { }
+FloatType::~FloatType( ) {
+	delete var;
 }
 FloatType & FloatType::operator=( const StringType &i2 ) {
 	bool isOk = false;

@@ -45,11 +45,15 @@ int testQStringSerialization( ) {
 		BinGenerate::toBin( ceshivp1, buff );
 		BinGenerate::toObj( &ceshivp2, buff.data( ), buff.size( ) );
 		qDebug( ) << "------	std_vector< QString * >	--------";
-		for( auto item : ceshivp1 )
+		for( auto item : ceshivp1 ) {
 			qDebug( ) << *item;
+			delete item;
+		}
 		qDebug( ) << "-----		反序列输出";
-		for( auto item : ceshivp2 )
+		for( auto item : ceshivp2 ) {
 			qDebug( ) << *item;
+			delete item;
+		}
 		qDebug( ) << "--------------";
 
 		qDebug( ) << "--------------";
@@ -91,15 +95,18 @@ void testIntSerialization( ) {
 		std_vector< uint16_t * > ceshivp2;
 		BinGenerate::toBin( ceshivp1, buff );
 		BinGenerate::toObj( &ceshivp2, buff.data( ), buff.size( ) );
-		qDebug( ) << "--------------";
-		for( auto item : ceshivp1 )
+		qDebug( ) << "------	std_vector< uint16_t * >	--------";
+		for( auto item : ceshivp1 ) {
 			qDebug( ) << *item;
+			delete item;
+		}
 		qDebug( ) << "-----		反序列输出";
-		for( auto item : ceshivp2 )
+		for( auto item : ceshivp2 ) {
 			qDebug( ) << *item;
+			delete item;
+		}
 		qDebug( ) << "--------------";
 
-		qDebug( ) << "--------------";
 	} while( false );
 	out_end( );
 
@@ -130,6 +137,19 @@ void testQtSerialization( ) {
 void testAppType( ) {
 	out_start( );
 
+	FloatType *float1 = VarGenerate::createVarType< FloatType >( );
+	FloatType *float2 = VarGenerate::createVarType< FloatType >( );
+	StringType *str = VarGenerate::createVarType< StringType >( );
+	*float1 = *float1 + *float2;
+	*float1 = *float1 + *str;
+	*float1 = *str;
+
+	BaseVarType *varType = VarGenerate::createVarType< FloatType >( );
+	auto p = qobject_cast< FloatType * >( varType );
+	qDebug( ) << "类型转换 : " << p;
+	delete float1;
+	delete float2;
+	delete varType;
 	out_end( );
 }
 void test( ) {
@@ -141,17 +161,7 @@ void test( ) {
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
-
-	FloatType* float1= VarGenerate::createVarType< FloatType >( );
-	FloatType* float2= VarGenerate::createVarType< FloatType >( );
-	StringType* str= VarGenerate::createVarType< StringType >( );
-	*float1 = *float1 + *float2;
-	*float1 = *float1 + *str;
-	*float1 = *str;
-
-	BaseVarType* varType = VarGenerate::createVarType< FloatType >( );
-	auto p = qobject_cast<FloatType*>( varType );
-
+	test( );
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );

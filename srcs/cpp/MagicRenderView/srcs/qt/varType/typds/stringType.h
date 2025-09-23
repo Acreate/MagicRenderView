@@ -25,6 +25,10 @@ protected:
 	}
 public:
 
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, FloatType);
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, IntType);
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, StringType);
+	
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, StringType );
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, IntType );
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, FloatType );

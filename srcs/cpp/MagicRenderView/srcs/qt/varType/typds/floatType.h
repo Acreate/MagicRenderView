@@ -15,12 +15,10 @@ protected:
 	using t_current_type = double;
 	t_current_type *var;
 protected:
-	FloatType( QObject *parent ) : BaseVarType( parent, std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) ) ), var( new t_current_type( ) ) { }
-	FloatType( ) : FloatType( nullptr ) { }
+	FloatType( QObject *parent );
+	FloatType( );
 public:
-	~FloatType( ) override {
-		delete var;
-	}
+	~FloatType( ) override;
 	FloatType( const FloatType &other )
 		: BaseVarType { other }, var { new t_current_type( *other.var ) } { }
 protected:
