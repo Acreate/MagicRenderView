@@ -57,6 +57,7 @@
 #include "../varType/typds/floatType.h"
 #include "../varType/typds/intType.h"
 #include "../varType/typds/stringType.h"
+#include "../varType/typds/nullptrType.h"
 
 #include "qt/tools/tools.h"
 
@@ -136,6 +137,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	VarGenerate::appendVarTypeGenerateInstance< FloatType >( );
 	VarGenerate::appendVarTypeGenerateInstance< StringType >( );
 	VarGenerate::appendVarTypeGenerateInstance< IntType >( );
+	VarGenerate::appendVarTypeGenerateInstance< NullptrType >( );
 	// todo : VarType 类型转换
 	VarGenerate::appendConverInstance< StringToInt >( );
 	VarGenerate::appendConverInstance< StringToFloat >( );

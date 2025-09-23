@@ -16,6 +16,7 @@ private:
 	friend class StringType;
 	friend class FloatType;
 	friend class IntType;
+	friend class NullptrType;
 protected:
 	/// @brief 记录当前类型
 	std_shared_ptr< I_Type > typeInfo;
@@ -35,6 +36,7 @@ public:
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
 	}
+	
 };
 
 #endif // BASEVARTYPE_H_H_HEAD__FILE__

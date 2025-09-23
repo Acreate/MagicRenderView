@@ -11,6 +11,7 @@ protected:
 	friend class VarGenerate;
 	friend class StringType;
 	friend class IntType;
+	friend class NullptrType;
 protected:
 	using t_current_type = double;
 	t_current_type *var;

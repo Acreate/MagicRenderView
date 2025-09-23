@@ -9,6 +9,7 @@ protected:
 	friend class VarGenerate;
 	friend class StringType;
 	friend class FloatType;
+	friend class NullptrType;
 protected:
 	using t_current_type = int64_t;
 	t_current_type *var;

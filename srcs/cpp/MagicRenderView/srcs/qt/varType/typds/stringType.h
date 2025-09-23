@@ -9,6 +9,7 @@ protected:
 	friend class VarGenerate;
 	friend class FloatType;
 	friend class IntType;
+	friend class NullptrType;
 protected:
 	using t_current_type = QString;
 	t_current_type *var;

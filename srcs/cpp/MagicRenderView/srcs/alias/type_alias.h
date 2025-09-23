@@ -58,20 +58,37 @@ using std_mutex = std::mutex;
 /// @brief 自动锁
 using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 
+/// @brief 比较运算符
+/// @param righth_type_ 比较数
+#define DEF_EQU_OPERATOR_CALCULATE( left_type_, righth_type_) \
+	public:\
+		friend bool operator ==( const righth_type_ &left_type_var_ref, const left_type_ &right_type_var_ref ){ return right_type_var_ref == left_type_var_ref ;}\
+		friend bool operator !=( const righth_type_ &left_type_var_ref, const left_type_ &right_type_var_ref ){ return !( right_type_var_ref == left_type_var_ref );}\
+		bool operator !=(const righth_type_ &right_type_var_ref )const{ return !(*this == right_type_var_ref );}\
+		bool operator ==(const righth_type_ &right_type_var_ref )const
 
+/// @brief 赋值计算操作符重载
+/// @param left_type_ 左值
+/// @param righth_type_ 右值
 #define DEF_ASSIGN_OPERATOR_CALCULATE( left_type_, righth_type_) \
 	public:\
-		left_type_ & operator =(const righth_type_ &i2 )
-	
+		left_type_ & operator =(const righth_type_ &right_type_var_ref )
+
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符
 /// @param righth_type_ 有操作符
-#define DEF_FRIEND_OPERATOR_CALCULATE( left_type_, righth_type_) \
+#define DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( left_type_, righth_type_, result_type_ ) \
 	public:\
-		friend left_type_ operator +( left_type_ &i, const righth_type_ &i2 ); \
-		friend left_type_ operator -( left_type_ &i, const righth_type_ &i2 ); \
-		friend left_type_ operator *( left_type_ &i, const righth_type_ &i2 ); \
-		friend left_type_ operator /( left_type_ &i, const righth_type_ &i2 )
+		friend result_type_ operator +( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
+		friend result_type_ operator -( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
+		friend result_type_ operator *( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
+		friend result_type_ operator /( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref )
+
+/// @brief 用于定义四则运算与 = 赋值
+/// @param left_type_ 做操作符
+/// @param righth_type_ 有操作符
+#define DEF_FRIEND_OPERATOR_CALCULATE( left_type_, righth_type_ ) \
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( left_type_, righth_type_, left_type_ )
 
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符

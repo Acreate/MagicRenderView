@@ -4,6 +4,7 @@
 #include "qt/generate/binGenerate.h"
 #include "qt/generate/varGenerate.h"
 #include "qt/varType/typds/floatType.h"
+#include "qt/varType/typds/nullptrType.h"
 #include "qt/varType/typds/stringType.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
@@ -143,6 +144,12 @@ void testAppType( ) {
 	*float1 = *float1 + *float2;
 	*float1 = *float1 + *str;
 	*float1 = *str;
+
+	NullptrType *null = VarGenerate::createVarType< NullptrType >( );
+	if( *null == *float1 )
+		qDebug( ) << "类型等于空";
+	else
+		qDebug( ) << "类型不等于空";
 
 	BaseVarType *varType = VarGenerate::createVarType< FloatType >( );
 	auto p = qobject_cast< FloatType * >( varType );
