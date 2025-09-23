@@ -10,5 +10,10 @@ public:
 	virtual ~I_Conver( ) = default;
 	virtual bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
 };
+#define ChackNeedType( left_type_, right_type_ ) \
+	if( left_type_info->getTypeInfo( ) != typeid( left_type_ ) ) \
+		return false;\
+	if( right_type_info->getTypeInfo( ) != typeid( right_type_ ) )  \
+		return false
 
 #endif // I_CONVER_H_H_HEAD__FILE__

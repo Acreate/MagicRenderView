@@ -7,10 +7,13 @@
 class StringType : public BaseVarType {
 	Q_OBJECT;
 protected:
+	friend class VarGenerate;
+protected:
 	using t_current_type = QString;
 	t_current_type *var;
-public:
+	
 	StringType( QObject *parent );
+public:
 	~StringType( ) override {
 		delete var;
 	}

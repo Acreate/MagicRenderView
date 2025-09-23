@@ -7,10 +7,12 @@
 class FloatType : public BaseVarType {
 	Q_OBJECT;
 protected:
+	friend class VarGenerate;
+protected:
 	using t_current_type = double;
 	t_current_type *var;
-public:
 	FloatType( QObject *parent );
+public:
 	~FloatType( ) override {
 		delete var;
 	}

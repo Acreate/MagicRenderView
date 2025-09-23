@@ -64,9 +64,11 @@ public:
 			base_ptr = new ttype( parent );
 		}
 	static void appendVarTypeGenerateInstance( ) {
-		appendConverInstance( std_shared_ptr< I_Type >( new I_Type( typeid( ttype ) ) ), [] ( QObject *parent )->BaseVarType * {
+		std_shared_ptr< I_Type > sharedPtr( new I_Type( typeid( ttype ) ) );
+		auto lambda = [] ( QObject *parent )->BaseVarType * {
 			return new ttype( parent );
-		} );
+		};
+		appendVarTypeGenerateInstance( sharedPtr, lambda );
 	}
 	/// @brief 生成指定类型的共享对象
 	/// @param create_type 生成类型
@@ -107,7 +109,7 @@ public:
 	}
 	/// @brief 获取支持类型
 	/// @return 类型列表
-	static std_vector<std_shared_ptr<I_Type>> getSupporType();
+	static std_vector< std_shared_ptr< I_Type > > getSupporType( );
 };
 
 #endif // VARGENERATE_H_H_HEAD__FILE__

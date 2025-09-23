@@ -6,10 +6,12 @@
 class IntType : public BaseVarType {
 	Q_OBJECT;
 protected:
+	friend class VarGenerate;
+protected:
 	using t_current_type = int64_t;
 	t_current_type *var;
-public:
 	IntType( QObject *parent );
+public:
 	~IntType( ) override {
 		delete var;
 	}
