@@ -58,3 +58,14 @@ BaseVarType * VarGenerate::createVarType( const type_info &create_type, QObject 
 BaseVarType * VarGenerate::createVarType( const type_info &create_type ) {
 	return createVarType( create_type, nullptr );
 }
+std_vector< std_shared_ptr< I_Type > > VarGenerate::getSupporType( ) {
+	std_vector< std_shared_ptr< I_Type > > result;
+	size_t count = varTypeGenerateVector.size( );
+	if( count == 0 )
+		return result;
+	auto data = varTypeGenerateVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		result.emplace_back( data[ index ].first );
+	return result;
+}

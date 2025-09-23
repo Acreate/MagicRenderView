@@ -105,6 +105,9 @@ public:
 	static BaseVarType * createVarType( QObject *parent ) {
 		return createVarType( typeid( ttype ), parent );
 	}
+	/// @brief 获取支持类型
+	/// @return 类型列表
+	static std_vector<std_shared_ptr<I_Type>> getSupporType();
 };
 
 #endif // VARGENERATE_H_H_HEAD__FILE__
