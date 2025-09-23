@@ -10,10 +10,12 @@ public:
 	virtual ~I_Conver( ) = default;
 	virtual bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
 };
-#define ChackNeedType( left_type_, right_type_ ) \
+#define ChackNeedType( left_type_, left_var_name_, right_type_,  right_var_name_ ) \
 	if( left_type_info->getTypeInfo( ) != typeid( left_type_ ) ) \
 		return false;\
 	if( right_type_info->getTypeInfo( ) != typeid( right_type_ ) )  \
-		return false
+		return false;\
+	left_type_ *left_var_name_ = (left_type_*)left;\
+	right_type_ *right_var_name_ = (right_type_*)right
 
 #endif // I_CONVER_H_H_HEAD__FILE__

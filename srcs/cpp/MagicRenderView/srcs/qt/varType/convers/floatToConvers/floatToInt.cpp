@@ -5,6 +5,7 @@
 #include "../../I_Type.h"
 bool FloatToInt::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 
-	ChackNeedType( int64_t, double );
+	ChackNeedType( int64_t, intVar, double, doubelVar );
+	*intVar = *doubelVar;
 	return true;
 }
