@@ -58,6 +58,24 @@ using std_mutex = std::mutex;
 /// @brief 自动锁
 using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 
+/// @brief 用于定义四则运算与 = 赋值
+/// @param left_type_ 做操作符
+/// @param righth_type_ 有操作符
+#define DEF_FRIEND_OPERATOR_CALCULATE( left_type_, righth_type_) \
+	public:\
+		friend left_type_ operator +( left_type_ &i, const righth_type_ &i2 ); \
+		friend left_type_ operator -( left_type_ &i, const righth_type_ &i2 ); \
+		friend left_type_ operator *( left_type_ &i, const righth_type_ &i2 ); \
+		friend left_type_ operator /( left_type_ &i, const righth_type_ &i2 )
+
+/// @brief 用于定义四则运算与 = 赋值
+/// @param left_type_ 做操作符
+/// @param righth_type_ 有操作符
+#define DEF_OPERATOR_CALCULATE( left_type_, righth_type_) \
+	DEF_FRIEND_OPERATOR_CALCULATE(left_type_, righth_type_); \
+	public:\
+		left_type_ & operator =(const righth_type_ &i2 )
+
 #ifdef Def_First_StaticMetaInfo
 #undef Def_First_StaticMetaInfo
 #endif

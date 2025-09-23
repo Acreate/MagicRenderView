@@ -2,8 +2,12 @@
 
 #include "qt/application/application.h"
 #include "qt/generate/binGenerate.h"
+#include "qt/generate/varGenerate.h"
+#include "qt/varType/typds/floatType.h"
+#include "qt/varType/typds/stringType.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
+
 #define out_start() qDebug() << "\n\n开始 ====\t" << tools::debug::getFunctionName( )[ 0 ]
 #define out_end() qDebug() << "结束 ====\t" << tools::debug::getFunctionName( )[ 0 ]
 int testQStringSerialization( ) {
@@ -20,7 +24,7 @@ int testQStringSerialization( ) {
 		qDebug( ) << "-----		反序列输出";
 		qDebug( ) << ceshi2;
 		qDebug( ) << "--------------";
-		//return 0;
+		return 0;
 		std_vector< QString > ceshiv1;
 		ceshiv1.emplace_back( "std_vector< QString > 123123" );
 		ceshiv1.emplace_back( "std_vector< QString > 778" );
@@ -48,7 +52,6 @@ int testQStringSerialization( ) {
 			qDebug( ) << *item;
 		qDebug( ) << "--------------";
 
-	
 		qDebug( ) << "--------------";
 	} while( false );
 	out_end( );
@@ -69,7 +72,6 @@ void testIntSerialization( ) {
 		qDebug( ) << "-----		反序列输出";
 		qDebug( ) << ceshi2;
 		qDebug( ) << "--------------";
-		//return 0;
 		std_vector< uint16_t > ceshiv1;
 		ceshiv1.emplace_back( 123 );
 		ceshiv1.emplace_back( 456 );
@@ -125,16 +127,31 @@ void testQtSerialization( ) {
 	} while( false );
 	out_end( );
 }
+void testAppType( ) {
+	out_start( );
+
+	out_end( );
+}
 void test( ) {
 
 	testQStringSerialization( );
 	testIntSerialization( );
 	testQtSerialization( );
+	testAppType( );
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 
-	test( );
+	FloatType* float1= VarGenerate::createVarType< FloatType >( );
+	FloatType* float2= VarGenerate::createVarType< FloatType >( );
+	StringType* str= VarGenerate::createVarType< StringType >( );
+	*float1 = *float1 + *float2;
+	*float1 = *float1 + *str;
+	*float1 = *str;
+
+	BaseVarType* varType = VarGenerate::createVarType< FloatType >( );
+	auto p = qobject_cast<FloatType*>( varType );
+
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );

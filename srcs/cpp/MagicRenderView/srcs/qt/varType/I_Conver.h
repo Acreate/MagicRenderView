@@ -16,6 +16,6 @@ public:
 	if( right_type_info->getTypeInfo( ) != typeid( right_type_ ) )  \
 		return false;\
 	left_type_ *left_var_name_ = (left_type_*)left;\
-	right_type_ *right_var_name_ = (right_type_*)right
+	const right_type_ *right_var_name_ = (const right_type_*)right
 
 #endif // I_CONVER_H_H_HEAD__FILE__

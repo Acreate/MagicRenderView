@@ -13,6 +13,9 @@ class BaseVarType : public QObject {
 	Q_OBJECT;
 private:
 	friend class VarGenerate;
+	friend class StringType;
+	friend class FloatType;
+	friend class IntType;
 protected:
 	/// @brief 记录当前类型
 	std_shared_ptr< I_Type > typeInfo;

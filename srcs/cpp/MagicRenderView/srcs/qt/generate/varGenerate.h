@@ -6,6 +6,9 @@
 
 #include "../varType/I_Type.h"
 
+class IntType;
+class StringType;
+class FloatType;
 class BaseVarType;
 class I_Type;
 class I_Conver;
@@ -97,19 +100,20 @@ public:
 	/// @brief 生成指定类型的共享对象
 	/// @return 失败返回 nullptr
 	template< typename ttype >
-	static BaseVarType * createVarType( ) {
-		return createVarType( typeid( ttype ) );
+	static ttype * createVarType( ) {
+		return ( ttype * ) createVarType( typeid( ttype ) );
 	}
 
 	/// @brief 生成指定类型的共享对象
 	/// @return 失败返回 nullptr
 	template< typename ttype >
-	static BaseVarType * createVarType( QObject *parent ) {
-		return createVarType( typeid( ttype ), parent );
+	static ttype * createVarType( QObject *parent ) {
+		return ( ttype * ) createVarType( typeid( ttype ), parent );
 	}
 	/// @brief 获取支持类型
 	/// @return 类型列表
 	static std_vector< std_shared_ptr< I_Type > > getSupporType( );
 };
+
 
 #endif // VARGENERATE_H_H_HEAD__FILE__
