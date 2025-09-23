@@ -1,7 +1,6 @@
 ﻿#ifndef INTTYPE_H_H_HEAD__FILE__
 #define INTTYPE_H_H_HEAD__FILE__
 #pragma once
-
 #include "../baseVarType.h"
 
 class IntType : public BaseVarType {

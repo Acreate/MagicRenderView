@@ -10,6 +10,7 @@
 #include <qt/stack/stack.h>
 
 #include "../generate/nodeItemGenerate.h"
+#include "../generate/varGenerate.h"
 
 #include "../node/item/calculate/varAdd.h"
 #include "../node/item/calculate/varDiv.h"
@@ -46,6 +47,17 @@
 #include "../serialization/qt/qColorSerialization.h"
 #include "../serialization/qt/qImageSerialization.h"
 #include "../serialization/qt/qstringSerialization.h"
+
+#include "../varType/convers/floatToConvers/floatToInt.h"
+#include "../varType/convers/floatToConvers/floatToString.h"
+#include "../varType/convers/intToConvers/intToFloat.h"
+#include "../varType/convers/intToConvers/intToString.h"
+#include "../varType/convers/stringToConvers/stringToFloat.h"
+#include "../varType/convers/stringToConvers/stringToInt.h"
+#include "../varType/typds/floatType.h"
+#include "../varType/typds/intType.h"
+#include "../varType/typds/stringType.h"
+
 #include "qt/tools/tools.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
@@ -121,7 +133,16 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	// todo : 音乐特效节点
 
 	// todo : VarType 支持变量
-
+	VarGenerate::appendVarTypeGenerateInstance< FloatType >( );
+	VarGenerate::appendVarTypeGenerateInstance< StringType >( );
+	VarGenerate::appendVarTypeGenerateInstance< IntType >( );
+	// todo : VarType 类型转换
+	VarGenerate::appendConverInstance< StringToInt >( );
+	VarGenerate::appendConverInstance< StringToFloat >( );
+	VarGenerate::appendConverInstance< FloatToInt >( );
+	VarGenerate::appendConverInstance< FloatToString >( );
+	VarGenerate::appendConverInstance< IntToFloat >( );
+	VarGenerate::appendConverInstance< IntToString >( );
 	// todo : 序列化支持
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
