@@ -8,6 +8,9 @@
 class NodeInputPort : public NodePort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodePort );
+	friend class NodeWidgetSerialization;
+	friend class NodeItemSerialization;
+	friend class MainWidget;
 protected:
 	std_vector< NodeOutputPort * > linkOutputVector;
 public:

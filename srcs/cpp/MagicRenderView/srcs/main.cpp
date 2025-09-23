@@ -1,7 +1,7 @@
 ﻿#include <qfile.h>
 
 #include "qt/application/application.h"
-#include "qt/generate/varTypeGenerate.h"
+#include "qt/generate/binGenerate.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
 #define out_start() qDebug() << "\n\n开始 ====\t" << tools::debug::getFunctionName( )[ 0 ]
@@ -48,43 +48,7 @@ int testQStringSerialization( ) {
 			qDebug( ) << *item;
 		qDebug( ) << "--------------";
 
-		/*return 0;*/
-		auto mkVarTypeGeneratePair = VarTypeGenerate::templateVarType< QString >( );
-		mkVarTypeGeneratePair->appendUnity( "first" );
-		mkVarTypeGeneratePair->appendUnity( "mid" );
-		mkVarTypeGeneratePair->appendUnity( "end" );
-		auto data = mkVarTypeGeneratePair->data< QString >( );
-		size_t count = mkVarTypeGeneratePair->size( );
-		if( data == nullptr ) {
-			tools::debug::printError( "无法追加元素" );
-			break;
-		}
-		qDebug( ) << "------	 VarTypeGenerate::templateVarType< QString >	--------";
-		qDebug( ) << "\rtype::" << mkVarTypeGeneratePair->getUnityTypeName( );
-		for( size_t index = 0; index < count; ++index )
-			qDebug( ) << *data[ index ];
-		qDebug( ) << "--------------";
-
-		buff = VarTypeGenerate::toBin( mkVarTypeGeneratePair );
-		auto var = VarTypeGenerate::toObj( count, buff.data( ), buff.size( ) );
-		if( var == nullptr ) {
-			tools::debug::printError( "加载对象失败" );
-			break;
-		}
-		qDebug( ) << "--------------";
-		qDebug( ) << "\rtype::" << var->getUnityTypeName( );
-		qDebug( ) << "-----		反序列输出";
-		data = var->data< QString >( );
-		if( data == nullptr )
-			break;
-		count = var->size( );
-		for( size_t index = 0; index < count; ++index ) {
-			QString *string = data[ index ];
-			if( string )
-				qDebug( ) << *string;
-			else
-				qDebug( ) << "序列 : [ " << index << " ]为空";
-		}
+	
 		qDebug( ) << "--------------";
 	} while( false );
 	out_end( );
@@ -133,42 +97,6 @@ void testIntSerialization( ) {
 			qDebug( ) << *item;
 		qDebug( ) << "--------------";
 
-		/*return 0;*/
-		auto mkVarTypeGeneratePair = VarTypeGenerate::templateVarType< uint16_t >( );
-		mkVarTypeGeneratePair->appendUnity< uint16_t >( 13 );
-		mkVarTypeGeneratePair->appendUnity< uint16_t >( 45 );
-		mkVarTypeGeneratePair->appendUnity< uint16_t >( 99 );
-		auto data = mkVarTypeGeneratePair->data< uint16_t >( );
-		size_t count = mkVarTypeGeneratePair->size( );
-		if( data == nullptr ) {
-			tools::debug::printError( "无法追加元素" );
-			break;
-		}
-		qDebug( ) << "--------------";
-		qDebug( ) << "\rtype::" << mkVarTypeGeneratePair->getUnityTypeName( );
-		for( size_t index = 0; index < count; ++index )
-			qDebug( ) << *data[ index ];
-
-		buff = VarTypeGenerate::toBin( mkVarTypeGeneratePair );
-		auto var = VarTypeGenerate::toObj( count, buff.data( ), buff.size( ) );
-		qDebug( ) << "-----		反序列输出";
-		if( var == nullptr ) {
-			tools::debug::printError( "加载对象失败" );
-			break;
-		}
-		qDebug( ) << "--------------";
-		qDebug( ) << "\rtype::" << var->getUnityTypeName( );
-		data = var->data< uint16_t >( );
-		if( data == nullptr )
-			break;
-		count = var->size( );
-		for( size_t index = 0; index < count; ++index ) {
-			uint16_t *string = data[ index ];
-			if( string )
-				qDebug( ) << *string;
-			else
-				qDebug( ) << "序列 : [ " << index << " ]为空";
-		}
 		qDebug( ) << "--------------";
 	} while( false );
 	out_end( );

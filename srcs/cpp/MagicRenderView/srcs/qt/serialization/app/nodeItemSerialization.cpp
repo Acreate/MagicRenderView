@@ -36,20 +36,20 @@ size_t NodeItemSerialization::fillUnityBin( const void *var_type, std_vector< ui
 	serialization.fillBinVector( dataPtr->nodePosY, buff );
 	resultBuff.append_range( buff );
 	// 节点链接个数
-	serialization.fillBinVector( dataPtr->linkCode.size( ), buff );
-	resultBuff.append_range( buff );
-	// 节点链接端口
-	size_t count = dataPtr->linkCode.size( ), index = 0;
-	auto data = dataPtr->linkCode.data( );
-	for( ; index < count; ++index ) {
-		auto &pair = data[ index ];
-		serialization.fillBinVector( pair.first->generateCode, buff );
-		resultBuff.append_range( buff );
-		serialization.fillBinVector( pair.second->generateCode, buff );
-		resultBuff.append_range( buff );
-		serialization.fillBinVector( pair.second->varCode, buff );
-		resultBuff.append_range( buff );
-	}
+	//serialization.fillBinVector( dataPtr->linkCode.size( ), buff );
+	//resultBuff.append_range( buff );
+	//// 节点链接端口
+	//size_t count = dataPtr->linkCode.size( ), index = 0;
+	//auto data = dataPtr->linkCode.data( );
+	//for( ; index < count; ++index ) {
+	//	auto &pair = data[ index ];
+	//	serialization.fillBinVector( pair.first, buff );
+	//	resultBuff.append_range( buff );
+	//	serialization.fillBinVector( pair.second.first, buff );
+	//	resultBuff.append_range( buff );
+	//	serialization.fillBinVector( pair.second.second, buff );
+	//	resultBuff.append_range( buff );
+	//}
 
 	serialization.fillBinVector( resultBuff.size( ), result_bin_data_vector );
 	result_bin_data_vector.append_range( resultBuff );
@@ -81,17 +81,17 @@ size_t NodeItemSerialization::fillUnityObj( void *var_type, const uint8_t *sourc
 
 	count = serialization.fillObjVector( &needCount, offsetPtr, mod );
 	Next_Ptr( offsetPtr, mod, count );
-	dataPtr->linkCode.reserve( needCount );
+	/*dataPtr->linkCode.reserve( needCount );
 	size_t index = 0;
 	auto data = dataPtr->linkCode.data( );
 	for( ; index < needCount; ++index ) {
-		count = serialization.fillObjVector( &data[ index ].first->generateCode, offsetPtr, mod );
+		count = serialization.fillObjVector( &data[ index ].first, offsetPtr, mod );
 		Next_Ptr( offsetPtr, mod, count );
-		count = serialization.fillObjVector( &data[ index ].second->generateCode, offsetPtr, mod );
+		count = serialization.fillObjVector( &data[ index ].second.first, offsetPtr, mod );
 		Next_Ptr( offsetPtr, mod, count );
-		count = serialization.fillObjVector( &data[ index ].second->varCode, offsetPtr, mod );
+		count = serialization.fillObjVector( &data[ index ].second.second, offsetPtr, mod );
 		Next_Ptr( offsetPtr, mod, count );
-	}
+	}*/
 	return offsetPtr - source_ptr;
 }
 size_t NodeItemSerialization::fillVectorBin( const void *var_type, std_vector< uint8_t > &result_bin_data_vector ) {

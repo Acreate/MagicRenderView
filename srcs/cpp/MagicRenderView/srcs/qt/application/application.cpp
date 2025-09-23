@@ -10,7 +10,6 @@
 #include <qt/stack/stack.h>
 
 #include "../generate/nodeItemGenerate.h"
-#include "../generate/varTypeGenerate.h"
 
 #include "../node/item/calculate/varAdd.h"
 #include "../node/item/calculate/varDiv.h"
@@ -122,18 +121,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	// todo : 音乐特效节点
 
 	// todo : VarType 支持变量
-	VarTypeGenerate::appendTypeGenerate< QString >( );
-	VarTypeGenerate::appendTypeGenerate< uint8_t >( );
-	VarTypeGenerate::appendTypeGenerate< uint16_t >( );
-	VarTypeGenerate::appendTypeGenerate< uint32_t >( );
-	VarTypeGenerate::appendTypeGenerate< uint64_t >( );
-	VarTypeGenerate::appendTypeGenerate< int8_t >( );
-	VarTypeGenerate::appendTypeGenerate< int16_t >( );
-	VarTypeGenerate::appendTypeGenerate< int32_t >( );
-	VarTypeGenerate::appendTypeGenerate< int64_t >( );
-	VarTypeGenerate::appendTypeGenerate< float_t >( );
-	VarTypeGenerate::appendTypeGenerate< double_t >( );
-	VarTypeGenerate::appendTypeGenerate< QString >( );
+
 	// todo : 序列化支持
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );

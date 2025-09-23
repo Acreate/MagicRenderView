@@ -10,9 +10,10 @@
 #include <qt/application/application.h>
 
 #include <qt/generate/nodeItemGenerate.h>
-#include <qt/generate/varTypeGenerate.h>
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
+
+#include "../generate/binGenerate.h"
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	nodeItemGenerateCode = 1;
@@ -158,7 +159,7 @@ void MainWidget::updateSupport( ) {
 		}
 		supportNode.emplace_back( dirMenu, pairs );
 	}
-	supporVarType = VarTypeGenerate::supportTypes( );
+	
 	supportInfoToBin( );
 }
 

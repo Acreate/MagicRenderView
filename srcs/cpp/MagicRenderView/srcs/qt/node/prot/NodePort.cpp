@@ -6,7 +6,6 @@
 
 #include "../../application/application.h"
 
-#include <qt/varType/varType.h>
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
 NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ),  nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );

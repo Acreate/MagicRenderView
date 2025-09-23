@@ -105,8 +105,6 @@ private:
 	int borderRightSpace;
 	/// @brief 边缘顶端空间大小
 	int borderTopSpace;
-	/// @brief 链接到该节点的映射列表
-	std_vector< std_pairt< NodeItem *, NodeOutputPort * > > linkCode;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
