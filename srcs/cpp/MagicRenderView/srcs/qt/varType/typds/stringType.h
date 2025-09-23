@@ -24,9 +24,6 @@ protected:
 		return var;
 	}
 public:
-	DEF_OPERATOR_CALCULATE( StringType, StringType );
-	DEF_OPERATOR_CALCULATE( StringType, IntType );
-	DEF_OPERATOR_CALCULATE( StringType, FloatType );
 
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, StringType );
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, IntType );
