@@ -150,7 +150,7 @@ void testAppType( ) {
 	*float1 = *float1 + *str;
 	*color1 = *float1 = str;
 
-	NullptrType *null = VarGenerate::createVarType< NullptrType >( );
+	auto null = VarGenerate::createVarType< NullptrType >( );
 	if( *null == *float1 )
 		qDebug( ) << "类型等于空";
 	else
