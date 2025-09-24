@@ -1,6 +1,7 @@
 ﻿#ifndef I_CONVER_H_H_HEAD__FILE__
 #define I_CONVER_H_H_HEAD__FILE__
 #pragma once
+#include "I_Type.h"
 
 class BaseVarType;
 class I_Type;
@@ -104,13 +105,20 @@ public:
 		return false;
 	}
 
+	template< typename TResult >
+	TResult * isType( const I_Type *check_type, const void *var_ptr ) {
+		if( check_type->getTypeInfo( ) == typeid( TResult ) )
+			return ( TResult * ) var_ptr;
+		return nullptr;
+	}
+
+	template< typename TResult >
+	bool typeCall( const I_Type *check_type, const void *var_ptr, const std_function< bool( TResult * ) > &call ) {
+		if( check_type->getTypeInfo( ) == typeid( TResult ) )
+			return call( ( TResult * ) var_ptr );
+		return false;
+	}
+
 };
-#define ChackNeedType( left_type_, left_var_name_, right_type_,  right_var_name_ ) \
-	if( left_type_info->getTypeInfo( ) != typeid( left_type_ ) ) \
-		return false;\
-	if( right_type_info->getTypeInfo( ) != typeid( right_type_ ) )  \
-		return false;\
-	left_type_ *left_var_name_ = (left_type_*)left;\
-	const right_type_ *right_var_name_ = (const right_type_*)right
 
 #endif // I_CONVER_H_H_HEAD__FILE__

@@ -9,13 +9,11 @@ protected:
 	const type_info &typeInfo;
 protected:
 public:
-	I_Type( type_info &type_info )
-		: typeInfo( type_info ) { }
-	I_Type( const type_info &type_info ) : typeInfo( type_info ) { }
-	virtual ~I_Type( ) { }
-	I_Type( const I_Type &other )
-		: typeInfo( other.typeInfo ) { }
-	friend bool operator==( const I_Type &lhs, const I_Type &rhs ) { return lhs.typeInfo == rhs.typeInfo; }
+	I_Type( type_info &type_info );
+	I_Type( const type_info &type_info );
+	virtual ~I_Type( );
+	I_Type( const I_Type &other );
+	friend bool operator==( const I_Type &lhs, const I_Type &rhs );
 	friend bool operator!=( const I_Type &lhs, const I_Type &rhs ) { return !( lhs == rhs ); }
 	virtual const type_info & getTypeInfo( ) const { return typeInfo; }
 };

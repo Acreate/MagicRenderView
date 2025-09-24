@@ -2,7 +2,6 @@
 #define COLORTYPE_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "../baseVarType.h"
 class ColorType : public BaseVarType {
 	Q_OBJECT;
@@ -13,15 +12,13 @@ protected:
 	friend class IntType;
 	friend class NullptrType;
 protected:
-	using t_current_type = double;
+	using t_current_type = QColor;
 	t_current_type *var;
 public:
 	ColorType( QObject *parent );
 	ColorType( );
 	~ColorType( ) override;
-	void resetVar( ) override {
-		*var = t_current_type( );
-	}
+	void resetVar( ) override;
 protected:
 	void * getVarPtr( ) const override {
 		return var;

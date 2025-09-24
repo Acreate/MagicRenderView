@@ -21,11 +21,15 @@ protected:
 	/// @brief 生成代码
 	size_t generateCode;
 	/// @brief 记录当前类型
-	std_shared_ptr< I_Type > typeInfo;
+	std_shared_ptr< I_Type > varTypeInfo;
+	/// @brief 记录对象自身类型
+	std_shared_ptr< I_Type > objTypeInfo;
+protected:
+	virtual I_Type * initTypeInfo( );
 public:
 	BaseVarType( );
 	BaseVarType( QObject *parent );
-	BaseVarType( QObject *parent, const std_shared_ptr< I_Type > &type_info );
+	BaseVarType( QObject *parent, const std_shared_ptr< I_Type > &var_type_info );
 	BaseVarType( const BaseVarType &other );
 	virtual void * getVarPtr( ) const { return nullptr; }
 	virtual void * getVarPtr( const I_Type &type_info ) const;
@@ -33,7 +37,8 @@ public:
 	virtual void resetVar( ) { }
 	~BaseVarType( ) override;
 	virtual bool setVar( const BaseVarType *target_data );
-	virtual const I_Type & getTypeInfo( ) const;
+	virtual const I_Type & getVarTypeInfo( ) const;
+	virtual const I_Type & getThisTypeInfo( ) const;
 	template< typename type >
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
@@ -73,13 +78,6 @@ public:
 Q_SIGNALS:
 	void releaseObj( BaseVarType *release );
 
-
-
-
-
-	
-
-	
 };
 
 #endif // BASEVARTYPE_H_H_HEAD__FILE__

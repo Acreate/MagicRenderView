@@ -113,14 +113,14 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool conver( BaseVarType &left, const BaseVarType &right ) {
-		return conver( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+		return conver( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool conver( BaseVarType *left, const BaseVarType *right ) {
-		return conver( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+		return conver( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
@@ -128,21 +128,21 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool conver( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return conver( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+		return conver( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool add( BaseVarType &left, const BaseVarType &right ) {
-		return add( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+		return add( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool add( BaseVarType *left, const BaseVarType *right ) {
-		return add( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+		return add( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
@@ -150,7 +150,7 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool add( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return add( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+		return add( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 
 	/// @brief 类型转换赋值
@@ -158,14 +158,14 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool sub( BaseVarType &left, const BaseVarType &right ) {
-		return sub( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+		return sub( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool sub( BaseVarType *left, const BaseVarType *right ) {
-		return sub( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+		return sub( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
@@ -173,21 +173,21 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool sub( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return sub( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+		return sub( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool mul( BaseVarType &left, const BaseVarType &right ) {
-		return mul( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+		return mul( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool mul( BaseVarType *left, const BaseVarType *right ) {
-		return mul( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+		return mul( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
@@ -195,21 +195,21 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool mul( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return mul( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+		return mul( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool dev( BaseVarType &left, const BaseVarType &right ) {
-		return dev( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+		return dev( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool dev( BaseVarType *left, const BaseVarType *right ) {
-		return dev( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+		return dev( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
@@ -217,7 +217,7 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool dev( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return dev( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+		return dev( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 
 	/// @brief 增加一个类型赋值对象

@@ -139,13 +139,13 @@ void testQtSerialization( ) {
 void testAppType( ) {
 	out_start( );
 
-	FloatType *float1 = VarGenerate::createVarType< FloatType >( );
-	FloatType *float2 = VarGenerate::createVarType< FloatType >( );
-	StringType *str = VarGenerate::createVarType< StringType >( );
+	BaseVarType *float1 = VarGenerate::createVarType< FloatType >( );
+	BaseVarType *float2 = VarGenerate::createVarType< FloatType >( );
+	BaseVarType *str = VarGenerate::createVarType< StringType >( );
 	BaseVarType *color1 = VarGenerate::createVarType< ColorType >( );
 	BaseVarType *color2 = VarGenerate::createVarType< ColorType >( );
-	*color1 = 234;
-	*color1 = *color1 + *color2;
+
+	*float2 = 245;
 	*float1 = *float1 + *float2;
 	*float1 = *float1 + *str;
 	*color1 = *float1 = str;
