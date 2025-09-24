@@ -154,8 +154,8 @@ BaseVarType * BaseVarType::operator=( const double &right_type_var_ref ) {
 }
 BaseVarType * BaseVarType::operator=( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto rightTypeInfo = I_Type( typeid( QString ) );
 	auto left = this->getVarPtr( );
+	auto rightTypeInfo = I_Type( typeid( QString ) );
 	auto right = &right_type_var_ref;
 	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
 	return this;
@@ -168,7 +168,7 @@ BaseVarType * BaseVarType::operator=( const std::wstring &right_type_var_ref ) {
 	QString ver = QString::fromStdWString( right_type_var_ref );
 	return operator=( ver );
 }
-// todo s
+
 bool BaseVarType::operator==( const BaseVarType &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
 	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
@@ -183,390 +183,439 @@ bool BaseVarType::operator>( const BaseVarType &right_type_var_ref ) {
 	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const BaseVarType &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
 	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const BaseVarType &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
 	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const BaseVarType &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
 	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const int8_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const int8_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const int8_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const int8_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const int8_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const int16_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const int16_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const int16_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const int16_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const int16_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const int32_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const int32_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const int32_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const int32_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const int32_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const int64_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const int64_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const int64_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const int64_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const int64_t &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const float &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const float &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const float &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const float &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const float &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const double &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const double &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const double &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const double &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const double &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const std::string &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const std::string &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const std::string &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const std::string &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const std::string &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator==( const std::wstring &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>( const std::wstring &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<( const std::wstring &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator<=( const std::wstring &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
 bool BaseVarType::operator>=( const std::wstring &right_type_var_ref ) {
 	auto &leftTypeInfo = this->getTypeInfo( );
-	auto &rightTypeInfo = right_type_var_ref.getTypeInfo( );
 	auto left = this->getVarPtr( );
-	auto right = right_type_var_ref.getVarPtr( );
-	VarGenerate::conver( &leftTypeInfo, left, &rightTypeInfo, right );
-	return this;
+	auto rightTypeInfo = I_Type( typeid( QString ) );
+	auto right = &right_type_var_ref;
+	bool result = false;
+	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	return result;
 }
