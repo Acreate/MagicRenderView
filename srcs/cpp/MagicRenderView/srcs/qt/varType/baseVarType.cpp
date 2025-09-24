@@ -2,6 +2,8 @@
 #include "I_Type.h"
 #include "../generate/varGenerate.h"
 
+#include "typds/nullptrType.h"
+
 I_Type * BaseVarType::initTypeInfo( ) {
 	const type_info &typeInfo = typeid( *this );
 	I_Type *px = new I_Type( typeInfo );
@@ -39,14 +41,20 @@ const I_Type & BaseVarType::getVarTypeInfo( ) const {
 const I_Type & BaseVarType::getThisTypeInfo( ) const {
 	return *objTypeInfo.get( );
 }
+I_Type * BaseVarType::getVarTypeInfoPtr( ) const {
+	return varTypeInfo.get( );
+}
+I_Type * BaseVarType::getThisTypeInfoPtr( ) const {
+	return objTypeInfo.get( );
+}
 
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type parent = left_type_var_ref.getThisTypeInfo( );
-	BaseVarType *result = VarGenerate::createVarType( parent );
+	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
 	if( result == nullptr )
 		return nullptr;
-	
-	I_Type dataType = result->getVarTypeInfo(  );
+
+	I_Type dataType = result->getVarTypeInfo( );
 	if( VarGenerate::conver( result, &dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
 		delete result;
 		return nullptr;
@@ -58,11 +66,11 @@ BaseVarType * operator+( const BaseVarType &left_type_var_ref, const BaseVarType
 	return result;
 }
 BaseVarType * operator-( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type parent = left_type_var_ref.getThisTypeInfo( );
-	BaseVarType *result = VarGenerate::createVarType( parent );
+	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
 	if( result == nullptr )
 		return nullptr;
-	I_Type dataType = result->getVarTypeInfo(  );
+	I_Type dataType = result->getVarTypeInfo( );
 	if( VarGenerate::conver( result, &dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
 		delete result;
 		return nullptr;
@@ -74,11 +82,11 @@ BaseVarType * operator-( const BaseVarType &left_type_var_ref, const BaseVarType
 	return result;
 }
 BaseVarType * operator*( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type parent = left_type_var_ref.getThisTypeInfo( );
-	BaseVarType *result = VarGenerate::createVarType( parent );
+	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
 	if( result == nullptr )
 		return nullptr;
-	I_Type dataType = result->getVarTypeInfo(  );
+	I_Type dataType = result->getVarTypeInfo( );
 	if( VarGenerate::conver( result, &dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
 		delete result;
 		return nullptr;
@@ -90,11 +98,11 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const BaseVarType
 	return result;
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type parent = left_type_var_ref.getThisTypeInfo( );
-	BaseVarType *result = VarGenerate::createVarType( parent );
+	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
 	if( result == nullptr )
 		return nullptr;
-	I_Type dataType = result->getVarTypeInfo(  );
+	I_Type dataType = result->getVarTypeInfo( );
 	if( VarGenerate::conver( result, &dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
 		delete result;
 		return nullptr;
@@ -742,91 +750,147 @@ bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+
+#define Imp_Operator_Calcu( function_name_ ) \
+	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( ); \
+	auto varType = VarGenerate::createVarType( *varTypeInfo, varTypeInfo ); \
+	if( varType == nullptr ) \
+		return VarGenerate::createVarType< NullptrType >( varTypeInfo ); \
+	if( VarGenerate::conver( varType, &left_type_var_ref ) ) { \
+		I_Type rightTypeInfo( typeid( right_type_var_ref ) ); \
+		VarGenerate::function_name_( varType, &rightTypeInfo, &right_type_var_ref ); \
+	} \
+	return varType
+
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }
-BaseVarType operator+( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+BaseVarType * operator+( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+	Imp_Operator_Calcu( add );
 }
-BaseVarType operator-( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+BaseVarType * operator-( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+	Imp_Operator_Calcu( sub );
 }
-BaseVarType operator*( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+BaseVarType * operator*( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+	Imp_Operator_Calcu( mul );
 }
-BaseVarType operator/( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+BaseVarType * operator/( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+	Imp_Operator_Calcu( dev );
 }

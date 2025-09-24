@@ -286,14 +286,14 @@ public:
 	/// @brief 生成指定类型的共享对象
 	/// @return 失败返回 nullptr
 	template< typename ttype >
-	static auto createVarType( ) {
+	static BaseVarType * createVarType( ) {
 		return createVarType( typeid( ttype ) );
 	}
 
 	/// @brief 生成指定类型的共享对象
 	/// @return 失败返回 nullptr
 	template< typename ttype >
-	static auto createVarType( QObject *parent ) {
+	static BaseVarType * createVarType( QObject *parent ) {
 		return createVarType( typeid( ttype ), parent );
 	}
 	/// @brief 获取支持类型

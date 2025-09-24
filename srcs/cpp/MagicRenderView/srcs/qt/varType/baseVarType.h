@@ -13,10 +13,6 @@ class BaseVarType : public QObject {
 	Q_OBJECT;
 private:
 	friend class VarGenerate;
-	friend class StringType;
-	friend class FloatType;
-	friend class IntType;
-	friend class NullptrType;
 protected:
 	/// @brief 生成代码
 	size_t generateCode;
@@ -39,6 +35,8 @@ public:
 	virtual bool setVar( const BaseVarType *target_data );
 	virtual const I_Type & getVarTypeInfo( ) const;
 	virtual const I_Type & getThisTypeInfo( ) const;
+	virtual  I_Type * getVarTypeInfoPtr( ) const;
+	virtual  I_Type * getThisTypeInfoPtr( ) const;
 	template< typename type >
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
@@ -62,18 +60,17 @@ public:
 	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
 		return operator/( left_type_var_ref, &right_type_var_ref );
 	}
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const int8_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const int16_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const int32_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const int64_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const uint8_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const uint16_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const uint32_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const uint64_t&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const float&, BaseVarType );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( BaseVarType &, const double&, BaseVarType );
-public:
-	STR_CALCU_OPERATOR( BaseVarType );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int8_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int16_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int32_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int64_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint8_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint16_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint32_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint64_t&, BaseVarType* );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const float&, BaseVarType* );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const double&, BaseVarType* );
+	STR_CALCU_OPERATOR( const BaseVarType&, BaseVarType* );
 
 	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, BaseVarType );
 	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int8_t );
