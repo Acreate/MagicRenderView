@@ -14,35 +14,45 @@ public:
 	/// @param right_type_info 右值类型
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
-	virtual bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+		return false;
+	}
 	/// @brief 右值赋予于右值加上左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
 	/// @param right_type_info 右值类型
 	/// @param right 右值指针
 	/// @return 成功加上返回 true
-	virtual bool addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+		return false;
+	}
 	/// @brief 右值赋值于右值减去左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
 	/// @param right_type_info 右值类型
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
-	virtual bool subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+		return false;
+	}
 	/// @brief 右值赋值于右值乘以左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
 	/// @param right_type_info 右值类型
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
-	virtual bool mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+		return false;
+	}
 	/// @brief 右值赋值于右值除以左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
 	/// @param right_type_info 右值类型
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
-	virtual bool devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+		return false;
+	}
 	/// @brief 右值是否等于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
@@ -50,7 +60,9 @@ public:
 	/// @param right 右值指针
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
-	virtual bool equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) = 0;
+	virtual bool equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+		return false;
+	}
 	/// @brief 右值是否大于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
@@ -58,7 +70,9 @@ public:
 	/// @param right 右值指针
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
-	virtual bool greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) = 0;
+	virtual bool greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+		return false;
+	}
 	/// @brief 右值是否小于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
@@ -66,7 +80,9 @@ public:
 	/// @param right 右值指针
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
-	virtual bool lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) = 0;
+	virtual bool lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+		return false;
+	}
 	/// @brief 右值是否大于等于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
@@ -74,7 +90,9 @@ public:
 	/// @param right 右值指针
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
-	virtual bool greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) = 0;
+	virtual bool greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+		return false;
+	}
 	/// @brief 右值是否小于于等于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针
@@ -82,7 +100,9 @@ public:
 	/// @param right 右值指针
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
-	virtual bool lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) = 0;
+	virtual bool lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+		return false;
+	}
 
 };
 #define ChackNeedType( left_type_, left_var_name_, right_type_,  right_var_name_ ) \

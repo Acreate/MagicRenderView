@@ -92,7 +92,7 @@ public:\
 	virtual left_type_ * operator =( const QString &right_type_var_ref );\
 	virtual left_type_ * operator =( const QString *right_type_var_ref ){	 return this->operator=( *right_type_var_ref );}\
 	virtual left_type_ * operator =( const std::wstring *right_type_var_ref ){	 return this->operator=( *right_type_var_ref );}\
-	virtual left_type_ * operator =( const std::string *right_type_var_ref );\
+	virtual left_type_ * operator =( const std::string *right_type_var_ref ){return return operator=( *right_type_var_ref );}\
 	virtual bool operator ==( const std::wstring *right_type_var_ref ) { return this->operator==( *right_type_var_ref ); }\
 	virtual bool operator !=( const std::wstring *right_type_var_ref ) { return this->operator!=( *right_type_var_ref ); }\
 	virtual bool operator >( const std::wstring *right_type_var_ref ) { return this->operator>( *right_type_var_ref ); }\
@@ -105,7 +105,7 @@ public:\
 	virtual bool operator <( const std::string *right_type_var_ref ) { return this->operator<( *right_type_var_ref ); }\
 	virtual bool operator <=( const std::string *right_type_var_ref ) { return this->operator<=( *right_type_var_ref ); }\
 	virtual bool operator >=( const std::string *right_type_var_ref ) { return this->operator>=( *right_type_var_ref ); }\
-	virtual bool operator ==( const std::wstring &right_type_var_ref ) {		QString var = QString::fromStdWString( right_type_var_ref );		return operator==( var );	}\
+	virtual bool operator ==( const std::wstring &right_type_var_ref ) { QString var = QString::fromStdWString( right_type_var_ref ); return operator==( var );}\
 	virtual bool operator !=( const std::wstring &right_type_var_ref ) { return this->operator==( right_type_var_ref ) == false; }\
 	virtual bool operator >( const std::wstring &right_type_var_ref ) {		QString var = QString::fromStdWString( right_type_var_ref );		return operator>( var );	}\
 	virtual bool operator <( const std::wstring &right_type_var_ref ) {		QString var = QString::fromStdWString( right_type_var_ref );		return operator<( var );	}\
@@ -123,8 +123,8 @@ public:\
 	virtual bool operator <( const std::string &right_type_var_ref ) {QString var = QString::fromStdString( right_type_var_ref );return operator< (var);}\
 	virtual bool operator <=( const std::string &right_type_var_ref ) {	QString var = QString::fromStdString( right_type_var_ref );	return operator<=( var );}\
 	virtual bool operator >=( const std::string &right_type_var_ref ) {	QString var = QString::fromStdString( right_type_var_ref );	return operator>=( var );}\
+	virtual bool operator !=( const QString &right_type_var_ref ){return !operator==( right_type_var_ref );}\
 	virtual bool operator ==( const QString &right_type_var_ref );\
-	virtual bool operator !=( const QString &right_type_var_ref );\
 	virtual bool operator >( const QString &right_type_var_ref );\
 	virtual bool operator <( const QString &right_type_var_ref );\
 	virtual bool operator <=( const QString &right_type_var_ref );\

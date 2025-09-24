@@ -729,7 +729,3 @@ bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	return result;
 }
 
-
-
-
-
