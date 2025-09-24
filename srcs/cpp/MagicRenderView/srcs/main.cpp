@@ -145,6 +145,9 @@ void testAppType( ) {
 	BaseVarType *color1 = VarGenerate::createVarType< ColorType >( );
 	BaseVarType *color2 = VarGenerate::createVarType< ColorType >( );
 
+	*str = 54581213465;
+	*str = *str / 3;
+
 	*float2 = 245;
 	*float1 = *float1 + *float2;
 	*float1 = *float1 + *str;

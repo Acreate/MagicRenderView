@@ -175,6 +175,76 @@ public:\
 	DEF_FRIEND_OPERATOR_CALCULATE(left_type_, righth_type_); \
 	DEF_ASSIGN_OPERATOR_CALCULATE(left_type_&, righth_type_&)
 
+
+/// @brief 定义字符串的四则运算
+/// @param _left_type 重载类型
+#define STR_CALCU_OPERATOR( _left_type ) \
+public:\
+	friend _left_type operator +( _left_type &left_type_var_ref,const std::string* right_type_var_ref ) { \
+		return operator+( left_type_var_ref, *right_type_var_ref  ); \
+	}\
+	friend _left_type operator -( _left_type &left_type_var_ref,const std::string* right_type_var_ref ) {\
+		return operator-( left_type_var_ref, *right_type_var_ref  );\
+	}\
+	friend _left_type operator *( _left_type &left_type_var_ref,const std::string* right_type_var_ref ) {\
+		return operator*( left_type_var_ref, *right_type_var_ref  ); \
+	}\
+	friend _left_type operator /( _left_type &left_type_var_ref,const std::string* right_type_var_ref ) {\
+		return operator/( left_type_var_ref, *right_type_var_ref );\
+	}\
+	friend _left_type operator +( _left_type &left_type_var_ref,const std::string& right_type_var_ref ) {\
+		QString str = QString::fromStdString( right_type_var_ref );\
+		return operator+( left_type_var_ref, str );\
+	}\
+	friend _left_type operator -( _left_type &left_type_var_ref,const std::string& right_type_var_ref ) {\
+		QString str = QString::fromStdString( right_type_var_ref );\
+		return operator-( left_type_var_ref, str );\
+	}\
+	friend _left_type operator *( _left_type &left_type_var_ref,const std::string& right_type_var_ref ) {\
+		QString str = QString::fromStdString( right_type_var_ref );\
+		return operator*( left_type_var_ref, str );\
+	}\
+	friend _left_type operator /( _left_type &left_type_var_ref,const std::string& right_type_var_ref ) {\
+		QString str = QString::fromStdString( right_type_var_ref );\
+		return operator/( left_type_var_ref, str );\
+	}\
+	friend _left_type operator +( _left_type &left_type_var_ref,const std::wstring* right_type_var_ref ) { \
+		return operator+( left_type_var_ref, *right_type_var_ref  ); \
+	}\
+	friend _left_type operator -( _left_type &left_type_var_ref,const std::wstring* right_type_var_ref ) {\
+		return operator-( left_type_var_ref, *right_type_var_ref  );\
+	}\
+	friend _left_type operator *( _left_type &left_type_var_ref,const std::wstring* right_type_var_ref ) {\
+		return operator*( left_type_var_ref, *right_type_var_ref  ); \
+	}\
+	friend _left_type operator /( _left_type &left_type_var_ref,const std::wstring* right_type_var_ref ) {\
+		return operator/( left_type_var_ref, *right_type_var_ref );\
+	}\
+	friend _left_type operator +( _left_type &left_type_var_ref,const std::wstring& right_type_var_ref ) {\
+		QString str = QString::fromStdWString( right_type_var_ref );\
+		return operator+( left_type_var_ref, str );\
+	}\
+	friend _left_type operator -( _left_type &left_type_var_ref,const std::wstring& right_type_var_ref ) {\
+		QString str = QString::fromStdWString( right_type_var_ref );\
+		return operator-( left_type_var_ref, str );\
+	}\
+	friend _left_type operator *( _left_type &left_type_var_ref,const std::wstring& right_type_var_ref ) {\
+		QString str = QString::fromStdWString( right_type_var_ref );\
+		return operator*( left_type_var_ref, str );\
+	}\
+	friend _left_type operator /( _left_type &left_type_var_ref,const std::wstring& right_type_var_ref ) {\
+		QString str = QString::fromStdWString( right_type_var_ref );\
+		return operator/( left_type_var_ref, str );\
+	}\
+	friend BaseVarType operator +( BaseVarType &left_type_var_ref, const QString *right_type_var_ref ){ return operator+(left_type_var_ref,*right_type_var_ref); }\
+	friend BaseVarType operator -( BaseVarType &left_type_var_ref, const QString *right_type_var_ref ){ return operator-(left_type_var_ref,*right_type_var_ref); }\
+	friend BaseVarType operator *( BaseVarType &left_type_var_ref, const QString *right_type_var_ref ){ return operator*(left_type_var_ref,*right_type_var_ref); }\
+	friend BaseVarType operator /( BaseVarType &left_type_var_ref, const QString *right_type_var_ref ){ return operator/(left_type_var_ref,*right_type_var_ref); }\
+	friend BaseVarType operator +( BaseVarType &left_type_var_ref, const QString &right_type_var_ref );\
+	friend BaseVarType operator -( BaseVarType &left_type_var_ref, const QString &right_type_var_ref );\
+	friend BaseVarType operator *( BaseVarType &left_type_var_ref, const QString &right_type_var_ref );\
+	friend BaseVarType operator /( BaseVarType &left_type_var_ref, const QString &right_type_var_ref )
+
 #ifdef Def_First_StaticMetaInfo
 #undef Def_First_StaticMetaInfo
 #endif

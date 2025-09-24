@@ -201,7 +201,6 @@ bool IntToFloat::devTarget( const I_Type *left_type_info, void *left, const I_Ty
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
 		return true;
-
 	return false;
 }
 bool IntToFloat::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -330,7 +329,6 @@ bool IntToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, 
 	if( doubelVar == nullptr )
 		return false;
 
-	
 	auto call = [doubelVar, result_bool] ( auto *var ) {
 		*result_bool = *doubelVar <= *var;
 		return true;
@@ -362,7 +360,6 @@ bool IntToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, 
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
 		return true;
-
 	return false;
 }
 bool IntToFloat::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -402,6 +399,5 @@ bool IntToFloat::lessThanTarget( const I_Type *left_type_info, void *left, const
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
 		return true;
-
 	return false;
 }

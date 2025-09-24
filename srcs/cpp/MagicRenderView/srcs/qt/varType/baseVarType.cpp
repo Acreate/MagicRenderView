@@ -742,3 +742,91 @@ bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
+BaseVarType operator+( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
+}
+BaseVarType operator+( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+}
+BaseVarType operator-( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+}
+BaseVarType operator*( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+}
+BaseVarType operator/( BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
+}
