@@ -33,7 +33,6 @@ public:
 	/// @brief 重置为默认
 	virtual void resetVar( ) = 0;
 	~BaseVarType( ) override;
-	virtual BaseVarType & operator=( const BaseVarType &other );
 	virtual bool setVar( const BaseVarType *target_data );
 	virtual const I_Type & getTypeInfo( ) const;
 	template< typename type >
@@ -46,29 +45,30 @@ public:
 	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, StringType* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, IntType * );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, FloatType* );
+	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
+		return operator+( left_type_var_ref, &right_type_var_ref );
+	}
+	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
 
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int8_t );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int16_t );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int32_t );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int64_t );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, float );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, double );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, QString );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::string );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::wstring );
+		return operator-( left_type_var_ref, &right_type_var_ref );
+	}
+	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
+		return operator*( left_type_var_ref, &right_type_var_ref );
+	}
+	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
+		return operator/( left_type_var_ref, &right_type_var_ref );
+	}
 
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int8_t * );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int16_t* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int32_t* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int64_t* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, float* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, double* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, QString* );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::string * );
-	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::wstring * );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, BaseVarType );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int8_t );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int16_t );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int32_t );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int64_t );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, float );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, double );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, QString );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, std::string );
+	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, std::wstring );
 Q_SIGNALS:
 	void releaseObj( BaseVarType *release );
 };

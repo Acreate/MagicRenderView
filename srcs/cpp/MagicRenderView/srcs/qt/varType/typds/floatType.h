@@ -16,10 +16,9 @@ protected:
 protected:
 	using t_current_type = double;
 	t_current_type *var;
-protected:
+public:
 	FloatType( QObject *parent );
 	FloatType( );
-public:
 	FloatType( const FloatType &other );
 	~FloatType( ) override;
 	void resetVar( ) override {
@@ -29,18 +28,18 @@ protected:
 	void * getVarPtr( ) const override {
 		return var;
 	}
-public:
-	DEF_OPERATOR_CALCULATE( FloatType, StringType );
-	DEF_OPERATOR_CALCULATE( FloatType, IntType );
-	DEF_OPERATOR_CALCULATE( FloatType, FloatType );
-
-	DEF_FRIEND_OPERATOR_CALCULATE( IntType, StringType );
-	DEF_FRIEND_OPERATOR_CALCULATE( IntType, IntType );
-	DEF_FRIEND_OPERATOR_CALCULATE( IntType, FloatType );
-
-	DEF_FRIEND_OPERATOR_CALCULATE( StringType, StringType );
-	DEF_FRIEND_OPERATOR_CALCULATE( StringType, IntType );
-	DEF_FRIEND_OPERATOR_CALCULATE( StringType, FloatType );
+//public:
+//	DEF_OPERATOR_CALCULATE( FloatType, StringType );
+//	DEF_OPERATOR_CALCULATE( FloatType, IntType );
+//	DEF_OPERATOR_CALCULATE( FloatType, FloatType );
+//
+//	DEF_FRIEND_OPERATOR_CALCULATE( IntType, StringType );
+//	DEF_FRIEND_OPERATOR_CALCULATE( IntType, IntType );
+//	DEF_FRIEND_OPERATOR_CALCULATE( IntType, FloatType );
+//
+//	DEF_FRIEND_OPERATOR_CALCULATE( StringType, StringType );
+//	DEF_FRIEND_OPERATOR_CALCULATE( StringType, IntType );
+//	DEF_FRIEND_OPERATOR_CALCULATE( StringType, FloatType );
 
 };
 

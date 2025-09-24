@@ -32,22 +32,6 @@ protected:
 	static void appendVarTypeGenerateInstance( const std_shared_ptr< I_Type > &info, const std_function< BaseVarType*( QObject * ) > &generate_instance_function );
 public:
 	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool conver( BaseVarType &left, const BaseVarType &right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool conver( BaseVarType *left, const BaseVarType *right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right_type_info right 类型信息
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool conver( BaseVarType *left, const I_Type *right_type_info, const void *right );
-	/// @brief 类型转换赋值
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值
 	/// @param right_type_info right 类型信息
@@ -55,22 +39,6 @@ public:
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool conver( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool add( BaseVarType &left, const BaseVarType &right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool add( BaseVarType *left, const BaseVarType *right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right_type_info right 类型信息
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool add( BaseVarType *left, const I_Type *right_type_info, const void *right );
 	/// @brief 类型加法
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值
@@ -79,22 +47,6 @@ public:
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool add( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool sub( BaseVarType &left, const BaseVarType &right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool sub( BaseVarType *left, const BaseVarType *right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right_type_info right 类型信息
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool sub( BaseVarType *left, const I_Type *right_type_info, const void *right );
 	/// @brief 类型减法
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值
@@ -102,22 +54,6 @@ public:
 	/// @param right 赋值
 	static bool sub( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool mul( BaseVarType &left, const BaseVarType &right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool mul( BaseVarType *left, const BaseVarType *right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right_type_info right 类型信息
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool mul( BaseVarType *left, const I_Type *right_type_info, const void *right );
 	/// @brief 类型乘法
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值
@@ -125,28 +61,165 @@ public:
 	/// @param right 赋值
 	static bool mul( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType &left, const BaseVarType &right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType *left, const BaseVarType *right );
-	/// @brief 类型转换赋值
-	/// @param left 被赋值
-	/// @param right_type_info right 类型信息
-	/// @param right 赋值
-	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType *left, const I_Type *right_type_info, const void *right );
 	/// @brief 类型除法
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值
 	/// @param right_type_info right 类型信息
 	/// @param right 赋值
 	static bool dev( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+
+	/// @brief 右值是否等于左值
+	/// @param left_type_info 左值类型
+	/// @param left 左值指针
+	/// @param right_type_info 右值类型
+	/// @param right 右值指针
+	/// @param result_bool 返回结果
+	/// @return 成功比较返回 true
+	static bool equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool );
+	/// @brief 右值是否大于左值
+	/// @param left_type_info 左值类型
+	/// @param left 左值指针
+	/// @param right_type_info 右值类型
+	/// @param right 右值指针
+	/// @param result_bool 返回结果
+	/// @return 成功比较返回 true
+	static bool greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool );
+	/// @brief 右值是否小于左值
+	/// @param left_type_info 左值类型
+	/// @param left 左值指针
+	/// @param right_type_info 右值类型
+	/// @param right 右值指针
+	/// @param result_bool 返回结果
+	/// @return 成功比较返回 true
+	static bool lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool );
+	/// @brief 右值是否大于等于左值
+	/// @param left_type_info 左值类型
+	/// @param left 左值指针
+	/// @param right_type_info 右值类型
+	/// @param right 右值指针
+	/// @param result_bool 返回结果
+	/// @return 成功比较返回 true
+	static bool greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool );
+	/// @brief 右值是否小于于等于左值
+	/// @param left_type_info 左值类型
+	/// @param left 左值指针
+	/// @param right_type_info 右值类型
+	/// @param right 右值指针
+	/// @param result_bool 返回结果
+	/// @return 成功比较返回 true
+	static bool lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool conver( BaseVarType &left, const BaseVarType &right ) {
+		return conver( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool conver( BaseVarType *left, const BaseVarType *right ) {
+		return conver( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool conver( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return conver( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType &left, const BaseVarType &right ) {
+		return add( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType *left, const BaseVarType *right ) {
+		return add( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return add( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	}
+
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType &left, const BaseVarType &right ) {
+		return sub( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType *left, const BaseVarType *right ) {
+		return sub( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return sub( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType &left, const BaseVarType &right ) {
+		return mul( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType *left, const BaseVarType *right ) {
+		return mul( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return mul( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType &left, const BaseVarType &right ) {
+		return dev( left.typeInfo.get( ), left.getVarPtr( ), right.typeInfo.get( ), right.getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType *left, const BaseVarType *right ) {
+		return dev( left->typeInfo.get( ), left->getVarPtr( ), right->typeInfo.get( ), right->getVarPtr( ) );
+	}
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return dev( left->typeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	}
+
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >

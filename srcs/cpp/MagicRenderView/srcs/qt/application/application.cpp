@@ -59,6 +59,8 @@
 #include <qt/varType/typds/stringType.h>
 #include <qt/varType/typds/nullptrType.h>
 
+#include "../varType/typds/colorType.h"
+
 #include "qt/tools/tools.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
@@ -137,6 +139,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	VarGenerate::appendVarTypeGenerateInstance< FloatType >( );
 	VarGenerate::appendVarTypeGenerateInstance< StringType >( );
 	VarGenerate::appendVarTypeGenerateInstance< IntType >( );
+	VarGenerate::appendVarTypeGenerateInstance< ColorType >( );
 	VarGenerate::appendVarTypeGenerateInstance< NullptrType >( );
 	// todo : VarType 类型转换
 	VarGenerate::appendConverInstance< StringToInt >( );
