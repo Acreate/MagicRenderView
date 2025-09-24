@@ -7,6 +7,7 @@ class StringType : public BaseVarType {
 	Q_OBJECT;
 protected:
 	friend class VarGenerate;
+	friend class BaseVarType;
 	friend class FloatType;
 	friend class IntType;
 	friend class NullptrType;
@@ -20,16 +21,18 @@ public:
 	~StringType( ) override {
 		delete var;
 	}
+	void resetVar( ) override {
+		*var = t_current_type( );
+	}
 protected:
 	void * getVarPtr( ) const override {
 		return var;
 	}
 public:
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType&, FloatType& );
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType&, IntType & );
+	DEF_ASSIGN_OPERATOR_CALCULATE( StringType&, StringType& );
 
-	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, FloatType);
-	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, IntType);
-	DEF_ASSIGN_OPERATOR_CALCULATE( StringType, StringType);
-	
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, StringType );
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, IntType );
 	DEF_FRIEND_OPERATOR_CALCULATE( FloatType, FloatType );

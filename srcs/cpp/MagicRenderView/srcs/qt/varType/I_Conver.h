@@ -9,6 +9,10 @@ class I_Conver {
 public:
 	virtual ~I_Conver( ) = default;
 	virtual bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
+	virtual bool devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) = 0;
 };
 #define ChackNeedType( left_type_, left_var_name_, right_type_,  right_var_name_ ) \
 	if( left_type_info->getTypeInfo( ) != typeid( left_type_ ) ) \

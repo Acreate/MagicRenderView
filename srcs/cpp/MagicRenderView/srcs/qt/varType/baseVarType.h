@@ -18,6 +18,8 @@ private:
 	friend class IntType;
 	friend class NullptrType;
 protected:
+	/// @brief 生成代码
+	size_t generateCode;
 	/// @brief 记录当前类型
 	std_shared_ptr< I_Type > typeInfo;
 protected:
@@ -28,6 +30,8 @@ protected:
 	virtual void * getVarPtr( ) const = 0;
 	virtual void * getVarPtr( const I_Type &type_info ) const;
 public:
+	/// @brief 重置为默认
+	virtual void resetVar( ) = 0;
 	~BaseVarType( ) override;
 	virtual BaseVarType & operator=( const BaseVarType &other );
 	virtual bool setVar( const BaseVarType *target_data );
@@ -36,7 +40,17 @@ public:
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
 	}
-	
+public:
+	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
+	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
+	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
+	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
+
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, StringType* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, IntType * );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, FloatType* );
+Q_SIGNALS:
+	void releaseObj( BaseVarType *release );
 };
 
 #endif // BASEVARTYPE_H_H_HEAD__FILE__

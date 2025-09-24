@@ -6,79 +6,81 @@
 NullptrType::NullptrType( QObject *parent ) : BaseVarType( parent, std_shared_ptr< I_Type >( new I_Type( typeid( nullptr ) ) ) ) {
 
 }
+NullptrType::NullptrType( ) : NullptrType( nullptr ) { }
+NullptrType::NullptrType( const NullptrType &other ) : BaseVarType { other } { }
 NullptrType::~NullptrType( ) {
 }
 
-StringType operator+( NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
+StringType operator+( const NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-StringType operator-( NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
+StringType operator-( const NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-StringType operator*( NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
+StringType operator*( const NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-StringType operator/( NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
+StringType operator/( const NullptrType &left_type_var_ref, const StringType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-IntType operator+( NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
+IntType operator+( const NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-IntType operator-( NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
+IntType operator-( const NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-IntType operator*( NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
+IntType operator*( const NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-IntType operator/( NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
+IntType operator/( const NullptrType &left_type_var_ref, const IntType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-FloatType operator+( NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
+FloatType operator+( const NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-FloatType operator-( NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
+FloatType operator-( const NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-FloatType operator*( NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
+FloatType operator*( const NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-FloatType operator/( NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
+FloatType operator/( const NullptrType &left_type_var_ref, const FloatType &right_type_var_ref ) {
 	return right_type_var_ref;
 }
-StringType operator+( StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+StringType operator+( const StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return StringType( left_type_var_ref );
 }
-StringType operator-( StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+StringType operator-( const StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return StringType( left_type_var_ref );
 }
-StringType operator*( StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+StringType operator*( const StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-StringType operator/( StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+StringType operator/( const StringType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-IntType operator+( IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+IntType operator+( const IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-IntType operator-( IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+IntType operator-( const IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-IntType operator*( IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+IntType operator*( const IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-IntType operator/( IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+IntType operator/( const IntType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-FloatType operator+( FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+FloatType operator+( const FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-FloatType operator-( FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+FloatType operator-( const FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-FloatType operator*( FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+FloatType operator*( const FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
-FloatType operator/( FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
+FloatType operator/( const FloatType &left_type_var_ref, const NullptrType &right_type_var_ref ) {
 	return left_type_var_ref;
 }
 NullptrType & NullptrType::operator=( const StringType &right_type_var_ref ) {

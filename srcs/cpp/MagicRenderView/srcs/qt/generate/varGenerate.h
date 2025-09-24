@@ -5,6 +5,7 @@
 #include <alias/type_alias.h>
 
 #include "../varType/I_Type.h"
+#include "../varType/baseVarType.h"
 
 class IntType;
 class StringType;
@@ -15,6 +16,9 @@ class I_Conver;
 class VarGenerate {
 
 protected:
+	/// @brief 类型堆栈
+	static std_vector< BaseVarType * > baseVarStack;
+
 	/// @brief 类型创建列表
 	static std_vector< std_pairt< std_shared_ptr< I_Type >, std_function< BaseVarType*( QObject * ) > > > varTypeGenerateVector;
 	/// @brief 转换列表
@@ -50,6 +54,99 @@ public:
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	static bool conver( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType &left, const BaseVarType &right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType *left, const BaseVarType *right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( BaseVarType *left, const I_Type *right_type_info, const void *right );
+	/// @brief 类型加法
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool add( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType &left, const BaseVarType &right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType *left, const BaseVarType *right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool sub( BaseVarType *left, const I_Type *right_type_info, const void *right );
+	/// @brief 类型减法
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	static bool sub( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType &left, const BaseVarType &right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType *left, const BaseVarType *right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool mul( BaseVarType *left, const I_Type *right_type_info, const void *right );
+	/// @brief 类型乘法
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	static bool mul( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType &left, const BaseVarType &right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType *left, const BaseVarType *right );
+	/// @brief 类型转换赋值
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	static bool dev( BaseVarType *left, const I_Type *right_type_info, const void *right );
+	/// @brief 类型除法
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	static bool dev( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >
@@ -68,10 +165,26 @@ public:
 		}
 	static void appendVarTypeGenerateInstance( ) {
 		std_shared_ptr< I_Type > sharedPtr( new I_Type( typeid( ttype ) ) );
-		auto lambda = [] ( QObject *parent )->BaseVarType * {
-			return new ttype( parent );
+
+		auto createLambda = [] ( QObject *parent )->BaseVarType * {
+			ttype *resultPtr = new ttype( parent );
+			baseVarStack.emplace_back( resultPtr );
+			QObject::connect( resultPtr, &BaseVarType::releaseObj, [resultPtr] ( BaseVarType *delete_ptr ) {
+				size_t count = baseVarStack.size( );
+				if( count == 0 )
+					return;
+				auto data = baseVarStack.data( );
+				for( size_t index = 0; index < count; ++index )
+					if( data[ index ] == resultPtr ) {
+						auto iterator = baseVarStack.begin( ) + index;
+						baseVarStack.erase( iterator );
+						break;
+					}
+			} );
+			return resultPtr;
+			return nullptr;
 		};
-		appendVarTypeGenerateInstance( sharedPtr, lambda );
+		appendVarTypeGenerateInstance( sharedPtr, createLambda );
 	}
 	/// @brief 生成指定类型的共享对象
 	/// @param create_type 生成类型
@@ -114,6 +227,5 @@ public:
 	/// @return 类型列表
 	static std_vector< std_shared_ptr< I_Type > > getSupporType( );
 };
-
 
 #endif // VARGENERATE_H_H_HEAD__FILE__

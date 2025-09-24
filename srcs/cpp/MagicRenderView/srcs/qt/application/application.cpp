@@ -54,10 +54,10 @@
 #include "../varType/convers/intToConvers/intToString.h"
 #include "../varType/convers/stringToConvers/stringToFloat.h"
 #include "../varType/convers/stringToConvers/stringToInt.h"
-#include "../varType/typds/floatType.h"
-#include "../varType/typds/intType.h"
-#include "../varType/typds/stringType.h"
-#include "../varType/typds/nullptrType.h"
+#include <qt/varType/typds/floatType.h>
+#include <qt/varType/typds/intType.h>
+#include <qt/varType/typds/stringType.h>
+#include <qt/varType/typds/nullptrType.h>
 
 #include "qt/tools/tools.h"
 

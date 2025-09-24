@@ -9,6 +9,7 @@ class FloatType : public BaseVarType {
 	Q_OBJECT;
 protected:
 	friend class VarGenerate;
+	friend class BaseVarType;
 	friend class StringType;
 	friend class IntType;
 	friend class NullptrType;
@@ -19,9 +20,11 @@ protected:
 	FloatType( QObject *parent );
 	FloatType( );
 public:
+	FloatType( const FloatType &other );
 	~FloatType( ) override;
-	FloatType( const FloatType &other )
-		: BaseVarType { other }, var { new t_current_type( *other.var ) } { }
+	void resetVar( ) override {
+		*var = t_current_type( );
+	}
 protected:
 	void * getVarPtr( ) const override {
 		return var;

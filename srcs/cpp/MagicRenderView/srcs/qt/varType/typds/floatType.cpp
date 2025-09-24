@@ -8,7 +8,7 @@
 #include <QDebug>
 
 #include "../../tools/tools.h"
-FloatType operator+( FloatType &i, const StringType &i2 ) {
+FloatType operator+( const FloatType &i, const StringType &i2 ) {
 	FloatType result;
 	bool isOk = false;
 	double toDouble = i2.var->toDouble( &isOk );
@@ -19,7 +19,7 @@ FloatType operator+( FloatType &i, const StringType &i2 ) {
 	*result.var = *i.var + toDouble;
 	return result;
 }
-FloatType operator-( FloatType &i, const StringType &i2 ) {
+FloatType operator-( const FloatType &i, const StringType &i2 ) {
 	FloatType result;
 	bool isOk = false;
 	double toDouble = i2.var->toDouble( &isOk );
@@ -30,7 +30,7 @@ FloatType operator-( FloatType &i, const StringType &i2 ) {
 	*result.var = *i.var - toDouble;
 	return result;
 }
-FloatType operator*( FloatType &i, const StringType &i2 ) {
+FloatType operator*( const FloatType &i, const StringType &i2 ) {
 	FloatType result;
 	bool isOk = false;
 	double toDouble = i2.var->toDouble( &isOk );
@@ -41,7 +41,7 @@ FloatType operator*( FloatType &i, const StringType &i2 ) {
 	*result.var = *i.var * toDouble;
 	return result;
 }
-FloatType operator/( FloatType &i, const StringType &i2 ) {
+FloatType operator/( const FloatType &i, const StringType &i2 ) {
 	FloatType result;
 	bool isOk = false;
 	double toDouble = i2.var->toDouble( &isOk );
@@ -60,6 +60,7 @@ FloatType::FloatType( ) : FloatType( nullptr ) { }
 FloatType::~FloatType( ) {
 	delete var;
 }
+FloatType::FloatType( const FloatType &other ) : BaseVarType { other }, var { new t_current_type( *other.var ) } { }
 FloatType & FloatType::operator=( const StringType &i2 ) {
 	bool isOk = false;
 	double toDouble = i2.var->toDouble( &isOk );
@@ -70,22 +71,22 @@ FloatType & FloatType::operator=( const StringType &i2 ) {
 	*this->var = toDouble;
 	return *this;
 }
-FloatType operator+( FloatType &i, const IntType &i2 ) {
+FloatType operator+( const FloatType &i, const IntType &i2 ) {
 	FloatType result;
 	*result.var = *i.var + *i2.var;
 	return result;
 }
-FloatType operator-( FloatType &i, const IntType &i2 ) {
+FloatType operator-( const FloatType &i, const IntType &i2 ) {
 	FloatType result;
 	*result.var = *i.var - *i2.var;
 	return result;
 }
-FloatType operator*( FloatType &i, const IntType &i2 ) {
+FloatType operator*( const FloatType &i, const IntType &i2 ) {
 	FloatType result;
 	*result.var = *i.var * *i2.var;
 	return result;
 }
-FloatType operator/( FloatType &i, const IntType &i2 ) {
+FloatType operator/( const FloatType &i, const IntType &i2 ) {
 	FloatType result;
 	if( *i2.var != 0 )
 		*result.var = *i.var / *i2.var;
@@ -95,22 +96,22 @@ FloatType & FloatType::operator=( const IntType &i2 ) {
 	*this->var = *i2.var;
 	return *this;
 }
-FloatType operator+( FloatType &i, const FloatType &i2 ) {
+FloatType operator+( const FloatType &i, const FloatType &i2 ) {
 	FloatType result;
 	*result.var = *i.var + *i2.var;
 	return result;
 }
-FloatType operator-( FloatType &i, const FloatType &i2 ) {
+FloatType operator-( const FloatType &i, const FloatType &i2 ) {
 	FloatType result;
 	*result.var = *i.var - *i2.var;
 	return result;
 }
-FloatType operator*( FloatType &i, const FloatType &i2 ) {
+FloatType operator*( const FloatType &i, const FloatType &i2 ) {
 	FloatType result;
 	*result.var = *i.var * *i2.var;
 	return result;
 }
-FloatType operator/( FloatType &i, const FloatType &i2 ) {
+FloatType operator/( const FloatType &i, const FloatType &i2 ) {
 	FloatType result;
 	if( *i2.var != 0 )
 		*result.var = *i.var + *i2.var;

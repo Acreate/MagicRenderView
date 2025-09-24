@@ -62,40 +62,40 @@ using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 /// @param righth_type_ 比较数
 #define DEF_EQU_OPERATOR_CALCULATE( left_type_, righth_type_) \
 	public:\
-		friend bool operator ==( const righth_type_ &left_type_var_ref, const left_type_ &right_type_var_ref ){ return right_type_var_ref == left_type_var_ref ;}\
-		friend bool operator !=( const righth_type_ &left_type_var_ref, const left_type_ &right_type_var_ref ){ return !( right_type_var_ref == left_type_var_ref );}\
-		bool operator !=(const righth_type_ &right_type_var_ref )const{ return !(*this == right_type_var_ref );}\
-		bool operator ==(const righth_type_ &right_type_var_ref )const
+		friend bool operator ==(  righth_type_ left_type_var_ref,  left_type_ right_type_var_ref ){ return right_type_var_ref == left_type_var_ref ;}\
+		friend bool operator !=(  righth_type_ left_type_var_ref,  left_type_ right_type_var_ref ){ return !( right_type_var_ref == left_type_var_ref );}\
+		bool operator !=( righth_type_ right_type_var_ref )const{ return !(*this == right_type_var_ref );}\
+		bool operator ==( righth_type_ right_type_var_ref )const
 
 /// @brief 赋值计算操作符重载
 /// @param left_type_ 左值
 /// @param righth_type_ 右值
 #define DEF_ASSIGN_OPERATOR_CALCULATE( left_type_, righth_type_) \
 	public:\
-		left_type_ & operator =(const righth_type_ &right_type_var_ref )
+		left_type_ operator =(const righth_type_ right_type_var_ref )
 
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符
 /// @param righth_type_ 有操作符
 #define DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( left_type_, righth_type_, result_type_ ) \
 	public:\
-		friend result_type_ operator +( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
-		friend result_type_ operator -( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
-		friend result_type_ operator *( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref ); \
-		friend result_type_ operator /( left_type_ &left_type_var_ref, const righth_type_ &right_type_var_ref )
+		friend result_type_ operator +( left_type_ left_type_var_ref, righth_type_ right_type_var_ref ); \
+		friend result_type_ operator -( left_type_ left_type_var_ref, righth_type_ right_type_var_ref ); \
+		friend result_type_ operator *( left_type_ left_type_var_ref, righth_type_ right_type_var_ref ); \
+		friend result_type_ operator /( left_type_ left_type_var_ref, righth_type_ right_type_var_ref )
 
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符
 /// @param righth_type_ 有操作符
 #define DEF_FRIEND_OPERATOR_CALCULATE( left_type_, righth_type_ ) \
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( left_type_, righth_type_, left_type_ )
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT(const left_type_&,const righth_type_&, left_type_ )
 
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符
 /// @param righth_type_ 有操作符
 #define DEF_OPERATOR_CALCULATE( left_type_, righth_type_) \
 	DEF_FRIEND_OPERATOR_CALCULATE(left_type_, righth_type_); \
-	DEF_ASSIGN_OPERATOR_CALCULATE(left_type_, righth_type_)
+	DEF_ASSIGN_OPERATOR_CALCULATE(left_type_&, righth_type_&)
 
 #ifdef Def_First_StaticMetaInfo
 #undef Def_First_StaticMetaInfo
