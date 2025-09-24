@@ -92,7 +92,7 @@ public:\
 	virtual left_type_ * operator =( const QString &right_type_var_ref );\
 	virtual left_type_ * operator =( const QString *right_type_var_ref ){	 return this->operator=( *right_type_var_ref );}\
 	virtual left_type_ * operator =( const std::wstring *right_type_var_ref ){	 return this->operator=( *right_type_var_ref );}\
-	virtual left_type_ * operator =( const std::string *right_type_var_ref ){return return operator=( *right_type_var_ref );}\
+	virtual left_type_ * operator =( const std::string *right_type_var_ref ){ return operator=( *right_type_var_ref );}\
 	virtual bool operator ==( const std::wstring *right_type_var_ref ) { return this->operator==( *right_type_var_ref ); }\
 	virtual bool operator !=( const std::wstring *right_type_var_ref ) { return this->operator!=( *right_type_var_ref ); }\
 	virtual bool operator >( const std::wstring *right_type_var_ref ) { return this->operator>( *right_type_var_ref ); }\

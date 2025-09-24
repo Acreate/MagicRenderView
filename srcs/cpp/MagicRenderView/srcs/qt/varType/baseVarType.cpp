@@ -221,7 +221,7 @@ bool BaseVarType::operator<=( const BaseVarType &right_type_var_ref ) {
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const BaseVarType &right_type_var_ref ) {
@@ -230,7 +230,7 @@ bool BaseVarType::operator>=( const BaseVarType &right_type_var_ref ) {
 	auto left = this->getVarPtr( );
 	auto right = right_type_var_ref.getVarPtr( );
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const int8_t &right_type_var_ref ) {
@@ -239,7 +239,7 @@ bool BaseVarType::operator==( const int8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const int8_t &right_type_var_ref ) {
@@ -266,7 +266,7 @@ bool BaseVarType::operator<=( const int8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const int8_t &right_type_var_ref ) {
@@ -275,7 +275,7 @@ bool BaseVarType::operator>=( const int8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const int16_t &right_type_var_ref ) {
@@ -284,7 +284,7 @@ bool BaseVarType::operator==( const int16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const int16_t &right_type_var_ref ) {
@@ -311,7 +311,7 @@ bool BaseVarType::operator<=( const int16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const int16_t &right_type_var_ref ) {
@@ -320,7 +320,7 @@ bool BaseVarType::operator>=( const int16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const int32_t &right_type_var_ref ) {
@@ -329,7 +329,7 @@ bool BaseVarType::operator==( const int32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const int32_t &right_type_var_ref ) {
@@ -356,7 +356,7 @@ bool BaseVarType::operator<=( const int32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const int32_t &right_type_var_ref ) {
@@ -365,7 +365,7 @@ bool BaseVarType::operator>=( const int32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const int64_t &right_type_var_ref ) {
@@ -374,7 +374,7 @@ bool BaseVarType::operator==( const int64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const int64_t &right_type_var_ref ) {
@@ -401,7 +401,7 @@ bool BaseVarType::operator<=( const int64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const int64_t &right_type_var_ref ) {
@@ -410,7 +410,7 @@ bool BaseVarType::operator>=( const int64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( int64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const uint8_t &right_type_var_ref ) {
@@ -419,7 +419,7 @@ bool BaseVarType::operator==( const uint8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const uint8_t &right_type_var_ref ) {
@@ -446,7 +446,7 @@ bool BaseVarType::operator<=( const uint8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const uint8_t &right_type_var_ref ) {
@@ -455,7 +455,7 @@ bool BaseVarType::operator>=( const uint8_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint8_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const uint16_t &right_type_var_ref ) {
@@ -464,7 +464,7 @@ bool BaseVarType::operator==( const uint16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const uint16_t &right_type_var_ref ) {
@@ -491,7 +491,7 @@ bool BaseVarType::operator<=( const uint16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const uint16_t &right_type_var_ref ) {
@@ -500,7 +500,7 @@ bool BaseVarType::operator>=( const uint16_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint16_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const uint32_t &right_type_var_ref ) {
@@ -509,7 +509,7 @@ bool BaseVarType::operator==( const uint32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const uint32_t &right_type_var_ref ) {
@@ -536,7 +536,7 @@ bool BaseVarType::operator<=( const uint32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const uint32_t &right_type_var_ref ) {
@@ -545,7 +545,7 @@ bool BaseVarType::operator>=( const uint32_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint32_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const uint64_t &right_type_var_ref ) {
@@ -554,7 +554,7 @@ bool BaseVarType::operator==( const uint64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const uint64_t &right_type_var_ref ) {
@@ -581,7 +581,7 @@ bool BaseVarType::operator<=( const uint64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const uint64_t &right_type_var_ref ) {
@@ -590,7 +590,7 @@ bool BaseVarType::operator>=( const uint64_t &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( uint64_t ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const float &right_type_var_ref ) {
@@ -599,7 +599,7 @@ bool BaseVarType::operator==( const float &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( float ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const float &right_type_var_ref ) {
@@ -626,7 +626,7 @@ bool BaseVarType::operator<=( const float &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( float ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const float &right_type_var_ref ) {
@@ -635,7 +635,7 @@ bool BaseVarType::operator>=( const float &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( float ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const double &right_type_var_ref ) {
@@ -644,7 +644,7 @@ bool BaseVarType::operator==( const double &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( double ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const double &right_type_var_ref ) {
@@ -671,7 +671,7 @@ bool BaseVarType::operator<=( const double &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( double ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const double &right_type_var_ref ) {
@@ -680,7 +680,7 @@ bool BaseVarType::operator>=( const double &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( double ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator==( const QString &right_type_var_ref ) {
@@ -689,7 +689,7 @@ bool BaseVarType::operator==( const QString &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( QString ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::equThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>( const QString &right_type_var_ref ) {
@@ -716,7 +716,7 @@ bool BaseVarType::operator<=( const QString &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( QString ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::lessOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
@@ -725,7 +725,7 @@ bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	auto rightTypeInfo = I_Type( typeid( QString ) );
 	auto right = &right_type_var_ref;
 	bool result = false;
-	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
+	VarGenerate::greaterOrEquThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
 
