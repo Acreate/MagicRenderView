@@ -114,3 +114,73 @@ BaseVarType * BaseVarType::operator=( const FloatType *right_type_var_ref ) {
 	VarGenerate::conver( &this->getTypeInfo( ), this->getVarPtr( ), &right_type_var_ref->getTypeInfo( ), right_type_var_ref->getVarPtr( ) );
 	return this;
 }
+BaseVarType * BaseVarType::operator=( const int8_t right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const int16_t right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const int32_t right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const int64_t right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const float right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const double right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const QString right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const std::string right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const std::wstring right_type_var_ref ) {
+	return operator=( &right_type_var_ref );
+}
+BaseVarType * BaseVarType::operator=( const int8_t *right_type_var_ref ) {
+	I_Type i( typeid( int8_t ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const int16_t *right_type_var_ref ) {
+	I_Type i( typeid( int16_t ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const int32_t *right_type_var_ref ) {
+	I_Type i( typeid( int32_t ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const int64_t *right_type_var_ref ) {
+	I_Type i( typeid( int64_t ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const float *right_type_var_ref ) {
+	I_Type i( typeid( float ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const double *right_type_var_ref ) {
+	I_Type i( typeid( double ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const QString *right_type_var_ref ) {
+	I_Type i( typeid( QString ) );
+	VarGenerate::conver( this, &i, right_type_var_ref );
+	return this;
+}
+BaseVarType * BaseVarType::operator=( const std::string *right_type_var_ref ) {
+	auto fromStdString = QString::fromStdString( *right_type_var_ref );
+	return operator=( &fromStdString );
+}
+BaseVarType * BaseVarType::operator=( const std::wstring *right_type_var_ref ) {
+	auto fromStdString = QString::fromStdWString( *right_type_var_ref );
+	return operator=( &fromStdString );
+}

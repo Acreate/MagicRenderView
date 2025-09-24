@@ -72,7 +72,7 @@ using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 /// @param righth_type_ 右值
 #define DEF_ASSIGN_OPERATOR_CALCULATE( left_type_, righth_type_) \
 	public:\
-		left_type_ operator =(const righth_type_ right_type_var_ref )
+		virtual	left_type_ operator =(const righth_type_ right_type_var_ref )
 
 /// @brief 用于定义四则运算与 = 赋值
 /// @param left_type_ 做操作符

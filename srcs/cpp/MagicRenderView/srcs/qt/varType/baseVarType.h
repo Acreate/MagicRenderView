@@ -49,6 +49,26 @@ public:
 	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, StringType* );
 	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, IntType * );
 	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, FloatType* );
+
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int8_t );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int16_t );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int32_t );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int64_t );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, float );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, double );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, QString );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::string );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::wstring );
+
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int8_t * );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int16_t* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int32_t* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, int64_t* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, float* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, double* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, QString* );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::string * );
+	DEF_ASSIGN_OPERATOR_CALCULATE( BaseVarType*, std::wstring * );
 Q_SIGNALS:
 	void releaseObj( BaseVarType *release );
 };
