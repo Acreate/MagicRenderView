@@ -1,11 +1,7 @@
-﻿#include "./baseVarType.h"
+﻿#include "baseVarType.h"
 #include "I_Type.h"
-
 #include "../generate/varGenerate.h"
 
-#include "typds/floatType.h"
-#include "typds/intType.h"
-#include "typds/stringType.h"
 
 BaseVarType::BaseVarType( ) : BaseVarType( nullptr ) {
 }
@@ -732,3 +728,8 @@ bool BaseVarType::operator>=( const QString &right_type_var_ref ) {
 	VarGenerate::greaterThanTarget( &leftTypeInfo, left, &rightTypeInfo, right, &result );
 	return result;
 }
+
+
+
+
+
