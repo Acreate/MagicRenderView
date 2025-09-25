@@ -49,36 +49,99 @@ public: // 删除列表
 	BaseVarType( const BaseVarType &other ) = delete;
 	/// @brief 同时与 BaseVarType( const BaseVarType &other ) 激活时，赋予指针赋值，但类型会降级，再也无法升级到子类。@code *varptr = varptr @cond 
 	const BaseVarType & operator =( const BaseVarType *right_type_var_ref ) = delete;
-	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
-	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
-	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
-	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
 public: // 重载列表
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const BaseVarType&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int8_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int16_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int32_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int64_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint8_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint16_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint32_t&, BaseVarType * );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint64_t&, BaseVarType* );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const float&, BaseVarType* );
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const double&, BaseVarType* );
-	STR_CALCU_OPERATOR( const BaseVarType&, BaseVarType* );
+#define def_operater_calcu( result_type_, param_type_, param_name_ ) \
+	result_type_ operator=(  param_type_ param_name_ ); \
+	result_type_ operator+(  param_type_ param_name_ ) = delete; \
+	result_type_ operator-(  param_type_ param_name_ ) = delete; \
+	result_type_ operator*(  param_type_ param_name_ ) = delete; \
+	result_type_ operator/(  param_type_ param_name_ ) = delete; \
+	result_type_ operator+=(  param_type_ param_name_ ); \
+	result_type_ operator-=(  param_type_ param_name_ ); \
+	result_type_ operator*=(  param_type_ param_name_ ); \
+	result_type_ operator/=(  param_type_ param_name_ ); \
+	bool operator==(  param_type_ param_name_ ) const; \
+	bool operator>(  param_type_ param_name_ ) const; \
+	bool operator<(  param_type_ param_name_ ) const; \
+	bool operator>=(  param_type_ param_name_ ) const; \
+	bool operator<=(  param_type_ param_name_ ) const
 
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, BaseVarType );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int8_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int16_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int32_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, int64_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, uint8_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, uint16_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, uint32_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, uint64_t );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, float );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_CALCULATE( BaseVarType, double );
-	DEF_ASSIGN_OPERATOR_REF_AND_PTR_AT_STR_CALCULATE( BaseVarType );
+#define delete_friend_operater( result_type_, left_param_type_, right_param_type_, operater_symbol) \
+	public :\
+	friend result_type_ operator operater_symbol( left_param_type_, right_param_type_ ) = delete
+
+#define del_fr_op_c( result_type_, left_param_type_, right_param_type_) \
+	delete_friend_operater( bool, left_param_type_, right_param_type_, == ) ;\
+	delete_friend_operater( bool, left_param_type_, right_param_type_, > );\
+	delete_friend_operater( bool, left_param_type_, right_param_type_, < );\
+	delete_friend_operater( bool, left_param_type_, right_param_type_, >= );\
+	delete_friend_operater( bool, left_param_type_, right_param_type_, <= )
+
+#define def_friend_operater(  result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, operater_symbol) \
+	public :\
+	friend result_type_ operator operater_symbol( left_param_type_ left_var_name_, right_param_type_ right_var_name_)
+
+#define def_fr_op_c( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_) \
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, += );\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, + ) = delete;\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, -= );\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, - ) = delete;\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, *= );\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, * ) = delete;\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, /= );\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, / ) = delete;\
+	def_friend_operater( result_type_, left_param_type_, left_var_name_, right_param_type_, right_var_name_, = );\
+	def_friend_operater( bool, left_param_type_, left_var_name_, right_param_type_, right_var_name_, == );\
+	def_friend_operater( bool, left_param_type_, left_var_name_, right_param_type_, right_var_name_, > );\
+	def_friend_operater( bool, left_param_type_, left_var_name_, right_param_type_, right_var_name_, < );\
+	def_friend_operater( bool, left_param_type_, left_var_name_, right_param_type_, right_var_name_, >= );\
+	def_friend_operater( bool, left_param_type_, left_var_name_, right_param_type_, right_var_name_, <= )
+
+	def_operater_calcu( BaseVarType &, const BaseVarType&, set_string_var );
+	def_operater_calcu( BaseVarType &, const QString&, set_string_var );
+	def_operater_calcu( BaseVarType &, const std::string&, set_string_var );
+	def_operater_calcu( BaseVarType &, const std::wstring&, set_string_var );
+	def_operater_calcu( BaseVarType &, const int8_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const int16_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const int32_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const int64_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const uint8_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const uint16_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const uint32_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const uint64_t&, set_string_var );
+	def_operater_calcu( BaseVarType &, const bool&, set_string_var );
+	def_operater_calcu( BaseVarType &, const float&, set_string_var );
+	def_operater_calcu( BaseVarType &, const double&, set_string_var );
+
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const BaseVarType* );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const QString& );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const std::string& );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const std::wstring& );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const int8_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const int16_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const int32_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const int64_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const uint8_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const uint16_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const uint32_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const uint64_t & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const float & );
+	del_fr_op_c( BaseVarType &, const BaseVarType &, const double & );
+
+	del_fr_op_c( BaseVarType &, const BaseVarType*, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const QString&, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const std::string&, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const std::wstring&, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const int8_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const int16_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const int32_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const int64_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const uint8_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const uint16_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const uint32_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const uint64_t &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const float &, const BaseVarType & );
+	del_fr_op_c( BaseVarType &, const double &, const BaseVarType & );
 Q_SIGNALS:
 	void releaseObj( BaseVarType *release );
 
