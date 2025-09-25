@@ -42,12 +42,6 @@ bool IntToString::fillTarget( const I_Type *left_type_info, void *left, const I_
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
@@ -84,13 +78,6 @@ bool IntToString::addTarget( const I_Type *left_type_info, void *left, const I_T
 	if( isOk )
 		return true;
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
-	if( isOk )
-		return true;
-
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
 	if( isOk )
 		return true;
 	return false;
@@ -136,12 +123,6 @@ bool IntToString::subTarget( const I_Type *left_type_info, void *left, const I_T
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
@@ -186,12 +167,6 @@ bool IntToString::mulTarget( const I_Type *left_type_info, void *left, const I_T
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
@@ -238,12 +213,6 @@ bool IntToString::divTarget( const I_Type *left_type_info, void *left, const I_T
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -286,12 +255,7 @@ bool IntToString::equThanTarget( const I_Type *left_type_info, void *left, const
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
 		return true;
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
+
 
 	return false;
 }
@@ -336,12 +300,6 @@ bool IntToString::greaterOrEquThanTarget( const I_Type *left_type_info, void *le
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -385,12 +343,6 @@ bool IntToString::greaterThanTarget( const I_Type *left_type_info, void *left, c
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -434,12 +386,6 @@ bool IntToString::lessOrEquThanTarget( const I_Type *left_type_info, void *left,
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
 bool IntToString::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
@@ -483,11 +429,5 @@ bool IntToString::lessThanTarget( const I_Type *left_type_info, void *left, cons
 	if( isOk )
 		return true;
 
-	isOk = typeCall< double >( right_type_info, right, call );
-	if( isOk )
-		return true;
-	isOk = typeCall< float >( right_type_info, right, call );
-	if( isOk )
-		return true;
 	return false;
 }
