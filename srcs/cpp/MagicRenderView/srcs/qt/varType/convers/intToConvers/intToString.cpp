@@ -178,11 +178,7 @@ bool IntToString::divTarget( const I_Type *left_type_info, void *left, const I_T
 	auto call = [leftTypeVar] ( auto *var ) {
 		qsizetype count = leftTypeVar->size( );
 		size_t var1 = count / *var;
-		size_t index = 0;
-		QStringList buff;
-		for( ; index < count; ++index )
-			buff.append( leftTypeVar->mid( index * var1, ( index + 1 ) * var1 ) );
-		*leftTypeVar = buff.join( "" );
+		*leftTypeVar = leftTypeVar->mid( 0, var1 );
 		return true;
 	};
 	bool isOk = typeCall< int8_t >( right_type_info, right, call );
@@ -255,7 +251,6 @@ bool IntToString::equThanTarget( const I_Type *left_type_info, void *left, const
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
 		return true;
-
 
 	return false;
 }

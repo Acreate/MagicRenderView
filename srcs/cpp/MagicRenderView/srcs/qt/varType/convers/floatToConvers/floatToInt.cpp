@@ -24,3 +24,18 @@ bool FloatToInt::divTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
+bool FloatToInt::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+	return I_Conver::equThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool FloatToInt::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+	return I_Conver::greaterOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool FloatToInt::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+	return I_Conver::greaterThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool FloatToInt::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+	return I_Conver::lessOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool FloatToInt::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+	return I_Conver::lessThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
