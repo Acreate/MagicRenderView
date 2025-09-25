@@ -170,6 +170,18 @@ public:
 		QString buff = QString::fromStdWString( *string );
 		return fillInt( &buff, fill_target, target_type_info );
 	}
+
+	bool fillFloat( const QString *string, void *fill_target, const type_info &target_type_info );
+
+	bool fillFloat( const std::string *string, void *fill_target, const type_info &target_type_info ) {
+		QString buff = QString::fromStdString( *string );
+		return fillInt( &buff, fill_target, target_type_info );
+	}
+
+	bool fillFloat( const std::wstring *string, void *fill_target, const type_info &target_type_info ) {
+		QString buff = QString::fromStdWString( *string );
+		return fillInt( &buff, fill_target, target_type_info );
+	}
 };
 
 #endif // I_CONVER_H_H_HEAD__FILE__

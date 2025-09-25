@@ -5,7 +5,7 @@ bool StringToFloat::fillTarget( const I_Type *left_type_info, void *left, const 
 
 	auto call = [this,left_type_info,left] ( auto *string ) {
 		const type_info &targetTypeInfo = left_type_info->getTypeInfo( );
-		bool isOK = fillInt( string, left, targetTypeInfo );
+		bool isOK = fillFloat( string, left, targetTypeInfo );
 		return isOK;
 	};
 	bool typeCallResult = typeCall< QString >( right_type_info, right, call );
@@ -26,7 +26,7 @@ bool StringToFloat::addTarget( const I_Type *left_type_info, void *left, const I
 		return false;
 	auto call = [this, leftVar] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		if( isOK )
 			*leftVar += result;
 		return isOK;
@@ -50,7 +50,7 @@ bool StringToFloat::subTarget( const I_Type *left_type_info, void *left, const I
 		return false;
 	auto call = [this, leftVar] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		if( isOK )
 			*leftVar -= result;
 		return isOK;
@@ -74,7 +74,7 @@ bool StringToFloat::mulTarget( const I_Type *left_type_info, void *left, const I
 		return false;
 	auto call = [this, leftVar] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		if( isOK )
 			*leftVar *= result;
 		return isOK;
@@ -98,7 +98,7 @@ bool StringToFloat::divTarget( const I_Type *left_type_info, void *left, const I
 		return false;
 	auto call = [this, leftVar] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		if( isOK && result != 0 )
 			*leftVar /= result;
 		return isOK;
@@ -122,7 +122,7 @@ bool StringToFloat::equThanTarget( const I_Type *left_type_info, void *left, con
 		return false;
 	auto call = [this, leftVar, result_bool] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		*result_bool = *leftVar == result;
 		return isOK;
 	};
@@ -139,13 +139,13 @@ bool StringToFloat::equThanTarget( const I_Type *left_type_info, void *left, con
 	return false;
 }
 bool StringToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	
+
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
 	auto call = [this, leftVar, result_bool] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		*result_bool = *leftVar >= result;
 		return isOK;
 	};
@@ -162,13 +162,13 @@ bool StringToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *
 	return false;
 }
 bool StringToFloat::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	
+
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
 	auto call = [this, leftVar, result_bool] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		*result_bool = *leftVar > result;
 		return isOK;
 	};
@@ -185,13 +185,13 @@ bool StringToFloat::greaterThanTarget( const I_Type *left_type_info, void *left,
 	return false;
 }
 bool StringToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	
+
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
 	auto call = [this, leftVar, result_bool] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		*result_bool = *leftVar <= result;
 		return isOK;
 	};
@@ -208,13 +208,13 @@ bool StringToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *lef
 	return false;
 }
 bool StringToFloat::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	
+
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
 	auto call = [this, leftVar, result_bool] ( auto *string ) {
 		double result = 0;
-		bool isOK = fillInt( string, &result, typeid( double ) );
+		bool isOK = fillFloat( string, &result, typeid( double ) );
 		*result_bool = *leftVar < result;
 		return isOK;
 	};

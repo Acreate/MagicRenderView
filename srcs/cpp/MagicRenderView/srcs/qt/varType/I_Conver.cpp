@@ -20,3 +20,11 @@ bool I_Conver::fillInt( const QString *string, void *fill_target, const type_inf
 		return true;
 	return false;
 }
+bool I_Conver::fillFloat( const QString *string, void *fill_target, const type_info &target_type_info ) {
+	bool is_ok = false;
+	if( stringFillToNumTypeVar< double >( string, fill_target, target_type_info, &is_ok ) )
+		return true;
+	if( stringFillToNumTypeVar< float >( string, fill_target, target_type_info, &is_ok ) )
+		return true;
+	return false;
+}
