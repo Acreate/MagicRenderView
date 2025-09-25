@@ -18,7 +18,6 @@ public:
 	IntType( QObject *parent );
 	IntType( ) : IntType( nullptr ) { }
 	~IntType( ) override {
-		delete var;
 	}
 	void resetVar( ) override {
 		*var = t_current_type( );

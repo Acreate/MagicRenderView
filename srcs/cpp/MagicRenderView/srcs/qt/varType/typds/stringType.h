@@ -18,7 +18,6 @@ public:
 	StringType( QObject *parent );
 	StringType( ) : StringType( nullptr ) { }
 	~StringType( ) override {
-		delete var;
 	}
 	void resetVar( ) override {
 		*var = t_current_type( );

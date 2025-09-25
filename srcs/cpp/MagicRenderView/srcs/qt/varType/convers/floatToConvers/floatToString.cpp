@@ -86,17 +86,92 @@ bool FloatToString::divTarget( const I_Type *left_type_info, void *left, const I
 	return false;
 }
 bool FloatToString::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	return I_Conver::equThanTarget( left_type_info, left, right_type_info, right, result_bool );
+
+	auto leftVar = isType< QString >( left_type_info, left );
+	if( leftVar == nullptr )
+		return false;
+	auto call = [leftVar, result_bool] ( auto *p ) {
+
+		QString var = QString::number( *p );
+		*result_bool = *leftVar == var;
+		return true;
+	};
+	if( typeCall< double >( right_type_info, right, call ) )
+		return true;
+	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+		
+	return false;
 }
 bool FloatToString::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	return I_Conver::greaterOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool );
+
+	auto leftVar = isType< QString >( left_type_info, left );
+	if( leftVar == nullptr )
+		return false;
+	auto call = [leftVar, result_bool] ( auto *p ) {
+
+		QString var = QString::number( *p );
+		*result_bool = *leftVar >= var;
+		return true;
+	};
+	if( typeCall< double >( right_type_info, right, call ) )
+		return true;
+	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+		
+	return false;
 }
 bool FloatToString::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	return I_Conver::greaterThanTarget( left_type_info, left, right_type_info, right, result_bool );
+
+	auto leftVar = isType< QString >( left_type_info, left );
+	if( leftVar == nullptr )
+		return false;
+	auto call = [leftVar, result_bool] ( auto *p ) {
+
+		QString var = QString::number( *p );
+		*result_bool = *leftVar > var;
+		return true;
+	};
+	if( typeCall< double >( right_type_info, right, call ) )
+		return true;
+	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+		
+	return false;
 }
 bool FloatToString::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	return I_Conver::lessOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool );
+
+	auto leftVar = isType< QString >( left_type_info, left );
+	if( leftVar == nullptr )
+		return false;
+	auto call = [leftVar, result_bool] ( auto *p ) {
+
+		QString var = QString::number( *p );
+		*result_bool = *leftVar <= var;
+		return true;
+	};
+	if( typeCall< double >( right_type_info, right, call ) )
+		return true;
+	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+		
+	return false;
 }
 bool FloatToString::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
-	return I_Conver::lessThanTarget( left_type_info, left, right_type_info, right, result_bool );
+
+	auto leftVar = isType< QString >( left_type_info, left );
+	if( leftVar == nullptr )
+		return false;
+	auto call = [leftVar, result_bool] ( auto *p ) {
+
+		QString var = QString::number( *p );
+		*result_bool = *leftVar < var;
+		return true;
+	};
+	if( typeCall< double >( right_type_info, right, call ) )
+		return true;
+	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+		
+	return false;
 }

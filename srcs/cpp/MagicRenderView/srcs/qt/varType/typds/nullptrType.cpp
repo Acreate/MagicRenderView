@@ -3,9 +3,13 @@
 #include "floatType.h"
 #include "intType.h"
 #include "stringType.h"
-NullptrType::NullptrType( QObject *parent ) : BaseVarType( parent, std_shared_ptr< I_Type >( new I_Type( typeid( nullptr ) ) ) ) {
-
-	I_Type *typeInfo = initTypeInfo( );
+NullptrType::NullptrType( QObject *parent ) : BaseVarType( parent ) {
+	initTypeInfo = [this] {
+		objTypeInfo.reset( new I_Type( typeid( *this ) ) );
+		varTypeInfo.reset( new I_Type( typeid( nullptr ) ) );
+		return true;
+	};
+	initTypeInfo( );
 }
 NullptrType::NullptrType( ) : NullptrType( nullptr ) { }
 NullptrType::NullptrType( const NullptrType &other ) : BaseVarType { other } { }

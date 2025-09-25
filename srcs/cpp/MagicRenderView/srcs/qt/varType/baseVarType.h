@@ -13,6 +13,7 @@ class BaseVarType : public QObject {
 	Q_OBJECT;
 private:
 	friend class VarGenerate;
+	std_function< bool ( ) > baseVarTypeInitTypeInfo;
 protected:
 	/// @brief 生成代码
 	size_t generateCode;
@@ -20,28 +21,29 @@ protected:
 	std_shared_ptr< I_Type > varTypeInfo;
 	/// @brief 记录对象自身类型
 	std_shared_ptr< I_Type > objTypeInfo;
-protected:
-	virtual I_Type * initTypeInfo( );
+	/// @brief 初始化函数
+	std_function< bool ( ) > initTypeInfo;
+	/// @brief 对象释放调用函数
+	std_function< void ( ) > deleteCall;
 public:
 	BaseVarType( );
 	BaseVarType( QObject *parent );
-	BaseVarType( QObject *parent, const std_shared_ptr< I_Type > &var_type_info );
 	BaseVarType( const BaseVarType &other );
+	virtual const std_function< bool( ) > & getBaseVarTypeInitTypeInfo( ) const { return baseVarTypeInitTypeInfo; }
 	virtual void * getVarPtr( ) const { return nullptr; }
 	virtual void * getVarPtr( const I_Type &type_info ) const;
 	/// @brief 重置为默认
 	virtual void resetVar( ) { }
 	~BaseVarType( ) override;
 	virtual bool setVar( const BaseVarType *target_data );
-	virtual const I_Type & getVarTypeInfo( ) const;
-	virtual const I_Type & getThisTypeInfo( ) const;
-	virtual  I_Type * getVarTypeInfoPtr( ) const;
-	virtual  I_Type * getThisTypeInfoPtr( ) const;
+	virtual I_Type * getVarTypeInfoPtr( ) const;
+	virtual I_Type * getThisTypeInfoPtr( ) const;
 	template< typename type >
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
 	}
 public:
+	const BaseVarType & operator =( const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
@@ -60,13 +62,13 @@ public:
 	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
 		return operator/( left_type_var_ref, &right_type_var_ref );
 	}
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int8_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int16_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int32_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int64_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint8_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint16_t&, BaseVarType *);
-	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint32_t&, BaseVarType *);
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int8_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int16_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int32_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int64_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint8_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint16_t&, BaseVarType * );
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint32_t&, BaseVarType * );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const uint64_t&, BaseVarType* );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const float&, BaseVarType* );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const double&, BaseVarType* );

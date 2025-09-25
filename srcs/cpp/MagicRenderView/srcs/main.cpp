@@ -140,41 +140,21 @@ void testQtSerialization( ) {
 void testAppType( ) {
 	out_start( );
 
-	BaseVarType *float1 = VarGenerate::createVarType< FloatType >( );
-	BaseVarType *float2 = VarGenerate::createVarType< FloatType >( );
-	BaseVarType *intv = VarGenerate::createVarType< IntType >( );
 	BaseVarType *str = VarGenerate::createVarType< StringType >( );
-	BaseVarType *color1 = VarGenerate::createVarType< ColorType >( );
-	BaseVarType *color2 = VarGenerate::createVarType< ColorType >( );
+	BaseVarType *str2 = VarGenerate::createVarType< StringType >( );
+	
 
 	*str = 54581213465;
-	*intv = 54581213460;
-	*str = *str / 3;
+	*str2 = 444;
+	*str = str2;
 
-	*float2 = 245;
-	*float1 = *float1 + *float2;
-	*float1 = *float1 + *str;
-	*color1 = *float1 = str;
-
-	auto null = VarGenerate::createVarType< NullptrType >( );
-	if( *null == *float1 )
-		qDebug( ) << "类型等于空";
-	else
-		qDebug( ) << "类型不等于空";
-
-	BaseVarType *varType = VarGenerate::createVarType< FloatType >( );
-	auto p = qobject_cast< FloatType * >( varType );
-	qDebug( ) << "类型转换 : " << p;
-	delete float1;
-	delete float2;
-	delete varType;
 	out_end( );
 }
 void test( ) {
 
-	testQStringSerialization( );
-	testIntSerialization( );
-	testQtSerialization( );
+	//testQStringSerialization( );
+	//testIntSerialization( );
+	//testQtSerialization( );
 	testAppType( );
 }
 int main( int argc, char *argv[ ] ) {
