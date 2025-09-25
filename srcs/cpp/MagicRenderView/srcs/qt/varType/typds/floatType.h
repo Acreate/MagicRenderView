@@ -16,9 +16,10 @@ protected:
 protected:
 	using t_current_type = double;
 	t_current_type *var;
-public:
+protected:
 	FloatType( QObject *parent );
 	FloatType( );
+public:
 	~FloatType( ) override;
 	void resetVar( ) override {
 		*var = t_current_type( );

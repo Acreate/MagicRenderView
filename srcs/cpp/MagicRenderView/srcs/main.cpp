@@ -143,10 +143,6 @@ void testAppType( ) {
 	BaseVarType *str = VarGenerate::createVarType< StringType >( );
 	BaseVarType *str2 = VarGenerate::createVarType< StringType >( );
 
-	*str = 54581213465;
-	*str2 += 444;
-	*str = *str2;
-	bool cond = ( *str > *str2 );
 
 	delete str;
 	delete str2;

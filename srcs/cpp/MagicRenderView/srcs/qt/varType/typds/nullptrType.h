@@ -9,9 +9,10 @@ class NullptrType : public BaseVarType {
 	Q_OBJECT;
 protected:
 	friend class VarGenerate;
-public:
+protected:
 	NullptrType( QObject *parent );
 	NullptrType( );
+public:
 	~NullptrType( ) override;
 protected:
 	void * getVarPtr( ) const override {

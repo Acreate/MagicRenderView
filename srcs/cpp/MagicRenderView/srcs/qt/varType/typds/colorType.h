@@ -14,9 +14,10 @@ protected:
 protected:
 	using t_current_type = QColor;
 	t_current_type *var;
-public:
+protected:
 	ColorType( QObject *parent );
 	ColorType( );
+public:
 	~ColorType( ) override;
 	void resetVar( ) override;
 protected:

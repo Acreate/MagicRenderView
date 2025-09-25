@@ -14,9 +14,10 @@ protected:
 protected:
 	using t_current_type = QString;
 	t_current_type *var;
-public:
+protected:
 	StringType( QObject *parent );
 	StringType( ) : StringType( nullptr ) { }
+public:
 	~StringType( ) override {
 	}
 	void resetVar( ) override {

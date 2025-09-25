@@ -14,9 +14,10 @@ protected:
 protected:
 	using t_current_type = int64_t;
 	t_current_type *var;
-public:
+protected:
 	IntType( QObject *parent );
 	IntType( ) : IntType( nullptr ) { }
+public:
 	~IntType( ) override {
 	}
 	void resetVar( ) override {

@@ -10,7 +10,6 @@
 class IntType;
 class StringType;
 class FloatType;
-class BaseVarType;
 class I_Type;
 class I_Conver;
 class VarGenerate {
