@@ -276,12 +276,16 @@ public:
 	/// @param create_type 生成类型
 	/// @param parent 父节点
 	/// @return 失败返回 nullptr
-	static BaseVarType * createVarType( const type_info &create_type, QObject *parent );
+	static BaseVarType * createVarType( const type_info &create_type, QObject *parent ) {
+		return createVarType( I_Type( create_type ), parent );
+	}
 
 	/// @brief 生成指定类型的共享对象
 	/// @param create_type 生成类型
 	/// @return 失败返回 nullptr
-	static BaseVarType * createVarType( const type_info &create_type );
+	static BaseVarType * createVarType( const type_info &create_type ) {
+		return createVarType( create_type, nullptr );
+	}
 
 	/// @brief 生成指定类型的共享对象
 	/// @return 失败返回 nullptr

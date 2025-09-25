@@ -21,8 +21,9 @@ bool VarGenerate::conver( const I_Type *left_type_info, void *left, const I_Type
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->fillTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->fillTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的转换" );
@@ -34,8 +35,9 @@ bool VarGenerate::add( const I_Type *left_type_info, void *left, const I_Type *r
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->addTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->addTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的加法运算转换" );
@@ -47,8 +49,9 @@ bool VarGenerate::sub( const I_Type *left_type_info, void *left, const I_Type *r
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->subTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->subTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的减法运算转换" );
@@ -60,8 +63,9 @@ bool VarGenerate::mul( const I_Type *left_type_info, void *left, const I_Type *r
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->mulTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->mulTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的乘法运算转换" );
@@ -73,8 +77,9 @@ bool VarGenerate::dev( const I_Type *left_type_info, void *left, const I_Type *r
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->devTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->devTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的除法运算转换" );
@@ -86,8 +91,9 @@ bool VarGenerate::equThanTarget( const I_Type *left_type_info, void *left, const
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->equThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
+			if( extent = data[ index ].get( ), extent->equThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的等于比较运算" );
@@ -99,8 +105,9 @@ bool VarGenerate::greaterThanTarget( const I_Type *left_type_info, void *left, c
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->greaterThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
+			if( extent = data[ index ].get( ), extent->greaterThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的大于比较运算" );
@@ -112,8 +119,9 @@ bool VarGenerate::lessThanTarget( const I_Type *left_type_info, void *left, cons
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->lessThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
+			if( extent = data[ index ].get( ), extent->lessThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的小于比较运算" );
@@ -125,8 +133,9 @@ bool VarGenerate::greaterOrEquThanTarget( const I_Type *left_type_info, void *le
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->greaterOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
+			if( extent = data[ index ].get( ), extent->greaterOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的大于等于比较运算" );
@@ -138,8 +147,9 @@ bool VarGenerate::lessOrEquThanTarget( const I_Type *left_type_info, void *left,
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
+		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( data[ index ].get( )->lessOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
+			if( extent = data[ index ].get( ), extent->lessOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的小于等于比较运算" );
@@ -166,12 +176,7 @@ BaseVarType * VarGenerate::createVarType( const I_Type &create_type, QObject *pa
 	tools::debug::printError( msg.arg( create_type.getTypeInfo( ).name( ) ) );
 	return nullptr;
 }
-BaseVarType * VarGenerate::createVarType( const type_info &create_type, QObject *parent ) {
-	return createVarType( I_Type( create_type ), parent );
-}
-BaseVarType * VarGenerate::createVarType( const type_info &create_type ) {
-	return createVarType( create_type, nullptr );
-}
+
 std_vector< std_shared_ptr< I_Type > > VarGenerate::getSupporType( ) {
 	std_vector< std_shared_ptr< I_Type > > result;
 	size_t count = varTypeGenerateVector.size( );

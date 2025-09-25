@@ -59,6 +59,7 @@
 #include <qt/varType/typds/stringType.h>
 #include <qt/varType/typds/nullptrType.h>
 
+#include "../varType/convers/nullToConver/nullToAny.h"
 #include "../varType/typds/colorType.h"
 
 #include "qt/tools/tools.h"
@@ -148,6 +149,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	VarGenerate::appendConverInstance< FloatToString >( );
 	VarGenerate::appendConverInstance< IntToFloat >( );
 	VarGenerate::appendConverInstance< IntToString >( );
+	VarGenerate::appendConverInstance< NullToAny >( );
 	// todo : 序列化支持
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
