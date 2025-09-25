@@ -28,7 +28,7 @@ protected:
 public:
 	BaseVarType( );
 	BaseVarType( QObject *parent );
-	BaseVarType( const BaseVarType &other );
+	
 	virtual const std_function< bool( ) > & getBaseVarTypeInitTypeInfo( ) const { return baseVarTypeInitTypeInfo; }
 	virtual void * getVarPtr( ) const { return nullptr; }
 	virtual void * getVarPtr( const I_Type &type_info ) const;
@@ -42,8 +42,10 @@ public:
 	type * getVarPtr( ) const {
 		return ( type * ) getVarPtr( typeid( type ) );
 	}
-public:
-	const BaseVarType & operator =( const BaseVarType *right_type_var_ref );
+public: // 删除列表
+	BaseVarType( const BaseVarType &other ) = delete;
+	const BaseVarType & operator =( const BaseVarType *right_type_var_ref ) = delete;
+public: // 重载列表
 	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
 	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );

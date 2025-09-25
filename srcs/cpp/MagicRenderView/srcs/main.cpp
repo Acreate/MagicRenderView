@@ -146,7 +146,7 @@ void testAppType( ) {
 
 	*str = 54581213465;
 	*str2 = 444;
-	*str = str2;
+	*str = *str2;
 
 	out_end( );
 }

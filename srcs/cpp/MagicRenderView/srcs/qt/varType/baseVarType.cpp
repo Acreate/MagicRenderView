@@ -19,13 +19,6 @@ BaseVarType::BaseVarType( QObject *parent ) : QObject( parent ) {
 	this->initTypeInfo = [this] {
 		return baseVarTypeInitTypeInfo( );
 	};
-	this->initTypeInfo( );
-}
-
-BaseVarType::BaseVarType( const BaseVarType &other ) : QObject { other.parent( ) } {
-	this->initTypeInfo = other.initTypeInfo;
-	if( this->initTypeInfo( ) == false )
-		tools::debug::printError( "初始化失败" );
 }
 
 bool BaseVarType::setVar( const BaseVarType *target_data ) {
@@ -123,9 +116,6 @@ BaseVarType * BaseVarType::operator=( const BaseVarType &right_type_var_ref ) {
 	auto right = right_type_var_ref.getVarPtr( );
 	VarGenerate::conver( leftTypeInfo, left, rightTypeInfo, right );
 	return this;
-}
-const BaseVarType & BaseVarType::operator=( const BaseVarType *right_type_var_ref ) {
-	return *operator=( *right_type_var_ref );
 }
 #define conver_fill_type( type_info_, right_var_ref )\
 	auto *leftTypeInfo = this->getVarTypeInfoPtr( ); \
