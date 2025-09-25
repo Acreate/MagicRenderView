@@ -5,6 +5,7 @@
 #include "qt/generate/varGenerate.h"
 #include "qt/varType/typds/colorType.h"
 #include "qt/varType/typds/floatType.h"
+#include "qt/varType/typds/intType.h"
 #include "qt/varType/typds/nullptrType.h"
 #include "qt/varType/typds/stringType.h"
 #include "qt/widgets/mainWidget.h"
@@ -141,11 +142,13 @@ void testAppType( ) {
 
 	BaseVarType *float1 = VarGenerate::createVarType< FloatType >( );
 	BaseVarType *float2 = VarGenerate::createVarType< FloatType >( );
+	BaseVarType *intv = VarGenerate::createVarType< IntType >( );
 	BaseVarType *str = VarGenerate::createVarType< StringType >( );
 	BaseVarType *color1 = VarGenerate::createVarType< ColorType >( );
 	BaseVarType *color2 = VarGenerate::createVarType< ColorType >( );
 
 	*str = 54581213465;
+	*intv = 54581213460;
 	*str = *str / 3;
 
 	*float2 = 245;

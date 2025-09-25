@@ -107,7 +107,7 @@ BaseVarType * operator/( const BaseVarType &left_type_var_ref, const BaseVarType
 		delete result;
 		return nullptr;
 	}
-	if( VarGenerate::dev( result, right_type_var_ref ) == false ) {
+	if( VarGenerate::div( result, right_type_var_ref ) == false ) {
 		delete result;
 		return nullptr;
 	}
@@ -772,7 +772,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int8_t &rig
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int8_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -784,7 +784,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int16_t &ri
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int16_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -796,7 +796,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int32_t &ri
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int32_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -808,7 +808,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const int64_t &ri
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const int64_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -820,7 +820,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint8_t &ri
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint8_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -832,7 +832,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint16_t &r
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint16_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -844,7 +844,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint32_t &r
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint32_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -856,7 +856,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const uint64_t &r
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const uint64_t &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -868,7 +868,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const float &righ
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const float &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -880,7 +880,7 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const double &rig
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const double &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }
 BaseVarType * operator+( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
 	Imp_Operator_Calcu( add );
@@ -892,5 +892,5 @@ BaseVarType * operator*( const BaseVarType &left_type_var_ref, const QString &ri
 	Imp_Operator_Calcu( mul );
 }
 BaseVarType * operator/( const BaseVarType &left_type_var_ref, const QString &right_type_var_ref ) {
-	Imp_Operator_Calcu( dev );
+	Imp_Operator_Calcu( div );
 }

@@ -59,7 +59,10 @@
 #include <qt/varType/typds/stringType.h>
 #include <qt/varType/typds/nullptrType.h>
 
+#include "../varType/convers/floatToConvers/floatToFloat.h"
+#include "../varType/convers/intToConvers/intToInt.h"
 #include "../varType/convers/nullToConver/nullToAny.h"
+#include "../varType/convers/stringToConvers/stringToString.h"
 #include "../varType/typds/colorType.h"
 
 #include "qt/tools/tools.h"
@@ -143,10 +146,13 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	VarGenerate::appendVarTypeGenerateInstance< ColorType >( );
 	VarGenerate::appendVarTypeGenerateInstance< NullptrType >( );
 	// todo : VarType 类型转换
+	VarGenerate::appendConverInstance< StringToString >( );
 	VarGenerate::appendConverInstance< StringToInt >( );
 	VarGenerate::appendConverInstance< StringToFloat >( );
+	VarGenerate::appendConverInstance< FloatToFloat >( );
 	VarGenerate::appendConverInstance< FloatToInt >( );
 	VarGenerate::appendConverInstance< FloatToString >( );
+	VarGenerate::appendConverInstance< IntToInt >( );
 	VarGenerate::appendConverInstance< IntToFloat >( );
 	VarGenerate::appendConverInstance< IntToString >( );
 	VarGenerate::appendConverInstance< NullToAny >( );

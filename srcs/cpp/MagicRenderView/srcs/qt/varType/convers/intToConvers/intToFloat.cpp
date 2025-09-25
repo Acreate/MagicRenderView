@@ -163,7 +163,7 @@ bool IntToFloat::mulTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
-bool IntToFloat::devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )

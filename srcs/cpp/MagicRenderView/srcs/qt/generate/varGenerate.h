@@ -66,7 +66,7 @@ public:
 	/// @param left 被赋值
 	/// @param right_type_info right 类型信息
 	/// @param right 赋值
-	static bool dev( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
+	static bool div( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right );
 
 	/// @brief 右值是否等于左值
 	/// @param left_type_info 左值类型
@@ -201,23 +201,23 @@ public:
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType &left, const BaseVarType &right ) {
-		return dev( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
+	static bool div( BaseVarType &left, const BaseVarType &right ) {
+		return div( left.varTypeInfo.get( ), left.getVarPtr( ), right.varTypeInfo.get( ), right.getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType *left, const BaseVarType *right ) {
-		return dev( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
+	static bool div( BaseVarType *left, const BaseVarType *right ) {
+		return div( left->varTypeInfo.get( ), left->getVarPtr( ), right->varTypeInfo.get( ), right->getVarPtr( ) );
 	}
 	/// @brief 类型转换赋值
 	/// @param left 被赋值
 	/// @param right_type_info right 类型信息
 	/// @param right 赋值
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
-	static bool dev( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
-		return dev( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
+	static bool div( BaseVarType *left, const I_Type *right_type_info, const void *right ) {
+		return div( left->varTypeInfo.get( ), left->getVarPtr( ), right_type_info, right );
 	}
 
 	/// @brief 增加一个类型赋值对象

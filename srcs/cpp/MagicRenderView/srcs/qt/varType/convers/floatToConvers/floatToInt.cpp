@@ -20,7 +20,7 @@ bool FloatToInt::mulTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
-bool FloatToInt::devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 
 	return false;
 }

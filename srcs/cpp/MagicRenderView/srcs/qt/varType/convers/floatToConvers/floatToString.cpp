@@ -21,7 +21,7 @@ bool FloatToString::mulTarget( const I_Type *left_type_info, void *left, const I
 
 	return true;
 }
-bool FloatToString::devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToString::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 
 	return false;
 }

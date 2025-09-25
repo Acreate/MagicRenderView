@@ -72,14 +72,14 @@ bool VarGenerate::mul( const I_Type *left_type_info, void *left, const I_Type *r
 	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
 	return false;
 }
-bool VarGenerate::dev( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::div( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
 		size_t index = 0;
 		I_Conver *extent;
 		for( ; index < count; ++index )
-			if( extent = data[ index ].get( ), extent->devTarget( left_type_info, left, right_type_info, right ) )
+			if( extent = data[ index ].get( ), extent->divTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的除法运算转换" );

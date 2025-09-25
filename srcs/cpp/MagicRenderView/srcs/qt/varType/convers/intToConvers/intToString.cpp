@@ -194,7 +194,7 @@ bool IntToString::mulTarget( const I_Type *left_type_info, void *left, const I_T
 		return true;
 	return false;
 }
-bool IntToString::devTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToString::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
 
 	auto leftTypeVar = isType< QString >( left_type_info, left );
 	if( leftTypeVar == nullptr )
