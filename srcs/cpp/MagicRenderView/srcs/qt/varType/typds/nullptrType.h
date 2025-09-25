@@ -12,7 +12,6 @@ protected:
 public:
 	NullptrType( QObject *parent );
 	NullptrType( );
-	NullptrType( const NullptrType &other );
 	~NullptrType( ) override;
 protected:
 	void * getVarPtr( ) const override {

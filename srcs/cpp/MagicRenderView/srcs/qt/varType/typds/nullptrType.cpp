@@ -12,6 +12,5 @@ NullptrType::NullptrType( QObject *parent ) : BaseVarType( parent ) {
 	initTypeInfo( );
 }
 NullptrType::NullptrType( ) : NullptrType( nullptr ) { }
-NullptrType::NullptrType( const NullptrType &other ) : BaseVarType { other } { }
 NullptrType::~NullptrType( ) {
 }

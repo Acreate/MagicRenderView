@@ -19,7 +19,6 @@ protected:
 public:
 	FloatType( QObject *parent );
 	FloatType( );
-	FloatType( const FloatType &other );
 	~FloatType( ) override;
 	void resetVar( ) override {
 		*var = t_current_type( );

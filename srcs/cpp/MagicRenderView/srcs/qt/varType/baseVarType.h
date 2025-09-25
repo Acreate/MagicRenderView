@@ -28,12 +28,12 @@ protected:
 public:
 	BaseVarType( );
 	BaseVarType( QObject *parent );
-	
+
 	virtual const std_function< bool( ) > & getBaseVarTypeInitTypeInfo( ) const { return baseVarTypeInitTypeInfo; }
-	virtual void * getVarPtr( ) const { return nullptr; }
+	virtual void * getVarPtr( ) const = 0;
 	virtual void * getVarPtr( const I_Type &type_info ) const;
 	/// @brief 重置为默认
-	virtual void resetVar( ) { }
+	virtual void resetVar( ) = 0;
 	~BaseVarType( ) override;
 	virtual bool setVar( const BaseVarType *target_data );
 	virtual I_Type * getVarTypeInfoPtr( ) const;

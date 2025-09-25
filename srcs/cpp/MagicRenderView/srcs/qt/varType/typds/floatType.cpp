@@ -24,4 +24,4 @@ FloatType::FloatType( QObject *parent ) : BaseVarType( parent ) {
 FloatType::FloatType( ) : FloatType( nullptr ) { }
 FloatType::~FloatType( ) {
 }
-FloatType::FloatType( const FloatType &other ) : BaseVarType { other }, var { new t_current_type( *other.var ) } { }
+
