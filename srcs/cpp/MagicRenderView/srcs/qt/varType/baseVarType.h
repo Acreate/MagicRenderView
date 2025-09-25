@@ -43,27 +43,18 @@ public:
 		return ( type * ) getVarPtr( typeid( type ) );
 	}
 public: // 删除列表
+
+	/// @brief 同时与 BaseVarType & operator =( const BaseVarType *right_type_var_ref )  激活时，赋予指针赋值，但类型会降级，再也无法升级到子类。@code *varptr = varptr @cond 
+	/// @param other 
 	BaseVarType( const BaseVarType &other ) = delete;
+	/// @brief 同时与 BaseVarType( const BaseVarType &other ) 激活时，赋予指针赋值，但类型会降级，再也无法升级到子类。@code *varptr = varptr @cond 
 	const BaseVarType & operator =( const BaseVarType *right_type_var_ref ) = delete;
+	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
+	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
+	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
+	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) = delete;
 public: // 重载列表
-	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
-	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
-	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
-	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref );
-
-	friend BaseVarType * operator +( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
-		return operator+( left_type_var_ref, &right_type_var_ref );
-	}
-	friend BaseVarType * operator -( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
-
-		return operator-( left_type_var_ref, &right_type_var_ref );
-	}
-	friend BaseVarType * operator *( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
-		return operator*( left_type_var_ref, &right_type_var_ref );
-	}
-	friend BaseVarType * operator /( const BaseVarType &left_type_var_ref, const BaseVarType &right_type_var_ref ) {
-		return operator/( left_type_var_ref, &right_type_var_ref );
-	}
+	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const BaseVarType&, BaseVarType * );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int8_t&, BaseVarType * );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int16_t&, BaseVarType * );
 	DEF_FRIEND_OPERATOR_CALCULATE_SET_RESULT( const BaseVarType &, const int32_t&, BaseVarType * );

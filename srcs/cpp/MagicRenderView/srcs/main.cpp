@@ -146,6 +146,7 @@ void testAppType( ) {
 	*str = 54581213465;
 	*str2 = 444;
 	*str = *str2;
+	bool cond = *str > *str2;
 
 	delete str;
 	delete str2;

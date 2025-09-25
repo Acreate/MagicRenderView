@@ -42,72 +42,72 @@ I_Type * BaseVarType::getVarTypeInfoPtr( ) const {
 I_Type * BaseVarType::getThisTypeInfoPtr( ) const {
 	return objTypeInfo.get( );
 }
-
-BaseVarType * operator+( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
-	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
-	if( result == nullptr )
-		return nullptr;
-
-	I_Type *dataType = result->getVarTypeInfoPtr( );
-	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	if( VarGenerate::add( result, right_type_var_ref ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	return result;
-}
-BaseVarType * operator-( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
-	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
-	if( result == nullptr )
-		return nullptr;
-	I_Type *dataType = result->getVarTypeInfoPtr( );
-	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	if( VarGenerate::sub( result, right_type_var_ref ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	return result;
-}
-BaseVarType * operator*( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
-	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
-	if( result == nullptr )
-		return nullptr;
-	I_Type *dataType = result->getVarTypeInfoPtr( );
-	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	if( VarGenerate::mul( result, right_type_var_ref ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	return result;
-}
-BaseVarType * operator/( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
-	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
-	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
-	if( result == nullptr )
-		return nullptr;
-	I_Type *dataType = result->getVarTypeInfoPtr( );
-	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	if( VarGenerate::div( result, right_type_var_ref ) == false ) {
-		delete result;
-		return nullptr;
-	}
-	return result;
-}
+//
+//BaseVarType * operator+( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
+//	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+//	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
+//	if( result == nullptr )
+//		return nullptr;
+//
+//	I_Type *dataType = result->getVarTypeInfoPtr( );
+//	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	if( VarGenerate::add( result, right_type_var_ref ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	return result;
+//}
+//BaseVarType * operator-( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
+//	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+//	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
+//	if( result == nullptr )
+//		return nullptr;
+//	I_Type *dataType = result->getVarTypeInfoPtr( );
+//	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	if( VarGenerate::sub( result, right_type_var_ref ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	return result;
+//}
+//BaseVarType * operator*( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
+//	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+//	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
+//	if( result == nullptr )
+//		return nullptr;
+//	I_Type *dataType = result->getVarTypeInfoPtr( );
+//	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	if( VarGenerate::mul( result, right_type_var_ref ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	return result;
+//}
+//BaseVarType * operator/( const BaseVarType &left_type_var_ref, const BaseVarType *right_type_var_ref ) {
+//	I_Type *varTypeInfo = left_type_var_ref.getThisTypeInfoPtr( );
+//	auto result = VarGenerate::createVarType( *varTypeInfo, varTypeInfo );
+//	if( result == nullptr )
+//		return nullptr;
+//	I_Type *dataType = result->getVarTypeInfoPtr( );
+//	if( VarGenerate::conver( result, dataType, left_type_var_ref.getVarPtr( ) ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	if( VarGenerate::div( result, right_type_var_ref ) == false ) {
+//		delete result;
+//		return nullptr;
+//	}
+//	return result;
+//}
 
 BaseVarType * BaseVarType::operator=( const BaseVarType &right_type_var_ref ) {
 	auto *leftTypeInfo = this->getVarTypeInfoPtr( );
