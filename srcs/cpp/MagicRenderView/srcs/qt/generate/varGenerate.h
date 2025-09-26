@@ -116,9 +116,9 @@ public:
 	virtual bool deleteTarget( void *target_ptr );
 	/// @brief 创建指针对象
 	/// @param target_type_info 指向的类型
-	/// @param target_ptr 创建的指针
+	/// @param create_call_function  创建的指针
 	/// @return 成功创建返回 true，并且改变 target_ptr 指向，使其指向创建对象
-	virtual bool createTarget( const type_info &target_type_info, void *&target_ptr );
+	virtual bool createTarget( const type_info &target_type_info, const std_function< void( void *create_obj_ptr ) > &create_call_function );
 
 	/// @brief 存储序列化
 	/// @param target_type_info 序列化对象类型
@@ -132,9 +132,10 @@ public:
 	/// @param target_type_info 序列化当中实例化的对象类型
 	/// @param target_ptr 序列化加载的返回指针
 	/// @param result_count 使用数据量
-	/// @param load_bin_vector 加载的二进制数据
+	/// @param source_data_ptr 指向数据段的起始指针
+	/// @param source_data_count 指向数据段的长度
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void *&target_ptr, size_t &result_count, const std_vector< uint8_t > &load_bin_vector );
+	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
 
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
