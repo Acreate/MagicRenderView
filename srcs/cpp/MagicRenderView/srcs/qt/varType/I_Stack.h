@@ -67,6 +67,7 @@ public:
 	/// @param source_data_count
 	/// @return 成功使用数据返回 true
 	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) { return false; }
+	// 提供子类使用
 protected:
 	/// @brief 二进制填充数组
 	/// @param source_data_ptr 获取源
@@ -83,15 +84,24 @@ protected:
 	/// @param target_var_ptr 目标指针
 	/// @param target_need_count 需要个数
 	/// @param source_data_ptr 源指针
-	/// @param source_ptr_count 源个数
+	/// @param source_data_count 源个数
 	/// @return 返回使用个数
-	virtual size_t fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_ptr_count ) const;
+	virtual size_t fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
 	/// @brief 填充到字符串
 	/// @param target_var_ptr 目标字符串
 	/// @param source_data_ptr 源指针
-	/// @param source_ptr_count 源个数
+	/// @param source_data_count 源个数
 	/// @return 使用个数
-	virtual size_t fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_ptr_count ) const;
+	virtual size_t fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
+
+	// 静态
+public:
+	/// @brief 从数据当中获取可能的类型名称
+	/// @param result_type_name 存储返回的名称
+	/// @param source_data_ptr 获取内存的起始位置
+	/// @param source_data_count 内存的长度
+	/// @return 使用长度，若返回 0，表示类型获取失败
+	static size_t getTypeName( QString &result_type_name, const uint8_t *source_data_ptr, const size_t &source_data_count );
 };
 
 #endif // I_STACK_H_H_HEAD__FILE__

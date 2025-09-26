@@ -33,19 +33,34 @@ size_t I_Stack::fillBinVector( const QString &var_type, std_vector< uint8_t > &r
 	result_bin_data_vector.append_range( buff );
 	return result_bin_data_vector.size( );
 }
-size_t I_Stack::fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_ptr_count ) const {
-	if( target_need_count > source_ptr_count )
+size_t I_Stack::fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+	if( target_need_count > source_data_count )
 		return 0;
 	memcpy( target_var_ptr, source_data_ptr, target_need_count );
 	return target_need_count;
 }
-size_t I_Stack::fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_ptr_count ) const {
+size_t I_Stack::fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
 	size_t count;
-	auto add = fillObjVector( &count, sizeof( size_t ), source_data_ptr, source_ptr_count );
+	auto add = fillObjVector( &count, sizeof( size_t ), source_data_ptr, source_data_count );
 	const char *sourcePtr = ( const char * ) source_data_ptr + add;
-	if( count > ( source_ptr_count - add ) )
+	if( count > ( source_data_count - add ) )
 		return 0;
 	QByteArray array( sourcePtr, count );
 	*target_var_ptr = QString::fromUtf8( array );
 	return count + add;
+}
+size_t I_Stack::getTypeName( QString &result_type_name, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+	size_t resultCount = 0;
+
+	size_t typeUseCount = sizeof( size_t );
+	size_t count = fillObjVector( &resultCount, typeUseCount, source_data_ptr, source_data_count );
+	size_t mod = source_data_count - count;
+	if( resultCount > mod )
+		return 0;
+	const uint8_t *offerPtr = source_data_ptr + count;
+	count = fillObjVector( &result_type_name, offerPtr, mod );
+	if( count != 0 )
+		return offerPtr + count - source_data_ptr;
+	//result_type_name.clear( );
+	return 0;
 }
