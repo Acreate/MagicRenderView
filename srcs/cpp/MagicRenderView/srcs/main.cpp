@@ -3,11 +3,6 @@
 #include "qt/application/application.h"
 #include "qt/generate/binGenerate.h"
 #include "qt/generate/varGenerate.h"
-#include "qt/varType/typds/colorType.h"
-#include "qt/varType/typds/floatType.h"
-#include "qt/varType/typds/intType.h"
-#include "qt/varType/typds/nullptrType.h"
-#include "qt/varType/typds/stringType.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
 
@@ -140,12 +135,6 @@ void testQtSerialization( ) {
 void testAppType( ) {
 	out_start( );
 
-	BaseVarType *str = VarGenerate::createVarType< StringType >( );
-	BaseVarType *str2 = VarGenerate::createVarType< StringType >( );
-
-
-	delete str;
-	delete str2;
 	out_end( );
 }
 void test( ) {
@@ -156,6 +145,10 @@ void test( ) {
 }
 int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
+	if( app.init( ) == false ) {
+		tools::debug::printError( "程序初始化失败" );
+		return -1;
+	}
 	test( );
 	MainWindow mainwidget;
 	mainwidget.show( );

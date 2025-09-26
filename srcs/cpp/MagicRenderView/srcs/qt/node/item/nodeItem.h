@@ -105,6 +105,8 @@ private:
 	int borderRightSpace;
 	/// @brief 边缘顶端空间大小
 	int borderTopSpace;
+	/// @brief 编辑窗口
+	QWidget* editWidget;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
@@ -112,6 +114,7 @@ protected:
 	NodeItem( );
 public:
 	~NodeItem( ) override;
+	virtual QWidget * getEditWidget( ) const { return editWidget; }
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;

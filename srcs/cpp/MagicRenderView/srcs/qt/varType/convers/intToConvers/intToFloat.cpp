@@ -5,7 +5,7 @@
 
 #include "../../I_Type.h"
 
-bool IntToFloat::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -44,7 +44,7 @@ bool IntToFloat::fillTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool IntToFloat::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -83,7 +83,7 @@ bool IntToFloat::addTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
-bool IntToFloat::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -123,7 +123,7 @@ bool IntToFloat::subTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
-bool IntToFloat::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -163,7 +163,7 @@ bool IntToFloat::mulTarget( const I_Type *left_type_info, void *left, const I_Ty
 
 	return false;
 }
-bool IntToFloat::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool IntToFloat::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -203,7 +203,7 @@ bool IntToFloat::divTarget( const I_Type *left_type_info, void *left, const I_Ty
 		return true;
 	return false;
 }
-bool IntToFloat::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool IntToFloat::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -243,7 +243,7 @@ bool IntToFloat::equThanTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool IntToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool IntToFloat::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -283,7 +283,7 @@ bool IntToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *lef
 
 	return false;
 }
-bool IntToFloat::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool IntToFloat::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -323,7 +323,7 @@ bool IntToFloat::greaterThanTarget( const I_Type *left_type_info, void *left, co
 
 	return false;
 }
-bool IntToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool IntToFloat::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )
@@ -362,7 +362,7 @@ bool IntToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, 
 		return true;
 	return false;
 }
-bool IntToFloat::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool IntToFloat::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
 	if( doubelVar == nullptr )

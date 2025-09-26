@@ -3,20 +3,9 @@
 #include "../tools/tools.h"
 
 #include "../varType/I_Conver.h"
-#include "../varType/baseVarType.h"
-#include "../varType/I_Type.h"
-class BaseVarType;
-std_vector< std_shared_ptr< I_Conver > > VarGenerate::converVector;
-std_vector< BaseVarType * > VarGenerate::baseVarStack;
-std_vector< std_pairt< std_shared_ptr< I_Type >, std_function< BaseVarType*( QObject * ) > > > VarGenerate::varTypeGenerateVector;
-void VarGenerate::appendConverInstance( const std_shared_ptr< I_Conver > &new_conver ) {
-	converVector.emplace_back( new_conver );
-}
-void VarGenerate::appendVarTypeGenerateInstance( const std_shared_ptr< I_Type > &info, const std_function< BaseVarType*( QObject * ) > &generate_instance_function ) {
-	varTypeGenerateVector.insert( varTypeGenerateVector.begin( ), std_pairt { info, generate_instance_function } );
-}
+#include "../varType/I_Stack.h"
 
-bool VarGenerate::conver( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -27,10 +16,10 @@ bool VarGenerate::conver( const I_Type *left_type_info, void *left, const I_Type
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的转换" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::add( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::add( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -41,10 +30,10 @@ bool VarGenerate::add( const I_Type *left_type_info, void *left, const I_Type *r
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的加法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::sub( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::sub( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -55,10 +44,10 @@ bool VarGenerate::sub( const I_Type *left_type_info, void *left, const I_Type *r
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的减法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::mul( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::mul( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -69,10 +58,10 @@ bool VarGenerate::mul( const I_Type *left_type_info, void *left, const I_Type *r
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的乘法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::div( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool VarGenerate::div( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -83,10 +72,10 @@ bool VarGenerate::div( const I_Type *left_type_info, void *left, const I_Type *r
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的除法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool VarGenerate::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -97,10 +86,10 @@ bool VarGenerate::equThanTarget( const I_Type *left_type_info, void *left, const
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool VarGenerate::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -111,10 +100,10 @@ bool VarGenerate::greaterThanTarget( const I_Type *left_type_info, void *left, c
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的大于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool VarGenerate::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -125,10 +114,10 @@ bool VarGenerate::lessThanTarget( const I_Type *left_type_info, void *left, cons
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的小于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool VarGenerate::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -139,10 +128,10 @@ bool VarGenerate::greaterOrEquThanTarget( const I_Type *left_type_info, void *le
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的大于等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool VarGenerate::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
 		auto data = converVector.data( );
@@ -153,41 +142,77 @@ bool VarGenerate::lessOrEquThanTarget( const I_Type *left_type_info, void *left,
 				return true;
 	}
 	QString msg( "未发现 %1 与 %2 类型的小于等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info->getTypeInfo( ).name( ) ).arg( right_type_info->getTypeInfo( ).name( ) ) );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
-BaseVarType * VarGenerate::createVarType( const I_Type &create_type, QObject *parent ) {
-	size_t count = varTypeGenerateVector.size( );
+bool VarGenerate::deleteTarget( const type_info &target_type_info, void *target_ptr ) {
+	size_t count = stackVector.size( );
 	if( count != 0 ) {
-		auto data = varTypeGenerateVector.data( );
+		auto data = stackVector.data( );
 		size_t index = 0;
-		for( ; index < count; ++index ) {
-			auto &pair = data[ index ];
-			I_Type &leftType = *pair.first.get( );
-			if( leftType != create_type )
-				continue;
-			auto sharedPtr = pair.second( parent );
-			if( sharedPtr == nullptr )
-				continue;
-			return sharedPtr;
-		}
+		I_Stack *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->deleteTarget( target_type_info, target_ptr ) )
+				return true;
 	}
-	QString msg( "未发现 %1 类型的创建函数" );
-	tools::debug::printError( msg.arg( create_type.getTypeInfo( ).name( ) ) );
-	return nullptr;
+	QString msg( "未发现 %1 类型的释放功能" );
+	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::deleteTarget( void *target_ptr ) {
+	size_t count = stackVector.size( );
+	if( count != 0 ) {
+		auto data = stackVector.data( );
+		size_t index = 0;
+		I_Stack *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->deleteTarget( target_ptr ) )
+				return true;
+	}
+	QString msg( "未发现 %1 类型的释放功能" );
+	tools::debug::printError( msg.arg( ( size_t ) target_ptr, 0, 16 ) );
+	return false;
+}
+bool VarGenerate::createTarget( const type_info &target_type_info, void *&target_ptr ) {
+	size_t count = stackVector.size( );
+	if( count != 0 ) {
+		auto data = stackVector.data( );
+		size_t index = 0;
+		I_Stack *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->createTarget( target_type_info, target_ptr ) )
+				return true;
+	}
+	QString msg( "未发现 %1 类型的创建功能" );
+	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	return false;
 }
 
-std_vector< std_shared_ptr< I_Type > > VarGenerate::getSupporType( ) {
-	std_vector< std_shared_ptr< I_Type > > result;
-	size_t count = varTypeGenerateVector.size( );
-	if( count == 0 ) {
-		QString msg( "未发现任意的支持类型" );
-		tools::debug::printError( msg );
-		return result;
+bool VarGenerate::toBinVector( const type_info &target_type_info, void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) {
+	size_t count = stackVector.size( );
+	if( count != 0 ) {
+		auto data = stackVector.data( );
+		size_t index = 0;
+		I_Stack *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->toBinVector( target_type_info, target_ptr, result_vector, result_count ) )
+				return true;
 	}
-	auto data = varTypeGenerateVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		result.emplace_back( data[ index ].first );
-	return result;
+	QString msg( "未发现 %1 类型的序列化功能" );
+	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::toOBjVector( const type_info &target_type_info, void *&target_ptr, size_t &result_count, const std_vector< uint8_t > &load_bin_vector ) {
+	size_t count = stackVector.size( );
+	if( count != 0 ) {
+		auto data = stackVector.data( );
+		size_t index = 0;
+		I_Stack *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->toOBjVector( target_type_info, target_ptr, result_count, load_bin_vector ) )
+				return true;
+	}
+	QString msg( "未发现 %1 类型的反序列化功能" );
+	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	return false;
 }

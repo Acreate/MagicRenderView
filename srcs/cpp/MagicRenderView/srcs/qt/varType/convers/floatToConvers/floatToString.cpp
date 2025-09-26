@@ -6,7 +6,7 @@
 #include "../../I_Type.h"
 
 #include "../../../generate/varGenerate.h"
-bool FloatToString::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToString::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto string = isType< QString >( left_type_info, left );
 	if( string == nullptr )
@@ -23,7 +23,7 @@ bool FloatToString::fillTarget( const I_Type *left_type_info, void *left, const 
 	return false;
 }
 
-bool FloatToString::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToString::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto string = isType< QString >( left_type_info, left );
 	if( string == nullptr )
@@ -39,7 +39,7 @@ bool FloatToString::addTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool FloatToString::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToString::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto string = isType< QString >( left_type_info, left );
 	if( string == nullptr )
@@ -58,12 +58,11 @@ bool FloatToString::subTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool FloatToString::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToString::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
-	auto call = [ left_type_info, left] ( auto *p ) {
+	auto call = [this, &left_type_info, left] ( auto *p ) {
 		int64_t count = *p;
-		I_Type type( typeid( int64_t ) );
-		return VarGenerate::mul( left_type_info, left, &type, &count );
+		return this->varGenerate->mul( left_type_info, left, typeid( int64_t ), &count );
 	};
 	if( typeCall< double >( right_type_info, right, call ) )
 		return true;
@@ -72,11 +71,10 @@ bool FloatToString::mulTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool FloatToString::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
-	auto call = [ left_type_info, left] ( auto *p ) {
+bool FloatToString::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
+	auto call = [ &left_type_info, left, this] ( auto *p ) {
 		int64_t count = *p;
-		I_Type type( typeid( int64_t ) );
-		return VarGenerate::div( left_type_info, left, &type, &count );
+		return this->varGenerate->div( left_type_info, left, typeid( int64_t ), &count );
 	};
 	if( typeCall< double >( right_type_info, right, call ) )
 		return true;
@@ -85,7 +83,7 @@ bool FloatToString::divTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool FloatToString::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToString::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -100,10 +98,10 @@ bool FloatToString::equThanTarget( const I_Type *left_type_info, void *left, con
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
 		return true;
-		
+
 	return false;
 }
-bool FloatToString::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToString::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -118,10 +116,10 @@ bool FloatToString::greaterOrEquThanTarget( const I_Type *left_type_info, void *
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
 		return true;
-		
+
 	return false;
 }
-bool FloatToString::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToString::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -136,10 +134,10 @@ bool FloatToString::greaterThanTarget( const I_Type *left_type_info, void *left,
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
 		return true;
-		
+
 	return false;
 }
-bool FloatToString::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToString::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -154,10 +152,10 @@ bool FloatToString::lessOrEquThanTarget( const I_Type *left_type_info, void *lef
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
 		return true;
-		
+
 	return false;
 }
-bool FloatToString::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToString::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -172,6 +170,6 @@ bool FloatToString::lessThanTarget( const I_Type *left_type_info, void *left, co
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
 		return true;
-		
+
 	return false;
 }

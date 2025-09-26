@@ -5,7 +5,7 @@
 
 class NullToAny : public I_Conver {
 public:
-	bool equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
+	bool equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
 };
 
 #endif // NULLTOANY_H_H_HEAD__FILE__

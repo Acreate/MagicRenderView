@@ -2,10 +2,9 @@
 
 #include "../../I_Type.h"
 
-bool StringToInt::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
-	auto call = [this,left_type_info,left] ( auto *string ) {
-		const type_info &targetTypeInfo = left_type_info->getTypeInfo( );
-		bool isOK = fillInt( string, left, targetTypeInfo );
+bool StringToInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
+	auto call = [this,&left_type_info,left] ( auto *string ) {
+		bool isOK = fillInt( string, left, left_type_info );
 		return isOK;
 	};
 	bool typeCallResult = typeCall< QString >( right_type_info, right, call );
@@ -20,7 +19,7 @@ bool StringToInt::fillTarget( const I_Type *left_type_info, void *left, const I_
 
 	return false;
 }
-bool StringToInt::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToInt::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -51,7 +50,7 @@ bool StringToInt::addTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool StringToInt::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToInt::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -82,7 +81,7 @@ bool StringToInt::subTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool StringToInt::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToInt::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -113,7 +112,7 @@ bool StringToInt::mulTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool StringToInt::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToInt::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -146,7 +145,7 @@ bool StringToInt::divTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool StringToInt::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToInt::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -177,7 +176,7 @@ bool StringToInt::equThanTarget( const I_Type *left_type_info, void *left, const
 
 	return false;
 }
-bool StringToInt::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToInt::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -208,7 +207,7 @@ bool StringToInt::greaterOrEquThanTarget( const I_Type *left_type_info, void *le
 
 	return false;
 }
-bool StringToInt::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToInt::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -239,7 +238,7 @@ bool StringToInt::greaterThanTarget( const I_Type *left_type_info, void *left, c
 
 	return false;
 }
-bool StringToInt::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToInt::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -270,7 +269,7 @@ bool StringToInt::lessOrEquThanTarget( const I_Type *left_type_info, void *left,
 
 	return false;
 }
-bool StringToInt::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToInt::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )

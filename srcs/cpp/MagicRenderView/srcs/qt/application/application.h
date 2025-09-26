@@ -8,6 +8,7 @@
 
 #include <alias/type_alias.h>
 
+class VarGenerate;
 class Stack;
 class QLabel;
 class QSettings;
@@ -61,19 +62,19 @@ protected:
 	std_shared_ptr< std_mutex > stdMutex_p;
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 	QString writeSettingPath;
-	Stack *stack;
+	VarGenerate *varGenerate;
 	std_shared_ptr< QFont > font;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
+	virtual bool init( );
 public:
 	virtual const QString & getWriteSettingPath( ) const { return writeSettingPath; }
 	virtual void setAppIniValue( const QAnyStringView &key, const QVariant &value );
 	virtual QVariant getAppIniValue( const QAnyStringView &key, const QVariant &defaultValue ) const;
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
-	virtual Stack * getStack( ) const { return stack; }
-	virtual void setStack( Stack *const stack ) { this->stack = stack; }
+	virtual VarGenerate * getVarGenerate( ) const { return varGenerate; }
 	virtual const QFont & getFont( ) const { return *font; }
 	virtual void setFont( const QFont &new_font ) {
 		*font = new_font;

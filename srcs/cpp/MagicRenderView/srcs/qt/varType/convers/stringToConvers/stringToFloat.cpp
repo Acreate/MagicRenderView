@@ -1,11 +1,10 @@
 ﻿#include "./stringToFloat.h"
 
 #include "../../I_Type.h"
-bool StringToFloat::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
-	auto call = [this,left_type_info,left] ( auto *string ) {
-		const type_info &targetTypeInfo = left_type_info->getTypeInfo( );
-		bool isOK = fillFloat( string, left, targetTypeInfo );
+	auto call = [this,&left_type_info,left] ( auto *string ) {
+		bool isOK = fillFloat( string, left, left_type_info );
 		return isOK;
 	};
 	bool typeCallResult = typeCall< QString >( right_type_info, right, call );
@@ -20,7 +19,7 @@ bool StringToFloat::fillTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool StringToFloat::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToFloat::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -43,7 +42,7 @@ bool StringToFloat::addTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool StringToFloat::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToFloat::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -67,7 +66,7 @@ bool StringToFloat::subTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool StringToFloat::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToFloat::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -91,7 +90,7 @@ bool StringToFloat::mulTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool StringToFloat::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToFloat::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -115,7 +114,7 @@ bool StringToFloat::divTarget( const I_Type *left_type_info, void *left, const I
 
 	return false;
 }
-bool StringToFloat::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToFloat::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -138,7 +137,7 @@ bool StringToFloat::equThanTarget( const I_Type *left_type_info, void *left, con
 
 	return false;
 }
-bool StringToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToFloat::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -161,7 +160,7 @@ bool StringToFloat::greaterOrEquThanTarget( const I_Type *left_type_info, void *
 
 	return false;
 }
-bool StringToFloat::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToFloat::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -184,7 +183,7 @@ bool StringToFloat::greaterThanTarget( const I_Type *left_type_info, void *left,
 
 	return false;
 }
-bool StringToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToFloat::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -207,7 +206,7 @@ bool StringToFloat::lessOrEquThanTarget( const I_Type *left_type_info, void *lef
 
 	return false;
 }
-bool StringToFloat::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToFloat::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
 	if( leftVar == nullptr )

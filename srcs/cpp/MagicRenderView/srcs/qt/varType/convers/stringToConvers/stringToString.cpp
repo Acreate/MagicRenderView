@@ -1,5 +1,5 @@
 ﻿#include "stringToString.h"
-bool StringToString::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToString::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -28,7 +28,7 @@ bool StringToString::fillTarget( const I_Type *left_type_info, void *left, const
 
 	return false;
 }
-bool StringToString::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToString::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -57,7 +57,7 @@ bool StringToString::addTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool StringToString::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToString::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -96,7 +96,7 @@ bool StringToString::subTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool StringToString::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToString::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -150,7 +150,7 @@ bool StringToString::mulTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool StringToString::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool StringToString::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -180,7 +180,7 @@ bool StringToString::divTarget( const I_Type *left_type_info, void *left, const 
 
 	return false;
 }
-bool StringToString::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToString::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -210,7 +210,7 @@ bool StringToString::equThanTarget( const I_Type *left_type_info, void *left, co
 
 	return false;
 }
-bool StringToString::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToString::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -240,7 +240,7 @@ bool StringToString::greaterOrEquThanTarget( const I_Type *left_type_info, void 
 
 	return false;
 }
-bool StringToString::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToString::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -270,7 +270,7 @@ bool StringToString::greaterThanTarget( const I_Type *left_type_info, void *left
 
 	return false;
 }
-bool StringToString::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToString::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;
@@ -300,7 +300,7 @@ bool StringToString::lessOrEquThanTarget( const I_Type *left_type_info, void *le
 
 	return false;
 }
-bool StringToString::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool StringToString::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	auto leftVar = isType< QString >( left_type_info, left );
 	if( leftVar == nullptr )
 		return false;

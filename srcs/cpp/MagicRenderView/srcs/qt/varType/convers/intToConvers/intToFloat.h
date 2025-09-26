@@ -5,16 +5,16 @@
 
 class IntToFloat : public I_Conver {
 public:
-	bool fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) override;
-	bool addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) override;
-	bool subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) override;
-	bool mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) override;
-	bool divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) override;
-	bool equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
-	bool greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
-	bool greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
-	bool lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
-	bool lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) override;
+	bool fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) override;
+	bool addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) override;
+	bool subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) override;
+	bool mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) override;
+	bool divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) override;
+	bool equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
+	bool greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
+	bool greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
+	bool lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
+	bool lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
 
 };
 

@@ -1,13 +1,12 @@
 ﻿#include "application.h"
 
+#include <QFontDatabase>
 #include <QMouseEvent>
 #include <QProcess>
-#include <QFontDatabase>
 #include <QSettings>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qfileinfo.h>
-#include <qt/stack/stack.h>
 
 #include "../generate/nodeItemGenerate.h"
 #include "../generate/varGenerate.h"
@@ -54,22 +53,62 @@
 #include "../varType/convers/intToConvers/intToString.h"
 #include "../varType/convers/stringToConvers/stringToFloat.h"
 #include "../varType/convers/stringToConvers/stringToInt.h"
-#include <qt/varType/typds/floatType.h>
-#include <qt/varType/typds/intType.h>
-#include <qt/varType/typds/stringType.h>
-#include <qt/varType/typds/nullptrType.h>
 
-#include "../varType/convers/floatToConvers/floatToFloat.h"
-#include "../varType/convers/intToConvers/intToInt.h"
-#include "../varType/convers/nullToConver/nullToAny.h"
-#include "../varType/convers/stringToConvers/stringToString.h"
-#include "../varType/typds/colorType.h"
+//#include <qt/varType/typds/unity/colorType.h>
+//#include <qt/varType/typds/unity/floatType.h>
+//#include <qt/varType/typds/unity/intType.h>
+//#include <qt/varType/typds/unity/nullptrType.h>
+//#include <qt/varType/typds/unity/stringType.h>
+
+#include <qt/varType/convers/floatToConvers/floatToFloat.h>
+#include <qt/varType/convers/intToConvers/intToInt.h>
+#include <qt/varType/convers/nullToConver/nullToAny.h>
+#include <qt/varType/convers/stringToConvers/stringToString.h>
+
+#include "../varType/convers/floatToConvers/floatToUInt.h"
+#include "../varType/convers/intToConvers/intToUInt.h"
+#include "../varType/convers/stringToConvers/stringToUint.h"
+#include "../varType/convers/uintToConvers/uIntToInt.h"
+#include "../varType/convers/uintToConvers/uIntToString.h"
+#include "../varType/convers/uintToConvers/uIntToUInt.h"
+#include "../varType/convers/uintToConvers/uintToFloat.h"
+#include "../varType/type/float32Type.h"
+#include "../varType/type/float64Type.h"
+#include "../varType/type/int16Type.h"
+#include "../varType/type/int32Type.h"
+#include "../varType/type/int64Type.h"
+#include "../varType/type/int8Type.h"
+#include "../varType/type/qStringType.h"
+#include "../varType/type/stdStringType.h"
+#include "../varType/type/stdWStringType.h"
+#include "../varType/type/uInt16Type.h"
+#include "../varType/type/uInt32Type.h"
+#include "../varType/type/uInt64Type.h"
+#include "../varType/type/uInt8Type.h"
 
 #include "qt/tools/tools.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
+	/*
+	 * 锁
+	 */
+	stdMutex_p.reset( new std_mutex );
+	stdMutexWidgetSelectLock.reset( new std_mutex );
+	/*
+	 * 堆栈
+	 */
+	varGenerate = new VarGenerate( );
+}
+Application::~Application( ) {
+	settings->sync( );
+	delete settings;
+	delete varGenerate;
+}
+bool Application::init( ) {
+
+	QString displayName = applicationDisplayName( );
 	QString fileName = writeSettingPath + displayName + "/" + displayName + ".ini";
 	settings = new QSettings( fileName, QSettings::IniFormat );
 	QFileInfo fileInfo( fileName );
@@ -83,16 +122,6 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 		else
 			settings->sync( );
 	}
-	/*
-	 * 锁
-	 */
-	stdMutex_p.reset( new std_mutex );
-	stdMutexWidgetSelectLock.reset( new std_mutex );
-	/*
-	 * 堆栈
-	 */
-	stack = new Stack( );
-
 	/*
 	 * 字体
 	 */
@@ -140,23 +169,40 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	// todo : 音乐特效节点
 
 	// todo : VarType 支持变量
-	VarGenerate::appendVarTypeGenerateInstance< FloatType >( );
-	VarGenerate::appendVarTypeGenerateInstance< StringType >( );
-	VarGenerate::appendVarTypeGenerateInstance< IntType >( );
-	VarGenerate::appendVarTypeGenerateInstance< ColorType >( );
-	VarGenerate::appendVarTypeGenerateInstance< NullptrType >( );
+
 	// todo : VarType 类型转换
-	VarGenerate::appendConverInstance< StringToString >( );
-	VarGenerate::appendConverInstance< StringToInt >( );
-	VarGenerate::appendConverInstance< StringToFloat >( );
-	VarGenerate::appendConverInstance< FloatToFloat >( );
-	VarGenerate::appendConverInstance< FloatToInt >( );
-	VarGenerate::appendConverInstance< FloatToString >( );
-	VarGenerate::appendConverInstance< IntToInt >( );
-	VarGenerate::appendConverInstance< IntToFloat >( );
-	VarGenerate::appendConverInstance< IntToString >( );
-	VarGenerate::appendConverInstance< NullToAny >( );
+	varGenerate->appendConverInstance< StringToString >( );
+	varGenerate->appendConverInstance< StringToInt >( );
+	varGenerate->appendConverInstance< StringToUint >( );
+	varGenerate->appendConverInstance< StringToFloat >( );
+	varGenerate->appendConverInstance< FloatToFloat >( );
+	varGenerate->appendConverInstance< FloatToUInt >( );
+	varGenerate->appendConverInstance< FloatToInt >( );
+	varGenerate->appendConverInstance< FloatToString >( );
+	varGenerate->appendConverInstance< IntToInt >( );
+	varGenerate->appendConverInstance< IntToUInt >( );
+	varGenerate->appendConverInstance< IntToFloat >( );
+	varGenerate->appendConverInstance< IntToString >( );
+	varGenerate->appendConverInstance< UIntToInt >( );
+	varGenerate->appendConverInstance< UIntToUInt >( );
+	varGenerate->appendConverInstance< UintToFloat >( );
+	varGenerate->appendConverInstance< UIntToString >( );
+	varGenerate->appendConverInstance< NullToAny >( );
 	// todo : 序列化支持
+	varGenerate->appendStackInstance< Float32Type >( );
+	varGenerate->appendStackInstance< Float64Type >( );
+	varGenerate->appendStackInstance< Int8Type >( );
+	varGenerate->appendStackInstance< Int16Type >( );
+	varGenerate->appendStackInstance< Int32Type >( );
+	varGenerate->appendStackInstance< Int64Type >( );
+	varGenerate->appendStackInstance< UInt8Type >( );
+	varGenerate->appendStackInstance< UInt16Type >( );
+	varGenerate->appendStackInstance< UInt32Type >( );
+	varGenerate->appendStackInstance< UInt64Type >( );
+	varGenerate->appendStackInstance< QStringType >( );
+	varGenerate->appendStackInstance< StdStringType >( );
+	varGenerate->appendStackInstance< StdWStringType >( );
+
 	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
 	BinGenerate::appendBinGenerateItem< Int64Serialization >( );
@@ -174,10 +220,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	BinGenerate::appendBinGenerateItem< QByteArraySerialization >( );
 	BinGenerate::appendBinGenerateItem< NodeWidgetSerialization >( );
 	BinGenerate::appendBinGenerateItem< NodeItemSerialization >( );
-}
-Application::~Application( ) {
-	settings->sync( );
-	delete settings;
+
+	return true;
 }
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {
 	std_lock_grad_mutex lock( *stdMutex_p.get( ) );

@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include "../../I_Type.h"
-bool FloatToInt::fillTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -19,7 +19,7 @@ bool FloatToInt::fillTarget( const I_Type *left_type_info, void *left, const I_T
 
 	return false;
 }
-bool FloatToInt::addTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -34,7 +34,7 @@ bool FloatToInt::addTarget( const I_Type *left_type_info, void *left, const I_Ty
 		return true;
 	return false;
 }
-bool FloatToInt::subTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -49,7 +49,7 @@ bool FloatToInt::subTarget( const I_Type *left_type_info, void *left, const I_Ty
 		return true;
 	return false;
 }
-bool FloatToInt::mulTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -64,7 +64,7 @@ bool FloatToInt::mulTarget( const I_Type *left_type_info, void *left, const I_Ty
 		return true;
 	return false;
 }
-bool FloatToInt::divTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right ) {
+bool FloatToInt::divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -80,7 +80,7 @@ bool FloatToInt::divTarget( const I_Type *left_type_info, void *left, const I_Ty
 		return true;
 	return false;
 }
-bool FloatToInt::equThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToInt::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -95,7 +95,7 @@ bool FloatToInt::equThanTarget( const I_Type *left_type_info, void *left, const 
 		return true;
 	return false;
 }
-bool FloatToInt::greaterOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToInt::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -110,7 +110,7 @@ bool FloatToInt::greaterOrEquThanTarget( const I_Type *left_type_info, void *lef
 		return true;
 	return false;
 }
-bool FloatToInt::greaterThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToInt::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -125,7 +125,7 @@ bool FloatToInt::greaterThanTarget( const I_Type *left_type_info, void *left, co
 		return true;
 	return false;
 }
-bool FloatToInt::lessOrEquThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToInt::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -140,7 +140,7 @@ bool FloatToInt::lessOrEquThanTarget( const I_Type *left_type_info, void *left, 
 		return true;
 	return false;
 }
-bool FloatToInt::lessThanTarget( const I_Type *left_type_info, void *left, const I_Type *right_type_info, const void *right, bool *result_bool ) {
+bool FloatToInt::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )

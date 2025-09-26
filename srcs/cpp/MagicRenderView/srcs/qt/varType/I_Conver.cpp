@@ -1,5 +1,10 @@
 ﻿#include "./I_Conver.h"
 
+#include "../application/application.h"
+
+I_Conver::I_Conver( ) {
+	varGenerate = Application::getApplicationInstancePtr(  )->getVarGenerate(  );
+}
 bool I_Conver::fillInt( const QString *string, void *fill_target, const type_info &target_type_info ) {
 	bool is_ok = false;
 	if( stringFillToNumTypeVar< int64_t >( string, fill_target, target_type_info, &is_ok ) )
