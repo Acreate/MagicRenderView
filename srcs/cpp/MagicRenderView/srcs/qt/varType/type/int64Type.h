@@ -5,7 +5,7 @@
 
 #include "../I_Stack.h"
 class Int64Type : public  I_Stack{
-	using t_current_type = int16_t;
+	using t_current_type = int64_t;
 public:
 	Int64Type( ) : I_Stack( typeid( t_current_type ) ) { }
 	bool createTarget( const type_info &target_type_info, const std_function<void(void *create_obj_ptr)> &create_call_function ) override;

@@ -188,7 +188,7 @@ bool VarGenerate::createTarget( const type_info &target_type_info, const std_fun
 	return false;
 }
 
-bool VarGenerate::toBinVector( const type_info &target_type_info, void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) {
+bool VarGenerate::toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) {
 	size_t count = stackVector.size( );
 	if( count != 0 ) {
 		auto data = stackVector.data( );

@@ -126,7 +126,7 @@ public:
 	/// @param result_vector 返回二进制数据
 	/// @param result_count 二进制数据的量
 	/// @return 成功序列化返回 true
-	virtual bool toBinVector( const type_info &target_type_info, void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count );
+	virtual bool toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count );
 
 	/// @brief 加载序列化
 	/// @param target_type_info 序列化当中实例化的对象类型
