@@ -8,11 +8,22 @@
 class VarGenerate;
 class I_Stack {
 protected:
-	const type_info& generateTypeInfo;
-	VarGenerate* varGenerate;
+	/// @brief 类型
+	const type_info &generateTypeInfo;
+	/// @brief 变量生成器
+	VarGenerate *varGenerate;
+	/// @brief 存储生成的变量
+	std_vector< void * > stackVarPtr;
 public:
 	I_Stack( const type_info &generate_type_info );
+	/// @brief 获取当前生成对象类型
+	/// @return 对象类型
 	virtual const type_info & getGenerateTypeInfo( ) const { return generateTypeInfo; }
+	/// @brief 检查指针类型
+	/// @param check_var_ptr 检查的指针
+	/// @param result_type 返回类型
+	/// @return 匹配成功返回 true
+	virtual bool getPtrTypeInfo( const void *check_var_ptr, const type_info *&result_type ) const;
 	virtual ~I_Stack( ) = default;
 	/// @brief 删除指针指针
 	/// @param target_type_info 指向的类型
