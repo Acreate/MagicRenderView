@@ -8,85 +8,62 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include "../generate/nodeItemGenerate.h"
-#include "../generate/varGenerate.h"
-
-#include "../node/item/calculate/varAdd.h"
-#include "../node/item/calculate/varDiv.h"
-#include "../node/item/calculate/varMod.h"
-#include "../node/item/calculate/varMul.h"
-#include "../node/item/calculate/varSub.h"
-#include "../node/item/disk/readFile.h"
-#include "../node/item/disk/readImage.h"
-#include "../node/item/disk/writeFile.h"
-#include "../node/item/disk/writeImage.h"
-#include "../node/item/info/pathInfo.h"
-#include "../node/item/info/systemInfo.h"
-#include "../node/item/str/strAppend.h"
-#include "../node/item/str/strInsert.h"
-#include "../node/item/str/strRemove.h"
-#include "../node/item/str/strReplace.h"
-#include "../node/item/str/strSplit.h"
-#include "../node/item/str/strSub.h"
-
-#include "../serialization/app/nodeItemSerialization.h"
-#include "../serialization/app/nodeWidgetSerialization.h"
-#include "../serialization/base/float32Serialization.h"
-#include "../serialization/base/float64Serialization.h"
-#include "../serialization/base/int16Serialization.h"
-#include "../serialization/base/int32Serialization.h"
-#include "../serialization/base/int64Serialization.h"
-#include "../serialization/base/uint16Serialization.h"
-#include "../serialization/base/uint32Serialization.h"
-#include "../serialization/base/uint64Serialization.h"
-#include "../serialization/base/uint8Serialization.h"
-#include "../serialization/cppStd/stdStringSerialization.h"
-#include "../serialization/cppStd/stdWStringSerialization.h"
-#include "../serialization/qt/qByteArraySerialization.h"
-#include "../serialization/qt/qColorSerialization.h"
-#include "../serialization/qt/qImageSerialization.h"
-#include "../serialization/qt/qstringSerialization.h"
-
-#include "../varType/convers/floatToConvers/floatToInt.h"
-#include "../varType/convers/floatToConvers/floatToString.h"
-#include "../varType/convers/intToConvers/intToFloat.h"
-#include "../varType/convers/intToConvers/intToString.h"
-#include "../varType/convers/stringToConvers/stringToFloat.h"
-#include "../varType/convers/stringToConvers/stringToInt.h"
-
-//#include <qt/varType/typds/unity/colorType.h>
-//#include <qt/varType/typds/unity/floatType.h>
-//#include <qt/varType/typds/unity/intType.h>
-//#include <qt/varType/typds/unity/nullptrType.h>
-//#include <qt/varType/typds/unity/stringType.h>
+#include <qt/generate/nodeItemGenerate.h>
+#include <qt/generate/varGenerate.h>
 
 #include <qt/varType/convers/floatToConvers/floatToFloat.h>
+#include <qt/varType/convers/floatToConvers/floatToInt.h>
+#include <qt/varType/convers/floatToConvers/floatToString.h>
+#include <qt/varType/convers/floatToConvers/floatToUInt.h>
+#include <qt/varType/convers/intToConvers/intToFloat.h>
 #include <qt/varType/convers/intToConvers/intToInt.h>
+#include <qt/varType/convers/intToConvers/intToString.h>
+#include <qt/varType/convers/intToConvers/intToUInt.h>
 #include <qt/varType/convers/nullToConver/nullToAny.h>
+#include <qt/varType/convers/stringToConvers/stringToFloat.h>
+#include <qt/varType/convers/stringToConvers/stringToInt.h>
 #include <qt/varType/convers/stringToConvers/stringToString.h>
+#include <qt/varType/convers/stringToConvers/stringToUint.h>
+#include <qt/varType/convers/uintToConvers/uIntToInt.h>
+#include <qt/varType/convers/uintToConvers/uIntToString.h>
+#include <qt/varType/convers/uintToConvers/uIntToUInt.h>
+#include <qt/varType/convers/uintToConvers/uintToFloat.h>
 
-#include "../varType/convers/floatToConvers/floatToUInt.h"
-#include "../varType/convers/intToConvers/intToUInt.h"
-#include "../varType/convers/stringToConvers/stringToUint.h"
-#include "../varType/convers/uintToConvers/uIntToInt.h"
-#include "../varType/convers/uintToConvers/uIntToString.h"
-#include "../varType/convers/uintToConvers/uIntToUInt.h"
-#include "../varType/convers/uintToConvers/uintToFloat.h"
-#include "../varType/type/float32Type.h"
-#include "../varType/type/float64Type.h"
-#include "../varType/type/int16Type.h"
-#include "../varType/type/int32Type.h"
-#include "../varType/type/int64Type.h"
-#include "../varType/type/int8Type.h"
-#include "../varType/type/qStringType.h"
-#include "../varType/type/stdStringType.h"
-#include "../varType/type/stdWStringType.h"
-#include "../varType/type/uInt16Type.h"
-#include "../varType/type/uInt32Type.h"
-#include "../varType/type/uInt64Type.h"
-#include "../varType/type/uInt8Type.h"
+#include <qt/varType/type/baseType/float32Type.h>
+#include <qt/varType/type/baseType/float64Type.h>
+#include <qt/varType/type/baseType/int16Type.h>
+#include <qt/varType/type/baseType/int32Type.h>
+#include <qt/varType/type/baseType/int64Type.h>
+#include <qt/varType/type/baseType/int8Type.h>
+#include <qt/varType/type/baseType/uInt32Type.h>
+#include <qt/varType/type/baseType/uInt64Type.h>
+#include <qt/varType/type/baseType/uInt8Type.h>
+#include <qt/varType/type/cpp/stdStringType.h>
+#include <qt/varType/type/cpp/stdWStringType.h>
+#include <qt/varType/type/qt/qStringType.h>
+#include "qt/varType/type/baseType/uInt16Type.h"
 
-#include "qt/tools/tools.h"
+
+#include <qt/node/item/calculate/varAdd.h>
+#include <qt/node/item/calculate/varDiv.h>
+#include <qt/node/item/calculate/varMod.h>
+#include <qt/node/item/calculate/varMul.h>
+#include <qt/node/item/calculate/varSub.h>
+#include <qt/node/item/disk/readFile.h>
+#include <qt/node/item/disk/readImage.h>
+#include <qt/node/item/disk/writeFile.h>
+#include <qt/node/item/disk/writeImage.h>
+#include <qt/node/item/info/pathInfo.h>
+#include <qt/node/item/info/systemInfo.h>
+#include <qt/node/item/str/strAppend.h>
+#include <qt/node/item/str/strInsert.h>
+#include <qt/node/item/str/strRemove.h>
+#include <qt/node/item/str/strReplace.h>
+#include <qt/node/item/str/strSplit.h>
+#include <qt/node/item/str/strSub.h>
+
+
+#include <qt/tools/tools.h>
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -202,24 +179,6 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
-
-	BinGenerate::appendBinGenerateItem< Int16Serialization >( );
-	BinGenerate::appendBinGenerateItem< Int32Serialization >( );
-	BinGenerate::appendBinGenerateItem< Int64Serialization >( );
-	BinGenerate::appendBinGenerateItem< UInt8Serialization >( );
-	BinGenerate::appendBinGenerateItem< UInt16Serialization >( );
-	BinGenerate::appendBinGenerateItem< UInt32Serialization >( );
-	BinGenerate::appendBinGenerateItem< UInt64Serialization >( );
-	BinGenerate::appendBinGenerateItem< Float32Serialization >( );
-	BinGenerate::appendBinGenerateItem< Float64Serialization >( );
-	BinGenerate::appendBinGenerateItem< StdStringSerialization >( );
-	BinGenerate::appendBinGenerateItem< StdWStringSerialization >( );
-	BinGenerate::appendBinGenerateItem< QStringSerialization >( );
-	BinGenerate::appendBinGenerateItem< QColorSerializtion >( );
-	BinGenerate::appendBinGenerateItem< QImageSerialization >( );
-	BinGenerate::appendBinGenerateItem< QByteArraySerialization >( );
-	BinGenerate::appendBinGenerateItem< NodeWidgetSerialization >( );
-	BinGenerate::appendBinGenerateItem< NodeItemSerialization >( );
 
 	return true;
 }
