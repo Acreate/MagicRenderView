@@ -3,10 +3,23 @@
 #pragma once
 #include "../../alias/type_alias.h"
 
+class VarGenerate;
+class Application;
 class I_Type;
 /// @brief 用于自定义数组或类型子类实现序列化的对象
 class I_Serialization‌ {
+protected:
+	Application *applicationInstancePtr;
+	VarGenerate *varInstance;
+	const type_info &typeInfo;
+	std_vector_pairt< const I_Type *, std_vector< uint8_t > > serializationMap;
+	std_vector_pairt< const type_info &, std_vector< QString > > typeMap;
 public:
+	I_Serialization‌( const type_info &set_type_info );
+	/// @brief 检查类型是否正确，正确返回 true
+	/// @param check_type_info 检查类型
+	/// @return 适配当前类型返回 true
+	static bool checkTypeInfo( const type_info &check_type_info ) { return false; }
 	virtual ~I_Serialization‌( ) = default;
 	/// @brief 增加一个序列化对象
 	/// @param append_unity 真的序列化对象指针
@@ -31,12 +44,15 @@ public:
 	/// @return 0 表示失败
 	virtual size_t getBinVector( std_vector< uint8_t > &result_bin ) const = 0;
 	/// @brief 配置二进制数据
-	/// @param init_bin 配置的二进制数据
+	/// @param init_bin_data_ptr 配置的二进制数据
+	/// @param init_bin_data_count
 	/// @return 失败返回 0，成功返回使用数据数量
-	virtual size_t setBinVector( const std_vector< uint8_t > &init_bin ) const = 0;
-	/// @brief 该序列化是否有效
-	/// @return true 表示有效
-	virtual bool valid( ) const;
+	virtual size_t setBinVector( const uint8_t *init_bin_data_ptr, const size_t &init_bin_data_count ) const = 0;
+	/// @brief 根据字符串获取支持类型
+	/// @param type_name 类型字符串名称
+	/// @param result_type 返回的支持类型
+	/// @return 不支持返回 false
+	virtual bool getTypeInfo( const QString &type_name, I_Type *result_type ) const;
 };
 
 #endif // I_SERIALIZATION__H_H_HEAD__FILE__

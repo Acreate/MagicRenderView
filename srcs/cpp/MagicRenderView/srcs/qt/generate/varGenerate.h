@@ -6,24 +6,33 @@
 
 #include "../varType/I_Type.h"
 
+class I_Serialization‌;
 class I_Conver;
 class VarGenerate : public QObject {
 	Q_OBJECT;
 protected:
+	/// @brief 存储扩展序列化对象功能列表
+	std_vector< std_pairt< std_function< bool( const type_info & ) >, std_function< std_shared_ptr< I_Serialization‌ >( ) > > > serializationVector;
 	/// @brief 转换列表
 	std_vector< std_shared_ptr< I_Conver > > converVector;
 	/// @brief 堆栈列表
 	std_vector< std_shared_ptr< I_Stack > > stackVector;
 protected:
 	/// @brief 追加一个赋值类型对象
+	/// @param check_function 检查函数
+	/// @param generate_serialization_function 生成函数	
+	virtual void appendSerializationInstance( const std_function< bool( const type_info & ) > &check_function, const std_function< std_shared_ptr< I_Serialization‌ >( ) > &generate_serialization_function ) {
+		serializationVector.insert( serializationVector.begin( ), { check_function, generate_serialization_function } );
+	}
+	/// @brief 追加一个赋值类型对象
 	/// @param new_conver 对象指针
 	virtual void appendConverInstance( const std_shared_ptr< I_Conver > &new_conver ) {
-		converVector.emplace_back( new_conver );
+		converVector.insert( converVector.begin( ), new_conver );
 	}
 	/// @brief 追加一个赋值类型对象
 	/// @param new_stack 对象指针
-	virtual void appendConverInstance( const std_shared_ptr< I_Stack > &new_stack ) {
-		stackVector.emplace_back( new_stack );
+	virtual void appendStackInstance( const std_shared_ptr< I_Stack > &new_stack ) {
+		stackVector.insert( stackVector.begin( ), new_stack );
 	}
 public:
 	~VarGenerate( ) override = default;
@@ -136,7 +145,10 @@ public:
 	/// @param source_data_count 指向数据段的长度
 	/// @return 成功使用数据返回 true
 	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
-
+	/// @brief 根据类型获取序列化操作对象
+	/// @param check_type_info 检查的类型
+	/// @return 操作对象指针，失败返回 nullptr
+	virtual std_shared_ptr< I_Serialization‌ > getSerializationInstancePtr( const type_info &check_type_info );
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >
@@ -154,7 +166,20 @@ public:
 			base_ptr = ptr;
 		}
 	void appendStackInstance( ) {
-		appendConverInstance( std_shared_ptr< I_Stack >( new ttype ) );
+		appendStackInstance( std_shared_ptr< I_Stack >( new ttype ) );
+	}
+
+	/// @brief 增加一个类型赋值对象
+	/// @tparam ttype 赋值对象类型
+	template< typename ttype >
+		requires requires ( ttype *ptr, I_Serialization‌ *base_ptr ) {
+			base_ptr = ptr;
+			{ ptr->checkTypeInfo( typeid( ttype ) ) }->std::same_as< bool >;
+		}
+	void appendSerializationInstance( ) {
+		appendSerializationInstance( ttype::checkTypeInfo, [] {
+			return ttype( );
+		} );
 	}
 };
 

@@ -216,3 +216,16 @@ bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_p
 	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
+std_shared_ptr< I_Serialization‌ > VarGenerate::getSerializationInstancePtr( const type_info &check_type_info ) {
+	size_t count = serializationVector.size( );
+	if( count != 0 ) {
+		auto data = serializationVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ].first( check_type_info ) )
+				return data[ index ].second( );
+	}
+	QString msg( "未发现 %1 扩展类型的序列化功能" );
+	tools::debug::printError( msg.arg( check_type_info.name( ) ) );
+	return nullptr;
+}

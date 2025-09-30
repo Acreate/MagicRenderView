@@ -65,6 +65,8 @@
 
 #include <qt/tools/tools.h>
 
+#include "../varType/extendType/nodeItemTypeSerialization‌.h"
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
@@ -179,6 +181,8 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
+	// todo : 扩展序列化支持
+	varGenerate->appendSerializationInstance<NodeItemTypeSerialization‌>(  );
 
 	return true;
 }
