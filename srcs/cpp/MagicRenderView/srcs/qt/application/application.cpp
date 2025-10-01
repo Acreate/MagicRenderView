@@ -177,7 +177,6 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
-
 	return true;
 }
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {
