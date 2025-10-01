@@ -59,7 +59,7 @@ private:
 	/// @brief 生成编号
 	size_t generateCode;
 	/// @brief 该节点的变量
-	std_vector< VarType * > varVector;
+	//std_vector< VarType * > varVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染

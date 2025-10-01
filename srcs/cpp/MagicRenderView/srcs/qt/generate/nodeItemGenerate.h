@@ -96,8 +96,10 @@ public:
 			name = TItemType::getStaticMetaObjectName( );
 			name = TItemType::getStaticMetaObjectDir( );
 			item = new TItemType( );
+			typeid( NodeItem_Type ).before( typeid( NodeItem_Type ) );
 		}
 	static bool appendGenerateNodeItemInfo( ) {
+		auto &varTypeInfo = typeid( TItemType );
 		auto dirName = TItemType::getStaticMetaObjectDir( );
 		auto name = TItemType::getStaticMetaObjectName( );
 		auto generate_function = [] ( void * ) {
@@ -107,7 +109,8 @@ public:
 
 		if( appendType == false )
 			return false;
-		return appendVarTypeGenerateInstance( typeid( TItemType ), generate_function, std_vector< QString >( { typeid( TItemType ).name( ), dirName + "/" + name } ) );
+
+		return appendVarTypeGenerateInstance( varTypeInfo, generate_function, std_vector< QString >( { varTypeInfo.name( ), TItemType::getStaticMetaObjectPathName( ) } ) );
 	}
 
 };

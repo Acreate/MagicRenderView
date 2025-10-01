@@ -16,7 +16,7 @@ protected:
 	/// @brief 堆栈列表
 	std_vector< std_shared_ptr< I_Stack > > stackVector;
 	/// @brief 类型生成列表
-	std_vector_pairt< std_pairt< const type_info &, std_function< void*( void * ) > >, std_vector< QString > > generateTypeInfos;
+	std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void*( void * ) > >, std_vector< QString > > generateTypeInfos;
 public:
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
@@ -145,13 +145,19 @@ public:
 	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
 
 	/// @brief 获取类型的生成信息
+	/// @param generate_type_name 类型名称
+	/// @param result_info 返回生成函数与信息列表
+	/// @return 失败返回 false
+	virtual bool getTypeInfoGenerateInfo( const QString &generate_type_name, std_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > &result_info ) const;
+
+	/// @brief 获取类型的生成信息
 	/// @param generate_type_info 类型
 	/// @param result_info 返回字符串名称与生成函数
 	/// @return 失败返回 false
 	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, std_pairt< std_vector< QString >, std_function< void *( void * ) > > &result_info ) const;
-	/// @brief 获取所有支持的类型
-	/// @return 支持类型列表信息
-	virtual const std_vector_pairt< std_pairt< const type_info &, std_function< void *( void * ) > >, std_vector< QString > > & getGenerateTypeInfos( ) const { return generateTypeInfos; }
+	/// @brief 获取当前对象所有支持生产的类型
+	/// @return 生成类型
+	virtual const std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > & getGenerateTypeInfos( ) const { return generateTypeInfos; }
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >

@@ -44,11 +44,11 @@ NodeItem::~NodeItem( ) {
 	nodeOutputProtVector.clear( );
 
 	index = 0;
-	count = varVector.size( );
-	auto varVectorPtr = varVector.data( );
-	for( ; index < count; ++index )
-		delete varVectorPtr[ index ];
-	varVector.clear( );
+	//count = varVector.size( );
+	//auto varVectorPtr = varVector.data( );
+	//for( ; index < count; ++index )
+	//	delete varVectorPtr[ index ];
+	//varVector.clear( );
 
 	delete nodeItemRender;
 	delete inputBuff;

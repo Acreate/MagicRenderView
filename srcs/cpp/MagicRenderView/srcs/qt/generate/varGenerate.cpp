@@ -7,12 +7,13 @@
 
 bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
 	for( auto &[ key,val ] : generateTypeInfos )
-		if( key.first == generate_var_type_info ) {
+		if( key.first->getTypeInfo( ) == generate_var_type_info ) {
 			key.second = generate_var_function;
 			val = generate_var_name_vector;
 			return true;
 		}
-	std_pairt unity( std_pairt< const type_info &, std_function< void*( void * ) > >( generate_var_type_info, generate_var_function ), generate_var_name_vector );
+	auto typeShared = std_shared_ptr< I_Type >( new I_Type( generate_var_type_info ) );
+	std_pairt unity( std_pairt( typeShared, generate_var_function ), generate_var_name_vector );
 	generateTypeInfos.emplace_back( unity );
 	return true;
 }
@@ -227,6 +228,24 @@ bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_p
 	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
+bool VarGenerate::getTypeInfoGenerateInfo( const QString &generate_type_name, std_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > &result_info ) const {
+
+	size_t count = generateTypeInfos.size( );
+	if( count == 0 )
+		return false;
+	auto data = generateTypeInfos.data( );
+	for( size_t index = 0; index < count; ++index )
+		for( auto &typeName : data[ index ].second )
+			if( typeName == generate_type_name ) {
+				auto &first = data[ index ].first;
+				std_pairt key( first.first, first.second );
+				result_info.first = key;
+				result_info.second = data[ index ].second;
+				return true;
+			}
+
+	return false;
+}
 bool VarGenerate::getTypeInfoGenerateInfo( const type_info &generate_type_info, std_pairt< std_vector< QString >, std_function< void *( void * ) > > &result_info ) const {
 
 	size_t count = generateTypeInfos.size( );
@@ -234,7 +253,7 @@ bool VarGenerate::getTypeInfoGenerateInfo( const type_info &generate_type_info, 
 		return false;
 	auto data = generateTypeInfos.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( data[ index ].first.first == generate_type_info ) {
+		if( data[ index ].first.first->getTypeInfo( ) == generate_type_info ) {
 			result_info.first = data[ index ].second;
 			result_info.second = data[ index ].first.second;
 			return true;

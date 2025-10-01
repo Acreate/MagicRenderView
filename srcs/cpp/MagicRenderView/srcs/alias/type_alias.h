@@ -252,9 +252,11 @@ public:\
 protected: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
+	static QString getStaticMetaObjectPathName( ); \
 public: \
 	virtual QString getMetaObjectName( ) const; \
-	virtual QString getMetaObjectDir( ) const
+	virtual QString getMetaObjectDir( ) const;\
+	virtual QString getMetaObjectPathName( ) const
 
 #ifdef Def_Last_StaticMetaInfo
 #undef Def_Last_StaticMetaInfo
@@ -264,9 +266,11 @@ public: \
 protected: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
+	static QString getStaticMetaObjectPathName( ); \
 public: \
 	QString getMetaObjectName( ) const override; \
-	QString getMetaObjectDir( ) const override
+	QString getMetaObjectDir( ) const override; \
+	QString getMetaObjectPathName( ) const override
 
 #ifdef Def_Last_Firend_StaticMetaInfo
 #undef Def_Last_Firend_StaticMetaInfo
@@ -275,29 +279,35 @@ public: \
 #define Def_Last_Firend_StaticMetaInfo( Friend_Class ) \
 public:\
 	friend class Friend_Class;\
-protected: \
-	static QString getStaticMetaObjectName( ); \
-	static QString getStaticMetaObjectDir( ); \
-public: \
-	QString getMetaObjectName( ) const override; \
-	QString getMetaObjectDir( ) const override
+	Def_Last_StaticMetaInfo(  )
+
 #ifdef Imp_StaticMetaInfo
 #undef Imp_StaticMetaInfo
 #endif
 
-#define Imp_StaticMetaInfo( Imp_Class , Class_Translate,  Dir_Translate) \
+#define Imp_StaticMetaInfo_Def_sep( Imp_Class , Class_Translate, Dir_Translate, sep) \
 	QString Imp_Class::getStaticMetaObjectName( ) { \
 		return Class_Translate; \
-	} \
+	}\
 	QString Imp_Class::getStaticMetaObjectDir( ) { \
 		return Dir_Translate; \
+	}\
+	QString Imp_Class::getStaticMetaObjectPathName( ) { \
+		return Imp_Class::getStaticMetaObjectDir( ) + sep + Imp_Class::getStaticMetaObjectDir( ) ; \
 	}\
 	QString Imp_Class::getMetaObjectName( ) const {\
 		return Class_Translate;\
 	}\
 	QString Imp_Class::getMetaObjectDir( ) const {\
 		return Dir_Translate;\
-	}class Imp_Class
+	}\
+	QString Imp_Class::getMetaObjectPathName( ) const {\
+		return Imp_Class::getMetaObjectDir( ) + sep + Imp_Class::getMetaObjectName( );\
+	}\
+	class Imp_Class
+
+#define Imp_StaticMetaInfo( Imp_Class , Class_Translate, Dir_Translate) \
+	Imp_StaticMetaInfo_Def_sep( Imp_Class , Class_Translate, Dir_Translate, "/")
 
 class Type_Alias {
 	Def_First_StaticMetaInfo( );
