@@ -43,7 +43,6 @@
 #include <qt/varType/type/qt/qStringType.h>
 #include "qt/varType/type/baseType/uInt16Type.h"
 
-
 #include <qt/node/item/calculate/varAdd.h>
 #include <qt/node/item/calculate/varDiv.h>
 #include <qt/node/item/calculate/varMod.h>
@@ -62,10 +61,8 @@
 #include <qt/node/item/str/strSplit.h>
 #include <qt/node/item/str/strSub.h>
 
-
 #include <qt/tools/tools.h>
 
-#include "../varType/extendType/nodeItemTypeSerialization‌.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -181,8 +178,7 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
-	// todo : 扩展序列化支持
-	varGenerate->appendSerializationInstance<NodeItemTypeSerialization‌>(  );
+
 
 	return true;
 }

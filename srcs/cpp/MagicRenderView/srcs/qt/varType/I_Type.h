@@ -26,13 +26,6 @@ public:
 		: typeInfo { other.typeInfo },
 		isDeletePtr { other.isDeletePtr },
 		p { other.p } { }
-	I_Type & operator=( const I_Type &other ) : typeInfo( other.typeInfo ) {
-		if( this == &other )
-			return *this;
-		isDeletePtr = other.isDeletePtr;
-		p = other.p;
-		return *this;
-	}
 	friend bool operator==( const I_Type &lhs, const I_Type &rhs ) {
 		return lhs.typeInfo == rhs.typeInfo
 			&& lhs.p == rhs.p;

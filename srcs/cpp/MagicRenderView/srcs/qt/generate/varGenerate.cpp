@@ -5,6 +5,17 @@
 #include "../varType/I_Conver.h"
 #include "../varType/I_Stack.h"
 
+bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
+	for( auto &[ key,val ] : generateTypeInfos )
+		if( key.first == generate_var_type_info ) {
+			key.second = generate_var_function;
+			val = generate_var_name_vector;
+			return true;
+		}
+	std_pairt unity( std_pairt< const type_info &, std_function< void*( void * ) > >( generate_var_type_info, generate_var_function ), generate_var_name_vector );
+	generateTypeInfos.emplace_back( unity );
+	return true;
+}
 bool VarGenerate::conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {
@@ -216,16 +227,18 @@ bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_p
 	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
-std_shared_ptr< I_Serialization‌ > VarGenerate::getSerializationInstancePtr( const type_info &check_type_info ) {
-	size_t count = serializationVector.size( );
-	if( count != 0 ) {
-		auto data = serializationVector.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ].first( check_type_info ) )
-				return data[ index ].second( );
-	}
-	QString msg( "未发现 %1 扩展类型的序列化功能" );
-	tools::debug::printError( msg.arg( check_type_info.name( ) ) );
-	return nullptr;
+bool VarGenerate::getTypeInfoGenerateInfo( const type_info &generate_type_info, std_pairt< std_vector< QString >, std_function< void *( void * ) > > &result_info ) const {
+
+	size_t count = generateTypeInfos.size( );
+	if( count == 0 )
+		return false;
+	auto data = generateTypeInfos.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].first.first == generate_type_info ) {
+			result_info.first = data[ index ].second;
+			result_info.second = data[ index ].first.second;
+			return true;
+		}
+
+	return false;
 }

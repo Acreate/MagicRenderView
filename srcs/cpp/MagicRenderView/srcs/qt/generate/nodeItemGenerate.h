@@ -20,7 +20,7 @@ public:
 	/// @brief 父对象指针类型
 	using NodeItem_ParentPtr_Type = NodeItem_Type::NodeItem_ParentPtr_Type;
 	/// @brief 节点创建函数指针类型
-	using NodeItemGenerateCall_Type = NodeItem_Type *( );
+	using NodeItemGenerateCall_Type = NodeItem_Type *( void * );
 	/// @brief 节点创建函数调用类型
 	using NodeItemGenerateFunction_Type = std_function< NodeItemGenerateCall_Type >;
 	/// @brief 节点名称创建信息类型
@@ -49,6 +49,11 @@ private:
 	/// @param generate_function 生成调用函数
 	/// @return 添加失败返回 false
 	static bool appendGenerateNodeItemInfo( const NodeItem_String_Type &dir_name, const NodeItem_String_Type &item_name, const NodeItemGenerateFunction_Type &generate_function );
+	/// @brief 追加一个类型生成器
+	/// @param generate_var_type_info cpp 类型
+	/// @param generate_var_function 类型生成器
+	/// @param generate_var_name_vector 类型字符串别名
+	static bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector );
 	/// @brief 建立信号链接
 	/// @param sender_obj 信号对象指针
 	static void cnnectSignal( NodeItem_Type *sender_obj );
@@ -66,6 +71,7 @@ public:
 	static DirClassItemMapVector_Type getSupperTyeNodes( ) {
 		return nodeItemDirClassMetaInfos;
 	}
+
 	/// @brief 创建节点对象
 	/// @param dir_name 节点目录
 	/// @param item_name 节点名称
@@ -92,9 +98,16 @@ public:
 			item = new TItemType( );
 		}
 	static bool appendGenerateNodeItemInfo( ) {
-		return NodeItemGenerate::appendGenerateNodeItemInfo( TItemType::getStaticMetaObjectDir( ), TItemType::getStaticMetaObjectName( ), []( ) {
+		auto dirName = TItemType::getStaticMetaObjectDir( );
+		auto name = TItemType::getStaticMetaObjectName( );
+		auto generate_function = [] ( void * ) {
 			return new TItemType( );
-		} );
+		};
+		auto appendType = NodeItemGenerate::appendGenerateNodeItemInfo( dirName, name, generate_function );
+
+		if( appendType == false )
+			return false;
+		return appendVarTypeGenerateInstance( typeid( TItemType ), generate_function, std_vector< QString >( { typeid( TItemType ).name( ), dirName + "/" + name } ) );
 	}
 
 };

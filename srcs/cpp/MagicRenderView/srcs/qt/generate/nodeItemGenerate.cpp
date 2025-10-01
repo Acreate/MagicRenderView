@@ -1,9 +1,11 @@
 ﻿#include "./nodeItemGenerate.h"
 
+#include "varGenerate.h"
+#include "../application/application.h"
+
 NodeItemGenerate::NodeItemGenerateMetaInfoVector_Type NodeItemGenerate::nodeItemGenerateMetaInfos;
 NodeItemGenerate::DirClassItemMapVector_Type NodeItemGenerate::nodeItemDirClassMetaInfos;
 std_vector< NodeItemGenerate::NodeItem_Type * > NodeItemGenerate::generateNodeItems;
-
 void NodeItemGenerate::cnnectSignal( NodeItemGenerate::NodeItem_Type *sender_obj ) {
 	QObject::connect( sender_obj, &NodeItem_Type::releaseThiNodeItem, [] ( NodeItem *release_node_item ) {
 		size_t generateNodeItemsCount = generateNodeItems.size( );
@@ -65,7 +67,7 @@ NodeItemGenerate::NodeItem_Type * NodeItemGenerate::createNodeItem( const NodeIt
 			auto classNameMapVectorDataPtr = classNameMapVector.data( );
 			for( ; classNameMapVectorIndex < classNameMapVectorCount; ++classNameMapVectorIndex )
 				if( classNameMapVectorDataPtr[ classNameMapVectorIndex ].first == itemNameTrimmed ) {
-					result = classNameMapVectorDataPtr[ classNameMapVectorIndex ].second( );
+					result = classNameMapVectorDataPtr[ classNameMapVectorIndex ].second( nullptr );
 					if( result ) {
 						size_t count = generateNodeItems.size( );
 						if( count > 0 ) {
@@ -143,4 +145,8 @@ bool NodeItemGenerate::appendGenerateNodeItemInfo( const NodeItem_String_Type &d
 	DirClassItemMap_Type dirClassItem( dirNameTrimmed, { itemNameTrimmed } );
 	nodeItemDirClassMetaInfos.emplace_back( dirClassItem );
 	return true;
+}
+bool NodeItemGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
+	VarGenerate *varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
+	return varGenerate->appendVarTypeGenerateInstance( generate_var_type_info, generate_var_function, generate_var_name_vector );
 }

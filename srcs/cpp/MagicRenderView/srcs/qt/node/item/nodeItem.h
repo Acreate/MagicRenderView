@@ -11,11 +11,15 @@
 
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
-	friend class NodeItemGenerate
+	friend class NodeItemGenerate;\
+	friend class Application;\
+	friend class VarGenerate
 
 #define Def_NodeItem_Last_StaticMetaInfo( ) \
 	Def_Last_Firend_StaticMetaInfo( NodeItem );\
-	friend class NodeItemGenerate
+	friend class NodeItemGenerate;\
+	friend class Application;\
+	friend class VarGenerate
 
 class VarType;
 class Application;
