@@ -95,8 +95,9 @@ public:
 		requires requires ( NodeItem_String_Type name, NodeItem_Type *item ) {
 			name = TItemType::getStaticMetaObjectName( );
 			name = TItemType::getStaticMetaObjectDir( );
+			name = TItemType::getStaticMetaObjectPathName( );
 			item = new TItemType( );
-			typeid( NodeItem_Type ).before( typeid( NodeItem_Type ) );
+			typeid( NodeItem_Type ).before( typeid( TItemType ) ) == true;
 		}
 	static bool appendGenerateNodeItemInfo( ) {
 		auto &varTypeInfo = typeid( TItemType );

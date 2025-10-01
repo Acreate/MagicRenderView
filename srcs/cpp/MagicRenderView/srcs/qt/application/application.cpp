@@ -63,7 +63,6 @@
 
 #include <qt/tools/tools.h>
 
-
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
@@ -178,7 +177,6 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
-
 
 	return true;
 }

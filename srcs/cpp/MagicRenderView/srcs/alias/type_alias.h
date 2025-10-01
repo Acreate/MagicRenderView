@@ -249,7 +249,7 @@ public:\
 #endif
 
 #define Def_First_StaticMetaInfo(  ) \
-protected: \
+public: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
 	static QString getStaticMetaObjectPathName( ); \
@@ -263,7 +263,7 @@ public: \
 #endif
 
 #define Def_Last_StaticMetaInfo(  ) \
-protected: \
+public: \
 	static QString getStaticMetaObjectName( ); \
 	static QString getStaticMetaObjectDir( ); \
 	static QString getStaticMetaObjectPathName( ); \
@@ -293,7 +293,7 @@ public:\
 		return Dir_Translate; \
 	}\
 	QString Imp_Class::getStaticMetaObjectPathName( ) { \
-		return Imp_Class::getStaticMetaObjectDir( ) + sep + Imp_Class::getStaticMetaObjectDir( ) ; \
+		return QString( "%1%2%3").arg(Dir_Translate).arg(sep).arg(Class_Translate) ; \
 	}\
 	QString Imp_Class::getMetaObjectName( ) const {\
 		return Class_Translate;\
@@ -302,7 +302,7 @@ public:\
 		return Dir_Translate;\
 	}\
 	QString Imp_Class::getMetaObjectPathName( ) const {\
-		return Imp_Class::getMetaObjectDir( ) + sep + Imp_Class::getMetaObjectName( );\
+		return QString( "%1%2%3").arg(Dir_Translate).arg(sep).arg(Class_Translate) ; \
 	}\
 	class Imp_Class
 
