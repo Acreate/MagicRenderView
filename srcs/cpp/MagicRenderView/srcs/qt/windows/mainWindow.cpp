@@ -63,8 +63,10 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			saveFileName.append( ".mr" );
 		appInstance->setAppIniValue( normalKey, saveFileName );
 		std_vector< uint8_t > saveBin;
-		/*if( mainWidget->objToBin( saveBin ) == 0 )
-			return;*/
+		if( mainWidget->saveBin( saveBin ) == 0 ) {
+			tools::debug::printError( "保存异常，请检查保存功能" );
+			return;
+		}
 
 		QFile file( saveFileName );
 		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
@@ -79,13 +81,18 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
 		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 		QString loadFileName = QFileDialog::getOpenFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
-		if( loadFileName.isEmpty( ) )
+		if( loadFileName.isEmpty( ) ) {
+			tools::debug::printError( "文件异常，非正常文件，空或者没有读取权限" );
 			return;
+		}
 		appInstance->setAppIniValue( normalKey, loadFileName );
 		QFile file( loadFileName );
 		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
 			QByteArray byteArray = file.readAll( );
-			mainWidget->loadBin( byteArray );
+			if( mainWidget->loadBin( byteArray ) == 0 ) {
+				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+				return;
+			}
 			return;
 		}
 	} );

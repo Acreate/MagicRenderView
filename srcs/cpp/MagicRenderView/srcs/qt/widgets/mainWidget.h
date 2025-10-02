@@ -98,16 +98,17 @@ public:
 	/// @param bin_data_ptr 数据起始位置
 	/// @param bin_data_count 数据个数
 	/// @return 使用数量
-	virtual size_t loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
-		//return loadBin( ( const uint8_t * ) bin_data_ptr, bin_data_count );
-		return 0;
-	}
+	virtual size_t loadBin( const char *bin_data_ptr, const size_t &bin_data_count );
 	/// @brief 加载二进制
 	/// @param bin_vector 二进制列表
 	/// @return 返回使用数据个数
 	virtual size_t loadBin( const std_vector< uint8_t > &bin_vector ) {
-		return 0;
+		return loadBin( ( const char * ) bin_vector.data( ), bin_vector.size( ) );
 	}
+	/// @brief 保存为二进制
+	/// @param bin_vector 二进制列表
+	/// @return 返回数据个数
+	virtual size_t saveBin( std_vector< uint8_t > &bin_vector );
 	/// @brief 加载二进制
 	/// @param bin_vector 二进制列表
 	/// @return 返回使用数据个数

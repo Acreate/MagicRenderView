@@ -47,6 +47,12 @@ MainWidget::~MainWidget( ) {
 		delete vectorDataPtr[ index ];
 }
 
+size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
+	return 0;
+}
+size_t MainWidget::saveBin( std_vector<uint8_t> &bin_vector ) {
+	return 0;
+}
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
 	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
 	if( appendNodeItem( nodeItem ) == 0 ) {
