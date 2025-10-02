@@ -19,7 +19,6 @@ int main( int argc, char *argv[ ] ) {
 		return -1;
 	}
 	test( );
-	return 0;
 	MainWindow mainwidget;
 	mainwidget.show( );
 	return app.exec( );

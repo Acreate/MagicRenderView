@@ -13,7 +13,6 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
-
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	nodeItemGenerateCode = 1;
 	scrollArea = scroll_area;
@@ -77,7 +76,7 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 	} );
 
 	renderWidgetActiveItem = new_node_item;
-
+	new_node_item->move( fromGlobalReleasePoint );
 	ensureVisibleToItemNode( new_node_item );
 	update( );
 	return new_node_item->generateCode;
@@ -151,7 +150,7 @@ void MainWidget::updateSupport( ) {
 		}
 		supportNode.emplace_back( dirMenu, pairs );
 	}
-	
+
 	supportInfoToBin( );
 }
 

@@ -243,9 +243,12 @@ bool NodeItem::removeOutputProt( TConstNodePortOutputPortPtr output_port ) {
 
 bool NodeItem::updateInputLayout( ) {
 
-	int width;
 	// 计算原本高度
-	size_t drawCount = nodeInputProtVector.size( ), index = 0;
+	size_t drawCount = nodeInputProtVector.size( );
+	//if( drawCount == 0 )
+	//	return true;
+	int width;
+	size_t index = 0;
 	auto drawPortDataPtr = nodeInputProtVector.data( );
 	for( ; index < drawCount; ++index ) {
 		NodeInputPort *nodeInputPort = drawPortDataPtr[ index ].first;
@@ -287,10 +290,12 @@ bool NodeItem::updateInputLayout( ) {
 }
 bool NodeItem::updateOutputLayout( ) {
 
-	int width;
-
 	// 计算原本高度
-	size_t drawCount = nodeOutputProtVector.size( ), index = 0;
+	size_t drawCount = nodeOutputProtVector.size( );
+	//if( drawCount == 0 )
+	//	return true;
+	int width;
+	size_t index = 0;
 	auto drawPortDataPtr = nodeOutputProtVector.data( );
 	for( ; index < drawCount; ++index ) {
 		NodeOutputPort *nodeOutputPort = drawPortDataPtr[ index ].first;
