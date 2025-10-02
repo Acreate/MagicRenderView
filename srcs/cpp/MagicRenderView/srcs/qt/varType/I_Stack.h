@@ -10,17 +10,22 @@ class I_Var;
 class VarGenerate;
 class I_Stack {
 	// 需要用到的变量列表
+private:
+	/// @brief 创建函数
+	std_function< bool( void * ) > deleteFunction;
+	/// @brief 释放函数
+	std_function< void*( ) > createFunction;
+	/// @brief 存储生成的变量
+	std_shared_ptr< std_vector< void * > > stackVarPtr;
 protected:
 	/// @brief 类型
 	const type_info &generateTypeInfo;
 	/// @brief 变量生成器
 	VarGenerate *varGenerate;
-	/// @brief 存储生成的变量
-	std_shared_ptr< std_vector< void * > > stackVarPtr;
 	/// @brief 创建函数
-	std_function< bool( void * ) > deleteFunction;
+	std_function< bool( void * ) > childDeleteFunction;
 	/// @brief 释放函数
-	std_function< void*( ) > createFunction;
+	std_function< void*( ) > childcreateFunction;
 	// 删除函数
 public:
 	I_Stack( const I_Stack &other ) = delete;
@@ -29,6 +34,7 @@ public:
 	// 构造与析构
 public:
 	I_Stack( const type_info &generate_type_info );
+	I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( ) > &create_function );
 	virtual ~I_Stack( ) = default;
 
 	// 虚函数

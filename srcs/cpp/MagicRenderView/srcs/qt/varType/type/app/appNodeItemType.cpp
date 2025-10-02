@@ -3,11 +3,11 @@
 #include <qt/tools/tools.h>
 #include <qt/node/item/nodeItem.h>
 AppNodeItemType::AppNodeItemType( ) : I_Stack( typeid( t_current_type ) ) {
-	createFunction = [] {
+	childcreateFunction = [] {
 		tools::debug::printError( "该对象不具备创建与释放功能" );
 		return nullptr;
 	};
-	deleteFunction = [this] ( void *target_ptr ) {
+	childDeleteFunction = [this] ( void *target_ptr ) {
 		tools::debug::printError( "该对象不具备创建与释放功能" );
 		return false;
 	};

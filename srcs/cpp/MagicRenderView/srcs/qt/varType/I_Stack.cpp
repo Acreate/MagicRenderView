@@ -5,8 +5,31 @@
 #include "../application/application.h"
 
 #include "../node/item/nodeItem.h"
-I_Stack::I_Stack( const type_info &generate_type_info ) : generateTypeInfo( generate_type_info ), stackVarPtr( new std_vector< void * > ) {
-	this->varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
+I_Stack::I_Stack( const type_info &generate_type_info ) : I_Stack( generate_type_info, nullptr, nullptr ) {
+}
+I_Stack::I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( ) > &create_function ) : generateTypeInfo( generate_type_info ), stackVarPtr( new std_vector< void * > ), childDeleteFunction( delete_function ), childcreateFunction( create_function ) {
+
+	createFunction = [this] {
+		auto p = childcreateFunction( );
+		if( p != nullptr )
+			stackVarPtr->emplace_back( p );
+		return p;
+	};
+	deleteFunction = [this] ( void *target_ptr ) {
+		size_t count = stackVarPtr->size( );
+		if( count == 0 )
+			return false;
+		auto data = stackVarPtr->data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ] == target_ptr ) {
+				if( childDeleteFunction( data[ index ] ) == false )
+					return false;
+				stackVarPtr->erase( stackVarPtr->begin( ) + index );
+				return true;
+			}
+		return false;
+	};
+
 }
 bool I_Stack::getPtrTypeInfo( const void *check_var_ptr, const type_info *&result_type ) const {
 	size_t count = stackVarPtr->size( );

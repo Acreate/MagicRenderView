@@ -1,23 +1,13 @@
 ﻿#include "float64Type.h"
 
 Float64Type::Float64Type( ): I_Stack( typeid( t_current_type ) ) {
-	createFunction = [this] {
+	childcreateFunction = [] {
 		auto p = new t_current_type( );
-		stackVarPtr->emplace_back( p );
 		return p;
 	};
-	deleteFunction = [this] ( void *target_ptr ) {
-		size_t count = stackVarPtr->size( );
-		if( count == 0 )
-			return false;
-		auto data = stackVarPtr->data( );
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ] == target_ptr ) {
-				delete ( t_current_type * ) data[ index ];
-				stackVarPtr->erase( stackVarPtr->begin( ) + index );
-				return true;
-			}
-		return false;
+	childDeleteFunction = [] ( void *target_ptr ) {
+		delete ( t_current_type * ) target_ptr;
+		return true;
 	};
  }
 bool Float64Type::toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const {
