@@ -21,6 +21,7 @@
 	friend class Application;\
 	friend class VarGenerate
 
+class I_Var;
 class VarType;
 class Application;
 class NodeOutputPort;
@@ -59,7 +60,7 @@ private:
 	/// @brief 生成编号
 	size_t generateCode;
 	/// @brief 该节点的变量
-	//std_vector< VarType * > varVector;
+	std_vector< I_Var * > varVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染

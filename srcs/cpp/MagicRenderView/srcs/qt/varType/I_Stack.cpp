@@ -1,5 +1,7 @@
 ﻿#include "I_Stack.h"
 
+#include "I_Var.h"
+
 #include "../application/application.h"
 I_Stack::I_Stack( const type_info &generate_type_info ) : generateTypeInfo( generate_type_info ) {
 	this->varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
@@ -48,6 +50,13 @@ size_t I_Stack::fillObjVector( QString *target_var_ptr, const uint8_t *source_da
 	QByteArray array( sourcePtr, count );
 	*target_var_ptr = QString::fromUtf8( array );
 	return count + add;
+}
+
+void I_Stack::setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code ) {
+	var->generateCode = new_var_generate_code;
+}
+void I_Stack::setIVarVarName( I_Var *var, const QString &new_var_name ) {
+	var->varName = new_var_name;
 }
 size_t I_Stack::getTypeName( QString &result_type_name, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 

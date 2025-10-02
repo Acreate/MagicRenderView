@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class I_Var;
 class VarGenerate;
 class I_Stack {
 	// 需要用到的变量列表
@@ -93,7 +94,15 @@ protected:
 	/// @param source_data_count 源个数
 	/// @return 使用个数
 	virtual size_t fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
-
+	/// @brief 设置生成代码
+	/// @param var 生成对象
+	/// @param new_var_generate_code 新的生成代码
+	virtual void setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code );
+	/// @brief 设置新的名称
+	/// @param var 生成对象
+	/// @param new_var_name 新的名称
+	virtual void setIVarVarName( I_Var *var, const QString &new_var_name );
+	
 	// 静态
 public:
 	/// @brief 从数据当中获取可能的类型名称

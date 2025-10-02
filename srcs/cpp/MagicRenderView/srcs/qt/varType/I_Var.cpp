@@ -8,8 +8,20 @@ I_Var::I_Var( const std_shared_ptr< I_Type > &type_info, const QString &var_name
 		create( p );
 	else
 		p = nullptr;
+	generateCode = ( size_t ) this;
+}
+I_Var::I_Var( const std_shared_ptr< I_Type > &type_info, const size_t &generate_code, const QString &var_name ) : typeInfo( type_info ),
+	generateCode( generate_code ),
+	varName( var_name ) {
+	I_Type *element = type_info.get( );
+	auto &create = element->getCreate( );
+	if( create )
+		create( p );
+	else
+		p = nullptr;
 }
 I_Var::I_Var( const I_Var &other ) {
+	generateCode = ( size_t ) this;
 	auto &create = other.typeInfo->getCreate( );
 	size_t memorySize = other.typeInfo->getMemorySize( );
 	I_Type *element = new I_Type( other.typeInfo->getTypeInfo( ), memorySize, other.typeInfo->getRelease( ), create );
@@ -23,6 +35,7 @@ I_Var::I_Var( const I_Var &other ) {
 I_Var & I_Var::operator=( const I_Var &other ) {
 	if( this == &other )
 		return *this;
+	generateCode = ( size_t ) this;
 	auto &create = other.typeInfo->getCreate( );
 	size_t memorySize = other.typeInfo->getMemorySize( );
 	I_Type *element = new I_Type( other.typeInfo->getTypeInfo( ), memorySize, other.typeInfo->getRelease( ), create );
