@@ -3,14 +3,16 @@
 #include "I_Var.h"
 
 #include "../application/application.h"
-I_Stack::I_Stack( const type_info &generate_type_info ) : generateTypeInfo( generate_type_info ) {
+
+#include "../node/item/nodeItem.h"
+I_Stack::I_Stack( const type_info &generate_type_info ) : generateTypeInfo( generate_type_info ), stackVarPtr( new std_vector< void * > ) {
 	this->varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
 }
 bool I_Stack::getPtrTypeInfo( const void *check_var_ptr, const type_info *&result_type ) const {
-	size_t count = stackVarPtr.size( );
+	size_t count = stackVarPtr->size( );
 	if( count == 0 )
 		return false;
-	auto data = stackVarPtr.data( );
+	auto data = stackVarPtr->data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] == check_var_ptr ) {
 			result_type = &generateTypeInfo;
@@ -52,11 +54,17 @@ size_t I_Stack::fillObjVector( QString *target_var_ptr, const uint8_t *source_da
 	return count + add;
 }
 
-void I_Stack::setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code ) {
+void I_Stack::setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code ) const {
 	var->generateCode = new_var_generate_code;
 }
-void I_Stack::setIVarVarName( I_Var *var, const QString &new_var_name ) {
+void I_Stack::setIVarVarName( I_Var *var, const QString &new_var_name ) const {
 	var->varName = new_var_name;
+}
+const std_vector< I_Var * > & I_Stack::getNodeItemVars( const NodeItem *node_item ) const {
+	return node_item->varVector;
+}
+std_vector< I_Var * > & I_Stack::getNodeItemVars( NodeItem *node_item ) const {
+	return node_item->varVector;
 }
 size_t I_Stack::getTypeName( QString &result_type_name, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 

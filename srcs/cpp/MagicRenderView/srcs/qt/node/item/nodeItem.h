@@ -37,6 +37,7 @@ public:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
+	friend class I_Stack;
 public:
 	enum class Click_Type {
 		None, // 没有

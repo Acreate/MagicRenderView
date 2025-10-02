@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItem;
 class I_Var;
 class VarGenerate;
 class I_Stack {
@@ -15,8 +16,11 @@ protected:
 	/// @brief 变量生成器
 	VarGenerate *varGenerate;
 	/// @brief 存储生成的变量
-	std_vector< void * > stackVarPtr;
-
+	std_shared_ptr< std_vector< void * > > stackVarPtr;
+	/// @brief 创建函数
+	std_function< bool( void * ) > deleteFunction;
+	/// @brief 释放函数
+	std_function< void*( ) > createFunction;
 	// 删除函数
 public:
 	I_Stack( const I_Stack &other ) = delete;
@@ -41,16 +45,28 @@ public:
 	/// @param target_type_info 指向的类型
 	/// @param target_ptr 删除的指针
 	/// @return 成功删除返回 true
-	virtual bool deleteTarget( const type_info &target_type_info, void *target_ptr ) { return false; }
+	virtual bool deleteTarget( const type_info &target_type_info, void *target_ptr ) const {
+		if( target_type_info != generateTypeInfo )
+			return false;
+		return deleteTarget( target_ptr );
+	}
 	/// @brief 期望删除指针
 	/// @param target_ptr 删除的指针
 	/// @return 成功删除返回 true
-	virtual bool deleteTarget( void *target_ptr ) { return false; }
+	virtual bool deleteTarget( void *target_ptr ) const { return deleteFunction( target_ptr ); }
 	/// @brief 创建指针对象
 	/// @param target_type_info 指向的类型
 	/// @param create_call_function 创建的指针对象成功时，调用该函数
 	/// @return 成功创建返回 true，并且调用 create_call_function，此时用户用变量保存值
-	virtual bool createTarget( const type_info &target_type_info, const std_function< void( void *create_obj_ptr ) > &create_call_function ) { return false; }
+	virtual bool createTarget( const type_info &target_type_info, const std_function< void( void *create_obj_ptr ) > &create_call_function ) const {
+		if( target_type_info != generateTypeInfo )
+			return false;
+		void *functionResult = createFunction( );
+		if( functionResult == nullptr )
+			return false;
+		create_call_function( functionResult );
+		return true;
+	}
 
 	/// @brief 存储序列化
 	/// @param target_type_info 序列化对象类型
@@ -58,7 +74,7 @@ public:
 	/// @param result_vector 返回二进制数据
 	/// @param result_count 二进制数据的量
 	/// @return 成功序列化返回 true
-	virtual bool toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) { return false; }
+	virtual bool toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const { return false; }
 
 	/// @brief 加载序列化
 	/// @param target_type_info 序列化当中实例化的对象类型
@@ -67,7 +83,7 @@ public:
 	/// @param source_data_ptr
 	/// @param source_data_count
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) { return false; }
+	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
 	// 提供子类使用
 protected:
 	/// @brief 二进制填充数组
@@ -97,12 +113,19 @@ protected:
 	/// @brief 设置生成代码
 	/// @param var 生成对象
 	/// @param new_var_generate_code 新的生成代码
-	virtual void setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code );
+	virtual void setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_code ) const;
 	/// @brief 设置新的名称
 	/// @param var 生成对象
 	/// @param new_var_name 新的名称
-	virtual void setIVarVarName( I_Var *var, const QString &new_var_name );
-	
+	virtual void setIVarVarName( I_Var *var, const QString &new_var_name ) const;
+	/// @brief 获取节点变量列表
+	/// @param node_item 节点变量
+	/// @return 变量列表
+	virtual const std_vector< I_Var * > & getNodeItemVars( const NodeItem *node_item ) const;
+	/// @brief 获取节点变量列表
+	/// @param node_item 节点变量
+	/// @return 变量列表
+	virtual std_vector< I_Var * > & getNodeItemVars( NodeItem *node_item ) const;
 	// 静态
 public:
 	/// @brief 从数据当中获取可能的类型名称
