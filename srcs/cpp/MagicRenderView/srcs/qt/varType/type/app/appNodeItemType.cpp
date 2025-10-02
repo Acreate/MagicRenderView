@@ -17,7 +17,7 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 		return false;
 	return I_Stack::toBinVector( target_type_info, target_ptr, result_vector, result_count );
 }
-bool AppNodeItemType::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+bool AppNodeItemType::toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
 	if( generateTypeInfo.before( target_type_info ) == false )
 		return false;
 	return I_Stack::toOBjVector( target_type_info, target_ptr, result_count, source_data_ptr, source_data_count );

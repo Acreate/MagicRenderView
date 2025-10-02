@@ -142,7 +142,7 @@ public:
 	/// @param source_data_ptr 指向数据段的起始指针
 	/// @param source_data_count 指向数据段的长度
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
+	virtual bool toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
 
 	/// @brief 获取类型的生成信息
 	/// @param generate_type_name 类型名称

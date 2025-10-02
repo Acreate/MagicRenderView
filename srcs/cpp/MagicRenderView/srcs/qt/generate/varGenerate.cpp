@@ -214,7 +214,7 @@ bool VarGenerate::toBinVector( const type_info &target_type_info, const void *ta
 	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
-bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+bool VarGenerate::toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 	size_t count = stackVector.size( );
 	if( count != 0 ) {
 		auto data = stackVector.data( );

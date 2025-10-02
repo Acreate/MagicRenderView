@@ -89,7 +89,7 @@ public:
 	/// @param source_data_ptr
 	/// @param source_data_count
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
+	virtual bool toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
 	// 提供子类使用
 protected:
 	/// @brief 二进制填充数组

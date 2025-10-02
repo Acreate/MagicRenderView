@@ -20,13 +20,15 @@ bool StdWStringType::toBinVector( const type_info &target_type_info, const void 
 	QString buff = QString::fromStdWString( *( std::wstring * ) target_ptr );
 	return varGenerate->toBinVector( typeid( QString ), &buff, result_vector, result_count );
 }
-bool StdWStringType::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+bool StdWStringType::toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
 	if( target_type_info != generateTypeInfo )
 		return false;
 	QString buff;
-	bool oBjVector = varGenerate->toOBjVector( typeid( QString ), &buff, result_count, source_data_ptr, source_data_count );
+	void *strPtr = &buff;
+	void **targetPtr = &strPtr;
+	bool oBjVector = varGenerate->toOBjVector( typeid( QString ), targetPtr, result_count, source_data_ptr, source_data_count );
 	if( oBjVector == false )
 		return false;
-	*( std::wstring * ) target_ptr = buff.toStdWString( );
+	*( std::wstring * ) *target_ptr = buff.toStdWString( );
 	return true;
 }

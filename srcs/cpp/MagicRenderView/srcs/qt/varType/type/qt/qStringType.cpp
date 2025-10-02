@@ -27,7 +27,7 @@ bool QStringType::toBinVector( const type_info &target_type_info, const void *ta
 	result_count = result_vector.size( );
 	return true;
 }
-bool QStringType::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+bool QStringType::toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
 
 	if( target_type_info != generateTypeInfo )
 		return false;
@@ -44,7 +44,7 @@ bool QStringType::toOBjVector( const type_info &target_type_info, void *target_p
 		return false;
 	offerPtr += count;
 	mod -= count;
-	offerPtr += fillObjVector( ( QString * ) target_ptr, offerPtr, mod );
+	offerPtr += fillObjVector( ( QString * ) *target_ptr, offerPtr, mod );
 	result_count = offerPtr - source_data_ptr;
 	return true;
 }
