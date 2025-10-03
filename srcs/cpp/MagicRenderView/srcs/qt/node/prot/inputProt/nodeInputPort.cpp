@@ -31,21 +31,12 @@ bool NodeInputPort::linkOutputPort( NodePort *output_port ) {
 		if( data[ index ] == output_port )
 			return true; // 已经链接
 
-	auto var = output_port->getVar( );
-	if( var == nullptr )
-		return false;
-	I_Type *outVar = var->getTypeInfo( ).get( );
+	const I_Type *outVar = output_port->getVarType( );
 	if( outVar == nullptr )
 		return false;
-	I_Var *varPtr = this->var.get( );
-	if( varPtr == nullptr )
+	if( typePtr == nullptr )
 		return false;
-	I_Type *typeInfo = varPtr->getTypeInfo( ).get( );
-	if( typeInfo == nullptr )
-		return false;
-	const auto &thisTypeInfo = typeInfo->getTypeInfo( );
-
-	if( varGenerate->supportType( thisTypeInfo, outVar->getTypeInfo( ) ) == false )
+	if( varGenerate->supportType( typePtr->getTypeInfo( ), outVar->getTypeInfo( ) ) == false )
 		return false;
 
 	// 检查是否存在重复链接

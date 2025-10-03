@@ -21,9 +21,6 @@ private:
 	friend class MainWidget;
 	friend class AppNodeItemType;
 protected:
-	size_t generateCode;
-	/// @brief 绑定变量
-	size_t varCode;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
 	/// @brief 图标
@@ -44,8 +41,10 @@ protected:
 	Application *applicationInstancePtr;
 	/// @brief 变量生成实例
 	VarGenerate *varGenerate;
-	/// @brief 接口变量
-	std_shared_ptr< I_Var > var;
+	/// @brief 变量类型
+	I_Type *typePtr;
+	/// @brief 变量指针
+	I_Var *varPtr;
 	/// @brief 链接的序<节点序号，输出端口名称>
 	std_vector_pairt< size_t, QString > linkOutputVector;
 public:
@@ -75,8 +74,11 @@ public:
 	}
 	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
 	virtual bool updateProtLayout( ) = 0;
-	virtual const std_shared_ptr< I_Var > & getVar( ) const {
-		return var;
+	virtual const I_Var * getVar( ) const {
+		return varPtr;
+	}
+	virtual const I_Type * getVarType( ) const {
+		return typePtr;
 	}
 	virtual bool linkOutputPort( NodePort *output_port ) { return false; }
 	virtual bool disLinkOutputPor( NodePort *remove_output_port ) { return false; }

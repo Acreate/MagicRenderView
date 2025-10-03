@@ -20,20 +20,22 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRe
 		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
 	icoItemHeith = ico->height( );
 	icoItemWidth = ico->width( );
-	var = nullptr;
-
+	varPtr = nullptr;
+	typePtr = nullptr;
 }
 NodePort::~NodePort( ) {
 	emit releaseThiNodeProt( this );
 	delete nodePortRender;
 	delete ico;
+	if( varPtr )
+		delete varPtr;
 }
 
 void NodePort::setTitle( const QString &title ) {
 	this->title = title;
-	if( var == nullptr )
+	if( varPtr == nullptr )
 		return;
-	var.get( )->setVarName( title );
+	varPtr->setVarName( title );
 }
 void NodePort::setIco( const QString &new_ico_path ) {
 	auto load = QImage( new_ico_path );

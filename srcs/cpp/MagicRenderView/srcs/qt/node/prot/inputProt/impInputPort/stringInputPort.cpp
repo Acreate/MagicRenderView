@@ -8,7 +8,8 @@
 #include <qt/varType/I_Var.h>
 Imp_StaticMetaInfo( StringInputPort, QObject::tr( "StringInputPort" ), QObject::tr( "impInputPort" ) );
 StringInputPort::StringInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
-	auto type = new I_Type(
+
+	typePtr = new I_Type(
 		typeid( QString ),
 		sizeof( QString ),
 		[] ( void *p ) {
@@ -19,6 +20,6 @@ StringInputPort::StringInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 			p = new QString( );
 			return true;
 		} );
-	var = std_shared_ptr< I_Var >( new I_Var( std_shared_ptr< I_Type >( type ), title ) );
+	varPtr = new I_Var( typePtr, title );
 	setTitle( getMetaObjectName( ) );
 }

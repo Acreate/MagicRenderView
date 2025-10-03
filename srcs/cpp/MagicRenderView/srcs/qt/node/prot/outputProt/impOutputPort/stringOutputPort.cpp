@@ -9,7 +9,7 @@
 Imp_StaticMetaInfo( StringOutputPort, QObject::tr( "StringOutputPort" ), QObject::tr( "impOutputPort" ) );
 StringOutputPort::StringOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 
-	auto type = new I_Type(
+	typePtr = new I_Type(
 		typeid( QString ),
 		sizeof( QString ),
 		[] ( void *p ) {
@@ -20,6 +20,6 @@ StringOutputPort::StringOutputPort( NodeItem *parent ) : NodeOutputPort( parent 
 			p = new QString( );
 			return true;
 		} );
-	var = std_shared_ptr< I_Var >( new I_Var( std_shared_ptr< I_Type >( type ), title ) );
+	varPtr = new I_Var( typePtr, title );
 	setTitle( getMetaObjectName( ) );
 }
