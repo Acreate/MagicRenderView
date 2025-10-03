@@ -83,12 +83,7 @@ void I_Stack::setIVarGenerateCode( I_Var *var, const size_t &new_var_generate_co
 void I_Stack::setIVarVarName( I_Var *var, const QString &new_var_name ) const {
 	var->varName = new_var_name;
 }
-const std_vector< I_Var * > & I_Stack::getNodeItemVars( const NodeItem *node_item ) const {
-	return node_item->varVector;
-}
-std_vector< I_Var * > & I_Stack::getNodeItemVars( NodeItem *node_item ) const {
-	return node_item->varVector;
-}
+
 size_t I_Stack::getTypeName( QString &result_type_name, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 
 	size_t resultCount = *( size_t * ) source_data_ptr;

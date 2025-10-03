@@ -13,6 +13,8 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
+#include "../varType/I_Var.h"
+
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	nodeItemGenerateCode = 1;
 	scrollArea = scroll_area;
@@ -43,14 +45,50 @@ MainWidget::~MainWidget( ) {
 	nodeItemList.clear( );
 	size_t count = buff.size( );
 	auto vectorDataPtr = buff.data( );
-	for( size_t index = 0; index < count; ++index )
+	size_t index = 0;
+	for( ; index < count; ++index )
 		delete vectorDataPtr[ index ];
+	count = mainWidgetGenerateVar.size( );
+	index = 0;
+	auto var = mainWidgetGenerateVar.data( );
+	for( ; index < count; ++index )
+		delete var[ index ];
+}
+bool MainWidget::getMainWidgetVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const {
+	size_t count = mainWidgetGenerateVar.size( );
+	if( count == 0 )
+		return false;
+	size_t index = 0;
+	auto var = mainWidgetGenerateVar.data( );
+	for( ; index < count; ++index )
+		if( var[ index ]->getGenerateCode( ) == generate_code ) {
+			result_var_ptr = var[ index ];
+			return true;
+		}
+	return false;
+}
+bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const {
+	size_t count = mainWidgetGenerateVar.size( );
+	if( count == 0 )
+		return false;
+	auto data = mainWidgetGenerateVar.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ]->getGenerateCode( ) == generate_code ) {
+			result_var_ptr = data[ index ];
+			return true;
+		}
+	return false;
+}
+bool MainWidget::requestGenerateVarPtr( NodeItem *request_node_item_ptr, NodeOutputPort *request_node_output_port_ptr, I_Var *&result_var_ptr ) const {
+
+	// todo : 请求生成的变量
+	
 }
 
 size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
 	return 0;
 }
-size_t MainWidget::saveBin( std_vector<uint8_t> &bin_vector ) {
+size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
 	return 0;
 }
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {

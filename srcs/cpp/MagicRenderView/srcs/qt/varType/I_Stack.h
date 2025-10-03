@@ -124,14 +124,8 @@ protected:
 	/// @param var 生成对象
 	/// @param new_var_name 新的名称
 	virtual void setIVarVarName( I_Var *var, const QString &new_var_name ) const;
-	/// @brief 获取节点变量列表
-	/// @param node_item 节点变量
-	/// @return 变量列表
-	virtual const std_vector< I_Var * > & getNodeItemVars( const NodeItem *node_item ) const;
-	/// @brief 获取节点变量列表
-	/// @param node_item 节点变量
-	/// @return 变量列表
-	virtual std_vector< I_Var * > & getNodeItemVars( NodeItem *node_item ) const;
+
+
 	// 静态
 public:
 	/// @brief 从数据当中获取可能的类型名称
