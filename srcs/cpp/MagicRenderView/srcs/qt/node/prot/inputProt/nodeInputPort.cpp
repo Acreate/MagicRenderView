@@ -18,14 +18,16 @@ bool NodeInputPort::updateProtLayout( ) {
 bool NodeInputPort::linkOutputPort( NodePort *output_port ) {
 	auto parentItem = output_port->getParentItem( );
 	// 检查是否存在重复链接
-	size_t count = linkOutputVector.size( );
+	size_t count = overrideLink.size( );
+	auto data = overrideLink.data( );
 	size_t index = 0;
-	auto data = linkOutputVector.data( );
+	for( ; index < count; ++index )
+		if( data[ index ] == output_port )
+			return true; // 已经链接
+	overrideLink.emplace_back( output_port );
 	auto nodeItemGenerateCode = parentItem->getGenerateCode( );
 	auto nodePortName = output_port->getTitle( );
-	for( ; index < count; ++index )
-		if( data[ index ].first == nodeItemGenerateCode && data[ index ].second == nodePortName )
-			return true;
+
 	linkOutputVector.emplace_back( nodeItemGenerateCode, nodePortName );
 	connect( output_port, &NodeOutputPort::outputPorDelete, this, &NodeInputPort::disLinkOutputPor );
 	emit linkOutputPorOver( output_port );
@@ -47,6 +49,12 @@ bool NodeInputPort::disLinkOutputPor( NodePort *remove_output_port ) {
 		if( vectorPtr[ index ].second == removeOutputPortName && generaterCode == vectorPtr[ index ].first ) {
 			linkOutputVector.erase( linkOutputVector.begin( ) + index );
 			disconnect( remove_output_port, &NodeOutputPort::outputPorDelete, this, &NodeInputPort::disLinkOutputPor );
+			count = overrideLink.size( );
+			auto data = overrideLink.data( );
+			index = 0;
+			for( ; index < count; ++index )
+				if( data[ index ] == remove_output_port )
+					overrideLink.erase( overrideLink.begin( ) + index );
 			emit disLinkOutputPorOver( remove_output_port );
 			return true;
 		}

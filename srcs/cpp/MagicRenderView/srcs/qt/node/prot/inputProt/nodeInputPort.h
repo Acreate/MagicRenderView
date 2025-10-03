@@ -11,6 +11,9 @@ class NodeInputPort : public NodePort {
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
+protected:
+	/// @brief 标识已经链接的端口
+	std_vector< NodePort * > overrideLink;
 public:
 	NodeInputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
