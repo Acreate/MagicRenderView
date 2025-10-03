@@ -19,8 +19,6 @@ public:
 	bool updateProtLayout( ) override;
 
 	bool getPos( QPoint &result_pos ) const override;
-Q_SIGNALS:
-	void outputPorDelete( NodeOutputPort *remove_output_port );
 };
 
 #endif // NODEOUTPUTPORT_H_H_HEAD__FILE__

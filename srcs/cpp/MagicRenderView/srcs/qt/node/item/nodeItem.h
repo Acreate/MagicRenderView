@@ -21,6 +21,7 @@
 	friend class Application;\
 	friend class VarGenerate
 
+class NodePort;
 class I_Var;
 class VarType;
 class Application;
@@ -142,7 +143,7 @@ public:
 	virtual Click_Type relativePointType( int x, int y ) const;
 	/// @brief 获取链接
 	/// @return 链接键值对
-	virtual std_vector< std_pairt< TPortWidgetPort< TNodePortOutputPortPtr >, TPortWidgetPort< TNodePortInputPortPtr > > > getLinkPort( ) const;
+	virtual std_vector< std_pairt< TPortWidgetPort< NodePort * >, TPortWidgetPort< NodePort * > > > getLinkPort( ) const;
 	/// @brief 从相对坐标获输入接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -211,6 +212,8 @@ public:
 	/// @param index 下标
 	/// @param bind_var_generate_code 绑定的变量指针
 	virtual bool setInputVarPtr( const size_t &index, const size_t &bind_var_generate_code );
+	virtual size_t getGenerateCode( ) const { return generateCode; }
+	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针

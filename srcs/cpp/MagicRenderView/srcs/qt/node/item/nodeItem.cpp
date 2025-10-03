@@ -60,7 +60,7 @@ NodeItem::~NodeItem( ) {
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
 	setParent( parent );
-	setMainWidget( parent );
+	renderMainWidget = parent;
 }
 bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
@@ -103,15 +103,15 @@ NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 		return Click_Type::Title;
 	return Click_Type::Space;
 }
-std_vector< std_pairt< NodeItem::TPortWidgetPort< NodeOutputPort * >, NodeItem::TPortWidgetPort< NodeInputPort * > > > NodeItem::getLinkPort( ) const {
-	std_vector< std_pairt< NodeItem::TPortWidgetPort< NodeOutputPort * >, NodeItem::TPortWidgetPort< NodeInputPort * > > > result;
+std_vector< std_pairt< NodeItem::TPortWidgetPort< NodePort * >, NodeItem::TPortWidgetPort< NodePort * > > > NodeItem::getLinkPort( ) const {
+	std_vector< std_pairt< NodeItem::TPortWidgetPort< NodePort * >, NodeItem::TPortWidgetPort< NodePort * > > > result;
 	size_t inputCount = nodeInputProtVector.size( );
 	auto inputVectorPtr = nodeInputProtVector.data( );
 
 	QPoint outPos, inPos;
 	for( size_t inputIndex = 0; inputIndex < inputCount; ++inputIndex ) {
 		auto &inputPortPirt = inputVectorPtr[ inputIndex ];
-		auto &linkNodeOutputPorts = inputPortPirt.first->getLinkOutputVector( );
+		auto linkNodeOutputPorts = inputPortPirt.first->getLinkOutputVector( );
 		size_t linkOutputCount = linkNodeOutputPorts.size( );
 		if( linkOutputCount == 0 )
 			continue;
@@ -122,7 +122,7 @@ std_vector< std_pairt< NodeItem::TPortWidgetPort< NodeOutputPort * >, NodeItem::
 		NodeItem::TPortWidgetPort< NodeInputPort * > inputPortWidgetInfo( inputVectorPtr[ inputIndex ].first, { inPos.x( ), inPos.y( ) } );
 		for( size_t linkOutputIndex = 0; linkOutputIndex < linkOutputCount; ++linkOutputIndex )
 			if( linkOutputVectPtr[ linkOutputIndex ]->getPos( outPos ) )
-				result.emplace_back( NodeItem::TPortWidgetPort< NodeOutputPort * >( linkOutputVectPtr[ linkOutputIndex ], { outPos.x( ), outPos.y( ) } ), inputPortWidgetInfo );
+				result.emplace_back( NodeItem::TPortWidgetPort< NodePort * >( linkOutputVectPtr[ linkOutputIndex ], { outPos.x( ), outPos.y( ) } ), inputPortWidgetInfo );
 	}
 	return result;
 }
@@ -215,6 +215,17 @@ bool NodeItem::setInputVarPtr( const size_t &index, const size_t &bind_var_gener
 	return true;
 }
 
+NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) const {
+	size_t count = nodeOutputProtVector.size( );
+	if( count == 0 )
+		return nullptr;
+	auto data = nodeOutputProtVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].first->getTitle( ) == output_port_name )
+			return data[ index ].first;
+
+	return nullptr;
+}
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;

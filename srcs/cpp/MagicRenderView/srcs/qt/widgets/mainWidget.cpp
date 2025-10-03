@@ -123,6 +123,12 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 	update( );
 	return new_node_item->generateCode;
 }
+NodeItem * MainWidget::getNodeItem( const size_t &generater_code ) const {
+	for( auto &item : nodeItemList )
+		if( item->generateCode == generater_code )
+			return item;
+	return nullptr;
+}
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
@@ -218,14 +224,14 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				if( rightMouseBtnSelectPort == nullptr )
 					break; // 无法获取正确的输入接口
 				rightMouseBtnRemoveOutPortMenu->clear( );
-				auto &nodeOutputPorts = rightMouseBtnSelectPort->getLinkOutputVector( );
+				auto nodeOutputPorts = rightMouseBtnSelectPort->getLinkOutputVector( );
 				size_t count = nodeOutputPorts.size( );
 				if( count == 0 )
 					break;
 				size_t index = 0;
 				auto nodeOutputPortVectorPtr = nodeOutputPorts.data( );
 				for( ; index < count; ++index ) {
-					NodeOutputPort *nodeOutputPort = nodeOutputPortVectorPtr[ index ];
+					auto nodeOutputPort = nodeOutputPortVectorPtr[ index ];
 					auto addAction = rightMouseBtnRemoveOutPortMenu->addAction( "删除 [ " + nodeOutputPort->getTitle( ) + " ] 输入接口" );
 					connect( addAction, &QAction::triggered, [this, nodeOutputPort]( ) {
 						if( rightMouseBtnSelectPort == nullptr )

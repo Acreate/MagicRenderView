@@ -11,8 +11,6 @@ class NodeInputPort : public NodePort {
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
-protected:
-	std_vector< NodeOutputPort * > linkOutputVector;
 public:
 	NodeInputPort( NodeItem *parent ) : NodePort( parent ) {
 	}
@@ -20,14 +18,8 @@ public:
 		emit inputPorDelete( this );
 	}
 	bool updateProtLayout( ) override;
-	virtual void linkOutputPort( NodeOutputPort *output_port );
-	virtual void disLinkOutputPor( NodeOutputPort *remove_output_port );
-	virtual const std_vector< NodeOutputPort * > & getLinkOutputVector( ) const { return linkOutputVector; }
-
+	bool linkOutputPort( NodePort *output_port ) override;
+	bool disLinkOutputPor( NodePort *remove_output_port ) override;
 	bool getPos( QPoint &result_pos ) const override;
-Q_SIGNALS:
-	void inputPorDelete( NodeInputPort *remove_input_port );
-	void linkOutputPorOver( NodeOutputPort *remove_input_port );
-	void disLinkOutputPorOver( NodeOutputPort *remove_input_port );
 };
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__

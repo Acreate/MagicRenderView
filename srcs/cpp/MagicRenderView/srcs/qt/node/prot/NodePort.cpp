@@ -6,6 +6,9 @@
 
 #include "../../application/application.h"
 
+#include "../../widgets/mainWidget.h"
+
+#include "outputProt/nodeOutputPort.h"
 
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
 NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
@@ -66,4 +69,30 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 		return false;
 	}
 	return true;
+}
+std_vector< NodePort * > NodePort::getLinkOutputVector( ) const {
+	std_vector< NodePort * > result;
+	if( parentItem == nullptr )
+		return result;
+	auto renderMainWidget = parentItem->getRenderMainWidget( );
+	if( renderMainWidget == nullptr )
+		return result;
+	size_t count = linkOutputVector.size( );
+	if( count == 0 )
+		return result;
+	auto pair = linkOutputVector.data( );
+	for( size_t index = 0; index < count; ++index ) {
+
+		auto nodeItemGenerateCode = pair[ index ].first;
+		auto nodeItem = renderMainWidget->getNodeItem( nodeItemGenerateCode );
+		if( nodeItem == nullptr )
+			continue;
+
+		auto nodePortName = pair[ index ].second;
+		auto outputPort = nodeItem->getOutputPort( nodePortName );
+		if( outputPort == nullptr )
+			continue;
+		result.emplace_back( outputPort );
+	}
+	return result;
 }

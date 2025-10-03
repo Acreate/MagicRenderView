@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeOutputPort;
 class I_Var;
 class I_Type;
 class VarType;
@@ -43,6 +44,8 @@ protected:
 	Application *applicationInstancePtr;
 	/// @brief 接口变量
 	std_shared_ptr< I_Var > var;
+	/// @brief 链接的序<节点序号，输出端口名称>
+	std_vector_pairt< size_t, QString > linkOutputVector;
 public:
 	NodePort( NodeItem *parent_item );
 	~NodePort( ) override;
@@ -73,7 +76,15 @@ public:
 	virtual const std_shared_ptr< I_Var > & getVar( ) const {
 		return var;
 	}
+	virtual bool linkOutputPort( NodePort *output_port ) { return false; }
+	virtual bool disLinkOutputPor( NodePort *remove_output_port ) { return false; }
+	virtual NodeItem * getParentItem( ) const { return parentItem; }
+	virtual std_vector< NodePort * > getLinkOutputVector( ) const;
 Q_SIGNALS:
 	void releaseThiNodeProt( NodePort *release_ptr );
+	void outputPorDelete( NodeOutputPort *remove_output_port );
+	void inputPorDelete( NodePort *remove_input_port );
+	void linkOutputPorOver( NodePort *remove_input_port );
+	void disLinkOutputPorOver( NodePort *remove_input_port );
 };
 #endif // NODEPORT_H_H_HEAD__FILE__

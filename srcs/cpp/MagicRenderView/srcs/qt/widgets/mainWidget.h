@@ -73,7 +73,7 @@ protected:
 	/// @brief 鼠标右键选中项
 	NodeItem *rightMouseBtnSelectItem;
 	/// @brief 鼠标右键选中节点
-	NodeInputPort *rightMouseBtnSelectPort;
+	NodePort *rightMouseBtnSelectPort;
 	/// @brief 用于操作删除输出接口的菜单-鼠标右键命中输入接口是弹出
 	QMenu *rightMouseBtnRemoveOutPortMenu;
 public:
@@ -139,6 +139,10 @@ public:
 	/// @param new_node_item 追加的节点项
 	/// @return 返回窗口节点代码，失败返回 0
 	virtual size_t appendNodeItem( NodeItem *new_node_item );
+	/// @brief 根据生成代码获取节点
+	/// @param generater_code 节点生成代码
+	/// @return 节点
+	virtual NodeItem* getNodeItem(const size_t& generater_code) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
