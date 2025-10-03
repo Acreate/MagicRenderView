@@ -14,7 +14,7 @@ private:
 	/// @brief 创建函数
 	std_function< bool( void * ) > deleteFunction;
 	/// @brief 释放函数
-	std_function< void*( ) > createFunction;
+	std_function< void*( const type_info &, const uint8_t *, const size_t & ) > createFunction;
 	/// @brief 存储生成的变量
 	std_shared_ptr< std_vector< void * > > stackVarPtr;
 protected:
@@ -25,7 +25,7 @@ protected:
 	/// @brief 创建函数
 	std_function< bool( void * ) > childDeleteFunction;
 	/// @brief 释放函数
-	std_function< void*( ) > childcreateFunction;
+	std_function< void*( const type_info &, const uint8_t *, const size_t & ) > childcreateFunction;
 	// 删除函数
 public:
 	I_Stack( const I_Stack &other ) = delete;
@@ -34,7 +34,7 @@ public:
 	// 构造与析构
 public:
 	I_Stack( const type_info &generate_type_info );
-	I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( ) > &create_function );
+	I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( const type_info &, const uint8_t *, const size_t & ) > &create_function );
 	virtual ~I_Stack( ) = default;
 
 	// 虚函数
@@ -62,12 +62,14 @@ public:
 	virtual bool deleteTarget( void *target_ptr ) const { return deleteFunction( target_ptr ); }
 	/// @brief 创建指针对象
 	/// @param target_type_info 指向的类型
+	/// @param target_type_data_ptr
+	/// @param target_type_data_count
 	/// @param create_call_function 创建的指针对象成功时，调用该函数
 	/// @return 成功创建返回 true，并且调用 create_call_function，此时用户用变量保存值
-	virtual bool createTarget( const type_info &target_type_info, const std_function< void( void *create_obj_ptr ) > &create_call_function ) const {
+	virtual bool createTarget( const type_info &target_type_info, uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) const {
 		if( target_type_info != generateTypeInfo )
 			return false;
-		void *functionResult = createFunction( );
+		void *functionResult = createFunction( target_type_info, target_type_data_ptr, target_type_data_count );
 		if( functionResult == nullptr )
 			return false;
 		create_call_function( functionResult );
@@ -89,7 +91,7 @@ public:
 	/// @param source_data_ptr
 	/// @param source_data_count
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
+	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
 	// 提供子类使用
 protected:
 	/// @brief 二进制填充数组
@@ -124,7 +126,6 @@ protected:
 	/// @param var 生成对象
 	/// @param new_var_name 新的名称
 	virtual void setIVarVarName( I_Var *var, const QString &new_var_name ) const;
-
 
 	// 静态
 public:

@@ -1,7 +1,7 @@
 ﻿#include "int64Type.h"
 
 Int64Type::Int64Type( ) : I_Stack( typeid( t_current_type ) ) {
-	childcreateFunction = [] {
+	childcreateFunction = [] ( const type_info &target_type_info, const void *target_data_ptr, const size_t &target_data_count ) {
 		auto p = new t_current_type( );
 		return p;
 	};
@@ -25,7 +25,7 @@ bool Int64Type::toBinVector( const type_info &target_type_info, const void *targ
 	result_count = result_vector.size( );
 	return true;
 }
-bool Int64Type::toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+bool Int64Type::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
 	if( target_type_info != generateTypeInfo )
 		return false;
 	size_t needCount = 0;
@@ -34,14 +34,14 @@ bool Int64Type::toOBjVector( const type_info &target_type_info, void **target_pt
 	size_t mod = source_data_count - count;
 	if( needCount > mod )
 		return false;
-	const uint8_t *offerPtr = source_data_ptr + count;
+	auto offerPtr = source_data_ptr + count;
 	QString typeName;
 	count = fillObjVector( &typeName, offerPtr, mod );
 	if( typeName != generateTypeInfo.name( ) )
 		return false;
 	offerPtr += count;
 	mod -= count;
-	offerPtr += fillObjVector( *target_ptr, sizeof( t_current_type ), offerPtr, mod );
+	offerPtr += fillObjVector( target_ptr, sizeof( t_current_type ), offerPtr, mod );
 	result_count = offerPtr - source_data_ptr;
 	return true;
 }

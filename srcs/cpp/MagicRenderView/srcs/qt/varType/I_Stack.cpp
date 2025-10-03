@@ -7,10 +7,10 @@
 #include "../node/item/nodeItem.h"
 I_Stack::I_Stack( const type_info &generate_type_info ) : I_Stack( generate_type_info, nullptr, nullptr ) {
 }
-I_Stack::I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( ) > &create_function ) : generateTypeInfo( generate_type_info ), stackVarPtr( new std_vector< void * > ), childDeleteFunction( delete_function ), childcreateFunction( create_function ) {
+I_Stack::I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( const type_info &, const uint8_t *, const size_t & ) > &create_function ) : stackVarPtr( new std_vector< void * > ), generateTypeInfo( generate_type_info ), childDeleteFunction( delete_function ), childcreateFunction( create_function ) {
 
-	createFunction = [this] {
-		auto p = childcreateFunction( );
+	createFunction = [this] ( const type_info &target_type_info, const uint8_t *target_data_ptr, const size_t &target_data_count ) {
+		auto p = childcreateFunction( target_type_info, target_data_ptr, target_data_count );
 		if( p != nullptr )
 			stackVarPtr->emplace_back( p );
 		return p;

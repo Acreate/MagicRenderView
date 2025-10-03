@@ -29,6 +29,7 @@
 #include <qt/varType/convers/uintToConvers/uIntToUInt.h>
 #include <qt/varType/convers/uintToConvers/uintToFloat.h>
 
+#include "qt/varType/type/baseType/uInt16Type.h"
 #include <qt/varType/type/baseType/float32Type.h>
 #include <qt/varType/type/baseType/float64Type.h>
 #include <qt/varType/type/baseType/int16Type.h>
@@ -41,7 +42,6 @@
 #include <qt/varType/type/cpp/stdStringType.h>
 #include <qt/varType/type/cpp/stdWStringType.h>
 #include <qt/varType/type/qt/qStringType.h>
-#include "qt/varType/type/baseType/uInt16Type.h"
 
 #include <qt/node/item/calculate/varAdd.h>
 #include <qt/node/item/calculate/varDiv.h>
@@ -67,6 +67,7 @@
 #include "../varType/isTypes/isInt.h"
 #include "../varType/isTypes/isString.h"
 #include "../varType/isTypes/isUint.h"
+#include "../varType/type/app/appNodeItemType.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -148,10 +149,10 @@ bool Application::init( ) {
 
 	// todo : 音乐特效节点
 	// todo : 类型识别支持
-	varGenerate->appendIsTypeInstance<IsInt>(  );
-	varGenerate->appendIsTypeInstance<IsUint>(  );
-	varGenerate->appendIsTypeInstance<IsFloat>(  );
-	varGenerate->appendIsTypeInstance<IsString>(  );
+	varGenerate->appendIsTypeInstance< IsInt >( );
+	varGenerate->appendIsTypeInstance< IsUint >( );
+	varGenerate->appendIsTypeInstance< IsFloat >( );
+	varGenerate->appendIsTypeInstance< IsString >( );
 	// todo : VarType 支持变量
 
 	// todo : VarType 类型转换
@@ -186,6 +187,7 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringType >( );
 	varGenerate->appendStackInstance< StdStringType >( );
 	varGenerate->appendStackInstance< StdWStringType >( );
+	varGenerate->appendStackInstance< AppNodeItemType >( );
 	return true;
 }
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {

@@ -136,9 +136,11 @@ public:
 	virtual bool deleteTarget( void *target_ptr );
 	/// @brief 创建指针对象
 	/// @param target_type_info 指向的类型
+	/// @param target_type_data_ptr 创建的数据目标指针
+	/// @param target_type_data_count 创建的目标数据长度
 	/// @param create_call_function  创建的指针
 	/// @return 成功创建返回 true，并且改变 target_ptr 指向，使其指向创建对象
-	virtual bool createTarget( const type_info &target_type_info, const std_function< void( void *create_obj_ptr ) > &create_call_function );
+	virtual bool createTarget( const type_info &target_type_info, uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function );
 
 	/// @brief 存储序列化
 	/// @param target_type_info 序列化对象类型
@@ -155,7 +157,7 @@ public:
 	/// @param source_data_ptr 指向数据段的起始指针
 	/// @param source_data_count 指向数据段的长度
 	/// @return 成功使用数据返回 true
-	virtual bool toOBjVector( const type_info &target_type_info, void **target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
+	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count );
 
 	/// @brief 获取类型的生成信息
 	/// @param generate_type_name 类型名称

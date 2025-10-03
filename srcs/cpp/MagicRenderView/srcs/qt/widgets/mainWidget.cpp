@@ -91,12 +91,10 @@ size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
 }
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
 	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
-	if( appendNodeItem( nodeItem ) == 0 ) {
-		delete nodeItem;
-		return nullptr;
-	}
-	nodeItem->move( fromGlobalReleasePoint );
-	return nodeItem;
+	if( appendNodeItem( nodeItem ) )
+		return nodeItem;
+	delete nodeItem;
+	return nullptr;
 }
 size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 
@@ -119,6 +117,22 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 
 	renderWidgetActiveItem = new_node_item;
 	new_node_item->move( fromGlobalReleasePoint );
+	VarGenerate *varGenerate = appInstance->getVarGenerate( );
+	std_vector< uint8_t > buff;
+	size_t result;
+	if( varGenerate->toBinVector( typeid( NodeItem ), new_node_item, buff, result ) ) {
+		NodeItem *resultPtr;
+		if( varGenerate->createTarget( typeid( NodeItem ), buff.data( ), buff.size( ), [&resultPtr] ( void *p ) {
+			resultPtr = ( NodeItem * ) p;
+		} ) ) {
+			if( resultPtr->intPortItems( this ) ) {
+				if( varGenerate->toOBjVector( typeid( NodeItem ), resultPtr, result, buff.data( ), buff.size( ) ) ) {
+					tools::debug::printError( "序列化成功" );
+				}
+			}
+		}
+
+	}
 	ensureVisibleToItemNode( new_node_item );
 	update( );
 	return new_node_item->generateCode;
