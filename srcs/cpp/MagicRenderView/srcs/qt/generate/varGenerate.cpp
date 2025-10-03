@@ -17,6 +17,20 @@ bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_t
 	generateTypeInfos.emplace_back( unity );
 	return true;
 }
+bool VarGenerate::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	size_t count = converVector.size( );
+	if( count != 0 ) {
+		auto data = converVector.data( );
+		size_t index = 0;
+		I_Conver *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->supportType( left_type_info, right_type_info ) )
+				return true;
+	}
+	QString msg( "未发现 %1 与 %2 类型的左值右值操作" );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	return false;
+}
 bool VarGenerate::conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	size_t count = converVector.size( );
 	if( count != 0 ) {

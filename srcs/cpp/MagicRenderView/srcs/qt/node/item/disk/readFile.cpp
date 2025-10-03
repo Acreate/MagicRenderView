@@ -4,18 +4,20 @@
 #include "../../prot/outputProt/impOutputPort/stringOutputPort.h"
 
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
-ReadFile::ReadFile(  ) : NodeItem(  ) {
+ReadFile::ReadFile( ) : NodeItem( ) {
 }
 bool ReadFile::intPortItems( MainWidget *parent ) {
+	if( parent == nullptr )
+		return false;
+	// 初始化父节点
+	setMainWidget( parent );
+	// 初始化节点名称
 	setNodeTitleName( getMetaObjectName( ) );
+	// 初始化输入端口
 	StringInputPort *inputPort = new StringInputPort( this );
 	inputPort->setTitle( "文件路径" );
 	appendInputProt( inputPort );
-	inputPort = new StringInputPort( this );
-	inputPort->setTitle( "限定目录" );
-	appendInputProt( inputPort );
-
-	
+	// 初始化输出端口
 	StringOutputPort *outputPort = new StringOutputPort( this );
 	outputPort->setTitle( "文件全路径" );
 	appendOutputProt( outputPort );
@@ -39,10 +41,14 @@ bool ReadFile::intPortItems( MainWidget *parent ) {
 	outputPort = new StringOutputPort( this );
 	outputPort->setTitle( "文件后缀名" );
 	appendOutputProt( outputPort );
-	
+	// 更新标题渲染布局
 	updateTitleLayout( );
+	// 更新输入渲染布局
 	updateInputLayout( );
+	// 更新输出渲染布局
 	updateOutputLayout( );
+	// 更新整体渲染布局
 	integrateLayout( );
+	// 返回
 	return true;
 }

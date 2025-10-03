@@ -1,4 +1,5 @@
 ﻿#include "uIntToUInt.h"
+
 bool UIntToUInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	return I_Conver::fillTarget( left_type_info, left, right_type_info, right );
 }

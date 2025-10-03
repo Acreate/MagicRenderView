@@ -13,6 +13,13 @@ protected:
 public:
 	I_Conver( );
 	virtual ~I_Conver( ) = default;
+	/// @brief 支持运算内容
+	/// @param left_type_info 左值
+	/// @param right_type_info 右值
+	/// @return 不支持返回 false
+	virtual bool supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+		return false;
+	}
 	/// @brief 右值赋值于左值
 	/// @param left_type_info 左值类型
 	/// @param left 左值指针

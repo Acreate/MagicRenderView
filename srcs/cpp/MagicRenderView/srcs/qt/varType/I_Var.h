@@ -24,6 +24,7 @@ public:
 	virtual const std_shared_ptr< I_Type > & getTypeInfo( ) const { return typeInfo; }
 	virtual void * getP( ) const { return p; }
 	virtual const QString & getVarName( ) const { return varName; }
+	virtual void setVarName( const QString &var_name ) { varName = var_name; }
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 };
 

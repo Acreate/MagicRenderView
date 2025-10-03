@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class VarGenerate;
 class NodeOutputPort;
 class I_Var;
 class I_Type;
@@ -17,9 +18,8 @@ class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
 private:
-	friend class NodeWidgetSerialization;
-	friend class NodeItemSerialization;
 	friend class MainWidget;
+	friend class AppNodeItemType;
 protected:
 	size_t generateCode;
 	/// @brief 绑定变量
@@ -42,6 +42,8 @@ protected:
 	NodeItem *parentItem;
 	/// @brief 引用对象指针
 	Application *applicationInstancePtr;
+	/// @brief 变量生成实例
+	VarGenerate *varGenerate;
 	/// @brief 接口变量
 	std_shared_ptr< I_Var > var;
 	/// @brief 链接的序<节点序号，输出端口名称>
@@ -53,7 +55,7 @@ public:
 	virtual int getIcoWidth( ) const { return icoItemWidth; }
 	virtual int getIcoHeith( ) const { return icoItemHeith; }
 	virtual const QString & getTitle( ) const { return title; }
-	virtual void setTitle( const QString &title ) { this->title = title; }
+	virtual void setTitle( const QString &title );
 	virtual QImage * getIco( ) const {
 		return ico;
 	}

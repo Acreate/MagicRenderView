@@ -34,6 +34,11 @@ public:
 		stackVector.insert( stackVector.begin( ), new_stack );
 	}
 	~VarGenerate( ) override = default;
+	/// @brief 校验是否支持左值与右值操作
+	/// @param left_type_info 左值类型
+	/// @param right_type_info 右值类型
+	/// @return 不支持返回 false
+	virtual bool supportType( const type_info &left_type_info, const type_info &right_type_info ) const;
 	/// @brief 类型转换赋值
 	/// @param left_type_info left 类型信息
 	/// @param left 被赋值

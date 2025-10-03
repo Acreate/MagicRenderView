@@ -6,6 +6,8 @@
 
 #include "../../application/application.h"
 
+#include "../../varType/I_Var.h"
+
 #include "../../widgets/mainWidget.h"
 
 #include "outputProt/nodeOutputPort.h"
@@ -13,11 +15,13 @@
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
 NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	varGenerate = applicationInstancePtr->getVarGenerate( );
 	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
 		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
 	icoItemHeith = ico->height( );
 	icoItemWidth = ico->width( );
 	var = nullptr;
+
 }
 NodePort::~NodePort( ) {
 	emit releaseThiNodeProt( this );
@@ -25,6 +29,12 @@ NodePort::~NodePort( ) {
 	delete ico;
 }
 
+void NodePort::setTitle( const QString &title ) {
+	this->title = title;
+	if( var == nullptr )
+		return;
+	var.get( )->setVarName( title );
+}
 void NodePort::setIco( const QString &new_ico_path ) {
 	auto load = QImage( new_ico_path );
 	if( load.isNull( ) )

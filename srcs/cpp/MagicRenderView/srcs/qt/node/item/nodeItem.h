@@ -35,10 +35,9 @@ class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
 public:
-	friend class NodeWidgetSerialization;
-	friend class NodeItemSerialization;
 	friend class MainWidget;
 	friend class I_Stack;
+	friend class AppNodeItemType;
 public:
 	enum class Click_Type {
 		None, // 没有

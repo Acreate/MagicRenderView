@@ -7,10 +7,7 @@ class StringInputPort : public NodeInputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeInputPort );
 public:
-	StringInputPort( NodeItem *parent )
-		: NodeInputPort( parent ) {
-		title = getMetaObjectName( );
-	}
+	StringInputPort( NodeItem *parent );
 };
 
 #endif // STRINGINPUTPORT_H_H_HEAD__FILE__
