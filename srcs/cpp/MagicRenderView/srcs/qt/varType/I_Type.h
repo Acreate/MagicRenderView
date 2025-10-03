@@ -28,6 +28,10 @@ public:
 		memorySize( memory_size ),
 		release( release ),
 		create( create ) { }
+	I_Type( const type_info &type_info, const std_function< bool( void *p ) > &release, const std_function< bool( void *&p ) > &create )
+		: typeInfo( type_info ),
+		release( release ),
+		create( create ) { }
 	friend bool operator==( const I_Type &lhs, const I_Type &rhs ) {
 		return lhs.typeInfo == rhs.typeInfo
 			&& lhs.memorySize == rhs.memorySize;
@@ -36,6 +40,7 @@ public:
 	virtual ~I_Type( ) { }
 	virtual const type_info & getTypeInfo( ) const { return typeInfo; }
 	virtual size_t getMemorySize( ) const { return memorySize; }
+	virtual void setMemorySize( const size_t memory_size ) { memorySize = memory_size; }
 	virtual const std_function< bool( void *p ) > & getRelease( ) const { return release; }
 	virtual const std_function< bool( void *&p ) > & getCreate( ) const { return create; }
 };

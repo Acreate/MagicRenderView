@@ -7,6 +7,8 @@
 
 #include <alias/type_alias.h>
 
+class I_Var;
+class I_Type;
 class VarType;
 class Application;
 class NodeItem;
@@ -39,6 +41,8 @@ protected:
 	NodeItem *parentItem;
 	/// @brief 引用对象指针
 	Application *applicationInstancePtr;
+	/// @brief 接口变量
+	std_shared_ptr< I_Var > var;
 public:
 	NodePort( NodeItem *parent_item );
 	~NodePort( ) override;
@@ -66,8 +70,10 @@ public:
 	}
 	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
 	virtual bool updateProtLayout( ) = 0;
-
+	virtual const std_shared_ptr< I_Var > & getVar( ) const {
+		return var;
+	}
 Q_SIGNALS:
-	void releaseThiNodeProt(NodePort* release_ptr);
+	void releaseThiNodeProt( NodePort *release_ptr );
 };
 #endif // NODEPORT_H_H_HEAD__FILE__

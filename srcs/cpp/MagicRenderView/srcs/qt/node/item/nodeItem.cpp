@@ -202,12 +202,6 @@ bool NodeItem::intPortItems( MainWidget *parent ) {
 	updateInputLayout( );
 	updateOutputLayout( );
 	integrateLayout( );
-	I_Var *buffPtr = nullptr;
-	for( auto &inputProt : nodeOutputProtVector )
-		if( parent->requestGenerateVarPtr( this, inputProt.first, buffPtr ) )
-			outputVarVector.emplace_back( buffPtr->getGenerateCode( ) );
-		else
-			tools::debug::printError( QString( "%1->%2 生成变量失败。" ).arg( this->nodeTitleName ).arg( inputProt.first->getTitle( ) ) );
 	return true;
 }
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {
@@ -220,12 +214,7 @@ bool NodeItem::setInputVarPtr( const size_t &index, const size_t &bind_var_gener
 	inputVarVector.data( )[ index ] = bind_var_generate_code;
 	return true;
 }
-bool NodeItem::getOntputVarPtr( const size_t &index, I_Var *&resuslt_bind_var ) {
-	if( ( outputVarVector.size( ) < index ) == false )
-		return false;
-	resuslt_bind_var = outputVarVector.data( )[ index ];
-	return true;
-}
+
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;

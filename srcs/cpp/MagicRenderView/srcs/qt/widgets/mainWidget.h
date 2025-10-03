@@ -25,7 +25,7 @@ protected:
 	/// @brief 生成的变量列表
 	std_vector< I_Var * > mainWidgetGenerateVar;
 	/// @brief 节点请求生成变量
-	std_vector< I_Var * > requestGenerateVar;
+	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, I_Var * > > requestGenerateVar;
 	/// @brief 数据化的支持对象（节点与数据类型）
 	std_vector< uint8_t > supportBin;
 	/// @brief 数据化支持的节点内容
@@ -88,13 +88,7 @@ public:
 	/// @param generate_code 生成代码
 	/// @param result_var_ptr 返回的变量指针
 	/// @return 失败返回 false
-	virtual bool getRequestVarPtr(const size_t &generate_code, I_Var *&result_var_ptr ) const;
-	/// @brief 请求生成一个节点输出绑定变量
-	/// @param request_node_item_ptr 请求节点
-	/// @param request_node_output_port_ptr 请求输出端口
-	/// @param result_var_ptr 返回变量
-	/// @return 成功返回 true
-	virtual bool requestGenerateVarPtr(NodeItem* request_node_item_ptr, NodeOutputPort* request_node_output_port_ptr, I_Var *&result_var_ptr ) const;
+	virtual bool getRequestVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const;
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );

@@ -13,6 +13,9 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
+#include "../generate/varGenerate.h"
+
+#include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
@@ -78,11 +81,6 @@ bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_v
 			return true;
 		}
 	return false;
-}
-bool MainWidget::requestGenerateVarPtr( NodeItem *request_node_item_ptr, NodeOutputPort *request_node_output_port_ptr, I_Var *&result_var_ptr ) const {
-
-	// todo : 请求生成的变量
-	
 }
 
 size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {

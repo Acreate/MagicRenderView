@@ -62,8 +62,6 @@ private:
 	size_t generateCode;
 	/// @brief 绑定的输入接口指针序列
 	std_vector< size_t > inputVarVector;
-	/// @brief 生成的输出接口指针序列
-	std_vector< size_t > outputVarVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -213,11 +211,6 @@ public:
 	/// @param index 下标
 	/// @param bind_var_generate_code 绑定的变量指针
 	virtual bool setInputVarPtr( const size_t &index, const size_t &bind_var_generate_code );
-	/// @brief 获取接口变量指针
-	/// @param index 获取下表
-	/// @param resuslt_bind_var 返回的变量指针
-	/// @return 成功返回 true
-	virtual bool getOntputVarPtr( const size_t &index, I_Var *&resuslt_bind_var );
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
