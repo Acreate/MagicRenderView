@@ -3,6 +3,7 @@
 #include "../tools/tools.h"
 
 #include "../varType/I_Conver.h"
+#include "../varType/I_IsType.h"
 #include "../varType/I_Stack.h"
 
 bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
@@ -273,5 +274,75 @@ bool VarGenerate::getTypeInfoGenerateInfo( const type_info &generate_type_info, 
 			return true;
 		}
 
+	return false;
+}
+bool VarGenerate::isInt( const type_info &check_type_info, void *check_type_data_ptr ) const {
+	size_t count = isTypeVector.size( );
+	if( count != 0 ) {
+		auto data = isTypeVector.data( );
+		size_t index = 0;
+		I_IsType *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->isInt( check_type_info, check_type_data_ptr ) )
+				return true;
+	}
+	//QString msg( "未发现 %1 类型的整数识别功能" );
+	//tools::debug::printError( msg.arg( check_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::isUInt( const type_info &check_type_info, void *check_type_data_ptr ) const {
+	size_t count = isTypeVector.size( );
+	if( count != 0 ) {
+		auto data = isTypeVector.data( );
+		size_t index = 0;
+		I_IsType *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->isUInt( check_type_info, check_type_data_ptr ) )
+				return true;
+	}
+	//QString msg( "未发现 %1 类型的无符号整数识别功能" );
+	//tools::debug::printError( msg.arg( check_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::isFloat( const type_info &check_type_info, void *check_type_data_ptr ) const {
+	size_t count = isTypeVector.size( );
+	if( count != 0 ) {
+		auto data = isTypeVector.data( );
+		size_t index = 0;
+		I_IsType *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->isFloat( check_type_info, check_type_data_ptr ) )
+				return true;
+	}
+	//QString msg( "未发现 %1 类型的浮点数识别功能" );
+	//tools::debug::printError( msg.arg( check_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::isString( const type_info &check_type_info, void *check_type_data_ptr ) const {
+	size_t count = isTypeVector.size( );
+	if( count != 0 ) {
+		auto data = isTypeVector.data( );
+		size_t index = 0;
+		I_IsType *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->isString( check_type_info, check_type_data_ptr ) )
+				return true;
+	}
+	//QString msg( "未发现 %1 类型的字符串识别功能" );
+	//tools::debug::printError( msg.arg( check_type_info.name( ) ) );
+	return false;
+}
+bool VarGenerate::getTypeName( const type_info &check_type_info, void *check_type_data_ptr, QString &result_type_string_name ) {
+	size_t count = isTypeVector.size( );
+	if( count != 0 ) {
+		auto data = isTypeVector.data( );
+		size_t index = 0;
+		I_IsType *extent;
+		for( ; index < count; ++index )
+			if( extent = data[ index ].get( ), extent->getTypeName( check_type_info, check_type_data_ptr, result_type_string_name ) )
+				return true;
+	}
+	//QString msg( "未发现 %1 类型的类型识别返回名称功能" );
+	//tools::debug::printError( msg.arg( check_type_info.name( ) ) );
 	return false;
 }

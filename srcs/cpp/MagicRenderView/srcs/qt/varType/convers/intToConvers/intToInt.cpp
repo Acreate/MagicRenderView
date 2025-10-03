@@ -1,4 +1,6 @@
 ﻿#include "intToInt.h"
+
+#include "../../../generate/varGenerate.h"
 bool IntToInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto leftVar = isType< int64_t >( left_type_info, left );
 	if( leftVar == nullptr )
@@ -356,6 +358,11 @@ bool IntToInt::lessThanTarget( const type_info &left_type_info, void *left, cons
 		return true;
 	runResult = typeCall< uint16_t >( right_type_info, right, call );
 	if( runResult )
+		return true;
+	return false;
+}
+bool IntToInt::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isInt( left_type_info, nullptr ) && varGenerate->isInt( right_type_info, nullptr ) )
 		return true;
 	return false;
 }

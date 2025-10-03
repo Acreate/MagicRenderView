@@ -5,6 +5,8 @@
 #include <cstdint>
 
 #include "../../I_Type.h"
+
+#include "../../../generate/varGenerate.h"
 bool IntToString::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftTypeVar = isType< QString >( left_type_info, left );
@@ -424,5 +426,10 @@ bool IntToString::lessThanTarget( const type_info &left_type_info, void *left, c
 	if( isOk )
 		return true;
 
+	return false;
+}
+bool IntToString::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isString( left_type_info, nullptr ) && varGenerate->isInt( right_type_info, nullptr ) )
+		return true;
 	return false;
 }

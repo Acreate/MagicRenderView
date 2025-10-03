@@ -290,8 +290,14 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	mouseMovePoint = event->pos( );
-	if( leftMouseBtnDragItem )
-		leftMouseBtnDragItem->move( mouseMovePoint - modPoint );
+	if( leftMouseBtnDragItem ) {
+		QPoint point = mouseMovePoint - modPoint;
+		if( point.x( ) < 0 )
+			point.setX( 0 );
+		if( point.y( ) < 0 )
+			point.setY( 0 );
+		leftMouseBtnDragItem->move( point );
+	}
 	update( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {

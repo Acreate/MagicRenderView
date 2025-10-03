@@ -1,4 +1,6 @@
 ﻿#include "stringToString.h"
+
+#include "../../../generate/varGenerate.h"
 bool StringToString::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< QString >( left_type_info, left );
@@ -326,6 +328,11 @@ bool StringToString::lessThanTarget( const type_info &left_type_info, void *left
 	};
 	typeCallResult = typeCall< std::wstring >( right_type_info, right, stdWStringCall );
 	if( typeCallResult )
+		return true;
+	return false;
+}
+bool StringToString::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isString( left_type_info, nullptr ) && varGenerate->isString( right_type_info, nullptr ) )
 		return true;
 	return false;
 }

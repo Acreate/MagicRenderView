@@ -3,6 +3,8 @@
 #include <cstdint>
 
 #include "../../I_Type.h"
+
+#include "../../../generate/varGenerate.h"
 bool FloatToInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< int64_t >( left_type_info, left );
@@ -152,6 +154,11 @@ bool FloatToInt::lessThanTarget( const type_info &left_type_info, void *left, co
 	if( typeCall< double >( right_type_info, right, call ) )
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+	return false;
+}
+bool FloatToInt::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isInt( left_type_info, nullptr ) && varGenerate->isFloat( right_type_info, nullptr ) )
 		return true;
 	return false;
 }

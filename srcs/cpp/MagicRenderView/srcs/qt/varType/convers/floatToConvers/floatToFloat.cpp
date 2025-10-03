@@ -1,6 +1,8 @@
 ﻿#include "floatToFloat.h"
 
 #include "../../I_Type.h"
+
+#include "../../../generate/varGenerate.h"
 bool FloatToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto leftVar = isType< double >( left_type_info, left );
@@ -150,6 +152,11 @@ bool FloatToFloat::lessThanTarget( const type_info &left_type_info, void *left, 
 	if( typeCall< double >( right_type_info, right, call ) )
 		return true;
 	if( typeCall< float >( right_type_info, right, call ) )
+		return true;
+	return false;
+}
+bool FloatToFloat::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isFloat( left_type_info, nullptr ) && varGenerate->isFloat( right_type_info, nullptr ) )
 		return true;
 	return false;
 }

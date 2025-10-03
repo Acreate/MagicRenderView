@@ -2,6 +2,8 @@
 
 #include "../../I_Type.h"
 
+#include "../../../generate/varGenerate.h"
+
 bool StringToInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	auto call = [this,&left_type_info,left] ( auto *string ) {
 		bool isOK = fillInt( string, left, left_type_info );
@@ -298,5 +300,10 @@ bool StringToInt::lessThanTarget( const type_info &left_type_info, void *left, c
 	if( typeCallResult )
 		return true;
 
+	return false;
+}
+bool StringToInt::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isInt( left_type_info, nullptr ) && varGenerate->isString( right_type_info, nullptr ) )
+		return true;
 	return false;
 }

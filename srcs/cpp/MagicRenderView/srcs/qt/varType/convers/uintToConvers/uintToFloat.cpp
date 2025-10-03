@@ -1,4 +1,6 @@
 ﻿#include "uintToFloat.h"
+
+#include "../../../generate/varGenerate.h"
 bool UintToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	return I_Conver::fillTarget( left_type_info, left, right_type_info, right );
 }
@@ -28,4 +30,10 @@ bool UintToFloat::lessOrEquThanTarget( const type_info &left_type_info, void *le
 }
 bool UintToFloat::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	return I_Conver::lessThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool UintToFloat::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+
+	if( varGenerate->isFloat( left_type_info, nullptr ) && varGenerate->isUInt( right_type_info, nullptr ) )
+		return true;
+	return false;
 }

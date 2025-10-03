@@ -173,3 +173,8 @@ bool FloatToString::lessThanTarget( const type_info &left_type_info, void *left,
 
 	return false;
 }
+bool FloatToString::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isString( left_type_info, nullptr ) && varGenerate->isFloat( right_type_info, nullptr ) )
+		return true;
+	return false;
+}

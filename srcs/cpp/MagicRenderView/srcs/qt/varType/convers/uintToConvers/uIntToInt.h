@@ -16,5 +16,6 @@ public:
 	bool greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
 	bool lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
 	bool lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) override;
+	bool supportType( const type_info &left_type_info, const type_info &right_type_info ) const override;
 };
 #endif // UINTTOINT_H_H_HEAD__FILE__

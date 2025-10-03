@@ -5,6 +5,8 @@
 
 #include "../../I_Type.h"
 
+#include "../../../generate/varGenerate.h"
+
 bool IntToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto doubelVar = isType< double >( left_type_info, left );
@@ -398,6 +400,11 @@ bool IntToFloat::lessThanTarget( const type_info &left_type_info, void *left, co
 		return true;
 	isOk = typeCall< uint64_t >( right_type_info, right, call );
 	if( isOk )
+		return true;
+	return false;
+}
+bool IntToFloat::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isFloat( left_type_info, nullptr ) && varGenerate->isInt( right_type_info, nullptr ) )
 		return true;
 	return false;
 }

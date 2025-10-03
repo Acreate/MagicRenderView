@@ -6,6 +6,7 @@
 
 #include "../varType/I_Type.h"
 
+class I_IsType;
 class I_Serialization‌;
 class I_Conver;
 class VarGenerate : public QObject {
@@ -15,6 +16,8 @@ protected:
 	std_vector< std_shared_ptr< I_Conver > > converVector;
 	/// @brief 堆栈列表
 	std_vector< std_shared_ptr< I_Stack > > stackVector;
+	/// @brief 类型识别列表
+	std_vector< std_shared_ptr< I_IsType > > isTypeVector;
 	/// @brief 类型生成列表
 	std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void*( void * ) > >, std_vector< QString > > generateTypeInfos;
 public:
@@ -32,6 +35,11 @@ public:
 	/// @param new_stack 对象指针
 	virtual void appendStackInstance( const std_shared_ptr< I_Stack > &new_stack ) {
 		stackVector.insert( stackVector.begin( ), new_stack );
+	}
+	/// @brief 追加一个识别类型对象
+	/// @param new_is_type 识别类型对象指针
+	virtual void appendIsTypeInstance( const std_shared_ptr< I_IsType > &new_is_type ) {
+		isTypeVector.insert( isTypeVector.begin( ), new_is_type );
 	}
 	~VarGenerate( ) override = default;
 	/// @brief 校验是否支持左值与右值操作
@@ -163,6 +171,33 @@ public:
 	/// @brief 获取当前对象所有支持生产的类型
 	/// @return 生成类型
 	virtual const std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > & getGenerateTypeInfos( ) const { return generateTypeInfos; }
+
+	/// @brief 目标为整数
+	/// @param check_type_info 类型识别
+	/// @param check_type_data_ptr 识别对象指针
+	/// @return true 表示整形
+	virtual bool isInt( const type_info &check_type_info, void *check_type_data_ptr ) const;
+	/// @brief 目标为无符号整数
+	/// @param check_type_info 类型识别
+	/// @param check_type_data_ptr 识别对象指针
+	/// @return true 表示整数
+	virtual bool isUInt( const type_info &check_type_info, void *check_type_data_ptr ) const;
+	/// @brief 目标为浮点数
+	/// @param check_type_info 类型识别
+	/// @param check_type_data_ptr 识别对象指针
+	/// @return true 表示浮点
+	virtual bool isFloat( const type_info &check_type_info, void *check_type_data_ptr ) const;
+	/// @brief 目标为字符串
+	/// @param check_type_info 类型识别
+	/// @param check_type_data_ptr 识别对象指针
+	/// @return true 表示浮点
+	virtual bool isString( const type_info &check_type_info, void *check_type_data_ptr ) const;
+	/// @brief 获取类型的字符串形式
+	/// @param check_type_info 检查的类型
+	/// @param check_type_data_ptr 识别对象指针
+	/// @param result_type_string_name 返回的字符串名称 
+	/// @return true 表示正确识别
+	virtual bool getTypeName( const type_info &check_type_info, void *check_type_data_ptr, QString &result_type_string_name );
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >
@@ -181,6 +216,16 @@ public:
 		}
 	void appendStackInstance( ) {
 		appendStackInstance( std_shared_ptr< I_Stack >( new ttype ) );
+	}
+
+	/// @brief 增加一个类型赋值对象
+	/// @tparam ttype 赋值对象类型
+	template< typename ttype >
+		requires requires ( ttype *ptr, I_IsType *base_ptr ) {
+			base_ptr = ptr;
+		}
+	void appendIsTypeInstance( ) {
+		appendIsTypeInstance( std_shared_ptr< I_IsType >( new ttype ) );
 	}
 
 	/// @brief 追加一个类型生成器

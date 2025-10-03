@@ -1,5 +1,7 @@
 ﻿#include "uIntToUInt.h"
 
+#include "../../../generate/varGenerate.h"
+
 bool UIntToUInt::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 	return I_Conver::fillTarget( left_type_info, left, right_type_info, right );
 }
@@ -29,4 +31,9 @@ bool UIntToUInt::lessOrEquThanTarget( const type_info &left_type_info, void *lef
 }
 bool UIntToUInt::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 	return I_Conver::lessThanTarget( left_type_info, left, right_type_info, right, result_bool );
+}
+bool UIntToUInt::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isUInt( left_type_info, nullptr ) && varGenerate->isUInt( right_type_info, nullptr ) )
+		return true;
+	return false;
 }

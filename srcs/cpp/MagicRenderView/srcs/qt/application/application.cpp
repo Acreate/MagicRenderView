@@ -63,6 +63,11 @@
 
 #include <qt/tools/tools.h>
 
+#include "../varType/isTypes/isFloat.h"
+#include "../varType/isTypes/isInt.h"
+#include "../varType/isTypes/isString.h"
+#include "../varType/isTypes/isUint.h"
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
@@ -142,7 +147,11 @@ bool Application::init( ) {
 	// todo : 音乐操作节点
 
 	// todo : 音乐特效节点
-
+	// todo : 类型识别支持
+	varGenerate->appendIsTypeInstance<IsInt>(  );
+	varGenerate->appendIsTypeInstance<IsUint>(  );
+	varGenerate->appendIsTypeInstance<IsFloat>(  );
+	varGenerate->appendIsTypeInstance<IsString>(  );
 	// todo : VarType 支持变量
 
 	// todo : VarType 类型转换

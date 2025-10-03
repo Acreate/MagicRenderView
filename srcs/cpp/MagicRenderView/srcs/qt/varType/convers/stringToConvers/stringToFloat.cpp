@@ -1,6 +1,8 @@
 ﻿#include "./stringToFloat.h"
 
 #include "../../I_Type.h"
+
+#include "../../../generate/varGenerate.h"
 bool StringToFloat::fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
 
 	auto call = [this,&left_type_info,left] ( auto *string ) {
@@ -227,5 +229,10 @@ bool StringToFloat::lessThanTarget( const type_info &left_type_info, void *left,
 	if( typeCallResult )
 		return true;
 
+	return false;
+}
+bool StringToFloat::supportType( const type_info &left_type_info, const type_info &right_type_info ) const {
+	if( varGenerate->isFloat( left_type_info, nullptr ) && varGenerate->isString( right_type_info, nullptr ) )
+		return true;
 	return false;
 }
