@@ -16,6 +16,8 @@ bool NodeInputPort::updateProtLayout( ) {
 	return renderLayout( false );
 }
 bool NodeInputPort::linkOutputPort( NodePort *output_port ) {
+	if( output_port->isOutputPort( ) == false )
+		return false;
 	auto parentItem = output_port->getParentItem( );
 	// 检查是否存在重复链接
 	size_t count = overrideLink.size( );
@@ -34,6 +36,8 @@ bool NodeInputPort::linkOutputPort( NodePort *output_port ) {
 	return true;
 }
 bool NodeInputPort::disLinkOutputPor( NodePort *remove_output_port ) {
+	if( remove_output_port->isOutputPort( ) == false )
+		return false;
 	size_t count = linkOutputVector.size( );
 	if( count == 0 )
 		return false;

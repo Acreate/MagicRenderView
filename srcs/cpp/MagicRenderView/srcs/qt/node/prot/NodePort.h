@@ -80,6 +80,9 @@ public:
 	virtual bool disLinkOutputPor( NodePort *remove_output_port ) { return false; }
 	virtual NodeItem * getParentItem( ) const { return parentItem; }
 	virtual std_vector< NodePort * > getLinkOutputVector( ) const;
+	virtual bool isOutputPort( ) const {
+		return false;
+	}
 Q_SIGNALS:
 	void releaseThiNodeProt( NodePort *release_ptr );
 	void outputPorDelete( NodeOutputPort *remove_output_port );

@@ -19,6 +19,9 @@ public:
 	bool updateProtLayout( ) override;
 
 	bool getPos( QPoint &result_pos ) const override;
+	bool isOutputPort( ) const override {
+		return true;
+	}
 };
 
 #endif // NODEOUTPUTPORT_H_H_HEAD__FILE__
