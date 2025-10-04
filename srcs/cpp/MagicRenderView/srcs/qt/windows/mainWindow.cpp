@@ -53,6 +53,9 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	mainWidget = new MainWidget( mainScrollArea, varGenerateWidget );
 	setCentralWidget( mainScrollArea );
 
+	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
+	this->restoreState( extendState.toByteArray( ) );
+
 	mainMenuBar = menuBar( );
 	if( mainMenuBar == nullptr )
 		mainMenuBar = new QMenuBar( this );
@@ -123,8 +126,23 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
-	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
-	this->restoreState( extendState.toByteArray( ) );
+	currentMenu = new QMenu( "窗口", this );
+	mainMenuBar->addMenu( currentMenu );
+	auto layoutDockWidgetMenu = currentMenu->addMenu( "布局显示" );
+	auto varEditorAction = layoutDockWidgetMenu->addAction( varEditorDockWidget->windowTitle( ) );
+	varEditorAction->setCheckable( true );
+	connect( varEditorAction, &QAction::triggered, [this] ( bool check ) {
+		if( check )
+			varEditorDockWidget->show( );
+		else
+			varEditorDockWidget->hide( );
+	} );
+	connect( layoutDockWidgetMenu, &QMenu::aboutToShow, [this, varEditorAction]( ) {
+		if( varEditorDockWidget->isHidden( ) )
+			varEditorAction->setChecked( false );
+		else
+			varEditorAction->setChecked( true );
+	} );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
