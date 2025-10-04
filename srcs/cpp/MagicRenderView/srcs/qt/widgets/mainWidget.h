@@ -78,6 +78,10 @@ protected:
 	NodePort *rightMouseBtnSelectPort;
 	/// @brief 用于操作删除输出接口的菜单-鼠标右键命中输入接口是弹出
 	QMenu *rightMouseBtnRemoveOutPortMenu;
+	/// @brief 用于删除当前选中节点的菜单
+	QMenu *removeSelectNodeItemMenu;
+	/// @brief 用于删除当前选中节点的快捷方式
+	QAction *removeSelectNodeItemAction;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

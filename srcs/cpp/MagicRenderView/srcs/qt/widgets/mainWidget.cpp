@@ -297,11 +297,20 @@ void MainWidget::updateSupport( ) {
 
 		delete rightMouseBtnRemoveOutPortMenu;
 		delete rightMouseBtnCreateNodeItemMenu;
+		delete removeSelectNodeItemMenu;
 		supportNode.clear( );
 		supportNodeName.clear( );
 		supporVarType.clear( );
 	}
 	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
+	removeSelectNodeItemMenu = new QMenu( this );
+
+	removeSelectNodeItemAction = removeSelectNodeItemMenu->addAction( "删除" );
+	connect( removeSelectNodeItemAction, &QAction::triggered, [this]( ) {
+		if( rightMouseBtnSelectItem == nullptr )
+			return;
+		delete rightMouseBtnSelectItem;
+	} );
 	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
 	auto infos = NodeItemGenerate::getSupperTyeNodes( );
 	for( auto &item : infos ) {
@@ -366,8 +375,13 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				rightMouseBtnRemoveOutPortMenu->show( );
 				break;
 			}
-			if( rightMouseBtnSelectItem )
+			if( rightMouseBtnSelectItem ) {
+				QString text = QString( "删除[%1]" ).arg( rightMouseBtnSelectItem->getMetaObjectPathName( ) );
+				removeSelectNodeItemAction->setText( text );
+				removeSelectNodeItemMenu->move( globalReleasePos );
+				removeSelectNodeItemMenu->show( );
 				break; // 如果命中的是面板，而非窗口空白，则跳过
+			}
 			rightMouseBtnCreateNodeItemMenu->move( globalReleasePos );
 			rightMouseBtnCreateNodeItemMenu->show( );
 			break;
