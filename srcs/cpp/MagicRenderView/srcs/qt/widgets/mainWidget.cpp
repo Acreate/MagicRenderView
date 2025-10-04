@@ -26,6 +26,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
+	varGenerate = appInstance->getVarGenerate( );
 
 	keyFirst = "Application/MainWindow/MainWidget";
 
@@ -84,9 +85,11 @@ bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_v
 }
 
 size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
+	// todo : 加载二进制
 	return 0;
 }
 size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
+	// todo : 存储二进制
 	return 0;
 }
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
@@ -117,25 +120,6 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 
 	renderWidgetActiveItem = new_node_item;
 	new_node_item->move( fromGlobalReleasePoint );
-	VarGenerate *varGenerate = appInstance->getVarGenerate( );
-	std_vector< uint8_t > buff;
-	size_t result;
-	if( varGenerate->toBinVector( typeid( NodeItem ), new_node_item, buff, result ) ) {
-		NodeItem *resultPtr;
-		if( varGenerate->createTarget( typeid( NodeItem ), buff.data( ), buff.size( ), [&resultPtr] ( void *p ) {
-			resultPtr = ( NodeItem * ) p;
-		} ) ) {
-			if( resultPtr->intPortItems( this ) ) {
-				if( varGenerate->toOBjVector( typeid( NodeItem ), resultPtr, result, buff.data( ), buff.size( ) ) ) {
-					tools::debug::printError( "序列化成功" );
-
-				}
-			}
-			if( varGenerate->deleteTarget( typeid( NodeItem ), resultPtr ) )
-				tools::debug::printError( "释放成功" );
-		}
-
-	}
 	ensureVisibleToItemNode( new_node_item );
 	update( );
 	return new_node_item->generateCode;
@@ -351,13 +335,35 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	}
 }
 size_t MainWidget::supportInfoToBin( ) {
-	supportBin.clear( );
-	//BinGenerate::toBin( supportNodeName, supportNodeBin );
-	//BinGenerate::toBin( supporVarType, supportVarTypeBin );
-	std_vector< uint8_t > countBuff;
+	size_t result;
+	size_t index;
+	size_t count = supportNodeName.size( );
+	std_vector< uint8_t > buff;
+	auto &sizeTTypeInfo = typeid( count );
+	if( varGenerate->toBinVector( sizeTTypeInfo, &count, supportNodeBin, result ) == false )
+		return 0;
+	auto data = supportNodeName.data( );
+	auto &qstringTypeInfo = typeid( QString );
+	for( index = 0; index < count; ++index ) {
+		if( varGenerate->toBinVector( qstringTypeInfo, data + index, buff, result ) == false )
+			return 0;
+		supportNodeBin.append_range( buff );
+	}
+
+	count = supporVarType.size( );
+	if( varGenerate->toBinVector( sizeTTypeInfo, &count, supportVarTypeBin, result ) == false )
+		return 0;
+	data = supporVarType.data( );
+	for( index = 0; index < count; ++index ) {
+		if( varGenerate->toBinVector( qstringTypeInfo, data + index, buff, result ) == false )
+			return 0;
+		supportVarTypeBin.append_range( buff );
+	}
+
 	auto vectorCount = supportVarTypeBin.size( ) + supportNodeBin.size( );
-	//BinGenerate::toBin( vectorCount, countBuff );
-	supportBin.append_range( countBuff );
+
+	if( varGenerate->toBinVector( sizeTTypeInfo, &vectorCount, supportBin, result ) == false )
+		return 0;
 	supportBin.append_range( supportNodeBin );
 	supportBin.append_range( supportVarTypeBin );
 	return supportBin.size( );

@@ -42,6 +42,8 @@ protected:
 	QScrollArea *scrollArea;
 	/// @brief 应用实例
 	Application *appInstance;
+	/// @brief 支持序列化
+	VarGenerate * varGenerate;
 	/// @brief ini 关键字
 	QString keyFirst;
 	/// @brief 用于创建节点的菜单-鼠标右键对应空白即可弹出
