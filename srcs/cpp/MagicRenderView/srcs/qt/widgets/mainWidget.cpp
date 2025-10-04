@@ -109,7 +109,8 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 	offset += result;
 	mod -= result;
 	auto &nodeItemTypeInfo = typeid( NodeItem );
-	std_list< NodeItem * > buffList;
+	std_vector< NodeItem * > buffList( needCount );
+	auto nodeItemDataPtr = buffList.data( );
 	while( needCount ) {
 		NodeItem *item = nullptr;
 		varGenerate->createTarget( nodeItemTypeInfo, offset, mod, [&item] ( void *create_obj_ptr ) {
@@ -121,17 +122,27 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 			return 0;
 		if( varGenerate->toOBjVector( nodeItemTypeInfo, item, result, offset, mod ) == false )
 			return 0;
-		buffList.emplace_back( item );
 
 		offset += result;
 		mod -= result;
 		--needCount;
-
+		nodeItemDataPtr[ needCount ] = item;
 		renderWidgetActiveItem = item;
 		ensureVisibleToItemNode( item );
 	}
+	needCount = nodeItemList.size( );
+	auto desNodeItemPtr = nodeItemList.data( );
+	for( result = 0; result < needCount; ++result ) // 释放
+		delete desNodeItemPtr[ result ];
 
-	nodeItemList = buffList;
+	needCount = buffList.size( );
+	nodeItemList.resize( needCount );
+	desNodeItemPtr = nodeItemList.data( );
+	for( result = 0; result < needCount; ++result ) { // 翻转
+		desNodeItemPtr[ result ] = nodeItemDataPtr[ needCount - result - 1 ];
+		connectNodeItem( desNodeItemPtr[ result ] );
+	}
+
 	return offset - bin_data_ptr;
 }
 size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
@@ -172,18 +183,28 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 	if( new_node_item->intPortItems( this ) == false )
 		return 0;
 	nodeItemList.emplace_back( new_node_item );
-	if( new_node_item->generateCode == 0 )
-		new_node_item->generateCode = nodeItemList.size( );
+	if( new_node_item->generateCode == 0 ) {
+		size_t count = nodeItemList.size( );
+		auto data = nodeItemList.data( );
+		size_t index = 0;
+		size_t checkCode = count;
+		for( ; index < count; ++index )
+			if( data[ index ]->generateCode != index ) { // 掉链子了
+				checkCode = index;
+				++index;
+				for( ; index < count; ++index )
+					if( data[ index ]->generateCode == checkCode ) {
+						index = checkCode + 1;
+						checkCode = count;
+						break;
+					}
+				if( index == count )
+					break;
 
-	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
-		auto iterator = nodeItemList.begin( );
-		auto end = nodeItemList.end( );
-		for( ; iterator != end; ++iterator )
-			if( *iterator == release_Item ) {
-				nodeItemList.erase( iterator );
-				break;
 			}
-	} );
+		data[ index ]->generateCode = checkCode;
+	}
+	connectNodeItem( new_node_item );
 
 	renderWidgetActiveItem = new_node_item;
 	new_node_item->move( fromGlobalReleasePoint );
@@ -196,6 +217,18 @@ NodeItem * MainWidget::getNodeItem( const size_t &generater_code ) const {
 		if( item->generateCode == generater_code )
 			return item;
 	return nullptr;
+}
+void MainWidget::connectNodeItem( NodeItem *node_item ) {
+
+	connect( node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
+		auto iterator = nodeItemList.begin( );
+		auto end = nodeItemList.end( );
+		for( ; iterator != end; ++iterator )
+			if( *iterator == release_Item ) {
+				nodeItemList.erase( iterator );
+				break;
+			}
+	} );
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

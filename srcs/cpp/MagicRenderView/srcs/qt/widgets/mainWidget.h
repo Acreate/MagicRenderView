@@ -61,7 +61,7 @@ protected:
 	/// @brief 鼠标移动时的坐标位置
 	QPoint mouseMovePoint;
 	/// @brief 节点链表
-	std_list< NodeItem * > nodeItemList;
+	std_vector< NodeItem * > nodeItemList;
 	/// @brief 鼠标左键选中的输入端口
 	NodeInputPort *leftMouseBtnSelectInputPort;
 	/// @brief 鼠标左键选中的输出端口
@@ -152,6 +152,9 @@ public:
 	/// @param generater_code 节点生成代码
 	/// @return 节点
 	virtual NodeItem * getNodeItem( const size_t &generater_code ) const;
+	/// @brief 链接信号
+	/// @param node_item 链接对象指针
+	virtual void connectNodeItem(NodeItem* node_item);
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
