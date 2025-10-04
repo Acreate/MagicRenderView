@@ -69,7 +69,7 @@ public:
 	/// @param target_type_data_count
 	/// @param create_call_function 创建的指针对象成功时，调用该函数
 	/// @return 成功创建返回 true，并且调用 create_call_function，此时用户用变量保存值
-	virtual bool createTarget( const type_info &target_type_info, uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) const {
+	virtual bool createTarget( const type_info &target_type_info, const uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) const {
 		if( target_type_info != generateTypeInfo )
 			return false;
 		void *functionResult = createFunction( target_type_info, target_type_data_ptr, target_type_data_count );

@@ -200,7 +200,7 @@ bool VarGenerate::deleteTarget( void *target_ptr ) {
 	tools::debug::printError( msg.arg( ( size_t ) target_ptr, 0, 16 ) );
 	return false;
 }
-bool VarGenerate::createTarget( const type_info &target_type_info, uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) {
+bool VarGenerate::createTarget( const type_info &target_type_info, const uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) {
 	size_t count = stackVector.size( );
 	if( count != 0 ) {
 		auto data = stackVector.data( );

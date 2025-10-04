@@ -84,13 +84,52 @@ bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_v
 	return false;
 }
 
-size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
-	// todo : 加载二进制
-	return 0;
+size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
+	
+	size_t needCount;
+	size_t result;
+	auto &sizeTypeInfo = typeid( size_t );
+	if( varGenerate->toOBjVector( sizeTypeInfo, &needCount, result, bin_data_ptr, bin_data_count ) == false )
+		return 0;
+	size_t mod = bin_data_count - result;
+	if( needCount > mod )
+		return 0;
+	auto offset = bin_data_ptr + result;
+
+	auto data = supportBin.data( );
+	size_t compCount = supportBin.size( );
+	for( result = 0; result < compCount; ++result )
+		if( offset[ result ] != data[ result ] )
+			return 0;
+	offset += result;
+	mod -= result;
+	if( varGenerate->toOBjVector( sizeTypeInfo, &needCount, result, offset, mod ) == false )
+		return 0;
+
+	offset += result;
+	mod -= result;
+	auto &nodeItemTypeInfo = typeid( NodeItem );
+	while( needCount ) {
+		NodeItem *item = nullptr;
+		varGenerate->createTarget( nodeItemTypeInfo, offset, mod, [&item] ( void *create_obj_ptr ) {
+			item = ( NodeItem * ) create_obj_ptr;
+		} );
+		if( item == nullptr )
+			return 0;
+		if( item->intPortItems( this ) == false )
+			return 0;
+		if( varGenerate->toOBjVector( nodeItemTypeInfo, item, result, offset, mod ) == false )
+			return 0;
+		offset += result;
+		mod -= result;
+		--needCount;
+	}
+
+	// todo : 调整链接
+	
+	return offset - bin_data_ptr;
 }
 size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
-	// todo : 存储二进制
-
 	std_vector< uint8_t > buff;
 
 	size_t count = nodeItemList.size( );

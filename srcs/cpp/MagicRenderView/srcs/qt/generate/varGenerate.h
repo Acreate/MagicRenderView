@@ -141,7 +141,7 @@ public:
 	/// @param target_type_data_count 创建的目标数据长度
 	/// @param create_call_function  创建的指针
 	/// @return 成功创建返回 true，并且改变 target_ptr 指向，使其指向创建对象
-	virtual bool createTarget( const type_info &target_type_info, uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function );
+	virtual bool createTarget( const type_info &target_type_info, const uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function );
 
 	/// @brief 存储序列化
 	/// @param target_type_info 序列化对象类型

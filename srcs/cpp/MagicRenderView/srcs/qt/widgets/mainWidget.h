@@ -43,7 +43,7 @@ protected:
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief 支持序列化
-	VarGenerate * varGenerate;
+	VarGenerate *varGenerate;
 	/// @brief ini 关键字
 	QString keyFirst;
 	/// @brief 用于创建节点的菜单-鼠标右键对应空白即可弹出
@@ -115,12 +115,19 @@ public:
 	/// @param bin_data_ptr 数据起始位置
 	/// @param bin_data_count 数据个数
 	/// @return 使用数量
-	virtual size_t loadBin( const char *bin_data_ptr, const size_t &bin_data_count );
+	virtual size_t loadBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
+		return loadBin( ( const uint8_t * ) bin_data_ptr, bin_data_count );
+	}
+	/// @brief 加载二进制
+	/// @param bin_data_ptr 数据起始位置
+	/// @param bin_data_count 数据个数
+	/// @return 使用数量
+	virtual size_t loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count );
 	/// @brief 加载二进制
 	/// @param bin_vector 二进制列表
 	/// @return 返回使用数据个数
 	virtual size_t loadBin( const std_vector< uint8_t > &bin_vector ) {
-		return loadBin( ( const char * ) bin_vector.data( ), bin_vector.size( ) );
+		return loadBin( bin_vector.data( ), bin_vector.size( ) );
 	}
 	/// @brief 保存为二进制
 	/// @param bin_vector 二进制列表
@@ -144,7 +151,7 @@ public:
 	/// @brief 根据生成代码获取节点
 	/// @param generater_code 节点生成代码
 	/// @return 节点
-	virtual NodeItem* getNodeItem(const size_t& generater_code) const;
+	virtual NodeItem * getNodeItem( const size_t &generater_code ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
