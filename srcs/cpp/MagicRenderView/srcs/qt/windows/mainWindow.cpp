@@ -4,6 +4,7 @@
 #include <QMenuBar>
 #include <QProcess>
 #include <QScrollBar>
+#include <QDockWidget>
 #include <QFileDialog>
 #include <QMouseEvent>
 #include <QPushButton>
@@ -13,6 +14,8 @@
 #include <qt/application/application.h>
 
 #include <qt/widgets/mainWidget.h>
+
+#include "../widgets/varGenerateWidget.h"
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -35,8 +38,19 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	move( point );
 	oldPos = buffPos = point;
 
+	// 创建一个QDockWidget
+
+	varEditorDockWidget = new QDockWidget( this );
+	varEditorDockWidget->setObjectName( varEditorDockWidget->metaObject( )->className( ) );
+	varEditorDockWidget->setWindowTitle( QObject::tr( "变量编辑器" ) );
+	varEditorDockWidget->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+
+	varGenerateWidget = new VarGenerateWidget( varEditorDockWidget );
+	varEditorDockWidget->setWidget( varGenerateWidget );
+	addDockWidget( Qt::LeftDockWidgetArea, varEditorDockWidget );
+
 	mainScrollArea = new QScrollArea( this );
-	mainWidget = new MainWidget( mainScrollArea );
+	mainWidget = new MainWidget( mainScrollArea, varGenerateWidget );
 	setCentralWidget( mainScrollArea );
 
 	mainMenuBar = menuBar( );
@@ -109,6 +123,8 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
+	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
+	this->restoreState( extendState.toByteArray( ) );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
@@ -119,6 +135,7 @@ MainWindow::~MainWindow( ) {
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), buffPos );
 	else
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
 	appInstance->syncAppValueIniFile( );
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {

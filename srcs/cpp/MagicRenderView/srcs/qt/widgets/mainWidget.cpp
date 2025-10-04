@@ -13,13 +13,14 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
+#include "varGenerateWidget.h"
+
 #include "../generate/varGenerate.h"
 
 #include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
-MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
-	nodeItemGenerateCode = 1;
+MainWidget::MainWidget( QScrollArea *scroll_area, VarGenerateWidget *var_generate_widget, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -27,7 +28,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
-
+	varGenerateWidget = var_generate_widget;
+	varGenerateWidget->setMainWidget( this );
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	appInstance->syncAppValueIniFile( );
@@ -52,38 +54,8 @@ MainWidget::~MainWidget( ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		delete vectorDataPtr[ index ];
-	count = mainWidgetGenerateVar.size( );
-	index = 0;
-	auto var = mainWidgetGenerateVar.data( );
-	for( ; index < count; ++index )
-		delete var[ index ];
-}
-bool MainWidget::getMainWidgetVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const {
-	size_t count = mainWidgetGenerateVar.size( );
-	if( count == 0 )
-		return false;
-	size_t index = 0;
-	auto var = mainWidgetGenerateVar.data( );
-	for( ; index < count; ++index )
-		if( var[ index ]->getGenerateCode( ) == generate_code ) {
-			result_var_ptr = var[ index ];
-			return true;
-		}
-	return false;
-}
-bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const {
-	size_t count = mainWidgetGenerateVar.size( );
-	if( count == 0 )
-		return false;
-	auto data = mainWidgetGenerateVar.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ]->getGenerateCode( ) == generate_code ) {
-			result_var_ptr = data[ index ];
-			return true;
-		}
-	return false;
-}
 
+}
 size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
 
 	size_t needCount;
@@ -247,6 +219,7 @@ void MainWidget::connectNodeItem( NodeItem *node_item ) {
 			}
 	} );
 }
+const std_vector< I_Var * > & MainWidget::getMainWidgetGenerateVar( ) const { return varGenerateWidget->getMainWidgetGenerateVar( ); }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );

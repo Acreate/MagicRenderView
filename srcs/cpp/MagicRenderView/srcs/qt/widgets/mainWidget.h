@@ -7,8 +7,12 @@
 
 #include <alias/type_alias.h>
 
-#include "../node/item/nodeItem.h"
-
+class NodeInputPort;
+class VarGenerate;
+class I_Var;
+class NodeOutputPort;
+class NodeItem;
+class VarGenerateWidget;
 class NodePort;
 class QScrollArea;
 class QVBoxLayout;
@@ -20,10 +24,8 @@ private:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 protected:
-	/// @brief 节点生成代码
-	size_t nodeItemGenerateCode;
-	/// @brief 生成的变量列表
-	std_vector< I_Var * > mainWidgetGenerateVar;
+	/// @brief 变量管理窗口
+	VarGenerateWidget *varGenerateWidget;
 	/// @brief 节点请求生成变量
 	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, I_Var * > > requestGenerateVar;
 	/// @brief 数据化的支持对象（节点与数据类型）
@@ -83,18 +85,8 @@ protected:
 	/// @brief 用于删除当前选中节点的快捷方式
 	QAction *removeSelectNodeItemAction;
 public:
-	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	MainWidget( QScrollArea *scroll_area, VarGenerateWidget *var_generate_widget, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
-	/// @brief 获取变量指针
-	/// @param generate_code 生成号
-	/// @param result_var_ptr 返回
-	/// @return 成功返回 true
-	virtual bool getMainWidgetVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const;
-	/// @brief 获取请求类生成对象指针
-	/// @param generate_code 生成代码
-	/// @param result_var_ptr 返回的变量指针
-	/// @return 失败返回 false
-	virtual bool getRequestVarPtr( const size_t &generate_code, I_Var *&result_var_ptr ) const;
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
@@ -158,7 +150,10 @@ public:
 	virtual NodeItem * getNodeItem( const size_t &generater_code ) const;
 	/// @brief 链接信号
 	/// @param node_item 链接对象指针
-	virtual void connectNodeItem(NodeItem* node_item);
+	virtual void connectNodeItem( NodeItem *node_item );
+	/// @brief 获取生成变量
+	/// @return 生成变量列表
+	virtual const std_vector< I_Var * > & getMainWidgetGenerateVar( ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

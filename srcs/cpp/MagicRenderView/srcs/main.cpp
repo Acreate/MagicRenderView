@@ -2,16 +2,10 @@
 
 #include "qt/application/application.h"
 #include "qt/generate/varGenerate.h"
+#include "qt/tools/tools.h"
 #include "qt/widgets/mainWidget.h"
 #include "qt/windows/mainWindow.h"
 
-
-class A {
-	
-};
-class B:A {
-	
-};
 
 int main( int argc, char *argv[ ] ) {
 
