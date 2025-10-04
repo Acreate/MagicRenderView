@@ -76,7 +76,7 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 	nameBuff.append_range( inputPortVectorBuff );
 
 	// 记录节点y坐标
-	result_count = fillBinVector( &targetPtr->nodePosX, sizeof( targetPtr->nodePosX ), inputPortVectorBuff );
+	result_count = fillBinVector( &targetPtr->nodePosY, sizeof( targetPtr->nodePosY ), inputPortVectorBuff );
 	if( result_count == 0 )
 		return false; // 失败，返回
 	nameBuff.append_range( inputPortVectorBuff );

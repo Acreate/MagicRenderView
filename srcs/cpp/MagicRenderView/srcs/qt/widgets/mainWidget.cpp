@@ -85,7 +85,7 @@ bool MainWidget::getRequestVarPtr( const size_t &generate_code, I_Var *&result_v
 }
 
 size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
-	
+
 	size_t needCount;
 	size_t result;
 	auto &sizeTypeInfo = typeid( size_t );
@@ -109,6 +109,7 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 	offset += result;
 	mod -= result;
 	auto &nodeItemTypeInfo = typeid( NodeItem );
+	std_list< NodeItem * > buffList;
 	while( needCount ) {
 		NodeItem *item = nullptr;
 		varGenerate->createTarget( nodeItemTypeInfo, offset, mod, [&item] ( void *create_obj_ptr ) {
@@ -120,13 +121,17 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 			return 0;
 		if( varGenerate->toOBjVector( nodeItemTypeInfo, item, result, offset, mod ) == false )
 			return 0;
+		buffList.emplace_back( item );
+
 		offset += result;
 		mod -= result;
 		--needCount;
+
+		renderWidgetActiveItem = item;
+		ensureVisibleToItemNode( item );
 	}
 
-	// todo : 调整链接
-	
+	nodeItemList = buffList;
 	return offset - bin_data_ptr;
 }
 size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
