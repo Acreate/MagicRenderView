@@ -6,6 +6,7 @@
 class NodeItem;
 class AppNodeItemType : public I_Stack {
 	using t_current_type = NodeItem;
+	std_shared_ptr< std_vector_pairt< void *, std_function< bool( void *ptr ) > > > releaseVector;
 public:
 	AppNodeItemType( );
 	bool toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const override;

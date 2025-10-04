@@ -52,8 +52,9 @@ private:
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
 	/// @param generate_var_function 类型生成器
+	/// @param release_var_function 类型释放器
 	/// @param generate_var_name_vector 类型字符串别名
-	static bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector );
+	static bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector );
 	/// @brief 建立信号链接
 	/// @param sender_obj 信号对象指针
 	static void cnnectSignal( NodeItem_Type *sender_obj );
@@ -111,7 +112,11 @@ public:
 		if( appendType == false )
 			return false;
 
-		return appendVarTypeGenerateInstance( varTypeInfo, generate_function, std_vector< QString >( { varTypeInfo.name( ), TItemType::getStaticMetaObjectPathName( ) } ) );
+		auto release_function = [] ( void *ptr ) ->bool {
+			delete ( TItemType * ) ptr;
+			return true;
+		};
+		return appendVarTypeGenerateInstance( varTypeInfo, generate_function, release_function, std_vector< QString >( { varTypeInfo.name( ), TItemType::getStaticMetaObjectPathName( ) } ) );
 	}
 
 };

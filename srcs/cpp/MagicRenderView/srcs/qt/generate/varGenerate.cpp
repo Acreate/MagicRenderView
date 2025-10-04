@@ -6,14 +6,14 @@
 #include "../varType/I_IsType.h"
 #include "../varType/I_Stack.h"
 
-bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
+bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector ) {
 	for( auto &[ key,val ] : generateTypeInfos )
 		if( key.first->getTypeInfo( ) == generate_var_type_info ) {
 			key.second = generate_var_function;
 			val = generate_var_name_vector;
 			return true;
 		}
-	auto typeShared = std_shared_ptr< I_Type >( new I_Type( generate_var_type_info ) );
+	auto typeShared = std_shared_ptr< I_Type >( new I_Type( generate_var_type_info, release_var_function, generate_var_function ) );
 	std_pairt unity( std_pairt( typeShared, generate_var_function ), generate_var_name_vector );
 	generateTypeInfos.emplace_back( unity );
 	return true;

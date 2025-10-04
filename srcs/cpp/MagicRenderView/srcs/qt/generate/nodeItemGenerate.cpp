@@ -146,7 +146,7 @@ bool NodeItemGenerate::appendGenerateNodeItemInfo( const NodeItem_String_Type &d
 	nodeItemDirClassMetaInfos.emplace_back( dirClassItem );
 	return true;
 }
-bool NodeItemGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
+bool NodeItemGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void *( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector ) {
 	VarGenerate *varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
-	return varGenerate->appendVarTypeGenerateInstance( generate_var_type_info, generate_var_function, generate_var_name_vector );
+	return varGenerate->appendVarTypeGenerateInstance( generate_var_type_info, generate_var_function, release_var_function, generate_var_name_vector );
 }

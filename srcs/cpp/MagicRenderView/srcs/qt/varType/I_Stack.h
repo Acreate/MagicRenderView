@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class Application;
 class NodeItem;
 class I_Var;
 class VarGenerate;
@@ -20,6 +21,8 @@ private:
 protected:
 	/// @brief 类型
 	const type_info &generateTypeInfo;
+	/// @brief 应用实例
+	Application * applicationInstancePtr;
 	/// @brief 变量生成器
 	VarGenerate *varGenerate;
 	/// @brief 创建函数

@@ -128,8 +128,11 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 			if( resultPtr->intPortItems( this ) ) {
 				if( varGenerate->toOBjVector( typeid( NodeItem ), resultPtr, result, buff.data( ), buff.size( ) ) ) {
 					tools::debug::printError( "序列化成功" );
+
 				}
 			}
+			if( varGenerate->deleteTarget( typeid( NodeItem ), resultPtr ) )
+				tools::debug::printError( "释放成功" );
 		}
 
 	}

@@ -24,8 +24,9 @@ public:
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
 	/// @param generate_var_function 类型生成器
+	/// @param release_var_function 释放函数
 	/// @param generate_var_name_vector 类型字符串别名
-	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector );
+	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector );
 	/// @brief 追加一个赋值类型对象
 	/// @param new_conver 对象指针
 	virtual void appendConverInstance( const std_shared_ptr< I_Conver > &new_conver ) {
@@ -232,11 +233,12 @@ public:
 
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_function 类型生成器
+	/// @param release_var_function 释放器
 	/// @param generate_var_name_vector 类型字符串别名
 	template< typename ttype >
-	bool appendVarTypeGenerateInstance( const std_function< void*( void * ) > &generate_var_function, const std_vector< QString > &generate_var_name_vector ) {
+	bool appendVarTypeGenerateInstance( const std_function< void*( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector ) {
 		const type_info &typeInfo = typeid( ttype );
-		return appendVarTypeGenerateInstance( typeInfo, generate_var_function, generate_var_name_vector );
+		return appendVarTypeGenerateInstance( typeInfo, generate_var_function, release_var_function, generate_var_name_vector );
 	}
 
 };
