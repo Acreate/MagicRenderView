@@ -161,10 +161,11 @@ size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
 	std_vector< uint8_t > resultbuff;
 	resultbuff.append_range( buff );
 	auto &nodeItemTypeInfo = typeid( NodeItem );
-	auto iterator = nodeItemList.begin( );
-	auto end = nodeItemList.end( );
-	for( ; iterator != end; ++iterator ) {
-		NodeItem *nodeItem = *iterator;
+
+	auto data = nodeItemList.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		NodeItem *nodeItem = data[ index ];
 		if( varGenerate->toBinVector( nodeItemTypeInfo, nodeItem, buff, count ) == false )
 			return 0;
 		resultbuff.append_range( buff );
@@ -190,7 +191,6 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 		return 0;
 	size_t count = nodeItemList.size( );
 	auto data = nodeItemList.data( );
-	size_t checkCode = count;
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr ) {
@@ -200,10 +200,12 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 	if( index == count ) {
 		nodeItemList.emplace_back( new_node_item );
 		++count;
+		data = nodeItemList.data( ); // 更新基址
 	}
+	size_t checkCode = count;
 	for( ; index < count; ++index )
-		if( data[ index ]->generateCode != index ) { // 掉链子了
-			checkCode = index;
+		if( data[ index ]->generateCode != ( index + 1 ) ) { // 掉链子了
+			checkCode = index + 1;
 			index = 0; // 重新遍历
 			for( ; index < count; ++index )
 				if( data[ index ]->generateCode == checkCode ) {
@@ -248,10 +250,14 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	QPainterPath painterPath;
-	auto iterator = nodeItemList.begin( );
-	auto end = nodeItemList.end( );
-	for( ; iterator != end; ++iterator ) {
-		NodeItem *nodeItem = *iterator;
+
+	size_t count = nodeItemList.size( );
+	auto data = nodeItemList.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		NodeItem *nodeItem = data[ index ];
+		if( nodeItem == nullptr )
+			continue;
 		painter.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
 		auto pairs = nodeItem->getLinkPort( );
 		for( auto &item : pairs ) {

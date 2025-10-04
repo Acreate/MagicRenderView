@@ -85,7 +85,9 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 	size_t count = protVector.size( );
 	// 记录输入接口个数
 	result_count = fillBinVector( &count, sizeof( size_t ), inputPortVectorBuff );
-	if( result_count != 0 ) {
+	if( result_count == 0 )
+		return false; // 失败，返回
+	if( count != 0 ) {
 		auto data = protVector.data( );
 		size_t index = 0;
 		std_vector< uint8_t > inputPortNameBuff;
@@ -123,6 +125,27 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 	}
 
 	nameBuff.append_range( inputPortVectorBuff );
+
+	count = targetPtr->inputVarVector.size( );
+	// 记录链接窗口接口个数
+	result_count = fillBinVector( &count, sizeof( size_t ), inputPortVectorBuff );
+	if( result_count == 0 )
+		return false; // 失败，返回
+	if( count != 0 ) {
+		auto data = targetPtr->inputVarVector.data( );
+		size_t index = 0;
+		std_vector< uint8_t > linkPortVectorBuff;
+		for( ; index < count; ++index ) {
+			result_count = data[ index ];
+			result_count = fillBinVector( &result_count, sizeof( size_t ), linkPortVectorBuff );
+			if( result_count == 0 )
+				return false; // 失败，返回
+			inputPortVectorBuff.append_range( linkPortVectorBuff );
+		}
+	}
+
+	nameBuff.append_range( inputPortVectorBuff );
+
 	result_count = nameBuff.size( );
 	result_count = fillBinVector( &result_count, sizeof( size_t ), result_vector );
 	if( result_count == 0 )
@@ -231,6 +254,26 @@ bool AppNodeItemType::toOBjVector( const type_info &target_type_info, void *targ
 
 		}
 
+	}
+
+	// 记录链接窗口接口个数
+	result_count = fillObjVector( &count, sizeof( size_t ), offset, mod );
+	if( result_count == 0 )
+		return false;
+	offset += result_count;
+	mod -= result_count;
+	if( count > 0 ) {
+		nodeItem->inputVarVector.resize( count );
+		auto data = nodeItem->inputVarVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index ) {
+			result_count = fillObjVector( &needCount, sizeof( size_t ), offset, mod );
+			if( result_count == 0 )
+				return false;
+			offset += result_count;
+			mod -= result_count;
+			data[ index ] = needCount;
+		}
 	}
 	result_count = offset - source_data_ptr;
 	return true;

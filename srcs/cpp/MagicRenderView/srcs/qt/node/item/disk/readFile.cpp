@@ -1,7 +1,7 @@
 ﻿#include "./readFile.h"
 
-#include "../../prot/inputProt/impInputPort/stringInputPort.h"
-#include "../../prot/outputProt/impOutputPort/stringOutputPort.h"
+#include <qt/node/prot/inputProt/inpInputPort/stringInputPort.h>
+#include <qt/node/prot/outputProt/impOutputPort/stringOutputPort.h>
 
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
 ReadFile::ReadFile( ) : NodeItem( ) {
