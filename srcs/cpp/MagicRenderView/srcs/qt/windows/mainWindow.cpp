@@ -44,6 +44,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	varEditorDockWidget->setObjectName( varEditorDockWidget->metaObject( )->className( ) );
 	varEditorDockWidget->setWindowTitle( QObject::tr( "变量编辑器" ) );
 	varEditorDockWidget->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+	varEditorDockWidget->setFeatures( QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
 
 	varGenerateWidget = new VarGenerateWidget( varEditorDockWidget );
 	varEditorDockWidget->setWidget( varGenerateWidget );
