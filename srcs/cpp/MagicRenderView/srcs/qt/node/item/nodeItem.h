@@ -251,6 +251,9 @@ public:
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
+	/// @brief 更新连接信息
+	/// @return 成功返回 true
+	virtual bool updataLinkInfo();
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关

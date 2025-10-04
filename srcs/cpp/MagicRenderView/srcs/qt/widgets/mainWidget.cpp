@@ -130,18 +130,24 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 		renderWidgetActiveItem = item;
 		ensureVisibleToItemNode( item );
 	}
-	needCount = nodeItemList.size( );
-	auto desNodeItemPtr = nodeItemList.data( );
-	for( result = 0; result < needCount; ++result ) // 释放
-		delete desNodeItemPtr[ result ];
+
+	auto copyMenu = nodeItemList; // 保存旧的
 
 	needCount = buffList.size( );
 	nodeItemList.resize( needCount );
-	desNodeItemPtr = nodeItemList.data( );
+	auto desNodeItemPtr = nodeItemList.data( );
 	for( result = 0; result < needCount; ++result ) { // 翻转
 		desNodeItemPtr[ result ] = nodeItemDataPtr[ needCount - result - 1 ];
 		connectNodeItem( desNodeItemPtr[ result ] );
 	}
+
+	for( result = 0; result < needCount; ++result )  // 更新
+		desNodeItemPtr[ result ]->updataLinkInfo( );
+
+	needCount = copyMenu.size( );
+	desNodeItemPtr = copyMenu.data( );
+	for( result = 0; result < needCount; ++result ) // 释放
+		delete desNodeItemPtr[ result ];
 
 	return offset - bin_data_ptr;
 }
@@ -182,28 +188,35 @@ size_t MainWidget::appendNodeItem( NodeItem *new_node_item ) {
 	new_node_item->setMainWidget( this );
 	if( new_node_item->intPortItems( this ) == false )
 		return 0;
-	nodeItemList.emplace_back( new_node_item );
-	if( new_node_item->generateCode == 0 ) {
-		size_t count = nodeItemList.size( );
-		auto data = nodeItemList.data( );
-		size_t index = 0;
-		size_t checkCode = count;
-		for( ; index < count; ++index )
-			if( data[ index ]->generateCode != index ) { // 掉链子了
-				checkCode = index;
-				++index;
-				for( ; index < count; ++index )
-					if( data[ index ]->generateCode == checkCode ) {
-						index = checkCode + 1;
-						checkCode = count;
-						break;
-					}
-				if( index == count )
-					break;
-
-			}
-		data[ index ]->generateCode = checkCode;
+	size_t count = nodeItemList.size( );
+	auto data = nodeItemList.data( );
+	size_t checkCode = count;
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == nullptr ) {
+			data[ index ] = new_node_item;
+			break;
+		}
+	if( index == count ) {
+		nodeItemList.emplace_back( new_node_item );
+		++count;
 	}
+	for( ; index < count; ++index )
+		if( data[ index ]->generateCode != index ) { // 掉链子了
+			checkCode = index;
+			index = 0; // 重新遍历
+			for( ; index < count; ++index )
+				if( data[ index ]->generateCode == checkCode ) {
+					index = checkCode + 1;
+					checkCode = count;
+					break;
+				}
+			if( index == count )
+				break;
+
+		}
+	new_node_item->generateCode = checkCode;
+
 	connectNodeItem( new_node_item );
 
 	renderWidgetActiveItem = new_node_item;
@@ -221,11 +234,12 @@ NodeItem * MainWidget::getNodeItem( const size_t &generater_code ) const {
 void MainWidget::connectNodeItem( NodeItem *node_item ) {
 
 	connect( node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_Item ) {
-		auto iterator = nodeItemList.begin( );
-		auto end = nodeItemList.end( );
-		for( ; iterator != end; ++iterator )
-			if( *iterator == release_Item ) {
-				nodeItemList.erase( iterator );
+		size_t count = nodeItemList.size( );
+		auto data = nodeItemList.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ] == release_Item ) {
+				data[ index ] = nullptr;
 				break;
 			}
 	} );

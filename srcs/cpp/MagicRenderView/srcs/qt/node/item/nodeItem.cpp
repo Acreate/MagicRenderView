@@ -438,3 +438,11 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 		return nodeInputProtVector.data( )[ index ].first;
 	return nullptr;
 }
+bool NodeItem::updataLinkInfo( ) {
+	size_t count = nodeInputProtVector.size( );
+	auto data = nodeInputProtVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		data[ index ].first->updateLinkInfoVector( );
+	return true;
+}

@@ -83,15 +83,20 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 	return true;
 }
 std_vector< NodePort * > NodePort::getLinkOutputVector( ) const {
-	std_vector< NodePort * > result;
+	return overrideLink;
+}
+bool NodePort::updateLinkInfoVector( ) {
+
 	if( parentItem == nullptr )
-		return result;
+		return false;
 	auto renderMainWidget = parentItem->getRenderMainWidget( );
 	if( renderMainWidget == nullptr )
-		return result;
+		return false;
 	size_t count = linkOutputVector.size( );
+	overrideLink.resize( count );
 	if( count == 0 )
-		return result;
+		return true;
+	auto nodePort = overrideLink.data( );
 	auto pair = linkOutputVector.data( );
 	for( size_t index = 0; index < count; ++index ) {
 
@@ -104,7 +109,7 @@ std_vector< NodePort * > NodePort::getLinkOutputVector( ) const {
 		auto outputPort = nodeItem->getOutputPort( nodePortName );
 		if( outputPort == nullptr )
 			continue;
-		result.emplace_back( outputPort );
+		nodePort[ index ] = outputPort;
 	}
-	return result;
+	return true;
 }

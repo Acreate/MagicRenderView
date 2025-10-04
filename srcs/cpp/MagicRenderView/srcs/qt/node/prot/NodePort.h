@@ -47,6 +47,8 @@ protected:
 	I_Var *varPtr;
 	/// @brief 链接的序<节点序号，输出端口名称>
 	std_vector_pairt< size_t, QString > linkOutputVector;
+	/// @brief 标识已经链接的端口
+	std_vector< NodePort * > overrideLink;
 public:
 	NodePort( NodeItem *parent_item );
 	~NodePort( ) override;
@@ -84,6 +86,9 @@ public:
 	virtual bool disLinkOutputPor( NodePort *remove_output_port ) { return false; }
 	virtual NodeItem * getParentItem( ) const { return parentItem; }
 	virtual std_vector< NodePort * > getLinkOutputVector( ) const;
+	/// @brief 更新链接信息
+	/// @return true 表示成功更新
+	virtual bool updateLinkInfoVector();
 	virtual bool isOutputPort( ) const {
 		return false;
 	}
