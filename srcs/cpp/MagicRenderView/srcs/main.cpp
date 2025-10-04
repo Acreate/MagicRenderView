@@ -6,7 +6,15 @@
 #include "qt/windows/mainWindow.h"
 
 
+class A {
+	
+};
+class B:A {
+	
+};
+
 int main( int argc, char *argv[ ] ) {
+
 	Application app( argc, argv );
 	if( app.init( ) == false ) {
 		tools::debug::printError( "程序初始化失败" );

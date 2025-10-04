@@ -3,7 +3,7 @@
 #pragma once
 #include "../I_IsType.h"
 
-class IsInt : public  I_IsType{
+class IsInt : public I_IsType {
 public:
 	bool isInt( const type_info &check_type_info, void *check_type_data_ptr ) const override;
 	bool isUInt( const type_info &check_type_info, void *check_type_data_ptr ) const override;

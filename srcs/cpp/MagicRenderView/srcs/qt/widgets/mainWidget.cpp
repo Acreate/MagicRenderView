@@ -90,7 +90,30 @@ size_t MainWidget::loadBin( const char *bin_data_ptr, const size_t &bin_data_cou
 }
 size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
 	// todo : 存储二进制
-	return 0;
+
+	std_vector< uint8_t > buff;
+
+	size_t count = nodeItemList.size( );
+	auto &sizeTypeInfo = typeid( size_t );
+	if( varGenerate->toBinVector( sizeTypeInfo, &count, buff, count ) == false )
+		return 0;
+	std_vector< uint8_t > resultbuff;
+	resultbuff.append_range( buff );
+	auto &nodeItemTypeInfo = typeid( NodeItem );
+	auto iterator = nodeItemList.begin( );
+	auto end = nodeItemList.end( );
+	for( ; iterator != end; ++iterator ) {
+		NodeItem *nodeItem = *iterator;
+		if( varGenerate->toBinVector( nodeItemTypeInfo, nodeItem, buff, count ) == false )
+			return 0;
+		resultbuff.append_range( buff );
+	}
+	count = resultbuff.size( ) + supportBin.size( );
+	if( varGenerate->toBinVector( sizeTypeInfo, &count, bin_vector, count ) == false )
+		return 0;
+	bin_vector.append_range( supportBin );
+	bin_vector.append_range( resultbuff );
+	return bin_vector.size( );
 }
 NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
 	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
@@ -339,7 +362,7 @@ size_t MainWidget::supportInfoToBin( ) {
 	size_t index;
 	size_t count = supportNodeName.size( );
 	std_vector< uint8_t > buff;
-	auto &sizeTTypeInfo = typeid( count );
+	auto &sizeTTypeInfo = typeid( size_t );
 	if( varGenerate->toBinVector( sizeTTypeInfo, &count, supportNodeBin, result ) == false )
 		return 0;
 	auto data = supportNodeName.data( );

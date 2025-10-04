@@ -11,8 +11,7 @@
 AppNodeItemType::AppNodeItemType( ) : I_Stack( typeid( t_current_type ) ), releaseVector( new std_vector_pairt< void *, std_function< bool( void * ) > > ) {
 
 	childcreateFunction = [this] ( const type_info &target_type_info, const uint8_t *target_data_ptr, const size_t &target_data_count ) ->void * {
-
-		if( target_type_info != generateTypeInfo && generateTypeInfo.before( target_type_info ) == false )
+		if( target_type_info != generateTypeInfo )
 			return nullptr;
 		size_t needCount;
 		size_t useCount = fillObjVector( &needCount, sizeof( size_t ), target_data_ptr, target_data_count );
@@ -53,7 +52,7 @@ AppNodeItemType::AppNodeItemType( ) : I_Stack( typeid( t_current_type ) ), relea
 	};
 }
 bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const {
-	if( target_type_info != generateTypeInfo && generateTypeInfo.before( target_type_info ) == false )
+	if( target_type_info != generateTypeInfo )
 		return false;
 	NodeItem *targetPtr = ( NodeItem * ) target_ptr;
 	QString metaObjectPathName = targetPtr->getMetaObjectPathName( );
@@ -133,7 +132,7 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 	return true;
 }
 bool AppNodeItemType::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
-	if( target_type_info != generateTypeInfo && generateTypeInfo.before( target_type_info ) == false )
+	if( target_type_info != generateTypeInfo )
 		return false;
 	size_t needCount;
 	result_count = fillObjVector( &needCount, sizeof( size_t ), source_data_ptr, source_data_count );
