@@ -43,8 +43,10 @@ void MainScrollAreaWidget::mouseMoveEvent( QMouseEvent *mouse_event ) {
 			QCursor::setPos( toGlobal );
 			isMidMouse = 2;
 		}
-	} else if( isMidMouse == 2 )
+	} else if( isMidMouse == 2 ) {
 		isMidMouse = 1;
+		fromGlobalPressPoint = mouse_event->pos( );
+	}
 }
 void MainScrollAreaWidget::mousePressEvent( QMouseEvent *mouse_event ) {
 	QScrollArea::mousePressEvent( mouse_event );
