@@ -158,6 +158,7 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
+	
 protected:
 	virtual size_t supportInfoToBin( );
 };

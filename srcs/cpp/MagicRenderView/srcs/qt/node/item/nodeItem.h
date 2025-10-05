@@ -21,6 +21,7 @@
 	friend class Application;\
 	friend class VarGenerate
 
+class NodeItemInfoScrollAreaWidget;
 class NodePort;
 class I_Var;
 class VarType;
@@ -38,6 +39,7 @@ public:
 	friend class MainWidget;
 	friend class I_Stack;
 	friend class AppNodeItemType;
+	friend class NodeItemInfoWidget;
 public:
 	enum class Click_Type {
 		None, // 没有
@@ -60,8 +62,8 @@ public:
 private:
 	/// @brief 生成编号
 	size_t generateCode;
-	/// @brief 绑定的输入接口指针序列
-	std_vector< I_Var * > inputVarVector;
+	/// @brief 节点变量
+	std_vector< I_Var * > nodeVarVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -117,14 +119,14 @@ protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 	/// @brief 编辑窗口
-	QWidget *editWidget;
+	NodeItemInfoScrollAreaWidget *editWidget;
 protected:
 	NodeItem( );
 public:
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	virtual void setRenderMainWidget( MainWidget *const render_main_widget ) { renderMainWidget = render_main_widget; }
 	~NodeItem( ) override;
-	virtual QWidget * getEditWidget( ) const { return editWidget; }
+	virtual NodeItemInfoScrollAreaWidget * getEditWidget( ) const { return editWidget; }
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;

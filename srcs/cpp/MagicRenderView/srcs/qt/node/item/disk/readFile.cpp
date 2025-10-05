@@ -3,17 +3,15 @@
 #include <qt/node/prot/inputProt/inpInputPort/stringInputPort.h>
 #include <qt/node/prot/outputProt/impOutputPort/stringOutputPort.h>
 
+#include "../../../widgets/nodeItemInfoScrollAreaWidget.h"
+
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
 ReadFile::ReadFile( ) : NodeItem( ) {
-	editWidget = new QWidget( );
-	editWidget->hide( );
-	editWidget->setBaseSize( 500, 500 );
+
 }
 bool ReadFile::intPortItems( MainWidget *parent ) {
-	if( parent == nullptr )
+	if( NodeItem::intPortItems( parent ) == false )
 		return false;
-	// 初始化父节点
-	setMainWidget( parent );
 	// 初始化节点名称
 	setNodeTitleName( getMetaObjectName( ) );
 	// 初始化输入端口
@@ -52,6 +50,7 @@ bool ReadFile::intPortItems( MainWidget *parent ) {
 	updateOutputLayout( );
 	// 更新整体渲染布局
 	integrateLayout( );
+
 	// 返回
 	return true;
 }

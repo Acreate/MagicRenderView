@@ -28,8 +28,8 @@ bool VarGenerate::supportType( const type_info &left_type_info, const type_info 
 			if( extent = data[ index ].get( ), extent->supportType( left_type_info, right_type_info ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的左值右值操作" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的左值右值操作" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
@@ -42,8 +42,8 @@ bool VarGenerate::conver( const type_info &left_type_info, void *left, const typ
 			if( extent = data[ index ].get( ), extent->fillTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的转换" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的转换" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::add( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
@@ -56,8 +56,8 @@ bool VarGenerate::add( const type_info &left_type_info, void *left, const type_i
 			if( extent = data[ index ].get( ), extent->addTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的加法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	/*QString msg( "未发现 %1 与 %2 类型的加法运算转换" );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );*/
 	return false;
 }
 bool VarGenerate::sub( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
@@ -70,8 +70,8 @@ bool VarGenerate::sub( const type_info &left_type_info, void *left, const type_i
 			if( extent = data[ index ].get( ), extent->subTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的减法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的减法运算转换" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::mul( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
@@ -84,8 +84,8 @@ bool VarGenerate::mul( const type_info &left_type_info, void *left, const type_i
 			if( extent = data[ index ].get( ), extent->mulTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的乘法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	/*QString msg( "未发现 %1 与 %2 类型的乘法运算转换" );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );*/
 	return false;
 }
 bool VarGenerate::div( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
@@ -98,8 +98,8 @@ bool VarGenerate::div( const type_info &left_type_info, void *left, const type_i
 			if( extent = data[ index ].get( ), extent->divTarget( left_type_info, left, right_type_info, right ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的除法运算转换" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	/*QString msg( "未发现 %1 与 %2 类型的除法运算转换" );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );*/
 	return false;
 }
 bool VarGenerate::equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
@@ -112,8 +112,8 @@ bool VarGenerate::equThanTarget( const type_info &left_type_info, void *left, co
 			if( extent = data[ index ].get( ), extent->equThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的等于比较运算" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
@@ -126,8 +126,8 @@ bool VarGenerate::greaterThanTarget( const type_info &left_type_info, void *left
 			if( extent = data[ index ].get( ), extent->greaterThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的大于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的大于比较运算" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
@@ -140,8 +140,8 @@ bool VarGenerate::lessThanTarget( const type_info &left_type_info, void *left, c
 			if( extent = data[ index ].get( ), extent->lessThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的小于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的小于比较运算" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
@@ -154,8 +154,8 @@ bool VarGenerate::greaterOrEquThanTarget( const type_info &left_type_info, void 
 			if( extent = data[ index ].get( ), extent->greaterOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的大于等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	//QString msg( "未发现 %1 与 %2 类型的大于等于比较运算" );
+	//tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
@@ -168,8 +168,8 @@ bool VarGenerate::lessOrEquThanTarget( const type_info &left_type_info, void *le
 			if( extent = data[ index ].get( ), extent->lessOrEquThanTarget( left_type_info, left, right_type_info, right, result_bool ) )
 				return true;
 	}
-	QString msg( "未发现 %1 与 %2 类型的小于等于比较运算" );
-	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
+	/*QString msg( "未发现 %1 与 %2 类型的小于等于比较运算" );
+	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );*/
 	return false;
 }
 bool VarGenerate::deleteTarget( const type_info &target_type_info, void *target_ptr ) {
@@ -182,8 +182,8 @@ bool VarGenerate::deleteTarget( const type_info &target_type_info, void *target_
 			if( extent = data[ index ].get( ), extent->deleteTarget( target_type_info, target_ptr ) )
 				return true;
 	}
-	QString msg( "未发现 %1 类型的释放功能" );
-	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	//QString msg( "未发现 %1 类型的释放功能" );
+	//tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::deleteTarget( void *target_ptr ) {
@@ -196,8 +196,8 @@ bool VarGenerate::deleteTarget( void *target_ptr ) {
 			if( extent = data[ index ].get( ), extent->deleteTarget( target_ptr ) )
 				return true;
 	}
-	QString msg( "未发现 %1 类型的释放功能" );
-	tools::debug::printError( msg.arg( ( size_t ) target_ptr, 0, 16 ) );
+	//QString msg( "未发现 %1 类型的释放功能" );
+	//tools::debug::printError( msg.arg( ( size_t ) target_ptr, 0, 16 ) );
 	return false;
 }
 bool VarGenerate::createTarget( const type_info &target_type_info, const uint8_t *target_type_data_ptr, const size_t &target_type_data_count, const std_function< void( void *create_obj_ptr ) > &create_call_function ) {
@@ -210,8 +210,8 @@ bool VarGenerate::createTarget( const type_info &target_type_info, const uint8_t
 			if( extent = data[ index ].get( ), extent->createTarget( target_type_info, target_type_data_ptr, target_type_data_count, create_call_function ) )
 				return true;
 	}
-	QString msg( "未发现 %1 类型的创建功能" );
-	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	//QString msg( "未发现 %1 类型的创建功能" );
+	//tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
 
@@ -225,8 +225,8 @@ bool VarGenerate::toBinVector( const type_info &target_type_info, const void *ta
 			if( extent = data[ index ].get( ), extent->toBinVector( target_type_info, target_ptr, result_vector, result_count ) )
 				return true;
 	}
-	QString msg( "未发现 %1 类型的序列化功能" );
-	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	//QString msg( "未发现 %1 类型的序列化功能" );
+	//tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) {
@@ -239,8 +239,8 @@ bool VarGenerate::toOBjVector( const type_info &target_type_info, void *target_p
 			if( extent = data[ index ].get( ), extent->toOBjVector( target_type_info, target_ptr, result_count, source_data_ptr, source_data_count ) )
 				return true;
 	}
-	QString msg( "未发现 %1 类型的反序列化功能" );
-	tools::debug::printError( msg.arg( target_type_info.name( ) ) );
+	//QString msg( "未发现 %1 类型的反序列化功能" );
+	//tools::debug::printError( msg.arg( target_type_info.name( ) ) );
 	return false;
 }
 bool VarGenerate::getTypeInfoGenerateInfo( const QString &generate_type_name, std_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > &result_info ) const {

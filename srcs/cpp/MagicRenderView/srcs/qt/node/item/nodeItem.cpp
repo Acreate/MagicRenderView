@@ -11,6 +11,7 @@
 #include "../../varType/I_Var.h"
 
 #include "../../widgets/mainWidget.h"
+#include "../../widgets/nodeItemInfoScrollAreaWidget.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), editWidget( nullptr ) {
@@ -46,11 +47,11 @@ NodeItem::~NodeItem( ) {
 	nodeOutputProtVector.clear( );
 
 	index = 0;
-	//count = varVector.size( );
-	//auto varVectorPtr = varVector.data( );
-	//for( ; index < count; ++index )
-	//	delete varVectorPtr[ index ];
-	//varVector.clear( );
+	count = inputVarVector.size( );
+	auto varVectorPtr = inputVarVector.data( );
+	for( ; index < count; ++index )
+		delete varVectorPtr[ index ];
+	inputVarVector.clear( );
 
 	delete nodeItemRender;
 	delete inputBuff;
@@ -199,11 +200,13 @@ bool NodeItem::intPortItems( MainWidget *parent ) {
 	if( parent == nullptr )
 		return false;
 	setMainWidget( parent );
-	setNodeTitleName( getMetaObjectName( ) );
-	updateTitleLayout( );
-	updateInputLayout( );
-	updateOutputLayout( );
-	integrateLayout( );
+
+	if( editWidget )
+		delete editWidget;
+	editWidget = new NodeItemInfoScrollAreaWidget( this, nullptr );
+	editWidget->hide( );
+	editWidget->setBaseSize( 500, 500 );
+
 	return true;
 }
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {

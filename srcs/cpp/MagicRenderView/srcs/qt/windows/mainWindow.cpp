@@ -4,15 +4,11 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMouseEvent>
-#include <QProcess>
-#include <QPushButton>
-#include <QScrollBar>
-#include <qguiapplication.h>
+
 #include <qt/application/application.h>
 #include <qt/tools/tools.h>
+#include <qt/widgets/mainScrollAreaWidget.h>
 #include <qt/widgets/mainWidget.h>
-
-#include "../widgets/mainScrollAreaWidget.h"
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -187,6 +183,10 @@ bool MainWindow::event( QEvent *event ) {
 }
 void MainWindow::mouseMoveEvent( QMouseEvent *event ) {
 	QMainWindow::mouseMoveEvent( event );
+}
+void MainWindow::closeEvent( QCloseEvent *event ) {
+	QMainWindow::closeEvent( event );
+	appInstance->quitApp(  );
 }
 void MainWindow::createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect ) {
 	QPoint point = contents_rect.bottomRight( );

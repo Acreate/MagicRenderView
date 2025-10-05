@@ -14,6 +14,8 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
+#include "nodeItemInfoScrollAreaWidget.h"
+
 #include "../generate/varGenerate.h"
 
 #include "../varType/I_Type.h"
@@ -51,7 +53,6 @@ MainWidget::~MainWidget( ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		delete vectorDataPtr[ index ];
-
 }
 size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
 
@@ -387,8 +388,11 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 						auto seep = currentDateTime - sigClickDateTime;
 						if( seep.count( ) < 2000 ) {
 							auto editWidget = renderWidgetActiveItem->getEditWidget( );
-							if( editWidget )
+							if( editWidget ) {
+								editWidget->raise( );
 								editWidget->show( );
+							}
+
 						}
 						sigClickDateTime = currentDateTime;
 						doubleClickWidgetActiveItem = nullptr;

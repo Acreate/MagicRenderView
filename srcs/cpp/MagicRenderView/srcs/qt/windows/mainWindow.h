@@ -79,6 +79,7 @@ protected:
 	void changeEvent( QEvent * ) override;
 	bool event( QEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
+	void closeEvent( QCloseEvent *event ) override;
 public:
 	virtual void createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect );;
 };
