@@ -12,6 +12,8 @@
 #include <qt/tools/tools.h>
 #include <qt/widgets/mainWidget.h>
 
+#include "../widgets/mainScrollAreaWidget.h"
+
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
 	setWindowToIndexScreenCentre( 0 );
@@ -33,7 +35,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	move( point );
 	oldPos = buffPos = point;
 
-	mainScrollArea = new QScrollArea( this );
+	mainScrollArea = new MainScrollAreaWidget( this );
 	mainWidget = new MainWidget( mainScrollArea );
 	setCentralWidget( mainScrollArea );
 

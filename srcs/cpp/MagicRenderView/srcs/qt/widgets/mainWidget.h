@@ -59,8 +59,6 @@ protected:
 	QPoint fromGlobalReleasePoint;
 	/// @brief 鼠标移动时的坐标位置
 	QPoint mouseMovePoint;
-	/// @brief 是否鼠标中键
-	bool isMidMouse;
 	/// @brief 节点链表
 	std_vector< NodeItem * > nodeItemList;
 	/// @brief 鼠标左键选中的输入端口
