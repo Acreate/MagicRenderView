@@ -151,9 +151,9 @@ public:
 	/// @brief 链接信号
 	/// @param node_item 链接对象指针
 	virtual void connectNodeItem( NodeItem *node_item );
-	/// @brief 获取生成变量
-	/// @return 生成变量列表
-	virtual const std_vector< I_Var * > & getMainWidgetGenerateVar( ) const;
+	/// @brief 获取变量窗口指针
+	/// @return 变量窗口对象指针
+	virtual VarGenerateWidget * getVarGenerateWidget( ) const { return varGenerateWidget; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

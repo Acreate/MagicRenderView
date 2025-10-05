@@ -219,7 +219,7 @@ void MainWidget::connectNodeItem( NodeItem *node_item ) {
 			}
 	} );
 }
-const std_vector< I_Var * > & MainWidget::getMainWidgetGenerateVar( ) const { return varGenerateWidget->getMainWidgetGenerateVar( ); }
+
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );

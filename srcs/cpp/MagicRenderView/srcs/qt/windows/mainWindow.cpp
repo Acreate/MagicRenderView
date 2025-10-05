@@ -1,21 +1,19 @@
 ﻿#include "mainWindow.h"
 
-#include <qguiapplication.h>
-#include <QMenuBar>
-#include <QProcess>
-#include <QScrollBar>
 #include <QDockWidget>
 #include <QFileDialog>
+#include <QMenuBar>
 #include <QMouseEvent>
+#include <QProcess>
 #include <QPushButton>
-
-#include <qt/tools/tools.h>
-
+#include <QScrollBar>
+#include <qguiapplication.h>
 #include <qt/application/application.h>
-
+#include <qt/tools/tools.h>
 #include <qt/widgets/mainWidget.h>
+#include <qt/widgets/varGenerateWidget.h>
 
-#include "../widgets/varGenerateWidget.h"
+#include "../widgets/VarGenerateScrollAreaWidget.h"
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -46,12 +44,12 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	varEditorDockWidget->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	varEditorDockWidget->setFeatures( QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
 
-	varGenerateWidget = new VarGenerateWidget( varEditorDockWidget );
-	varEditorDockWidget->setWidget( varGenerateWidget );
+	varGenerateQScrollAreaWidget = new VarGenerateScrollAreaWidget( varEditorDockWidget );
+	varEditorDockWidget->setWidget( varGenerateQScrollAreaWidget );
 	addDockWidget( Qt::LeftDockWidgetArea, varEditorDockWidget );
 
 	mainScrollArea = new QScrollArea( this );
-	mainWidget = new MainWidget( mainScrollArea, varGenerateWidget );
+	mainWidget = new MainWidget( mainScrollArea, varGenerateQScrollAreaWidget->getContentWidget( ) );
 	setCentralWidget( mainScrollArea );
 
 	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
