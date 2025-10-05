@@ -3,6 +3,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qmenu.h>
@@ -18,7 +19,8 @@
 #include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
-MainWidget::MainWidget( QScrollArea *scroll_area,  Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+	isMidMouse = false;
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -310,6 +312,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	size_t count;
 	size_t index;
 	NodeItem **data;
+	isMidMouse = false;
 	switch( mouseButton ) {
 		case Qt::RightButton :
 			rightMouseBtnSelectItem = nullptr;
@@ -421,6 +424,22 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 		if( point.y( ) < 0 )
 			point.setY( 0 );
 		leftMouseBtnDragItem->move( point );
+	} else if( isMidMouse && globalPressPos != QCursor::pos( ) ) {
+		auto point = fromGlobalPressPoint - mouseMovePoint;
+		auto verticalScrollBar = scrollArea->verticalScrollBar( );
+		auto horizontalScrollBar = scrollArea->horizontalScrollBar( );
+		int x = point.x( );
+		if( x > 0 )
+			horizontalScrollBar->setValue( horizontalScrollBar->value( ) + 1 );
+		else if( x < 0 )
+			horizontalScrollBar->setValue( horizontalScrollBar->value( ) - 1 );
+
+		int y = point.y( );
+		if( y > 0 )
+			verticalScrollBar->setValue( verticalScrollBar->value( ) + 1 );
+		else if( y < 0 )
+			verticalScrollBar->setValue( verticalScrollBar->value( ) - 1 );
+		fromGlobalPressPoint = mouseMovePoint;
 	}
 	update( );
 }
@@ -433,6 +452,9 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	size_t index;
 	NodeItem **data;
 	switch( mouseButton ) {
+		case Qt::MiddleButton :
+			isMidMouse = true;
+			break;
 		case Qt::LeftButton :
 
 			count = nodeItemList.size( );
