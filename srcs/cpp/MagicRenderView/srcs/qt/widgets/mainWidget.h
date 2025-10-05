@@ -4,6 +4,7 @@
 
 #include <QPainterPath>
 #include <QWidget>
+#include <qdatetime.h>
 
 #include <alias/type_alias.h>
 
@@ -69,6 +70,10 @@ protected:
 	NodeItem *leftMouseBtnSelectItem;
 	/// @brief 窗口当时激活的节点
 	NodeItem *renderWidgetActiveItem;
+	/// @brief 双击节点
+	NodeItem *doubleClickWidgetActiveItem;
+	/// @brief 记录点击时间点
+	QDateTime sigClickDateTime;
 	/// @brief 鼠标左键拖拽项
 	NodeItem *leftMouseBtnDragItem;
 	/// @brief 鼠标右键选中项

@@ -423,6 +423,8 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 			point.setY( 0 );
 		leftMouseBtnDragItem->move( point );
 	}
+
+	doubleClickWidgetActiveItem = nullptr; // 移动则清除双击信息
 	update( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
@@ -464,6 +466,19 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						break;
 				} else
 					leftMouseBtnDragItem = item;
+				if( doubleClickWidgetActiveItem == item ) {
+					auto currentDateTime = QDateTime::currentDateTime( );
+					auto seep = currentDateTime - sigClickDateTime;
+					if( seep.count( ) < 2000 ) {
+						auto editWidget = renderWidgetActiveItem->getEditWidget( );
+
+					}
+					sigClickDateTime = currentDateTime;
+					doubleClickWidgetActiveItem = nullptr;
+				} else {
+					sigClickDateTime = QDateTime::currentDateTime( );
+					doubleClickWidgetActiveItem = item;
+				}
 				renderWidgetActiveItem = leftMouseBtnSelectItem = item;
 				break;
 			}
