@@ -208,12 +208,7 @@ void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {
 	nodeTitleName = node_title_name;
 }
 
-bool NodeItem::setInputVarPtr( const size_t &index, const size_t &bind_var_generate_code ) {
-	if( ( inputVarVector.size( ) < index ) == false )
-		return false;
-	inputVarVector.data( )[ index ] = bind_var_generate_code;
-	return true;
-}
+
 
 NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) const {
 	size_t count = nodeOutputProtVector.size( );

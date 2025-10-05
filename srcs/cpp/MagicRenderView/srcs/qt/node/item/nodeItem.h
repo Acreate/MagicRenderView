@@ -61,7 +61,7 @@ private:
 	/// @brief 生成编号
 	size_t generateCode;
 	/// @brief 绑定的输入接口指针序列
-	std_vector< size_t > inputVarVector;
+	std_vector< I_Var * > inputVarVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -207,10 +207,6 @@ public:
 			return false;
 		return true;
 	}
-	/// @brief 设置接口变量指针
-	/// @param index 下标
-	/// @param bind_var_generate_code 绑定的变量指针
-	virtual bool setInputVarPtr( const size_t &index, const size_t &bind_var_generate_code );
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
 protected:
@@ -253,7 +249,7 @@ public:
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
 	/// @brief 更新连接信息
 	/// @return 成功返回 true
-	virtual bool updataLinkInfo();
+	virtual bool updataLinkInfo( );
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关

@@ -7,8 +7,6 @@
 
 #include <alias/type_alias.h>
 
-class VarGenerateScrollAreaWidget;
-class VarGenerateWidget;
 class NodeItem;
 class ItemWidget;
 class Application;
@@ -16,10 +14,6 @@ class MainWidget;
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
 protected:
-	/// @brief 变量管理窗口
-	VarGenerateScrollAreaWidget* varGenerateQScrollAreaWidget;
-	/// @brief 容器窗口
-	QDockWidget *varEditorDockWidget;
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief ini 关键字

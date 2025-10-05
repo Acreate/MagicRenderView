@@ -11,9 +11,6 @@
 #include <qt/application/application.h>
 #include <qt/tools/tools.h>
 #include <qt/widgets/mainWidget.h>
-#include <qt/widgets/varGenerateWidget.h>
-
-#include "../widgets/VarGenerateScrollAreaWidget.h"
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
@@ -36,20 +33,8 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	move( point );
 	oldPos = buffPos = point;
 
-	// 创建一个QDockWidget
-
-	varEditorDockWidget = new QDockWidget( this );
-	varEditorDockWidget->setObjectName( varEditorDockWidget->metaObject( )->className( ) );
-	varEditorDockWidget->setWindowTitle( QObject::tr( "变量编辑器" ) );
-	varEditorDockWidget->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
-	varEditorDockWidget->setFeatures( QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
-
-	varGenerateQScrollAreaWidget = new VarGenerateScrollAreaWidget( varEditorDockWidget );
-	varEditorDockWidget->setWidget( varGenerateQScrollAreaWidget );
-	addDockWidget( Qt::LeftDockWidgetArea, varEditorDockWidget );
-
 	mainScrollArea = new QScrollArea( this );
-	mainWidget = new MainWidget( mainScrollArea, varGenerateQScrollAreaWidget->getContentWidget( ) );
+	mainWidget = new MainWidget( mainScrollArea );
 	setCentralWidget( mainScrollArea );
 
 	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
@@ -123,24 +108,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	currentAction = currentMenu->addAction( "退出" );
 	connect( currentAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->quitApp( );
-	} );
-
-	currentMenu = new QMenu( "窗口", this );
-	mainMenuBar->addMenu( currentMenu );
-	auto layoutDockWidgetMenu = currentMenu->addMenu( "布局显示" );
-	auto varEditorAction = layoutDockWidgetMenu->addAction( varEditorDockWidget->windowTitle( ) );
-	varEditorAction->setCheckable( true );
-	connect( varEditorAction, &QAction::triggered, [this] ( bool check ) {
-		if( check )
-			varEditorDockWidget->show( );
-		else
-			varEditorDockWidget->hide( );
-	} );
-	connect( layoutDockWidgetMenu, &QMenu::aboutToShow, [this, varEditorAction]( ) {
-		if( varEditorDockWidget->isHidden( ) )
-			varEditorAction->setChecked( false );
-		else
-			varEditorAction->setChecked( true );
 	} );
 }
 MainWindow::~MainWindow( ) {

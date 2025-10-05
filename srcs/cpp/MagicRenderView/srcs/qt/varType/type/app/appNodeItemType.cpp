@@ -136,7 +136,7 @@ bool AppNodeItemType::toBinVector( const type_info &target_type_info, const void
 		size_t index = 0;
 		std_vector< uint8_t > linkPortVectorBuff;
 		for( ; index < count; ++index ) {
-			result_count = data[ index ];
+			//result_count = data[ index ];
 			result_count = fillBinVector( &result_count, sizeof( size_t ), linkPortVectorBuff );
 			if( result_count == 0 )
 				return false; // 失败，返回
@@ -272,7 +272,7 @@ bool AppNodeItemType::toOBjVector( const type_info &target_type_info, void *targ
 				return false;
 			offset += result_count;
 			mod -= result_count;
-			data[ index ] = needCount;
+			//data[ index ] = needCount;
 		}
 	}
 	result_count = offset - source_data_ptr;

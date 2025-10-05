@@ -12,7 +12,6 @@ class VarGenerate;
 class I_Var;
 class NodeOutputPort;
 class NodeItem;
-class VarGenerateWidget;
 class NodePort;
 class QScrollArea;
 class QVBoxLayout;
@@ -24,8 +23,6 @@ private:
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 protected:
-	/// @brief 变量管理窗口
-	VarGenerateWidget *varGenerateWidget;
 	/// @brief 节点请求生成变量
 	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, I_Var * > > requestGenerateVar;
 	/// @brief 数据化的支持对象（节点与数据类型）
@@ -85,7 +82,7 @@ protected:
 	/// @brief 用于删除当前选中节点的快捷方式
 	QAction *removeSelectNodeItemAction;
 public:
-	MainWidget( QScrollArea *scroll_area, VarGenerateWidget *var_generate_widget, Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	MainWidget( QScrollArea *scroll_area,  Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
@@ -151,9 +148,6 @@ public:
 	/// @brief 链接信号
 	/// @param node_item 链接对象指针
 	virtual void connectNodeItem( NodeItem *node_item );
-	/// @brief 获取变量窗口指针
-	/// @return 变量窗口对象指针
-	virtual VarGenerateWidget * getVarGenerateWidget( ) const { return varGenerateWidget; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

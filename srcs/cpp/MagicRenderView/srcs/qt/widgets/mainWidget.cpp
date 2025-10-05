@@ -13,14 +13,12 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
-#include "varGenerateWidget.h"
-
 #include "../generate/varGenerate.h"
 
 #include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
-MainWidget::MainWidget( QScrollArea *scroll_area, VarGenerateWidget *var_generate_widget, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+MainWidget::MainWidget( QScrollArea *scroll_area,  Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -28,8 +26,6 @@ MainWidget::MainWidget( QScrollArea *scroll_area, VarGenerateWidget *var_generat
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
-	varGenerateWidget = var_generate_widget;
-	varGenerateWidget->setMainWidget( this );
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	appInstance->syncAppValueIniFile( );
