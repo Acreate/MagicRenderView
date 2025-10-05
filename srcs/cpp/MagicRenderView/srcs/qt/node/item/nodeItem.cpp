@@ -56,7 +56,9 @@ NodeItem::~NodeItem( ) {
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
-
+	if( editWidget )
+		delete editWidget;
+	editWidget = nullptr;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
 	setParent( parent );
@@ -207,8 +209,6 @@ bool NodeItem::intPortItems( MainWidget *parent ) {
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {
 	nodeTitleName = node_title_name;
 }
-
-
 
 NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) const {
 	size_t count = nodeOutputProtVector.size( );

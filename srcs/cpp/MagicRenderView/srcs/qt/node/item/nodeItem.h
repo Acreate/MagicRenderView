@@ -111,13 +111,13 @@ private:
 	int borderRightSpace;
 	/// @brief 边缘顶端空间大小
 	int borderTopSpace;
-	/// @brief 编辑窗口
-	QWidget *editWidget;
 	/// @brief 渲染所在窗口
 	MainWidget *renderMainWidget;
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
+	/// @brief 编辑窗口
+	QWidget *editWidget;
 protected:
 	NodeItem( );
 public:

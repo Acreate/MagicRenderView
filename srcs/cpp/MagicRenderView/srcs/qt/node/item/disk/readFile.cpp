@@ -5,6 +5,9 @@
 
 Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
 ReadFile::ReadFile( ) : NodeItem( ) {
+	editWidget = new QWidget( );
+	editWidget->hide( );
+	editWidget->setBaseSize( 500, 500 );
 }
 bool ReadFile::intPortItems( MainWidget *parent ) {
 	if( parent == nullptr )

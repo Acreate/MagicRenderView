@@ -381,6 +381,22 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 					NodeItem::Click_Type pointType = item->relativePointType( modPoint );
 					if( pointType == NodeItem::Click_Type::None )
 						continue;
+
+					if( doubleClickWidgetActiveItem == item ) {
+						auto currentDateTime = QDateTime::currentDateTime( );
+						auto seep = currentDateTime - sigClickDateTime;
+						if( seep.count( ) < 2000 ) {
+							auto editWidget = renderWidgetActiveItem->getEditWidget( );
+							if( editWidget )
+								editWidget->show( );
+						}
+						sigClickDateTime = currentDateTime;
+						doubleClickWidgetActiveItem = nullptr;
+					} else {
+						sigClickDateTime = QDateTime::currentDateTime( );
+						doubleClickWidgetActiveItem = item;
+					}
+
 					if( leftMouseBtnSelectItem == item )
 						break;
 
@@ -396,6 +412,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 							if( leftMouseBtnSelectInputPort->getPos( modPoint ) == false )
 								leftMouseBtnSelectInputPort = nullptr;
 					}
+
 					renderWidgetActiveItem = item;
 					break;
 				}
@@ -466,19 +483,6 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						break;
 				} else
 					leftMouseBtnDragItem = item;
-				if( doubleClickWidgetActiveItem == item ) {
-					auto currentDateTime = QDateTime::currentDateTime( );
-					auto seep = currentDateTime - sigClickDateTime;
-					if( seep.count( ) < 2000 ) {
-						auto editWidget = renderWidgetActiveItem->getEditWidget( );
-
-					}
-					sigClickDateTime = currentDateTime;
-					doubleClickWidgetActiveItem = nullptr;
-				} else {
-					sigClickDateTime = QDateTime::currentDateTime( );
-					doubleClickWidgetActiveItem = item;
-				}
 				renderWidgetActiveItem = leftMouseBtnSelectItem = item;
 				break;
 			}
