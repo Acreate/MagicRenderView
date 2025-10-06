@@ -4,7 +4,7 @@ UInt64Stack::UInt64Stack( ) : I_Stack( typeid( t_current_type ) ) {
 
 }
 bool UInt64Stack::toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const {
-	if( target_type_info != generateTypeInfo )
+	if( target_type_info != stackTypeInfo )
 		return false;
 
 	std_vector< uint8_t > buff;
@@ -19,7 +19,7 @@ bool UInt64Stack::toBinVector( const type_info &target_type_info, const void *ta
 	return true;
 }
 bool UInt64Stack::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
-	if( target_type_info != generateTypeInfo )
+	if( target_type_info != stackTypeInfo )
 		return false;
 	size_t needCount = 0;
 	size_t typeUseCount = sizeof( size_t );
@@ -30,7 +30,7 @@ bool UInt64Stack::toOBjVector( const type_info &target_type_info, void *target_p
 	auto offerPtr = source_data_ptr + count;
 	QString typeName;
 	count = fillObjVector( &typeName, offerPtr, mod );
-	if( typeName != generateTypeInfo.name( ) )
+	if( typeName != stackTypeInfo.name( ) )
 		return false;
 	offerPtr += count;
 	mod -= count;

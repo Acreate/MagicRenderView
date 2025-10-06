@@ -12,7 +12,7 @@ class VarGenerate;
 class I_Stack {
 protected:
 	/// @brief 类型
-	const type_info &generateTypeInfo;
+	const type_info &stackTypeInfo;
 	/// @brief 应用实例
 	Application * applicationInstancePtr;
 	/// @brief 变量生成器
@@ -32,7 +32,7 @@ public:
 public:
 	/// @brief 获取当前生成对象类型
 	/// @return 对象类型
-	virtual const type_info & getGenerateTypeInfo( ) const { return generateTypeInfo; }
+	virtual const type_info & getGenerateTypeInfo( ) const { return stackTypeInfo; }
 
 	/// @brief 存储序列化
 	/// @param target_type_info 序列化对象类型

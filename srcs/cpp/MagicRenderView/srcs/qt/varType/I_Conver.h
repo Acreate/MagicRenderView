@@ -190,6 +190,20 @@ public:
 		QString buff = QString::fromStdWString( *string );
 		return fillInt( &buff, fill_target, target_type_info );
 	}
+
+	template< typename t_type >
+	static bool leftConverPtrTypeToTargetType( const type_info &ptr_type_info, void *ptr, const std_function< bool ( t_type * ) > &run_function ) {
+		if( ptr_type_info != typeid( t_type ) )
+			return false;
+		return run_function( ( t_type * ) ptr );
+	}
+
+	template< typename t_type >
+	static bool rightConverPtrTypeToTargetType( const type_info &ptr_type_info, const void *ptr, const std_function< bool ( const t_type * ) > &run_function ) {
+		if( ptr_type_info != typeid( t_type ) )
+			return false;
+		return run_function( ( const t_type * ) ptr );
+	}
 };
 
 #endif // I_CONVER_H_H_HEAD__FILE__

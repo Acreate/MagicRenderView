@@ -52,7 +52,7 @@ AppNodeItemStack::AppNodeItemStack( ) : I_Stack( typeid( t_current_type ) ), rel
 	//};
 }
 bool AppNodeItemStack::toBinVector( const type_info &target_type_info, const void *target_ptr, std_vector< uint8_t > &result_vector, size_t &result_count ) const {
-	if( target_type_info != generateTypeInfo )
+	if( target_type_info != stackTypeInfo )
 		return false;
 	NodeItem *targetPtr = ( NodeItem * ) target_ptr;
 	QString metaObjectPathName = targetPtr->getMetaObjectPathName( );
@@ -155,7 +155,7 @@ bool AppNodeItemStack::toBinVector( const type_info &target_type_info, const voi
 	return true;
 }
 bool AppNodeItemStack::toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
-	if( target_type_info != generateTypeInfo )
+	if( target_type_info != stackTypeInfo )
 		return false;
 	size_t needCount;
 	result_count = fillObjVector( &needCount, sizeof( size_t ), source_data_ptr, source_data_count );

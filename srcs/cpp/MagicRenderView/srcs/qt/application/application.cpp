@@ -64,13 +64,6 @@
 
 #include <qt/tools/tools.h>
 
-#include "../varType/convers/colorConvers/colorToTarget/colorToColor.h"
-#include "../varType/convers/colorConvers/colorToTarget/colorToInt.h"
-#include "../varType/convers/colorConvers/colorToTarget/colorToString.h"
-#include "../varType/convers/colorConvers/colorToTarget/colorToUint.h"
-#include "../varType/convers/colorConvers/sourceToColor/intToColor.h"
-#include "../varType/convers/colorConvers/sourceToColor/stringToColor.h"
-#include "../varType/convers/colorConvers/sourceToColor/uIntToColor.h"
 #include "../varType/isTypes/isColorType.h"
 #include "../varType/isTypes/isFloat32Type.h"
 #include "../varType/isTypes/isFloat64Type.h"
@@ -86,6 +79,7 @@
 #include "../varType/isTypes/isUint32Type.h"
 #include "../varType/isTypes/isUint64Type.h"
 #include "../varType/isTypes/isUint8Type.h"
+#include "../varType/stacks/qt/qColorStack.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -202,13 +196,6 @@ bool Application::init( ) {
 	varGenerate->appendConverInstance< UintToFloat >( );
 	varGenerate->appendConverInstance< UIntToString >( );
 	varGenerate->appendConverInstance< NullToAny >( );
-	varGenerate->appendConverInstance< ColorToColor >( );
-	varGenerate->appendConverInstance< ColorToInt >( );
-	varGenerate->appendConverInstance< ColorToUint >( );
-	varGenerate->appendConverInstance< ColorToString >( );
-	varGenerate->appendConverInstance< StringToColor >( );
-	varGenerate->appendConverInstance< UIntToColor >( );
-	varGenerate->appendConverInstance< IntToColor >( );
 
 	// todo : 序列化支持
 	varGenerate->appendStackInstance< Float32Stack >( );
@@ -225,6 +212,7 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< StdStringStack >( );
 	varGenerate->appendStackInstance< StdWStringStack >( );
 	varGenerate->appendStackInstance< AppNodeItemStack >( );
+	varGenerate->appendStackInstance< QColorStack >( );
 	return true;
 }
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {

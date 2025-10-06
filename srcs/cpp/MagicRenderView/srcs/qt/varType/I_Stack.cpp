@@ -7,7 +7,7 @@
 #include "../node/item/nodeItem.h"
 I_Stack::I_Stack( const type_info &generate_type_info ) : I_Stack( generate_type_info, nullptr, nullptr ) {
 }
-I_Stack::I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( const type_info &, const uint8_t *, const size_t & ) > &create_function ) : generateTypeInfo( generate_type_info ){
+I_Stack::I_Stack( const type_info &generate_type_info, const std_function< bool( void * ) > &delete_function, const std_function< void *( const type_info &, const uint8_t *, const size_t & ) > &create_function ) : stackTypeInfo( generate_type_info ){
 
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate(  );
