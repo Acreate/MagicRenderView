@@ -7,7 +7,7 @@ class IsUint32Type : public I_IsType{
 	
 	using t_current_type = uint32_t;
 public:
-	IsUint32Type( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsUint32Type( );
 };
 
 #endif // ISUINT32TYPE_H_H_HEAD__FILE__

@@ -7,7 +7,7 @@ class IsStdStringType : public I_IsType{
 	
 	using t_current_type = std::string;
 public:
-	IsStdStringType( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsStdStringType( );
 };
 
 #endif // ISSTDSTRINGTYPE_H_H_HEAD__FILE__

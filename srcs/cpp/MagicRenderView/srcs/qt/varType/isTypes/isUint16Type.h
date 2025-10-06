@@ -7,7 +7,7 @@ class IsUint16Type : public I_IsType{
 	
 	using t_current_type = uint16_t;
 public:
-	IsUint16Type( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsUint16Type( );
 };
 
 #endif // ISUINT16TYPE_H_H_HEAD__FILE__

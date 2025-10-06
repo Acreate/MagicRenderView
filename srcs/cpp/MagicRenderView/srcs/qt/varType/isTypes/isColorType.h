@@ -9,7 +9,7 @@ class IsColorType : public I_IsType {
 
 	using t_current_type = QColor;
 public:
-	IsColorType( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsColorType( );
 };
 
 #endif // ISCOLORTYPE_H_H_HEAD__FILE__

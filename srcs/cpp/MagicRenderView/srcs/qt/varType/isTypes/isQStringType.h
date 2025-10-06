@@ -7,7 +7,7 @@ class IsQStringType : public I_IsType{
 	
 	using t_current_type = QString;
 public:
-	IsQStringType( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsQStringType( );
 };
 
 #endif // ISQSTRINGTYPE_H_H_HEAD__FILE__

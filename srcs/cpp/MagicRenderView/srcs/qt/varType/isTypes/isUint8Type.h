@@ -7,7 +7,7 @@ class IsUint8Type: public I_IsType {
 	
 	using t_current_type = uint8_t;
 public:
-	IsUint8Type( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsUint8Type( );
 };
 
 #endif // ISUINT8TYPE_H_H_HEAD__FILE__

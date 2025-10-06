@@ -6,7 +6,7 @@
 class IsUint64Type : public I_IsType {
 	using t_current_type = uint64_t;
 public:
-	IsUint64Type( ) : I_IsType( typeid( t_current_type ) ) { }
+	IsUint64Type( );
 };
 
 #endif // ISUINT64TYPE_H_H_HEAD__FILE__
