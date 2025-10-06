@@ -87,7 +87,7 @@ size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_
 		if( varGenerate->getCheckTypeNames( nodeItemTypeInfo, offset, mod, name ) == false )
 			return 0;
 		varGenerate->createCheckTypeName( nodeItemTypeInfo, name[ 0 ], [&item] ( I_Var *create_obj_ptr ) {
-			item = ( NodeItem * ) create_obj_ptr->getP( );
+			item = ( NodeItem * ) create_obj_ptr->getVarPtr( );
 			connect( item, &NodeItem::releaseThiNodeItem, [create_obj_ptr]( ) {
 				delete create_obj_ptr;
 			} );

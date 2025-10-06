@@ -38,10 +38,20 @@ public:
 	}
 	friend bool operator!=( const I_Type &lhs, const I_Type &rhs ) { return !( lhs == rhs ); }
 	virtual ~I_Type( ) { }
+	/// @brief 获取对象类型
+	/// @return 类型信息引用
 	virtual const type_info & getTypeInfo( ) const { return typeInfo; }
+	/// @brief 获取内存占用大小
+	/// @return 创建类型占用大小
 	virtual size_t getMemorySize( ) const { return memorySize; }
+	/// @brief 设置创建类型占用大小
+	/// @param memory_size 类型占用大小
 	virtual void setMemorySize( const size_t memory_size ) { memorySize = memory_size; }
+	/// @brief 获取释放函数，可用于释放创建指针对象
+	/// @return 释放函数
 	virtual const std_function< bool( void *p ) > & getRelease( ) const { return release; }
+	/// @brief 获取创建函数，可用于创建对象
+	/// @return 创建函数
 	virtual const std_function< bool( void *&p ) > & getCreate( ) const { return create; }
 
 	// 静态
