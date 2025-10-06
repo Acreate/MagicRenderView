@@ -3,6 +3,9 @@
 #pragma once
 #include <QString>
 #include <alias/type_alias.h>
+
+#include "I_Type.h"
+class Application;
 class VarGenerate;
 class I_Var;
 class I_Type;
@@ -10,9 +13,13 @@ class I_Type;
 class I_IsType {
 protected:
 	std_vector< QString > aliasTypeName;
-	const type_info &currentTypeInfo;
-	VarGenerate* varGenerate;
-	I_IsType( const type_info &current_type_info );
+	QString *aliasTypeNameDataPtr;
+	size_t aliasTypeNameDataCount;
+	I_Type *currentTypeInfo;
+	Application *application;
+	VarGenerate *varGenerate;
+	I_IsType( );
+	virtual void updateNameVectorInfo( const std_vector< QString > &type_name_vector );
 public:
 	/// @brief 目标为整数
 	/// @param check_type_info 类型识别
@@ -21,6 +28,23 @@ public:
 	/// @param result_alias_name_list 返回别名列表
 	/// @return true 表示整形
 	virtual bool getCheckTypeNames( const type_info &check_type_info, const uint8_t *check_type_data_ptr, const size_t &check_type_data_count, std_vector< QString > &result_alias_name_list ) const {
+		if( currentTypeInfo == nullptr || check_type_info != currentTypeInfo->getTypeInfo( ) )
+			return false;
+		result_alias_name_list = aliasTypeName;
+		return true;
+	}
+	/// @brief 目标为整数
+	/// @param check_type_info 类型识别
+	/// @param check_type_data_ptr 识别对象指针
+	/// @param check_type_data_count 检查对象指向内存的数量
+	/// @param result_alias_name_list 返回别名列表
+	/// @return true 表示整形
+	virtual bool getCheckTypeNames( const QString &check_type_info, const uint8_t *check_type_data_ptr, const size_t &check_type_data_count, std_pairt< const I_Type *, std_vector< QString > > &result_alias_name_list ) const {
+		for( auto &name : aliasTypeName )
+			if( check_type_info == name ) {
+				result_alias_name_list = std_pairt( currentTypeInfo, aliasTypeName );
+				return true;
+			}
 		return false;
 	}
 	/// @brief 创建匹配的类型
@@ -31,6 +55,6 @@ public:
 	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
 		return false;
 	}
-	virtual ~I_IsType( ) = default;
+	virtual ~I_IsType( );
 };
 #endif // I_ISTYPE_H_H_HEAD__FILE__

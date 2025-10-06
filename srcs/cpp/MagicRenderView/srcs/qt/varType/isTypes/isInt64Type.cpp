@@ -1,8 +1,26 @@
 ﻿#include "isInt64Type.h"
-IsInt64Type::IsInt64Type( ): I_IsType( typeid( t_current_type ) ) { }
-bool IsInt64Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function<bool(I_Var *create_var_ptr)> &create_is_right_call_back_function ) const {
-	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
+IsInt64Type::IsInt64Type( ) :I_IsType( ) {
+	currentTypeInfo = new I_Type(
+		typeid( t_current_type ),
+		sizeof( t_current_type ),
+		[] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		},
+		[] ( void *&p ) {
+			p = new t_current_type();
+			return true;
+		} );
+	updateNameVectorInfo( {
+			currentTypeInfo->getTypeInfo( ).name( ),
+			"signed long long",
+			"signed int64",
+			"signed int64_t",
+			"int64",
+			"int64_t",
+			"qsizetype"
+		} );
 }
-bool IsInt64Type::getCheckTypeNames( const type_info &check_type_info, const uint8_t *check_type_data_ptr, const size_t &check_type_data_count, std_vector<QString> &result_alias_name_list ) const {
-	return I_IsType::getCheckTypeNames( check_type_info, check_type_data_ptr, check_type_data_count, result_alias_name_list );
+bool IsInt64Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
+	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
 }

@@ -1,5 +1,7 @@
-﻿#include "isUint16Type.h"
-IsUint16Type::IsUint16Type( ) : I_IsType( ) {
+﻿#include "isWCharType.h"
+
+#include "../I_Var.h"
+IsWCharType::IsWCharType( ) : I_IsType( ) {
 	currentTypeInfo = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
@@ -13,14 +15,10 @@ IsUint16Type::IsUint16Type( ) : I_IsType( ) {
 		} );
 	updateNameVectorInfo( {
 			currentTypeInfo->getTypeInfo( ).name( ),
-			"unsigned short",
-			"unsigned short16",
-			"unsigned int16",
-			"unsigned int16_t",
-			"uint16",
-			"uint16_t"
+			"wchar_t",
+			"wchar",
 		} );
 }
-bool IsUint16Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
+bool IsWCharType::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
 	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
 }

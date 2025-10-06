@@ -1,8 +1,47 @@
 ﻿#include "isColorType.h"
-IsColorType::IsColorType( ) : I_IsType( typeid( t_current_type ) ) { }
-bool IsColorType::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
-	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
+
+#include "../I_Type.h"
+#include "../I_Var.h"
+IsColorType::IsColorType( ) : I_IsType( ) {
+	currentTypeInfo = new I_Type(
+		typeid( t_current_type ),
+		sizeof( t_current_type ),
+		[] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		},
+		[] ( void *&p ) {
+			p = new t_current_type();
+			return true;
+		} );
+	updateNameVectorInfo( {
+			currentTypeInfo->getTypeInfo( ).name( ), "QColor", "color", "rgba"
+		} );
 }
-bool IsColorType::getCheckTypeNames( const type_info &check_type_info, const uint8_t *check_type_data_ptr, const size_t &check_type_data_count, std_vector< QString > &result_alias_name_list ) const {
-	return I_IsType::getCheckTypeNames( check_type_info, check_type_data_ptr, check_type_data_count, result_alias_name_list );
+bool IsColorType::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
+
+	if( check_type_info != currentTypeInfo->getTypeInfo( ) )
+		return false;
+	size_t index = 0;
+	for( ; index < aliasTypeNameDataCount; ++index )
+		if( aliasTypeNameDataPtr[ index ] == create_name )
+			break;
+	if( index == aliasTypeNameDataCount )
+		return false; // 没有明知
+	I_Type *colorType = new I_Type(
+		typeid( QColor ),
+		sizeof( QColor ),
+		[] ( void *p ) {
+			delete ( QColor * ) p;
+			return true;
+		},
+		[] ( void *&p ) {
+			p = new QColor( );
+			return true;
+		}
+		);
+	I_Var *colorTypeVar = new I_Var( colorType, create_name );
+	if( create_is_right_call_back_function( colorTypeVar ) == false )
+		delete colorTypeVar;
+	return true;
 }

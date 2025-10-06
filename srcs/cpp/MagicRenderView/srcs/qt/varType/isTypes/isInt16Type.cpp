@@ -1,8 +1,25 @@
 ﻿#include "isInt16Type.h"
-IsInt16Type::IsInt16Type( ): I_IsType( typeid( t_current_type ) ) { }
-bool IsInt16Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function<bool(I_Var *create_var_ptr)> &create_is_right_call_back_function ) const {
-	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
+IsInt16Type::IsInt16Type( ) : I_IsType( ) {
+	currentTypeInfo = new I_Type(
+		typeid( t_current_type ),
+		sizeof( t_current_type ),
+		[] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		},
+		[] ( void *&p ) {
+			p = new t_current_type();
+			return true;
+		} );
+	updateNameVectorInfo( {
+			currentTypeInfo->getTypeInfo( ).name( ),
+			"signed short",
+			"signed int16",
+			"signed int16_t",
+			"int16",
+			"int16_t"
+		} );
 }
-bool IsInt16Type::getCheckTypeNames( const type_info &check_type_info, const uint8_t *check_type_data_ptr, const size_t &check_type_data_count, std_vector<QString> &result_alias_name_list ) const {
-	return I_IsType::getCheckTypeNames( check_type_info, check_type_data_ptr, check_type_data_count, result_alias_name_list );
+bool IsInt16Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
+	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
 }
