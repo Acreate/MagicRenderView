@@ -1,6 +1,8 @@
 ﻿#include "isFloat64Type.h"
 
-IsFloat64Type::IsFloat64Type( ) :I_IsType( ) {
+#include "../I_Var.h"
+
+IsFloat64Type::IsFloat64Type( ) : I_IsType( ) {
 	currentTypeInfo = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
@@ -9,7 +11,7 @@ IsFloat64Type::IsFloat64Type( ) :I_IsType( ) {
 			return true;
 		},
 		[] ( void *&p ) {
-			p = new t_current_type();
+			p = new t_current_type( );
 			return true;
 		} );
 	updateNameVectorInfo( {
@@ -17,5 +19,16 @@ IsFloat64Type::IsFloat64Type( ) :I_IsType( ) {
 		} );
 }
 bool IsFloat64Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
-	return I_IsType::createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function );
+
+	if( check_type_info != currentTypeInfo->getTypeInfo( ) )
+		return false;
+	size_t index = 0;
+	for( ; index < aliasTypeNameDataCount; ++index )
+		if( aliasTypeNameDataPtr[ index ] == create_name ) {
+			I_Var *varPtr = new I_Var( *currentTypeInfo, create_name );
+			if( create_is_right_call_back_function( varPtr ) == false )
+				delete varPtr;
+			return true;
+		}
+	return false;
 }
