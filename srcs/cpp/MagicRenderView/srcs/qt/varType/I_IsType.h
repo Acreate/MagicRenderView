@@ -3,6 +3,7 @@
 #pragma once
 #include <QString>
 #include <alias/type_alias.h>
+class VarGenerate;
 class I_Var;
 class I_Type;
 /// @brief 类型识别器
@@ -10,8 +11,8 @@ class I_IsType {
 protected:
 	std_vector< QString > aliasTypeName;
 	const type_info &currentTypeInfo;
-	I_IsType( const type_info &current_type_info )
-		: currentTypeInfo( current_type_info ) { }
+	VarGenerate* varGenerate;
+	I_IsType( const type_info &current_type_info );
 public:
 	/// @brief 目标为整数
 	/// @param check_type_info 类型识别

@@ -50,32 +50,32 @@ public:
 	/// @param source_data_count
 	/// @return 成功使用数据返回 true
 	virtual bool toOBjVector( const type_info &target_type_info, void *target_ptr, size_t &result_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const { return false; }
-	// 提供子类使用
-protected:
+
+public:
 	/// @brief 二进制填充数组
 	/// @param source_data_ptr 获取源
 	/// @param source_ptr_count 获取个数 
 	/// @param result_mirror_image_bin_vector 填充目标
 	/// @return 填充个数
-	virtual size_t fillBinVector( const void *source_data_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_mirror_image_bin_vector ) const;
+	static size_t fillBinVector( const void *source_data_ptr, const size_t &source_ptr_count, std_vector< uint8_t > &result_mirror_image_bin_vector ) ;
 	/// @brief 填充字符串到二进制数组当中
 	/// @param var_type 字符串
 	/// @param result_bin_data_vector 填充对象，填充期间会实现清空
 	/// @return 填充个数
-	virtual size_t fillBinVector( const QString &var_type, std_vector< uint8_t > &result_bin_data_vector ) const;
+	static size_t fillBinVector( const QString &var_type, std_vector< uint8_t > &result_bin_data_vector ) ;
 	/// @brief 填充数据到目标
 	/// @param target_var_ptr 目标指针
 	/// @param target_need_count 需要个数
 	/// @param source_data_ptr 源指针
 	/// @param source_data_count 源个数
 	/// @return 返回使用个数
-	virtual size_t fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
+	static size_t fillObjVector( void *target_var_ptr, const size_t &target_need_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) ;
 	/// @brief 填充到字符串
 	/// @param target_var_ptr 目标字符串
 	/// @param source_data_ptr 源指针
 	/// @param source_data_count 源个数
 	/// @return 使用个数
-	virtual size_t fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
+	static size_t fillObjVector( QString *target_var_ptr, const uint8_t *source_data_ptr, const size_t &source_data_count ) ;
 	// 静态
 public:
 	/// @brief 从数据当中获取可能的类型名称
