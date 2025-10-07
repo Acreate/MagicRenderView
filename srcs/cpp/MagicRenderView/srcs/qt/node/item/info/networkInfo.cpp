@@ -1,13 +1,11 @@
-﻿#include "./systemInfo.h"
+﻿#include "networkInfo.h"
 
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
+Imp_StaticMetaInfo( NetworkInfo, QObject::tr( "NetworkInfo" ), QObject::tr( "info" ) );
 
-Imp_StaticMetaInfo( SystemInfo, QObject::tr( "SystemInfo" ), QObject::tr( "info" ) );
-
-SystemInfo::SystemInfo( )
-	: NodeItem( ) {
+NetworkInfo::NetworkInfo( ) {
 }
-bool SystemInfo::intPortItems( MainWidget *parent ) {
+bool NetworkInfo::intPortItems( MainWidget *parent ) {
 	if( NodeItem::intPortItems( parent ) == false )
 		return false;
 	// 初始化节点名称
@@ -17,12 +15,9 @@ bool SystemInfo::intPortItems( MainWidget *parent ) {
 	inputPort->setTitle( "文件路径" );
 	appendInputProt( inputPort );*/
 	// 初始化输出端口
-	addOutputProt< StringOutputPort >( "系统全名" );
-	addOutputProt< StringOutputPort >( "文件名" );
-	addOutputProt< StringOutputPort >( "基本名" );
+	addOutputProt< StringOutputPort >( "ipv4" );
+	addOutputProt< StringOutputPort >( "ipv6" );
 	addOutputProt< StringOutputPort >( "域名" );
-	addOutputProt< StringOutputPort >( "拥有者" );
-	addOutputProt< StringOutputPort >( "创建日期" );
 
 	// 更新标题渲染布局
 	updateTitleLayout( );

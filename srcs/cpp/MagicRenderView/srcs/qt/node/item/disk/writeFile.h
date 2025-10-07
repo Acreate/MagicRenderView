@@ -8,7 +8,8 @@ class WriteFile : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	WriteFile(  );
-
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 
 #endif // WRITEFILE_H_H_HEAD__FILE__

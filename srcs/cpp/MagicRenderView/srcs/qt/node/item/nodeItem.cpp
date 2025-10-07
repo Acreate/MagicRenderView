@@ -201,12 +201,6 @@ bool NodeItem::intPortItems( MainWidget *parent ) {
 		return false;
 	setMainWidget( parent );
 
-	if( editWidget )
-		delete editWidget;
-	editWidget = new NodeItemInfoScrollAreaWidget( this, nullptr );
-	editWidget->hide( );
-	editWidget->setBaseSize( 500, 500 );
-
 	return true;
 }
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {

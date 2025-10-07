@@ -1,13 +1,8 @@
-﻿#include "./stringOutputPort.h"
-
-#include <QPainter>
-
-#include <qt/application/application.h>
-
+﻿#include "intInputPort.h"
 #include <qt/varType/I_Type.h>
 #include <qt/varType/I_Var.h>
-Imp_StaticMetaInfo( StringOutputPort, QObject::tr( "StringOutputPort" ), QObject::tr( "impOutputPort" ) );
-StringOutputPort::StringOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
+Imp_StaticMetaInfo( IntInputPort, QObject::tr( "int" ), QObject::tr( "inputPort" ) );
+IntInputPort::IntInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 
 	typePtr = new I_Type(
 		typeid( QString ),

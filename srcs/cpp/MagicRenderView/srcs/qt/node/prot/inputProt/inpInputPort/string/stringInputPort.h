@@ -1,7 +1,7 @@
 ﻿#ifndef STRINGINPUTPORT_H_H_HEAD__FILE__
 #define STRINGINPUTPORT_H_H_HEAD__FILE__
 #pragma once
-#include "../nodeInputPort.h"
+#include "../../nodeInputPort.h"
 
 class StringInputPort : public NodeInputPort {
 	Q_OBJECT;

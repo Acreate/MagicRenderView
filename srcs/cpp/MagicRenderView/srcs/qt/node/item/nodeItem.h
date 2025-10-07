@@ -256,6 +256,26 @@ Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关
 
+	// 模版
+protected:
+	template< typename ttype >
+		requires requires ( ttype *p, TNodePortOutputPortPtr port ) {
+			port = p;
+		}
+	bool addOutputProt( const QString &prot_name ) {
+		auto outputProt = new ttype( this );
+		outputProt->setTitle( prot_name );
+		return appendOutputProt( outputProt );
+	}
+	template< typename ttype >
+		requires requires ( ttype *p, TNodePortInputPortPtr port ) {
+			port = p;
+		}
+	bool addInputProt( const QString &prot_name ) {
+		auto outputProt = new ttype( this );
+		outputProt->setTitle( prot_name );
+		return appendInputProt( outputProt );
+	}
 };
 
 #endif // NODEITEM_H_H_HEAD__FILE__

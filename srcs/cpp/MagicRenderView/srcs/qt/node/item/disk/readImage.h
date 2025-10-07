@@ -8,8 +8,8 @@ class ReadImage : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	ReadImage(  )
-		: NodeItem(  ) {
-	}
+	ReadImage( );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // READIMAGE_H_H_HEAD__FILE__
