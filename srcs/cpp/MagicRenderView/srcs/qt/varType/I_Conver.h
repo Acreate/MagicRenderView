@@ -115,6 +115,50 @@ public:
 	virtual bool lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
 		return false;
 	}
+
+	template< typename t_left_type, typename t_right_type >
+	static void fillTargetFcuntion( t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		left_var_ref = right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void addTargetFcuntion( t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		left_var_ref += right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void subTargetFcuntion( t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		left_var_ref -= right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void mulTargetFcuntion( t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		left_var_ref *= right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void divTargetFcuntion( t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		if( right_var_ref != 0 )
+			left_var_ref /= right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void equThanTargetFcuntion( bool &result_bool, t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		result_bool = left_var_ref == right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void greaterThanTargetFcuntion( bool &result_bool, t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		result_bool = left_var_ref > right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void lessThanTargetFcuntion( bool &result_bool, t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		result_bool = left_var_ref < right_var_ref;
+	}
+	template< typename t_left_type, typename t_right_type >
+	static void greaterOrEquThanTargetFcuntion( bool &result_bool, t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		result_bool = left_var_ref >= right_var_ref;
+	}
+
+	template< typename t_left_type, typename t_right_type >
+	static void lessOrEquThanTargetFcuntion( bool &result_bool, t_left_type &left_var_ref, const t_right_type &right_var_ref ) {
+		result_bool = left_var_ref <= right_var_ref;
+	}
+
 	/// @brief 识别类型，并且返回最终类型指针，失败返回 nullptr
 	/// @tparam TResult 返回类型
 	/// @param check_type 类型识别
