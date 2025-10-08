@@ -2,6 +2,7 @@
 
 #include "../../prot/inputProt/inpInputPort/time/timeInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
+#include "../../prot/outputProt/impOutputPort/time/timeOutputPort.h"
 Imp_StaticMetaInfo( TimeDataInfo, QObject::tr( "TimeDataInfo" ), QObject::tr( "app" ) );
 
 TimeDataInfo::TimeDataInfo( ) : NodeItem( ) {

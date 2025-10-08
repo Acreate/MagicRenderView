@@ -10,6 +10,7 @@ bool TimeInfo::intPortItems( MainWidget *parent ) {
 	return initNodeItem( parent, [this] ( MainWidget *main_widget_parent ) {
 		// 初始化节点名称
 		setNodeTitleName( getMetaObjectName( ) );
+		addOutputProt< TimeOutputPort >( "通用起始计算时间" );
 		addOutputProt< TimeOutputPort >( "运行时间" );
 		addOutputProt< TimeOutputPort >( "当前时间" );
 		addOutputProt< UIntOutputPort >( "帧数" );
