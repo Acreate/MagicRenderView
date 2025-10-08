@@ -64,6 +64,24 @@
 
 #include <qt/tools/tools.h>
 
+#include "../node/item/app/appInfo.h"
+#include "../node/item/app/endNode.h"
+#include "../node/item/app/startNode.h"
+#include "../node/item/generate/genBinTypes.h"
+#include "../node/item/generate/genColorTypes.h"
+#include "../node/item/generate/genFloatTypes.h"
+#include "../node/item/generate/genIntTypes.h"
+#include "../node/item/generate/genStringTypes.h"
+#include "../node/item/generate/genUIntTypes.h"
+#include "../node/item/info/networkInfo.h"
+#include "../node/item/logic/foreachLogic.h"
+#include "../node/item/logic/ifLogic.h"
+#include "../node/item/logic/loopNode.h"
+#include "../node/item/struct/array.h"
+#include "../node/item/time/timeDataConver.h"
+#include "../node/item/time/timeDataInfo.h"
+#include "../node/item/time/timeInfo.h"
+
 #include "../varType/isTypes/isColorType.h"
 #include "../varType/isTypes/isFloat32Type.h"
 #include "../varType/isTypes/isFloat64Type.h"
@@ -130,14 +148,32 @@ bool Application::init( ) {
 	/*
 	 * 初始化节点
 	 */
+	// todo : app
+
+	NodeItemGenerate::appendGenerateNodeItemInfo< AppInfo >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< EndNode >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< StartNode >( );
 	// todo : 磁盘节点
 	NodeItemGenerate::appendGenerateNodeItemInfo< WriteFile >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< WriteImage >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< ReadFile >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< ReadImage >( );
+	// todo : 生成
+
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenFloatTypes >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenIntTypes >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenStringTypes >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenUIntTypes >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenColorTypes >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< GenBinTypes >( );
 	// todo : 信息节点
 	NodeItemGenerate::appendGenerateNodeItemInfo< PathInfo >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< SystemInfo >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< NetworkInfo >( );
+	// todo : 逻辑节点
+	NodeItemGenerate::appendGenerateNodeItemInfo< ForeachLogic >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< IfLogic >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< LoopNode >( );
 	// todo : 计算节点
 	NodeItemGenerate::appendGenerateNodeItemInfo< VarAdd >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< VarSub >( );
@@ -151,6 +187,13 @@ bool Application::init( ) {
 	NodeItemGenerate::appendGenerateNodeItemInfo< StrInsert >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< StrSplit >( );
 	NodeItemGenerate::appendGenerateNodeItemInfo< StrSub >( );
+	// todo : 结构体
+	NodeItemGenerate::appendGenerateNodeItemInfo< Array >( );
+	// todo : 时间
+	NodeItemGenerate::appendGenerateNodeItemInfo< TimeDataConver >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< TimeDataInfo >( );
+	NodeItemGenerate::appendGenerateNodeItemInfo< TimeInfo >( );
+
 	// todo : 图片特效节点
 
 	// todo : 视频操作节点

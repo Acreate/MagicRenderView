@@ -1,13 +1,14 @@
-﻿#include "genFloatTypes.h"
+﻿#include "genBinTypes.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
+#include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "GenFloatTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "GenBinTypes" ), QObject::tr( "generate" ) );
 
-GenFloatTypes::GenFloatTypes( ) : NodeItem( ) {
+GenBinTypes::GenBinTypes( ) : NodeItem( ) {
 }
-bool GenFloatTypes::intPortItems( MainWidget *parent ) {
+bool GenBinTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
 		parent,
 		[this] ( MainWidget *main_widget_parent ) {
@@ -15,7 +16,7 @@ bool GenFloatTypes::intPortItems( MainWidget *parent ) {
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
 			addInputProt< AnyInputPort >( "运行机制" );
-			addOutputProt< FloatOutputPort >( "列表" );
+			addOutputProt< BinOutputPort >( "列表" );
 			return true;
 		} );
 }

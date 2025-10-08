@@ -1,5 +1,6 @@
 ﻿#include "genStringTypes.h"
 
+#include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 Imp_StaticMetaInfo( GenStringTypes, QObject::tr( "GenStringTypes" ), QObject::tr( "generate" ) );
@@ -13,6 +14,7 @@ bool GenStringTypes::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
+			addInputProt< AnyInputPort >( "运行机制" );
 			addOutputProt< StringOutputPort >( "列表" );
 			return true;
 		} );

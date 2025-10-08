@@ -1,16 +1,16 @@
-﻿#ifndef GENINTTYPES_H_H_HEAD__FILE__
-#define GENINTTYPES_H_H_HEAD__FILE__
+﻿#ifndef GENBINTYPES_H_H_HEAD__FILE__
+#define GENBINTYPES_H_H_HEAD__FILE__
 #pragma once
 
 #include "../nodeItem.h"
 
-class GenIntTypes : public NodeItem {
+class GenBinTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenIntTypes(  );
+	GenBinTypes(  );
 public:
 	bool intPortItems( MainWidget *parent ) override;
 	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Process; }
 };
-#endif // GENINTTYPES_H_H_HEAD__FILE__
+#endif // GENBINTYPES_H_H_HEAD__FILE__

@@ -1,16 +1,17 @@
-﻿#ifndef GENINTTYPES_H_H_HEAD__FILE__
-#define GENINTTYPES_H_H_HEAD__FILE__
+﻿#ifndef GENCOLORTYPES_H_H_HEAD__FILE__
+#define GENCOLORTYPES_H_H_HEAD__FILE__
 #pragma once
+
 
 #include "../nodeItem.h"
 
-class GenIntTypes : public NodeItem {
+class GenColorTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenIntTypes(  );
+	GenColorTypes(  );
 public:
 	bool intPortItems( MainWidget *parent ) override;
 	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Process; }
 };
-#endif // GENINTTYPES_H_H_HEAD__FILE__
+#endif // GENCOLORTYPES_H_H_HEAD__FILE__
