@@ -50,7 +50,16 @@ public:
 		InputPort, // 输入
 		OutputPort, // 输出
 	};
-	Q_ENUM( Click_Type )
+	Q_ENUM( Click_Type );
+	enum class Node_Item_Type {
+		None, // 非正式
+		Root, // 根，节点运行必须在连接的根源存在根节点，具备运行节点权
+		End, // 终结，运行该节点之后，整个渲染流程结束，具备结束节点权
+		Process, // 过程，一般的调度节点，自身不具备运行能力
+		Logic, // 逻辑，具备选择输出权，自身不具备运行能力
+		Foreach, // 循环，具备循环输出权，自身不具备运行能力
+	};
+	Q_ENUM( Node_Item_Type );
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -213,6 +222,13 @@ public:
 	}
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
+	/// @brief 节点类型
+	/// @return 节点类型
+	virtual Node_Item_Type getNodeType( ) const { return Node_Item_Type::None; }
+	/// @brief 本对象输入端是否连接到目标的输出端
+	/// @param check_link_target_node_item 检测的输出端节点对象指针
+	/// @return true 表示存在链接关系
+	virtual bool isLinkTarget( const NodeItem *check_link_target_node_item ) const;
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针

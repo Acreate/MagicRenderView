@@ -218,6 +218,32 @@ NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) cons
 
 	return nullptr;
 }
+
+bool NodeItem::isLinkTarget( const NodeItem *check_link_target_node_item ) const {
+	// 扫描输入端
+	size_t inputPortVectorCount = nodeInputProtVector.size( );
+	if( inputPortVectorCount == 0 )
+		return false;
+	auto inputPortVectorDataPtr = nodeInputProtVector.data( );
+	size_t inputPortVectorIndex = 0;
+	size_t linkOutputPortCount;
+	NodePort *const*linkOutputPortDataPtr;
+	size_t linkOutputPortIndex;
+	for( ; inputPortVectorIndex < inputPortVectorCount; ++inputPortVectorIndex ) {
+		NodeInputPort *inputPort = inputPortVectorDataPtr[ inputPortVectorIndex ].first;
+		const std_vector< NodePort * > &nodePorts = inputPort->getLinkOutputVector( );
+		linkOutputPortCount = nodePorts.size( );
+		if( linkOutputPortCount == 0 )
+			continue;
+		linkOutputPortDataPtr = nodePorts.data( );
+
+		for( linkOutputPortIndex = 0; linkOutputPortIndex < linkOutputPortCount; ++linkOutputPortIndex )
+			if( linkOutputPortDataPtr[ linkOutputPortIndex ]->getParentItem( ) == check_link_target_node_item )
+				return true;
+
+	}
+	return false;
+}
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;

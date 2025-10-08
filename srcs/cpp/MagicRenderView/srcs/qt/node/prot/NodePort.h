@@ -18,6 +18,7 @@ class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
 private:
+	friend class NodeItem;
 	friend class MainWidget;
 	friend class AppNodeItemStack;
 protected:

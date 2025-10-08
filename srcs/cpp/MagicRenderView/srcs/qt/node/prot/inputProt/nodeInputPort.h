@@ -11,6 +11,7 @@ class NodeInputPort : public NodePort {
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
+	friend class NodeItem;
 protected:
 public:
 	NodeInputPort( NodeItem *parent ) : NodePort( parent ) {

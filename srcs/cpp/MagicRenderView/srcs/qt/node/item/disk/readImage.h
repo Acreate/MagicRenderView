@@ -11,5 +11,6 @@ protected:
 	ReadImage( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
+	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Process; }
 };
 #endif // READIMAGE_H_H_HEAD__FILE__

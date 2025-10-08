@@ -10,6 +10,7 @@ class NodeOutputPort : public NodePort {
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
 	friend class MainWidget;
+	friend class NodeItem;
 public:
 	NodeOutputPort( NodeItem *parent ) : NodePort( parent ) {
 	}

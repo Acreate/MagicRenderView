@@ -11,5 +11,6 @@ protected:
 	IfLogic( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
+	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Logic; }
 };
 #endif // IFLOGIC_H_H_HEAD__FILE__
