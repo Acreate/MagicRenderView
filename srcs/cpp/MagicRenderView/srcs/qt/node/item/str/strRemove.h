@@ -8,8 +8,8 @@ class StrRemove : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrRemove(  )
-		: NodeItem(  ) {
-	}
+	StrRemove(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // STRREMOVE_H_H_HEAD__FILE__

@@ -8,8 +8,8 @@ class VarMod : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarMod(  )
-		: NodeItem(  ) {
-	}
+	VarMod(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // VARMOD_H_H_HEAD__FILE__

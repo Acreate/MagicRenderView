@@ -258,8 +258,8 @@ bool NodeItem::updateInputLayout( ) {
 
 	// 计算原本高度
 	size_t drawCount = nodeInputProtVector.size( );
-	//if( drawCount == 0 )
-	//	return true;
+	if( drawCount == 0 )
+		return true;
 	int width;
 	size_t index = 0;
 	auto drawPortDataPtr = nodeInputProtVector.data( );
@@ -305,8 +305,8 @@ bool NodeItem::updateOutputLayout( ) {
 
 	// 计算原本高度
 	size_t drawCount = nodeOutputProtVector.size( );
-	//if( drawCount == 0 )
-	//	return true;
+	if( drawCount == 0 )
+		return true;
 	int width;
 	size_t index = 0;
 	auto drawPortDataPtr = nodeOutputProtVector.data( );

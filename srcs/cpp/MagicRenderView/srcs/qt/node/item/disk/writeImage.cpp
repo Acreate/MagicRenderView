@@ -12,27 +12,20 @@ WriteImage::WriteImage( )
 	: NodeItem( ) {
 }
 bool WriteImage::intPortItems( MainWidget *parent ) {
-	if( NodeItem::intPortItems( parent ) == false )
-		return false;
-
-	// 初始化节点名称
-	setNodeTitleName( getMetaObjectName( ) );
-	// 初始化输入端口
-	addInputProt< StringInputPort >( "文件路径" );
-	addInputProt< ImagaRGBAColorInPutPort >( "rgba" );
-	addInputProt< UIntInputPort >( "红" );
-	addInputProt< UIntInputPort >( "绿" );
-	addInputProt< UIntInputPort >( "蓝" );
-	addInputProt< UIntInputPort >( "透" );
-	addInputProt< UIntInputPort >( "宽" );
-	addInputProt< UIntInputPort >( "高" );
-	// 更新标题渲染布局
-	updateTitleLayout( );
-	// 更新输入渲染布局
-	updateInputLayout( );
-	// 更新输出渲染布局
-	//updateOutputLayout( );
-	// 更新整体渲染布局
-	integrateLayout( );
-	return true;
+	return initNodeItem(
+		parent,
+		[this] ( MainWidget *main_widget_parent ) {
+			// 初始化节点名称
+			setNodeTitleName( getMetaObjectName( ) );
+			// 初始化输入端口
+			addInputProt< StringInputPort >( "文件路径" );
+			addInputProt< ImagaRGBAColorInPutPort >( "rgba" );
+			addInputProt< UIntInputPort >( "红" );
+			addInputProt< UIntInputPort >( "绿" );
+			addInputProt< UIntInputPort >( "蓝" );
+			addInputProt< UIntInputPort >( "透" );
+			addInputProt< UIntInputPort >( "宽" );
+			addInputProt< UIntInputPort >( "高" );
+			return true;
+		} );
 }

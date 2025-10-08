@@ -9,6 +9,8 @@
 
 #include <qt/tools/tools.h>
 
+#include "../../widgets/mainWidget.h"
+
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
 	friend class NodeItemGenerate;\
@@ -255,7 +257,22 @@ public:
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关
+	// 扩展功能
+protected:
+	virtual bool initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
+		if( intPortItems( parent ) == false || init_function( parent ) == false )
+			return false;
 
+		// 更新标题渲染布局
+		updateTitleLayout( );
+		// 更新输入渲染布局
+		updateInputLayout( );
+		// 更新输出渲染布局
+		updateOutputLayout( );
+		// 更新整体渲染布局
+		integrateLayout( );
+		return true;
+	}
 	// 模版
 protected:
 	template< typename ttype >

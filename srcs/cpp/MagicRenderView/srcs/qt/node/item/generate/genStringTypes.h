@@ -9,8 +9,8 @@ class GenStringTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenStringTypes(  )
-		: NodeItem(  ) {
-	}
+	GenStringTypes(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // GENSTRINGTYPES_H_H_HEAD__FILE__

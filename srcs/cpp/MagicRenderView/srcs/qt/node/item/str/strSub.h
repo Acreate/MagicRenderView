@@ -8,8 +8,8 @@ class StrSub : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrSub(  )
-		: NodeItem(  ) {
-	}
+	StrSub(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // STRSUB_H_H_HEAD__FILE__

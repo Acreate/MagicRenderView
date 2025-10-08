@@ -9,8 +9,8 @@ class GenUIntTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenUIntTypes(  )
-		: NodeItem(  ) {
-	}
+	GenUIntTypes(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // GENUINTTYPES_H_H_HEAD__FILE__

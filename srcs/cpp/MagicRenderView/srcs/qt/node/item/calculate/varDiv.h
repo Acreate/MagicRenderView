@@ -8,8 +8,8 @@ class VarDiv : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarDiv( )
-		: NodeItem(  ) {
-	}
+	VarDiv( );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // VARDIV_H_H_HEAD__FILE__

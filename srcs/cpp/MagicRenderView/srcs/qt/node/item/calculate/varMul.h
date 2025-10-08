@@ -8,8 +8,8 @@ class VarMul : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarMul( )
-		: NodeItem(  ) {
-	}
+	VarMul( );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // VARMUL_H_H_HEAD__FILE__

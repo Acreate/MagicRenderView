@@ -6,6 +6,8 @@
 class IntInputPort : public NodeInputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeInputPort );
+protected:
+	using t_current_type = int64_t;
 public:
 	IntInputPort( NodeItem *parent );
 };

@@ -9,5 +9,7 @@ class GenIntTypes : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	GenIntTypes(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // GENINTTYPES_H_H_HEAD__FILE__

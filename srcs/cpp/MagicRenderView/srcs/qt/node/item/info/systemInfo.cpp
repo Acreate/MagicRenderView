@@ -8,31 +8,21 @@ SystemInfo::SystemInfo( )
 	: NodeItem( ) {
 }
 bool SystemInfo::intPortItems( MainWidget *parent ) {
-	if( NodeItem::intPortItems( parent ) == false )
-		return false;
-	// 初始化节点名称
-	setNodeTitleName( getMetaObjectName( ) );
-	// 初始化输入端口
-	/*StringInputPort *inputPort = new StringInputPort( this );
-	inputPort->setTitle( "文件路径" );
-	appendInputProt( inputPort );*/
-	// 初始化输出端口
-	addOutputProt< StringOutputPort >( "系统全名" );
-	addOutputProt< StringOutputPort >( "文件名" );
-	addOutputProt< StringOutputPort >( "基本名" );
-	addOutputProt< StringOutputPort >( "域名" );
-	addOutputProt< StringOutputPort >( "拥有者" );
-	addOutputProt< StringOutputPort >( "创建日期" );
 
-	// 更新标题渲染布局
-	updateTitleLayout( );
-	// 更新输入渲染布局
-	//updateInputLayout( );
-	// 更新输出渲染布局
-	updateOutputLayout( );
-	// 更新整体渲染布局
-	integrateLayout( );
+	return initNodeItem(
+		parent,
+		[this] ( MainWidget *main_widget_parent ) {
 
-	// 返回
-	return true;
+			// 初始化节点名称
+			setNodeTitleName( getMetaObjectName( ) );
+
+			addOutputProt< StringOutputPort >( "系统全名" );
+			addOutputProt< StringOutputPort >( "文件名" );
+			addOutputProt< StringOutputPort >( "基本名" );
+			addOutputProt< StringOutputPort >( "域名" );
+			addOutputProt< StringOutputPort >( "拥有者" );
+			addOutputProt< StringOutputPort >( "创建日期" );
+
+			return true;
+		} );
 }

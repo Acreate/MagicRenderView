@@ -8,8 +8,8 @@ class VarAdd : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	VarAdd( )
-		: NodeItem(  ) {
-	}
+	VarAdd( );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // VARADD_H_H_HEAD__FILE__

@@ -8,8 +8,8 @@ class StrSplit : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrSplit(  )
-		: NodeItem(  ) {
-	}
+	StrSplit(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // STRSPLIT_H_H_HEAD__FILE__

@@ -8,8 +8,8 @@ class StrReplace : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	StrReplace(  )
-		: NodeItem(  ){
-	}
+	StrReplace(  );
+public:
+	bool intPortItems( MainWidget *parent ) override;
 };
 #endif // STRREPLACE_H_H_HEAD__FILE__
