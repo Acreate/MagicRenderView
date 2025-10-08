@@ -58,6 +58,7 @@ public:
 		Process, // 过程，一般的调度节点，自身不具备运行能力
 		Logic, // 逻辑，具备选择输出权，自身不具备运行能力
 		Foreach, // 循环，具备循环输出权，自身不具备运行能力
+		Continue, // 跳转，具备循环跳转权，自身不具备运行能力
 	};
 	Q_ENUM( Node_Item_Type );
 public:
