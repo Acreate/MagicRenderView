@@ -11,7 +11,7 @@ protected:
 	TimeDataInfo( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Process; }
+	Def_Last_Mate_Node_Type( Node_Item_Type::Process );
 };
 
 #endif // TIMEDATAINFO_H_H_HEAD__FILE__

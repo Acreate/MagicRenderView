@@ -7,6 +7,7 @@
 Imp_StaticMetaInfo( ImagaRGBAColorOutPutPort, QObject::tr( "imageRGBA" ), QObject::tr( "output" ) );
 ImagaRGBAColorOutPutPort::ImagaRGBAColorOutPutPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 
+
 	typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
@@ -14,9 +15,8 @@ ImagaRGBAColorOutPutPort::ImagaRGBAColorOutPutPort( NodeItem *parent ) : NodeOut
 			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			p = new t_current_type( );
-			return true;
+		[]( ) ->void * {
+			return new t_current_type( );
 		} );
 	varPtr = new I_Var( typePtr, title );
 	setTitle( getMetaObjectName( ) );

@@ -9,10 +9,9 @@ IsUint64Type::IsUint64Type( ) : I_IsType( ) {
 			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			p = new t_current_type( );
-			return true;
-		} );
+		[]( ) {
+			return new t_current_type( );
+		});
 	updateNameVectorInfo( {
 			currentTypeInfo->getTypeInfo( ).name( ),
 			"unsigned long long",

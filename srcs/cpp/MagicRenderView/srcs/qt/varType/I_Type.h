@@ -8,35 +8,52 @@
 class I_Stack;
 /// @brief 类型接口
 class I_Type {
+	friend class I_Type_Using_Type_Name;
+public:
+	using createFunction = std_function< void *( ) >;
+	using releaseFunction = std_function< bool( void *p ) >;
 protected:
 	const type_info &typeInfo;
 	size_t memorySize;
+	/// @brief 原生类型
+	QString proTypeName;
+	/// @brief 别名列表
+	std_vector< QString > aliasTypeName;
 	/// @brief 释放函数
-	std_function< bool( void *p ) > release;
+	releaseFunction release;
 	/// @brief 创建函数
-	std_function< bool( void *&p ) > create;
+	createFunction create;
 	I_Type( ) = delete;
 public:
 	I_Type( const type_info &type_info )
-		: typeInfo( type_info ) {
+		: typeInfo( type_info ), proTypeName( type_info.name( ) ) {
 		memorySize = 0;
 		release = nullptr;
 		create = nullptr;
 	}
-	I_Type( const type_info &type_info, const size_t &memory_size, const std_function< bool( void *p ) > &release, const std_function< bool( void *&p ) > &create )
+	I_Type( const type_info &type_info, size_t memory_size, const QString &pro_type_name, const std_vector< QString > &alias_type_name, const releaseFunction &release, const createFunction &create )
 		: typeInfo( type_info ),
 		memorySize( memory_size ),
+		proTypeName( pro_type_name ),
+		aliasTypeName( alias_type_name ),
 		release( release ),
 		create( create ) { }
-	I_Type( const type_info &type_info, const std_function< bool( void *p ) > &release, const std_function< bool( void *&p ) > &create )
+	I_Type( const type_info &type_info, size_t memory_size, const releaseFunction &release, const createFunction &create )
 		: typeInfo( type_info ),
-		release( release ),
+		memorySize( memory_size ),
+		proTypeName( type_info.name( ) ),
+		release( release ), create( create ) { }
+	I_Type( const type_info &type_info, const releaseFunction &release, const createFunction &create )
+		: typeInfo( type_info ),
+		release( release ), proTypeName( type_info.name( ) ),
 		create( create ) { }
 	friend bool operator==( const I_Type &lhs, const I_Type &rhs ) {
 		return lhs.typeInfo == rhs.typeInfo
 			&& lhs.memorySize == rhs.memorySize;
 	}
 	friend bool operator!=( const I_Type &lhs, const I_Type &rhs ) { return !( lhs == rhs ); }
+	virtual const QString & getProTypeName( ) const { return proTypeName; }
+	virtual const std_vector< QString > & getAliasTypeName( ) const { return aliasTypeName; }
 	virtual ~I_Type( ) { }
 	/// @brief 获取对象类型
 	/// @return 类型信息引用
@@ -49,10 +66,10 @@ public:
 	virtual void setMemorySize( const size_t memory_size ) { memorySize = memory_size; }
 	/// @brief 获取释放函数，可用于释放创建指针对象
 	/// @return 释放函数
-	virtual const std_function< bool( void *p ) > & getRelease( ) const { return release; }
+	virtual const releaseFunction & getRelease( ) const { return release; }
 	/// @brief 获取创建函数，可用于创建对象
 	/// @return 创建函数
-	virtual const std_function< bool( void *&p ) > & getCreate( ) const { return create; }
+	virtual const createFunction & getCreate( ) const { return create; }
 
 	// 静态
 public:
@@ -171,5 +188,22 @@ public:
 		return false;
 	}
 };
-
+class I_Type_Using_Type_Name {
+	friend class VarGenerate;
+	static void setInstanceTypeName( I_Type *i_type_ptr, const QString &new_type_name ) {
+		i_type_ptr->proTypeName = new_type_name;
+	}
+	static void setInstanceTypeAliasName( I_Type *i_type_ptr, const std_vector< QString > &new_type_name ) {
+		i_type_ptr->aliasTypeName = new_type_name;
+	}
+	static void setInstanceTypeCreateFunction( I_Type *i_type_ptr, const I_Type::createFunction &create_function ) {
+		i_type_ptr->create = create_function;
+	}
+	static void setInstanceTypeReleaseFunction( I_Type *i_type_ptr, const I_Type::releaseFunction &release_function ) {
+		i_type_ptr->release = release_function;
+	}
+	static void setInstanceTypeMemoySize( I_Type *i_type_ptr, const size_t &create_obj_memory_size ) {
+		i_type_ptr->memorySize = create_obj_memory_size;
+	}
+};
 #endif // I_TYPE_H_H_HEAD__FILE__

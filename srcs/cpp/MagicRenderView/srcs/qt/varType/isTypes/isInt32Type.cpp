@@ -9,9 +9,8 @@ IsInt32Type::IsInt32Type( ) : I_IsType( ) {
 			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			p = new t_current_type();
-			return true;
+		[]( ) {
+			return new t_current_type( );
 		} );
 	updateNameVectorInfo( {
 			currentTypeInfo->getTypeInfo( ).name( ),
@@ -25,7 +24,7 @@ IsInt32Type::IsInt32Type( ) : I_IsType( ) {
 		} );
 }
 bool IsInt32Type::createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
-	
+
 	if( check_type_info != currentTypeInfo->getTypeInfo( ) )
 		return false;
 	size_t index = 0;

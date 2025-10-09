@@ -10,10 +10,9 @@ IsColorType::IsColorType( ) : I_IsType( ) {
 			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			p = new t_current_type();
-			return true;
-		} );
+		[]( ) {
+			return new t_current_type( );
+		});
 	updateNameVectorInfo( {
 			currentTypeInfo->getTypeInfo( ).name( ), "QColor", "color", "rgba"
 		} );
@@ -29,15 +28,14 @@ bool IsColorType::createCheckTypeName( const type_info &check_type_info, const Q
 	if( index == aliasTypeNameDataCount )
 		return false; // 没有明知
 	I_Type *colorType = new I_Type(
-		typeid( QColor ),
-		sizeof( QColor ),
+		typeid( t_current_type ),
+		sizeof( t_current_type ),
 		[] ( void *p ) {
-			delete ( QColor * ) p;
+			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			p = new QColor( );
-			return true;
+		[]( ) {
+			return new t_current_type( );
 		}
 		);
 	I_Var *colorTypeVar = new I_Var( colorType, create_name );

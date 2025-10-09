@@ -11,6 +11,6 @@ protected:
 	AppInfo( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Node_Item_Type getNodeType( ) const override { return Node_Item_Type::Root; }
+	Def_Last_Mate_Node_Type( Node_Item_Type::Process );
 };
 #endif // APPINFO_H_H_HEAD__FILE__

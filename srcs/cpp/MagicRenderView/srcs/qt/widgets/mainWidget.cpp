@@ -4,13 +4,12 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QMetaEnum>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qmenu.h>
 
 #include <qt/application/application.h>
-
-#include <qt/generate/nodeItemGenerate.h>
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
@@ -18,6 +17,7 @@
 
 #include "../generate/varGenerate.h"
 
+#include "../varType/I_Conver.h"
 #include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
@@ -154,8 +154,10 @@ size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
 	bin_vector.append_range( resultbuff );
 	return bin_vector.size( );
 }
-NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name ) {
-	auto nodeItem = NodeItemGenerate::createNodeItem( dir_name, node_name );
+NodeItem * MainWidget::createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr ) {
+	NodeItem *nodeItem = ( NodeItem * ) itype_ptr->getCreate( ).operator()( );
+	if( nodeItem == nullptr )
+		return nullptr;
 	if( appendNodeItem( nodeItem ) )
 		return nodeItem;
 	delete nodeItem;
@@ -268,10 +270,13 @@ void MainWidget::updateSupport( ) {
 		rightMouseBtnRemoveOutPortMenu->hide( );
 		rightMouseBtnCreateNodeItemMenu->hide( );
 
-		for( auto &[ dirMenu, pairs ] : supportNode ) {
-			for( auto &[ nodeNameAction, nodeName ] : pairs )
-				delete nodeNameAction;
-			delete dirMenu;
+		for( auto &[ nodeTypeMenu, dirMapMenu ] : supportNode ) {
+			for( auto &[ dirMenu, nameActionMap ] : dirMapMenu ) {
+				for( auto &[ nodeNameAction, nodeName ] : nameActionMap )
+					delete nodeNameAction;
+				delete dirMenu;
+			}
+			delete nodeTypeMenu;
 		}
 
 		delete rightMouseBtnRemoveOutPortMenu;
@@ -291,21 +296,40 @@ void MainWidget::updateSupport( ) {
 		delete rightMouseBtnSelectItem;
 	} );
 	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
-	auto infos = NodeItemGenerate::getSupperTyeNodes( );
-	for( auto &item : infos ) {
-		QString dirName = item.first;
-		QMenu *dirMenu = rightMouseBtnCreateNodeItemMenu->addMenu( dirName );
-		std_vector_pairt< QAction *, QString > pairs;
-		for( auto &className : item.second ) {
-			if( className.isEmpty( ) )
-				continue;
-			auto addAction = dirMenu->addAction( className );
-			auto joint = dirName.isEmpty( ) ? className : dirName + "/" + className;
-			supportNodeName.emplace_back( joint );
-			pairs.emplace_back( addAction, joint );
-			connect( addAction, &QAction::triggered, [this, dirName, className]( ) { MainWidget::createNodeItem( dirName, className ); } );
+	auto infos = varGenerate->getNodeItemSortMap( );
+	QMetaEnum metaEnum = QMetaEnum::fromType< NodeItem::Node_Item_Type >( );
+	int keyCount = metaEnum.keyCount( );
+	int enumIndex;
+	QString enumString;
+	for( auto &[ enumType,dirNamMap ] : infos ) {
+		enumIndex = 0;
+		auto converEnum = ( int ) enumType;
+		for( ; enumIndex < keyCount; ++enumIndex )
+			if( metaEnum.value( enumIndex ) == converEnum ) {
+				enumString = metaEnum.key( enumIndex );
+				break;
+			}
+		if( enumIndex == keyCount ) {
+			tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( converEnum ) );
+			continue;
 		}
-		supportNode.emplace_back( dirMenu, pairs );
+		QMenu *nodeTypeMenu = rightMouseBtnCreateNodeItemMenu->addMenu( enumString );
+		std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > dirMap;
+		for( auto &[ dir,nameMap ] : dirNamMap ) {
+			QMenu *dirMenu = nodeTypeMenu->addMenu( dir );
+			std_vector_pairt< QAction *, QString > pairs;
+			for( auto &[ className, typePtr ] : nameMap ) {
+				if( className.isEmpty( ) )
+					continue;
+				auto addAction = dirMenu->addAction( className );
+				auto joint = dir.isEmpty( ) ? className : dir + "/" + className;
+				supportNodeName.emplace_back( joint );
+				pairs.emplace_back( addAction, joint );
+				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) { MainWidget::createNodeItem( dir, className, typePtr ); } );
+			}
+			dirMap.emplace_back( dirMenu, pairs );
+		}
+		supportNode.emplace_back( nodeTypeMenu, dirMap );
 	}
 
 	supportInfoToBin( );

@@ -23,6 +23,16 @@
 	friend class Application;\
 	friend class VarGenerate
 
+#define Def_First_Mate_Node_Type( node_Item_enum_type_value ) \
+	public: \
+	virtual Node_Item_Type getNodeMetaType( ) const { return node_Item_enum_type_value; } \
+	static Node_Item_Type getStaticMetaNodeType( ) { return node_Item_enum_type_value; }
+
+#define Def_Last_Mate_Node_Type( node_Item_enum_type_value ) \
+	public: \
+	Node_Item_Type getNodeMetaType( ) const override { return node_Item_enum_type_value; } \
+	static Node_Item_Type getStaticMetaNodeType( ) { return node_Item_enum_type_value; }
+
 class NodeItemInfoScrollAreaWidget;
 class NodePort;
 class I_Var;
@@ -51,6 +61,7 @@ public:
 		OutputPort, // 输出
 	};
 	Q_ENUM( Click_Type );
+	
 	enum class Node_Item_Type {
 		None, // 非正式
 		Root, // 根，节点运行必须在连接的根源存在根节点，具备循环权与运行权节点
@@ -223,13 +234,11 @@ public:
 	}
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
-	/// @brief 节点类型
-	/// @return 节点类型
-	virtual Node_Item_Type getNodeType( ) const { return Node_Item_Type::None; }
 	/// @brief 本对象输入端是否连接到目标的输出端
 	/// @param check_link_target_node_item 检测的输出端节点对象指针
 	/// @return true 表示存在链接关系
 	virtual bool isLinkTarget( const NodeItem *check_link_target_node_item ) const;
+	Def_First_Mate_Node_Type( Node_Item_Type::None );
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
@@ -276,20 +285,7 @@ Q_SIGNALS:
 public: // 二进制相关
 	// 扩展功能
 protected:
-	virtual bool initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
-		if( intPortItems( parent ) == false || init_function( parent ) == false )
-			return false;
-
-		// 更新标题渲染布局
-		updateTitleLayout( );
-		// 更新输入渲染布局
-		updateInputLayout( );
-		// 更新输出渲染布局
-		updateOutputLayout( );
-		// 更新整体渲染布局
-		integrateLayout( );
-		return true;
-	}
+	virtual bool initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function );
 	// 模版
 protected:
 	template< typename ttype >

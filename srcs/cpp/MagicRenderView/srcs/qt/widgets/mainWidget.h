@@ -8,6 +8,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../varType/I_Type.h"
+
 class NodeInputPort;
 class VarGenerate;
 class I_Var;
@@ -33,7 +35,7 @@ protected:
 	/// @brief 数据化支持的类型内容
 	std_vector< uint8_t > supportVarTypeBin;
 	/// @brief 支持节点
-	std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > supportNode;
+	std_vector_pairt< QMenu *, std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > > supportNode;
 	/// @brief 支持节点的名称
 	std_vector< QString > supportNodeName;
 	/// @brief 支持类型
@@ -87,7 +89,7 @@ protected:
 	/// @brief 用于删除当前选中节点的快捷方式
 	QAction *removeSelectNodeItemAction;
 public:
-	MainWidget( QScrollArea *scroll_area,  Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
@@ -140,8 +142,9 @@ public:
 	/// @brief 根据节点目录与节点名称创建节点
 	/// @param dir_name 目录名称
 	/// @param node_name 节点名称
+	/// @param itype_ptr
 	/// @return 失败返回 nullptr
-	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name );
+	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
 	/// @brief 根据节点目录与节点名称创建节点
 	/// @param new_node_item 追加的节点项
 	/// @return 返回窗口节点代码，失败返回 0
@@ -158,7 +161,6 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;
-	
 protected:
 	virtual size_t supportInfoToBin( );
 };

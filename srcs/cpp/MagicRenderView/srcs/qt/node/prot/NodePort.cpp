@@ -22,6 +22,7 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRe
 	icoItemWidth = ico->width( );
 	varPtr = nullptr;
 	typePtr = nullptr;
+	nodePortRender->fill( 0 );
 }
 NodePort::~NodePort( ) {
 	emit releaseThiNodeProt( this );

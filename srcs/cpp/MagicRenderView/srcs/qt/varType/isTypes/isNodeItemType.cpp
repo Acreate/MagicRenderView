@@ -16,8 +16,8 @@ IsNodeItemType::IsNodeItemType( ) : I_IsType( ) {
 			delete ( t_current_type * ) p;
 			return true;
 		},
-		[] ( void *&p ) {
-			return false;
+		[] (  ) {
+			return nullptr;
 		} );
 	updateNameVectorInfo( {
 			currentTypeInfo->getTypeInfo( ).name( ),
@@ -30,16 +30,22 @@ bool IsNodeItemType::createCheckTypeName( const type_info &check_type_info, cons
 	auto &typeInfo = currentTypeInfo->getTypeInfo( );
 	if( check_type_info != typeInfo )
 		return false;
-	std_pairt< std_vector< QString >, I_Type * > result_info;
+	I_Type *result_info;
 	if( varGenerate->getTypeInfoGenerateInfo( typeInfo, result_info ) == false )
 		return false;
-	for( auto &typeName : result_info.first )
-		if( typeName == create_name ) {
-			auto ptr = new I_Var( *result_info.second, typeName );
-			if( create_is_right_call_back_function( ptr ) == false )
-				delete ptr;
-			return true;
-		}
+	if( result_info->getProTypeName( ) == create_name ) {
+		auto ptr = new I_Var( *result_info, create_name );
+		if( create_is_right_call_back_function( ptr ) == false )
+			delete ptr;
+		return true;
+	} else
+		for( auto &typeName : result_info->getAliasTypeName( ) )
+			if( typeName == create_name ) {
+				auto ptr = new I_Var( *result_info, typeName );
+				if( create_is_right_call_back_function( ptr ) == false )
+					delete ptr;
+				return true;
+			}
 
 	return false;
 }
@@ -59,10 +65,11 @@ bool IsNodeItemType::getCheckTypeNames( const type_info &check_type_info, const 
 	useCount = I_Stack::fillObjVector( &typeName, check_type_data_ptr, mod );
 	if( useCount == 0 )
 		return false;
-	std_pairt< std_vector< QString >, I_Type * > resultInfo;
+	I_Type *resultInfo;
 
 	if( varGenerate->getTypeInfoGenerateInfo( typeName, resultInfo ) == false )
 		return false;
-	result_alias_name_list = resultInfo.first;
+	result_alias_name_list.emplace_back( resultInfo->getProTypeName( ) );
+	result_alias_name_list.append_range( resultInfo->getAliasTypeName( ) );
 	return true;
 }

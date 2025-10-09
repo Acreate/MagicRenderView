@@ -29,6 +29,10 @@ NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::
 	titleHeight = 0;
 	titleWidth = 0;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	nodeItemRender->fill( 0 );
+	inputBuff->fill( 0 );
+	outputBuff->fill( 0 );
+	titleBuff->fill( 0 );
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThiNodeItem( this );
@@ -462,5 +466,23 @@ bool NodeItem::updataLinkInfo( ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		data[ index ].first->updateLinkInfoVector( );
+	return true;
+}
+bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
+	if( parent == nullptr )
+		return false;
+	if( NodeItem::intPortItems( parent ) == false )
+		return false;
+	if( init_function( parent ) == false )
+		return false;
+
+	// 更新标题渲染布局
+	updateTitleLayout( );
+	// 更新输入渲染布局
+	updateInputLayout( );
+	// 更新输出渲染布局
+	updateOutputLayout( );
+	// 更新整体渲染布局
+	integrateLayout( );
 	return true;
 }

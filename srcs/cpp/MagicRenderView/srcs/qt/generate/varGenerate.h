@@ -4,6 +4,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../node/item/nodeItem.h"
+
 #include "../varType/I_Type.h"
 #include "../varType/I_Var.h"
 
@@ -12,6 +14,33 @@ class I_Serialization‌;
 class I_Conver;
 class VarGenerate : public QObject {
 	Q_OBJECT;
+public:
+	class NodeItemGenerate {
+		std_shared_ptr< I_Type > type;
+		QString name;
+		QString dir;
+		NodeItem::Node_Item_Type enumType;
+	public:
+		virtual ~NodeItemGenerate( ) = default;
+		NodeItemGenerate( const std_shared_ptr< I_Type > &var, const QString &name, const QString &dir, NodeItem::Node_Item_Type enum_type )
+			: type( var ),
+			name( name ),
+			dir( dir ),
+			enumType( enum_type ) { }
+		virtual bool isType( const QString &dir, const QString &name ) {
+			return dir == this->dir && name == this->name;
+		}
+		virtual const std_shared_ptr< I_Type > & getType( ) const { return type; }
+		virtual const QString & getName( ) const { return name; }
+		virtual const QString & getDir( ) const { return dir; }
+		virtual NodeItem::Node_Item_Type getEnumType( ) const { return enumType; }
+	};
+public:
+	/// @brief 节点排序类型
+	using node_name_type_vector_pairt = std_vector_pairt< QString, std_shared_ptr< I_Type > >;
+	using node_dir_type_vector_pairt = std_vector_pairt< QString, node_name_type_vector_pairt >;
+	using node_enum_type_vector_pairt = std_pairt< NodeItem::Node_Item_Type, node_dir_type_vector_pairt >;
+	using Node_Type_Sort_Vector = std_vector< node_enum_type_vector_pairt >;
 protected:
 	/// @brief 转换列表
 	std_vector< std_shared_ptr< I_Conver > > converVector;
@@ -20,14 +49,38 @@ protected:
 	/// @brief 类型识别列表
 	std_vector< std_shared_ptr< I_IsType > > isTypeVector;
 	/// @brief 类型生成列表
-	std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void*( void * ) > >, std_vector< QString > > generateTypeInfos;
+	std_vector< std_shared_ptr< I_Type > > generateAnyTypeInfos;
+	/// @brief 节点生成映射
+	std_vector< std_shared_ptr< NodeItemGenerate > > generateNodeItemTypeInfos;
+	/// @brief 排序后的节点
+	Node_Type_Sort_Vector nodeItemSortMap;
+protected:
+	/// @brief 添加一个节点的排序对象
+	/// @param enum_type 节点的枚举类
+	/// @param dir_name 目录
+	/// @param type_pro_name 原名
+	/// @param type_ptr 类型指针
+	/// @return 成功返回 true
+	virtual bool appendSortMap( const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr );
 public:
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
+	/// @param type_target_memory_size 类型占用量
+	/// @param enum_type 节点类型
+	/// @param dir_name 目录名称
+	/// @param type_pro_name 原名称
+	/// @param generate_var_name_vector 类型字符串别名
 	/// @param generate_var_function 类型生成器
 	/// @param release_var_function 释放函数
+	virtual bool appendNodeItemGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function );
+	/// @brief 追加一个类型生成器
+	/// @param generate_var_type_info cpp 类型
+	/// @param type_target_memory_size 类型占用量
+	/// @param type_pro_name 原名称
 	/// @param generate_var_name_vector 类型字符串别名
-	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const std_function< void*( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector );
+	/// @param generate_var_function 类型生成器
+	/// @param release_var_function 释放函数
+	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function );
 	/// @brief 追加一个赋值类型对象
 	/// @param new_conver 对象指针
 	virtual void appendConverInstance( const std_shared_ptr< I_Conver > &new_conver ) {
@@ -165,17 +218,14 @@ public:
 	/// @param result_info 返回生成函数与信息列表
 	/// @param start_index 开始下标
 	/// @return 失败返回 false
-	virtual bool getTypeInfoGenerateInfo( const QString &generate_type_name, std_pairt< std_vector< QString >, I_Type * > &result_info, size_t &start_index ) const;
+	virtual bool getTypeInfoGenerateInfo( const QString &generate_type_name, I_Type *&result_info, size_t &start_index ) const;
 
 	/// @brief 获取类型的生成信息
 	/// @param generate_type_info 类型
 	/// @param result_info 返回字符串名称与生成函数
 	/// @param start_index 开始下标
 	/// @return 失败返回 false
-	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, std_pairt< std_vector< QString >, I_Type * > &result_info, size_t &start_index ) const;
-	/// @brief 获取当前对象所有支持生产的类型
-	/// @return 生成类型
-	virtual const std_vector_pairt< std_pairt< std_shared_ptr< I_Type >, std_function< void *( void * ) > >, std_vector< QString > > & getGenerateTypeInfos( ) const { return generateTypeInfos; }
+	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, I_Type *&result_info, size_t &start_index ) const;
 
 	/// @brief 目标为整数
 	/// @param check_type_info 类型识别
@@ -347,7 +397,7 @@ public:
 	/// @param generate_type_name 类型名称
 	/// @param result_info 返回生成函数与信息列表
 	/// @return 失败返回 false
-	virtual bool getTypeInfoGenerateInfo( const QString &generate_type_name, std_pairt< std_vector< QString >, I_Type * > &result_info ) const {
+	virtual bool getTypeInfoGenerateInfo( const QString &generate_type_name, I_Type * &result_info ) const {
 		size_t index = 0;
 		return getTypeInfoGenerateInfo( generate_type_name, result_info, index );
 	}
@@ -356,7 +406,7 @@ public:
 	/// @param generate_type_info 类型
 	/// @param result_info 返回字符串名称与生成函数
 	/// @return 失败返回 false
-	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, std_pairt< std_vector< QString >, I_Type * > &result_info ) const {
+	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, I_Type * &result_info ) const {
 		size_t index = 0;
 		return getTypeInfoGenerateInfo( generate_type_info, result_info, index );
 	}
@@ -390,7 +440,15 @@ public:
 		size_t index = 0;
 		return createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function, index );
 	}
-
+	/// @brief 创建节点
+	/// @param dir_name 目录名称
+	/// @param class_name 类名称
+	/// @return 节点
+	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &class_name );
+	/// @brief 获取所有支持节点列表
+	/// @return 节点列表
+	virtual const std_vector< std_shared_ptr< NodeItemGenerate > > & getGenerateNodeItemTypeInfos( ) const { return generateNodeItemTypeInfos; }
+	virtual const Node_Type_Sort_Vector & getNodeItemSortMap( ) const { return nodeItemSortMap; }
 	/// @brief 增加一个类型赋值对象
 	/// @tparam ttype 赋值对象类型
 	template< typename ttype >
@@ -422,13 +480,113 @@ public:
 	}
 
 	/// @brief 追加一个类型生成器
+	/// @param type_pro_name 原生名称
+	/// @param generate_var_name_vector 类型字符串别名
 	/// @param generate_var_function 类型生成器
 	/// @param release_var_function 释放器
+	template< typename ttype >
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function ) {
+		const type_info &typeInfo = typeid( ttype );
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
+	}
+
+	/// @brief 追加一个类型生成器
+	/// @param release_var_function 释放器
+	/// @param type_pro_name 原生名称
 	/// @param generate_var_name_vector 类型字符串别名
 	template< typename ttype >
-	bool appendVarTypeGenerateInstance( const std_function< void*( void * ) > &generate_var_function, const std_function< bool( void * ) > &release_var_function, const std_vector< QString > &generate_var_name_vector ) {
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::releaseFunction &release_var_function ) {
 		const type_info &typeInfo = typeid( ttype );
-		return appendVarTypeGenerateInstance( typeInfo, generate_var_function, release_var_function, generate_var_name_vector );
+		I_Type::createFunction generate_var_function = []( ) {
+			return new ttype( );
+		};
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
+	}
+
+	/// @brief 追加一个类型生成器
+	/// @param type_pro_name 原生名称
+	/// @param generate_var_name_vector 类型字符串别名
+	template< typename ttype >
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector ) {
+		const type_info &typeInfo = typeid( ttype );
+		I_Type::createFunction generate_var_function = []( ) {
+			return new ttype( );
+		};
+		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+			delete ( ttype * ) p;
+		};
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
+	}
+
+	/// @brief 追加一个类型生成器
+	/// @param type_pro_name 原生名称
+	template< typename ttype >
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name ) {
+		const type_info &typeInfo = typeid( ttype );
+		I_Type::createFunction generate_var_function = []( ) {
+			return new ttype( );
+		};
+		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+			delete ( ttype * ) p;
+		};
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, { }, generate_var_function, release_var_function );
+	}
+	/// @brief 追加一个类型生成器
+	/// @param generate_var_name_vector 类型字符串别名
+	template< typename ttype >
+	bool appendVarTypeGenerateInstance( const std_vector< QString > &generate_var_name_vector ) {
+		const type_info &typeInfo = typeid( ttype );
+		I_Type::createFunction generate_var_function = []( ) {
+			return new ttype( );
+		};
+		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+			delete ( ttype * ) p;
+		};
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), typeInfo.name( ), generate_var_name_vector, generate_var_function, release_var_function );
+	}
+	/// @brief 追加一个类型生成器
+	template< typename ttype >
+	bool appendVarTypeGenerateInstance( ) {
+		const type_info &typeInfo = typeid( ttype );
+		I_Type::createFunction generate_var_function = []( ) {
+			return new ttype( );
+		};
+		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+			delete ( ttype * ) p;
+		};
+		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), typeInfo.name( ), { }, generate_var_function, release_var_function );
+	}
+
+	/// @brief 追加一个类型生成器
+	/// @param generate_var_name_vector 类型字符串别名
+	template< typename ttype >
+		requires requires ( NodeItem *p, ttype *tp ) {
+			p = tp;
+		}
+	bool appendNodeItemGenerateInstance( const std_vector< QString > &generate_var_name_vector ) {
+
+		auto &typeInfo = typeid( ttype );
+		auto memorySize = sizeof( ttype );
+		QString dirName = ttype::getStaticMetaObjectDir( );
+		QString objName = ttype::getStaticMetaObjectName( );
+		NodeItem::Node_Item_Type enumType = ttype::getStaticMetaNodeType( );
+		I_Type::createFunction generateVarFunction = []( ) {
+			return new ttype( );
+		};
+		I_Type::releaseFunction releaseVarFunction = [] ( void *p ) {
+			delete ( ttype * ) p;
+			return true;
+		};
+		return appendNodeItemGenerateInstance( typeInfo, memorySize, enumType, dirName, objName, generate_var_name_vector, generateVarFunction, releaseVarFunction );
+	}
+
+	/// @brief 追加一个类型生成器
+	template< typename ttype >
+		requires requires ( NodeItem *p, ttype *tp ) {
+			p = tp;
+		}
+	bool appendNodeItemGenerateInstance( ) {
+		return appendNodeItemGenerateInstance< ttype >( { } );
 	}
 
 };

@@ -8,7 +8,6 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include <qt/generate/nodeItemGenerate.h>
 #include <qt/generate/varGenerate.h>
 
 #include <qt/varType/convers/floatToConvers/floatToFloat.h>
@@ -149,50 +148,49 @@ bool Application::init( ) {
 	 * 初始化节点
 	 */
 	// todo : app
-
-	NodeItemGenerate::appendGenerateNodeItemInfo< AppInfo >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< EndNode >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StartNode >( );
+	varGenerate->appendNodeItemGenerateInstance< AppInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< EndNode >( );
+	varGenerate->appendNodeItemGenerateInstance< StartNode >( );
 	// todo : 磁盘节点
-	NodeItemGenerate::appendGenerateNodeItemInfo< WriteFile >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< WriteImage >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< ReadFile >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< ReadImage >( );
+	varGenerate->appendNodeItemGenerateInstance< WriteFile >( );
+	varGenerate->appendNodeItemGenerateInstance< WriteImage >( );
+	varGenerate->appendNodeItemGenerateInstance< ReadFile >( );
+	varGenerate->appendNodeItemGenerateInstance< ReadImage >( );
 	// todo : 生成
 
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenFloatTypes >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenIntTypes >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenStringTypes >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenUIntTypes >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenColorTypes >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< GenBinTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenFloatTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenIntTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenStringTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenUIntTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenColorTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenBinTypes >( );
 	// todo : 信息节点
-	NodeItemGenerate::appendGenerateNodeItemInfo< PathInfo >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< SystemInfo >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< NetworkInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< PathInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< SystemInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< NetworkInfo >( );
 	// todo : 逻辑节点
-	NodeItemGenerate::appendGenerateNodeItemInfo< ForeachLogic >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< IfLogic >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< LoopNode >( );
+	varGenerate->appendNodeItemGenerateInstance< ForeachLogic >( );
+	varGenerate->appendNodeItemGenerateInstance< IfLogic >( );
+	varGenerate->appendNodeItemGenerateInstance< LoopNode >( );
 	// todo : 计算节点
-	NodeItemGenerate::appendGenerateNodeItemInfo< VarAdd >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< VarSub >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< VarMul >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< VarDiv >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< VarMod >( );
+	varGenerate->appendNodeItemGenerateInstance< VarAdd >( );
+	varGenerate->appendNodeItemGenerateInstance< VarSub >( );
+	varGenerate->appendNodeItemGenerateInstance< VarMul >( );
+	varGenerate->appendNodeItemGenerateInstance< VarDiv >( );
+	varGenerate->appendNodeItemGenerateInstance< VarMod >( );
 	// todo : 字符串节点
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrAppend >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrRemove >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrReplace >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrInsert >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrSplit >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< StrSub >( );
+	varGenerate->appendNodeItemGenerateInstance< StrAppend >( );
+	varGenerate->appendNodeItemGenerateInstance< StrRemove >( );
+	varGenerate->appendNodeItemGenerateInstance< StrReplace >( );
+	varGenerate->appendNodeItemGenerateInstance< StrInsert >( );
+	varGenerate->appendNodeItemGenerateInstance< StrSplit >( );
+	varGenerate->appendNodeItemGenerateInstance< StrSub >( );
 	// todo : 结构体
-	NodeItemGenerate::appendGenerateNodeItemInfo< Array >( );
+	varGenerate->appendNodeItemGenerateInstance< Array >( );
 	// todo : 时间
-	NodeItemGenerate::appendGenerateNodeItemInfo< TimeDataConver >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< TimeDataInfo >( );
-	NodeItemGenerate::appendGenerateNodeItemInfo< TimeInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< TimeDataConver >( );
+	varGenerate->appendNodeItemGenerateInstance< TimeDataInfo >( );
+	varGenerate->appendNodeItemGenerateInstance< TimeInfo >( );
 
 	// todo : 图片特效节点
 
@@ -201,7 +199,7 @@ bool Application::init( ) {
 	// todo : 视频特效节点
 
 	// todo : 音乐操作节点
-
+	
 	// todo : 音乐特效节点
 	// todo : 类型识别支持
 	varGenerate->appendIsTypeInstance< IsColorType >( );
