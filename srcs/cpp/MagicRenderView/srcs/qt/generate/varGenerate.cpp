@@ -14,7 +14,7 @@ bool VarGenerate::appendSortMap( const NodeItem::Node_Item_Type &enum_type, cons
 		size_t index = 0;
 		auto topDataPtr = nodeItemSortMap.data( );
 		for( ; index < count; ++index ) {
-			auto enumMap = topDataPtr[ index ];
+			auto& enumMap = topDataPtr[ index ];
 			// 存在枚举
 			if( enumMap.first == enum_type ) {
 				count = enumMap.second.size( );
@@ -69,10 +69,12 @@ bool VarGenerate::appendNodeItemGenerateInstance( const type_info &generate_var_
 			key = nodeItemGenerate;
 			return true;
 		}
-	if( appendSortMap( enum_type, dir_name, type_pro_name, typeShared ) == false )
+	if( appendSortMap( enum_type, dir_name, type_pro_name, typeShared ) == false ) {
+		QString result;
+		tools::debug::printError( QString( "%1/%2 [%3]节点排序失败" ).arg( dir_name, type_pro_name ).arg( NodeItem::getEnumName( enum_type, result ) ) );
 		return false;
+	}
 	generateNodeItemTypeInfos.emplace_back( nodeItemGenerate );
-
 	return true;
 }
 bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function ) {

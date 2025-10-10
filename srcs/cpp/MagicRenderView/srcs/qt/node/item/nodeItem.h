@@ -61,7 +61,7 @@ public:
 		OutputPort, // 输出
 	};
 	Q_ENUM( Click_Type );
-	
+
 	enum class Node_Item_Type {
 		None, // 非正式
 		Root, // 根，节点运行必须在连接的根源存在根节点，具备循环权与运行权节点
@@ -72,6 +72,8 @@ public:
 		Loop, // 回路，运行该节点之后，整个渲染流程回到最近的循环权节点，具备完整跳转权。与 End 不同，该类型会询问循环权节点是否继续循环。
 	};
 	Q_ENUM( Node_Item_Type );
+
+	static bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;

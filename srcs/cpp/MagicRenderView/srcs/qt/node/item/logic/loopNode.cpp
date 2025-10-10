@@ -4,7 +4,7 @@
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( LoopNode, QObject::tr( "if" ), QObject::tr( "logic" ) );
+Imp_StaticMetaInfo( LoopNode, QObject::tr( "LoopNode" ), QObject::tr( "logic" ) );
 
 LoopNode::LoopNode( ) : NodeItem( ) {
 }

@@ -1,5 +1,6 @@
 ﻿#include "./nodeItem.h"
 
+#include <QMetaEnum>
 #include <QPainter>
 #include <QPainterPath>
 #include <qdir.h>
@@ -14,14 +15,34 @@
 #include "../../widgets/nodeItemInfoScrollAreaWidget.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
+bool NodeItem::getEnumName( const Node_Item_Type &enum_var, QString &result_str ) {
+	auto max = ( size_t ) INTMAX_MAX;
+	auto converEnum = ( size_t ) enum_var;
+	if( max < converEnum ) {
+		tools::debug::printError( QString( "%2 宏超出最大值 : %1 < %2" ).arg( max ).arg( converEnum ) );
+		return false;;
+	} else {
+		QMetaEnum metaEnum = QMetaEnum::fromType< NodeItem::Node_Item_Type >( );
+		int keyCount = metaEnum.keyCount( );
+		int enumIndex = 0;
+		for( ; enumIndex < keyCount; ++enumIndex )
+			if( metaEnum.value( enumIndex ) == converEnum ) {
+				result_str = metaEnum.key( enumIndex );
+				return true;;
+			}
+	}
+
+	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( converEnum ) );
+	return false;;
+}
 NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), editWidget( nullptr ) {
 	midPortSpace = 5 * 3;
-	borderTopSpace = 5;
-	borderRightSpace = 5;
-	borderLeftSpace = 5;
-	borderBoomSpace = 5;
-	titleToPortSpace = 5;
-	portSpace = 5;
+	borderTopSpace = 0;
+	borderRightSpace = 0;
+	borderLeftSpace = 0;
+	borderBoomSpace = 0;
+	titleToPortSpace = 0;
+	portSpace = 0;
 	inputBuffHeight = 0;
 	inputBuffWidth = 0;
 	outputBuffHeight = 0;
