@@ -3,7 +3,8 @@
 #pragma once
 #include "nodeItemInfoScrollAreaWidget.h"
 
-#include "../../alias/type_alias.h"
+#include <alias/type_alias.h>
+
 
 class VarEditorWidget;
 class QLabel;

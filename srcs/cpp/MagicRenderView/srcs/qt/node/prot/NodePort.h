@@ -21,6 +21,7 @@ private:
 	friend class NodeItem;
 	friend class MainWidget;
 	friend class AppNodeItemStack;
+	friend class NodeDirector;
 protected:
 	/// @brief 绑定渲染
 	QImage *nodePortRender;

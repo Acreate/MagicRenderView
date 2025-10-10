@@ -1,7 +1,5 @@
 ﻿#include "./readFile.h"
 
-#include "../../../widgets/nodeItemInfoScrollAreaWidget.h"
-
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"

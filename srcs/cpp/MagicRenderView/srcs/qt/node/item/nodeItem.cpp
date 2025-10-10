@@ -12,7 +12,6 @@
 #include "../../varType/I_Var.h"
 
 #include "../../widgets/mainWidget.h"
-#include "../../widgets/nodeItemInfoScrollAreaWidget.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 bool NodeItem::getEnumName( const Node_Item_Type &enum_var, QString &result_str ) {
@@ -67,7 +66,7 @@ bool NodeItem::getEnumName( const Click_Type &enum_var, QString &result_str ) {
 }
 
 /// @brief 输入输入端口之间的空间大小
-int NodeItem::midPortSpace = 5 * 3;
+int NodeItem::midPortSpace = 25;
 /// @brief 边缘顶端空间大小
 int NodeItem::borderTopSpace = 0;
 /// @brief 上下端口之间的空间大小
@@ -122,8 +121,6 @@ NodeItem::~NodeItem( ) {
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
-	if( editWidget )
-		delete editWidget;
 	editWidget = nullptr;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {

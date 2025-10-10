@@ -6,13 +6,10 @@
 #include <qboxlayout.h>
 #include <qmenu.h>
 
-#include "../application/application.h"
+#include <qt/widgets/varEditorWidgets/varEditorWidget.h>
 
-#include "../node/item/nodeItem.h"
+#include <qt/node/item/nodeItem.h>
 
-#include "../tools/tools.h"
-
-#include "varEditorWidgets/varEditorWidget.h"
 void NodeItemInfoWidget::connectItem( VarEditorWidget *new_var_edit_item ) {
 	connect( new_var_edit_item, &VarEditorWidget::destroyed, [this] ( QObject *ptr ) {
 

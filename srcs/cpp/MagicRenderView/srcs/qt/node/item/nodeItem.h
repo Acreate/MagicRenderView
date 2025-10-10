@@ -52,6 +52,7 @@ public:
 	friend class I_Stack;
 	friend class AppNodeItemStack;
 	friend class NodeItemInfoWidget;
+	friend class NodeDirector;
 protected:
 	/// @brief 输入输入端口之间的空间大小
 	static int midPortSpace;

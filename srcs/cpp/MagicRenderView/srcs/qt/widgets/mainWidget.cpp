@@ -3,6 +3,7 @@
 #include <QMetaEnum>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QScrollArea>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qmenu.h>
@@ -11,12 +12,13 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
-#include "nodeItemInfoScrollAreaWidget.h"
 
 #include <qt/generate/varGenerate.h>
 
 #include <qt/varType/I_Type.h>
 #include <qt/varType/I_Var.h>
+
+#include "../node/widgets/nodeItemInfoScrollAreaWidget.h"
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
