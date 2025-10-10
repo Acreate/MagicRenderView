@@ -16,33 +16,73 @@
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 bool NodeItem::getEnumName( const Node_Item_Type &enum_var, QString &result_str ) {
-	auto max = ( size_t ) INTMAX_MAX;
-	auto converEnum = ( size_t ) enum_var;
-	if( max < converEnum ) {
-		tools::debug::printError( QString( "%2 宏超出最大值 : %1 < %2" ).arg( max ).arg( converEnum ) );
-		return false;;
-	} else {
-		QMetaEnum metaEnum = QMetaEnum::fromType< NodeItem::Node_Item_Type >( );
-		int keyCount = metaEnum.keyCount( );
-		int enumIndex = 0;
-		for( ; enumIndex < keyCount; ++enumIndex )
-			if( metaEnum.value( enumIndex ) == converEnum ) {
-				result_str = metaEnum.key( enumIndex );
-				return true;;
-			}
+	switch( enum_var ) {
+
+		case Node_Item_Type::None :
+			result_str = NodeItem::tr( "None" );
+			return true;
+		case Node_Item_Type::Root :
+			result_str = NodeItem::tr( "Root" );
+			return true;
+		case Node_Item_Type::End :
+			result_str = NodeItem::tr( "End" );
+			return true;
+		case Node_Item_Type::Process :
+			result_str = NodeItem::tr( "Process" );
+			return true;
+		case Node_Item_Type::Logic :
+			result_str = NodeItem::tr( "Logic" );
+			return true;
+		case Node_Item_Type::Foreach :
+			result_str = NodeItem::tr( "Foreach" );
+			return true;
+		case Node_Item_Type::Loop :
+			result_str = NodeItem::tr( "Loop" );
+			return true;
 	}
 
-	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( converEnum ) );
+	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );
 	return false;;
 }
+bool NodeItem::getEnumName( const Click_Type &enum_var, QString &result_str ) {
+	switch( enum_var ) {
+		case Click_Type::None :
+			result_str = NodeItem::tr( "None" );
+			return true;
+		case Click_Type::Space :
+			result_str = NodeItem::tr( "Space" );
+			return true;
+		case Click_Type::Title :
+			result_str = NodeItem::tr( "Title" );
+			return true;
+		case Click_Type::InputPort :
+			result_str = NodeItem::tr( "InputPort" );
+			return true;
+		case Click_Type::OutputPort :
+			result_str = NodeItem::tr( "OutputPort" );
+			return true;
+	}
+	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );
+	return false;;
+}
+
+/// @brief 输入输入端口之间的空间大小
+int NodeItem::midPortSpace = 5 * 3;
+/// @brief 边缘顶端空间大小
+int NodeItem::borderTopSpace = 0;
+/// @brief 上下端口之间的空间大小
+int NodeItem::portSpace = 0;
+/// @brief 标题到端口的空间大小
+int NodeItem::titleToPortSpace = 0;
+/// @brief 边缘底部空间大小
+int NodeItem::borderBoomSpace = 0;
+/// @brief 边缘空间左侧空间大小
+int NodeItem::borderLeftSpace = 0;
+/// @brief 边缘右侧空间大小
+int NodeItem::borderRightSpace = 0;
+
 NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), editWidget( nullptr ) {
-	midPortSpace = 5 * 3;
-	borderTopSpace = 0;
-	borderRightSpace = 0;
-	borderLeftSpace = 0;
-	borderBoomSpace = 0;
-	titleToPortSpace = 0;
-	portSpace = 0;
+
 	inputBuffHeight = 0;
 	inputBuffWidth = 0;
 	outputBuffHeight = 0;

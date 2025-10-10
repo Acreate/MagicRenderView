@@ -1,10 +1,8 @@
 ﻿#include "./mainWidget.h"
 
+#include <QMetaEnum>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QScrollArea>
-#include <QScrollBar>
-#include <QMetaEnum>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qmenu.h>
@@ -15,11 +13,10 @@
 
 #include "nodeItemInfoScrollAreaWidget.h"
 
-#include "../generate/varGenerate.h"
+#include <qt/generate/varGenerate.h>
 
-#include "../varType/I_Conver.h"
-#include "../varType/I_Type.h"
-#include "../varType/I_Var.h"
+#include <qt/varType/I_Type.h>
+#include <qt/varType/I_Var.h>
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
@@ -289,7 +286,7 @@ void MainWidget::updateSupport( ) {
 	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
 	removeSelectNodeItemMenu = new QMenu( this );
 
-	removeSelectNodeItemAction = removeSelectNodeItemMenu->addAction( "删除" );
+	removeSelectNodeItemAction = removeSelectNodeItemMenu->addAction( tr( "删除" ) );
 	connect( removeSelectNodeItemAction, &QAction::triggered, [this]( ) {
 		if( rightMouseBtnSelectItem == nullptr )
 			return;
@@ -297,22 +294,10 @@ void MainWidget::updateSupport( ) {
 	} );
 	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
 	auto infos = varGenerate->getNodeItemSortMap( );
-	QMetaEnum metaEnum = QMetaEnum::fromType< NodeItem::Node_Item_Type >( );
-	int keyCount = metaEnum.keyCount( );
-	int enumIndex;
 	QString enumString;
 	for( auto &[ enumType,dirNamMap ] : infos ) {
-		enumIndex = 0;
-		auto converEnum = ( int ) enumType;
-		for( ; enumIndex < keyCount; ++enumIndex )
-			if( metaEnum.value( enumIndex ) == converEnum ) {
-				enumString = metaEnum.key( enumIndex );
-				break;
-			}
-		if( enumIndex == keyCount ) {
-			tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( converEnum ) );
+		if( NodeItem::getEnumName( enumType, enumString ) == false )
 			continue;
-		}
 		QMenu *nodeTypeMenu = rightMouseBtnCreateNodeItemMenu->addMenu( enumString );
 		std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > dirMap;
 		for( auto &[ dir,nameMap ] : dirNamMap ) {
@@ -375,7 +360,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 					auto nodeOutputPortVectorPtr = nodeOutputPorts.data( );
 					for( ; index < count; ++index ) {
 						auto nodeOutputPort = nodeOutputPortVectorPtr[ index ];
-						auto addAction = rightMouseBtnRemoveOutPortMenu->addAction( "删除 [ " + nodeOutputPort->getTitle( ) + " ] 输入接口" );
+						auto addAction = rightMouseBtnRemoveOutPortMenu->addAction( QString( tr( "删除 [ %1 ] 输入接口" ) ).arg( nodeOutputPort->getTitle( ) ) );
 						connect( addAction, &QAction::triggered, [this, nodeOutputPort]( ) {
 							if( rightMouseBtnSelectPort == nullptr )
 								return;
@@ -389,7 +374,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 					break;
 				}
 				if( rightMouseBtnSelectItem ) {
-					QString text = QString( "删除[%1]" ).arg( rightMouseBtnSelectItem->getMetaObjectPathName( ) );
+					QString text = QString( tr( "删除[%1]" ) ).arg( rightMouseBtnSelectItem->getMetaObjectPathName( ) );
 					removeSelectNodeItemAction->setText( text );
 					removeSelectNodeItemMenu->move( globalReleasePos );
 					removeSelectNodeItemMenu->show( );

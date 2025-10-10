@@ -52,6 +52,21 @@ public:
 	friend class I_Stack;
 	friend class AppNodeItemStack;
 	friend class NodeItemInfoWidget;
+protected:
+	/// @brief 输入输入端口之间的空间大小
+	static int midPortSpace;
+	/// @brief 边缘顶端空间大小
+	static int borderTopSpace;
+	/// @brief 上下端口之间的空间大小
+	static int portSpace;
+	/// @brief 标题到端口的空间大小
+	static int titleToPortSpace;
+	/// @brief 边缘底部空间大小
+	static int borderBoomSpace;
+	/// @brief 边缘空间左侧空间大小
+	static int borderLeftSpace;
+	/// @brief 边缘右侧空间大小
+	static int borderRightSpace;
 public:
 	enum class Click_Type {
 		None, // 没有
@@ -74,6 +89,7 @@ public:
 	Q_ENUM( Node_Item_Type );
 
 	static bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
+	static bool getEnumName( const Click_Type &enum_var, QString &result_str );
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -124,20 +140,6 @@ private:
 	int titleHeight;
 	/// @brief 标题宽度
 	int titleWidth;
-	/// @brief 上下端口之间的空间大小
-	int portSpace;
-	/// @brief 标题到端口的空间大小
-	int titleToPortSpace;
-	/// @brief 输入输入端口之间的空间大小
-	int midPortSpace;
-	/// @brief 边缘底部空间大小
-	int borderBoomSpace;
-	/// @brief 边缘空间左侧空间大小
-	int borderLeftSpace;
-	/// @brief 边缘右侧空间大小
-	int borderRightSpace;
-	/// @brief 边缘顶端空间大小
-	int borderTopSpace;
 	/// @brief 渲染所在窗口
 	MainWidget *renderMainWidget;
 protected:
