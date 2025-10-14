@@ -8,6 +8,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../node/item/nodeItem.h"
+
 #include "../varType/I_Type.h"
 
 class NodeDirector;
@@ -65,32 +67,24 @@ protected:
 	QPoint fromGlobalReleasePoint;
 	/// @brief 鼠标移动时的坐标位置
 	QPoint mouseMovePoint;
-	/// @brief 节点链表
-	std_vector< NodeItem * > nodeItemList;
-	/// @brief 鼠标左键选中的输入端口
-	NodeInputPort *leftMouseBtnSelectInputPort;
-	/// @brief 鼠标左键选中的输出端口
-	NodeOutputPort *leftMouseBtnSelectOutputPort;
-	/// @brief 鼠标左键选中的节点
-	NodeItem *leftMouseBtnSelectItem;
-	/// @brief 窗口当时激活的节点
-	NodeItem *renderWidgetActiveItem;
-	/// @brief 双击节点
-	NodeItem *doubleClickWidgetActiveItem;
 	/// @brief 记录点击时间点
 	QDateTime sigClickDateTime;
-	/// @brief 鼠标左键拖拽项
-	NodeItem *leftMouseBtnDragItem;
+	/// @brief 点击类型
+	NodeItem::Click_Type clickNodeItemType;
+	/// @brief 第一次左键
+	NodeItem *leftFirstSelectItem;
+	/// @brief 第二次左键
+	NodeItem *leftScondSelectItem;
+	/// @brief 第一次左键
+	NodePort *leftFirstSelectPort;
+	/// @brief 第二次左键
+	NodePort *leftScondSelecttPort;
 	/// @brief 鼠标右键选中项
 	NodeItem *rightMouseBtnSelectItem;
 	/// @brief 鼠标右键选中节点
 	NodePort *rightMouseBtnSelectPort;
-	/// @brief 用于操作删除输出接口的菜单-鼠标右键命中输入接口是弹出
-	QMenu *rightMouseBtnRemoveOutPortMenu;
 	/// @brief 用于删除当前选中节点的菜单
 	QMenu *removeSelectNodeItemMenu;
-	/// @brief 用于删除当前选中节点的快捷方式
-	QAction *removeSelectNodeItemAction;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
@@ -140,23 +134,6 @@ public:
 	virtual size_t loadBin( const QByteArray &bin_vector ) {
 		return loadBin( bin_vector.data( ), bin_vector.size( ) );
 	}
-	/// @brief 根据节点目录与节点名称创建节点
-	/// @param dir_name 目录名称
-	/// @param node_name 节点名称
-	/// @param itype_ptr
-	/// @return 失败返回 nullptr
-	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
-	/// @brief 根据节点目录与节点名称创建节点
-	/// @param new_node_item 追加的节点项
-	/// @return 返回窗口节点代码，失败返回 0
-	virtual size_t appendNodeItem( NodeItem *new_node_item );
-	/// @brief 根据生成代码获取节点
-	/// @param generater_code 节点生成代码
-	/// @return 节点
-	virtual NodeItem * getNodeItem( const size_t &generater_code ) const;
-	/// @brief 链接信号
-	/// @param node_item 链接对象指针
-	virtual void connectNodeItem( NodeItem *node_item );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

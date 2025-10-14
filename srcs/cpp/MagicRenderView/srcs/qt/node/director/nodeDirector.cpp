@@ -65,20 +65,23 @@ bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort 
 size_t NodeDirector::run( ) {
 	return 0;
 }
-bool NodeDirector::raise( const NodeItem *raise_node_item ) {
+bool NodeDirector::setRaise( const NodeItem *raise_node_item ) {
 
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
 		return false;
+
 	// 节点数组指针
 	auto data = generateNodeItems.data( );
 	// 下标
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == raise_node_item ) {
-			NodeItem *makeItem = data[ index ];
 			count -= 1;
+			if( index == count )
+				return true;
+			NodeItem *makeItem = data[ index ];
 			for( ; index < count; index++ )
 				data[ index ] = data[ index + 1 ];
 			data[ index ] = makeItem;
@@ -86,8 +89,8 @@ bool NodeDirector::raise( const NodeItem *raise_node_item ) {
 		}
 	return false;
 }
-bool NodeDirector::raise( const NodePort *raise_node_port ) {
-	return raise( raise_node_port->parentItem );
+bool NodeDirector::setRaise( const NodePort *raise_node_port ) {
+	return setRaise( raise_node_port->parentItem );
 }
 void NodeDirector::draw( QPainter &painter_target ) const {
 	QPainterPath painterPath;
@@ -274,8 +277,8 @@ NodeDirector::~NodeDirector( ) {
 				delete data[ index ];
 	}
 
-	if( nodeItemCreateMenu )
-		delete nodeItemCreateMenu;
+	nodeItemCreateMenu->disconnect( );
+	delete nodeItemCreateMenu;
 }
 
 bool NodeDirector::getNodeItemRender( QImage &result_render_image, const QPoint &offset ) const {

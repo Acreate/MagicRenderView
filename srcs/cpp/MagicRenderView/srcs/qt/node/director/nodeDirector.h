@@ -1,6 +1,7 @@
 ﻿#ifndef NODEDIRECTOR_H_H_HEAD__FILE__
 #define NODEDIRECTOR_H_H_HEAD__FILE__
 #pragma once
+#include <QDateTime>
 #include <QObject>
 
 #include "../../../alias/type_alias.h"
@@ -53,7 +54,7 @@ protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
 	virtual bool remove( NodeItem *remove_node_item );
-	virtual bool createMenu();
+	virtual bool createMenu( );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -75,8 +76,8 @@ public:
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual bool linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual size_t run( );
-	virtual bool raise( const NodeItem *raise_node_item );
-	virtual bool raise( const NodePort *raise_node_port );
+	virtual bool setRaise( const NodeItem *raise_node_item );
+	virtual bool setRaise( const NodePort *raise_node_port );
 	virtual NodeItem * getLastNodeItem( ) {
 		size_t count = generateNodeItems.size( );
 		if( count == 0 )

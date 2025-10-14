@@ -88,29 +88,29 @@ std_vector< NodePort * > NodePort::getLinkOutputVector( ) const {
 }
 bool NodePort::updateLinkInfoVector( ) {
 
-	if( parentItem == nullptr )
-		return false;
-	auto renderMainWidget = parentItem->getRenderMainWidget( );
-	if( renderMainWidget == nullptr )
-		return false;
-	size_t count = linkOutputVector.size( );
-	overrideLink.resize( count );
-	if( count == 0 )
-		return true;
-	auto nodePort = overrideLink.data( );
-	auto pair = linkOutputVector.data( );
-	for( size_t index = 0; index < count; ++index ) {
+	//if( parentItem == nullptr )
+	//	return false;
+	//auto renderMainWidget = parentItem->getRenderMainWidget( );
+	//if( renderMainWidget == nullptr )
+	//	return false;
+	//size_t count = linkOutputVector.size( );
+	//overrideLink.resize( count );
+	//if( count == 0 )
+	//	return true;
+	//auto nodePort = overrideLink.data( );
+	//auto pair = linkOutputVector.data( );
+	//for( size_t index = 0; index < count; ++index ) {
 
-		auto nodeItemGenerateCode = pair[ index ].first;
-		auto nodeItem = renderMainWidget->getNodeItem( nodeItemGenerateCode );
-		if( nodeItem == nullptr )
-			continue;
+	//	auto nodeItemGenerateCode = pair[ index ].first;
+	//	auto nodeItem = renderMainWidget->getNodeItem( nodeItemGenerateCode );
+	//	if( nodeItem == nullptr )
+	//		continue;
 
-		auto nodePortName = pair[ index ].second;
-		auto outputPort = nodeItem->getOutputPort( nodePortName );
-		if( outputPort == nullptr )
-			continue;
-		nodePort[ index ] = outputPort;
-	}
+	//	auto nodePortName = pair[ index ].second;
+	//	auto outputPort = nodeItem->getOutputPort( nodePortName );
+	//	if( outputPort == nullptr )
+	//		continue;
+	//	nodePort[ index ] = outputPort;
+	//}
 	return true;
 }
