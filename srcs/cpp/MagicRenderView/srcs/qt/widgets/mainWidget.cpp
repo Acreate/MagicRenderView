@@ -18,6 +18,7 @@
 #include <qt/varType/I_Type.h>
 #include <qt/varType/I_Var.h>
 
+#include "../node/director/nodeDirector.h"
 #include "../node/widgets/nodeItemInfoScrollAreaWidget.h"
 
 MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
@@ -28,6 +29,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
+	
+	nodeDirector = appInstance->getNodeDirector( );
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	appInstance->syncAppValueIniFile( );
@@ -229,6 +232,8 @@ void MainWidget::connectNodeItem( NodeItem *node_item ) {
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
+	//nodeDirector->draw( painter );
+	
 	QPainterPath painterPath;
 
 	size_t count = nodeItemList.size( );

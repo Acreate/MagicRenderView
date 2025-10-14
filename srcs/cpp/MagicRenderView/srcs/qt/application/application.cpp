@@ -63,6 +63,7 @@
 
 #include <qt/tools/tools.h>
 
+#include "../node/director/nodeDirector.h"
 #include "../node/item/app/appInfo.h"
 #include "../node/item/app/endNode.h"
 #include "../node/item/app/startNode.h"
@@ -110,11 +111,13 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	 * 堆栈
 	 */
 	varGenerate = new VarGenerate( );
+	nodeDirector = new NodeDirector( );
 }
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
 	delete varGenerate;
+	delete nodeDirector;
 }
 bool Application::init( ) {
 
@@ -199,7 +202,7 @@ bool Application::init( ) {
 	// todo : 视频特效节点
 
 	// todo : 音乐操作节点
-	
+
 	// todo : 音乐特效节点
 	// todo : 类型识别支持
 	varGenerate->appendIsTypeInstance< IsColorType >( );

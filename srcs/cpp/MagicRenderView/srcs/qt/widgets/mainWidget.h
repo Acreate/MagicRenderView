@@ -10,6 +10,7 @@
 
 #include "../varType/I_Type.h"
 
+class NodeDirector;
 class NodeInputPort;
 class VarGenerate;
 class I_Var;
@@ -46,6 +47,8 @@ protected:
 	Application *appInstance;
 	/// @brief 支持序列化
 	VarGenerate *varGenerate;
+	/// @brief 节点导演
+	NodeDirector *nodeDirector;
 	/// @brief ini 关键字
 	QString keyFirst;
 	/// @brief 用于创建节点的菜单-鼠标右键对应空白即可弹出

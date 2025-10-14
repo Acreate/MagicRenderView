@@ -8,6 +8,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeDirector;
 class VarGenerate;
 class Stack;
 class QLabel;
@@ -63,6 +64,7 @@ protected:
 	std_shared_ptr< std_mutex > stdMutexWidgetSelectLock;
 	QString writeSettingPath;
 	VarGenerate *varGenerate;
+	NodeDirector *nodeDirector;
 	std_shared_ptr< QFont > font;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
@@ -79,6 +81,7 @@ public:
 	virtual void setFont( const QFont &new_font ) {
 		*font = new_font;
 	}
+	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };
