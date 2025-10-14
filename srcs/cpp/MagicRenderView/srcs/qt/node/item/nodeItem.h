@@ -9,8 +9,6 @@
 
 #include <qt/tools/tools.h>
 
-#include "../../widgets/mainWidget.h"
-
 #define Def_NodeItem_StaticMetaInfo( ) \
 	Def_Last_StaticMetaInfo( );\
 	friend class NodeItemGenerate;\

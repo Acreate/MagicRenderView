@@ -7,6 +7,7 @@
 
 #include "../item/nodeItem.h"
 
+class I_Type;
 class NodeItemInfoScrollAreaWidget;
 class NodeItem;
 class NodeEditorWidget;

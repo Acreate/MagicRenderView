@@ -127,7 +127,7 @@ void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNo
 	mainWidget->ensureVisibleToItemNode( targetItemNode );
 }
 void MainWindow::updateMainWidgetSupport( ) {
-	mainWidget->updateSupport( );
+	//mainWidget->updateSupport( );
 }
 const std_vector< uint8_t > & MainWindow::getMainWidgetSupportBin( ) const {
 	return mainWidget->getSupportBin( );

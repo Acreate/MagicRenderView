@@ -1,11 +1,14 @@
 ﻿#include "nodeDirector.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <qmenu.h>
 
 #include "../../application/application.h"
 
 #include "../../generate/varGenerate.h"
+
+#include "../../widgets/mainWidget.h"
 
 #include "../prot/inputProt/nodeInputPort.h"
 
@@ -180,7 +183,9 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 				auto nodeItemGenerateInfo = std_shared_ptr< NodeItemGenerateInfo >( new NodeItemGenerateInfo( dir, className, typePtr ) );
 				generateNodeItemInfos.emplace_back( nodeItemGenerateInfo );
 				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) {
-					createNodeItem( dir, className, typePtr );
+					if( createNodeItem( dir, className, typePtr ) == nullptr || mainWidget == nullptr )
+						return;
+					mainWidget->update( );
 				} );
 			}
 		}
@@ -233,6 +238,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 
 		}
 	new_node_item->generateCode = checkCode;
+	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, this, &NodeDirector::remove );
 	return new_node_item->generateCode;
 }

@@ -97,8 +97,6 @@ public:
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
-	/// @brief 更新支持内容
-	virtual void updateSupport( );
 	/// @brief 获取经过二进制化的支持数据
 	/// @return 经过二进制化的支持是数据
 	virtual const std_vector< uint8_t > & getSupportBin( ) const {

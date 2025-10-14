@@ -12,7 +12,6 @@
 
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 
-
 #include <qt/generate/varGenerate.h>
 
 #include <qt/varType/I_Type.h>
@@ -29,7 +28,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
-	
+
 	nodeDirector = appInstance->getNodeDirector( );
 	keyFirst = "Application/MainWindow/MainWidget";
 
@@ -42,7 +41,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	renderWidgetActiveItem = nullptr;
 	leftMouseBtnSelectItem = nullptr;
 	leftMouseBtnDragItem = nullptr;
-	updateSupport( );
+	nodeDirector->setContentWidget( this );
+	rightMouseBtnCreateNodeItemMenu = nodeDirector->getNodeItemCraeteMenu( );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -232,30 +232,7 @@ void MainWidget::connectNodeItem( NodeItem *node_item ) {
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-	//nodeDirector->draw( painter );
-	
-	QPainterPath painterPath;
-
-	size_t count = nodeItemList.size( );
-	auto data = nodeItemList.data( );
-	size_t index = 0;
-	for( ; index < count; ++index ) {
-		NodeItem *nodeItem = data[ index ];
-		if( nodeItem == nullptr )
-			continue;
-		painter.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		auto pairs = nodeItem->getLinkPort( );
-		for( auto &item : pairs ) {
-			int first = item.first.second.first;
-			int second = item.first.second.second;
-			int x = item.second.second.first;
-			int y = item.second.second.second;
-
-			painterPath.moveTo( first, second );
-			painterPath.lineTo( x, y );
-		}
-	}
-	painter.drawPath( painterPath );
+	nodeDirector->draw( painter );
 	// 不在拖拽情况下，绘制动态线
 	if( leftMouseBtnDragItem == nullptr && leftMouseBtnSelectItem )
 		painter.drawLine( modPoint, mouseMovePoint );
@@ -267,64 +244,6 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 		setMinimumSize( newSize );
 	auto targetSize = geometry.bottomRight( );
 	scrollArea->ensureVisible( targetSize.x( ), targetSize.y( ) );
-}
-void MainWidget::updateSupport( ) {
-	size_t count = supportNode.size( );
-	if( count > 0 ) {
-		rightMouseBtnRemoveOutPortMenu->hide( );
-		rightMouseBtnCreateNodeItemMenu->hide( );
-
-		for( auto &[ nodeTypeMenu, dirMapMenu ] : supportNode ) {
-			for( auto &[ dirMenu, nameActionMap ] : dirMapMenu ) {
-				for( auto &[ nodeNameAction, nodeName ] : nameActionMap )
-					delete nodeNameAction;
-				delete dirMenu;
-			}
-			delete nodeTypeMenu;
-		}
-
-		delete rightMouseBtnRemoveOutPortMenu;
-		delete rightMouseBtnCreateNodeItemMenu;
-		delete removeSelectNodeItemMenu;
-		supportNode.clear( );
-		supportNodeName.clear( );
-		supporVarType.clear( );
-	}
-	rightMouseBtnRemoveOutPortMenu = new QMenu( this );
-	removeSelectNodeItemMenu = new QMenu( this );
-
-	removeSelectNodeItemAction = removeSelectNodeItemMenu->addAction( tr( "删除" ) );
-	connect( removeSelectNodeItemAction, &QAction::triggered, [this]( ) {
-		if( rightMouseBtnSelectItem == nullptr )
-			return;
-		delete rightMouseBtnSelectItem;
-	} );
-	rightMouseBtnCreateNodeItemMenu = new QMenu( this );
-	auto infos = varGenerate->getNodeItemSortMap( );
-	QString enumString;
-	for( auto &[ enumType,dirNamMap ] : infos ) {
-		if( NodeItem::getEnumName( enumType, enumString ) == false )
-			continue;
-		QMenu *nodeTypeMenu = rightMouseBtnCreateNodeItemMenu->addMenu( enumString );
-		std_vector_pairt< QMenu *, std_vector_pairt< QAction *, QString > > dirMap;
-		for( auto &[ dir,nameMap ] : dirNamMap ) {
-			QMenu *dirMenu = nodeTypeMenu->addMenu( dir );
-			std_vector_pairt< QAction *, QString > pairs;
-			for( auto &[ className, typePtr ] : nameMap ) {
-				if( className.isEmpty( ) )
-					continue;
-				auto addAction = dirMenu->addAction( className );
-				auto joint = dir.isEmpty( ) ? className : dir + "/" + className;
-				supportNodeName.emplace_back( joint );
-				pairs.emplace_back( addAction, joint );
-				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) { MainWidget::createNodeItem( dir, className, typePtr ); } );
-			}
-			dirMap.emplace_back( dirMenu, pairs );
-		}
-		supportNode.emplace_back( nodeTypeMenu, dirMap );
-	}
-
-	supportInfoToBin( );
 }
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
