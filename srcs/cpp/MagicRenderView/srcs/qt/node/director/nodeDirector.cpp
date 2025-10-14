@@ -289,6 +289,8 @@ NodeItem::Click_Type NodeDirector::getClickNodeItem( NodeItem *&result_node_item
 }
 NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, NodeItem *&result_node_item, NodePort * &result_node_port ) {
 
+	result_node_item = nullptr;
+	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
@@ -322,8 +324,6 @@ NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, No
 			return pointType; // 检测到了
 		}
 
-	result_node_item = nullptr;
-	result_node_port = nullptr;
 	return NodeItem::Click_Type::None;
 }
 NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
@@ -331,6 +331,8 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( NodeItem *&result_
 }
 NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
 
+	result_node_item = nullptr;
+	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
@@ -360,14 +362,14 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &clic
 
 			return pointType; // 检测到了
 		}
-	result_node_item = nullptr;
-	result_node_port = nullptr;
 	return NodeItem::Click_Type::None;
 }
 NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
 	return getClickNodeItemOutputPort( mainWidget->mapFromGlobal( QCursor::pos( ) ), result_node_item, result_node_port );
 }
 NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
+	result_node_item = nullptr;
+	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
@@ -397,8 +399,5 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &cli
 
 			return pointType; // 检测到了
 		}
-
-	result_node_item = nullptr;
-	result_node_port = nullptr;
 	return NodeItem::Click_Type::None;
 }

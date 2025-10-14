@@ -55,16 +55,8 @@ protected:
 	QString keyFirst;
 	/// @brief 用于创建节点的菜单-鼠标右键对应空白即可弹出
 	QMenu *rightMouseBtnCreateNodeItemMenu;
-	/// @brief 按下时全局位置
-	QPoint globalPressPos;
-	/// @brief 按下时当前窗口位置
-	QPoint fromGlobalPressPoint;
 	/// @brief 多用途位置信息
 	QPoint modPoint;
-	/// @brief 按下时全局位置
-	QPoint globalReleasePos;
-	/// @brief 按下时当前窗口位置
-	QPoint fromGlobalReleasePoint;
 	/// @brief 鼠标移动时的坐标位置
 	QPoint mouseMovePoint;
 	/// @brief 记录点击时间点

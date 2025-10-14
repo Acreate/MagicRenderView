@@ -149,8 +149,15 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	QPainter painter( this );
 	nodeDirector->draw( painter );
 	// 不在拖拽情况下，绘制动态线
-	if( leftFirstSelectPort )
-		painter.drawLine( modPoint, mouseMovePoint );
+	switch( clickNodeItemType ) {
+		case NodeItem::Click_Type::None :
+		case NodeItem::Click_Type::Space :
+		case NodeItem::Click_Type::Title :
+			break;
+		case NodeItem::Click_Type::InputPort :
+		case NodeItem::Click_Type::OutputPort :
+			painter.drawLine( modPoint, mouseMovePoint );
+	}
 }
 void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 	auto geometry = targetItemNode->geometry( );
@@ -164,57 +171,81 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-	globalReleasePos = QCursor::pos( );
-	fromGlobalReleasePoint = event->pos( );
 	switch( mouseButton ) {
 		case Qt::RightButton :
-			clickNodeItemType = nodeDirector->getClickNodeItem( fromGlobalReleasePoint, rightMouseBtnSelectItem, rightMouseBtnSelectPort );
-			if( clickNodeItemType == NodeItem::Click_Type::InputPort )
-				tools::debug::printError( "右击输出接口" );
-			else
-				rightMouseBtnCreateNodeItemMenu->popup( globalReleasePos );
+			clickNodeItemType = nodeDirector->getClickNodeItem( event->pos( ), rightMouseBtnSelectItem, rightMouseBtnSelectPort );
+			switch( clickNodeItemType ) {
+
+				case NodeItem::Click_Type::None :
+					rightMouseBtnCreateNodeItemMenu->popup( QCursor::pos( ) );
+					break;
+				case NodeItem::Click_Type::Space :
+				case NodeItem::Click_Type::Title :
+					break;
+				case NodeItem::Click_Type::InputPort :
+					tools::debug::printError( "右击输入接口" );
+					break;
+				case NodeItem::Click_Type::OutputPort :
+					tools::debug::printError( "右击输出接口" );
+					break;
+			}
 			break;
 		case Qt::LeftButton :
 
 			break;
 	}
-
-	update( );
+	leftFirstSelectItem = nullptr;
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
-	if( leftFirstSelectItem == nullptr )
-		return;
-	QPoint point;
+	mouseMovePoint = event->pos( );
 	switch( clickNodeItemType ) {
 		case NodeItem::Click_Type::Space :
 		case NodeItem::Click_Type::Title :
-			mouseMovePoint = event->pos( );
-			point = mouseMovePoint - modPoint;
-			if( point.x( ) < 0 )
-				point.setX( 0 );
-			if( point.y( ) < 0 )
-				point.setY( 0 );
-			leftFirstSelectItem->move( point );
+			if( leftFirstSelectItem ) {
+				QPoint point = mouseMovePoint - modPoint;
+				if( point.x( ) < 0 )
+					point.setX( 0 );
+				if( point.y( ) < 0 )
+					point.setY( 0 );
+				leftFirstSelectItem->move( point );
+			}
+
 			break;
 		case NodeItem::Click_Type::InputPort :
 		case NodeItem::Click_Type::OutputPort :
+			update( );
 		case NodeItem::Click_Type::None :
 			break;
 	}
-	update( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
-	globalPressPos = QCursor::pos( );
-	fromGlobalPressPoint = event->pos( );
+
+	auto fromGlobalPressPoint = event->pos( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
-			clickNodeItemType = nodeDirector->getClickNodeItem( fromGlobalReleasePoint, leftScondSelectItem, leftScondSelecttPort );
-			if( clickNodeItemType != NodeItem::Click_Type::None ) {
-				tools::debug::printError( "左击选中接口" );
-				nodeDirector->setRaise( leftScondSelectItem );
+			clickNodeItemType = nodeDirector->getClickNodeItem( fromGlobalPressPoint, leftScondSelectItem, leftScondSelecttPort );
+			switch( clickNodeItemType ) {
+				case NodeItem::Click_Type::None :
+					break;
+				case NodeItem::Click_Type::InputPort :
+					tools::debug::printError( "左击选中输入接口" );
+					nodeDirector->setRaise( leftScondSelectItem );
+					modPoint = fromGlobalPressPoint;
+					break;
+				case NodeItem::Click_Type::OutputPort :
+					tools::debug::printError( "左击选中输出接口" );
+					nodeDirector->setRaise( leftScondSelectItem );
+					modPoint = fromGlobalPressPoint;
+					break;
+				case NodeItem::Click_Type::Space :
+				case NodeItem::Click_Type::Title :
+					leftFirstSelectItem = leftScondSelectItem;
+					nodeDirector->setRaise( leftScondSelectItem );
+					modPoint = fromGlobalPressPoint - leftFirstSelectItem->getPos( );
+					break;
 			}
 			break;
 	}
