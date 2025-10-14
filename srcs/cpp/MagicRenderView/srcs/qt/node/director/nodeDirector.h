@@ -48,11 +48,10 @@ protected:
 	Application *applicationInstancePtr = nullptr;
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
-	/// @brief 最后激活的节点
-	NodeItem *lastActiveNodeItem = nullptr;
 protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
+	virtual bool remove( NodeItem *remove_node_item );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -61,8 +60,12 @@ public:
 	virtual bool getNodeItemRender( QImage &result_render_image ) const {
 		return getNodeItemRender( result_render_image, QPoint( 0, 0 ) );
 	}
-	virtual NodeItem::Click_Type getClickNodeItem( NodeItem * &result_node_item );
-	virtual NodeItem::Click_Type getClickNodeItem( const QPoint &click_pos, NodeItem * &result_node_item );
+	virtual NodeItem::Click_Type getClickNodeItem( NodeItem * &result_node_item, NodePort * &result_node_port );
+	virtual NodeItem::Click_Type getClickNodeItem( const QPoint &click_pos, NodeItem * &result_node_item, NodePort * &result_node_port );
+	virtual NodeItem::Click_Type getClickNodeItemInputPort( NodeItem * &result_node_item, NodeInputPort * &result_node_port );
+	virtual NodeItem::Click_Type getClickNodeItemInputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeInputPort * &result_node_port );
+	virtual NodeItem::Click_Type getClickNodeItemOutputPort( NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
+	virtual NodeItem::Click_Type getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
 	virtual QMenu * getNodeItemCraeteMenu( ) const {
 		return nodeItemCreateMenu;
 	}
@@ -70,6 +73,21 @@ public:
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual bool linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual size_t run( );
+	virtual bool raise( const NodeItem *raise_node_item );
+	virtual bool raise( const NodePort *raise_node_port );
+	virtual NodeItem * getLastNodeItem( ) {
+		size_t count = generateNodeItems.size( );
+		if( count == 0 )
+			return nullptr;
+		return generateNodeItems.data( )[ count - 1 ];
+	}
+	virtual void draw( QPainter &painter_target ) const;
+	virtual std_vector< NodeItem * > getNodeItems( ) const {
+		return generateNodeItems;
+	}
+	virtual std_vector< QImage * > getNodeItemRenders( ) const;
+
+	virtual bool release( const NodeItem *remove_node_item );
 	virtual bool setContentWidget( MainWidget *main_widget );
 	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
 	size_t appendNodeItem( NodeItem *new_node_item );
