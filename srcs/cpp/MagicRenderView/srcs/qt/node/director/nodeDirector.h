@@ -53,6 +53,7 @@ protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
 	virtual bool remove( NodeItem *remove_node_item );
+	virtual bool createMenu();
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;

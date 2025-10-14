@@ -34,7 +34,6 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 
 	appInstance->syncAppValueIniFile( );
 	rightMouseBtnRemoveOutPortMenu = nullptr;
-	rightMouseBtnCreateNodeItemMenu = nullptr;
 
 	leftMouseBtnSelectInputPort = nullptr;
 	leftMouseBtnSelectOutputPort = nullptr;

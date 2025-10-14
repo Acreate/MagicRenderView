@@ -10,6 +10,8 @@
 
 #include "../../widgets/mainWidget.h"
 
+#include "../nodeItemMenu/nodeItemMenu.h"
+
 #include "../prot/inputProt/nodeInputPort.h"
 
 #include "../widgets/nodeItemInfoScrollAreaWidget.h"
@@ -134,6 +136,34 @@ bool NodeDirector::remove( NodeItem *remove_node_item ) {
 		}
 	return false;
 }
+bool NodeDirector::createMenu( ) {
+
+	auto infos = varGenerate->getNodeItemSortMap( );
+	if( infos.size( ) == 0 )
+		return false;
+	QString enumString;
+	for( auto &[ enumType,dirNamMap ] : infos ) {
+		if( NodeItem::getEnumName( enumType, enumString ) == false )
+			continue;
+		QMenu *nodeTypeMenu = nodeItemCreateMenu->addMenu( enumString );
+		for( auto &[ dir,nameMap ] : dirNamMap ) {
+			QMenu *dirMenu = nodeTypeMenu->addMenu( dir );
+			for( auto &[ className, typePtr ] : nameMap ) {
+				if( className.isEmpty( ) )
+					continue;
+				auto addAction = dirMenu->addAction( className );
+				auto nodeItemGenerateInfo = std_shared_ptr< NodeItemGenerateInfo >( new NodeItemGenerateInfo( dir, className, typePtr ) );
+				generateNodeItemInfos.emplace_back( nodeItemGenerateInfo );
+				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) {
+					if( createNodeItem( dir, className, typePtr ) == nullptr || mainWidget == nullptr )
+						return;
+					mainWidget->update( );
+				} );
+			}
+		}
+	}
+	return true;
+}
 bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
@@ -166,32 +196,13 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	varGenerate = applicationInstancePtr->getVarGenerate( );
 	if( nodeItemCreateMenu )
 		delete nodeItemCreateMenu;
-	nodeItemCreateMenu = new QMenu( );
+	nodeItemCreateMenu = new NodeItemMenu( );
+	connect( nodeItemCreateMenu, &QMenu::destroyed, [this]( ) {
+		nodeItemCreateMenu = new NodeItemMenu( );
+		this->createMenu( );
+	} );
 
-	auto infos = varGenerate->getNodeItemSortMap( );
-	QString enumString;
-	for( auto &[ enumType,dirNamMap ] : infos ) {
-		if( NodeItem::getEnumName( enumType, enumString ) == false )
-			continue;
-		QMenu *nodeTypeMenu = nodeItemCreateMenu->addMenu( enumString );
-		for( auto &[ dir,nameMap ] : dirNamMap ) {
-			QMenu *dirMenu = nodeTypeMenu->addMenu( dir );
-			for( auto &[ className, typePtr ] : nameMap ) {
-				if( className.isEmpty( ) )
-					continue;
-				auto addAction = dirMenu->addAction( className );
-				auto nodeItemGenerateInfo = std_shared_ptr< NodeItemGenerateInfo >( new NodeItemGenerateInfo( dir, className, typePtr ) );
-				generateNodeItemInfos.emplace_back( nodeItemGenerateInfo );
-				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) {
-					if( createNodeItem( dir, className, typePtr ) == nullptr || mainWidget == nullptr )
-						return;
-					mainWidget->update( );
-				} );
-			}
-		}
-	}
-
-	return true;
+	return this->createMenu( );;
 }
 
 NodeItem * NodeDirector::createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr ) {
