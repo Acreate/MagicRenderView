@@ -138,9 +138,10 @@ bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	auto data = generateNodeItems.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] == remove_node_item ) {
+			NodeItem *item = data[ index ];
 			data[ index ] = nullptr;
-			data[ index ]->disconnect( this );
-			delete data[ index ];
+			item->disconnect( this );
+			delete item;
 			return true;
 		}
 	return false;
