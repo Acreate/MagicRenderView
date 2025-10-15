@@ -82,8 +82,9 @@ bool NodeDirector::linkUnInstallPort( NodePort *first_port, NodePort *scond_port
 bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
 	if( input_port == nullptr || output_port == nullptr )
 		return false; // 同一个节点或者为 nullptr
-	NodeItem *nodeItem = input_port->parentItem;
-	if( nodeItem == output_port->parentItem )
+	NodeItem *inputNodeItem = input_port->parentItem;
+	NodeItem *outputNodeItem = output_port->parentItem;
+	if( inputNodeItem == outputNodeItem )
 		return false; // 同一个节点或者为 nullptr
 	const I_Type *inputPorVarType = input_port->getVarType( );
 	if( inputPorVarType == nullptr ) {
@@ -110,7 +111,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	newLinkObjPtr->link( output_port );
 	linkVectorPairt.emplace_back( newLinkObjPtr );
 	// 节点删除则释放
-	connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_node_item ) {
+	connect( inputNodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_node_item ) {
 		size_t count = linkVectorPairt.size( );
 		auto data = linkVectorPairt.data( );
 		for( size_t index = 0; index < count; ++index )
@@ -120,6 +121,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 				break;
 			}
 	} );
+
 	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
 		emit linkNodePort( this, sender_obj_ptr, input_port, output_port );
 	} );
@@ -361,11 +363,11 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	}
 	size_t checkCode = count;
 	for( ; index < count; ++index )
-		if( data[ index ]->nodeItem->generateCode != ( index + 1 ) ) { // 掉链子了
+		if( data[ index ] == nullptr || data[ index ]->nodeItem->generateCode != ( index + 1 ) ) { // 掉链子了
 			checkCode = index + 1;
 			index = 0; // 重新遍历
 			for( ; index < count; ++index )
-				if( data[ index ]->nodeItem->generateCode == checkCode ) {
+				if( data[ index ] == nullptr || data[ index ]->nodeItem->generateCode == checkCode ) {
 					index = checkCode + 1;
 					checkCode = count;
 					break;

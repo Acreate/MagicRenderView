@@ -5,6 +5,8 @@
 
 #include <alias/type_alias.h>
 
+class NodeItem;
+class NodePort;
 class QMenu;
 class QAction;
 class NodeOutputPort;
@@ -15,7 +17,10 @@ protected:
 	friend class NodeDirector;
 	NodeInputPort *inputPort;
 	std_vector_pairt< NodeOutputPort *, QAction * > outputPorts;
+	std_vector< NodeItem * > nodeItemEvent;
 	QMenu *removeLinkMenu;
+protected:
+	virtual void appendReleaseNodeItemEvent( NodeOutputPort *link_output_port );
 public:
 	~NodePortLinkInfo( ) override;
 	NodePortLinkInfo( NodeInputPort *input_port );

@@ -116,8 +116,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
-	delete varGenerate;
 	delete nodeDirector;
+	delete varGenerate;
 }
 bool Application::init( ) {
 
