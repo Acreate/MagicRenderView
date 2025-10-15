@@ -5,6 +5,7 @@
 #include <qmenu.h>
 
 #include "nodeItemGenerateInfo.h"
+#include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
 
 #include "../../application/application.h"
@@ -156,11 +157,11 @@ bool NodeDirector::setRaise( const NodeItem *raise_node_item ) {
 	// 下标
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == raise_node_item ) {
+		if( data[ index ] != nullptr && data[ index ]->nodeItem == raise_node_item ) {
 			count -= 1;
 			if( index == count )
 				return true;
-			NodeItem *makeItem = data[ index ];
+			auto *makeItem = data[ index ];
 			for( ; index < count; index++ )
 				data[ index ] = data[ index + 1 ];
 			data[ index ] = makeItem;
@@ -171,18 +172,25 @@ bool NodeDirector::setRaise( const NodeItem *raise_node_item ) {
 bool NodeDirector::setRaise( const NodePort *raise_node_port ) {
 	return setRaise( raise_node_port->parentItem );
 }
+NodeItem * NodeDirector::getLastNodeItem( ) {
+	size_t count = generateNodeItems.size( );
+	if( count == 0 )
+		return nullptr;
+	return generateNodeItems.data( )[ count - 1 ]->nodeItem;
+}
 void NodeDirector::draw( QPainter &painter_target ) const {
 
 	size_t count = generateNodeItems.size( );
 	size_t index = 0;
 	if( count > 0 ) {
 		auto data = generateNodeItems.data( );
-		for( ; index < count; ++index ) {
-			NodeItem *nodeItem = data[ index ];
-			if( nodeItem == nullptr )
-				continue;
-			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		}
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
 	}
 
 	count = linkVectorPairt.size( );
@@ -196,7 +204,8 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 		size_t outPortCount;
 		std::pair< NodeOutputPort *, QAction * > *outPortData;
 		for( ; index < count; ++index )
-			if( outPortCount = nodePortLinkInfo[ index ]->outputPorts.size( ), outPortCount != 0 ) {
+			if( outPortCount = nodePortLinkInfo[ index ]->outputPorts.size( ), nodePortLinkInfo[ index ]
+				!= nullptr && outPortCount != 0 ) {
 				nodePortLinkInfo[ index ]->inputPort->getPos( outport );
 				outPortData = nodePortLinkInfo[ index ]->outputPorts.data( );
 				for( outIndex = 0; outIndex < outPortCount; ++outIndex ) {
@@ -207,6 +216,15 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 			}
 	}
 }
+std_vector< NodeItem * > NodeDirector::getNodeItems( ) const {
+	std_vector< NodeItem * > result;
+	size_t count = generateNodeItems.size( );
+	auto data = generateNodeItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ] != nullptr )
+			result.emplace_back( data[ index ]->nodeItem );
+	return result;
+}
 
 std_vector< QImage * > NodeDirector::getNodeItemRenders( ) const {
 	std_vector< QImage * > result;
@@ -215,7 +233,8 @@ std_vector< QImage * > NodeDirector::getNodeItemRenders( ) const {
 		return result;
 	auto data = generateNodeItems.data( );
 	for( size_t index = 0; index < count; ++index )
-		result.emplace_back( data[ index ]->getNodeItemRender( ) );
+		if( data[ index ] != nullptr )
+			result.emplace_back( data[ index ]->nodeItem->getNodeItemRender( ) );
 	return result;
 }
 bool NodeDirector::remove( NodeItem *remove_node_item ) {
@@ -224,11 +243,15 @@ bool NodeDirector::remove( NodeItem *remove_node_item ) {
 		return false;
 	auto data = generateNodeItems.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( data[ index ] == remove_node_item ) {
+		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
+			emit releaseNodeItemInfoObj( data[ index ] );
 			data[ index ] = nullptr;
 			return true;
 		}
 	return false;
+}
+bool NodeDirector::release( NodePort *remove_node_port ) {
+	return release( remove_node_port->parentItem );
 }
 bool NodeDirector::createMenu( ) {
 
@@ -258,16 +281,25 @@ bool NodeDirector::createMenu( ) {
 	}
 	return true;
 }
+bool NodeDirector::resetMenu( QObject *del_ptr ) {
+	nodeItemCreateMenu = new NodeItemMenu( );
+	return this->createMenu( );
+}
+bool NodeDirector::realseNodeItemInfo( NodeItemInfo *del_ptr ) {
+	return remove( del_ptr->nodeItem );
+}
 bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
 		return false;
 	auto data = generateNodeItems.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( data[ index ] == remove_node_item ) {
-			NodeItem *item = data[ index ];
+		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
+			auto *item = data[ index ];
+			emit releaseNodeItemInfoObj( item );
 			data[ index ] = nullptr;
-			item->disconnect( this );
+			NodeItem *nodeItem = item->nodeItem;
+			nodeItem->disconnect( this );
 			delete item;
 			return true;
 		}
@@ -282,7 +314,8 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	auto clone = generateNodeItems;
 	generateNodeItems.clear( );
 	for( auto removeItem : clone )
-		delete removeItem;
+		if( removeItem )
+			delete removeItem->nodeItem;
 
 	mainWidget = main_widget;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
@@ -291,10 +324,7 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	if( nodeItemCreateMenu )
 		delete nodeItemCreateMenu;
 	nodeItemCreateMenu = new NodeItemMenu( );
-	connect( nodeItemCreateMenu, &QMenu::destroyed, [this]( ) {
-		nodeItemCreateMenu = new NodeItemMenu( );
-		this->createMenu( );
-	} );
+	connect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 
 	return this->createMenu( );;
 }
@@ -317,23 +347,25 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	size_t count = generateNodeItems.size( );
 	auto data = generateNodeItems.data( );
 	size_t index = 0;
+	NodeItemInfo *nodeItemInfo = new NodeItemInfo( new_node_item );
+	connect( nodeItemInfo, &NodeItemInfo::releaseThis, this, &NodeDirector::realseNodeItemInfo );
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr ) {
-			data[ index ] = new_node_item;
+			data[ index ] = nodeItemInfo;
 			break;
 		}
 	if( index == count ) {
-		generateNodeItems.emplace_back( new_node_item );
+		generateNodeItems.emplace_back( nodeItemInfo );
 		++count;
 		data = generateNodeItems.data( ); // 更新基址
 	}
 	size_t checkCode = count;
 	for( ; index < count; ++index )
-		if( data[ index ]->generateCode != ( index + 1 ) ) { // 掉链子了
+		if( data[ index ]->nodeItem->generateCode != ( index + 1 ) ) { // 掉链子了
 			checkCode = index + 1;
 			index = 0; // 重新遍历
 			for( ; index < count; ++index )
-				if( data[ index ]->generateCode == checkCode ) {
+				if( data[ index ]->nodeItem->generateCode == checkCode ) {
 					index = checkCode + 1;
 					checkCode = count;
 					break;
@@ -380,8 +412,21 @@ bool NodeDirector::getLinkControlMenu( const NodeInputPort *input_port, QMenu *&
 		}
 	return false;
 }
+bool NodeDirector::getItemManageMenu( const NodeItem *node_item_ptr, QMenu *&result_menu_ptr ) {
+	size_t count = generateNodeItems.size( );
+	if( count == 0 )
+		return false;
+	auto data = generateNodeItems.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem == node_item_ptr ) {
+			result_menu_ptr = data[ index ]->manageMenu;
+			return true;
+		}
+	return false;
+}
 
 NodeDirector::~NodeDirector( ) {
+	emit releaseThis( this );
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
 	size_t index;
 	if( count ) {
@@ -397,11 +442,15 @@ NodeDirector::~NodeDirector( ) {
 		index = 0;
 		auto data = generateNodeItems.data( );
 		for( ; index < count; ++index )
-			if( data[ index ] != nullptr )
-				delete data[ index ];
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				NodeItemInfo *nodeItemInfo = data[ index ];
+				data[ index ] = nullptr;
+				delete nodeItem;
+			}
 	}
 
-	nodeItemCreateMenu->disconnect( );
+	nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 	delete nodeItemCreateMenu;
 }
 
@@ -428,17 +477,17 @@ NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, No
 
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
-			localPoint = click_pos - data[ index ]->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->relativePointType( localPoint );
+			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
+			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
 			if( pointType == NodeItem::Click_Type::None )
 				continue; // 空白处，则跳过循环
-			result_node_item = data[ index ]; // 选中了非空白处
+			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
 				case NodeItem::Click_Type::InputPort :
-					result_node_port = data[ index ]->getNodeInputAtRelativePointType( localPoint );
+					result_node_port = data[ index ]->nodeItem->getNodeInputAtRelativePointType( localPoint );
 					break;
 				case NodeItem::Click_Type::OutputPort :
-					result_node_port = data[ index ]->getNodeOutputPortAtRelativePointType( localPoint );
+					result_node_port = data[ index ]->nodeItem->getNodeOutputPortAtRelativePointType( localPoint );
 					break;
 				default :
 					result_node_port = nullptr;
@@ -470,14 +519,14 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &clic
 
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
-			localPoint = click_pos - data[ index ]->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->relativePointType( localPoint );
+			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
+			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
 			if( pointType == NodeItem::Click_Type::None )
 				continue; // 空白处，则跳过循环
-			result_node_item = data[ index ]; // 选中了非空白处
+			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
 				case NodeItem::Click_Type::InputPort :
-					result_node_port = data[ index ]->getNodeInputAtRelativePointType( localPoint );
+					result_node_port = data[ index ]->nodeItem->getNodeInputAtRelativePointType( localPoint );
 					break;
 				default :
 					result_node_port = nullptr;
@@ -507,14 +556,14 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &cli
 
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
-			localPoint = click_pos - data[ index ]->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->relativePointType( localPoint );
+			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
+			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
 			if( pointType == NodeItem::Click_Type::None )
 				continue; // 空白处，则跳过循环
-			result_node_item = data[ index ]; // 选中了非空白处
+			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
 				case NodeItem::Click_Type::OutputPort :
-					result_node_port = data[ index ]->getNodeOutputPortAtRelativePointType( localPoint );
+					result_node_port = data[ index ]->nodeItem->getNodeOutputPortAtRelativePointType( localPoint );
 					break;
 				default :
 					result_node_port = nullptr;

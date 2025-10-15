@@ -2,16 +2,20 @@
 #define NODEITEMGENERATEINFO_H_H_HEAD__FILE__
 #pragma once
 
+#include <QObject>
+
 #include <alias/type_alias.h>
 
 class I_Type;
 class NodeItem;
-class NodeItemGenerateInfo {
+class NodeItemGenerateInfo : public QObject {
+	Q_OBJECT;
+protected:
 	QString dirName;
 	QString nodeName;
 	std_shared_ptr< I_Type > createTypeInstancePtr;
 public:
-	virtual ~NodeItemGenerateInfo( ) = default;
+	~NodeItemGenerateInfo( ) override ;
 	NodeItemGenerateInfo( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &create_type_instance_ptr )
 		: dirName( dir_name ),
 		nodeName( node_name ),
@@ -23,6 +27,8 @@ public:
 		return dirName == dir_name && nodeName == node_name;
 	}
 	virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name );
+Q_SIGNALS:
+	void releaseThis( NodeItemGenerateInfo *release_ptr );
 };
 
 #endif // NODEITEMGENERATEINFO_H_H_HEAD__FILE__

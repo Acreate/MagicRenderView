@@ -26,5 +26,6 @@ public:
 Q_SIGNALS:
 	void linkNodePort( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePort( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	void releaseThis( NodePortLinkInfo *release_ptr );
 };
 #endif // NODEPORTLINKINFO_H_H_HEAD__FILE__

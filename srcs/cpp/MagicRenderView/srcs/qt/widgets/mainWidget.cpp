@@ -41,6 +41,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	sigClickDateTime = QDateTime::currentDateTime( );
 	connect( nodeDirector, &NodeDirector::linkNodePort, this, &MainWidget::linkNodePortEvent );
 	connect( nodeDirector, &NodeDirector::unlinkNodePort, this, &MainWidget::unlinkNodePortEvent );
+	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoObj, this, &MainWidget::releaseNodeItemInfoObj );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -75,6 +76,9 @@ void MainWidget::linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortL
 void MainWidget::unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {
 	update( );
 }
+void MainWidget::releaseNodeItemInfoObj( NodeItemInfo *release_ptr ) {
+	update( );
+}
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
@@ -90,6 +94,10 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 					break;
 				case NodeItem::Click_Type::Space :
 				case NodeItem::Click_Type::Title :
+					if( nodeDirector->getItemManageMenu( rightMouseBtnSelectItem, removeSelectNodeItemMenu ) ) {
+						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
+						clickNodeItemType = NodeItem::Click_Type::None;
+					}
 					break;
 				case NodeItem::Click_Type::InputPort :
 					if( nodeDirector->getLinkControlMenu( rightMouseBtnSelectPort, removeSelectNodeItemMenu ) ) {

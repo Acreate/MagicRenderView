@@ -12,6 +12,7 @@
 
 #include "../varType/I_Type.h"
 
+class NodeItemInfo;
 class NodePortLinkInfo;
 class NodeDirector;
 class NodeInputPort;
@@ -75,6 +76,7 @@ public:
 protected:
 	virtual void linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	virtual void unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	virtual void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

@@ -7,6 +7,8 @@
 #include "../prot/outputProt/nodeOutputPort.h"
 
 NodePortLinkInfo::~NodePortLinkInfo( ) {
+	emit releaseThis( this );
+	outputPorts.clear( );
 	delete removeLinkMenu;
 }
 NodePortLinkInfo::NodePortLinkInfo( NodeInputPort *input_port ) : inputPort( input_port ) {
@@ -26,8 +28,7 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 	activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
 	auto removeAction = removeLinkMenu->addAction( activeTitle );
 	connect( removeAction, &QAction::triggered, [this, link_output_port] {
-		if( unLink( link_output_port ) )
-			emit unlinkNodePort( this, this->inputPort, link_output_port );
+		unLink( link_output_port );
 	} );
 	emit linkNodePort( this, this->inputPort, link_output_port );
 	outputPorts.emplace_back( link_output_port, removeAction );
@@ -41,6 +42,7 @@ bool NodePortLinkInfo::unLink( NodeOutputPort *link_output_port ) {
 			if( data[ index ].first == link_output_port ) {
 				std::pair< NodeOutputPort *, QAction * > pair = data[ index ];
 				outputPorts.erase( outputPorts.begin( ) + index );
+				emit unlinkNodePort( this, this->inputPort, link_output_port );
 				qDebug( ) << "成功删除";
 				delete pair.second;
 				return true; // 删除成功，即刻返回

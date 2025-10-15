@@ -8,6 +8,7 @@
 
 #include "../item/nodeItem.h"
 
+class NodeItemInfo;
 class NodeItemGenerateInfo;
 class NodePortLinkInfo;
 class I_Type;
@@ -19,14 +20,12 @@ class NodeInputPort;
 class NodeDirector : public QObject {
 	Q_OBJECT;
 protected:
-
-protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
 	/// @brief 节点实例编辑窗口
 	std_vector< NodeItemInfoScrollAreaWidget * > nodeItemInfoScrollAreaWidgets;
 	/// @brief 已经创建的实例
-	std_vector< NodeItem * > generateNodeItems;
+	std_vector< NodeItemInfo * > generateNodeItems;
 	/// @brief 节点生成实例对象列表
 	std_vector< std_shared_ptr< NodeItemGenerateInfo > > generateNodeItemInfos;
 	/// @brief 连接列表
@@ -41,7 +40,10 @@ protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
 	virtual bool remove( NodeItem *remove_node_item );
+	virtual bool release( NodePort *remove_node_port );
 	virtual bool createMenu( );
+	virtual bool resetMenu( QObject *del_ptr );
+	virtual bool realseNodeItemInfo( NodeItemInfo *del_ptr );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -67,16 +69,9 @@ public:
 	virtual size_t run( );
 	virtual bool setRaise( const NodeItem *raise_node_item );
 	virtual bool setRaise( const NodePort *raise_node_port );
-	virtual NodeItem * getLastNodeItem( ) {
-		size_t count = generateNodeItems.size( );
-		if( count == 0 )
-			return nullptr;
-		return generateNodeItems.data( )[ count - 1 ];
-	}
+	virtual NodeItem * getLastNodeItem( );
 	virtual void draw( QPainter &painter_target ) const;
-	virtual std_vector< NodeItem * > getNodeItems( ) const {
-		return generateNodeItems;
-	}
+	virtual std_vector< NodeItem * > getNodeItems( ) const;
 	virtual std_vector< QImage * > getNodeItemRenders( ) const;
 
 	virtual bool release( const NodeItem *remove_node_item );
@@ -91,9 +86,12 @@ public:
 	virtual bool getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const;
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;
+	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );
 Q_SIGNALS:
 	void linkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	void releaseThis( NodeDirector *release_ptr );
+	void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__
