@@ -44,6 +44,8 @@ protected:
 	std_vector< NodeItem * > generateNodeItems;
 	/// @brief 节点生成实例对象列表
 	std_vector< std_shared_ptr< NodeItemGenerateInfo > > generateNodeItemInfos;
+	/// @brief 连接列表
+	std_vector_pairt<NodeOutputPort*, NodeInputPort*> linkVectorPairt;
 	/// @brief 节点创建菜单
 	QMenu *nodeItemCreateMenu = nullptr;
 	/// @brief 当前进程实例
@@ -73,6 +75,8 @@ public:
 		return nodeItemCreateMenu;
 	}
 	virtual NodeItemInfoScrollAreaWidget * requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr );
+	virtual bool linkInstallPort( NodePort *first_port, NodePort *scond_port );
+	virtual bool linkUnInstallPort( NodePort *first_port, NodePort *scond_port );
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual bool linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual size_t run( );

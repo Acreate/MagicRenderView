@@ -70,9 +70,10 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
+	auto pos = event->pos( );
 	switch( mouseButton ) {
 		case Qt::RightButton :
-			clickNodeItemType = nodeDirector->getClickNodeItem( event->pos( ), rightMouseBtnSelectItem, rightMouseBtnSelectPort );
+			clickNodeItemType = nodeDirector->getClickNodeItem( pos, rightMouseBtnSelectItem, rightMouseBtnSelectPort );
 			switch( clickNodeItemType ) {
 				case NodeItem::Click_Type::None :
 					rightMouseBtnCreateNodeItemMenu->popup( QCursor::pos( ) );
@@ -89,6 +90,20 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::LeftButton :
+
+			clickNodeItemType = nodeDirector->getClickNodeItem( pos, leftScondSelectItem, leftScondSelecttPort );
+			switch( clickNodeItemType ) {
+				case NodeItem::Click_Type::None :
+					break;
+				case NodeItem::Click_Type::Space :
+					break;
+				case NodeItem::Click_Type::Title :
+					break;
+				case NodeItem::Click_Type::InputPort :
+				case NodeItem::Click_Type::OutputPort :
+					nodeDirector->linkInstallPort( leftFirstSelectPort, leftScondSelecttPort );
+					break;
+			}
 			clickNodeItemType = NodeItem::Click_Type::None;
 			leftFirstSelectItem = leftScondSelectItem;
 			leftFirstSelectPort = leftScondSelecttPort;
@@ -137,11 +152,15 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					tools::debug::printError( "左击选中输入接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
+					leftFirstSelectItem = leftScondSelectItem;
+					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case NodeItem::Click_Type::OutputPort :
 					tools::debug::printError( "左击选中输出接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
+					leftFirstSelectItem = leftScondSelectItem;
+					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case NodeItem::Click_Type::Space :
 				case NodeItem::Click_Type::Title :
@@ -155,9 +174,9 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 							clickNodeItemType = NodeItem::Click_Type::None; // 取消移动
 							leftScondSelectItem = nullptr;
 						}
-					} else
-						leftFirstSelectItem = leftScondSelectItem;
-
+					}
+					leftFirstSelectItem = leftScondSelectItem;
+					leftFirstSelectPort = leftScondSelecttPort;
 					sigClickDateTime = currentDateTime; // 重新计时
 					break;
 			}
