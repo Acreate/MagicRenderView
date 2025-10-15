@@ -80,6 +80,14 @@ namespace tools {
 		inline void printError( const QString &msg, size_t start_index = 2, size_t last_remove_count = 0 ) {
 			printError( msg.toStdWString( ), start_index, last_remove_count );
 		}
+		/// @brief 返回调用函数信息
+		/// @return 调用函数的信息
+		void printInfo( const QString& info_msg);
+		/// @brief 格式化到 qt 字符串
+		/// @param str 格式化的字符串
+		/// @param  ... 参数列表
+		/// @return 格式化后的字符串
+		QString formQString( const char *str, ... );
 	}
 	namespace vector {
 

@@ -7,6 +7,7 @@
 #include <stacktrace>
 #include <filesystem>
 #include <QByteArray>
+#include <qfileinfo.h>
 
 int tools::ui::moveDisplayCenter( QWidget *move_target, size_t display_target ) {
 	QList< QScreen * > screens = qGuiApp->screens( );
@@ -108,6 +109,30 @@ void tools::debug::printError( const std::wstring &msg, size_t start_index, size
 	wss << L"================================================\n";
 	qDebug( ) << QString::fromStdWString( wss.str( ) ).toStdString( ).c_str( );
 }
+void tools::debug::printInfo( const QString &info_msg ) {
+	auto applicationName = qApp->applicationName( );
+	auto stacktrace = std::stacktrace::current( );
+	const std::stacktrace_entry &stacktraceEntry = stacktrace.operator[]( 1 );
+
+	QString description = QString::fromStdString( stacktraceEntry.description( ) );
+	QString currentCodeSourceFile = QString::fromStdString( stacktraceEntry.source_file( ) );
+	QString line = QString::number( stacktraceEntry.source_line( ) );
+
+	// 去除 +0x
+	qsizetype lastIndexOf = description.lastIndexOf( "+0x" );
+	// 去除 标题 !
+	qsizetype startIndexOf = description.lastIndexOf( "!" ) + 1;
+	description = description.mid( startIndexOf, lastIndexOf - startIndexOf );
+	QFileInfo homePath( cmake_value_CMAKE_HOME_DIRECTORY );
+	QFileInfo sourcePath( currentCodeSourceFile );
+	currentCodeSourceFile = sourcePath.absoluteFilePath( ).remove( homePath.absoluteFilePath( ) );
+	qDebug( ) << "== 消息显示::=> " << applicationName.toStdString( ).c_str( ) << " => "
+		<< currentCodeSourceFile.toStdString( ).c_str( ) << "("
+		<< description.toStdString( ).c_str( ) << ")["
+		<< line.toStdString( ).c_str( ) << "]\n\n"
+		<< info_msg.toStdString( ).c_str( ) << "\n\n=========== 消息 end\n";
+}
+
 QString tools::qstr::removeSpace( const QString &string ) {
 	qsizetype length = string.length( );
 	if( length == 0 )

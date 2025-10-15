@@ -84,13 +84,36 @@ bool NodeDirector::linkUnInstallPort( NodePort *first_port, NodePort *scond_port
 bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
 	if( input_port == nullptr || output_port == nullptr || input_port->parentItem == output_port->parentItem )
 		return false; // 同一个节点或者为 nullptr
+	const I_Type *inputPorVarType = input_port->getVarType( );
+	if( inputPorVarType == nullptr ) {
+		tools::debug::printError( QString( "%1 输入端口不存在变量指向" ).arg( input_port->getMetaObjectPathName( ) ) );
+		return false;
+	}
 
-	linkVectorPairt.emplace_back( output_port, input_port );
+	const I_Type *outputPorVarType = output_port->getVarType( );
+	if( outputPorVarType == nullptr ) {
+		tools::debug::printError( QString( "%1 输出端口不存在变量指向" ).arg( output_port->getMetaObjectPathName( ) ) );
+		return false;
+	}
+
+	if( varGenerate->supportType( inputPorVarType->getTypeInfo( ), outputPorVarType->getTypeInfo( ) ) )
+		linkVectorPairt.emplace_back( output_port, input_port );
 	return false;
 }
 bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
 	if( input_port == nullptr || output_port == nullptr || input_port->parentItem == output_port->parentItem )
 		return false; // 同一个节点或者为 nullptr
+
+	size_t count = linkVectorPairt.size( );
+	if( count == 0 )
+		return false;// 不存在匹配的链接端
+	auto pair = linkVectorPairt.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( pair[ index ].first == output_port && pair[ index ].second == input_port ) {
+			linkVectorPairt.erase( linkVectorPairt.begin( ) + index );
+			return true;
+		}
+
 	return false;
 }
 size_t NodeDirector::run( ) {
