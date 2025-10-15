@@ -63,6 +63,8 @@ protected:
 	NodePort *rightMouseBtnSelectPort;
 	/// @brief 用于删除当前选中节点的菜单
 	QMenu *removeSelectNodeItemMenu;
+	/// @brief 用于右键删除节点时使用的信息列表
+	std_vector<NodeOutputPort*> rightMenuRemoveInfo;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;

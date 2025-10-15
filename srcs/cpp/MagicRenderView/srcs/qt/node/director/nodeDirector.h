@@ -35,6 +35,16 @@ protected:
 		}
 		virtual NodeItem * createNodeItem( const QString &dir_name, const QString &node_name );
 	};
+	class NodePortLinkInfo {
+		friend class NodeDirector;
+		NodeInputPort *inputPort;
+		std_vector< NodeOutputPort * > outputPorts;
+	public:
+		virtual ~NodePortLinkInfo( ) = default;
+		NodePortLinkInfo( NodeInputPort *input_port )
+			: inputPort( input_port ) { }
+		virtual const std_vector< NodeOutputPort * > & getOutputPorts( ) const { return outputPorts; }
+	};
 protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
@@ -45,7 +55,7 @@ protected:
 	/// @brief 节点生成实例对象列表
 	std_vector< std_shared_ptr< NodeItemGenerateInfo > > generateNodeItemInfos;
 	/// @brief 连接列表
-	std_vector_pairt<NodeOutputPort*, NodeInputPort*> linkVectorPairt;
+	std_vector< std_shared_ptr< NodePortLinkInfo > > linkVectorPairt;
 	/// @brief 节点创建菜单
 	QMenu *nodeItemCreateMenu = nullptr;
 	/// @brief 当前进程实例
@@ -101,6 +111,9 @@ public:
 	virtual MainWidget * getContentWidget( ) const {
 		return mainWidget;
 	}
+	virtual const std_vector< std_shared_ptr< NodePortLinkInfo > > & getLinkVectorPairt( ) const { return linkVectorPairt; }
+	virtual bool getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const;
+	virtual bool getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const;
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

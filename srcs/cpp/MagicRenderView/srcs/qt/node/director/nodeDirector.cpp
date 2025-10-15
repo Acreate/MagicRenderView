@@ -96,9 +96,27 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false;
 	}
 
-	if( varGenerate->supportType( inputPorVarType->getTypeInfo( ), outputPorVarType->getTypeInfo( ) ) )
-		linkVectorPairt.emplace_back( output_port, input_port );
-	return false;
+	if( varGenerate->supportType( inputPorVarType->getTypeInfo( ), outputPorVarType->getTypeInfo( ) ) == false )
+		return false;
+
+	size_t count = linkVectorPairt.size( );
+	auto data = linkVectorPairt.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].get( )->inputPort == input_port ) {
+			std_vector< NodeOutputPort * > &nodeOutputPorts = data[ index ].get( )->outputPorts;
+			count = nodeOutputPorts.size( );
+			auto nodeOutputPort = nodeOutputPorts.data( );
+			for( index = 0; index < count; ++index )
+				if( nodeOutputPort[ index ] == output_port )
+					return true; // 已经存在
+			nodeOutputPorts.emplace_back( output_port ); // 不存在就添加
+			return true;
+		}
+	// 没有链接对象就创建
+	auto newLinkObjPtr = std::shared_ptr< NodePortLinkInfo >( new NodePortLinkInfo( input_port ) );
+	newLinkObjPtr->outputPorts.emplace_back( output_port );
+	linkVectorPairt.emplace_back( newLinkObjPtr );
+	return true;
 }
 bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
 	if( input_port == nullptr || output_port == nullptr || input_port->parentItem == output_port->parentItem )
@@ -109,12 +127,19 @@ bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort 
 		return false;// 不存在匹配的链接端
 	auto pair = linkVectorPairt.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( pair[ index ].first == output_port && pair[ index ].second == input_port ) {
-			linkVectorPairt.erase( linkVectorPairt.begin( ) + index );
-			return true;
+		if( pair[ index ]->inputPort == input_port ) {
+			std_vector< NodeOutputPort * > &nodeOutputPorts = pair[ index ]->outputPorts;
+			count = nodeOutputPorts.size( );
+			auto nodeOutputPort = nodeOutputPorts.data( );
+			for( index = 0; index < count; ++index )
+				if( nodeOutputPort[ index ] == output_port ) {
+					nodeOutputPorts.erase( nodeOutputPorts.begin( ) + index );
+					return true;
+				}
+			break;
 		}
 
-	return false;
+	return false; // 不存在
 }
 size_t NodeDirector::run( ) {
 	return 0;
@@ -150,22 +175,36 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 	QPainterPath painterPath;
 
 	size_t count = generateNodeItems.size( );
-	auto data = generateNodeItems.data( );
 	size_t index = 0;
-	QPoint inport;
-	QPoint outport;
-	for( ; index < count; ++index ) {
-		NodeItem *nodeItem = data[ index ];
-		if( nodeItem == nullptr )
-			continue;
-		painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		for( auto &item : linkVectorPairt ) {
-			item.first->getPos( outport );
-			item.second->getPos( inport );
-			painterPath.moveTo( outport );
-			painterPath.lineTo( inport );
+	if( count > 0 ) {
+		auto data = generateNodeItems.data( );
+		for( ; index < count; ++index ) {
+			NodeItem *nodeItem = data[ index ];
+			if( nodeItem == nullptr )
+				continue;
+			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+
 		}
 	}
+
+	count = linkVectorPairt.size( );
+	if( count > 0 ) {
+		QPoint inport;
+		QPoint outport;
+		auto nodePortLinkInfo = linkVectorPairt.data( );
+		index = 0;
+		for( ; index < count; ++index ) {
+			nodePortLinkInfo[ index ]->inputPort->getPos( outport );
+			auto outPortCount = nodePortLinkInfo[ index ]->outputPorts.size( );
+			auto outPortData = nodePortLinkInfo[ index ]->outputPorts.data( );
+			for( size_t outIndex = 0; outIndex < outPortCount; ++outIndex ) {
+				outPortData[ outIndex ]->getPos( inport );
+				painterPath.moveTo( outport );
+				painterPath.lineTo( inport );
+			}
+		}
+	}
+
 	painter_target.drawPath( painterPath );
 }
 
@@ -307,6 +346,22 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, this, &NodeDirector::remove );
 	return new_node_item->generateCode;
+}
+bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
+	size_t count = linkVectorPairt.size( );
+	auto data = linkVectorPairt.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->inputPort == input_port ) {
+			result_vector = data[ index ]->outputPorts;
+			return true;
+		}
+	return false;
+}
+bool NodeDirector::getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
+	if( input_port->isOutputPort( ) == false )
+		return getLinkOutPorts( ( NodeInputPort * ) input_port, result_vector );
+	return false;
 }
 
 NodeDirector::~NodeDirector( ) {

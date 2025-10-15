@@ -39,6 +39,11 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	nodeDirector->setContentWidget( this );
 	rightMouseBtnCreateNodeItemMenu = nodeDirector->getNodeItemCraeteMenu( );
 	sigClickDateTime = QDateTime::currentDateTime( );
+
+	removeSelectNodeItemMenu = new QMenu( );
+	connect( removeSelectNodeItemMenu, &QMenu::aboutToHide, [this]( ) {
+		removeSelectNodeItemMenu->clear( );
+	} );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -71,6 +76,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
 	auto pos = event->pos( );
+
 	switch( mouseButton ) {
 		case Qt::RightButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( pos, rightMouseBtnSelectItem, rightMouseBtnSelectPort );
@@ -82,6 +88,28 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				case NodeItem::Click_Type::Title :
 					break;
 				case NodeItem::Click_Type::InputPort :
+					if( nodeDirector->getLinkOutPorts( rightMouseBtnSelectPort, rightMenuRemoveInfo ) ) {
+						size_t count = rightMenuRemoveInfo.size( );
+						if( count == 0 )
+							break;
+						auto data = rightMenuRemoveInfo.data( );
+
+						// todo : 添加删除节点
+						QString actionTitleFrom( "删除 %1[%2] 输入" );
+						QString activeTitle;
+						QAction *addAction;
+						for( size_t index = 0; index < count; ++index ) {
+							activeTitle = actionTitleFrom.arg( data[ index ]->parentItem->nodeTitleName ).arg( data[ index ]->title );
+							addAction = removeSelectNodeItemMenu->addAction( activeTitle );
+							connect( addAction, &QAction::triggered, [this, index, data] {
+								nodeDirector->linkUnInstallPort( rightMouseBtnSelectPort, data[ index ] );
+							} );
+							//connect( addAction, &QAction::destroyed, [this, index, data, addAction] {
+							//	qDebug( ) << QString( "0x%1" ).arg( ( size_t ) addAction, 0, 16 );
+							//} );
+						}
+						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
+					}
 					tools::debug::printError( "右击输入接口" );
 					break;
 				case NodeItem::Click_Type::OutputPort :
