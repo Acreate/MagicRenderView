@@ -4,6 +4,9 @@
 #include <QPainterPath>
 #include <qmenu.h>
 
+#include "nodeItemGenerateInfo.h"
+#include "nodePortLinkInfo.h"
+
 #include "../../application/application.h"
 
 #include "../../generate/varGenerate.h"
@@ -15,12 +18,6 @@
 #include "../prot/inputProt/nodeInputPort.h"
 
 #include "../widgets/nodeItemInfoScrollAreaWidget.h"
-NodeItem * NodeDirector::NodeItemGenerateInfo::createNodeItem( const QString &dir_name, const QString &node_name ) {
-	bool cond = dirName == dir_name && nodeName == node_name;
-	if( cond == true )
-		return ( NodeItem * ) createTypeInstancePtr.get( )->getCreate( ).operator()( );
-	return nullptr;
-}
 bool NodeDirector::addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget ) {
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
 	if( count != 0 ) {
@@ -82,7 +79,10 @@ bool NodeDirector::linkUnInstallPort( NodePort *first_port, NodePort *scond_port
 		return linkUnInstallPort( ( NodeInputPort * ) first_port, ( NodeOutputPort * ) scond_port );
 }
 bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
-	if( input_port == nullptr || output_port == nullptr || input_port->parentItem == output_port->parentItem )
+	if( input_port == nullptr || output_port == nullptr )
+		return false; // 同一个节点或者为 nullptr
+	NodeItem *nodeItem = input_port->parentItem;
+	if( nodeItem == output_port->parentItem )
 		return false; // 同一个节点或者为 nullptr
 	const I_Type *inputPorVarType = input_port->getVarType( );
 	if( inputPorVarType == nullptr ) {
@@ -102,20 +102,30 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( data[ index ].get( )->inputPort == input_port ) {
-			std_vector< NodeOutputPort * > &nodeOutputPorts = data[ index ].get( )->outputPorts;
-			count = nodeOutputPorts.size( );
-			auto nodeOutputPort = nodeOutputPorts.data( );
-			for( index = 0; index < count; ++index )
-				if( nodeOutputPort[ index ] == output_port )
-					return true; // 已经存在
-			nodeOutputPorts.emplace_back( output_port ); // 不存在就添加
-			return true;
-		}
+		if( data[ index ]->inputPort == input_port )
+			return data[ index ]->link( output_port );
 	// 没有链接对象就创建
-	auto newLinkObjPtr = std::shared_ptr< NodePortLinkInfo >( new NodePortLinkInfo( input_port ) );
-	newLinkObjPtr->outputPorts.emplace_back( output_port );
+	auto newLinkObjPtr = new NodePortLinkInfo( input_port );
+	newLinkObjPtr->link( output_port );
 	linkVectorPairt.emplace_back( newLinkObjPtr );
+	// 节点删除则释放
+	connect( nodeItem, &NodeItem::destroyed, [this] ( QObject *del_obj_ptr ) {
+		size_t count = linkVectorPairt.size( );
+		auto data = linkVectorPairt.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ]->inputPort->getParentItem( ) == del_obj_ptr ) {
+				delete data[ index ];
+				linkVectorPairt.erase( linkVectorPairt.begin( ) + index );
+				break;
+			}
+	} );
+	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
+		emit linkNodePort( this, sender_obj_ptr, input_port, output_port );
+	} );
+	connect( newLinkObjPtr, &NodePortLinkInfo::unlinkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
+		emit unlinkNodePort( this, sender_obj_ptr, input_port, output_port );
+	} );
+
 	return true;
 }
 bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
@@ -127,18 +137,8 @@ bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort 
 		return false;// 不存在匹配的链接端
 	auto pair = linkVectorPairt.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( pair[ index ]->inputPort == input_port ) {
-			std_vector< NodeOutputPort * > &nodeOutputPorts = pair[ index ]->outputPorts;
-			count = nodeOutputPorts.size( );
-			auto nodeOutputPort = nodeOutputPorts.data( );
-			for( index = 0; index < count; ++index )
-				if( nodeOutputPort[ index ] == output_port ) {
-					nodeOutputPorts.erase( nodeOutputPorts.begin( ) + index );
-					return true;
-				}
-			break;
-		}
-
+		if( pair[ index ]->inputPort == input_port )
+			return pair[ index ]->unLink( output_port );
 	return false; // 不存在
 }
 size_t NodeDirector::run( ) {
@@ -172,7 +172,6 @@ bool NodeDirector::setRaise( const NodePort *raise_node_port ) {
 	return setRaise( raise_node_port->parentItem );
 }
 void NodeDirector::draw( QPainter &painter_target ) const {
-	QPainterPath painterPath;
 
 	size_t count = generateNodeItems.size( );
 	size_t index = 0;
@@ -183,7 +182,6 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 			if( nodeItem == nullptr )
 				continue;
 			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-
 		}
 	}
 
@@ -191,21 +189,23 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 	if( count > 0 ) {
 		QPoint inport;
 		QPoint outport;
+		size_t outIndex;
+
 		auto nodePortLinkInfo = linkVectorPairt.data( );
 		index = 0;
-		for( ; index < count; ++index ) {
-			nodePortLinkInfo[ index ]->inputPort->getPos( outport );
-			auto outPortCount = nodePortLinkInfo[ index ]->outputPorts.size( );
-			auto outPortData = nodePortLinkInfo[ index ]->outputPorts.data( );
-			for( size_t outIndex = 0; outIndex < outPortCount; ++outIndex ) {
-				outPortData[ outIndex ]->getPos( inport );
-				painterPath.moveTo( outport );
-				painterPath.lineTo( inport );
+		size_t outPortCount;
+		std::pair< NodeOutputPort *, QAction * > *outPortData;
+		for( ; index < count; ++index )
+			if( outPortCount = nodePortLinkInfo[ index ]->outputPorts.size( ), outPortCount != 0 ) {
+				nodePortLinkInfo[ index ]->inputPort->getPos( outport );
+				outPortData = nodePortLinkInfo[ index ]->outputPorts.data( );
+				for( outIndex = 0; outIndex < outPortCount; ++outIndex ) {
+					outPortData[ outIndex ].first->getPos( inport );
+					painter_target.drawLine( outport, inport );
+					qDebug( ) << outport << " -> " << inport;
+				}
 			}
-		}
 	}
-
-	painter_target.drawPath( painterPath );
 }
 
 std_vector< QImage * > NodeDirector::getNodeItemRenders( ) const {
@@ -345,6 +345,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	new_node_item->generateCode = checkCode;
 	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, this, &NodeDirector::remove );
+
 	return new_node_item->generateCode;
 }
 bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
@@ -353,7 +354,7 @@ bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector<
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ]->inputPort == input_port ) {
-			result_vector = data[ index ]->outputPorts;
+			result_vector = data[ index ]->getOutputPorts( );
 			return true;
 		}
 	return false;
@@ -361,6 +362,22 @@ bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector<
 bool NodeDirector::getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
 	if( input_port->isOutputPort( ) == false )
 		return getLinkOutPorts( ( NodeInputPort * ) input_port, result_vector );
+	return false;
+}
+bool NodeDirector::getLinkControlMenu( const NodePort *input_port, QMenu *&result_menu_ptr ) const {
+	if( input_port->isOutputPort( ) == false )
+		return getLinkControlMenu( ( NodeInputPort * ) input_port, result_menu_ptr );
+	return false;
+}
+bool NodeDirector::getLinkControlMenu( const NodeInputPort *input_port, QMenu *&result_menu_ptr ) const {
+	size_t count = linkVectorPairt.size( );
+	auto data = linkVectorPairt.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->inputPort == input_port ) {
+			result_menu_ptr = data[ index ]->removeLinkMenu;
+			return true;
+		}
 	return false;
 }
 

@@ -12,6 +12,7 @@
 
 #include "../varType/I_Type.h"
 
+class NodePortLinkInfo;
 class NodeDirector;
 class NodeInputPort;
 class VarGenerate;
@@ -71,6 +72,9 @@ public:
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
+protected:
+	virtual void linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	virtual void unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

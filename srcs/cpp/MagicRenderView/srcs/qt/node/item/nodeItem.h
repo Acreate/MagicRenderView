@@ -150,7 +150,6 @@ protected:
 	NodeItem( );
 public:
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
-	virtual void setRenderMainWidget( MainWidget *const render_main_widget ) { renderMainWidget = render_main_widget; }
 	~NodeItem( ) override;
 	virtual NodeItemInfoScrollAreaWidget * getEditWidget( ) const { return editWidget; }
 	virtual void setMainWidget( MainWidget *parent );

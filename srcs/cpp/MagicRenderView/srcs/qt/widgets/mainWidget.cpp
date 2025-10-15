@@ -28,8 +28,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	scrollArea->setWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
-
 	nodeDirector = appInstance->getNodeDirector( );
+
 	keyFirst = "Application/MainWindow/MainWidget";
 
 	appInstance->syncAppValueIniFile( );
@@ -39,11 +39,8 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	nodeDirector->setContentWidget( this );
 	rightMouseBtnCreateNodeItemMenu = nodeDirector->getNodeItemCraeteMenu( );
 	sigClickDateTime = QDateTime::currentDateTime( );
-
-	removeSelectNodeItemMenu = new QMenu( );
-	connect( removeSelectNodeItemMenu, &QMenu::aboutToHide, [this]( ) {
-		removeSelectNodeItemMenu->clear( );
-	} );
+	connect( nodeDirector, &NodeDirector::linkNodePort, this, &MainWidget::linkNodePortEvent );
+	connect( nodeDirector, &NodeDirector::unlinkNodePort, this, &MainWidget::unlinkNodePortEvent );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -51,6 +48,7 @@ MainWidget::~MainWidget( ) {
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
+	//painter.fillRect( contentsRect( ), QColor( 0, 0, 0, 0 ) );
 	nodeDirector->draw( painter );
 	// 不在拖拽情况下，绘制动态线
 	switch( clickNodeItemType ) {
@@ -61,6 +59,7 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 		case NodeItem::Click_Type::InputPort :
 		case NodeItem::Click_Type::OutputPort :
 			painter.drawLine( modPoint, mouseMovePoint );
+			break;
 	}
 }
 void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
@@ -70,6 +69,11 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 		setMinimumSize( newSize );
 	auto targetSize = geometry.bottomRight( );
 	scrollArea->ensureVisible( targetSize.x( ), targetSize.y( ) );
+}
+void MainWidget::linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {
+}
+void MainWidget::unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {
+	update( );
 }
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
@@ -88,28 +92,11 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				case NodeItem::Click_Type::Title :
 					break;
 				case NodeItem::Click_Type::InputPort :
-					if( nodeDirector->getLinkOutPorts( rightMouseBtnSelectPort, rightMenuRemoveInfo ) ) {
-						size_t count = rightMenuRemoveInfo.size( );
-						if( count == 0 )
-							break;
-						auto data = rightMenuRemoveInfo.data( );
-
-						// todo : 添加删除节点
-						QString actionTitleFrom( "删除 %1[%2] 输入" );
-						QString activeTitle;
-						QAction *addAction;
-						for( size_t index = 0; index < count; ++index ) {
-							activeTitle = actionTitleFrom.arg( data[ index ]->parentItem->nodeTitleName ).arg( data[ index ]->title );
-							addAction = removeSelectNodeItemMenu->addAction( activeTitle );
-							connect( addAction, &QAction::triggered, [this, index, data] {
-								nodeDirector->linkUnInstallPort( rightMouseBtnSelectPort, data[ index ] );
-							} );
-							//connect( addAction, &QAction::destroyed, [this, index, data, addAction] {
-							//	qDebug( ) << QString( "0x%1" ).arg( ( size_t ) addAction, 0, 16 );
-							//} );
-						}
+					if( nodeDirector->getLinkControlMenu( rightMouseBtnSelectPort, removeSelectNodeItemMenu ) ) {
 						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
+						clickNodeItemType = NodeItem::Click_Type::None;
 					}
+
 					tools::debug::printInfo( "右击输入接口" );
 					break;
 				case NodeItem::Click_Type::OutputPort :
@@ -122,9 +109,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			clickNodeItemType = nodeDirector->getClickNodeItem( pos, leftScondSelectItem, leftScondSelecttPort );
 			switch( clickNodeItemType ) {
 				case NodeItem::Click_Type::None :
-					break;
 				case NodeItem::Click_Type::Space :
-					break;
 				case NodeItem::Click_Type::Title :
 					break;
 				case NodeItem::Click_Type::InputPort :
