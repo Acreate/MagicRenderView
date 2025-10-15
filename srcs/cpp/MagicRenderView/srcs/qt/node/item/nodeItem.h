@@ -144,14 +144,11 @@ private:
 protected:
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
-	/// @brief 编辑窗口
-	NodeItemInfoScrollAreaWidget *editWidget;
 protected:
 	NodeItem( );
 public:
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	~NodeItem( ) override;
-	virtual NodeItemInfoScrollAreaWidget * getEditWidget( ) const { return editWidget; }
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
@@ -167,9 +164,6 @@ public:
 	/// @param y 基于该节点的 y 相对位置
 	/// @return 类型
 	virtual Click_Type relativePointType( int x, int y ) const;
-	/// @brief 获取链接
-	/// @return 链接键值对
-	virtual std_vector< std_pairt< TPortWidgetPort< NodePort * >, TPortWidgetPort< NodePort * > > > getLinkPort( ) const;
 	/// @brief 从相对坐标获输入接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -236,10 +230,6 @@ public:
 	}
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
-	/// @brief 本对象输入端是否连接到目标的输出端
-	/// @param check_link_target_node_item 检测的输出端节点对象指针
-	/// @return true 表示存在链接关系
-	virtual bool isLinkTarget( const NodeItem *check_link_target_node_item ) const;
 	Def_First_Mate_Node_Type( Node_Item_Type::None );
 protected:
 	/// @brief 增加一个输入接口

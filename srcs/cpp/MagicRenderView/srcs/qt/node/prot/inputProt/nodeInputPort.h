@@ -10,7 +10,6 @@ class NodeInputPort : public NodePort {
 	Def_Last_Firend_StaticMetaInfo( NodePort );
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
-	friend class MainWidget;
 	friend class NodeItem;
 protected:
 public:

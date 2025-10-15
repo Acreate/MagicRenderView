@@ -10,6 +10,8 @@
 
 #include "../../widgets/mainWidget.h"
 
+#include "../director/nodePortLinkInfo.h"
+
 #include "outputProt/nodeOutputPort.h"
 
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
@@ -25,7 +27,6 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRe
 	nodePortRender->fill( 0 );
 }
 NodePort::~NodePort( ) {
-	emit releaseThiNodeProt( this );
 	delete nodePortRender;
 	delete ico;
 	if( varPtr )

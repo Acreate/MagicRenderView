@@ -9,7 +9,6 @@ class NodeOutputPort : public NodePort {
 	Def_Last_Firend_StaticMetaInfo( NodePort );
 	friend class NodeWidgetSerialization;
 	friend class NodeItemSerialization;
-	friend class MainWidget;
 	friend class NodeItem;
 public:
 	NodeOutputPort( NodeItem *parent ) : NodePort( parent ) {

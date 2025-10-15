@@ -109,11 +109,11 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	newLinkObjPtr->link( output_port );
 	linkVectorPairt.emplace_back( newLinkObjPtr );
 	// 节点删除则释放
-	connect( nodeItem, &NodeItem::destroyed, [this] ( QObject *del_obj_ptr ) {
+	connect( nodeItem, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_node_item ) {
 		size_t count = linkVectorPairt.size( );
 		auto data = linkVectorPairt.data( );
 		for( size_t index = 0; index < count; ++index )
-			if( data[ index ]->inputPort->getParentItem( ) == del_obj_ptr ) {
+			if( data[ index ]->inputPort->getParentItem( ) == release_node_item ) {
 				delete data[ index ];
 				linkVectorPairt.erase( linkVectorPairt.begin( ) + index );
 				break;

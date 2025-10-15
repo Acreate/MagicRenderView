@@ -7,6 +7,8 @@
 
 #include <alias/type_alias.h>
 
+class NodeInputPort;
+class NodePortLinkInfo;
 class VarGenerate;
 class NodeOutputPort;
 class I_Var;
@@ -19,7 +21,6 @@ class NodePort : public QObject, public Type_Alias {
 	Def_Last_StaticMetaInfo( );
 private:
 	friend class NodeItem;
-	friend class MainWidget;
 	friend class AppNodeItemStack;
 	friend class NodeDirector;
 protected:
@@ -90,15 +91,13 @@ public:
 	virtual std_vector< NodePort * > getLinkOutputVector( ) const;
 	/// @brief 更新链接信息
 	/// @return true 表示成功更新
-	virtual bool updateLinkInfoVector();
+	virtual bool updateLinkInfoVector( );
 	virtual bool isOutputPort( ) const {
 		return false;
 	}
 Q_SIGNALS:
 	void releaseThiNodeProt( NodePort *release_ptr );
 	void outputPorDelete( NodeOutputPort *remove_output_port );
-	void inputPorDelete( NodePort *remove_input_port );
-	void linkOutputPorOver( NodePort *remove_input_port );
-	void disLinkOutputPorOver( NodePort *remove_input_port );
+	void inputPorDelete( NodeInputPort *remove_input_port );
 };
 #endif // NODEPORT_H_H_HEAD__FILE__

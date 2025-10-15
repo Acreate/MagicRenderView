@@ -80,7 +80,7 @@ int NodeItem::borderLeftSpace = 0;
 /// @brief 边缘右侧空间大小
 int NodeItem::borderRightSpace = 0;
 
-NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), editWidget( nullptr ) {
+NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ) {
 
 	inputBuffHeight = 0;
 	inputBuffWidth = 0;
@@ -121,7 +121,6 @@ NodeItem::~NodeItem( ) {
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
-	editWidget = nullptr;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
 	setParent( parent );
@@ -167,29 +166,6 @@ NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 	} else
 		return Click_Type::Title;
 	return Click_Type::Space;
-}
-std_vector< std_pairt< NodeItem::TPortWidgetPort< NodePort * >, NodeItem::TPortWidgetPort< NodePort * > > > NodeItem::getLinkPort( ) const {
-	std_vector< std_pairt< NodeItem::TPortWidgetPort< NodePort * >, NodeItem::TPortWidgetPort< NodePort * > > > result;
-	size_t inputCount = nodeInputProtVector.size( );
-	auto inputVectorPtr = nodeInputProtVector.data( );
-
-	QPoint outPos, inPos;
-	for( size_t inputIndex = 0; inputIndex < inputCount; ++inputIndex ) {
-		auto &inputPortPirt = inputVectorPtr[ inputIndex ];
-		auto linkNodeOutputPorts = inputPortPirt.first->getLinkOutputVector( );
-		size_t linkOutputCount = linkNodeOutputPorts.size( );
-		if( linkOutputCount == 0 )
-			continue;
-		// 输入端坐标
-		if( inputPortPirt.first->getPos( inPos ) == false )
-			continue;
-		auto linkOutputVectPtr = linkNodeOutputPorts.data( );
-		NodeItem::TPortWidgetPort< NodeInputPort * > inputPortWidgetInfo( inputVectorPtr[ inputIndex ].first, { inPos.x( ), inPos.y( ) } );
-		for( size_t linkOutputIndex = 0; linkOutputIndex < linkOutputCount; ++linkOutputIndex )
-			if( linkOutputVectPtr[ linkOutputIndex ]->getPos( outPos ) )
-				result.emplace_back( NodeItem::TPortWidgetPort< NodePort * >( linkOutputVectPtr[ linkOutputIndex ], { outPos.x( ), outPos.y( ) } ), inputPortWidgetInfo );
-	}
-	return result;
 }
 NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
 	// 数组数量为 0，直接返回
@@ -281,31 +257,6 @@ NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) cons
 	return nullptr;
 }
 
-bool NodeItem::isLinkTarget( const NodeItem *check_link_target_node_item ) const {
-	// 扫描输入端
-	size_t inputPortVectorCount = nodeInputProtVector.size( );
-	if( inputPortVectorCount == 0 )
-		return false;
-	auto inputPortVectorDataPtr = nodeInputProtVector.data( );
-	size_t inputPortVectorIndex = 0;
-	size_t linkOutputPortCount;
-	NodePort *const*linkOutputPortDataPtr;
-	size_t linkOutputPortIndex;
-	for( ; inputPortVectorIndex < inputPortVectorCount; ++inputPortVectorIndex ) {
-		NodeInputPort *inputPort = inputPortVectorDataPtr[ inputPortVectorIndex ].first;
-		const std_vector< NodePort * > &nodePorts = inputPort->getLinkOutputVector( );
-		linkOutputPortCount = nodePorts.size( );
-		if( linkOutputPortCount == 0 )
-			continue;
-		linkOutputPortDataPtr = nodePorts.data( );
-
-		for( linkOutputPortIndex = 0; linkOutputPortIndex < linkOutputPortCount; ++linkOutputPortIndex )
-			if( linkOutputPortDataPtr[ linkOutputPortIndex ]->getParentItem( ) == check_link_target_node_item )
-				return true;
-
-	}
-	return false;
-}
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
 	return true;
