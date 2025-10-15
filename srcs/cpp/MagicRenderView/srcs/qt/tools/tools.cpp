@@ -126,10 +126,11 @@ void tools::debug::printInfo( const QString &info_msg ) {
 	QFileInfo homePath( cmake_value_CMAKE_HOME_DIRECTORY );
 	QFileInfo sourcePath( currentCodeSourceFile );
 	currentCodeSourceFile = sourcePath.absoluteFilePath( ).remove( homePath.absoluteFilePath( ) );
-	qDebug( ) << "== 消息显示::=> " << applicationName.toStdString( ).c_str( ) << " => "
-		<< currentCodeSourceFile.toStdString( ).c_str( ) << "("
-		<< description.toStdString( ).c_str( ) << ")["
-		<< line.toStdString( ).c_str( ) << "]\n\n"
+	qDebug( ) << "== 消息显示::=> " << applicationName.toStdString( ).c_str( ) << "\n!"
+		<< "(" << description.toStdString( ).c_str( ) << ")"
+		<< currentCodeSourceFile.toStdString( ).c_str( )
+		<< "[" << line.toStdString( ).c_str( ) << "]"
+		<< "\n\n"
 		<< info_msg.toStdString( ).c_str( ) << "\n\n=========== 消息 end\n";
 }
 

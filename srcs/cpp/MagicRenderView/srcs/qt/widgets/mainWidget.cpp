@@ -110,10 +110,10 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 						}
 						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
 					}
-					tools::debug::printError( "右击输入接口" );
+					tools::debug::printInfo( "右击输入接口" );
 					break;
 				case NodeItem::Click_Type::OutputPort :
-					tools::debug::printError( "右击输出接口" );
+					tools::debug::printInfo( "右击输出接口" );
 					break;
 			}
 			break;
@@ -177,14 +177,14 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				case NodeItem::Click_Type::None :
 					break;
 				case NodeItem::Click_Type::InputPort :
-					tools::debug::printError( "左击选中输入接口" );
+					tools::debug::printInfo( "左击选中输入接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case NodeItem::Click_Type::OutputPort :
-					tools::debug::printError( "左击选中输出接口" );
+					tools::debug::printInfo( "左击选中输出接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
@@ -198,7 +198,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					if( leftFirstSelectItem == leftScondSelectItem ) {
 						long long count = duration_cast< std::chrono::milliseconds >( currentDateTime - sigClickDateTime ).count( );
 						if( count < 200 ) {
-							tools::debug::printError( QString( "(%1)双击节点 -> %2" ).arg( count ).arg( leftScondSelectItem->getMetaObjectPathName( ) ) );
+							tools::debug::printInfo( QString( "(%1)双击节点 -> %2" ).arg( count ).arg( leftScondSelectItem->getMetaObjectPathName( ) ) );
 							clickNodeItemType = NodeItem::Click_Type::None; // 取消移动
 							leftScondSelectItem = nullptr;
 						}
