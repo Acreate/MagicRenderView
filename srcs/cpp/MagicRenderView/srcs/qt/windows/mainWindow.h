@@ -38,15 +38,6 @@ public:
 	virtual void ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode );
 	/// @brief 更新支持内容
 	virtual void updateMainWidgetSupport( );
-	/// @brief 获取经过二进制化的支持数据
-	/// @return 经过二进制化的支持是数据
-	virtual const std_vector< uint8_t > & getMainWidgetSupportBin( ) const;
-	/// @brief 获取支持节点名称的二进制数据
-	/// @return 节点支持的二进制数据
-	virtual const std_vector< uint8_t > & getMainWidgetSupportNodeNmaeBin( ) const;
-	/// @brief 获取支持类型名称的二进制数据
-	/// @return 类型名称的二进制数据
-	virtual const std_vector< uint8_t > & getMainWidgetSupportVarTypeNameBin( ) const;
 	/// @brief 对象序列化到二进制
 	/// @return 二进制
 	virtual size_t objMainWidgetToBin( std_vector< uint8_t > &result_vector ) const;

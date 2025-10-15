@@ -38,112 +38,11 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	leftFirstSelectPort = leftScondSelecttPort = nullptr;
 	nodeDirector->setContentWidget( this );
 	rightMouseBtnCreateNodeItemMenu = nodeDirector->getNodeItemCraeteMenu( );
+	sigClickDateTime = QDateTime::currentDateTime( );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
 }
-size_t MainWidget::loadBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
-
-	//size_t needCount;
-	//size_t result;
-	//auto &sizeTypeInfo = typeid( size_t );
-	//if( varGenerate->toOBjVector( sizeTypeInfo, &needCount, result, bin_data_ptr, bin_data_count ) == false )
-	//	return 0;
-	//size_t mod = bin_data_count - result;
-	//if( needCount > mod )
-	//	return 0;
-	//auto offset = bin_data_ptr + result;
-
-	//auto data = supportBin.data( );
-	//size_t compCount = supportBin.size( );
-	//for( result = 0; result < compCount; ++result )
-	//	if( offset[ result ] != data[ result ] )
-	//		return 0;
-	//offset += result;
-	//mod -= result;
-	//if( varGenerate->toOBjVector( sizeTypeInfo, &needCount, result, offset, mod ) == false )
-	//	return 0;
-
-	//offset += result;
-	//mod -= result;
-	//auto &nodeItemTypeInfo = typeid( NodeItem );
-	//std_vector< NodeItem * > buffList( needCount );
-	//auto nodeItemDataPtr = buffList.data( );
-	//std_vector< QString > name;
-	//while( needCount ) {
-	//	NodeItem *item = nullptr;
-	//	if( varGenerate->getCheckTypeNames( nodeItemTypeInfo, offset, mod, name ) == false )
-	//		return 0;
-	//	varGenerate->createCheckTypeName( nodeItemTypeInfo, name[ 0 ], [&item] ( I_Var *create_obj_ptr ) {
-	//		item = ( NodeItem * ) create_obj_ptr->getVarPtr( );
-	//		connect( item, &NodeItem::releaseThiNodeItem, [create_obj_ptr]( ) {
-	//			delete create_obj_ptr;
-	//		} );
-	//		return true;
-	//	} );
-	//	if( item == nullptr )
-	//		return 0;
-	//	if( item->intPortItems( this ) == false )
-	//		return 0;
-	//	if( varGenerate->toOBjVector( nodeItemTypeInfo, item, result, offset, mod ) == false )
-	//		return 0;
-
-	//	offset += result;
-	//	mod -= result;
-	//	--needCount;
-	//	nodeItemDataPtr[ needCount ] = item;
-	//	renderWidgetActiveItem = item;
-	//	ensureVisibleToItemNode( item );
-	//}
-
-	//auto copyMenu = nodeItemList; // 保存旧的
-
-	//needCount = buffList.size( );
-	//nodeItemList.resize( needCount );
-	//auto desNodeItemPtr = nodeItemList.data( );
-	//for( result = 0; result < needCount; ++result ) { // 翻转
-	//	desNodeItemPtr[ result ] = nodeItemDataPtr[ needCount - result - 1 ];
-	//	connectNodeItem( desNodeItemPtr[ result ] );
-	//}
-
-	//for( result = 0; result < needCount; ++result )  // 更新
-	//	desNodeItemPtr[ result ]->updataLinkInfo( );
-
-	//needCount = copyMenu.size( );
-	//desNodeItemPtr = copyMenu.data( );
-	//for( result = 0; result < needCount; ++result ) // 释放
-	//	delete desNodeItemPtr[ result ];
-
-	//return offset - bin_data_ptr;
-	return 0;
-}
-size_t MainWidget::saveBin( std_vector< uint8_t > &bin_vector ) {
-	std_vector< uint8_t > buff;
-
-	//size_t count = nodeItemList.size( );
-	//auto &sizeTypeInfo = typeid( size_t );
-	//if( varGenerate->toBinVector( sizeTypeInfo, &count, buff, count ) == false )
-	//	return 0;
-	//std_vector< uint8_t > resultbuff;
-	//resultbuff.append_range( buff );
-	//auto &nodeItemTypeInfo = typeid( NodeItem );
-
-	//auto data = nodeItemList.data( );
-	//size_t index = 0;
-	//for( ; index < count; ++index ) {
-	//	NodeItem *nodeItem = data[ index ];
-	//	if( varGenerate->toBinVector( nodeItemTypeInfo, nodeItem, buff, count ) == false )
-	//		return 0;
-	//	resultbuff.append_range( buff );
-	//}
-	//count = resultbuff.size( ) + supportBin.size( );
-	//if( varGenerate->toBinVector( sizeTypeInfo, &count, bin_vector, count ) == false )
-	//	return 0;
-	//bin_vector.append_range( supportBin );
-	//bin_vector.append_range( resultbuff );
-	return bin_vector.size( );
-}
-
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
@@ -175,7 +74,6 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::RightButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( event->pos( ), rightMouseBtnSelectItem, rightMouseBtnSelectPort );
 			switch( clickNodeItemType ) {
-
 				case NodeItem::Click_Type::None :
 					rightMouseBtnCreateNodeItemMenu->popup( QCursor::pos( ) );
 					break;
@@ -191,10 +89,14 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::LeftButton :
-
+			clickNodeItemType = NodeItem::Click_Type::None;
+			leftFirstSelectItem = leftScondSelectItem;
+			leftFirstSelectPort = leftScondSelecttPort;
+			leftScondSelectItem = nullptr;
+			leftScondSelecttPort = nullptr;
+			update( );
 			break;
 	}
-	leftFirstSelectItem = nullptr;
 }
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
@@ -209,8 +111,8 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 				if( point.y( ) < 0 )
 					point.setY( 0 );
 				leftFirstSelectItem->move( point );
+				update( );
 			}
-
 			break;
 		case NodeItem::Click_Type::InputPort :
 		case NodeItem::Click_Type::OutputPort :
@@ -224,6 +126,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 
 	auto fromGlobalPressPoint = event->pos( );
+	auto currentDateTime = QDateTime::currentDateTime( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( fromGlobalPressPoint, leftScondSelectItem, leftScondSelecttPort );
@@ -233,54 +136,31 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				case NodeItem::Click_Type::InputPort :
 					tools::debug::printError( "左击选中输入接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
-					modPoint = fromGlobalPressPoint;
+					leftScondSelecttPort->getPos( modPoint );
 					break;
 				case NodeItem::Click_Type::OutputPort :
 					tools::debug::printError( "左击选中输出接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
-					modPoint = fromGlobalPressPoint;
+					leftScondSelecttPort->getPos( modPoint );
 					break;
 				case NodeItem::Click_Type::Space :
 				case NodeItem::Click_Type::Title :
-					leftFirstSelectItem = leftScondSelectItem;
 					nodeDirector->setRaise( leftScondSelectItem );
-					modPoint = fromGlobalPressPoint - leftFirstSelectItem->getPos( );
+					modPoint = fromGlobalPressPoint - leftScondSelectItem->getPos( );
+					// 相同节点
+					if( leftFirstSelectItem == leftScondSelectItem ) {
+						long long count = duration_cast< std::chrono::milliseconds >( currentDateTime - sigClickDateTime ).count( );
+						if( count < 200 ) {
+							tools::debug::printError( QString( "(%1)双击节点 -> %2" ).arg( count ).arg( leftScondSelectItem->getMetaObjectPathName( ) ) );
+							clickNodeItemType = NodeItem::Click_Type::None; // 取消移动
+							leftScondSelectItem = nullptr;
+						}
+					} else
+						leftFirstSelectItem = leftScondSelectItem;
+
+					sigClickDateTime = currentDateTime; // 重新计时
 					break;
 			}
 			break;
 	}
-}
-size_t MainWidget::supportInfoToBin( ) {
-	size_t result;
-	size_t index;
-	size_t count = supportNodeName.size( );
-	std_vector< uint8_t > buff;
-	auto &sizeTTypeInfo = typeid( size_t );
-	if( varGenerate->toBinVector( sizeTTypeInfo, &count, supportNodeBin, result ) == false )
-		return 0;
-	auto data = supportNodeName.data( );
-	auto &qstringTypeInfo = typeid( QString );
-	for( index = 0; index < count; ++index ) {
-		if( varGenerate->toBinVector( qstringTypeInfo, data + index, buff, result ) == false )
-			return 0;
-		supportNodeBin.append_range( buff );
-	}
-
-	count = supporVarType.size( );
-	if( varGenerate->toBinVector( sizeTTypeInfo, &count, supportVarTypeBin, result ) == false )
-		return 0;
-	data = supporVarType.data( );
-	for( index = 0; index < count; ++index ) {
-		if( varGenerate->toBinVector( qstringTypeInfo, data + index, buff, result ) == false )
-			return 0;
-		supportVarTypeBin.append_range( buff );
-	}
-
-	auto vectorCount = supportVarTypeBin.size( ) + supportNodeBin.size( );
-
-	if( varGenerate->toBinVector( sizeTTypeInfo, &vectorCount, supportBin, result ) == false )
-		return 0;
-	supportBin.append_range( supportNodeBin );
-	supportBin.append_range( supportVarTypeBin );
-	return supportBin.size( );
 }

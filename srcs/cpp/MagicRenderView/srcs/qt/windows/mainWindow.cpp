@@ -62,16 +62,16 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			saveFileName.append( ".mr" );
 		appInstance->setAppIniValue( normalKey, saveFileName );
 		std_vector< uint8_t > saveBin;
-		if( mainWidget->saveBin( saveBin ) == 0 ) {
-			tools::debug::printError( "保存异常，请检查保存功能" );
-			return;
-		}
+		//if( mainWidget->saveBin( saveBin ) == 0 ) {
+		//	tools::debug::printError( "保存异常，请检查保存功能" );
+		//	return;
+		//}
 
-		QFile file( saveFileName );
-		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
-			file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
-			return;
-		}
+		//QFile file( saveFileName );
+		//if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+		//	file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+		//	return;
+		//}
 	} );
 
 	currentAction = currentMenu->addAction( "加载..." );
@@ -85,15 +85,15 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			return;
 		}
 		appInstance->setAppIniValue( normalKey, loadFileName );
-		QFile file( loadFileName );
-		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
-			QByteArray byteArray = file.readAll( );
-			if( mainWidget->loadBin( byteArray ) == 0 ) {
-				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
-				return;
-			}
-			return;
-		}
+		//QFile file( loadFileName );
+		//if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+		//	QByteArray byteArray = file.readAll( );
+		//	if( mainWidget->loadBin( byteArray ) == 0 ) {
+		//		tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+		//		return;
+		//	}
+		//	return;
+		//}
 	} );
 
 	currentMenu = new QMenu( "配置", this );
@@ -128,15 +128,6 @@ void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNo
 }
 void MainWindow::updateMainWidgetSupport( ) {
 	//mainWidget->updateSupport( );
-}
-const std_vector< uint8_t > & MainWindow::getMainWidgetSupportBin( ) const {
-	return mainWidget->getSupportBin( );
-}
-const std_vector< uint8_t > & MainWindow::getMainWidgetSupportNodeNmaeBin( ) const {
-	return mainWidget->getSupportNodeNmaeBin( );
-}
-const std_vector< uint8_t > & MainWindow::getMainWidgetSupportVarTypeNameBin( ) const {
-	return mainWidget->getSupportVarTypeNameBin( );
 }
 size_t MainWindow::objMainWidgetToBin( std_vector< uint8_t > &result_vector ) const {
 	//return mainWidget->objToBin( result_vector );
