@@ -123,7 +123,7 @@ NodeItem::~NodeItem( ) {
 	delete titleBuff;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
-	setParent( parent );
+	//setParent( parent );
 	renderMainWidget = parent;
 }
 bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {

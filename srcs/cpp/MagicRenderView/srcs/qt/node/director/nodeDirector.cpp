@@ -295,21 +295,24 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	size_t index;
 	if( count != 0 ) {
 		index = 0;
+		NodePortLinkInfo *nodePortLinkInfo = nullptr;
 		auto nodePortLinkInfoData = linkVectorPairt.data( );
 		for( ; index < count; ++index ) {
 			if( nodePortLinkInfoData[ index ] != nullptr )
 				if( nodePortLinkInfoData[ index ]->inputPort->parentItem == release ) {
-					delete linkVectorPairt[ index ];
+					nodePortLinkInfo = linkVectorPairt[ index ];
 					linkVectorPairt[ index ] = nullptr;
 				} else
 					nodePortLinkInfoData[ index ]->releaseNodeItemPtr( release );
 		}
+		if( nodePortLinkInfo )
+			delete nodePortLinkInfo;
 	}
 
 	// 删除 generateNodeItems
 	count = generateNodeItems.size( );
+	NodeItemInfo *itemInfo = nullptr;
 	if( count != 0 ) {
-		NodeItemInfo *itemInfo = nullptr;
 		auto nodeitemPtrData = generateNodeItems.data( );
 		index = 0;
 		for( ; index < count; ++index )
@@ -526,8 +529,10 @@ NodeDirector::~NodeDirector( ) {
 		index = 0;
 		auto data = nodeItemInfoScrollAreaWidgets.data( );
 		for( ; index < count; ++index )
-			if( data[ index ] != nullptr )
+			if( data[ index ] != nullptr ) {
 				delete data[ index ];
+				data[ index ] = nullptr;
+			}
 	}
 
 	count = generateNodeItems.size( );
@@ -538,7 +543,6 @@ NodeDirector::~NodeDirector( ) {
 			if( data[ index ] != nullptr ) {
 				NodeItem *nodeItem = data[ index ]->nodeItem;
 				NodeItemInfo *nodeItemInfo = data[ index ];
-				nodeItemInfo->nodeItem = nullptr;
 				data[ index ] = nullptr;
 				delete nodeItemInfo;
 				delete nodeItem;

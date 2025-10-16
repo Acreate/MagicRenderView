@@ -114,6 +114,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	nodeDirector = new NodeDirector( );
 }
 Application::~Application( ) {
+	delete nodeDirector;
+	delete varGenerate;
 	settings->sync( );
 	delete settings;
 }
@@ -360,8 +362,6 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 bool Application::notify( QObject *object, QEvent *event ) {
 	switch( event->type( ) ) {
 		case QEvent::Quit :
-			delete nodeDirector;
-			delete varGenerate;
 			break;
 	}
 	return QApplication::notify( object, event );
