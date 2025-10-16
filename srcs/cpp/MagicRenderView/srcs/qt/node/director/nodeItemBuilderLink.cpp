@@ -138,18 +138,25 @@ void NodeItemBuilderLink::clear( ) {
 	clearNodeItemInfoVector( );
 	clearNodePortLinkInfoVector( );
 }
+
 bool NodeItemBuilderLink::generateBuilderInfo( ) {
+	// todo : 1. 实现编译节点
 	return true;
 }
+
 bool NodeItemBuilderLink::next( ) {
+	// todo : 2. 编译下一个模块
 	return false;
 }
 bool NodeItemBuilderLink::isRun( ) const {
-	return true;
+	// todo : 4. 是否可以运行
+	return false;
 }
 bool NodeItemBuilderLink::run( ) {
+	// todo : 5. 运行期间是否正确
 	return false;
 }
 bool NodeItemBuilderLink::getRunNodeItems( std_vector< NodeItemInfo * > &result_current_run_info_vector ) {
+	// todo : 3. 获取当前模块的运行节点
 	return false;
 }
