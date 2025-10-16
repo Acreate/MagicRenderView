@@ -152,6 +152,8 @@ public:
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
+	virtual bool hasInputPort(const NodePort * node_port);
+	virtual bool hasOutputPort(const NodePort * node_port);
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -269,9 +271,6 @@ public:
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
-	/// @brief 更新连接信息
-	/// @return 成功返回 true
-	virtual bool updataLinkInfo( );
 Q_SIGNALS:
 	void releaseThiNodeItem( NodeItem *release_node_item );
 public: // 二进制相关

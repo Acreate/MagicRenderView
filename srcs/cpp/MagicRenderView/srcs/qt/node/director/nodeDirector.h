@@ -39,11 +39,10 @@ protected:
 protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
-	virtual bool remove( NodeItem *remove_node_item );
-	virtual bool release( NodePort *remove_node_port );
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
-	virtual bool realseNodeItemInfo( NodeItemInfo *del_ptr );
+	virtual bool rleaseNodeItem( NodeItem* release );
+	virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;

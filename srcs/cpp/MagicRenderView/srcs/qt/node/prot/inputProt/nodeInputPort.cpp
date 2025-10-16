@@ -20,13 +20,7 @@ Imp_StaticMetaInfo( NodeInputPort, QObject::tr( "NodeInputPort" ), QObject::tr( 
 bool NodeInputPort::updateProtLayout( ) {
 	return renderLayout( false );
 }
-bool NodeInputPort::linkOutputPort( NodePort *output_port ) {
-	
-	return true;
-}
-bool NodeInputPort::disLinkOutputPor( NodePort *remove_output_port ) {
-	return false;
-}
+
 bool NodeInputPort::getPos( QPoint &result_pos ) const {
 	return parentItem->getInputPortPos( this, result_pos );
 }

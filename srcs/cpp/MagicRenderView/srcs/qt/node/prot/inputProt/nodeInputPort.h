@@ -19,8 +19,6 @@ public:
 		emit inputPorDelete( this );
 	}
 	bool updateProtLayout( ) override;
-	bool linkOutputPort( NodePort *output_port ) override;
-	bool disLinkOutputPor( NodePort *remove_output_port ) override;
 	bool getPos( QPoint &result_pos ) const override;
 };
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__

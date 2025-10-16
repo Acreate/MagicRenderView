@@ -16,17 +16,16 @@ class NodePortLinkInfo : public QObject {
 protected:
 	friend class NodeDirector;
 	NodeInputPort *inputPort;
-	std_vector_pairt< NodeOutputPort *, QAction * > outputPorts;
-	std_vector< NodeItem * > nodeItemEvent;
+	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, QAction * > > outputPorts;
 	QMenu *removeLinkMenu;
-protected:
-	virtual void appendReleaseNodeItemEvent( NodeOutputPort *link_output_port );
 public:
 	~NodePortLinkInfo( ) override;
 	NodePortLinkInfo( NodeInputPort *input_port );
 	virtual bool link( NodeOutputPort *link_output_port );
 	virtual bool unLink( NodeOutputPort *link_output_port );
-	virtual std_vector< NodeOutputPort * > getOutputPorts( ) const;
+	virtual bool releaseNodeItemPtr( NodeItem *link_node_item );
+	virtual bool getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > result_link );
+	virtual bool getLink( std_vector< NodeOutputPort * > result_link );
 	virtual QMenu * getRemoveLinkMenu( ) const { return removeLinkMenu; }
 Q_SIGNALS:
 	void linkNodePort( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );

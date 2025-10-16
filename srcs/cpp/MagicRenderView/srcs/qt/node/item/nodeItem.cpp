@@ -142,6 +142,18 @@ bool NodeItem::getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QP
 		}
 	return false;
 }
+bool NodeItem::hasInputPort( const NodePort *node_port ) {
+	for( auto &[ inputPort, pos ] : nodeInputProtVector )
+		if( inputPort == node_port )
+			return true;
+	return false;
+}
+bool NodeItem::hasOutputPort( const NodePort *node_port ) {
+	for( auto &[ onputPortPtr, pos ] : nodeOutputProtVector )
+		if( onputPortPtr == node_port )
+			return true;
+	return false;
+}
 NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
 
 	// 任意一个坐标超出范围，即可判定非法
@@ -469,14 +481,7 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 		return nodeInputProtVector.data( )[ index ].first;
 	return nullptr;
 }
-bool NodeItem::updataLinkInfo( ) {
-	size_t count = nodeInputProtVector.size( );
-	auto data = nodeInputProtVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		data[ index ].first->updateLinkInfoVector( );
-	return true;
-}
+
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
 	if( parent == nullptr )
 		return false;

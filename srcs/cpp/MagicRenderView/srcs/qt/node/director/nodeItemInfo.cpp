@@ -17,7 +17,5 @@ NodeItemInfo::NodeItemInfo( NodeItem *node_item ) : QObject( nullptr ),
 	auto addAction = manageMenu->addAction( title.arg( node_item->getMetaObjectPathName( ) ) );
 	connect( addAction, &QAction::triggered, [this]( ) {
 		nodeItem->deleteLater( );
-		this->deleteLater( );
 	} );
-
 }

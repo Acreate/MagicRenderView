@@ -6,46 +6,6 @@
 
 #include "../prot/outputProt/nodeOutputPort.h"
 
-void NodePortLinkInfo::appendReleaseNodeItemEvent( NodeOutputPort *link_output_port ) {
-	auto parentItem = link_output_port->getParentItem( );
-	size_t count = nodeItemEvent.size( );
-	if( count != 0 ) {
-		auto data = nodeItemEvent.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ] == parentItem )
-				return;
-	}
-	connect( parentItem, &NodeItem::releaseThiNodeItem, [this, parentItem]( ) {
-		if( inputPort == nullptr )
-			return;
-		size_t count = outputPorts.size( );
-		if( count != 0 )
-			do {
-				auto data = outputPorts.data( );
-				size_t index = 0;
-				for( ; index < count; ++index )
-					if( data[ index ].first->getParentItem( ) == parentItem ) {
-						std::pair< NodeOutputPort *, QAction * > pair = data[ index ];
-						outputPorts.erase( outputPorts.begin( ) + index );
-						emit unlinkNodePort( this, this->inputPort, pair.first );
-						tools::debug::printInfo( "成功删除" );
-						delete pair.second;
-						break;
-					}
-				if( index == count )
-					break;
-				count = outputPorts.size( );
-			} while( count != 0 );
-		count = nodeItemEvent.size( );
-		auto data = nodeItemEvent.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( data[ index ] == parentItem ) {
-				nodeItemEvent.erase( nodeItemEvent.begin( ) + index );
-				break;
-			}
-	} );
-	nodeItemEvent.emplace_back( parentItem );
-}
 NodePortLinkInfo::~NodePortLinkInfo( ) {
 	emit releaseThis( this );
 	this->disconnect( );
@@ -57,11 +17,28 @@ NodePortLinkInfo::NodePortLinkInfo( NodeInputPort *input_port ) : inputPort( inp
 }
 bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 	size_t count = outputPorts.size( );
+	auto parentNodeItem = link_output_port->getParentItem( );
 	if( count != 0 ) {
 		auto data = outputPorts.data( );
 		for( size_t index = 0; index < count; ++index )
-			if( data[ index ].first == link_output_port )
-				return true; // 已经链接，即刻返回
+			if( data[ index ].first == parentNodeItem ) {
+				auto &pairs = data[ index ].second;
+				size_t pairCount = pairs.size( );
+				auto pairArratData = pairs.data( );
+				for( size_t pairIndex = 0; pairIndex < pairCount; ++pairIndex )
+					if( pairArratData[ pairIndex ].first == link_output_port )
+						return true; // 已经链接，即刻返回
+				QString actionTitleFrom( "删除 %1[%2] 输入" );
+				QString activeTitle;
+				activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
+				auto removeAction = removeLinkMenu->addAction( activeTitle );
+				connect( removeAction, &QAction::triggered, [this, link_output_port] {
+					unLink( link_output_port );
+				} );
+				emit linkNodePort( this, this->inputPort, link_output_port );
+				pairs.emplace_back( link_output_port, removeAction );
+				return true;
+			}
 	}
 
 	QString actionTitleFrom( "删除 %1[%2] 输入" );
@@ -72,34 +49,93 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 		unLink( link_output_port );
 	} );
 	emit linkNodePort( this, this->inputPort, link_output_port );
-	outputPorts.emplace_back( link_output_port, removeAction );
-	appendReleaseNodeItemEvent( link_output_port );
+	std_vector_pairt< NodeOutputPort *, QAction * > unity( 1 );
+	unity.data( )[ 0 ] = std_pairt( link_output_port, removeAction );
+	outputPorts.emplace_back( parentNodeItem, unity );
 	return true;
 }
 bool NodePortLinkInfo::unLink( NodeOutputPort *link_output_port ) {
 	size_t count = outputPorts.size( );
 	if( count != 0 ) {
+		auto parentItem = link_output_port->getParentItem( );
 		auto data = outputPorts.data( );
 		for( size_t index = 0; index < count; ++index )
-			if( data[ index ].first == link_output_port ) {
-				std::pair< NodeOutputPort *, QAction * > pair = data[ index ];
+			if( data[ index ].first == parentItem ) {
+				auto &pairs = data[ index ].second;
+				size_t pairCount = pairs.size( );
+				auto pairArratData = pairs.data( );
+				for( size_t pairIndex = 0; pairIndex < pairCount; ++pairIndex )
+					if( pairArratData[ pairIndex ].first == link_output_port ) {
+						std::pair< NodeOutputPort *, QAction * > pair = pairArratData[ index ];
+						pairs.erase( pairs.begin( ) + index );
+						emit unlinkNodePort( this, this->inputPort, link_output_port );
+						tools::debug::printInfo( "成功删除" );
+						delete pair.second;
+						if( ( pairCount - 1 ) == pairIndex )
+							outputPorts.erase( outputPorts.begin( ) + index ); // 删除节点
+						return true; // 删除成功，即刻返回
+					}
+				return false; // 不存在输入链接
+			}
+	}
+	return false; // 甚至找不到节点（本身没有连接）
+}
+bool NodePortLinkInfo::releaseNodeItemPtr( NodeItem *link_node_item ) {
+	size_t count = outputPorts.size( );
+	if( count != 0 ) {
+		auto data = outputPorts.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ].first == link_node_item ) {
+
+				auto &vector = data[ index ].second;
+				count = vector.size( );
+				if( count != 0 ) {
+					auto vectorData = vector.data( );
+					for( size_t vectorDataIndex = 0; vectorDataIndex < count; ++vectorDataIndex )
+						delete vectorData[ vectorDataIndex ].second;
+				}
 				outputPorts.erase( outputPorts.begin( ) + index );
-				emit unlinkNodePort( this, this->inputPort, link_output_port );
-				tools::debug::printInfo( "成功删除" );
-				delete pair.second;
-				return true; // 删除成功，即刻返回
+				return true;
 			}
 	}
 	return false;
 }
-std_vector< NodeOutputPort * > NodePortLinkInfo::getOutputPorts( ) const {
+bool NodePortLinkInfo::getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > result_link ) {
 
 	size_t count = outputPorts.size( );
-	std_vector< NodeOutputPort * > result( count );
 	if( count != 0 ) {
 		auto data = outputPorts.data( );
+
 		for( size_t index = 0; index < count; ++index )
-			result[ index ] = data[ index ].first;
+			if( data[ index ].first == link_node_item ) {
+				count = data[ index ].second.size( );
+				result_link.resize( count );
+				if( count == 0 )
+					return false;
+				auto pair = data[ index ].second.data( );
+				auto resultLinkData = result_link.data( );
+				for( index = 0; index < count; ++index )
+					resultLinkData[ index ] = pair[ index ].first;
+				return true;
+			}
 	}
-	return result;
+	return false;
+}
+bool NodePortLinkInfo::getLink( std_vector< NodeOutputPort * > result_link ) {
+
+	size_t count = outputPorts.size( );
+	if( count != 0 ) {
+		auto data = outputPorts.data( );
+		result_link.clear( );
+		for( size_t index = 0; index < count; ++index ) {
+			count = data[ index ].second.size( );
+			if( count == 0 )
+				continue;
+			auto pair = data[ index ].second.data( );
+			for( index = 0; index < count; ++index )
+				result_link.emplace_back( pair[ index ].first );
+		}
+		return result_link.size( ) != 0;
+	}
+	return false;
 }
