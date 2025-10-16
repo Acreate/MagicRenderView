@@ -1,24 +1,18 @@
 ﻿#include "nodeDirector.h"
 
 #include <QPainter>
-#include <QPainterPath>
 #include <qmenu.h>
+
+#include <qt/application/application.h>
+#include <qt/generate/varGenerate.h>
+#include <qt/node/nodeItemMenu/nodeItemMenu.h>
+#include <qt/node/prot/inputProt/nodeInputPort.h>
+#include <qt/node/widgets/nodeItemInfoScrollAreaWidget.h>
+#include <qt/widgets/mainWidget.h>
 
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
-
-#include "../../application/application.h"
-
-#include "../../generate/varGenerate.h"
-
-#include "../../widgets/mainWidget.h"
-
-#include "../nodeItemMenu/nodeItemMenu.h"
-
-#include "../prot/inputProt/nodeInputPort.h"
-
-#include "../widgets/nodeItemInfoScrollAreaWidget.h"
 bool NodeDirector::addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget ) {
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
 	if( count != 0 ) {
@@ -303,6 +297,7 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 		for( ; index < count; ++index )
 			if( nodeitemPtrData[ index ] != nullptr )
 				if( nodeitemPtrData[ index ]->nodeItem == release ) {
+					delete nodeitemPtrData[ index ];
 					generateNodeItems.erase( generateNodeItems.begin( ) + index );
 					break;
 				}
@@ -482,6 +477,7 @@ NodeDirector::~NodeDirector( ) {
 				nodeItemInfo->nodeItem = nullptr;
 				data[ index ] = nullptr;
 				delete nodeItem;
+				delete nodeItemInfo;
 			}
 	}
 

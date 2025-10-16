@@ -1,15 +1,11 @@
 ﻿#include "nodePortLinkInfo.h"
 
-#include "../item/nodeItem.h"
-
-#include "../nodeItemMenu/nodeItemMenu.h"
-
-#include "../prot/outputProt/nodeOutputPort.h"
+#include <qt/node/item/nodeItem.h>
+#include <qt/node/nodeItemMenu/nodeItemMenu.h>
+#include <qt/node/prot/outputProt/nodeOutputPort.h>
 
 NodePortLinkInfo::~NodePortLinkInfo( ) {
 	emit releaseThis( this );
-	this->disconnect( );
-	outputPorts.clear( );
 	delete removeLinkMenu;
 }
 NodePortLinkInfo::NodePortLinkInfo( NodeInputPort *input_port ) : inputPort( input_port ) {

@@ -1,8 +1,7 @@
 ﻿#include "nodeItemInfo.h"
 
-#include "../item/nodeItem.h"
-
-#include "../nodeItemMenu/nodeItemMenu.h"
+#include <qt/node/item/nodeItem.h>
+#include <qt/node/nodeItemMenu/nodeItemMenu.h>
 NodeItemInfo::~NodeItemInfo( ) {
 	emit releaseThis( this );
 
