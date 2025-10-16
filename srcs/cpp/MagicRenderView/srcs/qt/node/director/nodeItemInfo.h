@@ -14,6 +14,7 @@ class NodeItemInfo : public QObject {
 	Q_OBJECT;
 private:
 	friend class NodeDirector;
+	friend class NodeItemBuilderLink;
 protected:
 	NodeItem *nodeItem;
 	QMenu *manageMenu;

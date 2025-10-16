@@ -36,6 +36,8 @@ protected:
 	Application *applicationInstancePtr = nullptr;
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
+	/// @brief 节点编译运行对象指针
+	NodeItemBuilderLink* nodeItemBuilderLink;
 protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );

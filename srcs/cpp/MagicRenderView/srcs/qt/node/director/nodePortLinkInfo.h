@@ -15,6 +15,7 @@ class NodePortLinkInfo : public QObject {
 	Q_OBJECT;
 protected:
 	friend class NodeDirector;
+	friend class NodeItemBuilderLink;
 	NodeInputPort *inputPort;
 	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, QAction * > > outputPorts;
 	QMenu *removeLinkMenu;

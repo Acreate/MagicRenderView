@@ -23,6 +23,7 @@ private:
 	friend class NodeItem;
 	friend class AppNodeItemStack;
 	friend class NodeDirector;
+	friend class NodeItemBuilderLink;
 protected:
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
