@@ -10,6 +10,7 @@ class NodeItemInfo;
 class NodeItemBuilderLink : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
+	friend class Application;
 protected:
 	std_vector< NodeItemInfo * > nodeItemInfos;
 	std_vector< NodePortLinkInfo * > nodePortLinkInfos;

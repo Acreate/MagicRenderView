@@ -64,6 +64,7 @@
 #include <qt/tools/tools.h>
 
 #include "../node/director/nodeDirector.h"
+#include "../node/director/nodeItemBuilderLink.h"
 #include "../node/item/app/appInfo.h"
 #include "../node/item/app/endNode.h"
 #include "../node/item/app/startNode.h"
@@ -112,8 +113,10 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	 */
 	varGenerate = new VarGenerate( );
 	nodeDirector = new NodeDirector( );
+	nodeItemBuilderLink = new NodeItemBuilderLink;
 }
 Application::~Application( ) {
+	delete nodeItemBuilderLink;
 	delete nodeDirector;
 	delete varGenerate;
 	settings->sync( );

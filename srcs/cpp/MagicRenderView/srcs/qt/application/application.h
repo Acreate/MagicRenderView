@@ -8,6 +8,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItemBuilderLink;
 class NodeDirector;
 class VarGenerate;
 class Stack;
@@ -66,6 +67,7 @@ protected:
 	VarGenerate *varGenerate;
 	NodeDirector *nodeDirector;
 	std_shared_ptr< QFont > font;
+	NodeItemBuilderLink *nodeItemBuilderLink;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -77,6 +79,7 @@ public:
 	virtual QVariant getAppIniValue( const QAnyStringView &key ) const;
 	virtual void syncAppValueIniFile( ) const;
 	virtual VarGenerate * getVarGenerate( ) const { return varGenerate; }
+	virtual NodeItemBuilderLink * getNodeItemBuilderLink( ) const { return nodeItemBuilderLink; }
 	virtual const QFont & getFont( ) const { return *font; }
 	virtual void setFont( const QFont &new_font ) {
 		*font = new_font;
