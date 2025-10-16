@@ -116,10 +116,10 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		linkVectorPairt.emplace_back( newLinkObjPtr );
 
 	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
-		emit linkNodePort( this, sender_obj_ptr, input_port, output_port );
+		emit linkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
 	} );
 	connect( newLinkObjPtr, &NodePortLinkInfo::unlinkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
-		emit unlinkNodePort( this, sender_obj_ptr, input_port, output_port );
+		emit unlinkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
 	} );
 
 	return true;
@@ -271,6 +271,7 @@ bool NodeDirector::resetMenu( QObject *del_ptr ) {
 	nodeItemCreateMenu = new NodeItemMenu( );
 	return this->createMenu( );
 }
+// todo : 节点释放调用
 bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	// 删除 linkVectorPairt
 
@@ -292,15 +293,23 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	// 删除 generateNodeItems
 	count = generateNodeItems.size( );
 	if( count != 0 ) {
-		index = 0;
+		NodeItemInfo *itemInfo = nullptr;
 		auto nodeitemPtrData = generateNodeItems.data( );
+		index = 0;
 		for( ; index < count; ++index )
 			if( nodeitemPtrData[ index ] != nullptr )
 				if( nodeitemPtrData[ index ]->nodeItem == release ) {
-					delete nodeitemPtrData[ index ];
-					generateNodeItems.erase( generateNodeItems.begin( ) + index );
+					itemInfo = nodeitemPtrData[ index ];
+					nodeitemPtrData[ index ] = nullptr;
 					break;
 				}
+		if( itemInfo ) {
+			index = 0;
+			for( ; index < count; ++index )
+				if( nodeitemPtrData[ index ] != nullptr )
+					nodeitemPtrData[ index ]->unlinkThis( itemInfo );
+			delete itemInfo;
+		}
 	}
 	return true;
 }
@@ -312,7 +321,6 @@ bool NodeDirector::releaseNodeItemInfo( NodeItemInfo *del_ptr ) {
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ] == del_ptr ) {
 			data[ index ] = nullptr;
-			emit releaseNodeItemInfoObj( del_ptr );
 			delete del_ptr;
 			return true;
 		}
@@ -344,7 +352,6 @@ bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
 			auto *item = data[ index ];
-			emit releaseNodeItemInfoObj( item );
 			data[ index ] = nullptr;
 			NodeItem *nodeItem = item->nodeItem;
 			nodeItem->disconnect( this );
@@ -426,10 +433,8 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this, new_node_item] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
-	connect( nodeItemInfo, &NodeItemInfo::removeEventFilter, []( ) {
-		nodeItemInfo
-	} );
-	emit generateNodeItem( new_node_item );
+	connect( nodeItemInfo, &NodeItemInfo::releaseThis, this, &NodeDirector::releaseNodeItemInfoSignal );
+	emit generateNodeItemSignal( new_node_item );
 	return new_node_item->generateCode;
 }
 bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
@@ -486,7 +491,7 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 }
 
 NodeDirector::~NodeDirector( ) {
-	emit releaseThis( this );
+	emit releaseThisSignal( this );
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
 	size_t index;
 	if( count ) {
@@ -507,7 +512,6 @@ NodeDirector::~NodeDirector( ) {
 				NodeItemInfo *nodeItemInfo = data[ index ];
 				nodeItemInfo->nodeItem = nullptr;
 				data[ index ] = nullptr;
-				emit releaseNodeItemInfoObj( nodeItemInfo );
 				delete nodeItemInfo;
 				delete nodeItem;
 			}

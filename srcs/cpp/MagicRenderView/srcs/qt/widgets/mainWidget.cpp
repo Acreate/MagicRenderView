@@ -32,10 +32,10 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	nodeDirector->setContentWidget( this );
 	rightMouseBtnCreateNodeItemMenu = nodeDirector->getNodeItemCraeteMenu( );
 	sigClickDateTime = QDateTime::currentDateTime( );
-	connect( nodeDirector, &NodeDirector::linkNodePort, this, &MainWidget::linkNodePortEvent );
-	connect( nodeDirector, &NodeDirector::unlinkNodePort, this, &MainWidget::unlinkNodePortEvent );
-	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoObj, this, &MainWidget::releaseNodeItemInfoObj );
-	connect( nodeDirector, &NodeDirector::generateNodeItem, this, &MainWidget::generateNodeItem );
+	connect( nodeDirector, &NodeDirector::linkNodePortSignal, this, &MainWidget::linkNodePortEvent );
+	connect( nodeDirector, &NodeDirector::unlinkNodePortSignal, this, &MainWidget::unlinkNodePortEvent );
+	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &MainWidget::releaseNodeItemInfoObj );
+	connect( nodeDirector, &NodeDirector::generateNodeItemSignal, this, &MainWidget::generateNodeItem );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -102,11 +102,8 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
 						clickNodeItemType = NodeItem::Click_Type::None;
 					}
-
-					tools::debug::printInfo( "右击输入接口" );
 					break;
 				case NodeItem::Click_Type::OutputPort :
-					tools::debug::printInfo( "右击输出接口" );
 					break;
 			}
 			break;
@@ -169,14 +166,12 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				case NodeItem::Click_Type::None :
 					break;
 				case NodeItem::Click_Type::InputPort :
-					tools::debug::printInfo( "左击选中输入接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case NodeItem::Click_Type::OutputPort :
-					tools::debug::printInfo( "左击选中输出接口" );
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
@@ -190,7 +185,6 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					if( leftFirstSelectItem == leftScondSelectItem ) {
 						long long count = duration_cast< std::chrono::milliseconds >( currentDateTime - sigClickDateTime ).count( );
 						if( count < 200 ) {
-							tools::debug::printInfo( QString( "(%1)双击节点 -> %2" ).arg( count ).arg( leftScondSelectItem->getMetaObjectPathName( ) ) );
 							clickNodeItemType = NodeItem::Click_Type::None; // 取消移动
 							leftScondSelectItem = nullptr;
 						}

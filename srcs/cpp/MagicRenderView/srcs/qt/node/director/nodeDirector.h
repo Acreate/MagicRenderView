@@ -89,11 +89,11 @@ public:
 	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );
 	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
 Q_SIGNALS:
-	void linkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
-	void unlinkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
-	void releaseThis( NodeDirector *release_ptr );
-	void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
-	void generateNodeItem( NodeItem *create_ptr );
+	void linkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	void unlinkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
+	void releaseThisSignal( NodeDirector *release_ptr );
+	void releaseNodeItemInfoSignal( NodeItemInfo *release_ptr );
+	void generateNodeItemSignal( NodeItem *create_ptr );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__
