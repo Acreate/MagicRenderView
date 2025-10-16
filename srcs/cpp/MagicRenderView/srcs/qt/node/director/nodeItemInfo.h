@@ -15,9 +15,10 @@ protected:
 	NodeItem *nodeItem;
 	QMenu *manageMenu;
 	std_vector< NodeItemInfo * > linkInfoVector;
+protected:
+	NodeItemInfo( NodeItem *node_item );
 public:
 	~NodeItemInfo( ) override;
-	NodeItemInfo( NodeItem *node_item );
 	virtual QMenu * getManageMenu( ) const { return manageMenu; }
 	virtual NodeItem * getNodeItem( ) const { return nodeItem; }
 	/// @brief 引用依赖节点

@@ -11,15 +11,15 @@ class NodeItem;
 class NodeItemGenerateInfo : public QObject {
 	Q_OBJECT;
 protected:
+	friend class NodeDirector;
+protected:
 	QString dirName;
 	QString nodeName;
 	std_shared_ptr< I_Type > createTypeInstancePtr;
+protected:
+	NodeItemGenerateInfo( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &create_type_instance_ptr );
 public:
-	~NodeItemGenerateInfo( ) override ;
-	NodeItemGenerateInfo( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &create_type_instance_ptr )
-		: dirName( dir_name ),
-		nodeName( node_name ),
-		createTypeInstancePtr( create_type_instance_ptr ) { }
+	~NodeItemGenerateInfo( ) override;
 	virtual const QString & getDirName( ) const { return dirName; }
 	virtual const QString & getNodeName( ) const { return nodeName; }
 	virtual const std_shared_ptr< I_Type > & getCreateTypeInstancePtr( ) const { return createTypeInstancePtr; }

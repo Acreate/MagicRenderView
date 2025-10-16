@@ -4,10 +4,7 @@
 #include <qt/node/nodeItemMenu/nodeItemMenu.h>
 NodeItemInfo::~NodeItemInfo( ) {
 	emit releaseThis( this );
-
 	delete manageMenu;
-
-	tools::debug::printInfo( "释放对象" );
 }
 NodeItemInfo::NodeItemInfo( NodeItem *node_item ) : QObject( nullptr ),
 	nodeItem( node_item ) {

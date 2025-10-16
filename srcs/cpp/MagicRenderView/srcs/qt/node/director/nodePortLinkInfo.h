@@ -18,9 +18,10 @@ protected:
 	NodeInputPort *inputPort;
 	std_vector_pairt< NodeItem *, std_vector_pairt< NodeOutputPort *, QAction * > > outputPorts;
 	QMenu *removeLinkMenu;
+protected:
+	NodePortLinkInfo( NodeInputPort *input_port );
 public:
 	~NodePortLinkInfo( ) override;
-	NodePortLinkInfo( NodeInputPort *input_port );
 	virtual bool link( NodeOutputPort *link_output_port );
 	virtual bool unLink( NodeOutputPort *link_output_port );
 	virtual bool releaseNodeItemPtr( NodeItem *link_node_item );
