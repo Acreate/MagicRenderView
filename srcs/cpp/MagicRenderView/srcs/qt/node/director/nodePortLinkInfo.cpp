@@ -118,7 +118,6 @@ bool NodePortLinkInfo::getLink( NodeItem *link_node_item, std_vector< NodeOutput
 	return false;
 }
 bool NodePortLinkInfo::getLink( std_vector< NodeOutputPort * > result_link ) {
-
 	size_t count = outputPorts.size( );
 	if( count != 0 ) {
 		auto data = outputPorts.data( );
@@ -132,6 +131,28 @@ bool NodePortLinkInfo::getLink( std_vector< NodeOutputPort * > result_link ) {
 				result_link.emplace_back( pair[ index ].first );
 		}
 		return result_link.size( ) != 0;
+	}
+	return false;
+}
+bool NodePortLinkInfo::getLinkNodeItem( std_vector< NodeItem * > result_link_node_items ) {
+	size_t count = outputPorts.size( );
+	if( count != 0 ) {
+		result_link_node_items.resize( count );
+		auto nodeItem = result_link_node_items.data( );
+		auto data = outputPorts.data( );
+		for( size_t index = 0; index < count; ++index )
+			nodeItem[ index ] = data[ index ].first;
+		return true;
+	}
+	return false;
+}
+bool NodePortLinkInfo::hasNodeItem( const NodeItem *check_nodeitem_ptr ) const {
+	size_t count = outputPorts.size( );
+	if( count != 0 ) {
+		auto data = outputPorts.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ].first == check_nodeitem_ptr )
+				return true;
 	}
 	return false;
 }

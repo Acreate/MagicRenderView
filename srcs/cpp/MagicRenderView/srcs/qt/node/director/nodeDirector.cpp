@@ -318,6 +318,24 @@ bool NodeDirector::releaseNodeItemInfo( NodeItemInfo *del_ptr ) {
 		}
 	return false;
 }
+bool NodeDirector::getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link ) {
+	size_t count = get_nodeitem_ptr->nodeInputProtVector.size( );
+	if( count == 0 )
+		return false;
+	size_t linkCount = linkVectorPairt.size( );
+	if( linkCount == 0 )
+		return false;
+	auto data = get_nodeitem_ptr->nodeInputProtVector.data( );
+	auto linkArrayDataPtr = linkVectorPairt.data( );
+	result_link.clear( );
+	for( size_t index = 0; index < count; ++index )
+		for( size_t linkIndex = 0; linkIndex < linkCount; ++linkIndex )
+			if( linkArrayDataPtr[ linkIndex ]->inputPort == data[ index ].first ) {
+				result_link.emplace_back( linkArrayDataPtr[ linkIndex ] );
+				break;
+			}
+	return result_link.size( ) != 0;
+}
 bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
@@ -408,6 +426,9 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this, new_node_item] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
+	connect( nodeItemInfo, &NodeItemInfo::removeEventFilter, []( ) {
+		nodeItemInfo
+	} );
 	emit generateNodeItem( new_node_item );
 	return new_node_item->generateCode;
 }
@@ -453,6 +474,16 @@ bool NodeDirector::getItemManageMenu( const NodeItem *node_item_ptr, QMenu *&res
 		}
 	return false;
 }
+bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr ) {
+	size_t count = linkVectorPairt.size( );
+	auto data = linkVectorPairt.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->inputPort == input_port ) {
+			return data[ index ]->hasNodeItem( node_item_ptr );
+		}
+	return false;
+}
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThis( this );
@@ -476,8 +507,9 @@ NodeDirector::~NodeDirector( ) {
 				NodeItemInfo *nodeItemInfo = data[ index ];
 				nodeItemInfo->nodeItem = nullptr;
 				data[ index ] = nullptr;
-				delete nodeItem;
+				emit releaseNodeItemInfoObj( nodeItemInfo );
 				delete nodeItemInfo;
+				delete nodeItem;
 			}
 	}
 

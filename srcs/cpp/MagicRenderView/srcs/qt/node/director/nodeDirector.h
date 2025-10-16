@@ -43,6 +43,7 @@ protected:
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
 	virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
+	virtual bool getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -86,6 +87,7 @@ public:
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );
+	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
 Q_SIGNALS:
 	void linkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
