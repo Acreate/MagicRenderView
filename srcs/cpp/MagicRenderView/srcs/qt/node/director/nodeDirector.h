@@ -41,7 +41,7 @@ protected:
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
-	virtual bool rleaseNodeItem( NodeItem* release );
+	virtual bool rleaseNodeItem( NodeItem *release );
 	virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
 public:
 	NodeDirector( QObject *parent = nullptr );
@@ -91,6 +91,7 @@ Q_SIGNALS:
 	void unlinkNodePort( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void releaseThis( NodeDirector *release_ptr );
 	void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
+	void generateNodeItem( NodeItem *create_ptr );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

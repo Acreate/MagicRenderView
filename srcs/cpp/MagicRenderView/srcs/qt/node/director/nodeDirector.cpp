@@ -267,7 +267,6 @@ bool NodeDirector::createMenu( ) {
 				connect( addAction, &QAction::triggered, [this, dir, className, typePtr]( ) {
 					if( createNodeItem( dir, className, typePtr ) == nullptr || mainWidget == nullptr )
 						return;
-					mainWidget->update( );
 				} );
 			}
 		}
@@ -414,7 +413,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this, new_node_item] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
-
+	emit generateNodeItem( new_node_item );
 	return new_node_item->generateCode;
 }
 bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {

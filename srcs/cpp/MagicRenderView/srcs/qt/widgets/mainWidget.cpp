@@ -42,6 +42,7 @@ MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWid
 	connect( nodeDirector, &NodeDirector::linkNodePort, this, &MainWidget::linkNodePortEvent );
 	connect( nodeDirector, &NodeDirector::unlinkNodePort, this, &MainWidget::unlinkNodePortEvent );
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoObj, this, &MainWidget::releaseNodeItemInfoObj );
+	connect( nodeDirector, &NodeDirector::generateNodeItem, this, &MainWidget::generateNodeItem );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -79,6 +80,10 @@ void MainWidget::unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePor
 void MainWidget::releaseNodeItemInfoObj( NodeItemInfo *release_ptr ) {
 	update( );
 }
+void MainWidget::generateNodeItem( NodeItem *create_ptr ) {
+	ensureVisibleToItemNode( create_ptr );
+	update( );
+}
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
@@ -113,12 +118,13 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::LeftButton :
-
 			clickNodeItemType = nodeDirector->getClickNodeItem( pos, leftScondSelectItem, leftScondSelecttPort );
 			switch( clickNodeItemType ) {
 				case NodeItem::Click_Type::None :
+					break;
 				case NodeItem::Click_Type::Space :
 				case NodeItem::Click_Type::Title :
+					ensureVisibleToItemNode( leftScondSelectItem );
 					break;
 				case NodeItem::Click_Type::InputPort :
 				case NodeItem::Click_Type::OutputPort :

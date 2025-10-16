@@ -66,7 +66,7 @@ protected:
 	/// @brief 用于删除当前选中节点的菜单
 	QMenu *removeSelectNodeItemMenu;
 	/// @brief 用于右键删除节点时使用的信息列表
-	std_vector<NodeOutputPort*> rightMenuRemoveInfo;
+	std_vector< NodeOutputPort * > rightMenuRemoveInfo;
 public:
 	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
@@ -77,6 +77,7 @@ protected:
 	virtual void linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	virtual void unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	virtual void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
+	virtual void generateNodeItem( NodeItem *create_ptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
