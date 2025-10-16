@@ -44,6 +44,7 @@ protected:
 	virtual bool rleaseNodeItem( NodeItem *release );
 	virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
 	virtual bool getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link );
+	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;

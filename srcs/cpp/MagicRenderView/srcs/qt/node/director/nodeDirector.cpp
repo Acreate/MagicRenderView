@@ -94,7 +94,24 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 
 	if( varGenerate->supportType( inputPorVarType->getTypeInfo( ), outputPorVarType->getTypeInfo( ) ) == false )
 		return false;
-
+	NodeItemInfo *outputNodeItemInfo;
+	if( getNodeItemInfo( outputNodeItem, outputNodeItemInfo ) == false ) {
+		tools::debug::printError( QString( "输出端 %1 不存在节点具象化信息" ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
+	if( outputNodeItemInfo->inLinkHasNodeItem( inputNodeItem ) ) {
+		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
+	NodeItemInfo *inputNodeItemInfo;
+	if( getNodeItemInfo( inputNodeItem, inputNodeItemInfo ) == false ) {
+		tools::debug::printError( QString( "输入端 %1 不存在节点具象化信息" ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
+	if( inputNodeItemInfo->linkThis( outputNodeItemInfo ) == false ) {
+		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
@@ -212,7 +229,6 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 						for( size_t pariIndex = 0; pariIndex < oupPairtCount; ++pariIndex ) {
 							pair[ pariIndex ].first->getPos( inport );
 							painter_target.drawLine( outport, inport );
-							qDebug( ) << outport << " -> " << inport;
 						}
 					}
 				}
@@ -343,6 +359,18 @@ bool NodeDirector::getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_v
 				break;
 			}
 	return result_link.size( ) != 0;
+}
+bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
+	size_t linkCount = generateNodeItems.size( );
+	if( linkCount == 0 )
+		return false;
+	auto linkArrayDataPtr = generateNodeItems.data( );
+	for( size_t index = 0; index < linkCount; ++index )
+		if( linkArrayDataPtr[ index ] != nullptr && linkArrayDataPtr[ index ]->nodeItem == get_nodeitem_ptr ) {
+			result_link = linkArrayDataPtr[ index ];
+			return true;
+		}
+	return false;
 }
 bool NodeDirector::release( const NodeItem *remove_node_item ) {
 	size_t count = generateNodeItems.size( );

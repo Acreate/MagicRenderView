@@ -116,8 +116,6 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 Application::~Application( ) {
 	settings->sync( );
 	delete settings;
-	delete nodeDirector;
-	delete varGenerate;
 }
 bool Application::init( ) {
 
@@ -360,5 +358,11 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 	return normalKeyAppendEnd( key, widget, appendStr );
 }
 bool Application::notify( QObject *object, QEvent *event ) {
+	switch( event->type( ) ) {
+		case QEvent::Quit :
+			delete nodeDirector;
+			delete varGenerate;
+			break;
+	}
 	return QApplication::notify( object, event );
 }
