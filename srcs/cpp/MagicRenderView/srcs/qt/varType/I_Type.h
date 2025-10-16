@@ -10,8 +10,6 @@ class I_Stack;
 class I_Type {
 	friend class I_Type_Using_Type_Name;
 public:
-	using createFunction = std_function< void *( ) >;
-	using releaseFunction = std_function< bool( void *p ) >;
 protected:
 	const type_info &typeInfo;
 	size_t memorySize;
@@ -196,10 +194,10 @@ class I_Type_Using_Type_Name {
 	static void setInstanceTypeAliasName( I_Type *i_type_ptr, const std_vector< QString > &new_type_name ) {
 		i_type_ptr->aliasTypeName = new_type_name;
 	}
-	static void setInstanceTypeCreateFunction( I_Type *i_type_ptr, const I_Type::createFunction &create_function ) {
+	static void setInstanceTypeCreateFunction( I_Type *i_type_ptr, const createFunction &create_function ) {
 		i_type_ptr->create = create_function;
 	}
-	static void setInstanceTypeReleaseFunction( I_Type *i_type_ptr, const I_Type::releaseFunction &release_function ) {
+	static void setInstanceTypeReleaseFunction( I_Type *i_type_ptr, const releaseFunction &release_function ) {
 		i_type_ptr->release = release_function;
 	}
 	static void setInstanceTypeMemoySize( I_Type *i_type_ptr, const size_t &create_obj_memory_size ) {

@@ -53,12 +53,12 @@ public:
 	virtual bool getNodeItemRender( QImage &result_render_image ) const {
 		return getNodeItemRender( result_render_image, QPoint( 0, 0 ) );
 	}
-	virtual NodeItem::Click_Type getClickNodeItem( NodeItem * &result_node_item, NodePort * &result_node_port );
-	virtual NodeItem::Click_Type getClickNodeItem( const QPoint &click_pos, NodeItem * &result_node_item, NodePort * &result_node_port );
-	virtual NodeItem::Click_Type getClickNodeItemInputPort( NodeItem * &result_node_item, NodeInputPort * &result_node_port );
-	virtual NodeItem::Click_Type getClickNodeItemInputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeInputPort * &result_node_port );
-	virtual NodeItem::Click_Type getClickNodeItemOutputPort( NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
-	virtual NodeItem::Click_Type getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItem( NodeItem * &result_node_item, NodePort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItem( const QPoint &click_pos, NodeItem * &result_node_item, NodePort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItemInputPort( NodeItem * &result_node_item, NodeInputPort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItemInputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeInputPort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItemOutputPort( NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
+	virtual nodeItemEnum::Click_Type getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem * &result_node_item, NodeOutputPort * &result_node_port );
 	virtual QMenu * getNodeItemCraeteMenu( ) const {
 		return nodeItemCreateMenu;
 	}

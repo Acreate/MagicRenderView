@@ -9,6 +9,9 @@
 #include <set>
 #include <QEvent>
 #include <mutex>
+
+#include <QObject>
+
 /// @brief 事件类型
 using t_event_type = decltype(QEvent::Type::AcceptDropsChange);
 
@@ -57,6 +60,10 @@ using std_function = std::function< TFunction >;
 using std_mutex = std::mutex;
 /// @brief 自动锁
 using std_lock_grad_mutex = std::lock_guard< std_mutex >;
+/// @brief 创建函数
+using createFunction = std_function< void *( ) >;
+/// @brief 释放函数
+using releaseFunction = std_function< bool( void *p ) >;
 
 /// @brief 比较运算符
 /// @param righth_type_ 比较数
@@ -309,9 +316,57 @@ public:\
 #define Imp_StaticMetaInfo( Imp_Class , Class_Translate, Dir_Translate) \
 	Imp_StaticMetaInfo_Def_sep( Imp_Class , Class_Translate, Dir_Translate, "/")
 
+#define Def_NodeItem_StaticMetaInfo( ) \
+	Def_Last_StaticMetaInfo( );\
+	friend class NodeItemGenerate;\
+	friend class Application;\
+	friend class VarGenerate
+
+#define Def_NodeItem_Last_StaticMetaInfo( ) \
+	Def_Last_Firend_StaticMetaInfo( NodeItem );\
+	friend class NodeItemGenerate;\
+	friend class Application;\
+	friend class VarGenerate
+
+#define Def_First_Mate_Node_Type( node_Item_enum_type_value ) \
+	public: \
+	virtual nodeItemEnum::Node_Item_Type getNodeMetaType( ) const { return nodeItemEnum::Node_Item_Type::node_Item_enum_type_value; } \
+	static nodeItemEnum::Node_Item_Type getStaticMetaNodeType( ) { return nodeItemEnum::Node_Item_Type::node_Item_enum_type_value; }
+
+#define Def_Last_Mate_Node_Type( node_Item_enum_type_value ) \
+	public: \
+	nodeItemEnum::Node_Item_Type getNodeMetaType( ) const override { return nodeItemEnum::Node_Item_Type::node_Item_enum_type_value; } \
+	static nodeItemEnum::Node_Item_Type getStaticMetaNodeType( ) { return nodeItemEnum::Node_Item_Type::node_Item_enum_type_value; }
+
 class Type_Alias {
 	Def_First_StaticMetaInfo( );
 public:
 	virtual ~Type_Alias( ) { }
 };
+
+namespace nodeItemEnum {
+	Q_NAMESPACE;
+	enum class Click_Type {
+		None, // 没有
+		Space, // 空白
+		Title, // 标题
+		InputPort, // 输入
+		OutputPort, // 输出
+	};
+	Q_ENUM_NS( Click_Type );
+
+	enum class Node_Item_Type {
+		None, // 非正式
+		Root, // 根，节点运行必须在连接的根源存在根节点，具备循环权与运行权节点
+		End, // 尾，节点链表结束节点，具备整个节点运行结束的能力。运行到该节点，总会结束整个节点链
+		Process, // 过程，一般的调度节点，自身不具备运行能力
+		Logic, // 逻辑，具备选择输出权，自身不具备运行能力
+		Foreach, // 循环，具备循环权，自身不具备运行能力
+		Loop, // 回路，运行该节点之后，整个渲染流程回到最近的循环权节点，具备完整跳转权。与 End 不同，该类型会询问循环权节点是否继续循环。
+	};
+	Q_ENUM_NS( Node_Item_Type );
+	bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
+	bool getEnumName( const Click_Type &enum_var, QString &result_str );
+}
+
 #endif // TYPE_ALIAS_H_H_HEAD__FILE__

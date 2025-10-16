@@ -10,6 +10,6 @@ protected:
 	GenFloatTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Node_Item_Type::Process );
+	Def_Last_Mate_Node_Type( Process );
 };
 #endif // GENFLOATTYPES_H_H_HEAD__FILE__

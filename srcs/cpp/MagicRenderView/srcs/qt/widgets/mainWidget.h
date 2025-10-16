@@ -50,7 +50,7 @@ protected:
 	/// @brief 记录点击时间点
 	QDateTime sigClickDateTime;
 	/// @brief 点击类型
-	NodeItem::Click_Type clickNodeItemType;
+	nodeItemEnum::Click_Type clickNodeItemType;
 	/// @brief 第一次左键
 	NodeItem *leftFirstSelectItem;
 	/// @brief 第二次左键

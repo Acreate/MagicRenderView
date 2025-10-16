@@ -4,11 +4,10 @@
 
 #include <alias/type_alias.h>
 
-#include "../node/item/nodeItem.h"
-
-#include "../varType/I_Type.h"
-#include "../varType/I_Var.h"
-
+class I_Var;
+class I_Stack;
+class I_Type;
+class NodeItem;
 class I_IsType;
 class I_Serialization‌;
 class I_Conver;
@@ -19,10 +18,10 @@ public:
 		std_shared_ptr< I_Type > type;
 		QString name;
 		QString dir;
-		NodeItem::Node_Item_Type enumType;
+		nodeItemEnum::Node_Item_Type enumType;
 	public:
 		virtual ~NodeItemGenerate( ) = default;
-		NodeItemGenerate( const std_shared_ptr< I_Type > &var, const QString &name, const QString &dir, NodeItem::Node_Item_Type enum_type )
+		NodeItemGenerate( const std_shared_ptr< I_Type > &var, const QString &name, const QString &dir, nodeItemEnum::Node_Item_Type enum_type )
 			: type( var ),
 			name( name ),
 			dir( dir ),
@@ -33,13 +32,13 @@ public:
 		virtual const std_shared_ptr< I_Type > & getType( ) const { return type; }
 		virtual const QString & getName( ) const { return name; }
 		virtual const QString & getDir( ) const { return dir; }
-		virtual NodeItem::Node_Item_Type getEnumType( ) const { return enumType; }
+		virtual nodeItemEnum::Node_Item_Type getEnumType( ) const { return enumType; }
 	};
 public:
 	/// @brief 节点排序类型
 	using node_name_type_vector_pairt = std_vector_pairt< QString, std_shared_ptr< I_Type > >;
 	using node_dir_type_vector_pairt = std_vector_pairt< QString, node_name_type_vector_pairt >;
-	using node_enum_type_vector_pairt = std_pairt< NodeItem::Node_Item_Type, node_dir_type_vector_pairt >;
+	using node_enum_type_vector_pairt = std_pairt< nodeItemEnum::Node_Item_Type, node_dir_type_vector_pairt >;
 	using Node_Type_Sort_Vector = std_vector< node_enum_type_vector_pairt >;
 protected:
 	/// @brief 转换列表
@@ -61,7 +60,7 @@ protected:
 	/// @param type_pro_name 原名
 	/// @param type_ptr 类型指针
 	/// @return 成功返回 true
-	virtual bool appendSortMap( const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr );
+	virtual bool appendSortMap( const nodeItemEnum::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr );
 public:
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
@@ -72,7 +71,7 @@ public:
 	/// @param generate_var_name_vector 类型字符串别名
 	/// @param generate_var_function 类型生成器
 	/// @param release_var_function 释放函数
-	virtual bool appendNodeItemGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function );
+	virtual bool appendNodeItemGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const nodeItemEnum::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const createFunction &generate_var_function, const releaseFunction &release_var_function );
 	/// @brief 追加一个类型生成器
 	/// @param generate_var_type_info cpp 类型
 	/// @param type_target_memory_size 类型占用量
@@ -80,7 +79,7 @@ public:
 	/// @param generate_var_name_vector 类型字符串别名
 	/// @param generate_var_function 类型生成器
 	/// @param release_var_function 释放函数
-	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function );
+	virtual bool appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const createFunction &generate_var_function, const releaseFunction &release_var_function );
 	/// @brief 追加一个赋值类型对象
 	/// @param new_conver 对象指针
 	virtual void appendConverInstance( const std_shared_ptr< I_Conver > &new_conver ) {
@@ -250,7 +249,7 @@ public:
 	/// @param create_is_right_call_back_function 创建成功时，会调用该函数，需要用户保存，并且返回 true，若返回 false，则自动释放
 	/// @param start_index 开始下标
 	/// @return 若成功创建并且调用create_is_right_call_back_function则返回 true（create_is_right_call_back_function 返回 false 时，仍然返回 true）
-	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function, size_t &start_index ) const;
+	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var * create_var_ptr ) > &create_is_right_call_back_function, size_t &start_index ) const;
 
 	/// @brief 校验是否支持左值与右值操作
 	/// @param left_type_info 左值类型
@@ -436,7 +435,7 @@ public:
 	/// @param create_name 创建的类型名称
 	/// @param create_is_right_call_back_function 创建成功时，会调用该函数，需要用户保存，并且返回 true，若返回 false，则自动释放
 	/// @return 若成功创建并且调用create_is_right_call_back_function则返回 true（create_is_right_call_back_function 返回 false 时，仍然返回 true）
-	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
+	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var * create_var_ptr ) > &create_is_right_call_back_function ) const {
 		size_t index = 0;
 		return createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function, index );
 	}
@@ -485,7 +484,7 @@ public:
 	/// @param generate_var_function 类型生成器
 	/// @param release_var_function 释放器
 	template< typename ttype >
-	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function ) {
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const createFunction &generate_var_function, const releaseFunction &release_var_function ) {
 		const type_info &typeInfo = typeid( ttype );
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
 	}
@@ -495,9 +494,9 @@ public:
 	/// @param type_pro_name 原生名称
 	/// @param generate_var_name_vector 类型字符串别名
 	template< typename ttype >
-	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::releaseFunction &release_var_function ) {
+	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const releaseFunction &release_var_function ) {
 		const type_info &typeInfo = typeid( ttype );
-		I_Type::createFunction generate_var_function = []( ) {
+		createFunction generate_var_function = []( ) {
 			return new ttype( );
 		};
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
@@ -509,10 +508,10 @@ public:
 	template< typename ttype >
 	bool appendVarTypeGenerateInstance( const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector ) {
 		const type_info &typeInfo = typeid( ttype );
-		I_Type::createFunction generate_var_function = []( ) {
+		createFunction generate_var_function = []( ) {
 			return new ttype( );
 		};
-		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+		releaseFunction release_var_function = [] ( void *p ) {
 			delete ( ttype * ) p;
 		};
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, generate_var_name_vector, generate_var_function, release_var_function );
@@ -523,10 +522,10 @@ public:
 	template< typename ttype >
 	bool appendVarTypeGenerateInstance( const QString &type_pro_name ) {
 		const type_info &typeInfo = typeid( ttype );
-		I_Type::createFunction generate_var_function = []( ) {
+		createFunction generate_var_function = []( ) {
 			return new ttype( );
 		};
-		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+		releaseFunction release_var_function = [] ( void *p ) {
 			delete ( ttype * ) p;
 		};
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), type_pro_name, { }, generate_var_function, release_var_function );
@@ -536,10 +535,10 @@ public:
 	template< typename ttype >
 	bool appendVarTypeGenerateInstance( const std_vector< QString > &generate_var_name_vector ) {
 		const type_info &typeInfo = typeid( ttype );
-		I_Type::createFunction generate_var_function = []( ) {
+		createFunction generate_var_function = []( ) {
 			return new ttype( );
 		};
-		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+		releaseFunction release_var_function = [] ( void *p ) {
 			delete ( ttype * ) p;
 		};
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), typeInfo.name( ), generate_var_name_vector, generate_var_function, release_var_function );
@@ -548,10 +547,10 @@ public:
 	template< typename ttype >
 	bool appendVarTypeGenerateInstance( ) {
 		const type_info &typeInfo = typeid( ttype );
-		I_Type::createFunction generate_var_function = []( ) {
+		createFunction generate_var_function = []( ) {
 			return new ttype( );
 		};
-		I_Type::releaseFunction release_var_function = [] ( void *p ) {
+		releaseFunction release_var_function = [] ( void *p ) {
 			delete ( ttype * ) p;
 		};
 		return appendVarTypeGenerateInstance( typeInfo, sizeof( ttype ), typeInfo.name( ), { }, generate_var_function, release_var_function );
@@ -569,11 +568,11 @@ public:
 		auto memorySize = sizeof( ttype );
 		QString dirName = ttype::getStaticMetaObjectDir( );
 		QString objName = ttype::getStaticMetaObjectName( );
-		NodeItem::Node_Item_Type enumType = ttype::getStaticMetaNodeType( );
-		I_Type::createFunction generateVarFunction = []( ) {
+		nodeItemEnum::Node_Item_Type enumType = ttype::getStaticMetaNodeType( );
+		createFunction generateVarFunction = []( ) {
 			return new ttype( );
 		};
-		I_Type::releaseFunction releaseVarFunction = [] ( void *p ) {
+		releaseFunction releaseVarFunction = [] ( void *p ) {
 			delete ( ttype * ) p;
 			return true;
 		};

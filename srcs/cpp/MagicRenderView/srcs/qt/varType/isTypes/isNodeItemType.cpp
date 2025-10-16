@@ -5,6 +5,7 @@
 #include <qt/node/item/nodeItem.h>
 
 #include "../I_Stack.h"
+#include "../I_Var.h"
 
 #include "../../generate/varGenerate.h"
 

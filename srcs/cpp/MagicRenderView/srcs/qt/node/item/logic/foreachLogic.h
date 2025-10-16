@@ -2,7 +2,6 @@
 #define FOREACHLOGIC_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "../nodeItem.h"
 
 class ForeachLogic : public NodeItem {
@@ -12,6 +11,6 @@ protected:
 	ForeachLogic( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Node_Item_Type::Foreach );
+	Def_Last_Mate_Node_Type( Foreach );
 };
 #endif // FOREACHLOGIC_H_H_HEAD__FILE__

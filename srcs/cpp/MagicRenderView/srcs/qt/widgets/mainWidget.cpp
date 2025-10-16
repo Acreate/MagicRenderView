@@ -47,12 +47,12 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	nodeDirector->draw( painter );
 	// 不在拖拽情况下，绘制动态线
 	switch( clickNodeItemType ) {
-		case NodeItem::Click_Type::None :
-		case NodeItem::Click_Type::Space :
-		case NodeItem::Click_Type::Title :
+		case nodeItemEnum::Click_Type::None :
+		case nodeItemEnum::Click_Type::Space :
+		case nodeItemEnum::Click_Type::Title :
 			break;
-		case NodeItem::Click_Type::InputPort :
-		case NodeItem::Click_Type::OutputPort :
+		case nodeItemEnum::Click_Type::InputPort :
+		case nodeItemEnum::Click_Type::OutputPort :
 			painter.drawLine( modPoint, mouseMovePoint );
 			break;
 	}
@@ -87,41 +87,41 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::RightButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( pos, rightMouseBtnSelectItem, rightMouseBtnSelectPort );
 			switch( clickNodeItemType ) {
-				case NodeItem::Click_Type::None :
+				case nodeItemEnum::Click_Type::None :
 					rightMouseBtnCreateNodeItemMenu->popup( QCursor::pos( ) );
 					break;
-				case NodeItem::Click_Type::Space :
-				case NodeItem::Click_Type::Title :
+				case nodeItemEnum::Click_Type::Space :
+				case nodeItemEnum::Click_Type::Title :
 					if( nodeDirector->getItemManageMenu( rightMouseBtnSelectItem, removeSelectNodeItemMenu ) ) {
 						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
-						clickNodeItemType = NodeItem::Click_Type::None;
+						clickNodeItemType = nodeItemEnum::Click_Type::None;
 					}
 					break;
-				case NodeItem::Click_Type::InputPort :
+				case nodeItemEnum::Click_Type::InputPort :
 					if( nodeDirector->getLinkControlMenu( rightMouseBtnSelectPort, removeSelectNodeItemMenu ) ) {
 						removeSelectNodeItemMenu->popup( QCursor::pos( ) );
-						clickNodeItemType = NodeItem::Click_Type::None;
+						clickNodeItemType = nodeItemEnum::Click_Type::None;
 					}
 					break;
-				case NodeItem::Click_Type::OutputPort :
+				case nodeItemEnum::Click_Type::OutputPort :
 					break;
 			}
 			break;
 		case Qt::LeftButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( pos, leftScondSelectItem, leftScondSelecttPort );
 			switch( clickNodeItemType ) {
-				case NodeItem::Click_Type::None :
+				case nodeItemEnum::Click_Type::None :
 					break;
-				case NodeItem::Click_Type::Space :
-				case NodeItem::Click_Type::Title :
+				case nodeItemEnum::Click_Type::Space :
+				case nodeItemEnum::Click_Type::Title :
 					ensureVisibleToItemNode( leftScondSelectItem );
 					break;
-				case NodeItem::Click_Type::InputPort :
-				case NodeItem::Click_Type::OutputPort :
+				case nodeItemEnum::Click_Type::InputPort :
+				case nodeItemEnum::Click_Type::OutputPort :
 					nodeDirector->linkInstallPort( leftFirstSelectPort, leftScondSelecttPort );
 					break;
 			}
-			clickNodeItemType = NodeItem::Click_Type::None;
+			clickNodeItemType = nodeItemEnum::Click_Type::None;
 			leftFirstSelectItem = leftScondSelectItem;
 			leftFirstSelectPort = leftScondSelecttPort;
 			leftScondSelectItem = nullptr;
@@ -134,8 +134,8 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	mouseMovePoint = event->pos( );
 	switch( clickNodeItemType ) {
-		case NodeItem::Click_Type::Space :
-		case NodeItem::Click_Type::Title :
+		case nodeItemEnum::Click_Type::Space :
+		case nodeItemEnum::Click_Type::Title :
 			if( leftFirstSelectItem ) {
 				QPoint point = mouseMovePoint - modPoint;
 				if( point.x( ) < 0 )
@@ -146,10 +146,10 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 				update( );
 			}
 			break;
-		case NodeItem::Click_Type::InputPort :
-		case NodeItem::Click_Type::OutputPort :
+		case nodeItemEnum::Click_Type::InputPort :
+		case nodeItemEnum::Click_Type::OutputPort :
 			update( );
-		case NodeItem::Click_Type::None :
+		case nodeItemEnum::Click_Type::None :
 			break;
 	}
 }
@@ -163,29 +163,29 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 		case Qt::LeftButton :
 			clickNodeItemType = nodeDirector->getClickNodeItem( fromGlobalPressPoint, leftScondSelectItem, leftScondSelecttPort );
 			switch( clickNodeItemType ) {
-				case NodeItem::Click_Type::None :
+				case nodeItemEnum::Click_Type::None :
 					break;
-				case NodeItem::Click_Type::InputPort :
+				case nodeItemEnum::Click_Type::InputPort :
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
-				case NodeItem::Click_Type::OutputPort :
+				case nodeItemEnum::Click_Type::OutputPort :
 					nodeDirector->setRaise( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
-				case NodeItem::Click_Type::Space :
-				case NodeItem::Click_Type::Title :
+				case nodeItemEnum::Click_Type::Space :
+				case nodeItemEnum::Click_Type::Title :
 					nodeDirector->setRaise( leftScondSelectItem );
 					modPoint = fromGlobalPressPoint - leftScondSelectItem->getPos( );
 					// 相同节点
 					if( leftFirstSelectItem == leftScondSelectItem ) {
 						long long count = duration_cast< std::chrono::milliseconds >( currentDateTime - sigClickDateTime ).count( );
 						if( count < 200 ) {
-							clickNodeItemType = NodeItem::Click_Type::None; // 取消移动
+							clickNodeItemType = nodeItemEnum::Click_Type::None; // 取消移动
 							leftScondSelectItem = nullptr;
 						}
 					}

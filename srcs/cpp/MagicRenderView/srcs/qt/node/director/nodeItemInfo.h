@@ -5,6 +5,9 @@
 
 #include <alias/type_alias.h>
 
+namespace nodeItemEnum {
+	enum class Node_Item_Type;
+}
 class QMenu;
 class NodeItem;
 class NodeItemInfo : public QObject {
@@ -37,6 +40,10 @@ public:
 	/// @param link_target 检查的目标
 	/// @return 存在，返回 true
 	virtual bool inLinkHasNodeItem( NodeItemInfo *link_target ) const;
+	/// @brief 获取节点类型
+	/// @param result 类型
+	/// @return 失败返回 false
+	virtual bool getNodeItemType( nodeItemEnum::Node_Item_Type &result );
 Q_SIGNALS:
 	void releaseThis( NodeItemInfo *release_ptr );
 };

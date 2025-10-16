@@ -2,16 +2,15 @@
 #define GENCOLORTYPES_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "../nodeItem.h"
 
 class GenColorTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenColorTypes(  );
+	GenColorTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Node_Item_Type::Process );
+	Def_Last_Mate_Node_Type( Process );
 };
 #endif // GENCOLORTYPES_H_H_HEAD__FILE__

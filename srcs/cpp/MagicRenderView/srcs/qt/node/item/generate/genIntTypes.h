@@ -8,9 +8,9 @@ class GenIntTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenIntTypes(  );
+	GenIntTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Node_Item_Type::Process );
+	Def_Last_Mate_Node_Type( Process );
 };
 #endif // GENINTTYPES_H_H_HEAD__FILE__

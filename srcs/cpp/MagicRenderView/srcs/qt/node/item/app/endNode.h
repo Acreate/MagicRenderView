@@ -12,6 +12,6 @@ protected:
 	EndNode( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Node_Item_Type::End );
+	Def_Last_Mate_Node_Type( End );
 };
 #endif // ENDNODE_H_H_HEAD__FILE__

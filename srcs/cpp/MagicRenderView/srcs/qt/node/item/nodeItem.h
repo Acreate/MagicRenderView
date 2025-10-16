@@ -2,46 +2,15 @@
 #define NODEITEM_H_H_HEAD__FILE__
 #pragma once
 #include <QObject>
-#include <QWidget>
-#include <qimage.h>
 
 #include <alias/type_alias.h>
 
 #include <qt/tools/tools.h>
 
-#define Def_NodeItem_StaticMetaInfo( ) \
-	Def_Last_StaticMetaInfo( );\
-	friend class NodeItemGenerate;\
-	friend class Application;\
-	friend class VarGenerate
-
-#define Def_NodeItem_Last_StaticMetaInfo( ) \
-	Def_Last_Firend_StaticMetaInfo( NodeItem );\
-	friend class NodeItemGenerate;\
-	friend class Application;\
-	friend class VarGenerate
-
-#define Def_First_Mate_Node_Type( node_Item_enum_type_value ) \
-	public: \
-	virtual Node_Item_Type getNodeMetaType( ) const { return node_Item_enum_type_value; } \
-	static Node_Item_Type getStaticMetaNodeType( ) { return node_Item_enum_type_value; }
-
-#define Def_Last_Mate_Node_Type( node_Item_enum_type_value ) \
-	public: \
-	Node_Item_Type getNodeMetaType( ) const override { return node_Item_enum_type_value; } \
-	static Node_Item_Type getStaticMetaNodeType( ) { return node_Item_enum_type_value; }
-
-class NodeItemInfoScrollAreaWidget;
 class NodePort;
 class I_Var;
-class VarType;
-class Application;
 class NodeOutputPort;
 class NodeInputPort;
-class NodeWidgetSerialization;
-class NodeItemSerialization;
-class MainWidget;
-
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
@@ -66,29 +35,6 @@ protected:
 	static int borderLeftSpace;
 	/// @brief 边缘右侧空间大小
 	static int borderRightSpace;
-public:
-	enum class Click_Type {
-		None, // 没有
-		Space, // 空白
-		Title, // 标题
-		InputPort, // 输入
-		OutputPort, // 输出
-	};
-	Q_ENUM( Click_Type );
-
-	enum class Node_Item_Type {
-		None, // 非正式
-		Root, // 根，节点运行必须在连接的根源存在根节点，具备循环权与运行权节点
-		End, // 尾，节点链表结束节点，具备整个节点运行结束的能力。运行到该节点，总会结束整个节点链
-		Process, // 过程，一般的调度节点，自身不具备运行能力
-		Logic, // 逻辑，具备选择输出权，自身不具备运行能力
-		Foreach, // 循环，具备循环权，自身不具备运行能力
-		Loop, // 回路，运行该节点之后，整个渲染流程回到最近的循环权节点，具备完整跳转权。与 End 不同，该类型会询问循环权节点是否继续循环。
-	};
-	Q_ENUM( Node_Item_Type );
-
-	static bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
-	static bool getEnumName( const Click_Type &enum_var, QString &result_str );
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -152,12 +98,12 @@ public:
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
-	virtual bool hasInputPort(const NodePort * node_port);
-	virtual bool hasOutputPort(const NodePort * node_port);
+	virtual bool hasInputPort( const NodePort *node_port );
+	virtual bool hasOutputPort( const NodePort *node_port );
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
-	virtual Click_Type relativePointType( const QPoint &point ) const {
+	virtual nodeItemEnum::Click_Type relativePointType( const QPoint &point ) const {
 		return relativePointType( point.x( ), point.y( ) );
 	}
 
@@ -165,7 +111,7 @@ public:
 	/// @param x 基于该节点的 x 相对位置
 	/// @param y 基于该节点的 y 相对位置
 	/// @return 类型
-	virtual Click_Type relativePointType( int x, int y ) const;
+	virtual nodeItemEnum::Click_Type relativePointType( int x, int y ) const;
 	/// @brief 从相对坐标获输入接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
@@ -232,7 +178,7 @@ public:
 	}
 	virtual size_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeOutputPort * getOutputPort( const QString &output_port_name ) const;
-	Def_First_Mate_Node_Type( Node_Item_Type::None );
+	Def_First_Mate_Node_Type( None );
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针

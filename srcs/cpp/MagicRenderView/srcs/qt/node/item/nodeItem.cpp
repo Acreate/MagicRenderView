@@ -14,56 +14,6 @@
 #include "../../widgets/mainWidget.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
-bool NodeItem::getEnumName( const Node_Item_Type &enum_var, QString &result_str ) {
-	switch( enum_var ) {
-
-		case Node_Item_Type::None :
-			result_str = NodeItem::tr( "None" );
-			return true;
-		case Node_Item_Type::Root :
-			result_str = NodeItem::tr( "Root" );
-			return true;
-		case Node_Item_Type::End :
-			result_str = NodeItem::tr( "End" );
-			return true;
-		case Node_Item_Type::Process :
-			result_str = NodeItem::tr( "Process" );
-			return true;
-		case Node_Item_Type::Logic :
-			result_str = NodeItem::tr( "Logic" );
-			return true;
-		case Node_Item_Type::Foreach :
-			result_str = NodeItem::tr( "Foreach" );
-			return true;
-		case Node_Item_Type::Loop :
-			result_str = NodeItem::tr( "Loop" );
-			return true;
-	}
-
-	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );
-	return false;;
-}
-bool NodeItem::getEnumName( const Click_Type &enum_var, QString &result_str ) {
-	switch( enum_var ) {
-		case Click_Type::None :
-			result_str = NodeItem::tr( "None" );
-			return true;
-		case Click_Type::Space :
-			result_str = NodeItem::tr( "Space" );
-			return true;
-		case Click_Type::Title :
-			result_str = NodeItem::tr( "Title" );
-			return true;
-		case Click_Type::InputPort :
-			result_str = NodeItem::tr( "InputPort" );
-			return true;
-		case Click_Type::OutputPort :
-			result_str = NodeItem::tr( "OutputPort" );
-			return true;
-	}
-	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );
-	return false;;
-}
 
 /// @brief 输入输入端口之间的空间大小
 int NodeItem::midPortSpace = 25;
@@ -154,30 +104,30 @@ bool NodeItem::hasOutputPort( const NodePort *node_port ) {
 			return true;
 	return false;
 }
-NodeItem::Click_Type NodeItem::relativePointType( int x, int y ) const {
+nodeItemEnum::Click_Type NodeItem::relativePointType( int x, int y ) const {
 
 	// 任意一个坐标超出范围，即可判定非法
 	if( x < 0 || y < 0 || x > nodeItemWidth || y > nodeItemHeith )
-		return Click_Type::None;
+		return nodeItemEnum::Click_Type::None;
 	int drawX = borderLeftSpace;
 	int drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	if( x > drawX && y > drawY ) { // 需要匹配是否输入和输出节点
 		drawX += inputBuffWidth;
 		// 判定输入
 		if( x < drawX )
-			return Click_Type::InputPort;
+			return nodeItemEnum::Click_Type::InputPort;
 		drawX += midPortSpace;
 		// 判定中间
 		if( x < drawX )
-			return Click_Type::Space;
+			return nodeItemEnum::Click_Type::Space;
 		drawX += outputBuffWidth;
 		// 判定输出
 		if( x < drawX )
-			return Click_Type::OutputPort;
+			return nodeItemEnum::Click_Type::OutputPort;
 
 	} else
-		return Click_Type::Title;
-	return Click_Type::Space;
+		return nodeItemEnum::Click_Type::Title;
+	return nodeItemEnum::Click_Type::Space;
 }
 NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
 	// 数组数量为 0，直接返回

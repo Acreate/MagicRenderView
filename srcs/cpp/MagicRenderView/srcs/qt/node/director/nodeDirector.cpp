@@ -263,7 +263,7 @@ bool NodeDirector::createMenu( ) {
 		return false;
 	QString enumString;
 	for( auto &[ enumType,dirNamMap ] : infos ) {
-		if( NodeItem::getEnumName( enumType, enumString ) == false )
+		if( nodeItemEnum::getEnumName( enumType, enumString ) == false )
 			continue;
 		QMenu *nodeTypeMenu = nodeItemCreateMenu->addMenu( enumString );
 		for( auto &[ dir,nameMap ] : dirNamMap ) {
@@ -461,7 +461,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 		}
 	new_node_item->generateCode = checkCode;
 	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
-	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this, new_node_item] ( NodeItem *release_node_item ) {
+	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
 	connect( nodeItemInfo, &NodeItemInfo::releaseThis, this, &NodeDirector::releaseNodeItemInfoSignal );
@@ -556,17 +556,17 @@ NodeDirector::~NodeDirector( ) {
 bool NodeDirector::getNodeItemRender( QImage &result_render_image, const QPoint &offset ) const {
 	return true;
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItem( NodeItem *&result_node_item, NodePort * &result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItem( NodeItem *&result_node_item, NodePort * &result_node_port ) {
 	return getClickNodeItem( mainWidget->mapFromGlobal( QCursor::pos( ) ), result_node_item, result_node_port );
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, NodeItem *&result_node_item, NodePort * &result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, NodeItem *&result_node_item, NodePort * &result_node_port ) {
 
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
-		return NodeItem::Click_Type::None;
+		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
 	auto data = generateNodeItems.data( );
 	// 下标
@@ -577,15 +577,15 @@ NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, No
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
 			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
-			if( pointType == NodeItem::Click_Type::None )
+			nodeItemEnum::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
+			if( pointType == nodeItemEnum::Click_Type::None )
 				continue; // 空白处，则跳过循环
 			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
-				case NodeItem::Click_Type::InputPort :
+				case nodeItemEnum::Click_Type::InputPort :
 					result_node_port = data[ index ]->nodeItem->getNodeInputAtRelativePointType( localPoint );
 					break;
-				case NodeItem::Click_Type::OutputPort :
+				case nodeItemEnum::Click_Type::OutputPort :
 					result_node_port = data[ index ]->nodeItem->getNodeOutputPortAtRelativePointType( localPoint );
 					break;
 				default :
@@ -596,19 +596,19 @@ NodeItem::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos, No
 			return pointType; // 检测到了
 		}
 
-	return NodeItem::Click_Type::None;
+	return nodeItemEnum::Click_Type::None;
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItemInputPort( NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
 	return getClickNodeItemInputPort( mainWidget->mapFromGlobal( QCursor::pos( ) ), result_node_item, result_node_port );
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeInputPort *&result_node_port ) {
 
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
-		return NodeItem::Click_Type::None;
+		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
 	auto data = generateNodeItems.data( );
 	// 下标
@@ -619,12 +619,12 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &clic
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
 			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
-			if( pointType == NodeItem::Click_Type::None )
+			nodeItemEnum::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
+			if( pointType == nodeItemEnum::Click_Type::None )
 				continue; // 空白处，则跳过循环
 			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
-				case NodeItem::Click_Type::InputPort :
+				case nodeItemEnum::Click_Type::InputPort :
 					result_node_port = data[ index ]->nodeItem->getNodeInputAtRelativePointType( localPoint );
 					break;
 				default :
@@ -634,18 +634,18 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &clic
 
 			return pointType; // 检测到了
 		}
-	return NodeItem::Click_Type::None;
+	return nodeItemEnum::Click_Type::None;
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItemOutputPort( NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
 	return getClickNodeItemOutputPort( mainWidget->mapFromGlobal( QCursor::pos( ) ), result_node_item, result_node_port );
 }
-NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
+nodeItemEnum::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &click_pos, NodeItem *&result_node_item, NodeOutputPort *&result_node_port ) {
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
 	size_t count = generateNodeItems.size( );
 	if( count == 0 )
-		return NodeItem::Click_Type::None;
+		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
 	auto data = generateNodeItems.data( );
 	// 下标
@@ -656,12 +656,12 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &cli
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr ) {
 			localPoint = click_pos - data[ index ]->nodeItem->getPos( );
-			NodeItem::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
-			if( pointType == NodeItem::Click_Type::None )
+			nodeItemEnum::Click_Type pointType = data[ index ]->nodeItem->relativePointType( localPoint );
+			if( pointType == nodeItemEnum::Click_Type::None )
 				continue; // 空白处，则跳过循环
 			result_node_item = data[ index ]->nodeItem; // 选中了非空白处
 			switch( pointType ) {
-				case NodeItem::Click_Type::OutputPort :
+				case nodeItemEnum::Click_Type::OutputPort :
 					result_node_port = data[ index ]->nodeItem->getNodeOutputPortAtRelativePointType( localPoint );
 					break;
 				default :
@@ -671,5 +671,5 @@ NodeItem::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint &cli
 
 			return pointType; // 检测到了
 		}
-	return NodeItem::Click_Type::None;
+	return nodeItemEnum::Click_Type::None;
 }

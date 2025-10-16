@@ -80,3 +80,7 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 bool NodeItemInfo::inLinkHasNodeItem( NodeItemInfo *link_target ) const {
 	return inLinkHasNodeItem( link_target->nodeItem );
 }
+bool NodeItemInfo::getNodeItemType( nodeItemEnum::Node_Item_Type &result ) {
+	result = nodeItem->getNodeMetaType( );
+	return true;
+}

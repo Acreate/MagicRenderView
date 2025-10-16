@@ -1,12 +1,11 @@
 ﻿#include "./varGenerate.h"
 
-#include "../tools/tools.h"
+#include <qt/tools/tools.h>
+#include <qt/varType/I_Conver.h>
+#include <qt/varType/I_IsType.h>
+#include <qt/varType/I_Stack.h>
 
-#include "../varType/I_Conver.h"
-#include "../varType/I_IsType.h"
-#include "../varType/I_Stack.h"
-
-bool VarGenerate::appendSortMap( const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr ) {
+bool VarGenerate::appendSortMap( const nodeItemEnum::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr ) {
 
 	// 查找已经存在的列表
 	size_t count = nodeItemSortMap.size( );
@@ -14,7 +13,7 @@ bool VarGenerate::appendSortMap( const NodeItem::Node_Item_Type &enum_type, cons
 		size_t index = 0;
 		auto topDataPtr = nodeItemSortMap.data( );
 		for( ; index < count; ++index ) {
-			auto& enumMap = topDataPtr[ index ];
+			auto &enumMap = topDataPtr[ index ];
 			// 存在枚举
 			if( enumMap.first == enum_type ) {
 				count = enumMap.second.size( );
@@ -59,7 +58,7 @@ bool VarGenerate::appendSortMap( const NodeItem::Node_Item_Type &enum_type, cons
 	return true;
 
 }
-bool VarGenerate::appendNodeItemGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const NodeItem::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function ) {
+bool VarGenerate::appendNodeItemGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const nodeItemEnum::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const createFunction &generate_var_function, const releaseFunction &release_var_function ) {
 	auto typeShared = std_shared_ptr< I_Type >( new I_Type( generate_var_type_info, type_target_memory_size, type_pro_name, generate_var_name_vector, release_var_function, generate_var_function ) );
 	std_shared_ptr< NodeItemGenerate > nodeItemGenerate( new NodeItemGenerate( typeShared, type_pro_name, dir_name, enum_type ) );
 	for( auto &key : generateNodeItemTypeInfos )
@@ -71,13 +70,13 @@ bool VarGenerate::appendNodeItemGenerateInstance( const type_info &generate_var_
 		}
 	if( appendSortMap( enum_type, dir_name, type_pro_name, typeShared ) == false ) {
 		QString result;
-		tools::debug::printError( QString( "%1/%2 [%3]节点排序失败" ).arg( dir_name, type_pro_name ).arg( NodeItem::getEnumName( enum_type, result ) ) );
+		tools::debug::printError( QString( "%1/%2 [%3]节点排序失败" ).arg( dir_name, type_pro_name ).arg( nodeItemEnum::getEnumName( enum_type, result ) ) );
 		return false;
 	}
 	generateNodeItemTypeInfos.emplace_back( nodeItemGenerate );
 	return true;
 }
-bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const I_Type::createFunction &generate_var_function, const I_Type::releaseFunction &release_var_function ) {
+bool VarGenerate::appendVarTypeGenerateInstance( const type_info &generate_var_type_info, const size_t &type_target_memory_size, const QString &type_pro_name, const std_vector< QString > &generate_var_name_vector, const createFunction &generate_var_function, const releaseFunction &release_var_function ) {
 	auto typeShared = std_shared_ptr< I_Type >( new I_Type( generate_var_type_info, type_target_memory_size, type_pro_name, generate_var_name_vector, release_var_function, generate_var_function ) );
 	for( auto &key : generateAnyTypeInfos )
 		if( key->getTypeInfo( ) == generate_var_type_info ) {
