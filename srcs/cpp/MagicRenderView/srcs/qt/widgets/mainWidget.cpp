@@ -1,6 +1,7 @@
 ﻿#include "./mainWidget.h"
 
 #include <QMetaEnum>
+#include <QClipboard>
 #include <QMouseEvent>
 #include <QPainter>
 #include <qboxlayout.h>
@@ -13,12 +14,15 @@
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 #include <qt/node/widgets/nodeItemInfoScrollAreaWidget.h>
 
-MainWidget::MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
+#include "mainScrollAreaWidget.h"
+
+MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	scrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	scrollArea->setWidget( this );
+	scroll_area->setMainWidget( this );
 	appInstance = Application::getApplicationInstancePtr( );
 	varGenerate = appInstance->getVarGenerate( );
 	nodeDirector = appInstance->getNodeDirector( );
@@ -64,6 +68,29 @@ void MainWidget::ensureVisibleToItemNode( const NodeItem *targetItemNode ) {
 		setMinimumSize( newSize );
 	auto targetSize = geometry.bottomRight( );
 	scrollArea->ensureVisible( targetSize.x( ), targetSize.y( ) );
+}
+bool MainWidget::copyNodeItemActionInfo( ) {
+	if( leftFirstSelectItem == nullptr )
+		return false;
+	QClipboard *clip = QApplication::clipboard( );
+	NodeItem::NodeItemString_Type name = leftFirstSelectItem->getMetaObjectPathName( );
+	clip->setText( name, QClipboard::Clipboard );
+	return true;
+}
+bool MainWidget::pasteNodeItemActionInfo( ) {
+	QClipboard *clip = QApplication::clipboard( );
+	QString resultText = clip->text( QClipboard::Clipboard );
+	if( resultText.isEmpty( ) )
+		return false;
+	auto split = resultText.split( "/" );
+	if( split.size( ) != 2 )
+		return false;
+	auto nodeItem = nodeDirector->createNodeItem( split[ 0 ], split[ 1 ] );
+	if( nodeItem == nullptr )
+		return false;
+	nodeItem->move( mapFromGlobal( QCursor::pos( ) ) );
+	ensureVisibleToItemNode( nodeItem );
+	return true;
 }
 void MainWidget::linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {
 }

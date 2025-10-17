@@ -64,6 +64,7 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 			count = subVector.size( );
 			if( count == 0 )
 				return false;
+			data = subVector.data( );
 			index = 0;
 			for( ; index < count; ++index )
 				if( data[ index ]->nodeItem == link_target ) {

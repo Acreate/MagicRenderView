@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMouseEvent>
+#include <QShortcut>
 
 #include <qt/application/application.h>
 #include <qt/tools/tools.h>
@@ -107,6 +108,15 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	connect( currentAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
+
+	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
+	connect( shortcut, &QShortcut::activated, [this]( ) {
+		mainWidget->copyNodeItemActionInfo( );
+	} );
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this );
+	connect( shortcut, &QShortcut::activated, [this]( ) {
+		mainWidget->pasteNodeItemActionInfo( );
+	} );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
@@ -177,7 +187,7 @@ void MainWindow::mouseMoveEvent( QMouseEvent *event ) {
 }
 void MainWindow::closeEvent( QCloseEvent *event ) {
 	QMainWindow::closeEvent( event );
-	appInstance->quitApp(  );
+	appInstance->quitApp( );
 }
 void MainWindow::createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect ) {
 	QPoint point = contents_rect.bottomRight( );

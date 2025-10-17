@@ -12,6 +12,7 @@
 
 #include "../varType/I_Type.h"
 
+class MainScrollAreaWidget;
 class NodeItemInfo;
 class NodePortLinkInfo;
 class NodeDirector;
@@ -32,7 +33,7 @@ private:
 	friend class NodeItemSerialization;
 protected:
 	/// @brief 当前窗口的滚动页面
-	QScrollArea *scrollArea;
+	MainScrollAreaWidget *scrollArea;
 	/// @brief 应用实例
 	Application *appInstance;
 	/// @brief 支持序列化
@@ -68,11 +69,17 @@ protected:
 	/// @brief 用于右键删除节点时使用的信息列表
 	std_vector< NodeOutputPort * > rightMenuRemoveInfo;
 public:
-	MainWidget( QScrollArea *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
+	MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureVisibleToItemNode( const NodeItem *targetItemNode );
+	/// @brief 赋值当前选中
+	/// @return 成功返回 true
+	virtual bool copyNodeItemActionInfo( );
+	/// @brief 粘贴选中
+	/// @return 成功返回 true
+	virtual bool pasteNodeItemActionInfo( );
 protected:
 	virtual void linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	virtual void unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );

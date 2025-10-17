@@ -100,6 +100,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		tools::debug::printError( QString( "输出端 %1 不存在节点具象化信息" ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
+	// 多层引用
 	if( outputNodeItemInfo->inLinkHasNodeItem( inputNodeItem ) ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
@@ -438,6 +439,17 @@ NodeItem * NodeDirector::createNodeItem( const QString &dir_name, const QString 
 		return nodeItem;
 	delete nodeItem;
 	return nullptr;
+}
+NodeItem * NodeDirector::createNodeItem( const QString &dir_name, const QString &node_name ) {
+	size_t count = generateNodeItemInfos.size( );
+	if( count == 0 )
+		return nullptr;
+	auto generateInfoArrayPtr = generateNodeItemInfos.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( generateInfoArrayPtr[ index ]->isNodeType( dir_name, node_name ) )
+			return createNodeItem( dir_name, node_name, generateInfoArrayPtr[ index ]->getCreateTypeInstancePtr( ) );
+	return nullptr;
+
 }
 
 size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {

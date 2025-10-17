@@ -14,8 +14,19 @@ protected:
 	QPoint globalPressPos;
 	/// @brief 按下时当前窗口位置
 	QPoint fromGlobalPressPoint;
+	MainWindow *mainWindow;
+	MainWidget *mainWidget;
 public:
 	MainScrollAreaWidget( MainWindow *main_window );
+	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
+	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+	virtual void setMainWidget( MainWidget *main_widget ) { mainWidget = main_widget; }
+	/// @brief 赋值当前选中
+	/// @return 成功返回 true
+	virtual bool copyNodeItemActionInfo( );
+	/// @brief 粘贴选中
+	/// @return 成功返回 true
+	virtual bool pasteNodeItemActionInfo( );
 protected:
 	void mouseMoveEvent( QMouseEvent * ) override;
 	void mousePressEvent( QMouseEvent * ) override;

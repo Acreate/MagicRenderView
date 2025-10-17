@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class MainScrollAreaWidget;
 class NodeItem;
 class ItemWidget;
 class Application;
@@ -21,7 +22,7 @@ protected:
 	/// @brief 窗口的工具栏菜单
 	QMenuBar *mainMenuBar;
 	/// @brief 主要滚动视窗
-	QScrollArea *mainScrollArea;
+	MainScrollAreaWidget *mainScrollArea;
 	/// @brief 主要操作视窗
 	MainWidget *mainWidget;
 	/// @brief 记录窗口最大化，最小化，全屏之前的坐标位置

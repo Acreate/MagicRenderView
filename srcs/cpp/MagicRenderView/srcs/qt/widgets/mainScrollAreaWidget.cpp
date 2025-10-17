@@ -2,9 +2,17 @@
 
 #include <QMouseEvent>
 #include <QScrollBar>
-MainScrollAreaWidget::MainScrollAreaWidget( MainWindow *main_window ) : QScrollArea( main_window ) {
 
+#include "mainWidget.h"
+
+MainScrollAreaWidget::MainScrollAreaWidget( MainWindow *main_window ) : QScrollArea( main_window ), mainWidget( nullptr ) {
 	isMidMouse = 0;
+}
+bool MainScrollAreaWidget::copyNodeItemActionInfo( ) {
+	return mainWidget->copyNodeItemActionInfo( );
+}
+bool MainScrollAreaWidget::pasteNodeItemActionInfo( ) {
+	return mainWidget->pasteNodeItemActionInfo( );
 }
 void MainScrollAreaWidget::mouseMoveEvent( QMouseEvent *mouse_event ) {
 	QScrollArea::mouseMoveEvent( mouse_event );

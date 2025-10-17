@@ -80,6 +80,7 @@ public:
 	virtual bool release( const NodeItem *remove_node_item );
 	virtual bool setContentWidget( MainWidget *main_widget );
 	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
+	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name);
 	size_t appendNodeItem( NodeItem *new_node_item );
 	virtual MainWidget * getContentWidget( ) const {
 		return mainWidget;
