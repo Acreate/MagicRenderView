@@ -132,10 +132,10 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port )
-			return data[ index ]->link( output_port, unLinkFunction );
+			return data[ index ]->link( output_port );
 	// 没有链接对象就创建
 	auto newLinkObjPtr = new NodePortLinkInfo( input_port );
-	newLinkObjPtr->link( output_port, unLinkFunction );
+	newLinkObjPtr->link( output_port );
 
 	data = linkVectorPairt.data( );
 	index = 0;
@@ -147,49 +147,71 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	if( index == count )
 		linkVectorPairt.emplace_back( newLinkObjPtr );
 
-	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
+	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this, newLinkObjPtr] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
 		emit linkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
+		auto outputParentNodeItem = output_port->parentItem;
+		if( newLinkObjPtr->hasNodeItem( outputParentNodeItem ) == true )
+			return;
+
+		NodeItemInfo *outputInfo;
+		if( getNodeItemInfo( outputParentNodeItem, outputInfo ) == false ) {
+			QString msg( "%1 找不到匹配的具体输出" );
+			tools::debug::printError( msg.arg( outputParentNodeItem->getMetaObjectPathName( ) ) );
+			return;
+		}
+
+		auto inputParentNodeItem = input_port->parentItem;
+		NodeItemInfo *inputInfo;
+		if( getNodeItemInfo( inputParentNodeItem, inputInfo ) == false ) {
+			QString msg( "%1 找不到匹配的具体输入" );
+			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
+			return;
+		}
+		outputInfo->appendInputNodeItemInfo( inputInfo );
+		inputInfo->appendOutputNodeItemInfo( outputInfo );
 	} );
-	connect( newLinkObjPtr, &NodePortLinkInfo::unlinkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
+	connect( newLinkObjPtr, &NodePortLinkInfo::unlinkNodePort, [this, newLinkObjPtr] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
 		emit unlinkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
+		auto outputParentNodeItem = output_port->parentItem;
+		if( newLinkObjPtr->hasNodeItem( outputParentNodeItem ) == true )
+			return;
+
+		NodeItemInfo *outputInfo;
+		if( getNodeItemInfo( outputParentNodeItem, outputInfo ) == false ) {
+			QString msg( "%1 找不到匹配的具体输出" );
+			tools::debug::printError( msg.arg( outputParentNodeItem->getMetaObjectPathName( ) ) );
+			return;
+		}
+
+		auto inputParentNodeItem = input_port->parentItem;
+		NodeItemInfo *inputInfo;
+		if( getNodeItemInfo( inputParentNodeItem, inputInfo ) == false ) {
+			QString msg( "%1 找不到匹配的具体输入" );
+			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
+			return;
+		}
+
+		outputInfo->removeInputNodeItemInfo( inputInfo );
+		inputInfo->removeOutputNodeItemInfo( outputInfo );
 	} );
 	return true;
 }
 bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
 	if( input_port == nullptr || output_port == nullptr )
 		return false; // 一个节点为 nullptr
-	if( input_port->parentItem == output_port->parentItem )
-		return false; // 同一个节点
 
 	NodeItem *outputNodeItem = output_port->parentItem;
 	NodeItem *inputNodeItem = input_port->parentItem;
+	if( outputNodeItem == inputNodeItem )
+		return false; // 同一个节点
 
 	size_t count = linkVectorPairt.size( );
 	if( count == 0 )
 		return false;// 不存在匹配的链接端
 	auto pair = linkVectorPairt.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( pair[ index ]->inputPort == input_port ) {
-			bool unLink = pair[ index ]->unLink( output_port );
-			if( pair[ index ]->hasNodeItem( outputNodeItem ) == true )
-				return unLink;
-			NodeItemInfo *inputInfo;
-			if( getNodeItemInfo( inputNodeItem, inputInfo ) == false ) {
-				QString msg( "%1 找不到匹配的具体输入" );
-				tools::debug::printError( msg.arg( inputNodeItem->getMetaObjectPathName( ) ) );
-				return unLink;
-			}
-
-			NodeItemInfo *outputInfo;
-			if( getNodeItemInfo( outputNodeItem, outputInfo ) == false ) {
-				QString msg( "%1 找不到匹配的具体输出" );
-				tools::debug::printError( msg.arg( outputNodeItem->getMetaObjectPathName( ) ) );
-				return unLink;
-			}
-			outputInfo->removeInputNodeItemInfo( inputInfo );
-			inputInfo->removeOutputNodeItemInfo( outputInfo );
-			return unLink;
-		}
+		if( pair[ index ]->inputPort == input_port )
+			return pair[ index ]->unLink( output_port );
 	return false; // 不存在
 }
 size_t NodeDirector::run( ) {

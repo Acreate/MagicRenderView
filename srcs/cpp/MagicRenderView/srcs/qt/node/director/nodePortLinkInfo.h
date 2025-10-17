@@ -24,7 +24,7 @@ protected:
 	NodePortLinkInfo( NodeInputPort *input_port );
 public:
 	~NodePortLinkInfo( ) override;
-	virtual bool link( NodeOutputPort *link_output_port, const std_function< void( ) > &un_link_call_function );
+	virtual bool link( NodeOutputPort *link_output_port );
 	virtual bool unLink( NodeOutputPort *link_output_port );
 	virtual bool releaseNodeItemPtr( NodeItem *link_node_item );
 	virtual bool getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > &result_link );
