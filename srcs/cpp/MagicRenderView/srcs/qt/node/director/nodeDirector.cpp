@@ -126,7 +126,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
-	auto unLinkFunction = [this, input_port, output_port] { linkUnInstallPort( input_port, output_port ); };
+
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
@@ -135,7 +135,6 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 			return data[ index ]->link( output_port );
 	// 没有链接对象就创建
 	auto newLinkObjPtr = new NodePortLinkInfo( input_port );
-	newLinkObjPtr->link( output_port );
 
 	data = linkVectorPairt.data( );
 	index = 0;
@@ -147,31 +146,11 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	if( index == count )
 		linkVectorPairt.emplace_back( newLinkObjPtr );
 
-	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this, newLinkObjPtr] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
+	newLinkObjPtr->link( output_port );
+	connect( newLinkObjPtr, &NodePortLinkInfo::linkNodePort, [this] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
 		emit linkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
-		auto outputParentNodeItem = output_port->parentItem;
-		if( newLinkObjPtr->hasNodeItem( outputParentNodeItem ) == true )
-			return;
-
-		NodeItemInfo *outputInfo;
-		if( getNodeItemInfo( outputParentNodeItem, outputInfo ) == false ) {
-			QString msg( "%1 找不到匹配的具体输出" );
-			tools::debug::printError( msg.arg( outputParentNodeItem->getMetaObjectPathName( ) ) );
-			return;
-		}
-
-		auto inputParentNodeItem = input_port->parentItem;
-		NodeItemInfo *inputInfo;
-		if( getNodeItemInfo( inputParentNodeItem, inputInfo ) == false ) {
-			QString msg( "%1 找不到匹配的具体输入" );
-			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
-			return;
-		}
-		outputInfo->appendInputNodeItemInfo( inputInfo );
-		inputInfo->appendOutputNodeItemInfo( outputInfo );
 	} );
 	connect( newLinkObjPtr, &NodePortLinkInfo::unlinkNodePort, [this, newLinkObjPtr] ( NodePortLinkInfo *sender_obj_ptr, NodeInputPort *input_port, NodeOutputPort *output_port ) {
-		emit unlinkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
 		auto outputParentNodeItem = output_port->parentItem;
 		if( newLinkObjPtr->hasNodeItem( outputParentNodeItem ) == true )
 			return;
@@ -193,6 +172,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 
 		outputInfo->removeInputNodeItemInfo( inputInfo );
 		inputInfo->removeOutputNodeItemInfo( outputInfo );
+		emit unlinkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
 	} );
 	return true;
 }
