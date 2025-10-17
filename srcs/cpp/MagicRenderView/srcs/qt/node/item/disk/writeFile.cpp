@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/bin/binInputPort.h"
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 
-Imp_StaticMetaInfo( WriteFile, QObject::tr( "WriteFile" ), QObject::tr( "disk" ) );
+Imp_StaticMetaInfo( WriteFile, QObject::tr( "写文件" ), QObject::tr( "磁盘" ) );
 WriteFile::WriteFile( ) : NodeItem( ) {
 }
 bool WriteFile::intPortItems( MainWidget *parent ) {

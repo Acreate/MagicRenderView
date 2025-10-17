@@ -6,7 +6,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 
-Imp_StaticMetaInfo( WriteImage, QObject::tr( "WriteImage" ), QObject::tr( "disk" ) );
+Imp_StaticMetaInfo( WriteImage, QObject::tr( "写图像" ), QObject::tr( "磁盘" ) );
 
 WriteImage::WriteImage( )
 	: NodeItem( ) {

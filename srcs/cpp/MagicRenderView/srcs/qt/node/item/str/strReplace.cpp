@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( StrReplace, QObject::tr( "StrReplace" ), QObject::tr( "str" ) );
+Imp_StaticMetaInfo( StrReplace, QObject::tr( "替换" ), QObject::tr( "字符" ) );
 
 StrReplace::StrReplace( )
 	: NodeItem( ) {

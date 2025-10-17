@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( StrSub, QObject::tr( "StrSub" ), QObject::tr( "str" ) );
+Imp_StaticMetaInfo( StrSub, QObject::tr( "提取" ), QObject::tr( "字符" ) );
 
 StrSub::StrSub( ) : NodeItem( ) {
 }

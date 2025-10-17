@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( IfLogic, QObject::tr( "if" ), QObject::tr( "logic" ) );
+Imp_StaticMetaInfo( IfLogic, QObject::tr( "如果" ), QObject::tr( "逻辑" ) );
 
 IfLogic::IfLogic( ) : NodeItem( ) {
 }

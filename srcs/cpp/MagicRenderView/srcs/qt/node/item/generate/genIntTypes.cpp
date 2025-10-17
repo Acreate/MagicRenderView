@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/intOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "GenIntTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
 GenIntTypes::GenIntTypes( ) : NodeItem( ) {
 }

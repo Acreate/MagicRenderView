@@ -2,7 +2,7 @@
 #include "../../prot/inputProt/inpInputPort/time/timeInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/time/timeOutputPort.h"
-Imp_StaticMetaInfo( TimeDataConver, QObject::tr( "TimeDataConver" ), QObject::tr( "app" ) );
+Imp_StaticMetaInfo( TimeDataConver, QObject::tr( "时间转换" ), QObject::tr( "软件" ) );
 
 TimeDataConver::TimeDataConver( ) : NodeItem( ) {
 }

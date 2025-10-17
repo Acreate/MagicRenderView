@@ -4,7 +4,7 @@
 #include "../../prot/outputProt/impOutputPort/color/imagaRGBAColorOutPutPort.h"
 #include "../../prot/outputProt/impOutputPort/int/intOutputPort.h"
 
-Imp_StaticMetaInfo( ReadImage, QObject::tr( "ReadImage" ), QObject::tr( "disk" ) );
+Imp_StaticMetaInfo( ReadImage, QObject::tr( "读图像" ), QObject::tr( "磁盘" ) );
 
 ReadImage::ReadImage( ) : NodeItem( ) {
 }

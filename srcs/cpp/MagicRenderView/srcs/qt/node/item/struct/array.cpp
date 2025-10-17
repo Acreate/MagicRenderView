@@ -7,7 +7,7 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( Array, QObject::tr( "Array" ), QObject::tr( "struct" ) );
+Imp_StaticMetaInfo( Array, QObject::tr( "数组" ), QObject::tr( "结构体" ) );
 Array::Array( ) {
 }
 bool Array::intPortItems( MainWidget *parent ) {

@@ -4,7 +4,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( StrInsert, QObject::tr( "StrInsert" ), QObject::tr( "str" ) );
+Imp_StaticMetaInfo( StrInsert, QObject::tr( "插入" ), QObject::tr( "字符" ) );
 
 StrInsert::StrInsert( )
 	: NodeItem( ) {

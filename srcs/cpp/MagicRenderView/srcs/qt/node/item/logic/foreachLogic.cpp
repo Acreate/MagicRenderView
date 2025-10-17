@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( ForeachLogic, QObject::tr( "foreach" ), QObject::tr( "logic" ) );
+Imp_StaticMetaInfo( ForeachLogic, QObject::tr( "循环" ), QObject::tr( "逻辑" ) );
 
 ForeachLogic::ForeachLogic( ) : NodeItem( ) {
 }

@@ -2,7 +2,7 @@
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 
-Imp_StaticMetaInfo( EndNode, QObject::tr( "end" ), QObject::tr( "app" ) );
+Imp_StaticMetaInfo( EndNode, QObject::tr( "结束" ), QObject::tr( "软件" ) );
 
 EndNode::EndNode( ) : NodeItem( ) {
 }

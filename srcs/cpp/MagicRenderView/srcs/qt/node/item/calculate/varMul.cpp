@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/float/floatInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 
-Imp_StaticMetaInfo( VarMul, QObject::tr( "VarMul" ), QObject::tr( "calculate" ) );
+Imp_StaticMetaInfo( VarMul, QObject::tr( "乘" ), QObject::tr( "计算" ) );
 
 VarMul::VarMul( ) : NodeItem( ) {
 }

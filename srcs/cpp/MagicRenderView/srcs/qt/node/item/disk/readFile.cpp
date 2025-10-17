@@ -4,7 +4,7 @@
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( ReadFile, QObject::tr( "ReadFile" ), QObject::tr( "disk" ) );
+Imp_StaticMetaInfo( ReadFile, QObject::tr( "读文件" ), QObject::tr( "磁盘" ) );
 ReadFile::ReadFile( ) : NodeItem( ) {
 
 }

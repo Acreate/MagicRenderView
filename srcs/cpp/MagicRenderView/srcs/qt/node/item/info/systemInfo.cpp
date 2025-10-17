@@ -2,7 +2,7 @@
 
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( SystemInfo, QObject::tr( "SystemInfo" ), QObject::tr( "info" ) );
+Imp_StaticMetaInfo( SystemInfo, QObject::tr( "系统" ), QObject::tr( "信息" ) );
 
 SystemInfo::SystemInfo( )
 	: NodeItem( ) {

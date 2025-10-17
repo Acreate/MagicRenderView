@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/int/uIntInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/time/timeOutputPort.h"
-Imp_StaticMetaInfo( TimeInfo, QObject::tr( "TimeInfo" ), QObject::tr( "app" ) );
+Imp_StaticMetaInfo( TimeInfo, QObject::tr( "软件时间信息" ), QObject::tr( "软件" ) );
 
 TimeInfo::TimeInfo( ) : NodeItem( ) {
 }

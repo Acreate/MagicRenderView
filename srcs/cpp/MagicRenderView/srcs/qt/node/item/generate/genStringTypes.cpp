@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
-Imp_StaticMetaInfo( GenStringTypes, QObject::tr( "GenStringTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
 GenStringTypes::GenStringTypes( ) : NodeItem( ) {
 }

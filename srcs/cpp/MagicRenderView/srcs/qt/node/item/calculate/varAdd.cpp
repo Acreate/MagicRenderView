@@ -2,7 +2,7 @@
 
 #include "../../prot/inputProt/inpInputPort/float/floatInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
-Imp_StaticMetaInfo( VarAdd, QObject::tr( "VarAdd" ), QObject::tr( "calculate" ) );
+Imp_StaticMetaInfo( VarAdd, QObject::tr( "加" ), QObject::tr( "计算" ) );
 
 VarAdd::VarAdd( ) : NodeItem( ) {
 }

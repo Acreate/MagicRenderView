@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( StrAppend, QObject::tr( "StrAppend" ), QObject::tr( "str" ) );
+Imp_StaticMetaInfo( StrAppend, QObject::tr( "追加" ), QObject::tr( "字符" ) );
 
 StrAppend::StrAppend( ) : NodeItem( ) {
 }

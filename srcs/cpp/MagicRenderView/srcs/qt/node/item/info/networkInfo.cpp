@@ -1,7 +1,7 @@
 ﻿#include "networkInfo.h"
 
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
-Imp_StaticMetaInfo( NetworkInfo, QObject::tr( "NetworkInfo" ), QObject::tr( "info" ) );
+Imp_StaticMetaInfo( NetworkInfo, QObject::tr( "网络" ), QObject::tr( "信息" ) );
 
 NetworkInfo::NetworkInfo( ) {
 }

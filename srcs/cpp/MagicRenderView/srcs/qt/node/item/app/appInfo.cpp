@@ -1,7 +1,7 @@
 ﻿#include "appInfo.h"
 
-#include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
-Imp_StaticMetaInfo( AppInfo, QObject::tr( "AppInfo" ), QObject::tr( "app" ) );
+#include <qt/node/prot/outputProt/impOutputPort/string/stringOutputPort.h>
+Imp_StaticMetaInfo( AppInfo, QObject::tr( "软件信息" ), QObject::tr( "软件" ) );
 
 AppInfo::AppInfo( ) : NodeItem( ) {
 }

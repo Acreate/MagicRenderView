@@ -4,7 +4,7 @@
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "GenBinTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
 GenBinTypes::GenBinTypes( ) : NodeItem( ) {
 }

@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( StrSplit, QObject::tr( "StrSplit" ), QObject::tr( "str" ) );
+Imp_StaticMetaInfo( StrSplit, QObject::tr( "切分" ), QObject::tr( "字符" ) );
 
 StrSplit::StrSplit( )
 	: NodeItem( ) {

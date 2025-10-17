@@ -4,7 +4,7 @@
 #include "../../prot/outputProt/impOutputPort/color/imagaRGBAColorOutPutPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenColorTypes, QObject::tr( "GenColorTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenColorTypes, QObject::tr( "颜色" ), QObject::tr( "生成" ) );
 
 GenColorTypes::GenColorTypes( ) : NodeItem( ) {
 }

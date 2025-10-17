@@ -3,7 +3,7 @@
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "GenFloatTypes" ), QObject::tr( "generate" ) );
+Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
 GenFloatTypes::GenFloatTypes( ) : NodeItem( ) {
 }

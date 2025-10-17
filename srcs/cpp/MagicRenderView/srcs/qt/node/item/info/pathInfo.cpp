@@ -4,7 +4,7 @@
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
-Imp_StaticMetaInfo( PathInfo, QObject::tr( "PathInfo" ), QObject::tr( "info" ) );
+Imp_StaticMetaInfo( PathInfo, QObject::tr( "路径" ), QObject::tr( "信息" ) );
 
 PathInfo::PathInfo( ) : NodeItem( ) {
 }

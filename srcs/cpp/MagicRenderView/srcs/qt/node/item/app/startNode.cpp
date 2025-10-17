@@ -2,7 +2,7 @@
 
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( StartNode, QObject::tr( "start" ), QObject::tr( "app" ) );
+Imp_StaticMetaInfo( StartNode, QObject::tr( "起始" ), QObject::tr( "软件" ) );
 
 StartNode::StartNode( ) : NodeItem( ) {
 }
