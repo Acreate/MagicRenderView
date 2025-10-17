@@ -5,20 +5,21 @@
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
-std_vector_shared_unity_shared< NodeItemBuilderMode > NodeItemBuilderMode::generateNodeItemBuilderModeVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, const std_vector< NodeItemInfo * > &end_node_item_info_vector, const std_vector< NodeItemInfo * > &normal_node_item_info_vector ) {
+std_vector_shared_unity_shared< NodeItemBuilderMode > NodeItemBuilderMode::generateNodeItemBuilderModeVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, const std_vector< NodeItemInfo * > &normal_node_item_info_vector ) {
 	size_t startNodeCount = start_node_item_info_vector.size( );
 	if( startNodeCount == 0 ) {
 		tools::debug::printError( "不存在匹配的开始节点" );
 		return nullptr; // 没有结束节点，则返回
 	}
-	size_t endNodeCount = end_node_item_info_vector.size( );
-	if( endNodeCount == 0 ) {
-		tools::debug::printError( "不存在匹配的结束节点" );
-		return nullptr; // 没有结束节点，则返回
-	}
 
 	// todo : 实现返回
 	std_vector_shared_unity_shared< NodeItemBuilderMode > result( new std_vector_unity_shared< NodeItemBuilderMode > );
+
+
+
+	
+	
+	
 	return result;
 }
 std_vector_shared_unity_shared< NodeItemBuilderMode > NodeItemBuilderMode::generateNodeItemBuilderModeVector( const std_vector< NodeItemInfo * > &node_item_info_vector ) {
@@ -29,8 +30,7 @@ std_vector_shared_unity_shared< NodeItemBuilderMode > NodeItemBuilderMode::gener
 	auto builderNodeArrayPtr = node_item_info_vector.data( );
 	// 当前遍历下标
 	size_t index = 0;
-	// 查找 end
-	std_vector< NodeItemInfo * > endNodeItem;
+	// 查找 开始节点
 	std_vector< NodeItemInfo * > startNodeItem;
 	std_vector< NodeItemInfo * > normalNodeItem;
 	nodeItemEnum::Node_Item_Type result;
@@ -45,16 +45,14 @@ std_vector_shared_unity_shared< NodeItemBuilderMode > NodeItemBuilderMode::gener
 					startNodeItem.emplace_back( builderNodeArrayPtr[ index ] );
 					break;
 				case nodeItemEnum::Node_Item_Type::End :
-					endNodeItem.emplace_back( builderNodeArrayPtr[ index ] );
-					break;
 				case nodeItemEnum::Node_Item_Type::Process :
 				case nodeItemEnum::Node_Item_Type::Logic :
-				case nodeItemEnum::Node_Item_Type::Foreach :
-				case nodeItemEnum::Node_Item_Type::Loop :
+				case nodeItemEnum::Node_Item_Type::Point :
+				case nodeItemEnum::Node_Item_Type::Jump :
 					normalNodeItem.emplace_back( builderNodeArrayPtr[ index ] );
 					break;
 			}
-	return NodeItemBuilderMode::generateNodeItemBuilderModeVector( startNodeItem, endNodeItem, normalNodeItem );
+	return NodeItemBuilderMode::generateNodeItemBuilderModeVector( startNodeItem,normalNodeItem );
 }
 bool NodeItemBuilderMode::getRunNodeItems( std_vector< NodeItemInfo * > &result_current_run_info_vector ) {
 	result_current_run_info_vector = runNodeItemInfoVector;

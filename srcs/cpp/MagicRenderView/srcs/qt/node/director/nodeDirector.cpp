@@ -100,31 +100,42 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		tools::debug::printError( QString( "输出端 %1 不存在节点具象化信息" ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
-	// 多层引用
-	if( outputNodeItemInfo->inLinkHasNodeItem( inputNodeItem ) ) {
+
+	if( outputNodeItemInfo->inOutputNodeItemInfo( inputNodeItem ) ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
-	
+
 	NodeItemInfo *inputNodeItemInfo;
 	if( getNodeItemInfo( inputNodeItem, inputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "输入端 %1 不存在节点具象化信息" ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
-	
-	if( inputNodeItemInfo->linkThis( outputNodeItemInfo ) == false ) {
+	//if( inputNodeItemInfo->inOutputNodeItemInfo( outputNodeItem ) ) {
+	//	tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+	//	return false;
+	//}
+
+	if( outputNodeItemInfo->appendInputNodeItemInfo( inputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
+
+	if( inputNodeItemInfo->appendOutputNodeItemInfo( outputNodeItemInfo ) == false ) {
+		outputNodeItemInfo->removeInputNodeItemInfo( inputNodeItemInfo );
+		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
+	auto unLinkFunction = [this, input_port, output_port] { linkUnInstallPort( input_port, output_port ); };
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port )
-			return data[ index ]->link( output_port );
+			return data[ index ]->link( output_port, unLinkFunction );
 	// 没有链接对象就创建
 	auto newLinkObjPtr = new NodePortLinkInfo( input_port );
-	newLinkObjPtr->link( output_port );
+	newLinkObjPtr->link( output_port, unLinkFunction );
 
 	data = linkVectorPairt.data( );
 	index = 0;
@@ -145,16 +156,40 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	return true;
 }
 bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port ) {
-	if( input_port == nullptr || output_port == nullptr || input_port->parentItem == output_port->parentItem )
-		return false; // 同一个节点或者为 nullptr
+	if( input_port == nullptr || output_port == nullptr )
+		return false; // 一个节点为 nullptr
+	if( input_port->parentItem == output_port->parentItem )
+		return false; // 同一个节点
+
+	NodeItem *outputNodeItem = output_port->parentItem;
+	NodeItem *inputNodeItem = input_port->parentItem;
 
 	size_t count = linkVectorPairt.size( );
 	if( count == 0 )
 		return false;// 不存在匹配的链接端
 	auto pair = linkVectorPairt.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( pair[ index ]->inputPort == input_port )
-			return pair[ index ]->unLink( output_port );
+		if( pair[ index ]->inputPort == input_port ) {
+			bool unLink = pair[ index ]->unLink( output_port );
+			if( pair[ index ]->hasNodeItem( outputNodeItem ) == true )
+				return unLink;
+			NodeItemInfo *inputInfo;
+			if( getNodeItemInfo( inputNodeItem, inputInfo ) == false ) {
+				QString msg( "%1 找不到匹配的具体输入" );
+				tools::debug::printError( msg.arg( inputNodeItem->getMetaObjectPathName( ) ) );
+				return unLink;
+			}
+
+			NodeItemInfo *outputInfo;
+			if( getNodeItemInfo( outputNodeItem, outputInfo ) == false ) {
+				QString msg( "%1 找不到匹配的具体输出" );
+				tools::debug::printError( msg.arg( outputNodeItem->getMetaObjectPathName( ) ) );
+				return unLink;
+			}
+			outputInfo->removeInputNodeItemInfo( inputInfo );
+			inputInfo->removeOutputNodeItemInfo( outputInfo );
+			return unLink;
+		}
 	return false; // 不存在
 }
 size_t NodeDirector::run( ) {
@@ -343,26 +378,28 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 		if( itemInfo ) {
 			index = 0;
 			for( ; index < count; ++index )
-				if( nodeitemPtrData[ index ] != nullptr )
-					nodeitemPtrData[ index ]->unlinkThis( itemInfo );
+				if( nodeitemPtrData[ index ] != nullptr ) {
+					nodeitemPtrData[ index ]->removeOutputNodeItemInfo( itemInfo );
+					nodeitemPtrData[ index ]->removeInputNodeItemInfo( itemInfo );
+				}
 			delete itemInfo;
 		}
 	}
 	return true;
 }
-bool NodeDirector::releaseNodeItemInfo( NodeItemInfo *del_ptr ) {
-	size_t count = generateNodeItems.size( );
-	if( count == 0 )
-		return false;
-	auto data = generateNodeItems.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ] != nullptr && data[ index ] == del_ptr ) {
-			data[ index ] = nullptr;
-			delete del_ptr;
-			return true;
-		}
-	return false;
-}
+//bool NodeDirector::releaseNodeItemInfo( NodeItemInfo *del_ptr ) {
+//	size_t count = generateNodeItems.size( );
+//	if( count == 0 )
+//		return false;
+//	auto data = generateNodeItems.data( );
+//	for( size_t index = 0; index < count; ++index )
+//		if( data[ index ] != nullptr && data[ index ] == del_ptr ) {
+//			data[ index ] = nullptr;
+//			delete del_ptr;
+//			return true;
+//		}
+//	return false;
+//}
 bool NodeDirector::getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link ) {
 	size_t count = get_nodeitem_ptr->nodeInputProtVector.size( );
 	if( count == 0 )
@@ -393,22 +430,22 @@ bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemIn
 		}
 	return false;
 }
-bool NodeDirector::release( const NodeItem *remove_node_item ) {
-	size_t count = generateNodeItems.size( );
-	if( count == 0 )
-		return false;
-	auto data = generateNodeItems.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
-			auto *item = data[ index ];
-			data[ index ] = nullptr;
-			NodeItem *nodeItem = item->nodeItem;
-			nodeItem->disconnect( this );
-			delete item;
-			return true;
-		}
-	return false;
-}
+//bool NodeDirector::release( const NodeItem *remove_node_item ) {
+//	size_t count = generateNodeItems.size( );
+//	if( count == 0 )
+//		return false;
+//	auto data = generateNodeItems.data( );
+//	for( size_t index = 0; index < count; ++index )
+//		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
+//			auto *item = data[ index ];
+//			data[ index ] = nullptr;
+//			NodeItem *nodeItem = item->nodeItem;
+//			nodeItem->disconnect( this );
+//			delete item;
+//			return true;
+//		}
+//	return false;
+//}
 bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	if( main_widget == nullptr )
 		return false;

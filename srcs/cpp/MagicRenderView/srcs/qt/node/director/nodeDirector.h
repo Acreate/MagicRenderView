@@ -44,7 +44,7 @@ protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
-	virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
+	//virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
 	virtual bool getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link );
 	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 public:
@@ -77,7 +77,7 @@ public:
 	virtual std_vector< NodeItem * > getNodeItems( ) const;
 	virtual std_vector< QImage * > getNodeItemRenders( ) const;
 
-	virtual bool release( const NodeItem *remove_node_item );
+	//virtual bool release( const NodeItem *remove_node_item );
 	virtual bool setContentWidget( MainWidget *main_widget );
 	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
 	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name);

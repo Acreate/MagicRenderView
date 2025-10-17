@@ -4,6 +4,8 @@
 
 #include <alias/type_alias.h>
 
+#include <qt/enums/nodeItemEnum.h>
+
 class I_Var;
 class I_Stack;
 class I_Type;

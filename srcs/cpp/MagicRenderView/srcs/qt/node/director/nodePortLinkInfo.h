@@ -24,10 +24,10 @@ protected:
 	NodePortLinkInfo( NodeInputPort *input_port );
 public:
 	~NodePortLinkInfo( ) override;
-	virtual bool link( NodeOutputPort *link_output_port );
+	virtual bool link( NodeOutputPort *link_output_port, const std_function< void( ) > &un_link_call_function );
 	virtual bool unLink( NodeOutputPort *link_output_port );
 	virtual bool releaseNodeItemPtr( NodeItem *link_node_item );
-	virtual bool getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > result_link );
+	virtual bool getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > &result_link );
 	virtual bool getLink( std_vector< NodeOutputPort * > result_link );
 	virtual bool getLinkNodeItem( std_vector< NodeItem * > result_link_node_items );
 	virtual QMenu * getRemoveLinkMenu( ) const { return removeLinkMenu; }

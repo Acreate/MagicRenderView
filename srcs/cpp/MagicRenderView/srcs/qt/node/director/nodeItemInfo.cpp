@@ -15,51 +15,51 @@ NodeItemInfo::NodeItemInfo( NodeItem *node_item ) : QObject( nullptr ),
 		nodeItem->deleteLater( );
 	} );
 }
-bool NodeItemInfo::linkThis( NodeItemInfo *link_target ) {
-	size_t count = linkInfoVector.size( );
+bool NodeItemInfo::appendOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
+	size_t count = outputNodeItemVector.size( );
 	if( count != 0 ) {
-		auto data = linkInfoVector.data( );
+		auto data = outputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == link_target->nodeItem )
+			if( data[ index ]->nodeItem == output_ref_ptr->nodeItem )
 				return true;
 		index = 0;
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == nullptr ) {
-				data[ index ] = link_target;
+				data[ index ] = output_ref_ptr;
 				return true;
 			}
 	}
-	linkInfoVector.emplace_back( link_target );
+	outputNodeItemVector.emplace_back( output_ref_ptr );
 	return true;
 }
-bool NodeItemInfo::unlinkThis( NodeItemInfo *link_target ) {
+bool NodeItemInfo::removeOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
 
-	size_t count = linkInfoVector.size( );
+	size_t count = outputNodeItemVector.size( );
 	if( count != 0 ) {
-		auto data = linkInfoVector.data( );
+		auto data = outputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == link_target->nodeItem ) {
+			if( data[ index ]->nodeItem == output_ref_ptr->nodeItem ) {
 				data[ index ] = nullptr;
 				return true;
 			}
 	}
 	return false;
 }
-bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
+bool NodeItemInfo::inOutputNodeItemInfo( NodeItem *output_ref_ptr ) const {
 
-	size_t count = linkInfoVector.size( );
+	size_t count = outputNodeItemVector.size( );
 	if( count != 0 ) {
-		auto data = linkInfoVector.data( );
+		auto data = outputNodeItemVector.data( );
 		size_t index = 0;
-		using buffVector = decltype(linkInfoVector);
+		using buffVector = decltype(outputNodeItemVector);
 		buffVector subVector, subBufferVector;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == link_target )
+			if( data[ index ]->nodeItem == output_ref_ptr )
 				return true;
 			else
-				subVector.append_range( data[ index ]->linkInfoVector );
+				subVector.append_range( data[ index ]->outputNodeItemVector );
 		do {
 			count = subVector.size( );
 			if( count == 0 )
@@ -67,10 +67,10 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 			data = subVector.data( );
 			index = 0;
 			for( ; index < count; ++index )
-				if( data[ index ]->nodeItem == link_target )
+				if( data[ index ]->nodeItem == output_ref_ptr )
 					return true;
 				else
-					subBufferVector.append_range( data[ index ]->linkInfoVector );
+					subBufferVector.append_range( data[ index ]->outputNodeItemVector );
 			subVector = subBufferVector;
 		} while( true );
 
@@ -78,8 +78,71 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 	return false;
 
 }
-bool NodeItemInfo::inLinkHasNodeItem( NodeItemInfo *link_target ) const {
-	return inLinkHasNodeItem( link_target->nodeItem );
+bool NodeItemInfo::inOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) const {
+	return inOutputNodeItemInfo( output_ref_ptr->nodeItem );
+}
+bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
+	size_t count = inputNodeItemVector.size( );
+	if( count != 0 ) {
+		auto data = inputNodeItemVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ]->nodeItem == input_ref_ptr->nodeItem )
+				return true;
+		index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ]->nodeItem == nullptr ) {
+				data[ index ] = input_ref_ptr;
+				return true;
+			}
+	}
+	inputNodeItemVector.emplace_back( input_ref_ptr );
+	return true;
+}
+bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
+	size_t count = inputNodeItemVector.size( );
+	if( count != 0 ) {
+		auto data = inputNodeItemVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
+				data[ index ] = nullptr;
+				return true;
+			}
+	}
+	return false;
+}
+bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
+	size_t count = inputNodeItemVector.size( );
+	if( count != 0 ) {
+		auto data = inputNodeItemVector.data( );
+		size_t index = 0;
+		using buffVector = decltype(inputNodeItemVector);
+		buffVector subVector, subBufferVector;
+		for( ; index < count; ++index )
+			if( data[ index ]->nodeItem == input_ref_ptr )
+				return true;
+			else
+				subVector.append_range( data[ index ]->inputNodeItemVector );
+		do {
+			count = subVector.size( );
+			if( count == 0 )
+				return false;
+			data = subVector.data( );
+			index = 0;
+			for( ; index < count; ++index )
+				if( data[ index ]->nodeItem == input_ref_ptr )
+					return true;
+				else
+					subBufferVector.append_range( data[ index ]->inputNodeItemVector );
+			subVector = subBufferVector;
+		} while( true );
+
+	}
+	return false;
+}
+bool NodeItemInfo::inInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) const {
+	return inInputNodeItemInfo( input_ref_ptr->nodeItem );
 }
 bool NodeItemInfo::getNodeItemType( nodeItemEnum::Node_Item_Type &result ) {
 	result = nodeItem->getNodeMetaType( );

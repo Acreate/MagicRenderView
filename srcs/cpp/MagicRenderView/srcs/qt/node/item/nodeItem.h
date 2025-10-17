@@ -7,6 +7,8 @@
 
 #include <qt/tools/tools.h>
 
+#include <qt/enums/nodeItemEnum.h>
+
 class NodePort;
 class I_Var;
 class NodeOutputPort;

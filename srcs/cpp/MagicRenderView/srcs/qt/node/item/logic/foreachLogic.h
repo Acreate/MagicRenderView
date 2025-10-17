@@ -11,6 +11,6 @@ protected:
 	ForeachLogic( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Foreach );
+	Def_Last_Mate_Node_Type( Point );
 };
 #endif // FOREACHLOGIC_H_H_HEAD__FILE__

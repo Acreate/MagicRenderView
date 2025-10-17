@@ -11,6 +11,6 @@ protected:
 	LoopNode( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Loop );
+	Def_Last_Mate_Node_Type( Jump );
 };
 #endif // LOOPNODE_H_H_HEAD__FILE__

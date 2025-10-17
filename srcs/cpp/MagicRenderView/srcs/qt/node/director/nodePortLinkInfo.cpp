@@ -11,7 +11,7 @@ NodePortLinkInfo::~NodePortLinkInfo( ) {
 NodePortLinkInfo::NodePortLinkInfo( NodeInputPort *input_port ) : inputPort( input_port ) {
 	removeLinkMenu = new QMenu( );
 }
-bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
+bool NodePortLinkInfo::link( NodeOutputPort *link_output_port, const std_function< void( ) > &un_link_call_function ) {
 	size_t count = outputPorts.size( );
 	auto parentNodeItem = link_output_port->getParentItem( );
 	if( count != 0 ) {
@@ -28,8 +28,9 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 				QString activeTitle;
 				activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
 				auto removeAction = removeLinkMenu->addAction( activeTitle );
-				connect( removeAction, &QAction::triggered, [this, link_output_port] {
-					unLink( link_output_port );
+				connect( removeAction, &QAction::triggered, [this, un_link_call_function] {
+					un_link_call_function( );
+					//unLink( link_output_port );
 				} );
 				emit linkNodePort( this, this->inputPort, link_output_port );
 				pairs.emplace_back( link_output_port, removeAction );
@@ -41,8 +42,9 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 	QString activeTitle;
 	activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
 	auto removeAction = removeLinkMenu->addAction( activeTitle );
-	connect( removeAction, &QAction::triggered, [this, link_output_port] {
-		unLink( link_output_port );
+	connect( removeAction, &QAction::triggered, [this, un_link_call_function] {
+		un_link_call_function( );
+		//unLink( link_output_port );
 	} );
 	emit linkNodePort( this, this->inputPort, link_output_port );
 	std_vector_pairt< NodeOutputPort *, QAction * > unity( 1 );
@@ -95,7 +97,7 @@ bool NodePortLinkInfo::releaseNodeItemPtr( NodeItem *link_node_item ) {
 	}
 	return false;
 }
-bool NodePortLinkInfo::getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > result_link ) {
+bool NodePortLinkInfo::getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > &result_link ) {
 
 	size_t count = outputPorts.size( );
 	if( count != 0 ) {
