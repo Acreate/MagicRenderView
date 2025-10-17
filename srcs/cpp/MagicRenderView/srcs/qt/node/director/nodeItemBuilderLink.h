@@ -5,6 +5,7 @@
 
 #include "../../../alias/type_alias.h"
 
+class NodeItemBuilderMode;
 class NodePortLinkInfo;
 class NodeItemInfo;
 class NodeItemBuilderLink : public QObject {
@@ -14,8 +15,12 @@ class NodeItemBuilderLink : public QObject {
 protected:
 	std_vector< NodeItemInfo * > nodeItemInfos;
 	std_vector< NodePortLinkInfo * > nodePortLinkInfos;
+	std_vector_shared_unity_shared< NodeItemBuilderMode > nodeItemBuilderModes;
+	size_t nodeItemBulderModeindex;
+	size_t nodeItemBulderModeCount;
+	std::shared_ptr< NodeItemBuilderMode > *nodeItemBuilderModeArrayPtr;
 protected:
-	NodeItemBuilderLink( ) { }
+	NodeItemBuilderLink( );
 public:
 	~NodeItemBuilderLink( ) override;
 	virtual bool appendNodeItemInfo( NodeItemInfo *append_nodeite_info );

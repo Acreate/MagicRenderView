@@ -1,5 +1,6 @@
 ﻿#include "nodeItemBuilderLink.h"
 
+#include "nodeItemBuilderMode.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
 
@@ -8,6 +9,8 @@
 #include "../item/nodeItem.h"
 
 #include "../prot/inputProt/nodeInputPort.h"
+NodeItemBuilderLink::NodeItemBuilderLink( ) : nodeItemBuilderModes( nullptr ), nodeItemBulderModeCount( 0 ), nodeItemBuilderModeArrayPtr( nullptr ), nodeItemBulderModeindex( 0 ) {
+}
 NodeItemBuilderLink::~NodeItemBuilderLink( ) {
 	emit releaseThisSignal( this );
 }
@@ -140,23 +143,44 @@ void NodeItemBuilderLink::clear( ) {
 }
 
 bool NodeItemBuilderLink::generateBuilderInfo( ) {
+	nodeItemBulderModeindex = 0;
+	nodeItemBulderModeCount = 0;
+	nodeItemBuilderModeArrayPtr = nullptr;
 	// todo : 1. 实现编译节点
+	nodeItemBuilderModes = NodeItemBuilderMode::generateNodeItemBuilderModeVector( nodeItemInfos );
+	if( nodeItemBuilderModes == nullptr )
+		return false;
+	nodeItemBulderModeCount = nodeItemBuilderModes->size( );
+	nodeItemBuilderModeArrayPtr = nodeItemBuilderModes->data( );
 	return true;
 }
 
 bool NodeItemBuilderLink::next( ) {
 	// todo : 2. 编译下一个模块
-	return false;
+	if( nodeItemBulderModeCount == 0 )
+		return false;
+	if( nodeItemBulderModeindex == nodeItemBulderModeCount )
+		return false; // 间断重复地震
+	++nodeItemBulderModeindex; // 指向下一个执行模块
+	if( nodeItemBulderModeindex == nodeItemBulderModeCount )
+		return false; // 结尾则退出
+	return true;
 }
 bool NodeItemBuilderLink::isRun( ) const {
-	// todo : 4. 是否可以运行
-	return false;
+	if( nodeItemBulderModeCount == 0 )
+		return false;
+	if( nodeItemBulderModeindex == nodeItemBulderModeCount )
+		return false;
+	return true;
 }
 bool NodeItemBuilderLink::run( ) {
 	// todo : 5. 运行期间是否正确
+	if( nodeItemBulderModeCount == 0 )
+		return false;
 	return false;
 }
 bool NodeItemBuilderLink::getRunNodeItems( std_vector< NodeItemInfo * > &result_current_run_info_vector ) {
-	// todo : 3. 获取当前模块的运行节点
-	return false;
+	if( isRun( ) == false )
+		return false;
+	return nodeItemBuilderModeArrayPtr[ nodeItemBulderModeindex ]->getRunNodeItems( result_current_run_info_vector );
 }
