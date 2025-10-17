@@ -56,10 +56,10 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 		using buffVector = decltype(linkInfoVector);
 		buffVector subVector, subBufferVector;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == link_target ) {
-				subVector.append_range( data[ index ]->linkInfoVector );
+			if( data[ index ]->nodeItem == link_target )
 				return true;
-			}
+			else
+				subVector.append_range( data[ index ]->linkInfoVector );
 		do {
 			count = subVector.size( );
 			if( count == 0 )
@@ -67,10 +67,10 @@ bool NodeItemInfo::inLinkHasNodeItem( NodeItem *link_target ) const {
 			data = subVector.data( );
 			index = 0;
 			for( ; index < count; ++index )
-				if( data[ index ]->nodeItem == link_target ) {
-					subBufferVector.append_range( data[ index ]->linkInfoVector );
+				if( data[ index ]->nodeItem == link_target )
 					return true;
-				}
+				else
+					subBufferVector.append_range( data[ index ]->linkInfoVector );
 			subVector = subBufferVector;
 		} while( true );
 

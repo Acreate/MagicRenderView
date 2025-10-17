@@ -105,11 +105,13 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
+	
 	NodeItemInfo *inputNodeItemInfo;
 	if( getNodeItemInfo( inputNodeItem, inputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "输入端 %1 不存在节点具象化信息" ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
+	
 	if( inputNodeItemInfo->linkThis( outputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;

@@ -62,8 +62,8 @@ bool NodePortLinkInfo::unLink( NodeOutputPort *link_output_port ) {
 				auto pairArratData = pairs.data( );
 				for( size_t pairIndex = 0; pairIndex < pairCount; ++pairIndex )
 					if( pairArratData[ pairIndex ].first == link_output_port ) {
-						std::pair< NodeOutputPort *, QAction * > pair = pairArratData[ index ];
-						pairs.erase( pairs.begin( ) + index );
+						std::pair< NodeOutputPort *, QAction * > pair = pairArratData[ pairIndex ];
+						pairs.erase( pairs.begin( ) + pairIndex );
 						emit unlinkNodePort( this, this->inputPort, link_output_port );
 						tools::debug::printInfo( "成功删除" );
 						delete pair.second;
