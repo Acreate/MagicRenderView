@@ -281,7 +281,7 @@ bool NodeItem::updateInputLayout( ) {
 	if( inputBuff->size( ) != newImageSize ) {
 		*inputBuff = inputBuff->scaled( newImageSize );
 		if( inputBuff->isNull( ) ) {
-			tools::debug::printError( "改变布局大小失败[" + getMetaObjectName( ) + "]" );
+			tools::debug::printError( "改变布局大小失败[" + getMetaObjectPathName( ) + "]" );
 			return false;
 		}
 	}
@@ -329,7 +329,7 @@ bool NodeItem::updateOutputLayout( ) {
 	if( outputBuff->size( ) != newImageSize ) {
 		*outputBuff = outputBuff->scaled( newImageSize );
 		if( outputBuff->isNull( ) ) {
-			tools::debug::printError( "改变布局大小失败[" + getMetaObjectName( ) + "]" );
+			tools::debug::printError( "改变布局大小失败[" + getMetaObjectPathName( ) + "]" );
 			return false;
 		}
 	}
@@ -370,7 +370,7 @@ bool NodeItem::updateTitleLayout( ) {
 		if( titleBuff->size( ) != newSize ) {
 			*titleBuff = titleBuff->scaled( newSize );
 			if( titleBuff->isNull( ) ) {
-				tools::debug::printError( "标题适配失败[" + getMetaObjectName( ) + "]" );
+				tools::debug::printError( "标题适配失败[" + getMetaObjectPathName( ) + "]" );
 				return false;
 			}
 		}
@@ -392,7 +392,7 @@ bool NodeItem::updateTitleLayout( ) {
 		if( titleBuff->size( ) != newSize ) {
 			*titleBuff = titleBuff->scaled( newSize );
 			if( titleBuff->isNull( ) ) {
-				tools::debug::printError( "标题适配失败[" + getMetaObjectName( ) + "]" );
+				tools::debug::printError( "标题适配失败[" + getMetaObjectPathName( ) + "]" );
 				return false;
 			}
 		}

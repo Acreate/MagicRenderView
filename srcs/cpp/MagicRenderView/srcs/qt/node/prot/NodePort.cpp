@@ -19,7 +19,7 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRe
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
 	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
-		tools::debug::printError( "加载图标失败[" + getMetaObjectName( ) + "]" );
+		tools::debug::printError( "加载图标失败[" + getMetaObjectPathName( ) + "]" );
 	icoItemHeith = ico->height( );
 	icoItemWidth = ico->width( );
 	varPtr = nullptr;
@@ -56,7 +56,7 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 	if( ico->height( ) != portItemHeith ) {
 		*ico = ico->scaledToHeight( portItemHeith );
 		if( ico->isNull( ) ) {
-			tools::debug::printError( "适配图标失败[" + getMetaObjectName( ) + "]" );
+			tools::debug::printError( "适配图标失败[" + getMetaObjectPathName( ) + "]" );
 			return false;
 		}
 	}
@@ -80,7 +80,7 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 
 	painter.end( );
 	if( nodePortRender->isNull( ) ) {
-		tools::debug::printError( "渲染标题失败[" + getMetaObjectName( ) + "]" );
+		tools::debug::printError( "渲染标题失败[" + getMetaObjectPathName( ) + "]" );
 		return false;
 	}
 	return true;
