@@ -5,8 +5,6 @@
 
 #include <alias/type_alias.h>
 
-
-class VarEditorWidget;
 class QLabel;
 class QPushButton;
 class QHBoxLayout;
@@ -21,19 +19,13 @@ protected:
 	QVBoxLayout *mainLayout;
 	/// @brief 标题窗口
 	QWidget *titileWidget;
-	/// @brief 保存选项信息
-	std_vector< VarEditorWidget * > itemInfos;
 	/// @brief 创建变量的菜单
 	QMenu* createVarItemMenu;
-protected:
-	virtual void connectItem( VarEditorWidget* new_var_edit_item);
 public:
 	NodeItemInfoWidget( NodeItem *node_item, QWidget *parent = nullptr );
 	virtual NodeItem * getNodeItemTarget( ) const { return nodeItemTarget; }
 	virtual void setNodeItemTarget( NodeItem *node_item_target );
-	virtual bool updateNodeItemInfo( );
 	virtual void resetUpdataStats( ) { updateOver = false; }
-	virtual bool insterLast( VarEditorWidget* new_var_edit_item );
 protected:
 	void showEvent( QShowEvent *event ) override;
 };

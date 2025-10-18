@@ -19,6 +19,7 @@ class NodeOutputPort;
 class NodeInputPort;
 class NodeDirector : public QObject {
 	Q_OBJECT;
+	friend class NodeItemInfoFind;
 protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
@@ -42,14 +43,13 @@ protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
-	//virtual bool releaseNodeItemInfo( NodeItemInfo *del_ptr );
-	virtual bool getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link );
-	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
 
-	virtual bool getNodeItemRender( QImage &result_render_image, const QPoint &offset = QPoint( 0, 0 ) ) const;
+	virtual bool getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link );
+	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
+	virtual bool getNodeItemRender( QImage &result_render_image, const QPoint &offset ) const;
 	virtual bool getNodeItemRender( QImage &result_render_image ) const {
 		return getNodeItemRender( result_render_image, QPoint( 0, 0 ) );
 	}
@@ -77,7 +77,7 @@ public:
 	//virtual bool release( const NodeItem *remove_node_item );
 	virtual bool setContentWidget( MainWidget *main_widget );
 	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name, const std_shared_ptr< I_Type > &itype_ptr );
-	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name);
+	NodeItem * createNodeItem( const QString &dir_name, const QString &node_name );
 	size_t appendNodeItem( NodeItem *new_node_item );
 	virtual MainWidget * getContentWidget( ) const {
 		return mainWidget;

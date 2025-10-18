@@ -570,6 +570,7 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 	return false;
 }
 
+
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
