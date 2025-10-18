@@ -4,11 +4,12 @@
 
 #include "../../nodeOutputPort.h"
 
+class Any;
 class AnyOutputPort : public NodeOutputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeOutputPort );
 protected:
-	using t_current_type = void *;
+	using t_current_type = Any;
 public:
 	AnyOutputPort( NodeItem *parent );
 };

@@ -8,10 +8,8 @@
 #include <qt/application/application.h>
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 #include <qt/node/prot/outputProt/nodeOutputPort.h>
-
-#include "../../varType/I_Var.h"
-
-#include "../../widgets/mainWidget.h"
+#include <qt/varType/I_Var.h>
+#include <qt/widgets/mainWidget.h>
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 
@@ -43,6 +41,8 @@ NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::
 	inputBuff->fill( 0 );
 	outputBuff->fill( 0 );
 	titleBuff->fill( 0 );
+	nodeItemInfoScrollAreaWidgetWidget = nullptr;
+	nodeItemInfoWidget = nullptr;
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThiNodeItem( this );

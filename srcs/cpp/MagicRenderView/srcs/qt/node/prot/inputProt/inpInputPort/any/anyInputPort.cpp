@@ -4,5 +4,16 @@
 #include <qt/varType/I_Var.h>
 Imp_StaticMetaInfo( AnyInputPort, QObject::tr( "any" ), QObject::tr( "inputPort" ) );
 AnyInputPort::AnyInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
+	typePtr = new I_Type(
+		typeid( t_current_type ),
+		sizeof( t_current_type ),
+		[] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		},
+		[]( ) ->void * {
+			return new t_current_type( );
+		} );
+	varPtr = new I_Var( typePtr, title );
 	setTitle( getMetaObjectName( ) );
 }

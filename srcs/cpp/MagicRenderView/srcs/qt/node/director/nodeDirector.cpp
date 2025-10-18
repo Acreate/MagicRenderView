@@ -194,24 +194,6 @@ bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort 
 			return pair[ index ]->unLink( output_port );
 	return false; // 不存在
 }
-size_t NodeDirector::run( ) {
-	size_t resultCount = 0;
-	nodeItemBuilderLink->clear( );
-	nodeItemBuilderLink->appendNodeItemInfoVector( generateNodeItems );
-	nodeItemBuilderLink->appendNodePortLinkInfoVector( linkVectorPairt );
-	if( nodeItemBuilderLink->generateBuilderInfo( ) == false )
-		return resultCount;
-	while( true ) {
-		if( nodeItemBuilderLink->next( ) == false )
-			break;
-		if( nodeItemBuilderLink->isRun( ) == false )
-			break;
-		if( nodeItemBuilderLink->run( ) == false )
-			break;
-		++resultCount;
-	}
-	return resultCount;
-}
 bool NodeDirector::setRaise( const NodeItem *raise_node_item ) {
 
 	// 节点个数
@@ -462,7 +444,6 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 
 	mainWidget = main_widget;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
-	nodeItemBuilderLink = applicationInstancePtr->getNodeItemBuilderLink( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
 	if( nodeItemCreateMenu )
 		delete nodeItemCreateMenu;

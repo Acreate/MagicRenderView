@@ -92,6 +92,7 @@ bool MainWidget::pasteNodeItemActionInfo( ) {
 	ensureVisibleToItemNode( nodeItem );
 	return true;
 }
+
 void MainWidget::linkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {
 }
 void MainWidget::unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port ) {

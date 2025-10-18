@@ -117,6 +117,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	connect( shortcut, &QShortcut::activated, [this]( ) {
 		mainWidget->pasteNodeItemActionInfo( );
 	} );
+
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );

@@ -1,13 +1,12 @@
-﻿#include "foreachLogic.h"
-
+﻿#include "pointLogic.h"
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( ForeachLogic, QObject::tr( "循环" ), QObject::tr( "逻辑" ) );
+Imp_StaticMetaInfo( PointLogic, QObject::tr( "记录点" ), QObject::tr( "逻辑" ) );
 
-ForeachLogic::ForeachLogic( ) : NodeItem( ) {
+PointLogic::PointLogic( ) : NodeItem( ) {
 }
-bool ForeachLogic::intPortItems( MainWidget *parent ) {
+bool PointLogic::intPortItems( MainWidget *parent ) {
 
 	return initNodeItem(
 		parent,

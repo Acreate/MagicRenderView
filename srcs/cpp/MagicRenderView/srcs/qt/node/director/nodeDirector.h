@@ -4,7 +4,7 @@
 #include <QDateTime>
 #include <QObject>
 
-#include "../../../alias/type_alias.h"
+#include <alias/type_alias.h>
 
 #include "../item/nodeItem.h"
 
@@ -36,8 +36,6 @@ protected:
 	Application *applicationInstancePtr = nullptr;
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
-	/// @brief 节点编译运行对象指针
-	NodeItemBuilderLink* nodeItemBuilderLink;
 protected:
 	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
 	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
@@ -69,7 +67,6 @@ public:
 	virtual bool linkUnInstallPort( NodePort *first_port, NodePort *scond_port );
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual bool linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
-	virtual size_t run( );
 	virtual bool setRaise( const NodeItem *raise_node_item );
 	virtual bool setRaise( const NodePort *raise_node_port );
 	virtual NodeItem * getLastNodeItem( );

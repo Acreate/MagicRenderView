@@ -9,7 +9,43 @@
 #include <qfileinfo.h>
 
 #include <qt/generate/varGenerate.h>
-
+#include <qt/node/director/nodeDirector.h>
+#include <qt/node/item/app/appInfo.h>
+#include <qt/node/item/app/endNode.h>
+#include <qt/node/item/app/startNode.h>
+#include <qt/node/item/calculate/varAdd.h>
+#include <qt/node/item/calculate/varDiv.h>
+#include <qt/node/item/calculate/varMod.h>
+#include <qt/node/item/calculate/varMul.h>
+#include <qt/node/item/calculate/varSub.h>
+#include <qt/node/item/disk/readFile.h>
+#include <qt/node/item/disk/readImage.h>
+#include <qt/node/item/disk/writeFile.h>
+#include <qt/node/item/disk/writeImage.h>
+#include <qt/node/item/generate/genBinTypes.h>
+#include <qt/node/item/generate/genColorTypes.h>
+#include <qt/node/item/generate/genFloatTypes.h>
+#include <qt/node/item/generate/genIntTypes.h>
+#include <qt/node/item/generate/genStringTypes.h>
+#include <qt/node/item/generate/genUIntTypes.h>
+#include <qt/node/item/info/networkInfo.h>
+#include <qt/node/item/info/pathInfo.h>
+#include <qt/node/item/info/systemInfo.h>
+#include <qt/node/item/logic/ifLogic.h>
+#include <qt/node/item/logic/jumpLogic.h>
+#include <qt/node/item/logic/pointLogic.h>
+#include <qt/node/item/str/strAppend.h>
+#include <qt/node/item/str/strInsert.h>
+#include <qt/node/item/str/strRemove.h>
+#include <qt/node/item/str/strReplace.h>
+#include <qt/node/item/str/strSplit.h>
+#include <qt/node/item/str/strSub.h>
+#include <qt/node/item/struct/array.h>
+#include <qt/node/item/time/timeDataConver.h>
+#include <qt/node/item/time/timeDataInfo.h>
+#include <qt/node/item/time/timeInfo.h>
+#include <qt/tools/tools.h>
+#include <qt/varType/convers/anyConvers/anyToAny.h>
 #include <qt/varType/convers/floatToConvers/floatToFloat.h>
 #include <qt/varType/convers/floatToConvers/floatToInt.h>
 #include <qt/varType/convers/floatToConvers/floatToString.h>
@@ -27,7 +63,21 @@
 #include <qt/varType/convers/uintToConvers/uIntToString.h>
 #include <qt/varType/convers/uintToConvers/uIntToUInt.h>
 #include <qt/varType/convers/uintToConvers/uintToFloat.h>
-
+#include <qt/varType/isTypes/isColorType.h>
+#include <qt/varType/isTypes/isFloat32Type.h>
+#include <qt/varType/isTypes/isFloat64Type.h>
+#include <qt/varType/isTypes/isInt16Type.h>
+#include <qt/varType/isTypes/isInt32Type.h>
+#include <qt/varType/isTypes/isInt64Type.h>
+#include <qt/varType/isTypes/isInt8Type.h>
+#include <qt/varType/isTypes/isNodeItemType.h>
+#include <qt/varType/isTypes/isQStringType.h>
+#include <qt/varType/isTypes/isStdStringType.h>
+#include <qt/varType/isTypes/isStdWStringType.h>
+#include <qt/varType/isTypes/isUint16Type.h>
+#include <qt/varType/isTypes/isUint32Type.h>
+#include <qt/varType/isTypes/isUint64Type.h>
+#include <qt/varType/isTypes/isUint8Type.h>
 #include <qt/varType/stacks/app/appNodeItemStack.h>
 #include <qt/varType/stacks/base/float32Stack.h>
 #include <qt/varType/stacks/base/float64Stack.h>
@@ -35,70 +85,14 @@
 #include <qt/varType/stacks/base/int32Stack.h>
 #include <qt/varType/stacks/base/int64Stack.h>
 #include <qt/varType/stacks/base/int8Stack.h>
+#include <qt/varType/stacks/base/uInt16Stack.h>
 #include <qt/varType/stacks/base/uInt32Stack.h>
 #include <qt/varType/stacks/base/uInt64Stack.h>
 #include <qt/varType/stacks/base/uInt8Stack.h>
 #include <qt/varType/stacks/cpp/stdStringStack.h>
 #include <qt/varType/stacks/cpp/stdWStringStack.h>
+#include <qt/varType/stacks/qt/qColorStack.h>
 #include <qt/varType/stacks/qt/qStringStack.h>
-#include <qt/varType/stacks/base/uInt16Stack.h>
-
-#include <qt/node/item/calculate/varAdd.h>
-#include <qt/node/item/calculate/varDiv.h>
-#include <qt/node/item/calculate/varMod.h>
-#include <qt/node/item/calculate/varMul.h>
-#include <qt/node/item/calculate/varSub.h>
-#include <qt/node/item/disk/readFile.h>
-#include <qt/node/item/disk/readImage.h>
-#include <qt/node/item/disk/writeFile.h>
-#include <qt/node/item/disk/writeImage.h>
-#include <qt/node/item/info/pathInfo.h>
-#include <qt/node/item/info/systemInfo.h>
-#include <qt/node/item/str/strAppend.h>
-#include <qt/node/item/str/strInsert.h>
-#include <qt/node/item/str/strRemove.h>
-#include <qt/node/item/str/strReplace.h>
-#include <qt/node/item/str/strSplit.h>
-#include <qt/node/item/str/strSub.h>
-
-#include <qt/tools/tools.h>
-
-#include "../node/director/nodeDirector.h"
-#include "../node/director/nodeItemBuilderLink.h"
-#include "../node/item/app/appInfo.h"
-#include "../node/item/app/endNode.h"
-#include "../node/item/app/startNode.h"
-#include "../node/item/generate/genBinTypes.h"
-#include "../node/item/generate/genColorTypes.h"
-#include "../node/item/generate/genFloatTypes.h"
-#include "../node/item/generate/genIntTypes.h"
-#include "../node/item/generate/genStringTypes.h"
-#include "../node/item/generate/genUIntTypes.h"
-#include "../node/item/info/networkInfo.h"
-#include "../node/item/logic/foreachLogic.h"
-#include "../node/item/logic/ifLogic.h"
-#include "../node/item/logic/loopNode.h"
-#include "../node/item/struct/array.h"
-#include "../node/item/time/timeDataConver.h"
-#include "../node/item/time/timeDataInfo.h"
-#include "../node/item/time/timeInfo.h"
-
-#include "../varType/isTypes/isColorType.h"
-#include "../varType/isTypes/isFloat32Type.h"
-#include "../varType/isTypes/isFloat64Type.h"
-#include "../varType/isTypes/isInt16Type.h"
-#include "../varType/isTypes/isInt32Type.h"
-#include "../varType/isTypes/isInt64Type.h"
-#include "../varType/isTypes/isInt8Type.h"
-#include "../varType/isTypes/isNodeItemType.h"
-#include "../varType/isTypes/isQStringType.h"
-#include "../varType/isTypes/isStdStringType.h"
-#include "../varType/isTypes/isStdWStringType.h"
-#include "../varType/isTypes/isUint16Type.h"
-#include "../varType/isTypes/isUint32Type.h"
-#include "../varType/isTypes/isUint64Type.h"
-#include "../varType/isTypes/isUint8Type.h"
-#include "../varType/stacks/qt/qColorStack.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -113,10 +107,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	 */
 	varGenerate = new VarGenerate( );
 	nodeDirector = new NodeDirector( );
-	nodeItemBuilderLink = new NodeItemBuilderLink;
 }
 Application::~Application( ) {
-	delete nodeItemBuilderLink;
 	delete nodeDirector;
 	delete varGenerate;
 	settings->sync( );
@@ -175,9 +167,9 @@ bool Application::init( ) {
 	varGenerate->appendNodeItemGenerateInstance< SystemInfo >( );
 	varGenerate->appendNodeItemGenerateInstance< NetworkInfo >( );
 	// todo : 逻辑节点
-	varGenerate->appendNodeItemGenerateInstance< ForeachLogic >( );
+	varGenerate->appendNodeItemGenerateInstance< PointLogic >( );
 	varGenerate->appendNodeItemGenerateInstance< IfLogic >( );
-	varGenerate->appendNodeItemGenerateInstance< LoopNode >( );
+	varGenerate->appendNodeItemGenerateInstance< JumpLogic >( );
 	// todo : 计算节点
 	varGenerate->appendNodeItemGenerateInstance< VarAdd >( );
 	varGenerate->appendNodeItemGenerateInstance< VarSub >( );
@@ -243,6 +235,8 @@ bool Application::init( ) {
 	varGenerate->appendConverInstance< UintToFloat >( );
 	varGenerate->appendConverInstance< UIntToString >( );
 	varGenerate->appendConverInstance< NullToAny >( );
+	
+	varGenerate->appendConverInstance< AnyToAny >( );
 
 	// todo : 序列化支持
 	varGenerate->appendStackInstance< Float32Stack >( );
