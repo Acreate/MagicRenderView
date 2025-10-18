@@ -124,7 +124,6 @@ nodeItemEnum::Click_Type NodeItem::relativePointType( int x, int y ) const {
 		// 判定输出
 		if( x < drawX )
 			return nodeItemEnum::Click_Type::OutputPort;
-
 	} else
 		return nodeItemEnum::Click_Type::Title;
 	return nodeItemEnum::Click_Type::Space;
