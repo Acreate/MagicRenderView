@@ -50,9 +50,8 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 	auto fontMetrics = QFontMetrics( font );
 	QRect boundingRect = fontMetrics.boundingRect( title );
 	int width = boundingRect.width( ) + boundingRect.x( );
-	int drawHeight = fontMetrics.leading( );
-	icoItemHeith = portItemHeith = fontMetrics.height( ) + drawHeight;
-	drawHeight = portItemHeith - fontMetrics.descent( ) - drawHeight;
+
+	icoItemHeith = portItemHeith = fontMetrics.height( ) ;
 
 	if( ico->height( ) != portItemHeith ) {
 		*ico = ico->scaledToHeight( portItemHeith );
@@ -69,12 +68,14 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 	nodePortRender->fill( 0 );
 	QPainter painter( nodePortRender );
 	painter.setFont( font );
+	
+	int y = icoItemHeith - fontMetrics.leading( ) - fontMetrics.descent( );
 	if( ico_is_end ) {
 		painter.drawImage( width, 0, *ico );
-		painter.drawText( 0, drawHeight, title );
+		painter.drawText( 0, y, title );
 	} else {
 		painter.drawImage( 0, 0, *ico );
-		painter.drawText( icoItemWidth, drawHeight, title );
+		painter.drawText( icoItemWidth, y, title );
 	}
 
 	painter.end( );
