@@ -15,6 +15,7 @@ bool JumpLogic::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			addInputProt< BoolInputPort >( "返回条件" );
+			addOutputProt< AnyOutputPort >( "继续" );
 			return true;
 		} );
 }

@@ -14,8 +14,8 @@ bool IfLogic::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< BoolInputPort >( "逻辑条件" );
-			addOutputProt< AnyOutputPort >( "结果" );
+			addInputProt< BoolInputPort >( "条件" );
+			addOutputProt< AnyOutputPort >( "继续" );
 			return true;
 		} );
 }
