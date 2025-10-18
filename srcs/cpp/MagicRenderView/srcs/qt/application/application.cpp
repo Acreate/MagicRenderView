@@ -107,6 +107,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	 */
 	varGenerate = new VarGenerate( );
 	nodeDirector = new NodeDirector( );
+	nodeItemWidgetIco = new QImage( ":/ico/ui_w_font.png" );
+	*nodeItemWidgetIco = nodeItemWidgetIco->scaled( 16, 16 );
 }
 Application::~Application( ) {
 	delete nodeDirector;
@@ -235,7 +237,7 @@ bool Application::init( ) {
 	varGenerate->appendConverInstance< UintToFloat >( );
 	varGenerate->appendConverInstance< UIntToString >( );
 	varGenerate->appendConverInstance< NullToAny >( );
-	
+
 	varGenerate->appendConverInstance< AnyToAny >( );
 
 	// todo : 序列化支持

@@ -66,6 +66,7 @@ protected:
 	VarGenerate *varGenerate;
 	NodeDirector *nodeDirector;
 	std_shared_ptr< QFont > font;
+	QImage* nodeItemWidgetIco;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -78,6 +79,7 @@ public:
 	virtual void syncAppValueIniFile( ) const;
 	virtual VarGenerate * getVarGenerate( ) const { return varGenerate; }
 	virtual const QFont & getFont( ) const { return *font; }
+	virtual QImage * getNodeItemWidgetIco( ) const { return nodeItemWidgetIco; }
 	virtual void setFont( const QFont &new_font ) {
 		*font = new_font;
 	}

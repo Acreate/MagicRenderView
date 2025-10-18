@@ -356,24 +356,56 @@ bool NodeItem::updateTitleLayout( ) {
 	auto boundingRect = fontMetrics.boundingRect( nodeTitleName );
 
 	titleWidth = boundingRect.width( ) + boundingRect.x( );
-	titleHeight = fontMetrics.leading( );
-	int fontHeight = fontMetrics.height( ) + titleHeight;
-	titleHeight = fontHeight - fontMetrics.descent( ) - titleHeight;
-	QSize newSize( titleWidth, titleHeight );
-	if( titleBuff->size( ) != newSize ) {
-		*titleBuff = titleBuff->scaled( newSize );
-		if( titleBuff->isNull( ) ) {
-			tools::debug::printError( "标题适配失败[" + getMetaObjectName( ) + "]" );
-			return false;
+	titleHeight = fontMetrics.height( );
+
+	if( nodeItemInfoWidget ) {
+
+		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
+
+		int imageHeight = nodeItemWidgetIco->height( );
+		if( titleHeight < imageHeight )
+			titleHeight = imageHeight;
+		int imageWidth = nodeItemWidgetIco->width( );
+		QSize newSize( titleWidth + 20 + imageWidth, titleHeight );
+		if( titleBuff->size( ) != newSize ) {
+			*titleBuff = titleBuff->scaled( newSize );
+			if( titleBuff->isNull( ) ) {
+				tools::debug::printError( "标题适配失败[" + getMetaObjectName( ) + "]" );
+				return false;
+			}
 		}
+
+		titleBuff->fill( 0 );
+		QPainter painter( titleBuff );
+		painter.setFont( font );
+		int leading = fontMetrics.leading( );
+		int descent = fontMetrics.descent( );
+		int y = titleHeight - leading - descent;
+		painter.drawText( 0, y, nodeTitleName );
+		titleWidth += 20;
+		imageHeight = ( titleHeight - imageHeight ) / 2;
+		painter.drawImage( titleWidth, imageHeight, *nodeItemWidgetIco );
+		titleWidth += imageWidth;
+		painter.end( );
+	} else {
+		QSize newSize( titleWidth, titleHeight );
+		if( titleBuff->size( ) != newSize ) {
+			*titleBuff = titleBuff->scaled( newSize );
+			if( titleBuff->isNull( ) ) {
+				tools::debug::printError( "标题适配失败[" + getMetaObjectName( ) + "]" );
+				return false;
+			}
+		}
+		titleBuff->fill( 0 );
+		QPainter painter( titleBuff );
+		painter.setFont( font );
+		int leading = fontMetrics.leading( );
+		int descent = fontMetrics.descent( );
+		int y = titleHeight - leading - descent;
+		painter.drawText( 0, y, nodeTitleName );
+		painter.end( );
 	}
 
-	titleBuff->fill( 0 );
-
-	QPainter painter( titleBuff );
-	painter.setFont( font );
-	painter.drawText( 0, titleHeight, nodeTitleName );
-	painter.end( );
 	return true;
 }
 bool NodeItem::integrateLayout( ) {
