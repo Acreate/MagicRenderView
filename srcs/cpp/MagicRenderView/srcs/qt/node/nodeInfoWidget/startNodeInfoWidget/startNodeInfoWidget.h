@@ -17,6 +17,8 @@ protected:
 	NodeItem *nodeItem;
 	NodeItemInfo *nodeItemInfo;
 	std_vector<NodeItemInfo *> builderVector;
+	std_vector< NodeItemInfo * > runOverVector;
+	NodeItemInfo * currentRunNodeItemInfoPtr;
 	Application *application;
 	NodeDirector *nodeDirector;
 	VarGenerate *varGenerate;

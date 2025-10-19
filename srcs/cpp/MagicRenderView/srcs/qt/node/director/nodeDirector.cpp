@@ -439,7 +439,8 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
 	connect( nodeItemInfo, &NodeItemInfo::releaseThisPtr, this, &NodeDirector::releaseNodeItemInfoSignal );
-	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChange, this, &NodeDirector::nodeItemInfoRefChange );
+	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChangeOutputNodeItem, this, &NodeDirector::nodeItemInfoRefChangeOutputNodeItem );
+	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChangeInputNodeItem, this, &NodeDirector::nodeItemInfoRefChangeInputNodeItem );
 	emit generateNodeItemSignal( new_node_item );
 	return new_node_item->generateCode;
 }
@@ -541,7 +542,7 @@ bool NodeDirector::getLinkInputPorts( const NodeItem *output_port_node_item, std
 										isAppend = true;
 										break;
 									}
-								if(isAppend == false) {
+								if( isAppend == false ) {
 									resultInputPortVector.emplace_back( linkArrayPtr[ linkArrayIndex ]->inputPort );
 									isAppend = true;
 								}
@@ -597,7 +598,7 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
-	size_t count ;
+	size_t count;
 	size_t index;
 
 	count = generateNodeItems.size( );

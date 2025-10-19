@@ -62,12 +62,16 @@ public:
 	/// @param result 类型
 	/// @return 失败返回 false
 	virtual bool getNodeItemType( nodeItemEnum::Node_Item_Type &result );
+	virtual const std_vector< NodeItemInfo * > & getOutputNodeItemVector( ) const { return outputNodeItemVector; }
+	virtual const std_vector< NodeItemInfo * > & getInputNodeItemVector( ) const { return inputNodeItemVector; }
+
 	// 本对象触发信号
 Q_SIGNALS:
 	void releaseThisPtr( NodeItemInfo *release_ptr );
 	void runNodeItemInfo( NodeItemInfo *run_node_item_ptr );
 	void requestNodeItemInfoConverVar( NodeItemInfo *left_node_item_ptr, NodeItemInfo *right_node_item_ptr );
-	void nodeItemInfoRefChange( NodeItemInfo *node_item_info );
+	void nodeItemInfoRefChangeInputNodeItem( NodeItemInfo *node_item_info );
+	void nodeItemInfoRefChangeOutputNodeItem( NodeItemInfo *node_item_info );
 };
 
 #endif // NODEITEMINFO_H_H_HEAD__FILE__
