@@ -23,8 +23,6 @@ class NodeDirector : public QObject {
 protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
-	/// @brief 节点实例编辑窗口
-	std_vector< NodeItemInfoScrollAreaWidget * > nodeItemInfoScrollAreaWidgets;
 	/// @brief 已经创建的实例
 	std_vector< NodeItemInfo * > generateNodeItems;
 	/// @brief 节点生成实例对象列表
@@ -38,8 +36,6 @@ protected:
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
 protected:
-	virtual bool addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget );
-	virtual bool removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget );
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );

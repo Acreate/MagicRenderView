@@ -7,7 +7,6 @@
 #include <qt/generate/varGenerate.h>
 #include <qt/node/nodeItemMenu/nodeItemMenu.h>
 #include <qt/node/prot/inputProt/nodeInputPort.h>
-#include <qt/node/widgets/nodeItemInfoScrollAreaWidget.h>
 #include <qt/widgets/mainWidget.h>
 
 #include "nodeItemBuilderLink.h"
@@ -16,36 +15,6 @@
 #include "nodePortLinkInfo.h"
 
 #include "../../varType/I_Var.h"
-bool NodeDirector::addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget ) {
-	size_t count = nodeItemInfoScrollAreaWidgets.size( );
-	if( count != 0 ) {
-		size_t index = 0;
-		auto data = nodeItemInfoScrollAreaWidgets.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] == nullptr ) {
-				data[ index ] = add_widget;
-				return true;
-			}
-	}
-	nodeItemInfoScrollAreaWidgets.emplace_back( add_widget );
-	connect( add_widget, &QWidget::destroyed, [add_widget, this]( ) {
-		removeManagementWidget( add_widget );
-	} );
-	return true;
-}
-bool NodeDirector::removeManagementWidget( NodeItemInfoScrollAreaWidget *del_widget ) {
-	size_t count = nodeItemInfoScrollAreaWidgets.size( );
-	if( count != 0 ) {
-		size_t index = 0;
-		auto data = nodeItemInfoScrollAreaWidgets.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] == del_widget ) {
-				data[ index ] = nullptr;
-				return true;
-			}
-	}
-	return false;
-}
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
 }
 NodeItemInfoScrollAreaWidget * NodeDirector::requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr ) {
@@ -627,17 +596,8 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
-	size_t count = nodeItemInfoScrollAreaWidgets.size( );
+	size_t count ;
 	size_t index;
-	if( count ) {
-		index = 0;
-		auto data = nodeItemInfoScrollAreaWidgets.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] != nullptr ) {
-				delete data[ index ];
-				data[ index ] = nullptr;
-			}
-	}
 
 	count = generateNodeItems.size( );
 	if( count ) {

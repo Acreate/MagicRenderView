@@ -12,9 +12,9 @@
 #include <qt/generate/varGenerate.h>
 #include <qt/node/director/nodeDirector.h>
 #include <qt/node/prot/inputProt/nodeInputPort.h>
-#include <qt/node/widgets/nodeItemInfoScrollAreaWidget.h>
 
 #include "mainScrollAreaWidget.h"
+
 
 MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
@@ -215,6 +215,11 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						if( count < 200 ) {
 							clickNodeItemType = nodeItemEnum::Click_Type::None; // 取消移动
 							leftScondSelectItem = nullptr;
+							auto nodeItemInfoWidget = leftFirstSelectItem->getNodeItemWidget( );
+							if( nodeItemInfoWidget ) {
+								nodeItemInfoWidget->show( );
+								nodeItemInfoWidget->raise( );
+							}
 						}
 					}
 					leftFirstSelectItem = leftScondSelectItem;

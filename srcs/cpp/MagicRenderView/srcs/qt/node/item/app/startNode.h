@@ -4,12 +4,17 @@
 
 #include "../nodeItem.h"
 
+class StartNodeInfoWidget;
 class StartNode : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
+	StartNodeInfoWidget *nodeInfoWidget;
+	QScrollArea *nodeInfoScrollArea;
+protected:
 	StartNode( );
 public:
+	QWidget * getNodeItemWidget( ) const override;
 	bool intPortItems( MainWidget *parent ) override;
 	Def_Last_Mate_Node_Type( Begin );
 };

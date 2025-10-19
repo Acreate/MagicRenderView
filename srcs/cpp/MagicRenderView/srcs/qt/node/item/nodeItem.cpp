@@ -41,8 +41,6 @@ NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::
 	inputBuff->fill( 0 );
 	outputBuff->fill( 0 );
 	titleBuff->fill( 0 );
-	nodeItemInfoScrollAreaWidgetWidget = nullptr;
-	nodeItemInfoWidget = nullptr;
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
@@ -357,7 +355,7 @@ bool NodeItem::updateTitleLayout( ) {
 	titleWidth = boundingRect.width( ) + boundingRect.x( );
 	titleHeight = fontMetrics.height( );
 
-	if( nodeItemInfoWidget ) {
+	if( getNodeItemWidget(  ) ) {
 
 		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
 
