@@ -107,8 +107,8 @@ public:
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
 	virtual bool hasInputPort( const NodePort *node_port );
 	virtual bool hasOutputPort( const NodePort *node_port );
-	virtual size_t toBinData( std_vector< uint8_t > &result_data ) const { return 0; }
-	virtual size_t loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count ) { return 0; }
+	virtual size_t toBinData( std_vector< uint8_t > &result_data ) const;
+	virtual size_t loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count );
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型

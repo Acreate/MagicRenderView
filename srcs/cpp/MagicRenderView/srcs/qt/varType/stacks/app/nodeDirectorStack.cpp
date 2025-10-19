@@ -39,8 +39,7 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 		resultBuff.append_range( buff );
 		fillBinVector( &nodeItemPtr->nodePosY, sizeof( nodeItemPtr->nodePosY ), buff );
 		resultBuff.append_range( buff );
-		if( nodeItemPtr->toBinData( buff ) == 0 )
-			continue;
+		nodeItemPtr->toBinData( buff );
 		resultBuff.append_range( buff );
 	}
 	nodeItemCount = nodeDirector->linkVectorPairt.size( );

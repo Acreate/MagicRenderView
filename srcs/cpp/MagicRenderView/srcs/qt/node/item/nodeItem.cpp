@@ -11,6 +11,8 @@
 #include <qt/varType/I_Var.h>
 #include <qt/widgets/mainWidget.h>
 
+#include "../../generate/varGenerate.h"
+
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 
 /// @brief 输入输入端口之间的空间大小
@@ -101,6 +103,18 @@ bool NodeItem::hasOutputPort( const NodePort *node_port ) {
 		if( onputPortPtr == node_port )
 			return true;
 	return false;
+}
+size_t NodeItem::toBinData( std_vector< uint8_t > &result_data ) const {
+	size_t dataCount = 0;
+	size_t resultSize = 0;
+	applicationInstancePtr->getVarGenerate( )->toBinVector( typeid( size_t ), &dataCount, result_data, resultSize );
+	return resultSize;
+}
+size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+	size_t dataCount = 0;
+	size_t resultSize = 0;
+	applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count );
+	return resultSize;
 }
 nodeItemEnum::Click_Type NodeItem::relativePointType( int x, int y ) const {
 
@@ -355,7 +369,7 @@ bool NodeItem::updateTitleLayout( ) {
 	titleWidth = boundingRect.width( ) + boundingRect.x( );
 	titleHeight = fontMetrics.height( );
 
-	if( getNodeItemWidget(  ) ) {
+	if( getNodeItemWidget( ) ) {
 
 		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
 
