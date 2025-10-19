@@ -16,11 +16,13 @@ namespace nodeItemEnum {
 
 	enum class Node_Item_Type {
 		None, // 非正式
-		Root, // 根，节点运行必须在连接的根源存在根节点，具备循环权与运行权节点
-		End, // 尾，节点链表结束节点，具备整个节点运行结束的能力。运行到该节点，总会结束整个节点链
-		Process, // 过程，一般的调度节点，自身不具备运行能力
-		Logic, // 逻辑，具备选择输出权，自身不具备运行能力
-		Point, // 点，记录节点，自身不具备运行能力
+		Begin, // 根
+		End, // 尾
+		GenerateVar, // 生成，当输出为 nullptr 时，终结进程
+		ReleaseVar, // 释放，当输出为 nullptr 时，终结进程
+		Process, // 过程
+		Logic, // 逻辑
+		Mark, // 点，记录节点
 		Jump, // 回路，运行该节点之后，整个渲染流程回到最近的 Point 权节点，具备完整跳转权。
 	};
 	Q_ENUM_NS( Node_Item_Type );

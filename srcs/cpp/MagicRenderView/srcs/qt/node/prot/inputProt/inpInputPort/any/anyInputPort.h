@@ -4,11 +4,12 @@
 
 #include "../../nodeInputPort.h"
 
+class Any;
 class AnyInputPort : public NodeInputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeInputPort );
 protected:
-	using t_current_type = void *;
+	using t_current_type = Any;
 public:
 	AnyInputPort( NodeItem *parent );
 };

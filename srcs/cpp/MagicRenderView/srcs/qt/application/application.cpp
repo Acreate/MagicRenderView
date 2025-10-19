@@ -32,8 +32,6 @@
 #include <qt/node/item/info/pathInfo.h>
 #include <qt/node/item/info/systemInfo.h>
 #include <qt/node/item/logic/ifLogic.h>
-#include <qt/node/item/logic/jumpLogic.h>
-#include <qt/node/item/logic/pointLogic.h>
 #include <qt/node/item/str/strAppend.h>
 #include <qt/node/item/str/strInsert.h>
 #include <qt/node/item/str/strRemove.h>
@@ -93,6 +91,10 @@
 #include <qt/varType/stacks/cpp/stdWStringStack.h>
 #include <qt/varType/stacks/qt/qColorStack.h>
 #include <qt/varType/stacks/qt/qStringStack.h>
+
+#include "../node/item/jump/jumpGenerate.h"
+#include "../node/item/jump/jumpMark.h"
+#include "../node/item/mark/markPoint.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -168,10 +170,12 @@ bool Application::init( ) {
 	varGenerate->appendNodeItemGenerateInstance< PathInfo >( );
 	varGenerate->appendNodeItemGenerateInstance< SystemInfo >( );
 	varGenerate->appendNodeItemGenerateInstance< NetworkInfo >( );
+	// todo : 跳
+	varGenerate->appendNodeItemGenerateInstance< MarkPoint >( );
+	varGenerate->appendNodeItemGenerateInstance< JumpMark >( );
+	varGenerate->appendNodeItemGenerateInstance< JumpGenerate >( );
 	// todo : 逻辑节点
-	varGenerate->appendNodeItemGenerateInstance< PointLogic >( );
 	varGenerate->appendNodeItemGenerateInstance< IfLogic >( );
-	varGenerate->appendNodeItemGenerateInstance< JumpLogic >( );
 	// todo : 计算节点
 	varGenerate->appendNodeItemGenerateInstance< VarAdd >( );
 	varGenerate->appendNodeItemGenerateInstance< VarSub >( );

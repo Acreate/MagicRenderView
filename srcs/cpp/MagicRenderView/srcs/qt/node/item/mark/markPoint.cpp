@@ -1,20 +1,21 @@
-﻿#include "jumpLogic.h"
+﻿#include "markPoint.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( JumpLogic, QObject::tr( "跳" ), QObject::tr( "逻辑" ) );
+Imp_StaticMetaInfo( MarkPoint, QObject::tr( "点" ), QObject::tr( "坐标" ) );
 
-JumpLogic::JumpLogic( ) : NodeItem( ) {
+MarkPoint::MarkPoint( ) : NodeItem( ) {
 }
-bool JumpLogic::intPortItems( MainWidget *parent ) {
+bool MarkPoint::intPortItems( MainWidget *parent ) {
 
 	return initNodeItem(
 		parent,
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< BoolInputPort >( "返回条件" );
+			addInputProt< AnyInputPort >( "继续" );
 			addOutputProt< AnyOutputPort >( "继续" );
 			return true;
 		} );

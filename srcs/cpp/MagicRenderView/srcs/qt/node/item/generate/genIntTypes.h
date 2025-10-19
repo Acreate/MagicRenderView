@@ -11,6 +11,6 @@ protected:
 	GenIntTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
+	Def_Last_Mate_Node_Type( GenerateVar );
 };
 #endif // GENINTTYPES_H_H_HEAD__FILE__

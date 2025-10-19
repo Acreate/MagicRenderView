@@ -8,8 +8,8 @@ bool nodeItemEnum::getEnumName( const Node_Item_Type &enum_var, QString &result_
 		case Node_Item_Type::None :
 			result_str = QObject::tr( "无" );
 			return true;
-		case Node_Item_Type::Root :
-			result_str = QObject::tr( "根" );
+		case Node_Item_Type::Begin :
+			result_str = QObject::tr( "开始" );
 			return true;
 		case Node_Item_Type::End :
 			result_str = QObject::tr( "结束" );
@@ -20,11 +20,17 @@ bool nodeItemEnum::getEnumName( const Node_Item_Type &enum_var, QString &result_
 		case Node_Item_Type::Logic :
 			result_str = QObject::tr( "逻辑" );
 			return true;
-		case Node_Item_Type::Point :
-			result_str = QObject::tr( "循环" );
+		case Node_Item_Type::Mark :
+			result_str = QObject::tr( "点" );
 			return true;
 		case Node_Item_Type::Jump :
 			result_str = QObject::tr( "跳" );
+			return true;
+		case Node_Item_Type::GenerateVar:
+			result_str = QObject::tr( "生成" );
+			return true;
+		case Node_Item_Type::ReleaseVar:
+			result_str = QObject::tr( "释放" );
 			return true;
 	}
 

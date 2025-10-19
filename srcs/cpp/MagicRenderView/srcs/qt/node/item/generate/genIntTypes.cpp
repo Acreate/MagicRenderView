@@ -14,7 +14,7 @@ bool GenIntTypes::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
-			addInputProt< AnyInputPort >( "运行机制" );
+			addInputProt< AnyInputPort >( "任意" );
 			addOutputProt< IntOutputPort >( "列表" );
 			return true;
 		} );

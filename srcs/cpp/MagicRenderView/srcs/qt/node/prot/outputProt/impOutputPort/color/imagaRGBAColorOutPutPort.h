@@ -7,7 +7,7 @@ class ImagaRGBAColorOutPutPort : public NodeOutputPort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodeOutputPort );
 protected:
-	using t_current_type = QColor;
+	using t_current_type = QImage;
 public:
 	ImagaRGBAColorOutPutPort( NodeItem *parent );
 };
