@@ -15,7 +15,6 @@ class NodeItemInfo : public QObject {
 private:
 	friend class NodeDirector;
 	friend class NodeItemBuilderLink;
-	friend class NodeItemBuilderMode;
 protected:
 	NodeItem *nodeItem;
 	QMenu *manageMenu;
@@ -63,8 +62,11 @@ public:
 	/// @param result 类型
 	/// @return 失败返回 false
 	virtual bool getNodeItemType( nodeItemEnum::Node_Item_Type &result );
+	// 本对象触发信号
 Q_SIGNALS:
-	void releaseThis( NodeItemInfo *release_ptr );
+	void releaseThisPtr( NodeItemInfo *release_ptr );
+	void runNodeItemInfo( NodeItemInfo *run_node_item_ptr );
+	void requestNodeItemInfoConverVar( NodeItemInfo *left_node_item_ptr, NodeItemInfo *right_node_item_ptr );
 };
 
 #endif // NODEITEMINFO_H_H_HEAD__FILE__

@@ -53,6 +53,8 @@ public:
 	virtual bool getNodeItemRender( QImage &result_render_image ) const {
 		return getNodeItemRender( result_render_image, QPoint( 0, 0 ) );
 	}
+	virtual bool nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr );
+	virtual bool nodeItemInfRightConverVar( NodeItemInfo *output_node_item_ptr );
 	virtual nodeItemEnum::Click_Type getClickNodeItem( NodeItem * &result_node_item, NodePort * &result_node_port );
 	virtual nodeItemEnum::Click_Type getClickNodeItem( const QPoint &click_pos, NodeItem * &result_node_item, NodePort * &result_node_port );
 	virtual nodeItemEnum::Click_Type getClickNodeItemInputPort( NodeItem * &result_node_item, NodeInputPort * &result_node_port );
@@ -85,6 +87,8 @@ public:
 	virtual const std_vector< NodePortLinkInfo * > & getLinkVectorPairt( ) const { return linkVectorPairt; }
 	virtual bool getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const;
 	virtual bool getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const;
+	virtual bool getLinkInputPorts( const NodeOutputPort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
+	virtual bool getLinkInputPorts( const NodePort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );

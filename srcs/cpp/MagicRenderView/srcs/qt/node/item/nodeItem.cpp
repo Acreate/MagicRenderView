@@ -45,7 +45,7 @@ NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::
 	nodeItemInfoWidget = nullptr;
 }
 NodeItem::~NodeItem( ) {
-	emit releaseThiNodeItem( this );
+	emit releaseThisPtr( this );
 	size_t index = 0;
 	size_t count = nodeInputProtVector.size( );
 	auto inputVectorPtr = nodeInputProtVector.data( );

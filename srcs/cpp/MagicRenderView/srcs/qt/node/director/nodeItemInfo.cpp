@@ -3,7 +3,7 @@
 #include <qt/node/item/nodeItem.h>
 #include <qt/node/nodeItemMenu/nodeItemMenu.h>
 NodeItemInfo::~NodeItemInfo( ) {
-	emit releaseThis( this );
+	emit releaseThisPtr( this );
 	delete manageMenu;
 }
 NodeItemInfo::NodeItemInfo( NodeItem *node_item ) : QObject( nullptr ),

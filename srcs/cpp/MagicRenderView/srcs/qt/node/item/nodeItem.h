@@ -229,7 +229,7 @@ public:
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
 	virtual NodeItemInfoWidget * getNodeItemWidget( ) const { return nodeItemInfoWidget; }
 Q_SIGNALS:
-	void releaseThiNodeItem( NodeItem *release_node_item );
+	void releaseThisPtr( NodeItem *release_node_item );
 public: // 二进制相关
 	// 扩展功能
 protected:

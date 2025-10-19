@@ -14,6 +14,8 @@
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
+
+#include "../../varType/I_Var.h"
 bool NodeDirector::addManagementWidget( NodeItemInfoScrollAreaWidget *add_widget ) {
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
 	if( count != 0 ) {
@@ -510,15 +512,17 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 		}
 	new_node_item->generateCode = checkCode;
 	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
-	connect( new_node_item, &NodeItem::releaseThiNodeItem, [this] ( NodeItem *release_node_item ) {
+	connect( new_node_item, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
-	connect( nodeItemInfo, &NodeItemInfo::releaseThis, this, &NodeDirector::releaseNodeItemInfoSignal );
+	connect( nodeItemInfo, &NodeItemInfo::releaseThisPtr, this, &NodeDirector::releaseNodeItemInfoSignal );
 	emit generateNodeItemSignal( new_node_item );
 	return new_node_item->generateCode;
 }
 bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
 	size_t count = linkVectorPairt.size( );
+	if( count == 0 )
+		return false;
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
@@ -529,6 +533,31 @@ bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector<
 bool NodeDirector::getLinkOutPorts( const NodePort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
 	if( input_port->isOutputPort( ) == false )
 		return getLinkOutPorts( ( NodeInputPort * ) input_port, result_vector );
+	return false;
+}
+bool NodeDirector::getLinkInputPorts( const NodeOutputPort *output_port, std_vector< NodeInputPort * > &result_vector ) const {
+
+	size_t count = linkVectorPairt.size( );
+	if( count == 0 )
+		return false;
+	result_vector.clear( );
+	auto data = linkVectorPairt.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		std_vector< NodeOutputPort * > resultInputLink;
+		if( data[ index ]->getLink( resultInputLink ) == false )
+			continue;
+		for( auto &outputPort : resultInputLink )
+			if( output_port == outputPort ) {
+				result_vector.emplace_back( data[ index ]->inputPort );
+				break;
+			}
+	}
+	return false;
+}
+bool NodeDirector::getLinkInputPorts( const NodePort *output_port, std_vector< NodeInputPort * > &result_vector ) const {
+	if( output_port->isOutputPort( ) )
+		return getLinkInputPorts( ( NodeOutputPort * ) output_port, result_vector );
 	return false;
 }
 bool NodeDirector::getLinkControlMenu( const NodePort *input_port, QMenu *&result_menu_ptr ) const {
@@ -570,7 +599,6 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 	return false;
 }
 
-
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
 	size_t count = nodeItemInfoScrollAreaWidgets.size( );
@@ -604,6 +632,60 @@ NodeDirector::~NodeDirector( ) {
 }
 
 bool NodeDirector::getNodeItemRender( QImage &result_render_image, const QPoint &offset ) const {
+	return true;
+}
+bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {
+	size_t count = input_node_item_ptr->nodeItem->nodeInputProtVector.size( );
+	if( count == 0 )
+		return true;
+	auto inputArrayPtr = input_node_item_ptr->nodeItem->nodeInputProtVector.data( );
+
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		auto inputPort = inputArrayPtr[ index ].first;
+		std_vector< NodeOutputPort * > resultVector;
+		if( getLinkOutPorts( inputPort, resultVector ) == false )
+			return false;
+		auto inputVar = inputPort->getVar( );
+		auto inputVarPtr = inputVar->getVarPtr( );
+		auto inputVarType = inputVar->getTypeInfo( );
+		const auto &inputTypeInfo = inputVarType->getTypeInfo( );
+		for( auto &outPort : resultVector ) {
+			auto outputVar = outPort->getVar( );
+			auto outputVarPtr = outputVar->getVarPtr( );
+			auto outputVarType = outputVar->getTypeInfo( );
+			const auto &outputTypeInfo = outputVarType->getTypeInfo( );
+			if( varGenerate->conver( inputTypeInfo, inputVarPtr, outputTypeInfo, outputVarPtr ) == false )
+				return false;
+		}
+	}
+	return true;
+}
+bool NodeDirector::nodeItemInfRightConverVar( NodeItemInfo *output_node_item_ptr ) {
+	size_t count = output_node_item_ptr->nodeItem->nodeOutputProtVector.size( );
+	if( count == 0 )
+		return true;
+	auto outputArrayPtr = output_node_item_ptr->nodeItem->nodeOutputProtVector.data( );
+
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		auto outputPort = outputArrayPtr[ index ].first;
+		std_vector< NodeInputPort * > resultVector;
+		if( getLinkInputPorts( outputPort, resultVector ) == false )
+			return false;
+		auto outputVar = outputPort->getVar( );
+		auto outputVarPtr = outputVar->getVarPtr( );
+		auto outputVarType = outputVar->getTypeInfo( );
+		const auto &outputTypeInfo = outputVarType->getTypeInfo( );
+		for( auto &inputPort : resultVector ) {
+			auto inputVar = inputPort->getVar( );
+			auto inputVarPtr = inputVar->getVarPtr( );
+			auto inputVarType = inputVar->getTypeInfo( );
+			const auto &inputTypeInfo = inputVarType->getTypeInfo( );
+			if( varGenerate->conver( inputTypeInfo, inputVarPtr, outputTypeInfo, outputVarPtr ) == false )
+				return false;
+		}
+	}
 	return true;
 }
 nodeItemEnum::Click_Type NodeDirector::getClickNodeItem( NodeItem *&result_node_item, NodePort * &result_node_port ) {
