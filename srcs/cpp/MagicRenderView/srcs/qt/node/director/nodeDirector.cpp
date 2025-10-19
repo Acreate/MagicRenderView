@@ -72,7 +72,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false;
 	}
 
-	if( outputNodeItemInfo->inOutputNodeItemInfo( inputNodeItem ) ) {
+	if( outputNodeItemInfo->inInputNodeItemInfo( inputNodeItem ) ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
@@ -87,12 +87,12 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	//	return false;
 	//}
 
-	if( outputNodeItemInfo->appendInputNodeItemInfo( inputNodeItemInfo ) == false ) {
+	if( outputNodeItemInfo->appendOutputNodeItemInfo( inputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
-	if( inputNodeItemInfo->appendOutputNodeItemInfo( outputNodeItemInfo ) == false ) {
+	if( inputNodeItemInfo->appendInputNodeItemInfo( outputNodeItemInfo ) == false ) {
 		outputNodeItemInfo->removeInputNodeItemInfo( inputNodeItemInfo );
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;

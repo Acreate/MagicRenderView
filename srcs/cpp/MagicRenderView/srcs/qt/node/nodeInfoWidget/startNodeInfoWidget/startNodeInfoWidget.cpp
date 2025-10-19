@@ -29,38 +29,88 @@ void StartNodeInfoWidget::builder( ) {
 	runOverVector.resize( count ); // 模拟运行
 	auto runvoerVectorPtr = runOverVector.data( );
 
-	for( ; index < count; ++index )
+	size_t checkIndex = 0;
+	size_t checkMaxCount = 0;
+	size_t inputRefCount;
+	size_t inputRefIndex;
+	size_t buffCount;
+	size_t buffIndex;
+	NodeItemInfo *const*buffArrayPtr;
+	size_t startOffsetIndex;
+
+	NodeItemInfo *const*inputRefArrayPtr;
+	for( ; index < count; ++index ) {
+
+		auto &inputNodeItemVector = itemInfoArrayPtr[ index ]->getInputNodeItemVector( );
+
+		inputRefCount = inputNodeItemVector.size( );
+		inputRefArrayPtr = inputNodeItemVector.data( );
+		inputRefIndex = 0;
+		for( ; inputRefIndex < inputRefCount; ++inputRefIndex )
+			if( inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
+				for( checkIndex = 0; checkIndex < index; ++checkIndex )
+					if( runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
+						break;
+				if( checkIndex == index ) {
+					tools::debug::printError( QString( "%1 不存在运行列表当中" ).arg( inputRefArrayPtr[ inputRefIndex ]->getNodeItem( )->getMetaObjectPathName( ) ) );
+					return; // 没有发现运行单元中存在已运行节点
+				}
+			}
+
 		runvoerVectorPtr[ index ] = itemInfoArrayPtr[ index ];
+	}
 
 	// 递归缓存
 	std_vector< NodeItemInfo * > overSubBuff;
+	size_t overSubBuffCount = 0;
+	size_t overSubBuffOffsetIndex;
+	NodeItemInfo **overSubBuffPtr;
 	// 递归运行
 	do {
 		for( ; index < count; ++index ) {
 			auto &buff = itemInfoArrayPtr[ index ]->getOutputNodeItemVector( );
 
-			size_t buffCount = buff.size( );
-			size_t buffIndex = 0;
-			auto buffArrayPtr = buff.data( );
-			size_t startOffsetIndex = runOverVector.size( );
+			buffCount = buff.size( );
+			buffIndex = 0;
+			buffArrayPtr = buff.data( );
+			startOffsetIndex = runOverVector.size( );
 			runOverVector.resize( startOffsetIndex + buffCount );
-			auto runOverVectorPtr = runOverVector.data( );
-			overSubBuff.resize( buffCount );
-			auto overSubBuffPtr = overSubBuff.data( );
+			runvoerVectorPtr = runOverVector.data( );
+			overSubBuffOffsetIndex = overSubBuff.size( );
+
+			overSubBuffCount = buffCount + overSubBuffOffsetIndex;
+			overSubBuff.resize( overSubBuffCount );
+			overSubBuffPtr = overSubBuff.data( );
 			for( ; buffIndex < buffCount; ++buffIndex ) {
 				// todo : 检查引用的问题
-				overSubBuffPtr[ buffIndex ] = runOverVectorPtr[ buffIndex + startOffsetIndex ] = buffArrayPtr[ buffIndex ];
+
+				auto &inputNodeItemVector = buffArrayPtr[ buffIndex ]->getInputNodeItemVector( );
+
+				inputRefCount = inputNodeItemVector.size( );
+				inputRefArrayPtr = inputNodeItemVector.data( );
+				inputRefIndex = 0;
+				for( ; inputRefIndex < inputRefCount; ++inputRefIndex )
+					if( inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
+						for( checkIndex = 0, checkMaxCount = buffIndex + startOffsetIndex; checkIndex < checkMaxCount; ++checkIndex )
+							if( runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
+								break;
+						if( checkIndex == checkMaxCount ) {
+							tools::debug::printError( QString( "%1 不存在运行列表当中" ).arg( inputRefArrayPtr[ inputRefIndex ]->getNodeItem( )->getMetaObjectPathName( ) ) );
+							return; // 没有发现运行单元中存在已运行节点
+						}
+					}
+				overSubBuffPtr[ buffIndex + overSubBuffOffsetIndex ] = runvoerVectorPtr[ buffIndex + startOffsetIndex ] = buffArrayPtr[ buffIndex ];
 			}
 		}
-		count = overSubBuff.size( );
-		if( count == 0 )
+		if( overSubBuffCount == 0 )
 			break;
+		count = overSubBuffCount;
 		nodeItemInfos = overSubBuff;
 		index = 0;
 		itemInfoArrayPtr = nodeItemInfos.data( );
 		overSubBuff.clear( );
 	} while( true );
-
+	runBtn->setEnabled( true );
 }
 void StartNodeInfoWidget::updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info ) {
 
