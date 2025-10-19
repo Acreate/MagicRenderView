@@ -11,6 +11,8 @@
 #include <qt/widgets/mainScrollAreaWidget.h>
 #include <qt/widgets/mainWidget.h>
 
+#include "../node/director/nodeDirector.h"
+
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
 	setWindowToIndexScreenCentre( 0 );
@@ -63,16 +65,16 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			saveFileName.append( ".mr" );
 		appInstance->setAppIniValue( normalKey, saveFileName );
 		std_vector< uint8_t > saveBin;
-		//if( mainWidget->saveBin( saveBin ) == 0 ) {
-		//	tools::debug::printError( "保存异常，请检查保存功能" );
-		//	return;
-		//}
+		if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
+			tools::debug::printError( "保存异常，请检查保存功能" );
+			return;
+		}
 
-		//QFile file( saveFileName );
-		//if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
-		//	file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
-		//	return;
-		//}
+		QFile file( saveFileName );
+		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+			file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+			return;
+		}
 	} );
 
 	currentAction = currentMenu->addAction( "加载..." );
@@ -86,15 +88,18 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			return;
 		}
 		appInstance->setAppIniValue( normalKey, loadFileName );
-		//QFile file( loadFileName );
-		//if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
-		//	QByteArray byteArray = file.readAll( );
-		//	if( mainWidget->loadBin( byteArray ) == 0 ) {
-		//		tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
-		//		return;
-		//	}
-		//	return;
-		//}
+		QFile file( loadFileName );
+		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+			QByteArray byteArray = file.readAll( );
+			char *sourceDataPtr = byteArray.data( );
+			qint64 sourceDataCount = byteArray.size( );
+			size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
+			if( loadDataBinCount == 0 ) {
+				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+				return;
+			}
+			return;
+		}
 	} );
 
 	currentMenu = new QMenu( "配置", this );

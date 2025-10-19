@@ -76,7 +76,6 @@
 #include <qt/varType/isTypes/isUint32Type.h>
 #include <qt/varType/isTypes/isUint64Type.h>
 #include <qt/varType/isTypes/isUint8Type.h>
-#include <qt/varType/stacks/app/appNodeItemStack.h>
 #include <qt/varType/stacks/base/float32Stack.h>
 #include <qt/varType/stacks/base/float64Stack.h>
 #include <qt/varType/stacks/base/int16Stack.h>
@@ -95,6 +94,8 @@
 #include "../node/item/jump/jumpGenerate.h"
 #include "../node/item/jump/jumpMark.h"
 #include "../node/item/mark/markPoint.h"
+
+#include "../varType/stacks/app/nodeDirectorStack.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
@@ -258,8 +259,8 @@ bool Application::init( ) {
 	varGenerate->appendStackInstance< QStringStack >( );
 	varGenerate->appendStackInstance< StdStringStack >( );
 	varGenerate->appendStackInstance< StdWStringStack >( );
-	varGenerate->appendStackInstance< AppNodeItemStack >( );
 	varGenerate->appendStackInstance< QColorStack >( );
+	varGenerate->appendStackInstance< NodeDirectorStack >( );
 	return true;
 }
 void Application::setAppIniValue( const QAnyStringView &key, const QVariant &value ) {

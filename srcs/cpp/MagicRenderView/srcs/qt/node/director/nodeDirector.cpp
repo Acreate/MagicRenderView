@@ -595,6 +595,20 @@ bool NodeDirector::renderLinkListHasNodeItem( const NodeInputPort *input_port, c
 		}
 	return false;
 }
+size_t NodeDirector::toDataBin( std_vector< uint8_t > &result_data_vector ) {
+
+	size_t resultCount = 0;
+	if( applicationInstancePtr->getVarGenerate( )->toBinVector( typeid( NodeDirector ), this, result_data_vector, resultCount ) )
+		return resultCount;
+	return 0;
+
+}
+size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+	size_t resultCount = 0;
+	if( applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( NodeDirector ), this, resultCount, source_data_ptr, resultCount ) )
+		return resultCount;
+	return 0;
+}
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );

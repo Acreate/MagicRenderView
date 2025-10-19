@@ -29,8 +29,8 @@ void StartNodeInfoWidget::builder( ) {
 	runOverVector.resize( count ); // 模拟运行
 	auto runvoerVectorPtr = runOverVector.data( );
 
-	size_t checkIndex = 0;
-	size_t checkMaxCount = 0;
+	size_t checkIndex;
+	size_t checkMaxCount;
 	size_t inputRefCount;
 	size_t inputRefIndex;
 	size_t buffCount;

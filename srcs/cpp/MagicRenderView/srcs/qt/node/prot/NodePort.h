@@ -21,9 +21,9 @@ class NodePort : public QObject, public Type_Alias {
 	Def_Last_StaticMetaInfo( );
 private:
 	friend class NodeItem;
-	friend class AppNodeItemStack;
 	friend class NodeDirector;
 	friend class NodeItemBuilderLink;
+	friend class NodeDirectorStack;
 protected:
 	/// @brief 绑定渲染
 	QImage *nodePortRender;

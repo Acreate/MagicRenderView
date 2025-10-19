@@ -20,6 +20,7 @@ class NodeInputPort;
 class NodeDirector : public QObject {
 	Q_OBJECT;
 	friend class NodeItemInfoFind;
+	friend class NodeDirectorStack;
 protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
@@ -89,6 +90,8 @@ public:
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );
 	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
+	virtual size_t toDataBin(std_vector<uint8_t>& result_data_vector);
+	virtual size_t loadDataBin(const uint8_t* source_data_ptr, const size_t&  source_data_count);
 Q_SIGNALS:
 	void linkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
