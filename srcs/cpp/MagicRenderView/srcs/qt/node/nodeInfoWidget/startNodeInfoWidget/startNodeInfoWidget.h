@@ -14,10 +14,16 @@ protected:
 	Application *application;
 	NodeDirector *nodeDirector;
 	VarGenerate *varGenerate;
+	QWidget *toolBtnVector;
+protected:
+	virtual void run( );
+	virtual void builder( );
+	virtual void toolWidgetMoveToMid( );
 public:
-	StartNodeInfoWidget( NodeItem *node_item )
-		: nodeItem( node_item ) { }
-	
+	StartNodeInfoWidget( NodeItem *node_item );
+protected:
+	void resizeEvent( QResizeEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
 };
 
 #endif // STARTNODEINFOWIDGET_H_H_HEAD__FILE__
