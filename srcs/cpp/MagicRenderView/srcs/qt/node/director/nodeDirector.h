@@ -95,6 +95,7 @@ Q_SIGNALS:
 	void releaseThisSignal( NodeDirector *release_ptr );
 	void releaseNodeItemInfoSignal( NodeItemInfo *release_ptr );
 	void generateNodeItemSignal( NodeItem *create_ptr );
+	void nodeItemInfoRefChange( NodeItemInfo *node_item_info );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

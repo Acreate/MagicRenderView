@@ -439,6 +439,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
 	connect( nodeItemInfo, &NodeItemInfo::releaseThisPtr, this, &NodeDirector::releaseNodeItemInfoSignal );
+	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChange, this, &NodeDirector::nodeItemInfoRefChange );
 	emit generateNodeItemSignal( new_node_item );
 	return new_node_item->generateCode;
 }

@@ -67,6 +67,7 @@ Q_SIGNALS:
 	void releaseThisPtr( NodeItemInfo *release_ptr );
 	void runNodeItemInfo( NodeItemInfo *run_node_item_ptr );
 	void requestNodeItemInfoConverVar( NodeItemInfo *left_node_item_ptr, NodeItemInfo *right_node_item_ptr );
+	void nodeItemInfoRefChange( NodeItemInfo *node_item_info );
 };
 
 #endif // NODEITEMINFO_H_H_HEAD__FILE__

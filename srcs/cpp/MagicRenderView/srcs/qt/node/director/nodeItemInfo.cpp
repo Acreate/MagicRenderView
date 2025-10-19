@@ -27,9 +27,11 @@ bool NodeItemInfo::appendOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == nullptr ) {
 				data[ index ] = output_ref_ptr;
+				emit nodeItemInfoRefChange( this );
 				return true;
 			}
 	}
+	emit nodeItemInfoRefChange( this );
 	outputNodeItemVector.emplace_back( output_ref_ptr );
 	return true;
 }
@@ -42,6 +44,7 @@ bool NodeItemInfo::removeOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == output_ref_ptr->nodeItem ) {
 				data[ index ] = nullptr;
+				emit nodeItemInfoRefChange( this );
 				return true;
 			}
 	}
@@ -93,9 +96,11 @@ bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == nullptr ) {
 				data[ index ] = input_ref_ptr;
+				emit nodeItemInfoRefChange( this );
 				return true;
 			}
 	}
+	emit nodeItemInfoRefChange( this );
 	inputNodeItemVector.emplace_back( input_ref_ptr );
 	return true;
 }
@@ -107,6 +112,7 @@ bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
 				data[ index ] = nullptr;
+				emit nodeItemInfoRefChange( this );
 				return true;
 			}
 	}

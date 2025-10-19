@@ -3,6 +3,10 @@
 #pragma once
 #include <QWidget>
 
+#include <alias/type_alias.h>
+
+class QPushButton;
+class NodeItemInfo;
 class VarGenerate;
 class NodeDirector;
 class Application;
@@ -11,13 +15,18 @@ class StartNodeInfoWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	NodeItem *nodeItem;
+	NodeItemInfo *nodeItemInfo;
+	std_vector<NodeItemInfo *> builderVector;
 	Application *application;
 	NodeDirector *nodeDirector;
 	VarGenerate *varGenerate;
 	QWidget *toolBtnVector;
+	QPushButton *runBtn;
+	QPushButton *builderBtn;
 protected:
 	virtual void run( );
 	virtual void builder( );
+	virtual void updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info );
 	virtual void toolWidgetMoveToMid( );
 public:
 	StartNodeInfoWidget( NodeItem *node_item );
