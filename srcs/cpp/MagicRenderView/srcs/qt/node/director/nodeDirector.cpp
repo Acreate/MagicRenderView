@@ -373,37 +373,7 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	}
 	return true;
 }
-//bool NodeDirector::releaseNodeItemInfo( NodeItemInfo *del_ptr ) {
-//	size_t count = generateNodeItems.size( );
-//	if( count == 0 )
-//		return false;
-//	auto data = generateNodeItems.data( );
-//	for( size_t index = 0; index < count; ++index )
-//		if( data[ index ] != nullptr && data[ index ] == del_ptr ) {
-//			data[ index ] = nullptr;
-//			delete del_ptr;
-//			return true;
-//		}
-//	return false;
-//}
-bool NodeDirector::getNodeItemInputLink( const NodeItem *get_nodeitem_ptr, std_vector< NodePortLinkInfo * > &result_link ) {
-	size_t count = get_nodeitem_ptr->nodeInputProtVector.size( );
-	if( count == 0 )
-		return false;
-	size_t linkCount = linkVectorPairt.size( );
-	if( linkCount == 0 )
-		return false;
-	auto data = get_nodeitem_ptr->nodeInputProtVector.data( );
-	auto linkArrayDataPtr = linkVectorPairt.data( );
-	result_link.clear( );
-	for( size_t index = 0; index < count; ++index )
-		for( size_t linkIndex = 0; linkIndex < linkCount; ++linkIndex )
-			if( linkArrayDataPtr[ linkIndex ]->inputPort == data[ index ].first ) {
-				result_link.emplace_back( linkArrayDataPtr[ linkIndex ] );
-				break;
-			}
-	return result_link.size( ) != 0;
-}
+
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = generateNodeItems.size( );
 	if( linkCount == 0 )
@@ -416,22 +386,6 @@ bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemIn
 		}
 	return false;
 }
-//bool NodeDirector::release( const NodeItem *remove_node_item ) {
-//	size_t count = generateNodeItems.size( );
-//	if( count == 0 )
-//		return false;
-//	auto data = generateNodeItems.data( );
-//	for( size_t index = 0; index < count; ++index )
-//		if( data[ index ] != nullptr && data[ index ]->nodeItem == remove_node_item ) {
-//			auto *item = data[ index ];
-//			data[ index ] = nullptr;
-//			NodeItem *nodeItem = item->nodeItem;
-//			nodeItem->disconnect( this );
-//			delete item;
-//			return true;
-//		}
-//	return false;
-//}
 bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	if( main_widget == nullptr )
 		return false;
@@ -560,6 +514,78 @@ bool NodeDirector::getLinkInputPorts( const NodePort *output_port, std_vector< N
 		return getLinkInputPorts( ( NodeOutputPort * ) output_port, result_vector );
 	return false;
 }
+bool NodeDirector::getLinkOutPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const {
+
+	size_t linkArrayCount = linkVectorPairt.size( );
+	if( linkArrayCount == 0 )
+		return false;
+
+	size_t findInputCount = input_port_node_item->nodeInputProtVector.size( );
+	if( findInputCount == 0 )
+		return true;
+
+	result_vector.clear( );
+	auto linkArrayPtr = linkVectorPairt.data( );
+	auto inputPortArrayPtr = input_port_node_item->nodeInputProtVector.data( );
+	size_t linkArrayIndex = 0;
+	size_t inputPortArrayIndex;
+	std_vector< NodeOutputPort * > resultLink;
+	for( ; linkArrayIndex < linkArrayCount; ++linkArrayIndex )
+		for( inputPortArrayIndex = 0; linkArrayIndex < linkArrayCount; ++linkArrayIndex )
+			if( linkArrayPtr[ linkArrayIndex ]->inputPort == inputPortArrayPtr[ inputPortArrayIndex ].first ) {
+				if( linkArrayPtr[ linkArrayIndex ]->getLink( resultLink ) )
+					result_vector.emplace_back( inputPortArrayPtr[ inputPortArrayIndex ].first, resultLink );
+				break;
+			}
+	return result_vector.size( ) != 0;
+
+}
+bool NodeDirector::getLinkInputPorts( const NodeItem *output_port_node_item, std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > &result_vector ) const {
+
+	size_t linkArrayCount = linkVectorPairt.size( );
+	if( linkArrayCount == 0 )
+		return false;
+
+	size_t findInputCount = output_port_node_item->nodeOutputProtVector.size( );
+	if( findInputCount == 0 )
+		return true;
+	result_vector.clear( );
+	auto linkArrayPtr = linkVectorPairt.data( );
+	auto inputPortArrayPtr = output_port_node_item->nodeOutputProtVector.data( );
+	size_t linkArrayIndex = 0;
+	size_t inputPortArrayIndex;
+	std_vector< NodeOutputPort * > nodeOutputPorts;
+	std_vector< NodeInputPort * > appendInputPortBuff;
+	for( ; linkArrayIndex < linkArrayCount; ++linkArrayIndex )
+		if( linkArrayPtr[ linkArrayIndex ]->getLink( nodeOutputPorts ) == false )
+			continue;
+		else
+			for( inputPortArrayIndex = 0; linkArrayIndex < linkArrayCount; ++linkArrayIndex ) {
+				for( auto outputPort : nodeOutputPorts )
+					if( inputPortArrayPtr[ inputPortArrayIndex ].first == outputPort ) {
+						bool isAppend = false;
+						for( auto &[ resultOutputPort,resultInputPortVector ] : result_vector ) {
+							if( resultOutputPort == outputPort ) {
+								for( auto input : resultInputPortVector )
+									if( input == linkArrayPtr[ linkArrayIndex ]->inputPort ) {
+										isAppend = true;
+										break;
+									}
+								if(isAppend == false) {
+									resultInputPortVector.emplace_back( linkArrayPtr[ linkArrayIndex ]->inputPort );
+									isAppend = true;
+								}
+								break;
+							}
+						}
+						if( isAppend == false )
+							result_vector.emplace_back( outputPort, std_vector { linkArrayPtr[ linkArrayIndex ]->inputPort } );
+						break;
+					}
+			}
+	return result_vector.size( ) != 0;
+
+}
 bool NodeDirector::getLinkControlMenu( const NodePort *input_port, QMenu *&result_menu_ptr ) const {
 	if( input_port->isOutputPort( ) == false )
 		return getLinkControlMenu( ( NodeInputPort * ) input_port, result_menu_ptr );
@@ -631,9 +657,6 @@ NodeDirector::~NodeDirector( ) {
 	delete nodeItemCreateMenu;
 }
 
-bool NodeDirector::getNodeItemRender( QImage &result_render_image, const QPoint &offset ) const {
-	return true;
-}
 bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {
 	size_t count = input_node_item_ptr->nodeItem->nodeInputProtVector.size( );
 	if( count == 0 )
