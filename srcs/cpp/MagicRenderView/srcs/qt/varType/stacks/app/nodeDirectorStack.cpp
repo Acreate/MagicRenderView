@@ -21,8 +21,8 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 
 	auto nodeDirector = ( NodeDirector * ) target_ptr;
 	std_vector< uint8_t > buff;
-	size_t nodeItemCount = nodeDirector->generateNodeItems.size( );
-	auto nodeItemArrayPtr = nodeDirector->generateNodeItems.data( );
+	size_t nodeItemCount = nodeDirector->nodeItemInfoVector.size( );
+	auto nodeItemArrayPtr = nodeDirector->nodeItemInfoVector.data( );
 	size_t nodeItemIndex = 0;
 
 	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
@@ -46,27 +46,28 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 	}
 
 	nodeItemCount = nodeDirector->linkVectorPairt.size( );
-	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
-	resultBuff.append_range( buff );
+
 	nodeItemIndex = 0;
 	auto nodePortLinkInfoArrayPtr = nodeDirector->linkVectorPairt.data( );
 	QString linkName( "%1/%2" );
+	std_vector< uint8_t > linkVectorPairtBuff;
+	size_t subCount = 0;
 	for( ; nodeItemIndex < nodeItemCount; ++nodeItemIndex ) {
 		NodePortLinkInfo *nodePortLinkInfo = nodePortLinkInfoArrayPtr[ nodeItemIndex ];
 		if( nodePortLinkInfo == nullptr ) {
+			++subCount;
 			continue;
 		}
-		QString inputPortName = linkName.arg( nodePortLinkInfo->inputPort->parentItem->generateCode ).arg( nodePortLinkInfo->inputPort->getMetaObjectPathName( ) );
+		QString inputPortName = linkName.arg( nodePortLinkInfo->inputPort->parentItem->generateCode ).arg( nodePortLinkInfo->inputPort->generateCode );
 
 		fillBinVector( inputPortName, buff );
-		resultBuff.append_range( buff );
+		linkVectorPairtBuff.append_range( buff );
 
 		size_t outPortCount = nodePortLinkInfo->outputPorts.size( );
-		if( outPortCount == 0 ) {
-			fillBinVector( &outPortCount, sizeof( outPortCount ), buff );
-			resultBuff.append_range( buff );
+		fillBinVector( &outPortCount, sizeof( outPortCount ), buff );
+		linkVectorPairtBuff.append_range( buff );
+		if( outPortCount == 0 )
 			continue;
-		}
 		auto outPortArrayPtr = nodePortLinkInfo->outputPorts.data( );
 		for( size_t outPortIndex = 0; outPortIndex < outPortCount; ++outPortIndex ) {
 			auto &pair = outPortArrayPtr[ outPortIndex ];
@@ -74,10 +75,14 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 			for( auto &[ prot, action ] : pair.second ) {
 				inputPortName = nodeItemCodeName.arg( prot->generateCode );
 				fillBinVector( inputPortName, buff );
-				resultBuff.append_range( buff );
+				linkVectorPairtBuff.append_range( buff );
 			}
 		}
 	}
+	nodeItemCount -= subCount;
+	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
+	resultBuff.append_range( buff );
+	resultBuff.append_range( linkVectorPairtBuff );
 
 	nodeItemCount = resultBuff.size( );
 	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), result_vector );
@@ -119,11 +124,11 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 
 	mod -= count;
 
-	nodeDirector->generateNodeItems.clear( );
+	nodeDirector->nodeItemInfoVector.clear( );
 	nodeDirector->linkVectorPairt.clear( );
 
 	QString nodeItemName;
-	nodeDirector->generateNodeItems.resize( generateCount, nullptr );
+	nodeDirector->nodeItemInfoVector.resize( generateCount, nullptr );
 	size_t getNodeNameIndex = 0;
 	while( getNodeNameIndex < generateCount ) {
 		count = fillObjVector( &nodeItemName, offerPtr, mod );
@@ -164,9 +169,41 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		++getNodeNameIndex;
 	}
 	nodeDirector->sortNodeItemInfo( );
+	// 连接数量
+	count = fillObjVector( &generateCount, sizeof( generateCount ), offerPtr, mod );
 
-	
-	
+	offerPtr = offerPtr + count;
+	if( generateCount == 0 ) {
+		result_count = offerPtr - source_data_ptr;
+		return true;
+	}
+
+	mod -= count;
+	std_vector_pairt< QString, std_vector< QString > > linkInfo( generateCount );
+	auto data = linkInfo.data( );
+	QString linkName( "%1/%2" );
+	getNodeNameIndex = 0;
+	for( ; getNodeNameIndex < generateCount; ++getNodeNameIndex ) {
+
+		QString inputPortName;
+		std_vector< QString > outTarget;
+		count = fillObjVector( &inputPortName, offerPtr, mod );
+		offerPtr = offerPtr + count;
+		mod -= count;
+
+		count = fillObjVector( &result_count, sizeof( result_count ), offerPtr, mod );
+		offerPtr = offerPtr + count;
+		mod -= count;
+		for( size_t outPortIndex = 0; outPortIndex < result_count; ++outPortIndex ) {
+			QString outputPortName;
+			count = fillObjVector( &outputPortName, offerPtr, mod );
+			offerPtr = offerPtr + count;
+			mod -= count;
+			outTarget.emplace_back( outputPortName );
+		}
+		data[ getNodeNameIndex ] = std_pairt( inputPortName, outTarget );
+	}
+
 	offerPtr = offerPtr + count;
 	result_count = offerPtr - source_data_ptr;
 	return true;

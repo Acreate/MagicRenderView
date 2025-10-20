@@ -245,7 +245,7 @@ bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
 bool NodeItem::appendOutputProt( NodeOutputPort *output_prot ) {
 
 	nodeOutputProtVector.emplace_back( TPortWidgetPort< TNodePortOutputPortPtr >( output_prot, { 0, 0 } ) );
-	output_prot->generateCode = nodeInputProtVector.size( );
+	output_prot->generateCode = nodeOutputProtVector.size( );
 	return true;
 }
 bool NodeItem::removeOutputProt( TConstNodePortOutputPortPtr output_port ) {

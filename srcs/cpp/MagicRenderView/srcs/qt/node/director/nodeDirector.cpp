@@ -168,12 +168,12 @@ bool NodeDirector::linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort 
 bool NodeDirector::setRaise( const NodeItem *raise_node_item ) {
 
 	// 节点个数
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return false;
 
 	// 节点数组指针
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	// 下标
 	size_t index = 0;
 	for( ; index < count; ++index )
@@ -193,17 +193,17 @@ bool NodeDirector::setRaise( const NodePort *raise_node_port ) {
 	return setRaise( raise_node_port->parentItem );
 }
 NodeItem * NodeDirector::getLastNodeItem( ) {
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return nullptr;
-	return generateNodeItems.data( )[ count - 1 ]->nodeItem;
+	return nodeItemInfoVector.data( )[ count - 1 ]->nodeItem;
 }
 void NodeDirector::draw( QPainter &painter_target ) const {
 
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	size_t index = 0;
 	if( count > 0 ) {
-		auto data = generateNodeItems.data( );
+		auto data = nodeItemInfoVector.data( );
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr ) {
 				NodeItem *nodeItem = data[ index ]->nodeItem;
@@ -244,8 +244,8 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 }
 std_vector< NodeItem * > NodeDirector::getNodeItems( ) const {
 	std_vector< NodeItem * > result;
-	size_t count = generateNodeItems.size( );
-	auto data = generateNodeItems.data( );
+	size_t count = nodeItemInfoVector.size( );
+	auto data = nodeItemInfoVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] != nullptr )
 			result.emplace_back( data[ index ]->nodeItem );
@@ -254,10 +254,10 @@ std_vector< NodeItem * > NodeDirector::getNodeItems( ) const {
 
 std_vector< QImage * > NodeDirector::getNodeItemRenders( ) const {
 	std_vector< QImage * > result;
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return result;
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] != nullptr )
 			result.emplace_back( data[ index ]->nodeItem->getNodeItemRender( ) );
@@ -318,10 +318,10 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	}
 
 	// 删除 generateNodeItems
-	count = generateNodeItems.size( );
+	count = nodeItemInfoVector.size( );
 	NodeItemInfo *itemInfo = nullptr;
 	if( count != 0 ) {
-		auto nodeitemPtrData = generateNodeItems.data( );
+		auto nodeitemPtrData = nodeItemInfoVector.data( );
 		index = 0;
 		for( ; index < count; ++index )
 			if( nodeitemPtrData[ index ] != nullptr )
@@ -343,29 +343,69 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	return true;
 }
 bool NodeDirector::sortNodeItemInfo( ) {
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return true;
-	auto nodeItemArrayPtr = generateNodeItems.data( );
+	auto nodeItemArrayPtr = nodeItemInfoVector.data( );
 	size_t index = 0;
 	size_t maxCount = 0;
 	for( ; index < count; ++index )
 		if( nodeItemArrayPtr[ index ] != nullptr && maxCount < nodeItemArrayPtr[ index ]->nodeItem->generateCode )
 			maxCount = nodeItemArrayPtr[ index ]->nodeItem->generateCode;
-	generateNodeItems.resize( maxCount, nullptr );
-	nodeItemArrayPtr = generateNodeItems.data( );
+	nodeItemInfoVector.resize( maxCount, nullptr );
+	nodeItemArrayPtr = nodeItemInfoVector.data( );
 	count = maxCount - 1;
 	for( ; count != 0; --count )
 		nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
 	nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
 	return true;
 }
+bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code ) {
+
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return false;
+	NodeItem *inputItem = nullptr;
+	NodeItem *outputItem = nullptr;
+	auto itemGenerateInfo = nodeItemInfoVector.data( );
+
+	size_t index = 0;
+	for( ; ( inputItem == nullptr || outputItem == nullptr ) && index < count; ++index )
+		if( inputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == input_nodeitem_code )
+			inputItem = itemGenerateInfo[ index ]->nodeItem;
+		else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
+			outputItem = itemGenerateInfo[ index ]->nodeItem;
+	if( inputItem == nullptr || outputItem == nullptr )
+		return false;
+
+	auto &inputProtVector = inputItem->nodeInputProtVector;
+	count = inputProtVector.size( );
+	index = 0;
+	NodeInputPort *input = nullptr;
+	auto inputArrayPtr = inputProtVector.data( );
+	for( ; input == nullptr && index < count; ++index )
+		if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
+			input = inputArrayPtr[ index ].first;
+	if( input == nullptr )
+		return false;
+	NodeOutputPort *output = nullptr;
+	auto &outputProtVector = outputItem->nodeOutputProtVector;
+	count = outputProtVector.size( );
+	index = 0;
+	auto outputArrayPtr = outputProtVector.data( );
+	for( ; input == nullptr && index < count; ++index )
+		if( outputArrayPtr[ index ].first->generateCode == outut_prot_code )
+			output = outputArrayPtr[ index ].first;
+	if( output == nullptr )
+		return false;
+	return this->linkInstallPort( input, output );
+}
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
-	size_t linkCount = generateNodeItems.size( );
+	size_t linkCount = nodeItemInfoVector.size( );
 	if( linkCount == 0 )
 		return false;
-	auto linkArrayDataPtr = generateNodeItems.data( );
+	auto linkArrayDataPtr = nodeItemInfoVector.data( );
 	for( size_t index = 0; index < linkCount; ++index )
 		if( linkArrayDataPtr[ index ] != nullptr && linkArrayDataPtr[ index ]->nodeItem == get_nodeitem_ptr ) {
 			result_link = linkArrayDataPtr[ index ];
@@ -379,8 +419,8 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	if( mainWidget == main_widget )
 		return true;
 	generateNodeItemInfos.clear( );
-	auto clone = generateNodeItems;
-	generateNodeItems.clear( );
+	auto clone = nodeItemInfoVector;
+	nodeItemInfoVector.clear( );
 	for( auto removeItem : clone )
 		if( removeItem )
 			delete removeItem->nodeItem;
@@ -422,8 +462,8 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	new_node_item->setMainWidget( mainWidget );
 	if( new_node_item->intPortItems( mainWidget ) == false )
 		return 0;
-	size_t count = generateNodeItems.size( );
-	auto data = generateNodeItems.data( );
+	size_t count = nodeItemInfoVector.size( );
+	auto data = nodeItemInfoVector.data( );
 	size_t index = 0;
 	NodeItemInfo *nodeItemInfo = new NodeItemInfo( new_node_item );
 	for( ; index < count; ++index )
@@ -432,9 +472,9 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 			break;
 		}
 	if( index == count ) {
-		generateNodeItems.emplace_back( nodeItemInfo );
+		nodeItemInfoVector.emplace_back( nodeItemInfo );
 		++count;
-		data = generateNodeItems.data( ); // 更新基址
+		data = nodeItemInfoVector.data( ); // 更新基址
 	}
 	size_t checkCode = count;
 	for( ; index < count; ++index )
@@ -592,10 +632,10 @@ bool NodeDirector::getLinkControlMenu( const NodeInputPort *input_port, QMenu *&
 	return false;
 }
 bool NodeDirector::getItemManageMenu( const NodeItem *node_item_ptr, QMenu *&result_menu_ptr ) {
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return false;
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ]->nodeItem == node_item_ptr ) {
 			result_menu_ptr = data[ index ]->manageMenu;
@@ -633,10 +673,10 @@ NodeDirector::~NodeDirector( ) {
 	size_t count;
 	size_t index;
 
-	count = generateNodeItems.size( );
+	count = nodeItemInfoVector.size( );
 	if( count ) {
 		index = 0;
-		auto data = generateNodeItems.data( );
+		auto data = nodeItemInfoVector.data( );
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr ) {
 				NodeItem *nodeItem = data[ index ]->nodeItem;
@@ -713,11 +753,11 @@ nodeItemEnum::Click_Type NodeDirector::getClickNodeItem( const QPoint &click_pos
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	// 下标
 	size_t index = 0;
 	// 局部坐标
@@ -755,11 +795,11 @@ nodeItemEnum::Click_Type NodeDirector::getClickNodeItemInputPort( const QPoint &
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	// 下标
 	size_t index = 0;
 	// 局部坐标
@@ -792,11 +832,11 @@ nodeItemEnum::Click_Type NodeDirector::getClickNodeItemOutputPort( const QPoint 
 	result_node_item = nullptr;
 	result_node_port = nullptr;
 	// 节点个数
-	size_t count = generateNodeItems.size( );
+	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
 		return nodeItemEnum::Click_Type::None;
 	// 节点数组指针
-	auto data = generateNodeItems.data( );
+	auto data = nodeItemInfoVector.data( );
 	// 下标
 	size_t index = 0;
 	// 局部坐标

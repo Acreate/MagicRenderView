@@ -25,7 +25,7 @@ protected:
 	/// @brief 绑定的主窗口
 	MainWidget *mainWidget = nullptr;
 	/// @brief 已经创建的实例
-	std_vector< NodeItemInfo * > generateNodeItems;
+	std_vector< NodeItemInfo * > nodeItemInfoVector;
 	/// @brief 节点生成实例对象列表
 	std_vector< std_shared_ptr< NodeItemGenerateInfo > > generateNodeItemInfos;
 	/// @brief 连接列表
@@ -40,7 +40,8 @@ protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
-	virtual bool sortNodeItemInfo();
+	virtual bool sortNodeItemInfo( );
+	virtual bool connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -84,15 +85,15 @@ public:
 	virtual bool getLinkInputPorts( const NodeOutputPort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
 	virtual bool getLinkInputPorts( const NodePort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
 
-	virtual bool getLinkOutPorts( const NodeItem *input_port_node_item, std_vector_pairt<NodeInputPort *, std_vector<NodeOutputPort *>> &result_vector ) const;
-	virtual bool getLinkInputPorts( const NodeItem *output_port_node_item, std_vector_pairt<NodeOutputPort *, std_vector<NodeInputPort *>> &result_vector ) const;
+	virtual bool getLinkOutPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const;
+	virtual bool getLinkInputPorts( const NodeItem *output_port_node_item, std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > &result_vector ) const;
 
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getItemManageMenu( const NodeItem *node_item_ptr, QMenu * &result_menu_ptr );
 	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
-	virtual size_t toDataBin(std_vector<uint8_t>& result_data_vector);
-	virtual size_t loadDataBin(const uint8_t* source_data_ptr, const size_t&  source_data_count);
+	virtual size_t toDataBin( std_vector< uint8_t > &result_data_vector );
+	virtual size_t loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count );
 Q_SIGNALS:
 	void linkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
