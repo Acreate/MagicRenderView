@@ -47,9 +47,9 @@ void StartNodeInfoWidget::builder( ) {
 		inputRefArrayPtr = inputNodeItemVector.data( );
 		inputRefIndex = 0;
 		for( ; inputRefIndex < inputRefCount; ++inputRefIndex )
-			if( inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
+			if( inputRefArrayPtr[ inputRefIndex ] != nullptr && inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
 				for( checkIndex = 0; checkIndex < index; ++checkIndex )
-					if( runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
+					if( inputRefArrayPtr[ inputRefIndex ] != nullptr && runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
 						break;
 				if( checkIndex == index ) {
 					tools::debug::printError( QString( "%1 不存在运行列表当中" ).arg( inputRefArrayPtr[ inputRefIndex ]->getNodeItem( )->getMetaObjectPathName( ) ) );

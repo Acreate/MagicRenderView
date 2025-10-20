@@ -21,11 +21,11 @@ bool NodeItemInfo::appendOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
 		auto data = outputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == output_ref_ptr->nodeItem )
+			if( data[ index ] != nullptr && data[ index ]->nodeItem == output_ref_ptr->nodeItem )
 				return true;
 		index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == nullptr ) {
+			if( data[ index ] == nullptr ) {
 				data[ index ] = output_ref_ptr;
 				emit nodeItemInfoRefChangeOutputNodeItem( this );
 				return true;
@@ -42,7 +42,7 @@ bool NodeItemInfo::removeOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) {
 		auto data = outputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == output_ref_ptr->nodeItem ) {
+			if( data[ index ] != nullptr && data[ index ]->nodeItem == output_ref_ptr->nodeItem ) {
 				data[ index ] = nullptr;
 				emit nodeItemInfoRefChangeOutputNodeItem( this );
 				return true;
@@ -90,11 +90,11 @@ bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		auto data = inputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == input_ref_ptr->nodeItem )
+			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem )
 				return true;
 		index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == nullptr ) {
+			if( data[ index ] == nullptr ) {
 				data[ index ] = input_ref_ptr;
 				emit nodeItemInfoRefChangeInputNodeItem( this );
 				return true;
@@ -110,7 +110,7 @@ bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		auto data = inputNodeItemVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
+			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
 				data[ index ] = nullptr;
 				emit nodeItemInfoRefChangeInputNodeItem( this );
 				return true;
