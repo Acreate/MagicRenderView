@@ -66,6 +66,7 @@ public:
 	virtual size_t loadMainWidgetBin( const QByteArray &bin_vector ) {
 		return loadMainWidgetBin( bin_vector.data( ), bin_vector.size( ) );
 	}
+	virtual void quickSave();
 protected:
 	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;
