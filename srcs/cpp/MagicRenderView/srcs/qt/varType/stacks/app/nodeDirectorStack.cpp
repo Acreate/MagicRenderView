@@ -4,7 +4,10 @@
 
 #include "../../../node/director/nodeItemInfo.h"
 #include "../../../node/director/nodePortLinkInfo.h"
+#include "../../../node/nodeItemMenu/nodeItemMenu.h"
 #include "../../../node/prot/inputProt/nodeInputPort.h"
+
+#include "../../../widgets/mainWidget.h"
 
 NodeDirectorStack::NodeDirectorStack( ) : I_Stack( typeid( t_current_type ) ) {
 
@@ -58,6 +61,9 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 	size_t outPortCount;
 	QString inputPortName;
 	NodePortLinkInfo *nodePortLinkInfo;
+	std::pair< NodeItem *, std::vector< std::pair< NodeOutputPort *, QAction * > > > *outPortArrayPtr;
+	size_t outPortIndex;
+
 	for( ; nodeItemIndex < nodeItemCount; ++nodeItemIndex ) {
 
 		nodePortLinkInfo = nodePortLinkInfoArrayPtr[ nodeItemIndex ];
@@ -75,8 +81,9 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 		linkVectorPairtBuff.append_range( buff );
 		if( outPortCount == 0 )
 			continue;
-		auto outPortArrayPtr = nodePortLinkInfo->outputPorts.data( );
-		for( size_t outPortIndex = 0; outPortIndex < outPortCount; ++outPortIndex ) {
+		outPortArrayPtr = nodePortLinkInfo->outputPorts.data( );
+		outPortIndex = 0;
+		for( ; outPortIndex < outPortCount; ++outPortIndex ) {
 			auto &pair = outPortArrayPtr[ outPortIndex ];
 			nodeItemCodeName = linkName.arg( pair.first->generateCode );
 			for( auto &[ prot, action ] : pair.second ) {
@@ -120,11 +127,11 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		tools::debug::printError( "不存在用于节点的主窗口，请使用 bool NodeDirector::setContentWidget( MainWidget *main_widget ) 配置该对象实例" );
 		return false;
 	}
-	size_t generateCount = 0;
-	count = fillObjVector( &generateCount, sizeof( generateCount ), offerPtr, mod );
+	size_t nodeInfoCount = 0;
+	count = fillObjVector( &nodeInfoCount, sizeof( nodeInfoCount ), offerPtr, mod );
 
 	offerPtr = offerPtr + count;
-	if( generateCount == 0 ) {
+	if( nodeInfoCount == 0 ) {
 		result_count = offerPtr - source_data_ptr;
 		return true;
 	}
@@ -135,14 +142,18 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 	nodeDirector->linkVectorPairt.clear( );
 
 	QString nodeItemName;
-	nodeDirector->nodeItemInfoVector.resize( generateCount, nullptr );
+	nodeDirector->nodeItemInfoVector.resize( nodeInfoCount, nullptr );
 	size_t getNodeNameIndex = 0;
 
 	QString *pointer;
 	NodeItem *nodeItem;
 	QStringList split;
+	size_t generateCode;
+	int nodePosX;
+	int nodePosY;
+	QPoint glpos;
 
-	while( getNodeNameIndex < generateCount ) {
+	for( ; getNodeNameIndex < nodeInfoCount; ++getNodeNameIndex ) {
 		count = fillObjVector( &nodeItemName, offerPtr, mod );
 		if( count == 0 ) {
 			QString info( "无法获取节点名称" );
@@ -155,6 +166,28 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 			tools::debug::printError( info.arg( nodeItemName ) );
 			return false;
 		}
+		offerPtr = offerPtr + count;
+		mod -= count;
+		generateCode = 0;
+		count = fillObjVector( &generateCode, sizeof( generateCode ), offerPtr, mod );
+		if( count == 0 || generateCode == 0 ) {
+			QString info( "节点生成代码异常 %1" );
+			tools::debug::printError( info.arg( generateCode ) );
+			return false;
+		}
+		offerPtr = offerPtr + count;
+		mod -= count;
+
+		count = fillObjVector( &nodePosX, sizeof( nodePosX ), offerPtr, mod );
+		offerPtr = offerPtr + count;
+		mod -= count;
+		count = fillObjVector( &nodePosY, sizeof( nodePosY ), offerPtr, mod );
+		offerPtr = offerPtr + count;
+		mod -= count;
+		glpos = QPoint( nodePosX, nodePosY );
+		glpos = nodeDirector->mainWidget->mapToGlobal( glpos );
+		nodeDirector->nodeItemCreateMenu->move( glpos );
+
 		pointer = split.data( );
 		nodeItem = nodeDirector->createNodeItem( pointer[ 0 ], pointer[ 1 ] );
 		if( nodeItem == nullptr ) {
@@ -162,30 +195,17 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 			tools::debug::printError( info.arg( nodeItemName ) );
 			return false;
 		}
-		offerPtr = offerPtr + count;
-		mod -= count;
-		count = fillObjVector( &nodeItem->generateCode, sizeof( nodeItem->generateCode ), offerPtr, mod );
-
-		offerPtr = offerPtr + count;
-		mod -= count;
-		count = fillObjVector( &nodeItem->nodePosX, sizeof( nodeItem->nodePosX ), offerPtr, mod );
-		offerPtr = offerPtr + count;
-		mod -= count;
-		count = fillObjVector( &nodeItem->nodePosY, sizeof( nodeItem->nodePosY ), offerPtr, mod );
-		offerPtr = offerPtr + count;
-		mod -= count;
+		nodeItem->generateCode = generateCode;
 		count = nodeItem->loadBinData( offerPtr, mod );
 		offerPtr = offerPtr + count;
 		mod -= count;
-
-		++getNodeNameIndex;
 	}
 	nodeDirector->sortNodeItemInfo( );
 	// 连接数量
-	count = fillObjVector( &generateCount, sizeof( generateCount ), offerPtr, mod );
+	count = fillObjVector( &nodeInfoCount, sizeof( nodeInfoCount ), offerPtr, mod );
 
 	offerPtr = offerPtr + count;
-	if( generateCount == 0 ) {
+	if( nodeInfoCount == 0 ) {
 		result_count = offerPtr - source_data_ptr;
 		return true;
 	}
@@ -204,10 +224,10 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 	QString *subStringDataPtr;
 	size_t outputNodeItemCode;
 	size_t outputNodeItemPortCode;
-	for( ; getNodeNameIndex < generateCount; ++getNodeNameIndex ) {
+	for( ; getNodeNameIndex < nodeInfoCount; ++getNodeNameIndex ) {
 		count = fillObjVector( &inputPortName, offerPtr, mod );
 		list = inputPortName.split( "/" );
-		if( list.size( ) != 2 ) {
+		if( count == 0 || list.size( ) != 2 ) {
 			QString msg( "[%1]无法使用 / 切分成 2 组" );
 			tools::debug::printError( msg.arg( inputPortName ) );
 			return false;
@@ -221,10 +241,10 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 			return false;
 		}
 		converResultFlag = false;
-		inputNodeItemPortCode = stringDataPtr[ 0 ].toULongLong( &converResultFlag );
+		inputNodeItemPortCode = stringDataPtr[ 1 ].toULongLong( &converResultFlag );
 		if( converResultFlag == false ) {
 			QString msg( "[%1]无法正确转换到生成端口编号" );
-			tools::debug::printError( msg.arg( stringDataPtr[ 0 ] ) );
+			tools::debug::printError( msg.arg( stringDataPtr[ 1 ] ) );
 			return false;
 		}
 		offerPtr = offerPtr + count;
@@ -238,7 +258,7 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 
 			count = fillObjVector( &outputPortName, offerPtr, mod );
 			subList = outputPortName.split( "/" );
-			if( subList.size( ) != 2 ) {
+			if( count == 0 || subList.size( ) != 2 ) {
 				QString msg( "[%1]无法使用 / 切分成 2 组" );
 				tools::debug::printError( msg.arg( outputPortName ) );
 				return false;
@@ -252,10 +272,10 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 				return false;
 			}
 			converResultFlag = false;
-			outputNodeItemPortCode = subStringDataPtr[ 0 ].toULongLong( &converResultFlag );
+			outputNodeItemPortCode = subStringDataPtr[ 1 ].toULongLong( &converResultFlag );
 			if( converResultFlag == false ) {
 				QString msg( "[%1]无法正确转换到生成端口编号" );
-				tools::debug::printError( msg.arg( subStringDataPtr[ 0 ] ) );
+				tools::debug::printError( msg.arg( subStringDataPtr[ 1 ] ) );
 				return false;
 			}
 			if( nodeDirector->connectLink( inputNodeItemCode, inputNodeItemPortCode, outputNodeItemCode, outputNodeItemPortCode ) == false ) {

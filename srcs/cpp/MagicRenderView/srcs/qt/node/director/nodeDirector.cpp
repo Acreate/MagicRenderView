@@ -363,8 +363,12 @@ bool NodeDirector::sortNodeItemInfo( ) {
 bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code ) {
 
 	size_t count = nodeItemInfoVector.size( );
-	if( count == 0 )
+	if( count == 0 ) {
+		QString msg( "0x%1 不存在任何节点信息" );
+		QString hex = QString::number( ( size_t ) this, 16 );
+		tools::debug::printError( msg.arg( hex.toUpper( ), 8, '0' ) );
 		return false;
+	}
 	NodeItem *inputItem = nullptr;
 	NodeItem *outputItem = nullptr;
 	auto itemGenerateInfo = nodeItemInfoVector.data( );
@@ -375,8 +379,19 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 			inputItem = itemGenerateInfo[ index ]->nodeItem;
 		else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
 			outputItem = itemGenerateInfo[ index ]->nodeItem;
-	if( inputItem == nullptr || outputItem == nullptr )
+	if( inputItem == nullptr ) {
+		QString msg( "%1 不存在匹配的输入节点" );
+		QString hex = QString::number( input_nodeitem_code );
+		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
+		tools::debug::printError( msg );
 		return false;
+	}
+	if( outputItem == nullptr ) {
+		QString msg( "%1 不存在匹配的输出节点" );
+		QString hex = QString::number( output_nodeitem_code );
+		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
+		return false;
+	}
 
 	auto &inputProtVector = inputItem->nodeInputProtVector;
 	count = inputProtVector.size( );
@@ -386,8 +401,12 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	for( ; input == nullptr && index < count; ++index )
 		if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
 			input = inputArrayPtr[ index ].first;
-	if( input == nullptr )
+	if( input == nullptr ) {
+		QString msg( "%1 不存在匹配的输入端口" );
+		QString hex = QString::number( input_prot_code );
+		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
+	}
 	NodeOutputPort *output = nullptr;
 	auto &outputProtVector = outputItem->nodeOutputProtVector;
 	count = outputProtVector.size( );
@@ -396,9 +415,19 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	for( ; output == nullptr && index < count; ++index )
 		if( outputArrayPtr[ index ].first->generateCode == outut_prot_code )
 			output = outputArrayPtr[ index ].first;
-	if( output == nullptr )
+	if( output == nullptr ) {
+		QString msg( "%1 不存在匹配的输出端口" );
+		QString hex = QString::number( outut_prot_code );
+		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
-	return this->linkInstallPort( input, output );
+	}
+	bool resultOk = this->linkInstallPort( input, output );
+	if( resultOk == false ) {
+		QString msg( "[%1.%2 -> %3.%4] 连接异常" );
+		tools::debug::printError( msg.arg( inputItem->getMetaObjectPathName( ) ).arg( input->getMetaObjectPathName( ) ).arg( outputItem->getMetaObjectPathName( ) ).arg( output->getMetaObjectPathName( ) ) );
+		return false;
+	}
+	return resultOk;
 }
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
