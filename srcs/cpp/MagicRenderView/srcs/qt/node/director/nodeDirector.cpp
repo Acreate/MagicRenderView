@@ -655,7 +655,7 @@ bool NodeDirector::getLinkControlMenu( const NodeInputPort *input_port, QMenu *&
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ]->inputPort == input_port ) {
+		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port ) {
 			result_menu_ptr = data[ index ]->removeLinkMenu;
 			return true;
 		}
