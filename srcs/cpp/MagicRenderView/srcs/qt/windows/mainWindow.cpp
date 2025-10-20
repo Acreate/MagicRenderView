@@ -114,6 +114,26 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
+	currentAction = mainMenuBar->addAction( "加载首要文件" );
+	currentAction->setCheckable( true );
+	connect( currentAction, &QAction::triggered, [this]( ) {
+		QString workPath = QDir::currentPath( );
+		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
+		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+		QFile file( workPath );
+		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+			QByteArray byteArray = file.readAll( );
+			char *sourceDataPtr = byteArray.data( );
+			size_t sourceDataCount = byteArray.size( );
+			size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
+			if( loadDataBinCount == 0 ) {
+				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+				return;
+			}
+			return;
+		}
+	} );
+
 	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
 	connect( shortcut, &QShortcut::activated, [this]( ) {
 		mainWidget->copyNodeItemActionInfo( );
@@ -122,7 +142,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	connect( shortcut, &QShortcut::activated, [this]( ) {
 		mainWidget->pasteNodeItemActionInfo( );
 	} );
-
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
