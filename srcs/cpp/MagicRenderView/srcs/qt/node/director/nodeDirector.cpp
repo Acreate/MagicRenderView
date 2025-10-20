@@ -352,12 +352,14 @@ bool NodeDirector::sortNodeItemInfo( ) {
 	for( ; index < count; ++index )
 		if( nodeItemArrayPtr[ index ] != nullptr && maxCount < nodeItemArrayPtr[ index ]->nodeItem->generateCode )
 			maxCount = nodeItemArrayPtr[ index ]->nodeItem->generateCode;
-	nodeItemInfoVector.resize( maxCount, nullptr );
-	nodeItemArrayPtr = nodeItemInfoVector.data( );
-	count = maxCount - 1;
-	for( ; count != 0; --count )
-		nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
-	nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
+	std_vector< NodeItemInfo * > buff( maxCount, nullptr );
+
+	auto buffArrayPtr = buff.data( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( nodeItemArrayPtr[ index ] != nullptr )
+			buffArrayPtr[ nodeItemArrayPtr[ index ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ index ];
+	nodeItemInfoVector = buff;
 	return true;
 }
 bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code ) {
@@ -383,7 +385,6 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 		QString msg( "%1 不存在匹配的输入节点" );
 		QString hex = QString::number( input_nodeitem_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
-		tools::debug::printError( msg );
 		return false;
 	}
 	if( outputItem == nullptr ) {

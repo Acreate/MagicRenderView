@@ -28,34 +28,38 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 	auto nodeItemArrayPtr = nodeDirector->nodeItemInfoVector.data( );
 	size_t nodeItemIndex = 0;
 
-	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
-	resultBuff.append_range( buff );
 	NodeItem *nodeItemPtr;
 	NodeItemInfo *nodeItemInfo;
+	std_vector< uint8_t > subBuff;
+	size_t subCount = 0;
 	for( ; nodeItemIndex < nodeItemCount; ++nodeItemIndex ) {
 		nodeItemInfo = nodeItemArrayPtr[ nodeItemIndex ];
-		if( nodeItemInfo == nullptr )
+		if( nodeItemInfo == nullptr ) {
+			++subCount;
 			continue;
+		}
 		nodeItemPtr = nodeItemInfo->nodeItem;
 		fillBinVector( nodeItemPtr->getMetaObjectPathName( ), buff );
-		resultBuff.append_range( buff );
+		subBuff.append_range( buff );
 		fillBinVector( &nodeItemPtr->generateCode, sizeof( nodeItemPtr->generateCode ), buff );
-		resultBuff.append_range( buff );
+		subBuff.append_range( buff );
 		fillBinVector( &nodeItemPtr->nodePosX, sizeof( nodeItemPtr->nodePosX ), buff );
-		resultBuff.append_range( buff );
+		subBuff.append_range( buff );
 		fillBinVector( &nodeItemPtr->nodePosY, sizeof( nodeItemPtr->nodePosY ), buff );
-		resultBuff.append_range( buff );
+		subBuff.append_range( buff );
 		nodeItemPtr->toBinData( buff );
-		resultBuff.append_range( buff );
+		subBuff.append_range( buff );
 	}
+	nodeItemCount -= subCount;
+	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
+	resultBuff.append_range( buff );
+	resultBuff.append_range( subBuff );
 
 	nodeItemCount = nodeDirector->linkVectorPairt.size( );
 
 	nodeItemIndex = 0;
 	auto nodePortLinkInfoArrayPtr = nodeDirector->linkVectorPairt.data( );
 	QString linkName( "%1/%2" );
-	std_vector< uint8_t > linkVectorPairtBuff;
-	size_t subCount = 0;
 
 	QString nodeItemCodeName;
 	size_t outPortCount;
@@ -63,7 +67,7 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 	NodePortLinkInfo *nodePortLinkInfo;
 	std::pair< NodeItem *, std::vector< std::pair< NodeOutputPort *, QAction * > > > *outPortArrayPtr;
 	size_t outPortIndex;
-
+	subBuff.clear( );
 	for( ; nodeItemIndex < nodeItemCount; ++nodeItemIndex ) {
 
 		nodePortLinkInfo = nodePortLinkInfoArrayPtr[ nodeItemIndex ];
@@ -74,11 +78,11 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 		inputPortName = linkName.arg( nodePortLinkInfo->inputPort->parentItem->generateCode ).arg( nodePortLinkInfo->inputPort->generateCode );
 
 		fillBinVector( inputPortName, buff );
-		linkVectorPairtBuff.append_range( buff );
+		subBuff.append_range( buff );
 
 		outPortCount = nodePortLinkInfo->outputPorts.size( );
 		fillBinVector( &outPortCount, sizeof( outPortCount ), buff );
-		linkVectorPairtBuff.append_range( buff );
+		subBuff.append_range( buff );
 		if( outPortCount == 0 )
 			continue;
 		outPortArrayPtr = nodePortLinkInfo->outputPorts.data( );
@@ -89,14 +93,14 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 			for( auto &[ prot, action ] : pair.second ) {
 				inputPortName = nodeItemCodeName.arg( prot->generateCode );
 				fillBinVector( inputPortName, buff );
-				linkVectorPairtBuff.append_range( buff );
+				subBuff.append_range( buff );
 			}
 		}
 	}
 	nodeItemCount -= subCount;
 	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), buff );
 	resultBuff.append_range( buff );
-	resultBuff.append_range( linkVectorPairtBuff );
+	resultBuff.append_range( subBuff );
 
 	nodeItemCount = resultBuff.size( );
 	fillBinVector( &nodeItemCount, sizeof( nodeItemCount ), result_vector );
@@ -137,8 +141,20 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 	}
 
 	mod -= count;
-
-	nodeDirector->nodeItemInfoVector.clear( );
+	typeUseCount = nodeDirector->nodeItemInfoVector.size( );
+	if( typeUseCount ) {
+		needCount = 0;
+		auto data = nodeDirector->nodeItemInfoVector.data( );
+		for( ; needCount < typeUseCount; ++needCount )
+			if( data[ needCount ] != nullptr ) {
+				NodeItem *nodeItem = data[ needCount ]->nodeItem;
+				NodeItemInfo *nodeItemInfo = data[ needCount ];
+				data[ needCount ] = nullptr;
+				delete nodeItemInfo;
+				delete nodeItem;
+			}
+		nodeDirector->nodeItemInfoVector.clear( );
+	}
 	nodeDirector->linkVectorPairt.clear( );
 
 	QString nodeItemName;

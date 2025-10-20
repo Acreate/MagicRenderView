@@ -114,8 +114,34 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
-	currentAction = mainMenuBar->addAction( "加载首要文件" );
-	currentAction->setCheckable( true );
+	currentMenu = mainMenuBar->addMenu( "快速菜单" );
+
+	currentAction = currentMenu->addAction( "快速保存" );
+	connect( currentAction, &QAction::triggered, [this]( ) {
+		QString workPath = QDir::currentPath( );
+		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
+		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+		
+		qsizetype lastIndexOf = workPath.lastIndexOf( "/" );
+		auto fileName = workPath.mid( lastIndexOf + 1 );
+		lastIndexOf = fileName.lastIndexOf( "." );
+		if( lastIndexOf == -1 )
+			workPath.append( ".mr" );
+		appInstance->setAppIniValue( normalKey, workPath );
+		std_vector< uint8_t > saveBin;
+		if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
+			tools::debug::printError( "保存异常，请检查保存功能" );
+			return;
+		}
+
+		QFile file( workPath );
+		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+			file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+			return;
+		}
+	} );
+
+	currentAction = currentMenu->addAction( "快速加载" );
 	connect( currentAction, &QAction::triggered, [this]( ) {
 		QString workPath = QDir::currentPath( );
 		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
