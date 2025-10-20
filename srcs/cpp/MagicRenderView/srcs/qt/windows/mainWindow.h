@@ -29,11 +29,13 @@ protected:
 	QPoint oldPos, buffPos;
 	/// @brief 是否记录坐标
 	bool makePos;
+	QString currentSaveFilePath;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
-
+	virtual void overSave();
+	virtual void normalSave();
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode );

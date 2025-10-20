@@ -52,29 +52,12 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 
 	currentAction = currentMenu->addAction( "保存..." );
 	connect( currentAction, &QAction::triggered, [this]( ) {
-		QString workPath = QDir::currentPath( );
-		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
-		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
-		QString saveFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview)" );
-		if( saveFileName.isEmpty( ) )
-			return;
-		qsizetype lastIndexOf = saveFileName.lastIndexOf( "/" );
-		auto fileName = saveFileName.mid( lastIndexOf + 1 );
-		lastIndexOf = fileName.lastIndexOf( "." );
-		if( lastIndexOf == -1 )
-			saveFileName.append( ".mr" );
-		appInstance->setAppIniValue( normalKey, saveFileName );
-		std_vector< uint8_t > saveBin;
-		if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
-			tools::debug::printError( "保存异常，请检查保存功能" );
-			return;
-		}
+		normalSave( );
+	} );
 
-		QFile file( saveFileName );
-		if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
-			file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
-			return;
-		}
+	currentAction = currentMenu->addAction( "另存为..." );
+	connect( currentAction, &QAction::triggered, [this]( ) {
+		overSave( );
 	} );
 
 	currentAction = currentMenu->addAction( "加载..." );
@@ -98,6 +81,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
 				return;
 			}
+			currentSaveFilePath = loadFileName;
 			return;
 		}
 	} );
@@ -148,7 +132,10 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	} );
 	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
 	connect( shortcut, &QShortcut::activated, [this]( ) {
-		quickSave( );
+		if( currentSaveFilePath.isEmpty( ) )
+			overSave( );
+		else
+			normalSave( );
 	} );
 }
 MainWindow::~MainWindow( ) {
@@ -165,6 +152,49 @@ MainWindow::~MainWindow( ) {
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
+}
+void MainWindow::overSave( ) {
+	QString workPath = QDir::currentPath( );
+	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
+	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+	QString saveFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview)" );
+	if( saveFileName.isEmpty( ) )
+		return;
+	qsizetype lastIndexOf = saveFileName.lastIndexOf( "/" );
+	auto fileName = saveFileName.mid( lastIndexOf + 1 );
+	lastIndexOf = fileName.lastIndexOf( "." );
+	if( lastIndexOf == -1 )
+		saveFileName.append( ".mr" );
+	appInstance->setAppIniValue( normalKey, saveFileName );
+	std_vector< uint8_t > saveBin;
+	if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
+		tools::debug::printError( "保存异常，请检查保存功能" );
+		return;
+	}
+
+	QFile file( saveFileName );
+	if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+		file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+		currentSaveFilePath = saveFileName;
+		return;
+	}
+}
+void MainWindow::normalSave( ) {
+	if( currentSaveFilePath.isEmpty( ) ) {
+		overSave( );
+		return;
+	}
+	std_vector< uint8_t > saveBin;
+	if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
+		tools::debug::printError( "保存异常，请检查保存功能" );
+		return;
+	}
+
+	QFile file( currentSaveFilePath );
+	if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
+		file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
+		return;
+	}
 }
 void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode ) {
 	mainWidget->ensureVisibleToItemNode( targetItemNode );
