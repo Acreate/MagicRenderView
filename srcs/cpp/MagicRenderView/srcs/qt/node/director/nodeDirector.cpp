@@ -393,7 +393,7 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	count = outputProtVector.size( );
 	index = 0;
 	auto outputArrayPtr = outputProtVector.data( );
-	for( ; input == nullptr && index < count; ++index )
+	for( ; output == nullptr && index < count; ++index )
 		if( outputArrayPtr[ index ].first->generateCode == outut_prot_code )
 			output = outputArrayPtr[ index ].first;
 	if( output == nullptr )

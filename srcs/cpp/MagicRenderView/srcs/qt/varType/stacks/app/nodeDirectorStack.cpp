@@ -188,6 +188,28 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		QString inputPortName;
 		std_vector< QString > outTarget;
 		count = fillObjVector( &inputPortName, offerPtr, mod );
+
+		auto list = inputPortName.split( "/" );
+		if( list.size( ) != 2 ) {
+			QString msg( "[%1]无法使用 / 切分成 2 组" );
+			tools::debug::printError( msg.arg( inputPortName ) );
+			return false;
+		}
+		auto stringDataPtr = list.data( );
+		bool converResultFlag = false;
+		size_t inputNodeItemCode = stringDataPtr[ 0 ].toULongLong( &converResultFlag );
+		if( converResultFlag == false ) {
+			QString msg( "[%1]无法正确转换到生成节点编号" );
+			tools::debug::printError( msg.arg( stringDataPtr[ 0 ] ) );
+			return false;
+		}
+		converResultFlag = false;
+		size_t inputNodeItemPortCode = stringDataPtr[ 0 ].toULongLong( &converResultFlag );
+		if( converResultFlag == false ) {
+			QString msg( "[%1]无法正确转换到生成端口编号" );
+			tools::debug::printError( msg.arg( stringDataPtr[ 0 ] ) );
+			return false;
+		}
 		offerPtr = offerPtr + count;
 		mod -= count;
 
@@ -197,6 +219,32 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		for( size_t outPortIndex = 0; outPortIndex < result_count; ++outPortIndex ) {
 			QString outputPortName;
 			count = fillObjVector( &outputPortName, offerPtr, mod );
+			auto subList = outputPortName.split( "/" );
+			if( subList.size( ) != 2 ) {
+				QString msg( "[%1]无法使用 / 切分成 2 组" );
+				tools::debug::printError( msg.arg( outputPortName ) );
+				return false;
+			}
+			auto subStringDataPtr = subList.data( );
+			converResultFlag = false;
+			size_t outputNodeItemCode = subStringDataPtr[ 0 ].toULongLong( &converResultFlag );
+			if( converResultFlag == false ) {
+				QString msg( "[%1]无法正确转换到生成节点编号" );
+				tools::debug::printError( msg.arg( subStringDataPtr[ 0 ] ) );
+				return false;
+			}
+			converResultFlag = false;
+			size_t outputNodeItemPortCode = subStringDataPtr[ 0 ].toULongLong( &converResultFlag );
+			if( converResultFlag == false ) {
+				QString msg( "[%1]无法正确转换到生成端口编号" );
+				tools::debug::printError( msg.arg( subStringDataPtr[ 0 ] ) );
+				return false;
+			}
+			if( nodeDirector->connectLink( inputNodeItemCode, inputNodeItemPortCode, outputNodeItemCode, outputNodeItemPortCode ) == false ) {
+				QString msg( "[%1/%2 -> %3/%4] 无法正确连接" );
+				tools::debug::printError( msg.arg( inputNodeItemCode ).arg( inputNodeItemPortCode ).arg( outputNodeItemCode ).arg( outputNodeItemPortCode ) );
+				return false;
+			}
 			offerPtr = offerPtr + count;
 			mod -= count;
 			outTarget.emplace_back( outputPortName );
