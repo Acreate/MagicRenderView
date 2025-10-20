@@ -40,6 +40,7 @@ protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
+	virtual bool sortNodeItemInfo();
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;

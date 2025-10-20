@@ -342,6 +342,24 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	}
 	return true;
 }
+bool NodeDirector::sortNodeItemInfo( ) {
+	size_t count = generateNodeItems.size( );
+	if( count == 0 )
+		return true;
+	auto nodeItemArrayPtr = generateNodeItems.data( );
+	size_t index = 0;
+	size_t maxCount = 0;
+	for( ; index < count; ++index )
+		if( nodeItemArrayPtr[ index ] != nullptr && maxCount < nodeItemArrayPtr[ index ]->nodeItem->generateCode )
+			maxCount = nodeItemArrayPtr[ index ]->nodeItem->generateCode;
+	generateNodeItems.resize( maxCount, nullptr );
+	nodeItemArrayPtr = generateNodeItems.data( );
+	count = maxCount - 1;
+	for( ; count != 0; --count )
+		nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
+	nodeItemArrayPtr[ nodeItemArrayPtr[ count ]->nodeItem->generateCode - 1 ] = nodeItemArrayPtr[ count ];
+	return true;
+}
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = generateNodeItems.size( );
@@ -605,7 +623,7 @@ size_t NodeDirector::toDataBin( std_vector< uint8_t > &result_data_vector ) {
 }
 size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
 	size_t resultCount = 0;
-	if( applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( NodeDirector ), this, resultCount, source_data_ptr, resultCount ) )
+	if( applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( NodeDirector ), this, resultCount, source_data_ptr, source_data_count ) )
 		return resultCount;
 	return 0;
 }

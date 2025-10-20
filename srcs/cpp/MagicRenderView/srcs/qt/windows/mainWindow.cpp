@@ -92,7 +92,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
 			QByteArray byteArray = file.readAll( );
 			char *sourceDataPtr = byteArray.data( );
-			qint64 sourceDataCount = byteArray.size( );
+			size_t sourceDataCount = byteArray.size( );
 			size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
 			if( loadDataBinCount == 0 ) {
 				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );

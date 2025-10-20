@@ -30,19 +30,14 @@ int NodeItem::borderLeftSpace = 0;
 /// @brief 边缘右侧空间大小
 int NodeItem::borderRightSpace = 0;
 
-NodeItem::NodeItem( ) : QObject( ), nodeItemRender( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), inputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), outputBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ), titleBuff( new QImage( 10, 10, QImage::Format_RGBA8888 ) ) {
+NodeItem::NodeItem( ) : QObject( ) {
 
-	inputBuffHeight = 0;
-	inputBuffWidth = 0;
-	outputBuffHeight = 0;
-	outputBuffWidth = 0;
-	titleHeight = 0;
-	titleWidth = 0;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
-	nodeItemRender->fill( 0 );
-	inputBuff->fill( 0 );
-	outputBuff->fill( 0 );
-	titleBuff->fill( 0 );
+
+	nodeItemRender = new QImage( 10, 10, QImage::Format_RGBA8888 );
+	inputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
+	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
+	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
@@ -478,8 +473,27 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
 	if( parent == nullptr )
 		return false;
+
+	nodeOutputProtVector.clear( );
+	nodeInputProtVector.clear( );
+	*nodeItemRender = nodeItemRender->scaled( 10, 10 );
+	*inputBuff = inputBuff->scaled( 10, 10 );
+	*outputBuff = outputBuff->scaled( 10, 10 );
+
+	inputBuffHeight = 0;
+	inputBuffWidth = 0;
+	outputBuffHeight = 0;
+	outputBuffWidth = 0;
+	titleHeight = 0;
+	titleWidth = 0;
+	nodeItemRender->fill( 0 );
+	inputBuff->fill( 0 );
+	outputBuff->fill( 0 );
+	titleBuff->fill( 0 );
+
 	if( NodeItem::intPortItems( parent ) == false )
 		return false;
+
 	if( init_function( parent ) == false )
 		return false;
 
