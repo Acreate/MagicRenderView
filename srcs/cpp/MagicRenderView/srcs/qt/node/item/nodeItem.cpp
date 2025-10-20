@@ -227,6 +227,7 @@ NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) cons
 
 bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
 	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
+	input_prot->generateCode = nodeInputProtVector.size( );
 	return true;
 }
 bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
@@ -244,7 +245,7 @@ bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
 bool NodeItem::appendOutputProt( NodeOutputPort *output_prot ) {
 
 	nodeOutputProtVector.emplace_back( TPortWidgetPort< TNodePortOutputPortPtr >( output_prot, { 0, 0 } ) );
-
+	output_prot->generateCode = nodeInputProtVector.size( );
 	return true;
 }
 bool NodeItem::removeOutputProt( TConstNodePortOutputPortPtr output_port ) {

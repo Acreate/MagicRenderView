@@ -72,7 +72,7 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 			auto &pair = outPortArrayPtr[ outPortIndex ];
 			QString nodeItemCodeName = linkName.arg( pair.first->generateCode );
 			for( auto &[ prot, action ] : pair.second ) {
-				inputPortName = nodeItemCodeName.arg( prot->getMetaObjectPathName( ) );
+				inputPortName = nodeItemCodeName.arg( prot->generateCode );
 				fillBinVector( inputPortName, buff );
 				resultBuff.append_range( buff );
 			}
@@ -164,6 +164,9 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		++getNodeNameIndex;
 	}
 	nodeDirector->sortNodeItemInfo( );
+
+	
+	
 	offerPtr = offerPtr + count;
 	result_count = offerPtr - source_data_ptr;
 	return true;

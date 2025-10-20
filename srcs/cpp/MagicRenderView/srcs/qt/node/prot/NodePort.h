@@ -25,6 +25,8 @@ private:
 	friend class NodeItemBuilderLink;
 	friend class NodeDirectorStack;
 protected:
+	/// @brief 生成代码
+	size_t generateCode = 0;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
 	/// @brief 图标
