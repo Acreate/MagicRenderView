@@ -14,7 +14,6 @@ class NodePortLinkInfo;
 class I_Type;
 class NodeItemInfoScrollAreaWidget;
 class NodeItem;
-class NodeEditorWidget;
 class NodeOutputPort;
 class NodeInputPort;
 class NodeDirector : public QObject {
@@ -36,12 +35,15 @@ protected:
 	Application *applicationInstancePtr = nullptr;
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
+	
 protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
 	virtual bool sortNodeItemInfo( );
 	virtual bool connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code );
+protected:
+
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;

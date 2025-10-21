@@ -25,8 +25,9 @@ public:
 	friend class NodeItemInfoWidget;
 	friend class NodeDirector;
 	friend class NodeItemBuilderLink;
-	friend class NodeItemBuilderMode;
+	friend class NodeItemBuilderModule;
 	friend class NodeDirectorStack;
+	friend class StartNodeInfoWidget;
 protected:
 	/// @brief 输入输入端口之间的空间大小
 	static int midPortSpace;

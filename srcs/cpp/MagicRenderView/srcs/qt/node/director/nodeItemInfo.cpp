@@ -85,9 +85,9 @@ bool NodeItemInfo::inOutputNodeItemInfo( NodeItemInfo *output_ref_ptr ) const {
 	return inOutputNodeItemInfo( output_ref_ptr->nodeItem );
 }
 bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
-	size_t count = inputNodeItemVector.size( );
+	size_t count = inputNodeItemInfoVector.size( );
 	if( count != 0 ) {
-		auto data = inputNodeItemVector.data( );
+		auto data = inputNodeItemInfoVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem )
@@ -101,13 +101,13 @@ bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 			}
 	}
 	emit nodeItemInfoRefChangeInputNodeItem( this );
-	inputNodeItemVector.emplace_back( input_ref_ptr );
+	inputNodeItemInfoVector.emplace_back( input_ref_ptr );
 	return true;
 }
 bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
-	size_t count = inputNodeItemVector.size( );
+	size_t count = inputNodeItemInfoVector.size( );
 	if( count != 0 ) {
-		auto data = inputNodeItemVector.data( );
+		auto data = inputNodeItemInfoVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
@@ -119,17 +119,17 @@ bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 	return false;
 }
 bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
-	size_t count = inputNodeItemVector.size( );
+	size_t count = inputNodeItemInfoVector.size( );
 	if( count != 0 ) {
-		auto data = inputNodeItemVector.data( );
+		auto data = inputNodeItemInfoVector.data( );
 		size_t index = 0;
-		using buffVector = decltype(inputNodeItemVector);
+		using buffVector = decltype(inputNodeItemInfoVector);
 		buffVector subVector, subBufferVector;
 		for( ; index < count; ++index )
 			if( data[ index ]->nodeItem == input_ref_ptr )
 				return true;
 			else
-				subVector.append_range( data[ index ]->inputNodeItemVector );
+				subVector.append_range( data[ index ]->inputNodeItemInfoVector );
 		do {
 			count = subVector.size( );
 			if( count == 0 )
@@ -140,7 +140,7 @@ bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
 				if( data[ index ]->nodeItem == input_ref_ptr )
 					return true;
 				else
-					subBufferVector.append_range( data[ index ]->inputNodeItemVector );
+					subBufferVector.append_range( data[ index ]->inputNodeItemInfoVector );
 			subVector = subBufferVector;
 		} while( true );
 

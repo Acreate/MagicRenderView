@@ -9,7 +9,6 @@
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 #include <qt/widgets/mainWidget.h>
 
-#include "nodeItemBuilderLink.h"
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
@@ -431,6 +430,7 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	return resultOk;
 }
 
+
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = nodeItemInfoVector.size( );
 	if( linkCount == 0 )
@@ -717,9 +717,22 @@ NodeDirector::~NodeDirector( ) {
 			}
 	}
 
+	count = linkVectorPairt.size( );
+	if( count ) {
+		index = 0;
+		auto data = linkVectorPairt.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				auto *removeItem = data[ index ];
+				data[ index ] = nullptr;
+				delete removeItem;
+			}
+	}
+
 	nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 	delete nodeItemCreateMenu;
 }
+
 
 bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {
 	size_t count = input_node_item_ptr->nodeItem->nodeInputProtVector.size( );

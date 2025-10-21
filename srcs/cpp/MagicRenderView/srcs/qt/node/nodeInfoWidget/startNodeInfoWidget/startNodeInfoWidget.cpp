@@ -12,144 +12,119 @@
 void StartNodeInfoWidget::run( ) {
 }
 void StartNodeInfoWidget::builder( ) {
-	runBtn->setEnabled( false );
-	if( nodeItemInfo == nullptr ) {
-		builderVector.clear( );
-		if( nodeDirector->getNodeItemInfo( nodeItem, nodeItemInfo ) == false ) {
+	if( currentNodeItemInfo == nullptr )
+		if( nodeDirector->getNodeItemInfo( nodeItem, currentNodeItemInfo ) == false ) {
 			runBtn->setEnabled( false );
-			tools::debug::printError( "无法匹配正确的 NodeItemInfo 类型实例对象" );
 			return;
 		}
+	runList.clear( );
+	if( fillLinkNodeInfo( currentNodeItemInfo ) == false ) {
+		runBtn->setEnabled( false );
+		tools::debug::printError( QString( "%1(%2) 节点未被正确引用" ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
+		return;
 	}
-
-	auto nodeItemInfos = nodeItemInfo->getOutputNodeItemVector( );
-	size_t count = nodeItemInfos.size( );
-	size_t index = 0;
-	auto itemInfoArrayPtr = nodeItemInfos.data( );
-	runOverVector.resize( count ); // 模拟运行
-	auto runvoerVectorPtr = runOverVector.data( );
-
-	size_t checkIndex;
-	size_t checkMaxCount;
-	size_t inputRefCount;
-	size_t inputRefIndex;
-	size_t buffCount;
-	size_t buffIndex;
-	NodeItemInfo *const*buffArrayPtr;
-	size_t startOffsetIndex;
-
-	NodeItemInfo *const*inputRefArrayPtr;
-	NodeItemInfo *itemInfo;
-	for( ; index < count; ++index ) {
-		itemInfo = itemInfoArrayPtr[ index ];
-		auto &inputNodeItemVector = itemInfo->getInputNodeItemVector( );
-
-		inputRefCount = inputNodeItemVector.size( );
-		inputRefArrayPtr = inputNodeItemVector.data( );
-		inputRefIndex = 0;
-		for( ; inputRefIndex < inputRefCount; ++inputRefIndex )
-			if( inputRefArrayPtr[ inputRefIndex ] != nullptr && inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
-				for( checkIndex = 0; checkIndex < index; ++checkIndex )
-					if( inputRefArrayPtr[ inputRefIndex ] != nullptr && runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
-						break;
-				if( checkIndex == index ) {
-					tools::debug::printError( QString( "%1 不存在运行列表当中" ).arg( inputRefArrayPtr[ inputRefIndex ]->getNodeItem( )->getMetaObjectPathName( ) ) );
-					return; // 没有发现运行单元中存在已运行节点
-				}
-			}
-
-		runvoerVectorPtr[ index ] = itemInfo;
-	}
-
-	// 递归缓存
-	std_vector< NodeItemInfo * > overSubBuff;
-	size_t overSubBuffCount = 0;
-	size_t overSubBuffOffsetIndex;
-	NodeItemInfo **overSubBuffPtr;
-	builderVector = nodeItemInfos;
-	// 递归运行
-	do {
-		for( ; index < count; ++index ) {
-			itemInfo = itemInfoArrayPtr[ index ];
-			builderVector.emplace_back( itemInfo );
-			auto &buff = itemInfo->getOutputNodeItemVector( );
-
-			buffCount = buff.size( );
-			buffIndex = 0;
-			buffArrayPtr = buff.data( );
-			startOffsetIndex = runOverVector.size( );
-			runOverVector.resize( startOffsetIndex + buffCount );
-			runvoerVectorPtr = runOverVector.data( );
-			overSubBuffOffsetIndex = overSubBuff.size( );
-
-			overSubBuffCount = buffCount + overSubBuffOffsetIndex;
-			overSubBuff.resize( overSubBuffCount );
-			overSubBuffPtr = overSubBuff.data( );
-			for( ; buffIndex < buffCount; ++buffIndex ) {
-				// todo : 检查引用的问题
-
-				auto &inputNodeItemVector = buffArrayPtr[ buffIndex ]->getInputNodeItemVector( );
-
-				inputRefCount = inputNodeItemVector.size( );
-				inputRefArrayPtr = inputNodeItemVector.data( );
-				inputRefIndex = 0;
-				for( ; inputRefIndex < inputRefCount; ++inputRefIndex )
-					if( inputRefArrayPtr[ inputRefIndex ] != nodeItemInfo ) {
-						for( checkIndex = 0, checkMaxCount = buffIndex + startOffsetIndex; checkIndex < checkMaxCount; ++checkIndex )
-							if( runvoerVectorPtr[ checkIndex ] == inputRefArrayPtr[ inputRefIndex ] )
-								break;
-						if( checkIndex == checkMaxCount ) {
-							tools::debug::printError( QString( "%1 不存在运行列表当中" ).arg( inputRefArrayPtr[ inputRefIndex ]->getNodeItem( )->getMetaObjectPathName( ) ) );
-							builderVector.clear( );
-							return; // 没有发现运行单元中存在已运行节点
-						}
-					}
-				overSubBuffPtr[ buffIndex + overSubBuffOffsetIndex ] = runvoerVectorPtr[ buffIndex + startOffsetIndex ] = buffArrayPtr[ buffIndex ];
-			}
-		}
-		if( overSubBuffCount == 0 )
-			break;
-		count = overSubBuffCount;
-		nodeItemInfos = overSubBuff;
-		index = 0;
-		itemInfoArrayPtr = nodeItemInfos.data( );
-		overSubBuff.clear( );
-	} while( true );
-
-	// todo : 添加编译链
-
 	runBtn->setEnabled( true );
 }
+bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
+	std_vector< NodeItemInfo * > runAppendVector( 1 );
+	auto appendArrayPtr = runAppendVector.data( );
+	appendArrayPtr[ 0 ] = currentNodeItemInfo;
+	runList.emplace_back( runAppendVector );
+	runAppendVector.clear( );
+
+	size_t forCount = node_item->outputNodeItemVector.size( );
+	auto forArrayPtr = node_item->outputNodeItemVector.data( );
+	size_t forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( forArrayPtr[ forIndex ] != nullptr )
+			runAppendVector.emplace_back( forArrayPtr[ forIndex ] );
+
+	forCount = node_item->inputNodeItemInfoVector.size( );
+	forArrayPtr = node_item->inputNodeItemInfoVector.data( );
+	forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( forArrayPtr[ forIndex ] != nullptr && inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
+			return false;
+	forCount = runAppendVector.size( );
+	appendArrayPtr = runAppendVector.data( );
+	forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
+			return false;
+	return true;
+}
+void StartNodeInfoWidget::removeNodeInfo( const NodeItemInfo *node_item ) {
+	if( currentNodeItemInfo == nullptr )
+		return;
+	auto runListArrayCount = runList.size( );
+	if( runListArrayCount == 0 ) {
+		currentNodeItemInfo = nullptr;
+		runBtn->setEnabled( false );
+		return;
+	}
+	auto runListArrayPtr = runList.data( );
+	size_t runListArrayIndex = 0;
+	for( ; runListArrayIndex < runListArrayCount; ++runListArrayIndex ) {
+		auto &subRunList = runListArrayPtr[ runListArrayIndex ];
+		auto subRunListArrayCount = subRunList.size( );
+		auto subRunListArrayPtr = subRunList.data( );
+		size_t subRunListArrayIndex = 0;
+		for( ; subRunListArrayIndex < subRunListArrayCount; ++subRunListArrayIndex )
+			if( subRunListArrayPtr[ subRunListArrayIndex ] == node_item ) {
+				currentNodeItemInfo = nullptr;
+				runList.clear( );
+				runBtn->setEnabled( false );
+				return;
+			}
+	}
+}
 void StartNodeInfoWidget::updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info ) {
-
-	if( nodeItemInfo == nullptr ) {
-		builderVector.clear( );
-		if( nodeDirector->getNodeItemInfo( nodeItem, nodeItemInfo ) == false ) {
-			runBtn->setEnabled( false );
-			return;
-		}
-	}
-	if( node_item_info == nodeItemInfo ) {
+	if( currentNodeItemInfo == nullptr ) {
 		runBtn->setEnabled( false );
 		return;
 	}
-	size_t count = builderVector.size( );
-	if( count == 0 ) {
+	if( hasNodeInfo( node_item_info->nodeItem ) )
 		runBtn->setEnabled( false );
-		return;
-	}
-	auto data = builderVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ] == node_item_info )
-			break;
+}
 
-	if( index == count )
-		return; // 没有改变编译的输出依赖
-	runBtn->setEnabled( false );
+bool StartNodeInfoWidget::hasNodeInfo( const NodeItem *node_item ) {
+	for( auto &subNodeItemInfoVector : runList )
+		for( auto &nodeItemInfo : subNodeItemInfoVector )
+			if( nodeItemInfo->nodeItem == nodeItem )
+				return true;
+	return false;
+}
+bool StartNodeInfoWidget::inputNodeItemLegitimate( const NodeItemInfo *input_node_item ) {
+	errorNodeItemInfo = nullptr;
+	std_vector< NodeItemInfo * > inAppendVector;
+	auto forCount = input_node_item->inputNodeItemInfoVector.size( );
+	if( forCount == 0 )
+		if( input_node_item->nodeItem->getNodeMetaType( ) != nodeItemEnum::Node_Item_Type::Begin ) {
+			errorNodeItemInfo = input_node_item;
+			return false;
+		} else
+			return true;
+
+	auto forArrayPtr = input_node_item->inputNodeItemInfoVector.data( );
+	auto forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( forArrayPtr[ forIndex ] != nullptr )
+			if( hasNodeInfo( forArrayPtr[ forIndex ]->nodeItem ) == false ) {
+				errorNodeItemInfo = forArrayPtr[ forIndex ];
+				return false; // 找不到已运行
+			} else
+				inAppendVector.emplace_back( forArrayPtr[ forIndex ] );
+	forCount = inAppendVector.size( );
+	forArrayPtr = inAppendVector.data( );
+	forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
+			return false;
+	return true;
 }
 StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node_item ) {
 	toolBtnVector = new QWidget( this );
+	currentNodeItemInfo = nullptr;
 	QHBoxLayout *qhBoxLayout = new QHBoxLayout( toolBtnVector );
 
 	runBtn = new QPushButton( toolBtnVector );
@@ -166,8 +141,9 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	application = Application::getApplicationInstancePtr( );
 	nodeDirector = application->getNodeDirector( );
 	varGenerate = application->getVarGenerate( );
-	nodeItemInfo = nullptr;
+
 	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
+	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
 }
 void StartNodeInfoWidget::toolWidgetMoveToMid( ) {
 	int toolWidgetWidth = toolBtnVector->width( );

@@ -14,13 +14,13 @@ class NodeItemInfo : public QObject {
 	Q_OBJECT;
 private:
 	friend class NodeDirector;
-	friend class NodeItemBuilderLink;
 	friend class NodeDirectorStack;
+	friend class StartNodeInfoWidget;
 protected:
 	NodeItem *nodeItem;
 	QMenu *manageMenu;
 	std_vector< NodeItemInfo * > outputNodeItemVector;
-	std_vector< NodeItemInfo * > inputNodeItemVector;
+	std_vector< NodeItemInfo * > inputNodeItemInfoVector;
 protected:
 	NodeItemInfo( NodeItem *node_item );
 public:
@@ -64,7 +64,7 @@ public:
 	/// @return 失败返回 false
 	virtual bool getNodeItemType( nodeItemEnum::Node_Item_Type &result );
 	virtual const std_vector< NodeItemInfo * > & getOutputNodeItemVector( ) const { return outputNodeItemVector; }
-	virtual const std_vector< NodeItemInfo * > & getInputNodeItemVector( ) const { return inputNodeItemVector; }
+	virtual const std_vector< NodeItemInfo * > & getInputNodeItemVector( ) const { return inputNodeItemInfoVector; }
 
 	// 本对象触发信号
 Q_SIGNALS:
