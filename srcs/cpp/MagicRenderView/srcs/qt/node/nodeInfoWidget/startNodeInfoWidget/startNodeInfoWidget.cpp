@@ -13,24 +13,36 @@
 
 #include "../../director/nodeItemInfo.h"
 void StartNodeInfoWidget::run( ) {
+	if( nodeModuleWidget->toBegin( ) == false )
+		setRunBtnStatus( false );
+
+}
+void StartNodeInfoWidget::setRunBtnStatus( bool flag ) {
+	runBtn->setEnabled( flag );
+	nextBtn->setEnabled( flag );
 }
 void StartNodeInfoWidget::runNext( ) {
-
+	if( nodeModuleWidget->next( ) == false )
+		setRunBtnStatus( false );
 }
 void StartNodeInfoWidget::builder( ) {
 	if( currentNodeItemInfo == nullptr )
 		if( nodeDirector->getNodeItemInfo( nodeItem, currentNodeItemInfo ) == false ) {
-			runBtn->setEnabled( false );
+			setRunBtnStatus( false );
 			return;
 		}
 	runList.clear( );
 	runList.emplace_back( std_vector { currentNodeItemInfo } );
 	if( fillLinkNodeInfo( currentNodeItemInfo ) == false ) {
-		runBtn->setEnabled( false );
+		setRunBtnStatus( false );
 		tools::debug::printError( QString( "%1(%2) 节点未被正确引用" ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
 		return;
 	}
-	runBtn->setEnabled( true );
+	nodeModuleWidget->setRunList( &runList );
+	if( nodeModuleWidget->toBegin( ) == false )
+		setRunBtnStatus( false );
+	else
+		setRunBtnStatus( true );
 }
 bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
 
@@ -64,7 +76,7 @@ void StartNodeInfoWidget::removeNodeInfo( const NodeItemInfo *node_item ) {
 	auto runListArrayCount = runList.size( );
 	if( runListArrayCount == 0 ) {
 		currentNodeItemInfo = nullptr;
-		runBtn->setEnabled( false );
+		setRunBtnStatus( false );
 		return;
 	}
 	auto runListArrayPtr = runList.data( );
@@ -78,18 +90,18 @@ void StartNodeInfoWidget::removeNodeInfo( const NodeItemInfo *node_item ) {
 			if( subRunListArrayPtr[ subRunListArrayIndex ] == node_item ) {
 				currentNodeItemInfo = nullptr;
 				runList.clear( );
-				runBtn->setEnabled( false );
+				setRunBtnStatus( false );
 				return;
 			}
 	}
 }
 void StartNodeInfoWidget::updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info ) {
 	if( currentNodeItemInfo == nullptr ) {
-		runBtn->setEnabled( false );
+		setRunBtnStatus( false );
 		return;
 	}
 	if( hasNodeInfo( node_item_info->nodeItem ) )
-		runBtn->setEnabled( false );
+		setRunBtnStatus( false );
 }
 
 bool StartNodeInfoWidget::hasNodeInfo( const NodeItem *node_item ) {
@@ -140,7 +152,6 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	runBtn = new QPushButton( topBtnWidget );
 	runBtn->setText( "运行" );
 	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::run );
-	runBtn->setEnabled( false );
 	qhBoxLayout->addWidget( runBtn );
 
 	builderBtn = new QPushButton( topBtnWidget );
@@ -159,6 +170,8 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 
 	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
+	
+	setRunBtnStatus( false );
 }
 
 void StartNodeInfoWidget::updateLayout( ) {

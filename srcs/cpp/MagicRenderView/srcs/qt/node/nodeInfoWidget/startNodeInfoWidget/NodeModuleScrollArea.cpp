@@ -2,7 +2,7 @@
 
 #include "nodeModuleWidget.h"
 NodeModuleScrollArea::NodeModuleScrollArea( const std_vector< std_vector< NodeItemInfo * > > *run_list, QWidget *parent ) : QScrollArea( parent ) {
-	nodeModuleWidget = new NodeModuleWidget( run_list, this );
+	nodeModuleWidget = new NodeModuleWidget( this );
 	setWidget( nodeModuleWidget );
 	setWidgetResizable( true );
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );

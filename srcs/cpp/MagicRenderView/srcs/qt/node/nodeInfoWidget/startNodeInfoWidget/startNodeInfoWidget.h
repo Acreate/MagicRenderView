@@ -28,16 +28,17 @@ protected:
 	QWidget *topBtnWidget;
 	QPushButton *runBtn;
 	QPushButton *builderBtn;
-	NodeModuleScrollArea* nodeModuleScrollArea;
-	NodeModuleWidget* nodeModuleWidget;
+	NodeModuleScrollArea *nodeModuleScrollArea;
+	NodeModuleWidget *nodeModuleWidget;
 	QWidget *bottomBtnWidget;
-	QPushButton* nextBtn;
+	QPushButton *nextBtn;
 protected:
 	virtual void run( );
+	virtual void setRunBtnStatus( bool flag );
 	virtual void runNext( );
 	virtual void builder( );
 	virtual void updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info );
-	virtual void updateLayout();
+	virtual void updateLayout( );
 	virtual bool fillLinkNodeInfo( const NodeItemInfo *node_item );
 	virtual void removeNodeInfo( const NodeItemInfo *node_item );
 public:
