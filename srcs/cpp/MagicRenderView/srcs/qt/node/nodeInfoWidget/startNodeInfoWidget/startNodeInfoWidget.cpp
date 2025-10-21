@@ -5,25 +5,38 @@
 #include <qboxlayout.h>
 
 #include <qt/application/application.h>
-
 #include <qt/node/director/nodeDirector.h>
+#include <qt/node/director/nodeItemInfo.h>
 
 #include "NodeModuleScrollArea.h"
 #include "nodeModuleWidget.h"
-
-#include "../../director/nodeItemInfo.h"
 void StartNodeInfoWidget::run( ) {
-	if( nodeModuleWidget->toBegin( ) == false )
+	if( nodeModuleWidget->toBegin( ) == false ) {
 		setRunBtnStatus( false );
+		return;
+	}
+	std_vector< std_vector< NodeItemInfo * > > runHistoryVector;
+	std_vector< NodeItemInfo * > resultList;
+	while( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) ) {
+		// todo : 执行节点
 
+		
+		
+		runHistoryVector.emplace_back( resultList ); // 执行历史
+		if( nodeModuleWidget->next( ) == false )
+			break;
+	}
+	nextBtn->setEnabled( false );
 }
 void StartNodeInfoWidget::setRunBtnStatus( bool flag ) {
 	runBtn->setEnabled( flag );
 	nextBtn->setEnabled( flag );
 }
 void StartNodeInfoWidget::runNext( ) {
-	if( nodeModuleWidget->next( ) == false )
+	if( nodeModuleWidget->next( ) == false ) {
 		setRunBtnStatus( false );
+		return;
+	}
 }
 void StartNodeInfoWidget::builder( ) {
 	if( currentNodeItemInfo == nullptr )
@@ -35,7 +48,7 @@ void StartNodeInfoWidget::builder( ) {
 	runList.emplace_back( std_vector { currentNodeItemInfo } );
 	if( fillLinkNodeInfo( currentNodeItemInfo ) == false ) {
 		setRunBtnStatus( false );
-		tools::debug::printError( QString( "%1(%2) 节点未被正确引用" ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
+		tools::debug::printError( QString( QObject::tr( "%1(%2) 节点未被正确引用" ) ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
 		return;
 	}
 	nodeModuleWidget->setRunList( &runList );
@@ -150,17 +163,17 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	QHBoxLayout *qhBoxLayout = new QHBoxLayout( topBtnWidget );
 
 	runBtn = new QPushButton( topBtnWidget );
-	runBtn->setText( "运行" );
+	runBtn->setText( QObject::tr( "运行" ) );
 	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::run );
 	qhBoxLayout->addWidget( runBtn );
 
 	builderBtn = new QPushButton( topBtnWidget );
-	builderBtn->setText( "编译" );
+	builderBtn->setText( QObject::tr( "编译" ) );
 	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::builder );
 	qhBoxLayout->addWidget( builderBtn );
 
 	qhBoxLayout = new QHBoxLayout( bottomBtnWidget );
-	nextBtn = new QPushButton( "下一步", bottomBtnWidget );
+	nextBtn = new QPushButton( QObject::tr( "下一步" ), bottomBtnWidget );
 	qhBoxLayout->addWidget( nextBtn );
 	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::runNext );
 
@@ -170,7 +183,7 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 
 	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
-	
+
 	setRunBtnStatus( false );
 }
 

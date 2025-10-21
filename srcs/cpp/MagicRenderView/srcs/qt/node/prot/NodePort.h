@@ -90,6 +90,7 @@ public:
 	virtual bool isOutputPort( ) const {
 		return false;
 	}
+	virtual bool isArray( ) const { return false; }
 Q_SIGNALS:
 	void releaseThiNodeProt( NodePort *release_ptr );
 	void outputPorDelete( NodeOutputPort *remove_output_port );

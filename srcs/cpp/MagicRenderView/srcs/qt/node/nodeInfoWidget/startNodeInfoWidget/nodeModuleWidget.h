@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItem;
 class NodeItemInfo;
 class NodeModuleWidget : public QWidget {
 	Q_OBJECT;
@@ -19,6 +20,14 @@ public:
 	virtual const std_vector< std_vector< NodeItemInfo * > > * getRunList( ) const;
 	virtual void setRunList( const std_vector< std_vector< NodeItemInfo * > > *run_list );
 	virtual size_t getCurrentRunNodeItemInfoVector( std_vector< NodeItemInfo * > &result_list ) const;
+	virtual bool findNodeItemInfoAtIndex( const NodeItemInfo *node_item_info, size_t &result_index ) const;
+	virtual bool findNodeItemInfoAtIndex( const NodeItem *node_item, size_t &result_index ) const;
+	virtual bool jump( const size_t &jump_target_index ) {
+		if( runList->size( ) <= jump_target_index )
+			return false;
+		currentIndex = jump_target_index;
+		return true;
+	}
 	virtual bool next( ) {
 		if( runList->size( ) == currentIndex )
 			return false;
