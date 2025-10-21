@@ -18,6 +18,7 @@ void StartNodeInfoWidget::builder( ) {
 			return;
 		}
 	runList.clear( );
+	runList.emplace_back( std_vector { currentNodeItemInfo } );
 	if( fillLinkNodeInfo( currentNodeItemInfo ) == false ) {
 		runBtn->setEnabled( false );
 		tools::debug::printError( QString( "%1(%2) 节点未被正确引用" ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
@@ -26,26 +27,23 @@ void StartNodeInfoWidget::builder( ) {
 	runBtn->setEnabled( true );
 }
 bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
-	std_vector< NodeItemInfo * > runAppendVector( 1 );
-	auto appendArrayPtr = runAppendVector.data( );
-	appendArrayPtr[ 0 ] = currentNodeItemInfo;
-	runList.emplace_back( runAppendVector );
-	runAppendVector.clear( );
 
 	size_t forCount = node_item->outputNodeItemVector.size( );
 	auto forArrayPtr = node_item->outputNodeItemVector.data( );
 	size_t forIndex = 0;
+	std_vector< NodeItemInfo * > runAppendVector;
 	for( ; forIndex < forCount; ++forIndex )
 		if( forArrayPtr[ forIndex ] != nullptr )
 			runAppendVector.emplace_back( forArrayPtr[ forIndex ] );
 
+	runList.emplace_back( runAppendVector );
 	forCount = runAppendVector.size( );
-	appendArrayPtr = runAppendVector.data( );
+	auto appendArrayPtr = runAppendVector.data( );
 	forIndex = 0;
 	for( ; forIndex < forCount; ++forIndex )
 		if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
 			return false;
-	
+
 	forCount = node_item->inputNodeItemInfoVector.size( );
 	forArrayPtr = node_item->inputNodeItemInfoVector.data( );
 	forIndex = 0;
