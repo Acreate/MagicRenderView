@@ -39,17 +39,18 @@ bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
 		if( forArrayPtr[ forIndex ] != nullptr )
 			runAppendVector.emplace_back( forArrayPtr[ forIndex ] );
 
-	forCount = node_item->inputNodeItemInfoVector.size( );
-	forArrayPtr = node_item->inputNodeItemInfoVector.data( );
-	forIndex = 0;
-	for( ; forIndex < forCount; ++forIndex )
-		if( forArrayPtr[ forIndex ] != nullptr && inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
-			return false;
 	forCount = runAppendVector.size( );
 	appendArrayPtr = runAppendVector.data( );
 	forIndex = 0;
 	for( ; forIndex < forCount; ++forIndex )
 		if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
+			return false;
+	
+	forCount = node_item->inputNodeItemInfoVector.size( );
+	forArrayPtr = node_item->inputNodeItemInfoVector.data( );
+	forIndex = 0;
+	for( ; forIndex < forCount; ++forIndex )
+		if( forArrayPtr[ forIndex ] != nullptr && inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
 			return false;
 	return true;
 }
