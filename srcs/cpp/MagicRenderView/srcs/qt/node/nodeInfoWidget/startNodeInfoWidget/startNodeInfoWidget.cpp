@@ -8,8 +8,14 @@
 
 #include <qt/node/director/nodeDirector.h>
 
+#include "NodeModuleScrollArea.h"
+#include "nodeModuleWidget.h"
+
 #include "../../director/nodeItemInfo.h"
 void StartNodeInfoWidget::run( ) {
+}
+void StartNodeInfoWidget::runNext( ) {
+
 }
 void StartNodeInfoWidget::builder( ) {
 	if( currentNodeItemInfo == nullptr )
@@ -114,6 +120,8 @@ bool StartNodeInfoWidget::inputNodeItemLegitimate( const NodeItemInfo *input_nod
 			} else
 				inAppendVector.emplace_back( forArrayPtr[ forIndex ] );
 	forCount = inAppendVector.size( );
+	if( forCount == 0 )
+		return true;
 	forArrayPtr = inAppendVector.data( );
 	forIndex = 0;
 	for( ; forIndex < forCount; ++forIndex )
@@ -122,20 +130,28 @@ bool StartNodeInfoWidget::inputNodeItemLegitimate( const NodeItemInfo *input_nod
 	return true;
 }
 StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node_item ) {
-	toolBtnVector = new QWidget( this );
+	topBtnWidget = new QWidget( this );
+	bottomBtnWidget = new QWidget( this );
+	nodeModuleScrollArea = new NodeModuleScrollArea( &runList, this );
+	nodeModuleWidget = nodeModuleScrollArea->getNodeModuleWidget( );
 	currentNodeItemInfo = nullptr;
-	QHBoxLayout *qhBoxLayout = new QHBoxLayout( toolBtnVector );
+	QHBoxLayout *qhBoxLayout = new QHBoxLayout( topBtnWidget );
 
-	runBtn = new QPushButton( toolBtnVector );
+	runBtn = new QPushButton( topBtnWidget );
 	runBtn->setText( "运行" );
 	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::run );
 	runBtn->setEnabled( false );
 	qhBoxLayout->addWidget( runBtn );
 
-	builderBtn = new QPushButton( toolBtnVector );
+	builderBtn = new QPushButton( topBtnWidget );
 	builderBtn->setText( "编译" );
 	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::builder );
 	qhBoxLayout->addWidget( builderBtn );
+
+	qhBoxLayout = new QHBoxLayout( bottomBtnWidget );
+	nextBtn = new QPushButton( "下一步", bottomBtnWidget );
+	qhBoxLayout->addWidget( nextBtn );
+	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::runNext );
 
 	application = Application::getApplicationInstancePtr( );
 	nodeDirector = application->getNodeDirector( );
@@ -144,18 +160,31 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
 }
-void StartNodeInfoWidget::toolWidgetMoveToMid( ) {
-	int toolWidgetWidth = toolBtnVector->width( );
-	int width = this->width( );
-	int mid = width - toolWidgetWidth;
+
+void StartNodeInfoWidget::updateLayout( ) {
+	int currentWidgetWidth = this->width( );
+	int currentWidgetHeight = this->height( );
+
+	int topBtnWidgetWidth = topBtnWidget->width( );
+	int mid = currentWidgetWidth - topBtnWidgetWidth;
 	mid /= 2;
-	toolBtnVector->move( mid, 0 );
+	topBtnWidget->move( mid, 0 );
+
+	int toolWidgetWidth = bottomBtnWidget->width( );
+	int bottomHeight = bottomBtnWidget->height( );
+	mid = currentWidgetWidth - toolWidgetWidth;
+	mid /= 2;
+	bottomBtnWidget->move( mid, currentWidgetHeight - bottomHeight );
+
+	nodeModuleScrollArea->move( 0, bottomHeight );
+	int topBtnHeight = topBtnWidget->height( );
+	nodeModuleScrollArea->setFixedSize( currentWidgetWidth, currentWidgetHeight - topBtnHeight - bottomHeight );
 }
 void StartNodeInfoWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	toolWidgetMoveToMid( );
+	updateLayout( );
 }
 void StartNodeInfoWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	toolWidgetMoveToMid( );
+	updateLayout( );
 }

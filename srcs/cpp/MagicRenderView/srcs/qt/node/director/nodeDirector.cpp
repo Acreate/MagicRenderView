@@ -376,10 +376,11 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 
 	size_t index = 0;
 	for( ; ( inputItem == nullptr || outputItem == nullptr ) && index < count; ++index )
-		if( inputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == input_nodeitem_code )
-			inputItem = itemGenerateInfo[ index ]->nodeItem;
-		else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
-			outputItem = itemGenerateInfo[ index ]->nodeItem;
+		if( itemGenerateInfo[ index ] )
+			if( inputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == input_nodeitem_code )
+				inputItem = itemGenerateInfo[ index ]->nodeItem;
+			else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
+				outputItem = itemGenerateInfo[ index ]->nodeItem;
 	if( inputItem == nullptr ) {
 		QString msg( "%1 不存在匹配的输入节点" );
 		QString hex = QString::number( input_nodeitem_code );
@@ -399,8 +400,8 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	NodeInputPort *input = nullptr;
 	auto inputArrayPtr = inputProtVector.data( );
 	for( ; input == nullptr && index < count; ++index )
-		if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
-			input = inputArrayPtr[ index ].first;
+			if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
+				input = inputArrayPtr[ index ].first;
 	if( input == nullptr ) {
 		QString msg( "%1 不存在匹配的输入端口" );
 		QString hex = QString::number( input_prot_code );
@@ -429,7 +430,6 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	}
 	return resultOk;
 }
-
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = nodeItemInfoVector.size( );
@@ -732,7 +732,6 @@ NodeDirector::~NodeDirector( ) {
 	nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 	delete nodeItemCreateMenu;
 }
-
 
 bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {
 	size_t count = input_node_item_ptr->nodeItem->nodeInputProtVector.size( );

@@ -5,6 +5,8 @@
 
 #include <alias/type_alias.h>
 
+class NodeModuleScrollArea;
+class NodeModuleWidget;
 class QPushButton;
 class NodeItemInfo;
 class VarGenerate;
@@ -23,14 +25,19 @@ protected:
 	Application *application;
 	NodeDirector *nodeDirector;
 	VarGenerate *varGenerate;
-	QWidget *toolBtnVector;
+	QWidget *topBtnWidget;
 	QPushButton *runBtn;
 	QPushButton *builderBtn;
+	NodeModuleScrollArea* nodeModuleScrollArea;
+	NodeModuleWidget* nodeModuleWidget;
+	QWidget *bottomBtnWidget;
+	QPushButton* nextBtn;
 protected:
 	virtual void run( );
+	virtual void runNext( );
 	virtual void builder( );
 	virtual void updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info );
-	virtual void toolWidgetMoveToMid( );
+	virtual void updateLayout();
 	virtual bool fillLinkNodeInfo( const NodeItemInfo *node_item );
 	virtual void removeNodeInfo( const NodeItemInfo *node_item );
 public:

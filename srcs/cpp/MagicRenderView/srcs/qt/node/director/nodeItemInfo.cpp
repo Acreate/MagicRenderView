@@ -59,10 +59,11 @@ bool NodeItemInfo::inOutputNodeItemInfo( NodeItem *output_ref_ptr ) const {
 		using buffVector = decltype(outputNodeItemVector);
 		buffVector subVector, subBufferVector;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == output_ref_ptr )
-				return true;
-			else
-				subVector.append_range( data[ index ]->outputNodeItemVector );
+			if( data[ index ] != nullptr )
+				if( data[ index ]->nodeItem == output_ref_ptr )
+					return true;
+				else
+					subVector.append_range( data[ index ]->outputNodeItemVector );
 		do {
 			count = subVector.size( );
 			if( count == 0 )
@@ -70,10 +71,11 @@ bool NodeItemInfo::inOutputNodeItemInfo( NodeItem *output_ref_ptr ) const {
 			data = subVector.data( );
 			index = 0;
 			for( ; index < count; ++index )
-				if( data[ index ]->nodeItem == output_ref_ptr )
-					return true;
-				else
-					subBufferVector.append_range( data[ index ]->outputNodeItemVector );
+				if( data[ index ] != nullptr )
+					if( data[ index ]->nodeItem == output_ref_ptr )
+						return true;
+					else
+						subBufferVector.append_range( data[ index ]->outputNodeItemVector );
 			subVector = subBufferVector;
 		} while( true );
 
@@ -90,8 +92,9 @@ bool NodeItemInfo::appendInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		auto data = inputNodeItemInfoVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem )
-				return true;
+			if( data[ index ] != nullptr )
+				if( data[ index ]->nodeItem == input_ref_ptr->nodeItem )
+					return true;
 		index = 0;
 		for( ; index < count; ++index )
 			if( data[ index ] == nullptr ) {
@@ -110,11 +113,12 @@ bool NodeItemInfo::removeInputNodeItemInfo( NodeItemInfo *input_ref_ptr ) {
 		auto data = inputNodeItemInfoVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
-			if( data[ index ] != nullptr && data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
-				data[ index ] = nullptr;
-				emit nodeItemInfoRefChangeInputNodeItem( this );
-				return true;
-			}
+			if( data[ index ] != nullptr )
+				if( data[ index ]->nodeItem == input_ref_ptr->nodeItem ) {
+					data[ index ] = nullptr;
+					emit nodeItemInfoRefChangeInputNodeItem( this );
+					return true;
+				}
 	}
 	return false;
 }
@@ -126,10 +130,11 @@ bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
 		using buffVector = decltype(inputNodeItemInfoVector);
 		buffVector subVector, subBufferVector;
 		for( ; index < count; ++index )
-			if( data[ index ]->nodeItem == input_ref_ptr )
-				return true;
-			else
-				subVector.append_range( data[ index ]->inputNodeItemInfoVector );
+			if( data[ index ] != nullptr )
+				if( data[ index ]->nodeItem == input_ref_ptr )
+					return true;
+				else
+					subVector.append_range( data[ index ]->inputNodeItemInfoVector );
 		do {
 			count = subVector.size( );
 			if( count == 0 )
@@ -137,10 +142,11 @@ bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
 			data = subVector.data( );
 			index = 0;
 			for( ; index < count; ++index )
-				if( data[ index ]->nodeItem == input_ref_ptr )
-					return true;
-				else
-					subBufferVector.append_range( data[ index ]->inputNodeItemInfoVector );
+				if( data[ index ] != nullptr )
+					if( data[ index ]->nodeItem == input_ref_ptr )
+						return true;
+					else
+						subBufferVector.append_range( data[ index ]->inputNodeItemInfoVector );
 			subVector = subBufferVector;
 		} while( true );
 
