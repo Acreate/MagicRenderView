@@ -1,10 +1,32 @@
 ﻿#include "nodeModuleWidget.h"
 
-#include "../../director/nodeItemInfo.h"
-NodeModuleWidget::NodeModuleWidget( QWidget *parent ) : QWidget( parent ), runList( nullptr ), currentIndex( 0 ) { }
+#include <qboxlayout.h>
+
+#include "nodeModuleItemWidget.h"
+
+#include <qt/node/director/nodeItemInfo.h>
+NodeModuleWidget::NodeModuleWidget( QWidget *parent ) : QWidget( parent ), runList( nullptr ), currentIndex( 0 ) {
+	mainLayout = new QVBoxLayout( this );
+	mainLayout->addSpacerItem( new QSpacerItem( 10, 20, QSizePolicy::Expanding, QSizePolicy::MinimumExpanding ) );
+}
 const std_vector< std_vector< NodeItemInfo * > > * NodeModuleWidget::getRunList( ) const { return runList; }
 void NodeModuleWidget::setRunList( const std_vector< std_vector< NodeItemInfo * > > *run_list ) {
 	runList = run_list;
+	currentIndex = 0;
+	size_t count = subItemWidget.size( );
+	auto itemWidgetArrayPtr = subItemWidget.data( );
+	for( ; currentIndex < count; ++currentIndex )
+		delete itemWidgetArrayPtr[ currentIndex ];
+	currentIndex = 0;
+	count = runList->size( );
+	subItemWidget.resize( count );
+	itemWidgetArrayPtr = subItemWidget.data( );
+	auto runListDataPtr = runList->data( );
+	for( ; currentIndex < count; ++currentIndex ) {
+		NodeModuleItemWidget *moduleItemWidget = new NodeModuleItemWidget( runListDataPtr[ currentIndex ], this );
+		itemWidgetArrayPtr[ currentIndex ] = moduleItemWidget;
+		mainLayout->insertWidget( currentIndex, moduleItemWidget );
+	}
 	currentIndex = 0;
 }
 size_t NodeModuleWidget::getCurrentRunNodeItemInfoVector( std_vector< NodeItemInfo * > &result_list ) const {

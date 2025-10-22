@@ -5,12 +5,16 @@
 
 #include <alias/type_alias.h>
 
+class QVBoxLayout;
+class NodeModuleItemWidget;
 class NodeItem;
 class NodeItemInfo;
 class NodeModuleWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	const std_vector< std_vector< NodeItemInfo * > > *runList;
+	std_vector<NodeModuleItemWidget*> subItemWidget;
+	QVBoxLayout* mainLayout;
 	size_t currentIndex;
 public:
 	NodeModuleWidget( QWidget *parent = nullptr );

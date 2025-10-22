@@ -1,4 +1,4 @@
-﻿#include "NodeModuleScrollArea.h"
+﻿#include "nodeModuleScrollArea.h"
 
 #include "nodeModuleWidget.h"
 NodeModuleScrollArea::NodeModuleScrollArea( const std_vector< std_vector< NodeItemInfo * > > *run_list, QWidget *parent ) : QScrollArea( parent ) {

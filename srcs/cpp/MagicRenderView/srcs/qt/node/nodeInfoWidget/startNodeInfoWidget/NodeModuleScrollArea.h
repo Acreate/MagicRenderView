@@ -3,7 +3,7 @@
 #pragma once
 #include <QScrollArea>
 
-#include "../../../../alias/type_alias.h"
+#include <alias/type_alias.h>
 
 class NodeModuleWidget;
 class NodeItemInfo;

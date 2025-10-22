@@ -8,7 +8,7 @@
 #include <qt/node/director/nodeDirector.h>
 #include <qt/node/director/nodeItemInfo.h>
 
-#include "NodeModuleScrollArea.h"
+#include "nodeModuleScrollArea.h"
 #include "nodeModuleWidget.h"
 void StartNodeInfoWidget::run( ) {
 	if( nodeModuleWidget->toBegin( ) == false ) {
@@ -20,8 +20,6 @@ void StartNodeInfoWidget::run( ) {
 	while( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) ) {
 		// todo : 执行节点
 
-		
-		
 		runHistoryVector.emplace_back( resultList ); // 执行历史
 		if( nodeModuleWidget->next( ) == false )
 			break;
@@ -66,14 +64,15 @@ bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
 	for( ; forIndex < forCount; ++forIndex )
 		if( forArrayPtr[ forIndex ] != nullptr )
 			runAppendVector.emplace_back( forArrayPtr[ forIndex ] );
-
-	runList.emplace_back( runAppendVector );
 	forCount = runAppendVector.size( );
-	auto appendArrayPtr = runAppendVector.data( );
-	forIndex = 0;
-	for( ; forIndex < forCount; ++forIndex )
-		if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
-			return false;
+	if( forCount != 0 ) {
+		runList.emplace_back( runAppendVector );
+		auto appendArrayPtr = runAppendVector.data( );
+		forIndex = 0;
+		for( ; forIndex < forCount; ++forIndex )
+			if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
+				return false;
+	}
 
 	forCount = node_item->inputNodeItemInfoVector.size( );
 	forArrayPtr = node_item->inputNodeItemInfoVector.data( );

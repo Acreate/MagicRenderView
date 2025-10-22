@@ -53,13 +53,13 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false; // 同一个节点或者为 nullptr
 	const I_Type *inputPorVarType = input_port->getVarType( );
 	if( inputPorVarType == nullptr ) {
-		tools::debug::printError( QString( "%1 输入端口不存在变量指向" ).arg( input_port->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "%1 输入端口不存在变量指向" ) ).arg( input_port->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
 	const I_Type *outputPorVarType = output_port->getVarType( );
 	if( outputPorVarType == nullptr ) {
-		tools::debug::printError( QString( "%1 输出端口不存在变量指向" ).arg( output_port->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "%1 输出端口不存在变量指向" ) ).arg( output_port->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
@@ -67,18 +67,18 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false;
 	NodeItemInfo *outputNodeItemInfo;
 	if( getNodeItemInfo( outputNodeItem, outputNodeItemInfo ) == false ) {
-		tools::debug::printError( QString( "输出端 %1 不存在节点具象化信息" ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "输出端 %1 不存在节点具象化信息" ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
 	if( outputNodeItemInfo->inInputNodeItemInfo( inputNodeItem ) ) {
-		tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "%1 引用 %2 异常->引用循环" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
 	NodeItemInfo *inputNodeItemInfo;
 	if( getNodeItemInfo( inputNodeItem, inputNodeItemInfo ) == false ) {
-		tools::debug::printError( QString( "输入端 %1 不存在节点具象化信息" ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "输入端 %1 不存在节点具象化信息" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
 	//if( inputNodeItemInfo->inOutputNodeItemInfo( outputNodeItem ) ) {
@@ -93,7 +93,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 
 	if( inputNodeItemInfo->appendInputNodeItemInfo( outputNodeItemInfo ) == false ) {
 		outputNodeItemInfo->removeInputNodeItemInfo( inputNodeItemInfo );
-		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
+		tools::debug::printError( QString( QObject::tr( "%1 引用 %2 异常->未知错误" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
 
@@ -127,7 +127,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 
 		NodeItemInfo *outputInfo;
 		if( getNodeItemInfo( outputParentNodeItem, outputInfo ) == false ) {
-			QString msg( "%1 找不到匹配的具体输出" );
+			QString msg( QObject::tr( "%1 找不到匹配的具体输出" ) );
 			tools::debug::printError( msg.arg( outputParentNodeItem->getMetaObjectPathName( ) ) );
 			return;
 		}
@@ -135,7 +135,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		auto inputParentNodeItem = input_port->parentItem;
 		NodeItemInfo *inputInfo;
 		if( getNodeItemInfo( inputParentNodeItem, inputInfo ) == false ) {
-			QString msg( "%1 找不到匹配的具体输入" );
+			QString msg(  QObject::tr("%1 找不到匹配的具体输入" ));
 			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
 			return;
 		}
@@ -365,7 +365,7 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 
 	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 ) {
-		QString msg( "0x%1 不存在任何节点信息" );
+		QString msg(  QObject::tr("0x%1 不存在任何节点信息") );
 		QString hex = QString::number( ( size_t ) this, 16 );
 		tools::debug::printError( msg.arg( hex.toUpper( ), 8, '0' ) );
 		return false;
@@ -382,13 +382,13 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 			else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
 				outputItem = itemGenerateInfo[ index ]->nodeItem;
 	if( inputItem == nullptr ) {
-		QString msg( "%1 不存在匹配的输入节点" );
+		QString msg(  QObject::tr("%1 不存在匹配的输入节点") );
 		QString hex = QString::number( input_nodeitem_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
 	}
 	if( outputItem == nullptr ) {
-		QString msg( "%1 不存在匹配的输出节点" );
+		QString msg(  QObject::tr("%1 不存在匹配的输出节点") );
 		QString hex = QString::number( output_nodeitem_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
@@ -400,10 +400,10 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	NodeInputPort *input = nullptr;
 	auto inputArrayPtr = inputProtVector.data( );
 	for( ; input == nullptr && index < count; ++index )
-			if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
-				input = inputArrayPtr[ index ].first;
+		if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
+			input = inputArrayPtr[ index ].first;
 	if( input == nullptr ) {
-		QString msg( "%1 不存在匹配的输入端口" );
+		QString msg(  QObject::tr("%1 不存在匹配的输入端口") );
 		QString hex = QString::number( input_prot_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
@@ -417,14 +417,14 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 		if( outputArrayPtr[ index ].first->generateCode == outut_prot_code )
 			output = outputArrayPtr[ index ].first;
 	if( output == nullptr ) {
-		QString msg( "%1 不存在匹配的输出端口" );
+		QString msg(  QObject::tr("%1 不存在匹配的输出端口") );
 		QString hex = QString::number( outut_prot_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
 	}
 	bool resultOk = this->linkInstallPort( input, output );
 	if( resultOk == false ) {
-		QString msg( "[%1.%2 -> %3.%4] 连接异常" );
+		QString msg(  QObject::tr("[%1.%2 -> %3.%4] 连接异常") );
 		tools::debug::printError( msg.arg( inputItem->getMetaObjectPathName( ) ).arg( input->getMetaObjectPathName( ) ).arg( outputItem->getMetaObjectPathName( ) ).arg( output->getMetaObjectPathName( ) ) );
 		return false;
 	}
