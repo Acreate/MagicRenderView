@@ -13,6 +13,8 @@
 
 #include "../../generate/varGenerate.h"
 
+#include "../../tools/tools.h"
+
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 
 /// @brief 输入输入端口之间的空间大小
@@ -111,6 +113,9 @@ size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &sour
 	applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count );
 	return resultSize;
 }
+nodeItemEnum::Click_Type NodeItem::relativePointType( const QPoint &point ) const {
+	return relativePointType( point.x( ), point.y( ) );
+}
 nodeItemEnum::Click_Type NodeItem::relativePointType( int x, int y ) const {
 
 	// 任意一个坐标超出范围，即可判定非法
@@ -134,6 +139,9 @@ nodeItemEnum::Click_Type NodeItem::relativePointType( int x, int y ) const {
 	} else
 		return nodeItemEnum::Click_Type::Title;
 	return nodeItemEnum::Click_Type::Space;
+}
+NodeItem::TNodePortInputPortPtr NodeItem::getNodeInputAtRelativePointType( const QPoint &point ) const {
+	return getNodeInputAtRelativePointType( point.x( ), point.y( ) );
 }
 NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const {
 	// 数组数量为 0，直接返回
@@ -166,6 +174,9 @@ NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const 
 	while( count > 0 );
 	// 最后返回
 	return data[ 0 ].first;
+}
+NodeItem::TNodePortOutputPortPtr NodeItem::getNodeOutputPortAtRelativePointType( const QPoint &point ) const {
+	return getNodeOutputPortAtRelativePointType( point.x( ), point.y( ) );
 }
 NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) const {
 
@@ -211,6 +222,10 @@ bool NodeItem::intPortItems( MainWidget *parent ) {
 }
 void NodeItem::setNodeTitleName( const NodeItemString_Type &node_title_name ) {
 	nodeTitleName = node_title_name;
+}
+void NodeItem::move( const QPoint &point ) {
+	nodePosX = point.x( );
+	nodePosY = point.y( );
 }
 
 NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) const {

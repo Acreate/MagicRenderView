@@ -7,6 +7,7 @@
 #include <stacktrace>
 #include <filesystem>
 #include <QByteArray>
+#include <QWidget>
 #include <qfileinfo.h>
 
 int tools::ui::moveDisplayCenter( QWidget *move_target, size_t display_target ) {

@@ -2,11 +2,11 @@
 #define NODEITEM_H_H_HEAD__FILE__
 #pragma once
 #include <QObject>
+#include <QRect>
+#include <QSizeF>
+#include <qpoint.h>
 
 #include <alias/type_alias.h>
-
-#include <qt/tools/tools.h>
-
 #include <qt/enums/nodeItemEnum.h>
 
 class QScrollArea;
@@ -113,9 +113,7 @@ public:
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
-	virtual nodeItemEnum::Click_Type relativePointType( const QPoint &point ) const {
-		return relativePointType( point.x( ), point.y( ) );
-	}
+	virtual nodeItemEnum::Click_Type relativePointType( const QPoint &point ) const;
 
 	/// @brief 从相对坐标获取类型
 	/// @param x 基于该节点的 x 相对位置
@@ -125,9 +123,7 @@ public:
 	/// @brief 从相对坐标获输入接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
-	virtual TNodePortInputPortPtr getNodeInputAtRelativePointType( const QPoint &point ) const {
-		return getNodeInputAtRelativePointType( point.x( ), point.y( ) );
-	}
+	virtual TNodePortInputPortPtr getNodeInputAtRelativePointType( const QPoint &point ) const;
 
 	/// @brief 从相对坐标获取输入接口
 	/// @param x 基于该节点的 x 相对位置
@@ -138,9 +134,7 @@ public:
 	/// @brief 从相对坐标获输出接口
 	/// @param point 基于该节点的相对位置
 	/// @return 类型
-	virtual TNodePortOutputPortPtr getNodeOutputPortAtRelativePointType( const QPoint &point ) const {
-		return getNodeOutputPortAtRelativePointType( point.x( ), point.y( ) );
-	}
+	virtual TNodePortOutputPortPtr getNodeOutputPortAtRelativePointType( const QPoint &point ) const;
 
 	/// @brief 从相对坐标获取输出接口
 	/// @param x 基于该节点的 x 相对位置
@@ -153,10 +147,7 @@ public:
 	virtual const NodeItemString_Type & getNodeTitleName( ) const { return nodeTitleName; }
 	virtual void setNodeTitleName( const NodeItemString_Type &node_title_name );
 
-	virtual void move( const QPoint &point ) {
-		nodePosX = point.x( );
-		nodePosY = point.y( );
-	}
+	virtual void move( const QPoint &point );
 
 	virtual void move( int x, int y ) {
 		nodePosX = x;

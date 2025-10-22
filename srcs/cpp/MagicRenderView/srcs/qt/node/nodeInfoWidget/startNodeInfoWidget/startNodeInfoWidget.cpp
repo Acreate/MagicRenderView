@@ -10,6 +10,10 @@
 
 #include "nodeModuleScrollArea.h"
 #include "nodeModuleWidget.h"
+
+#include "../../../tools/tools.h"
+
+#include "../../item/nodeItem.h"
 void StartNodeInfoWidget::run( ) {
 	if( nodeModuleWidget->isEnd( ) == true )
 		return;

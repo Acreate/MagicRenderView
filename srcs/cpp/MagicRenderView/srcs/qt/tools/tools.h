@@ -2,10 +2,10 @@
 #define TOOLS_H_H_HEAD__FILE__
 #pragma once
 
-#include <QMainWindow>
 
 #include <alias/type_alias.h>
 
+class QWindow;
 namespace tools {
 	namespace qstr {
 		using qstring_t = QString;

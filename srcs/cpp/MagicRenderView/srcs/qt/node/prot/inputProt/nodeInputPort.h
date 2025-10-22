@@ -4,7 +4,6 @@
 
 #include "../NodePort.h"
 
-#include "../outputProt/nodeOutputPort.h"
 class NodeInputPort : public NodePort {
 	Q_OBJECT;
 	Def_Last_Firend_StaticMetaInfo( NodePort );

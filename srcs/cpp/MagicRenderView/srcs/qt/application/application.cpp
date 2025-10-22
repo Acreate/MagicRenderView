@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QProcess>
 #include <QSettings>
+#include <QWidget>
 #include <qboxlayout.h>
 #include <qfile.h>
 #include <qfileinfo.h>

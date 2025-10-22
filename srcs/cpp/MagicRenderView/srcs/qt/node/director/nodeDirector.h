@@ -6,8 +6,14 @@
 
 #include <alias/type_alias.h>
 
-#include "../item/nodeItem.h"
+#include <qt/enums/nodeItemEnum.h>
 
+class QPainter;
+class NodePort;
+class VarGenerate;
+class Application;
+class QMenu;
+class MainWidget;
 class NodeItemInfo;
 class NodeItemGenerateInfo;
 class NodePortLinkInfo;
@@ -35,7 +41,6 @@ protected:
 	Application *applicationInstancePtr = nullptr;
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
-	
 protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
@@ -43,7 +48,10 @@ protected:
 	virtual bool sortNodeItemInfo( );
 	virtual bool connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code );
 protected:
-
+	virtual void nodeItemErrorMsgPrintf( NodeItem *node_item, const QString &error_msg );
+	virtual void nodeItemInfoMsgPrintf( NodeItem *node_item, const QString &normal_msg );
+	virtual void nodeItemNormalMsgPrintf( NodeItem *node_item, const QString &normal_msg );
+	virtual void nodeItemSelects( const std_vector< NodeItem * > &node_item_select_vector );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -104,6 +112,10 @@ Q_SIGNALS:
 	void generateNodeItemSignal( NodeItem *create_ptr );
 	void nodeItemInfoRefChangeInputNodeItem( NodeItemInfo *node_item_info );
 	void nodeItemInfoRefChangeOutputNodeItem( NodeItemInfo *node_item_info );
+	void nodeItemErrorMsgPrintfSignal( NodeItem *node_item, const QString &error_msg );
+	void nodeItemInfoMsgPrintfSignal( NodeItem *node_item, const QString &normal_msg );
+	void nodeItemNormalMsgPrintfSignal( NodeItem *node_item, const QString &normal_msg );
+	void nodeItemSelectsSignal( const std_vector< NodeItem * > &node_item_select_vector );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

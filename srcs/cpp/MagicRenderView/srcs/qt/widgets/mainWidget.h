@@ -8,9 +8,7 @@
 
 #include <alias/type_alias.h>
 
-#include "../node/item/nodeItem.h"
-
-#include "../varType/I_Type.h"
+#include <qt/enums/nodeItemEnum.h>
 
 class MainScrollAreaWidget;
 class NodeItemInfo;

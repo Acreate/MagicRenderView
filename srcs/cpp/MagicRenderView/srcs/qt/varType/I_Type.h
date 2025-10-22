@@ -3,7 +3,7 @@
 #pragma once
 #include <QObject>
 
-#include "../../alias/type_alias.h"
+#include <alias/type_alias.h>
 
 class I_Stack;
 /// @brief 类型接口

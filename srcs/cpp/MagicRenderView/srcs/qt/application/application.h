@@ -3,8 +3,8 @@
 #pragma once
 
 #include <QApplication>
+#include <QVariant>
 #include <qfont.h>
-#include <qfontmetrics.h>
 
 #include <alias/type_alias.h>
 

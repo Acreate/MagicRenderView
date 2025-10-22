@@ -6,6 +6,8 @@
 
 #include "../../application/application.h"
 
+#include "../../tools/tools.h"
+
 #include "../../varType/I_Var.h"
 
 #include "../../widgets/mainWidget.h"

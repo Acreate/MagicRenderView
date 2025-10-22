@@ -5,16 +5,25 @@
 
 #include <qt/application/application.h>
 #include <qt/generate/varGenerate.h>
+#include <qt/node/item/nodeItem.h>
 #include <qt/node/nodeItemMenu/nodeItemMenu.h>
 #include <qt/node/prot/inputProt/nodeInputPort.h>
+#include <qt/node/prot/outputProt/nodeOutputPort.h>
+#include <qt/tools/tools.h>
+#include <qt/varType/I_Type.h>
+#include <qt/varType/I_Var.h>
 #include <qt/widgets/mainWidget.h>
 
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
 
-#include "../../varType/I_Var.h"
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
+
+	connect( this, &NodeDirector::nodeItemInfoMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
+	connect( this, &NodeDirector::nodeItemNormalMsgPrintfSignal, this, &NodeDirector::nodeItemNormalMsgPrintf );
+	connect( this, &NodeDirector::nodeItemErrorMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
+	connect( this, &NodeDirector::nodeItemSelectsSignal, this, &NodeDirector::nodeItemSelects );
 }
 NodeItemInfoScrollAreaWidget * NodeDirector::requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr ) {
 	return nullptr;
@@ -135,7 +144,7 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		auto inputParentNodeItem = input_port->parentItem;
 		NodeItemInfo *inputInfo;
 		if( getNodeItemInfo( inputParentNodeItem, inputInfo ) == false ) {
-			QString msg(  QObject::tr("%1 找不到匹配的具体输入" ));
+			QString msg( QObject::tr( "%1 找不到匹配的具体输入" ) );
 			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
 			return;
 		}
@@ -365,7 +374,7 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 
 	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 ) {
-		QString msg(  QObject::tr("0x%1 不存在任何节点信息") );
+		QString msg( QObject::tr( "0x%1 不存在任何节点信息" ) );
 		QString hex = QString::number( ( size_t ) this, 16 );
 		tools::debug::printError( msg.arg( hex.toUpper( ), 8, '0' ) );
 		return false;
@@ -382,13 +391,13 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 			else if( outputItem == nullptr && itemGenerateInfo[ index ]->nodeItem->generateCode == output_nodeitem_code )
 				outputItem = itemGenerateInfo[ index ]->nodeItem;
 	if( inputItem == nullptr ) {
-		QString msg(  QObject::tr("%1 不存在匹配的输入节点") );
+		QString msg( QObject::tr( "%1 不存在匹配的输入节点" ) );
 		QString hex = QString::number( input_nodeitem_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
 	}
 	if( outputItem == nullptr ) {
-		QString msg(  QObject::tr("%1 不存在匹配的输出节点") );
+		QString msg( QObject::tr( "%1 不存在匹配的输出节点" ) );
 		QString hex = QString::number( output_nodeitem_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
@@ -403,7 +412,7 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 		if( inputArrayPtr[ index ].first->generateCode == input_prot_code )
 			input = inputArrayPtr[ index ].first;
 	if( input == nullptr ) {
-		QString msg(  QObject::tr("%1 不存在匹配的输入端口") );
+		QString msg( QObject::tr( "%1 不存在匹配的输入端口" ) );
 		QString hex = QString::number( input_prot_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
@@ -417,18 +426,26 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 		if( outputArrayPtr[ index ].first->generateCode == outut_prot_code )
 			output = outputArrayPtr[ index ].first;
 	if( output == nullptr ) {
-		QString msg(  QObject::tr("%1 不存在匹配的输出端口") );
+		QString msg( QObject::tr( "%1 不存在匹配的输出端口" ) );
 		QString hex = QString::number( outut_prot_code );
 		tools::debug::printError( msg.arg( hex.toUpper( ) ) );
 		return false;
 	}
 	bool resultOk = this->linkInstallPort( input, output );
 	if( resultOk == false ) {
-		QString msg(  QObject::tr("[%1.%2 -> %3.%4] 连接异常") );
+		QString msg( QObject::tr( "[%1.%2 -> %3.%4] 连接异常" ) );
 		tools::debug::printError( msg.arg( inputItem->getMetaObjectPathName( ) ).arg( input->getMetaObjectPathName( ) ).arg( outputItem->getMetaObjectPathName( ) ).arg( output->getMetaObjectPathName( ) ) );
 		return false;
 	}
 	return resultOk;
+}
+void NodeDirector::nodeItemErrorMsgPrintf( NodeItem *node_item, const QString &error_msg ) {
+}
+void NodeDirector::nodeItemInfoMsgPrintf( NodeItem *node_item, const QString &normal_msg ) {
+}
+void NodeDirector::nodeItemNormalMsgPrintf( NodeItem *node_item, const QString &normal_msg ) {
+}
+void NodeDirector::nodeItemSelects( const std_vector< NodeItem * > &node_item_select_vector ) {
 }
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {

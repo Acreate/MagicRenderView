@@ -11,7 +11,7 @@
 #include <qt/widgets/mainScrollAreaWidget.h>
 #include <qt/widgets/mainWidget.h>
 
-#include "../node/director/nodeDirector.h"
+#include <qt/node/director/nodeDirector.h>
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 
