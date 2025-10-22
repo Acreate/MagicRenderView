@@ -13,14 +13,12 @@ class NodeModuleWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	const std_vector< std_vector< NodeItemInfo * > > *runList;
-	std_vector<NodeModuleItemWidget*> subItemWidget;
-	QVBoxLayout* mainLayout;
+	std_vector< NodeModuleItemWidget * > subItemWidget;
+	QVBoxLayout *mainLayout;
 	size_t currentIndex;
 public:
 	NodeModuleWidget( QWidget *parent = nullptr );
-	virtual void clear( ) {
-		runList = nullptr;
-	}
+	virtual void clear( );
 	virtual const std_vector< std_vector< NodeItemInfo * > > * getRunList( ) const;
 	virtual void setRunList( const std_vector< std_vector< NodeItemInfo * > > *run_list );
 	virtual size_t getCurrentRunNodeItemInfoVector( std_vector< NodeItemInfo * > &result_list ) const;
@@ -48,6 +46,12 @@ public:
 		currentIndex = runList->size( );
 		return true;
 	}
+	virtual bool isEnd( ) {
+		return currentIndex == runList->size( );
+	}
+	virtual size_t getCurrentIndex( ) const { return currentIndex; }
+	virtual size_t getCurrentCount( ) const { return runList->size( ); }
+	virtual const std_vector< std_vector< NodeItemInfo * > > * getData( ) const { return runList; }
 };
 
 #endif // NODEMODULEWIDGET_H_H_HEAD__FILE__

@@ -20,6 +20,7 @@ protected:
 	NodeItemInfo *currentNodeItemInfo;
 protected:
 	std_vector< std_vector< NodeItemInfo * > > runList;
+	std_vector< std_vector< NodeItemInfo * > > runHistoryVector;
 	const NodeItemInfo *errorNodeItemInfo;
 protected:
 	Application *application;
@@ -34,6 +35,7 @@ protected:
 	QPushButton *nextBtn;
 protected:
 	virtual void run( );
+	virtual bool runNodeItemInfoVector( const std_vector< NodeItemInfo * > &run_node_item_info );
 	virtual void setRunBtnStatus( bool flag );
 	virtual void runNext( );
 	virtual void builder( );

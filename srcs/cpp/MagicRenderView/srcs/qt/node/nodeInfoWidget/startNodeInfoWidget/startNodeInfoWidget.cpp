@@ -11,27 +11,32 @@
 #include "nodeModuleScrollArea.h"
 #include "nodeModuleWidget.h"
 void StartNodeInfoWidget::run( ) {
-	if( nodeModuleWidget->toBegin( ) == false ) {
-		setRunBtnStatus( false );
+	if( nodeModuleWidget->isEnd( ) == true )
 		return;
-	}
-	std_vector< std_vector< NodeItemInfo * > > runHistoryVector;
+	setRunBtnStatus( false );
 	std_vector< NodeItemInfo * > resultList;
 	while( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) ) {
-		// todo : 执行节点
-
-		runHistoryVector.emplace_back( resultList ); // 执行历史
+		if( runNodeItemInfoVector( resultList ) == false )
+			break;
 		if( nodeModuleWidget->next( ) == false )
 			break;
 	}
-	nextBtn->setEnabled( false );
+	nextBtn->setEnabled( true );
+}
+bool StartNodeInfoWidget::runNodeItemInfoVector( const std_vector< NodeItemInfo * > &run_node_item_info ) {
+
+	// todo : 执行节点
+	
+	runHistoryVector.emplace_back( run_node_item_info ); // 执行历史
+	return true;
 }
 void StartNodeInfoWidget::setRunBtnStatus( bool flag ) {
 	runBtn->setEnabled( flag );
 	nextBtn->setEnabled( flag );
 }
 void StartNodeInfoWidget::runNext( ) {
-	if( nodeModuleWidget->next( ) == false ) {
+	std_vector< NodeItemInfo * > resultList;
+	if( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) == false || runNodeItemInfoVector( resultList ) || nodeModuleWidget->next( ) == false ) {
 		setRunBtnStatus( false );
 		return;
 	}

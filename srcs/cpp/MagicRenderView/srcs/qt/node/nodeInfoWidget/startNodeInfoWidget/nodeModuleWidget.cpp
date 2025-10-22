@@ -9,6 +9,14 @@ NodeModuleWidget::NodeModuleWidget( QWidget *parent ) : QWidget( parent ), runLi
 	mainLayout = new QVBoxLayout( this );
 	mainLayout->addSpacerItem( new QSpacerItem( 10, 20, QSizePolicy::Expanding, QSizePolicy::MinimumExpanding ) );
 }
+void NodeModuleWidget::clear( ) {
+	runList = nullptr;
+	size_t count = subItemWidget.size( );
+	auto itemWidgetArrayPtr = subItemWidget.data( );
+	for( ; currentIndex < count; ++currentIndex )
+		delete itemWidgetArrayPtr[ currentIndex ];
+	subItemWidget.clear( );
+}
 const std_vector< std_vector< NodeItemInfo * > > * NodeModuleWidget::getRunList( ) const { return runList; }
 void NodeModuleWidget::setRunList( const std_vector< std_vector< NodeItemInfo * > > *run_list ) {
 	runList = run_list;
