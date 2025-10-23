@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <qboxlayout.h>
 
+#include "runNodeModuleItemWidget.h"
+
 #include "../../director/nodeItemInfo.h"
 
 #include "../../item/nodeItem.h"
@@ -14,7 +16,7 @@ NodeModuleItemWidget::NodeModuleItemWidget( const std_vector< NodeItemInfo * > &
 	QString labelTitile( "%1 [%2]" );
 	for( size_t index = 0; index < count; ++index ) {
 		NodeItem *nodeItem = data[ index ]->getNodeItem( );
-		auto label = new QLabel( labelTitile.arg( nodeItem->getMetaObjectPathName( ) ).arg( nodeItem->getGenerateCode( ) ), this );
+		auto label = new RunNodeModuleItemWidget( nodeItem, this );
 		mainLayout->addWidget( label );
 	}
 	mainLayout->addSpacerItem( new QSpacerItem( 10, 10, QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding ) );
