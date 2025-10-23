@@ -14,7 +14,7 @@
 #include "../../../tools/tools.h"
 
 #include "../../item/nodeItem.h"
-void StartNodeInfoWidget::run( ) {
+void StartNodeInfoWidget::nodeItemRun( ) {
 	if( nodeModuleWidget->isEnd( ) == true )
 		return;
 	setRunBtnStatus( false );
@@ -30,7 +30,7 @@ void StartNodeInfoWidget::run( ) {
 bool StartNodeInfoWidget::runNodeItemInfoVector( const std_vector< NodeItemInfo * > &run_node_item_info ) {
 
 	// todo : 执行节点
-	
+
 	runHistoryVector.emplace_back( run_node_item_info ); // 执行历史
 	return true;
 }
@@ -38,7 +38,7 @@ void StartNodeInfoWidget::setRunBtnStatus( bool flag ) {
 	runBtn->setEnabled( flag );
 	nextBtn->setEnabled( flag );
 }
-void StartNodeInfoWidget::runNext( ) {
+void StartNodeInfoWidget::nodeItemRunNext( ) {
 	std_vector< NodeItemInfo * > resultList;
 	if( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) == false || runNodeItemInfoVector( resultList ) || nodeModuleWidget->next( ) == false ) {
 		setRunBtnStatus( false );
@@ -172,7 +172,7 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 
 	runBtn = new QPushButton( topBtnWidget );
 	runBtn->setText( QObject::tr( "运行" ) );
-	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::run );
+	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::nodeItemRun );
 	qhBoxLayout->addWidget( runBtn );
 
 	builderBtn = new QPushButton( topBtnWidget );
@@ -183,7 +183,7 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	qhBoxLayout = new QHBoxLayout( bottomBtnWidget );
 	nextBtn = new QPushButton( QObject::tr( "下一步" ), bottomBtnWidget );
 	qhBoxLayout->addWidget( nextBtn );
-	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::runNext );
+	connect( nextBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::nodeItemRunNext );
 
 	application = Application::getApplicationInstancePtr( );
 	nodeDirector = application->getNodeDirector( );

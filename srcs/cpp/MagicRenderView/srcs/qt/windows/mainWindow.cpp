@@ -19,6 +19,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 
 	appInstance = Application::getApplicationInstancePtr( );
 	keyFirst = "Application/MainWindow";
+	savefilePathKey = "saveFilePath";
 
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
 	setBaseSize( size );
@@ -61,30 +62,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	} );
 
 	currentAction = currentMenu->addAction( "加载..." );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		QString workPath = QDir::currentPath( );
-		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
-		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
-		QString loadFileName = QFileDialog::getOpenFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
-		if( loadFileName.isEmpty( ) ) {
-			tools::debug::printError( "文件异常，非正常文件，空或者没有读取权限" );
-			return;
-		}
-		appInstance->setAppIniValue( normalKey, loadFileName );
-		QFile file( loadFileName );
-		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
-			QByteArray byteArray = file.readAll( );
-			char *sourceDataPtr = byteArray.data( );
-			size_t sourceDataCount = byteArray.size( );
-			size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
-			if( loadDataBinCount == 0 ) {
-				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
-				return;
-			}
-			currentSaveFilePath = loadFileName;
-			return;
-		}
-	} );
+	connect( currentAction, &QAction::triggered, this, &MainWindow::normalLoadFile );
 
 	currentMenu = new QMenu( "配置", this );
 	mainMenuBar->addMenu( currentMenu );
@@ -104,23 +82,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	connect( currentAction, &QAction::triggered, this, &MainWindow::quickSave );
 
 	currentAction = currentMenu->addAction( "快速加载" );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		QString workPath = QDir::currentPath( );
-		QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "loadFilePath" );
-		workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
-		QFile file( workPath );
-		if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
-			QByteArray byteArray = file.readAll( );
-			char *sourceDataPtr = byteArray.data( );
-			size_t sourceDataCount = byteArray.size( );
-			size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
-			if( loadDataBinCount == 0 ) {
-				tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
-				return;
-			}
-			return;
-		}
-	} );
+	connect( currentAction, &QAction::triggered, this, &MainWindow::quickLoadFile );
 
 	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
 	connect( shortcut, &QShortcut::activated, [this]( ) {
@@ -155,7 +117,7 @@ void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 }
 void MainWindow::overSave( ) {
 	QString workPath = QDir::currentPath( );
-	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
+	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, savefilePathKey );
 	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 	QString saveFileName = QFileDialog::getSaveFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview)" );
 	if( saveFileName.isEmpty( ) )
@@ -165,7 +127,7 @@ void MainWindow::overSave( ) {
 	lastIndexOf = fileName.lastIndexOf( "." );
 	if( lastIndexOf == -1 )
 		saveFileName.append( ".mr" );
-	appInstance->setAppIniValue( normalKey, saveFileName );
+
 	std_vector< uint8_t > saveBin;
 	if( appInstance->getNodeDirector( )->toDataBin( saveBin ) == 0 ) {
 		tools::debug::printError( "保存异常，请检查保存功能" );
@@ -176,6 +138,9 @@ void MainWindow::overSave( ) {
 	if( file.open( QIODeviceBase::Truncate | QIODeviceBase::WriteOnly ) ) {
 		file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
 		currentSaveFilePath = saveFileName;
+		appInstance->syncAppValueIniFile( );
+		appInstance->setAppIniValue( normalKey, saveFileName );
+		appInstance->syncAppValueIniFile( );
 		return;
 	}
 }
@@ -196,6 +161,50 @@ void MainWindow::normalSave( ) {
 		return;
 	}
 }
+void MainWindow::overLoadFile( ) {
+	QString workPath = QDir::currentPath( );
+	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, savefilePathKey );
+	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+	if( QFileInfo( workPath ).isDir( ) ) {
+		normalLoadFile( );
+	}
+	QFile file( workPath );
+	if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+		QByteArray byteArray = file.readAll( );
+		char *sourceDataPtr = byteArray.data( );
+		size_t sourceDataCount = byteArray.size( );
+		size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
+		if( loadDataBinCount == 0 ) {
+			tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+			return;
+		}
+		return;
+	}
+}
+void MainWindow::normalLoadFile( ) {
+	QString workPath = QDir::currentPath( );
+	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, savefilePathKey );
+	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
+	QString loadFileName = QFileDialog::getOpenFileName( this, "文件保存", workPath, "魅力渲染 (*.mr *.mrv *.magicrender *.magicrenderview);;任意文件 (*.*);;其他文件 (*)" );
+	if( loadFileName.isEmpty( ) ) {
+		tools::debug::printError( "文件异常，非正常文件，空或者没有读取权限" );
+		return;
+	}
+	appInstance->setAppIniValue( normalKey, loadFileName );
+	QFile file( loadFileName );
+	if( file.open( QIODeviceBase::ReadOnly | QIODeviceBase::ExistingOnly ) ) {
+		QByteArray byteArray = file.readAll( );
+		char *sourceDataPtr = byteArray.data( );
+		size_t sourceDataCount = byteArray.size( );
+		size_t loadDataBinCount = appInstance->getNodeDirector( )->loadDataBin( ( const uint8_t * ) sourceDataPtr, sourceDataCount );
+		if( loadDataBinCount == 0 ) {
+			tools::debug::printError( "文件异常，非程序存档，请检查文件内容是否正确" );
+			return;
+		}
+		currentSaveFilePath = loadFileName;
+		return;
+	}
+}
 void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode ) {
 	mainWidget->ensureVisibleToItemNode( targetItemNode );
 }
@@ -212,7 +221,8 @@ size_t MainWindow::loadMainWidgetBin( const uint8_t *bin_data_ptr, const size_t 
 }
 void MainWindow::quickSave( ) {
 	QString workPath = QDir::currentPath( );
-	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, "saveFilePath" );
+	
+	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, savefilePathKey );
 	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 
 	qsizetype lastIndexOf = workPath.lastIndexOf( "/" );
@@ -232,6 +242,9 @@ void MainWindow::quickSave( ) {
 		file.write( ( const char * ) saveBin.data( ), saveBin.size( ) );
 		return;
 	}
+}
+void MainWindow::quickLoadFile( ) {
+	overLoadFile(  );
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );

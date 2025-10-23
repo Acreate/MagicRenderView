@@ -34,10 +34,10 @@ protected:
 	QWidget *bottomBtnWidget;
 	QPushButton *nextBtn;
 protected:
-	virtual void run( );
+	virtual void nodeItemRun( );
 	virtual bool runNodeItemInfoVector( const std_vector< NodeItemInfo * > &run_node_item_info );
 	virtual void setRunBtnStatus( bool flag );
-	virtual void runNext( );
+	virtual void nodeItemRunNext( );
 	virtual void builder( );
 	virtual void updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info );
 	virtual void updateLayout( );

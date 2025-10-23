@@ -29,13 +29,18 @@ protected:
 	QPoint oldPos, buffPos;
 	/// @brief 是否记录坐标
 	bool makePos;
+	/// @brief 当前使用的路径
 	QString currentSaveFilePath;
+	/// @brief 文件保存路径 key
+	QString savefilePathKey;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
 	virtual void overSave();
 	virtual void normalSave();
+	virtual void overLoadFile();
+	virtual void normalLoadFile();
 	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
 	/// @param targetItemNode 目标节点
 	virtual void ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode );
@@ -69,6 +74,7 @@ public:
 		return loadMainWidgetBin( bin_vector.data( ), bin_vector.size( ) );
 	}
 	virtual void quickSave();
+	virtual void quickLoadFile();
 protected:
 	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;
