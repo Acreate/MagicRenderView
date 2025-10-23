@@ -26,7 +26,6 @@
 #include <qt/node/item/generate/genBinTypes.h>
 #include <qt/node/item/generate/genFloatTypes.h>
 #include <qt/node/item/generate/genIntTypes.h>
-#include <qt/node/item/generate/genStringTypes.h>
 #include <qt/node/item/generate/genUIntTypes.h>
 #include <qt/node/item/info/networkInfo.h>
 #include <qt/node/item/info/pathInfo.h>
@@ -93,8 +92,9 @@
 
 #include "../node/item/generate/genQColorTypes.h"
 #include "../node/item/generate/genQImageTypes.h"
-#include "../node/item/jump/jumpGenerate.h"
-#include "../node/item/jump/jumpMark.h"
+#include "../node/item/generate/genQStringTypes.h"
+#include "../node/item/jump/generateNodeJump.h"
+#include "../node/item/jump/makeNodeJimp.h"
 #include "../node/item/mark/markPoint.h"
 
 #include "../varType/stacks/app/nodeDirectorStack.h"
@@ -165,7 +165,7 @@ bool Application::init( ) {
 
 	varGenerate->appendNodeItemGenerateInstance< GenFloatTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenIntTypes >( );
-	varGenerate->appendNodeItemGenerateInstance< GenStringTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenQStringTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenUIntTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenQColorTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenQImageTypes >( );
@@ -176,8 +176,8 @@ bool Application::init( ) {
 	varGenerate->appendNodeItemGenerateInstance< NetworkInfo >( );
 	// todo : 跳
 	varGenerate->appendNodeItemGenerateInstance< MarkPoint >( );
-	varGenerate->appendNodeItemGenerateInstance< JumpMark >( );
-	varGenerate->appendNodeItemGenerateInstance< JumpGenerate >( );
+	varGenerate->appendNodeItemGenerateInstance< MakeNodeJimp >( );
+	varGenerate->appendNodeItemGenerateInstance< GenerateNodeJump >( );
 	// todo : 逻辑节点
 	varGenerate->appendNodeItemGenerateInstance< IfLogic >( );
 	// todo : 计算节点

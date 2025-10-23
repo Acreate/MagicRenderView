@@ -1,13 +1,20 @@
-﻿#include "genStringTypes.h"
+﻿#include "genQStringTypes.h"
+
+#include <QScrollArea>
+
+#include "../../nodeInfoWidget/generateQStringNodeInfoWidget/generateQStringWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
-Imp_StaticMetaInfo( GenStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
+Imp_StaticMetaInfo( GenQStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
-GenStringTypes::GenStringTypes( ) : NodeItem( ) {
+GenQStringTypes::GenQStringTypes( ) : NodeItem( ) {
+
+	generateQStringWidget = new GenerateQStringWidget( this );
+	nodeInfoScrollArea->setWidget( generateQStringWidget );
 }
-bool GenStringTypes::intPortItems( MainWidget *parent ) {
+bool GenQStringTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
 		parent,
 		[this] ( MainWidget *main_widget_parent ) {

@@ -4,9 +4,12 @@
 
 #include "../nodeItem.h"
 
+class GenerateBinWidget;
 class GenBinTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
+protected:
+	GenerateBinWidget* generateBinWidget;
 protected:
 	GenBinTypes( );
 public:

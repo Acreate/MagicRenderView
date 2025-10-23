@@ -1,5 +1,9 @@
 ﻿#include "genBinTypes.h"
 
+#include <QScrollArea>
+
+#include "../../nodeInfoWidget/generateBinNodeInfoWidget/generateBinWidget.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
@@ -7,6 +11,8 @@
 Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
 GenBinTypes::GenBinTypes( ) : NodeItem( ) {
+	generateBinWidget = new GenerateBinWidget( this );
+	nodeInfoScrollArea->setWidget( generateBinWidget );
 }
 bool GenBinTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

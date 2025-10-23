@@ -1,11 +1,18 @@
 ﻿#include "genQImageTypes.h"
 
+#include <QScrollArea>
+
+#include "../../nodeInfoWidget/generateQImageNodeInfoWidget/generateQImageWidget.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/image/qImageOutputPort.h"
 Imp_StaticMetaInfo( GenQImageTypes, QObject::tr( "qt图像" ), QObject::tr( "生成" ) );
 
 GenQImageTypes::GenQImageTypes( ) : NodeItem( ) {
+
+	generateQImageWidget = new GenerateQImageWidget( this );
+	nodeInfoScrollArea->setWidget( generateQImageWidget );
 }
 bool GenQImageTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

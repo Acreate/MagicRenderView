@@ -1,13 +1,14 @@
-﻿#include "jumpMark.h"
+﻿#include "makeNodeJimp.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( JumpMark, QObject::tr( "跳" ), QObject::tr( "坐标" ) );
+Imp_StaticMetaInfo( MakeNodeJimp, QObject::tr( "跳" ), QObject::tr( "坐标" ) );
 
-JumpMark::JumpMark( ) : NodeItem( ) {
+MakeNodeJimp::MakeNodeJimp( ) : NodeItem( ) {
 }
-bool JumpMark::intPortItems( MainWidget *parent ) {
+bool MakeNodeJimp::intPortItems( MainWidget *parent ) {
 
 	return initNodeItem(
 		parent,

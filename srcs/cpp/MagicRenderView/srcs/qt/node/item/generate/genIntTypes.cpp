@@ -1,11 +1,18 @@
 ﻿#include "genIntTypes.h"
 
+#include <QScrollArea>
+
+#include "../../nodeInfoWidget/generateIntNodeInfoWidget/generateIntWidget.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/intOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
 GenIntTypes::GenIntTypes( ) : NodeItem( ) {
+	
+	generateIntWidget = new GenerateIntWidget( this );
+	nodeInfoScrollArea->setWidget( generateIntWidget );
 }
 bool GenIntTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

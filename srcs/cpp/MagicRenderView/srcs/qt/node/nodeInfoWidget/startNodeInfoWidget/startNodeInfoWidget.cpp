@@ -193,6 +193,11 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
 
 	setRunBtnStatus( false );
+	connect( nodeItem, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_ptr ) {
+		if( release_ptr != nodeItem )
+			return;
+		deleteLater( );
+	} );
 }
 
 void StartNodeInfoWidget::updateLayout( ) {

@@ -10,11 +10,9 @@ class StartNode : public NodeItem {
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	StartNodeInfoWidget *nodeInfoWidget;
-	QScrollArea *nodeInfoScrollArea;
 protected:
 	StartNode( );
 public:
-	QWidget * getNodeItemWidget( ) const override;
 	bool intPortItems( MainWidget *parent ) override;
 	Def_Last_Mate_Node_Type( Begin );
 };

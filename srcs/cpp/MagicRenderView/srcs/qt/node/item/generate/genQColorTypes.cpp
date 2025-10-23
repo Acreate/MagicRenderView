@@ -1,5 +1,9 @@
 ﻿#include "genQColorTypes.h"
 
+#include <QScrollArea>
+
+#include "../../nodeInfoWidget/generateQColorNodeInfoWidget/generateQColorWidget.h"
+
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/color/qColorOutputPort.h"
@@ -8,6 +12,9 @@
 Imp_StaticMetaInfo( GenQColorTypes, QObject::tr( "qt颜色" ), QObject::tr( "生成" ) );
 
 GenQColorTypes::GenQColorTypes( ) : NodeItem( ) {
+
+	generateQColorWidget = new GenerateQColorWidget( this );
+	nodeInfoScrollArea->setWidget( generateQColorWidget );
 }
 bool GenQColorTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

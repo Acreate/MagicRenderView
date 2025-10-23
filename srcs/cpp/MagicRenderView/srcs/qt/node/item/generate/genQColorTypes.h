@@ -3,9 +3,12 @@
 #pragma once
 #include "../nodeItem.h"
 
+class GenerateQColorWidget;
 class GenQColorTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
+protected:
+	GenerateQColorWidget* generateQColorWidget;
 protected:
 	GenQColorTypes( );
 public:

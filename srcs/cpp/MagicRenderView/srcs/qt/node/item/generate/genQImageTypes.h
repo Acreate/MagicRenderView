@@ -3,9 +3,12 @@
 #pragma once
 #include "../nodeItem.h"
 
+class GenerateQImageWidget;
 class GenQImageTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
+protected:
+	GenerateQImageWidget* generateQImageWidget;
 protected:
 	GenQImageTypes( );
 public:

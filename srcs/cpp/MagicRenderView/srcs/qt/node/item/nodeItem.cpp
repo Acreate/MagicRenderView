@@ -3,6 +3,7 @@
 #include <QMetaEnum>
 #include <QPainter>
 #include <QPainterPath>
+#include <QScrollArea>
 #include <qdir.h>
 
 #include <qt/application/application.h>
@@ -40,6 +41,13 @@ NodeItem::NodeItem( ) : QObject( ) {
 	inputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
+	
+	nodeInfoScrollArea = new QScrollArea( );
+	nodeInfoScrollArea->setWidgetResizable( true );
+	nodeInfoScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	nodeInfoScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	nodeInfoScrollArea->setMinimumSize( 200, 300 );
+	nodeInfoScrollArea->setBaseSize( 200, 300 );
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
@@ -68,6 +76,7 @@ NodeItem::~NodeItem( ) {
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
+	delete nodeInfoScrollArea;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
 	//setParent( parent );
@@ -484,6 +493,11 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 	if( count < index )
 		return nodeInputProtVector.data( )[ index ].first;
 	return nullptr;
+}
+QWidget * NodeItem::getNodeItemWidget( ) const {
+	if( nodeInfoScrollArea == nullptr || nodeInfoScrollArea->widget( ) == nullptr )
+		return nullptr;
+	return nodeInfoScrollArea;
 }
 
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {

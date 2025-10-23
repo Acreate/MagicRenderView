@@ -43,6 +43,8 @@ protected:
 	static int borderLeftSpace;
 	/// @brief 边缘右侧空间大小
 	static int borderRightSpace;
+	/// @brief 返回窗口
+	QScrollArea *nodeInfoScrollArea;
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -219,7 +221,7 @@ public:
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
-	virtual QWidget * getNodeItemWidget( ) const { return nullptr; }
+	virtual QWidget * getNodeItemWidget( ) const;
 Q_SIGNALS:
 	void releaseThisPtr( NodeItem *release_node_item );
 public: // 二进制相关

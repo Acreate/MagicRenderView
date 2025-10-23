@@ -1,13 +1,13 @@
-﻿#include "jumpGenerate.h"
+﻿#include "generateNodeJump.h"
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/inputProt/inpInputPort/bool/boolInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
 
-Imp_StaticMetaInfo( JumpGenerate, QObject::tr( "跳" ), QObject::tr( "生成" ) );
+Imp_StaticMetaInfo( GenerateNodeJump, QObject::tr( "跳" ), QObject::tr( "生成" ) );
 
-JumpGenerate::JumpGenerate( ) : NodeItem( ) {
+GenerateNodeJump::GenerateNodeJump( ) : NodeItem( ) {
 }
-bool JumpGenerate::intPortItems( MainWidget *parent ) {
+bool GenerateNodeJump::intPortItems( MainWidget *parent ) {
 
 	return initNodeItem(
 		parent,

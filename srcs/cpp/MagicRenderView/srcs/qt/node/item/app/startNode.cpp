@@ -11,17 +11,9 @@ Imp_StaticMetaInfo( StartNode, QObject::tr( "起始" ), QObject::tr( "软件" ) 
 StartNode::StartNode( ) : NodeItem( ) {
 
 	nodeInfoWidget = new StartNodeInfoWidget( this );
-	nodeInfoScrollArea = new QScrollArea( );
 	nodeInfoScrollArea->setWidget( nodeInfoWidget );
-	nodeInfoScrollArea->setWidgetResizable( true );
-	nodeInfoScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-	nodeInfoScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-	nodeInfoScrollArea->setMinimumSize( 200, 300 );
-	nodeInfoScrollArea->setBaseSize( 200, 300 );
 }
-QWidget * StartNode::getNodeItemWidget( ) const {
-	return nodeInfoScrollArea;
-}
+
 bool StartNode::intPortItems( MainWidget *parent ) {
 
 	return initNodeItem(
