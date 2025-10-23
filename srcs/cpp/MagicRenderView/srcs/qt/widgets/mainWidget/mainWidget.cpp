@@ -1,7 +1,7 @@
 ﻿#include "./mainWidget.h"
 
-#include <QMetaEnum>
 #include <QClipboard>
+#include <QMetaEnum>
 #include <QMouseEvent>
 #include <QPainter>
 #include <qboxlayout.h>
@@ -15,7 +15,7 @@
 
 #include "mainScrollAreaWidget.h"
 
-#include "../node/item/nodeItem.h"
+#include <qt/node/item/nodeItem.h>
 
 MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;

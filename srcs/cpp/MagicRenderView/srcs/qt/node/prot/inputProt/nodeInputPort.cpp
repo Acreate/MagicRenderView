@@ -3,17 +3,7 @@
 #include <QPainter>
 
 #include <qt/application/application.h>
-
-#include "../../../generate/varGenerate.h"
-
-#include "../../../tools/tools.h"
-
-#include "../../../varType/I_Type.h"
-#include "../../../varType/I_Var.h"
-
-#include "../../../widgets/mainWidget.h"
-
-#include "../../item/nodeItem.h"
+#include <qt/node/item/nodeItem.h>
 
 Imp_StaticMetaInfo( NodeInputPort, QObject::tr( "NodeInputPort" ), QObject::tr( "inputProt" ) );
 

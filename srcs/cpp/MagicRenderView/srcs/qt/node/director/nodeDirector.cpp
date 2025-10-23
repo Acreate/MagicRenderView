@@ -12,7 +12,7 @@
 #include <qt/tools/tools.h>
 #include <qt/varType/I_Type.h>
 #include <qt/varType/I_Var.h>
-#include <qt/widgets/mainWidget.h>
+#include <qt/widgets/mainWidget/mainWidget.h>
 
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"

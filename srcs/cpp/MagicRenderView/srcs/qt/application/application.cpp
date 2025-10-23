@@ -133,7 +133,7 @@ bool Application::init( ) {
 		settings->sync( );
 		settings->remove( key );
 		if( fileInfo.exists( ) == false )
-			qDebug( ) << "无法创建匹配的 ini 文件";
+			tools::debug::printError( QObject::tr( "无法创建匹配的 ini 文件" ) );
 		else
 			settings->sync( );
 	}

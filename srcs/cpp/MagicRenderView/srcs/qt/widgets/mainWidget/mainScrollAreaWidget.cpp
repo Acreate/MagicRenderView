@@ -5,6 +5,8 @@
 
 #include "mainWidget.h"
 
+#include <qt/windows/mainWindow.h>
+
 MainScrollAreaWidget::MainScrollAreaWidget( MainWindow *main_window ) : QScrollArea( main_window ), mainWidget( nullptr ) {
 	isMidMouse = 0;
 }

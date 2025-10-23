@@ -7,11 +7,10 @@
 #include <QShortcut>
 
 #include <qt/application/application.h>
-#include <qt/tools/tools.h>
-#include <qt/widgets/mainScrollAreaWidget.h>
-#include <qt/widgets/mainWidget.h>
-
 #include <qt/node/director/nodeDirector.h>
+#include <qt/tools/tools.h>
+#include <qt/widgets/mainWidget/mainScrollAreaWidget.h>
+#include <qt/widgets/mainWidget/mainWidget.h>
 
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 

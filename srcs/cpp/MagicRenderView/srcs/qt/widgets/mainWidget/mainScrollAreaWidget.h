@@ -3,8 +3,8 @@
 #pragma once
 #include <QScrollArea>
 
-#include "../windows/mainWindow.h"
-
+class MainWidget;
+class MainWindow;
 class MainScrollAreaWidget : public QScrollArea {
 	Q_OBJECT;
 protected:

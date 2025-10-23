@@ -1,17 +1,14 @@
 ﻿#include "nodeDirectorStack.h"
 
 #include <qt/node/director/nodeDirector.h>
-
-#include "../../../node/director/nodeItemInfo.h"
-#include "../../../node/director/nodePortLinkInfo.h"
-#include "../../../node/item/nodeItem.h"
-#include "../../../node/nodeItemMenu/nodeItemMenu.h"
-#include "../../../node/prot/inputProt/nodeInputPort.h"
-#include "../../../node/prot/outputProt/nodeOutputPort.h"
-
-#include "../../../tools/tools.h"
-
-#include "../../../widgets/mainWidget.h"
+#include <qt/node/director/nodeItemInfo.h>
+#include <qt/node/director/nodePortLinkInfo.h>
+#include <qt/node/item/nodeItem.h>
+#include <qt/node/nodeItemMenu/nodeItemMenu.h>
+#include <qt/node/prot/inputProt/nodeInputPort.h>
+#include <qt/node/prot/outputProt/nodeOutputPort.h>
+#include <qt/tools/tools.h>
+#include <qt/widgets/mainWidget/mainWidget.h>
 
 NodeDirectorStack::NodeDirectorStack( ) : I_Stack( typeid( t_current_type ) ) {
 

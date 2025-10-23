@@ -7,14 +7,11 @@
 #include <qdir.h>
 
 #include <qt/application/application.h>
+#include <qt/generate/varGenerate.h>
 #include <qt/node/prot/inputProt/nodeInputPort.h>
 #include <qt/node/prot/outputProt/nodeOutputPort.h>
+#include <qt/tools/tools.h>
 #include <qt/varType/I_Var.h>
-#include <qt/widgets/mainWidget.h>
-
-#include "../../generate/varGenerate.h"
-
-#include "../../tools/tools.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 
