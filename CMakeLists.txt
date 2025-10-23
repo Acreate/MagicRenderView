@@ -27,7 +27,7 @@ init_std_builder_path()
 find_package( Qt6 QUIET COMPONENTS Widgets Core LinguistTools )
 if( NOT Qt6_FOUND OR NOT EXISTS "${Qt6_DIR}" )
     # # 使用 qt6
-    set( Qt6_DIR "C:/Qt/6.8.2/msvc2022_64/lib/cmake/QT6/" )
+    set( Qt6_DIR "C:/Qt/6.10.0/msvc2022_64/lib/cmake/QT6/" )
     init_qt_dir_event( "${Qt6_DIR}" )
     find_package( Qt6 REQUIRED COMPONENTS Widgets Core LinguistTools  )
 else()

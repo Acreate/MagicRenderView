@@ -15,6 +15,7 @@
 
 #include "mainScrollAreaWidget.h"
 
+#include "../node/item/nodeItem.h"
 
 MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;

@@ -4,8 +4,12 @@
 
 #include "../../../node/director/nodeItemInfo.h"
 #include "../../../node/director/nodePortLinkInfo.h"
+#include "../../../node/item/nodeItem.h"
 #include "../../../node/nodeItemMenu/nodeItemMenu.h"
 #include "../../../node/prot/inputProt/nodeInputPort.h"
+#include "../../../node/prot/outputProt/nodeOutputPort.h"
+
+#include "../../../tools/tools.h"
 
 #include "../../../widgets/mainWidget.h"
 
