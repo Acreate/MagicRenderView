@@ -102,6 +102,7 @@ protected:
 	Application *applicationInstancePtr;
 protected:
 	NodeItem( );
+	NodeItem( QScrollArea *node_info_scroll_area );
 public:
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	~NodeItem( ) override;

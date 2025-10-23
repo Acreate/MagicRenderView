@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateBinNodeInfoWidget/generateBinWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
@@ -10,7 +12,7 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
-GenBinTypes::GenBinTypes( ) : NodeItem( ) {
+GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateBinWidget = new GenerateBinWidget( this );
 	nodeInfoScrollArea->setWidget( generateBinWidget );
 }

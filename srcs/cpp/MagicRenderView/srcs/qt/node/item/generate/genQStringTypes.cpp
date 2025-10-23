@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateQStringNodeInfoWidget/generateQStringWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
@@ -9,7 +11,7 @@
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 Imp_StaticMetaInfo( GenQStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
-GenQStringTypes::GenQStringTypes( ) : NodeItem( ) {
+GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
 	generateQStringWidget = new GenerateQStringWidget( this );
 	nodeInfoScrollArea->setWidget( generateQStringWidget );

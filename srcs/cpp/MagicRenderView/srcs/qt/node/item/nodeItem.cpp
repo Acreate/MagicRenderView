@@ -30,16 +30,17 @@ int NodeItem::borderLeftSpace = 0;
 /// @brief 边缘右侧空间大小
 int NodeItem::borderRightSpace = 0;
 
-NodeItem::NodeItem( ) : QObject( ) {
+NodeItem::NodeItem( ) : NodeItem( new QScrollArea( ) ) {
 
+}
+NodeItem::NodeItem( QScrollArea *node_info_scroll_area ) : QObject( ), nodeInfoScrollArea( node_info_scroll_area ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 
 	nodeItemRender = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	inputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
-	
-	nodeInfoScrollArea = new QScrollArea( );
+
 	nodeInfoScrollArea->setWidgetResizable( true );
 	nodeInfoScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	nodeInfoScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );

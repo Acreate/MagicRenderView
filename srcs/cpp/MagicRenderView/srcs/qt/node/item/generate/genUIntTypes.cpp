@@ -2,14 +2,16 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateUIntNodeInfoWidget/generateUintWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenUIntTypes, QObject::tr( "无符号" ), QObject::tr( "生成" ) );
 
-GenUIntTypes::GenUIntTypes( ) : NodeItem( ) {
-	
+GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
+
 	generateUintWidget = new GenerateUintWidget( this );
 	nodeInfoScrollArea->setWidget( generateUintWidget );
 }

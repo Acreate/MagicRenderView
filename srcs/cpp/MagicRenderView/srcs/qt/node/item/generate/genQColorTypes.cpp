@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateQColorNodeInfoWidget/generateQColorWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
@@ -11,7 +13,7 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenQColorTypes, QObject::tr( "qt颜色" ), QObject::tr( "生成" ) );
 
-GenQColorTypes::GenQColorTypes( ) : NodeItem( ) {
+GenQColorTypes::GenQColorTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
 	generateQColorWidget = new GenerateQColorWidget( this );
 	nodeInfoScrollArea->setWidget( generateQColorWidget );

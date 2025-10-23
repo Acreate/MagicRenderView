@@ -2,6 +2,7 @@
 
 #include "qt/application/application.h"
 #include "qt/tools/tools.h"
+#include "qt/widgets/generateListWidget/generateListScrollArea.h"
 #include "qt/windows/mainWindow.h"
 
 int main( int argc, char *argv[ ] ) {
@@ -13,5 +14,9 @@ int main( int argc, char *argv[ ] ) {
 	}
 	MainWindow mainwidget;
 	mainwidget.show( );
+
+	GenerateListScrollArea scrollArea;
+	scrollArea.show( );
+
 	return app.exec( );
 }

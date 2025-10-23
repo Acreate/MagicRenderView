@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateQImageNodeInfoWidget/generateQImageWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
@@ -9,7 +11,7 @@
 #include "../../prot/outputProt/impOutputPort/image/qImageOutputPort.h"
 Imp_StaticMetaInfo( GenQImageTypes, QObject::tr( "qt图像" ), QObject::tr( "生成" ) );
 
-GenQImageTypes::GenQImageTypes( ) : NodeItem( ) {
+GenQImageTypes::GenQImageTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
 	generateQImageWidget = new GenerateQImageWidget( this );
 	nodeInfoScrollArea->setWidget( generateQImageWidget );

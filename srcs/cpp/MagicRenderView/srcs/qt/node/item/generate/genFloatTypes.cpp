@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/generateFloatNodeInfoWidget/generateFloatWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
@@ -9,7 +11,7 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
-GenFloatTypes::GenFloatTypes( ) : NodeItem( ) {
+GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
 	generateFloatWidget = new GenerateFloatWidget( this );
 	nodeInfoScrollArea->setWidget( generateFloatWidget );
