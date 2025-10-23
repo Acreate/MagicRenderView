@@ -1,8 +1,10 @@
 ﻿#include <QPainter>
+#include <QScrollBar>
 
 #include "GenerateListItemWidget.h"
 #include "GenerateListWidget.h"
 #include "generateAddInfoWidget.h"
+#include "generateListScrollArea.h"
 bool GenerateListWidget::addItem( GenerateListItemWidget *new_list_item_widget ) {
 	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
@@ -58,33 +60,50 @@ bool GenerateListWidget::inster( GenerateListItemWidget *new_list_item_widget, c
 }
 bool GenerateListWidget::sortItemWidget( ) {
 	size_t count = generateListItemWidgets.size( );
-	if( count == 0 )
-		return true;
-	int x = 0, y = 0;
-	generateAddInfoWidget->move( x, y );
+	int x = 0, y = 0, offset = 2;
+	generateAddInfoWidget->move( offset, y );
 	int width = generateAddInfoWidget->width( );
 	if( width > x )
 		x = width;
 	y += generateAddInfoWidget->height( );
+	if( count == 0 ) {
+		generateAddInfoWidget->setFixedWidth( x + offset );
+		setFixedSize( x + offset, y );
+		generateListScrollArea->setFixedSize( x + verticalScrollBar->width( ) + offset * 2, y + horizontalScrollBar->height( ) + offset );
+		return true;
+	}
 	auto data = generateListItemWidgets.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == nullptr )
+		if( data[ index ] == nullptr ) { // 停止，并且重置所有宽度
+			count = index + 1;
+			index = 0;
+			for( ; index < count; ++index )
+				data[ index ]->setFixedWidth( x + offset );
+			generateAddInfoWidget->setFixedWidth( x + offset );
 			break;
-		else {
-			data[ index ]->move( 0, y );
+		} else {
+			data[ index ]->move( offset, y );
 			width = data[ index ]->width( );
 			if( width > x )
 				x = width;
 			y += data[ index ]->height( );
+
 		}
-	setMinimumSize( x, y );
+	setFixedSize( x + offset, y );
+	generateListScrollArea->setFixedSize( x + verticalScrollBar->width( ) + offset * 2, y + horizontalScrollBar->height( ) + offset );
 	return true;
 }
-GenerateListWidget::GenerateListWidget( QWidget *parent ) : QWidget( parent ) {
+GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidget( parent ) {
 	generateAddInfoWidget = new GenerateAddInfoWidget( this );
 	generateAddInfoWidget->move( 0, 0 );
-	setMinimumSize( generateAddInfoWidget->size( ) );
+	generateListScrollArea = parent;
+	generateListScrollArea->setWidget( this );
+	generateListScrollArea->setWidgetResizable( true );
+	generateListScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	generateListScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	horizontalScrollBar = generateListScrollArea->horizontalScrollBar( );
+	verticalScrollBar = generateListScrollArea->verticalScrollBar( );
 }
 GenerateListWidget::~GenerateListWidget( ) {
 	size_t count = generateListItemWidgets.size( );
@@ -124,4 +143,8 @@ void GenerateListWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 
+}
+void GenerateListWidget::showEvent( QShowEvent *event ) {
+	QWidget::showEvent( event );
+	sortItemWidget( );
 }

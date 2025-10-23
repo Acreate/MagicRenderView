@@ -3,8 +3,11 @@
 #pragma once
 #include "GenerateListItemWidget.h"
 
+class QHBoxLayout;
 class GenerateAddInfoWidget : public QWidget {
 	Q_OBJECT;
+protected:
+	QHBoxLayout* mainLayout;
 public:
 	GenerateAddInfoWidget( QWidget *parent = nullptr );
 };
