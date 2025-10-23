@@ -4,12 +4,12 @@
 #include "GenerateListWidget.h"
 
 class I_Var;
-class GenerateListItemWidget : public QObject {
+class GenerateListItemWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	std_shared_ptr< I_Var > var;
 public:
-	GenerateListItemWidget( const std_shared_ptr< I_Var > &var, QObject *parent = nullptr );
+	GenerateListItemWidget( const std_shared_ptr< I_Var > &var, QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	virtual const std_shared_ptr< I_Var > & getVar( ) const { return var; }
 };
 

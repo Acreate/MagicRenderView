@@ -5,16 +5,19 @@
 
 #include <alias/type_alias.h>
 
+class GenerateAddInfoWidget;
 class I_Var;
 class GenerateListItemWidget;
 class GenerateListWidget : public QWidget {
 	Q_OBJECT;
 protected:
+	GenerateAddInfoWidget *generateAddInfoWidget;
 	std_vector< GenerateListItemWidget * > generateListItemWidgets;
 protected:
 	virtual bool addItem( GenerateListItemWidget *new_list_item_widget );
 	virtual bool removeItem( const GenerateListItemWidget *new_list_item_widget );
 	virtual bool inster(GenerateListItemWidget *new_list_item_widget, const size_t& index);
+	virtual bool sortItemWidget();
 public:
 	GenerateListWidget( QWidget *parent = nullptr );
 	~GenerateListWidget( ) override;

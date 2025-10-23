@@ -2,6 +2,7 @@
 
 #include "GenerateListItemWidget.h"
 #include "GenerateListWidget.h"
+#include "generateAddInfoWidget.h"
 bool GenerateListWidget::addItem( GenerateListItemWidget *new_list_item_widget ) {
 	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
@@ -55,7 +56,36 @@ bool GenerateListWidget::inster( GenerateListItemWidget *new_list_item_widget, c
 
 	return true;
 }
-GenerateListWidget::GenerateListWidget( QWidget *parent ) : QWidget( parent ) { }
+bool GenerateListWidget::sortItemWidget( ) {
+	size_t count = generateListItemWidgets.size( );
+	if( count == 0 )
+		return true;
+	int x = 0, y = 0;
+	generateAddInfoWidget->move( x, y );
+	int width = generateAddInfoWidget->width( );
+	if( width > x )
+		x = width;
+	y += generateAddInfoWidget->height( );
+	auto data = generateListItemWidgets.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == nullptr )
+			break;
+		else {
+			data[ index ]->move( 0, y );
+			width = data[ index ]->width( );
+			if( width > x )
+				x = width;
+			y += data[ index ]->height( );
+		}
+	setMinimumSize( x, y );
+	return true;
+}
+GenerateListWidget::GenerateListWidget( QWidget *parent ) : QWidget( parent ) {
+	generateAddInfoWidget = new GenerateAddInfoWidget( this );
+	generateAddInfoWidget->move( 0, 0 );
+	setMinimumSize( generateAddInfoWidget->size( ) );
+}
 GenerateListWidget::~GenerateListWidget( ) {
 	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
