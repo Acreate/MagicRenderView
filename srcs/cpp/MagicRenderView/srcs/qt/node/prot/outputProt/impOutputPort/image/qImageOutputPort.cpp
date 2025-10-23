@@ -1,13 +1,11 @@
-﻿#include "imagaRGBAColorInPutPort.h"
+﻿#include "qImageOutputPort.h"
 
 #include <qt/varType/I_Type.h>
 
 #include <qt/varType/I_Var.h>
 
-Imp_StaticMetaInfo( ImagaRGBAColorInPutPort, QObject::tr( "imageRGBA" ), QObject::tr( "inputPort" ) );
-ImagaRGBAColorInPutPort::ImagaRGBAColorInPutPort( NodeItem *parent ) : NodeInputPort( parent ) {
-
-
+Imp_StaticMetaInfo( QImageOutputPort, QObject::tr( "qimage" ), QObject::tr( "output" ) );
+QImageOutputPort::QImageOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 	typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),

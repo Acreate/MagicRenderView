@@ -1,14 +1,15 @@
-﻿#include "genColorTypes.h"
+﻿#include "genQColorTypes.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
-#include "../../prot/outputProt/impOutputPort/color/imagaRGBAColorOutPutPort.h"
+#include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
+#include "../../prot/outputProt/impOutputPort/color/qColorOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
-Imp_StaticMetaInfo( GenColorTypes, QObject::tr( "颜色" ), QObject::tr( "生成" ) );
+Imp_StaticMetaInfo( GenQColorTypes, QObject::tr( "qt颜色" ), QObject::tr( "生成" ) );
 
-GenColorTypes::GenColorTypes( ) : NodeItem( ) {
+GenQColorTypes::GenQColorTypes( ) : NodeItem( ) {
 }
-bool GenColorTypes::intPortItems( MainWidget *parent ) {
+bool GenQColorTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
 		parent,
 		[this] ( MainWidget *main_widget_parent ) {
@@ -16,7 +17,7 @@ bool GenColorTypes::intPortItems( MainWidget *parent ) {
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
 			addInputProt< AnyInputPort >( "任意" );
-			addOutputProt< ImagaRGBAColorOutPutPort >( "列表" );
+			addOutputProt< QColorOutputPort >( "列表" );
 			return true;
 		} );
 }

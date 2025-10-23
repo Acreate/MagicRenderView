@@ -24,7 +24,6 @@
 #include <qt/node/item/disk/writeFile.h>
 #include <qt/node/item/disk/writeImage.h>
 #include <qt/node/item/generate/genBinTypes.h>
-#include <qt/node/item/generate/genColorTypes.h>
 #include <qt/node/item/generate/genFloatTypes.h>
 #include <qt/node/item/generate/genIntTypes.h>
 #include <qt/node/item/generate/genStringTypes.h>
@@ -92,6 +91,8 @@
 #include <qt/varType/stacks/qt/qColorStack.h>
 #include <qt/varType/stacks/qt/qStringStack.h>
 
+#include "../node/item/generate/genQColorTypes.h"
+#include "../node/item/generate/genQImageTypes.h"
 #include "../node/item/jump/jumpGenerate.h"
 #include "../node/item/jump/jumpMark.h"
 #include "../node/item/mark/markPoint.h"
@@ -166,7 +167,8 @@ bool Application::init( ) {
 	varGenerate->appendNodeItemGenerateInstance< GenIntTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenStringTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenUIntTypes >( );
-	varGenerate->appendNodeItemGenerateInstance< GenColorTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenQColorTypes >( );
+	varGenerate->appendNodeItemGenerateInstance< GenQImageTypes >( );
 	varGenerate->appendNodeItemGenerateInstance< GenBinTypes >( );
 	// todo : 信息节点
 	varGenerate->appendNodeItemGenerateInstance< PathInfo >( );

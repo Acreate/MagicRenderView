@@ -13,6 +13,7 @@ RunNodeModuleItemWidget::RunNodeModuleItemWidget( NodeItem *node_item_ptr, QWidg
 	setTitile( titile );
 }
 void RunNodeModuleItemWidget::setTitile( const QString &titile ) {
+	
 	this->titile = titile;
 	auto applicationInstancePtr = Application::getApplicationInstancePtr( );
 	auto font = applicationInstancePtr->getFont( );
@@ -60,6 +61,5 @@ void RunNodeModuleItemWidget::mouseDoubleClickEvent( QMouseEvent *event ) {
 void RunNodeModuleItemWidget::paintEvent( QPaintEvent *paint_event ) {
 	QLabel::paintEvent( paint_event );
 	QPainter painter( this );
-
 	painter.drawImage( 0, 0, titleBuff );
 }

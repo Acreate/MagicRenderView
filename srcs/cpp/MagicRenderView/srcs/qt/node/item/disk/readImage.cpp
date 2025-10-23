@@ -1,7 +1,7 @@
 ﻿#include "./readImage.h"
 
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
-#include "../../prot/outputProt/impOutputPort/color/imagaRGBAColorOutPutPort.h"
+#include "../../prot/outputProt/impOutputPort/image/qImageOutputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/intOutputPort.h"
 
 Imp_StaticMetaInfo( ReadImage, QObject::tr( "读图像" ), QObject::tr( "磁盘" ) );
@@ -19,7 +19,7 @@ bool ReadImage::intPortItems( MainWidget *parent ) {
 			// 初始化输入端口
 			addInputProt< StringInputPort >( "文件路径" );
 			// 初始化输出端口
-			addOutputProt< ImagaRGBAColorOutPutPort >( "红绿蓝透" );
+			addOutputProt< QImageOutputPort >( "图像" );
 			addOutputProt< IntOutputPort >( "红" );
 			addOutputProt< IntOutputPort >( "绿" );
 			addOutputProt< IntOutputPort >( "蓝" );

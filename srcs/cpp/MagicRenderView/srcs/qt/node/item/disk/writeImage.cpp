@@ -1,7 +1,8 @@
 ﻿#include "./writeImage.h"
 
 #include "../../prot/inputProt/inpInputPort/bin/binInputPort.h"
-#include "../../prot/inputProt/inpInputPort/color/imagaRGBAColorInPutPort.h"
+#include "../../prot/inputProt/inpInputPort/color/qColorInputPort.h"
+#include "../../prot/inputProt/inpInputPort/image/qImageInputPort.h"
 #include "../../prot/inputProt/inpInputPort/int/uIntInputPort.h"
 #include "../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
@@ -20,9 +21,7 @@ bool WriteImage::intPortItems( MainWidget *parent ) {
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
 			addInputProt< StringInputPort >( "文件路径" );
-			addInputProt< ImagaRGBAColorInPutPort >( "rgba" );
-			addInputProt< UIntInputPort >( "宽" );
-			addInputProt< UIntInputPort >( "高" );
+			addInputProt< QImageInputPort >( "图像" );
 			addOutputProt< AnyOutputPort >( "下一步" );
 			return true;
 		} );
