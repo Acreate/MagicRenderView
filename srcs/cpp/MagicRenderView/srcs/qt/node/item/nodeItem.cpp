@@ -41,11 +41,6 @@ NodeItem::NodeItem( QScrollArea *node_info_scroll_area ) : QObject( ), nodeInfoS
 	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 
-	nodeInfoScrollArea->setWidgetResizable( true );
-	nodeInfoScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-	nodeInfoScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-	nodeInfoScrollArea->setMinimumSize( 200, 300 );
-	nodeInfoScrollArea->setBaseSize( 200, 300 );
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
