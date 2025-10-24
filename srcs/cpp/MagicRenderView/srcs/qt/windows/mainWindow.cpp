@@ -204,20 +204,6 @@ void MainWindow::normalLoadFile( ) {
 		return;
 	}
 }
-void MainWindow::ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode ) {
-	mainWidget->ensureVisibleToItemNode( targetItemNode );
-}
-void MainWindow::updateMainWidgetSupport( ) {
-	//mainWidget->updateSupport( );
-}
-size_t MainWindow::objMainWidgetToBin( std_vector< uint8_t > &result_vector ) const {
-	//return mainWidget->objToBin( result_vector );
-	return 0;
-}
-size_t MainWindow::loadMainWidgetBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count ) {
-	//return mainWidget->loadBin( bin_data_ptr, bin_data_count );
-	return 0;
-}
 void MainWindow::quickSave( ) {
 	QString workPath = QDir::currentPath( );
 	

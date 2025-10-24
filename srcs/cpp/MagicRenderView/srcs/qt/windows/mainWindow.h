@@ -41,38 +41,6 @@ public:
 	virtual void normalSave();
 	virtual void overLoadFile();
 	virtual void normalLoadFile();
-	/// @brief 窗口滚动到指定节点位置-大小不足时进行窗口扩充
-	/// @param targetItemNode 目标节点
-	virtual void ensureMainWidgetVisibleToItemNode( const NodeItem *targetItemNode );
-	/// @brief 更新支持内容
-	virtual void updateMainWidgetSupport( );
-	/// @brief 对象序列化到二进制
-	/// @return 二进制
-	virtual size_t objMainWidgetToBin( std_vector< uint8_t > &result_vector ) const;
-	/// @brief 加载二进制
-	/// @param bin_data_ptr 数据起始位置
-	/// @param bin_data_count 数据个数
-	/// @return 使用数量
-	virtual size_t loadMainWidgetBin( const uint8_t *bin_data_ptr, const size_t &bin_data_count );
-	/// @brief 加载二进制
-	/// @param bin_data_ptr 数据起始位置
-	/// @param bin_data_count 数据个数
-	/// @return 使用数量
-	virtual size_t loadMainWidgetBin( const char *bin_data_ptr, const size_t &bin_data_count ) {
-		return loadMainWidgetBin( ( const uint8_t * ) bin_data_ptr, bin_data_count );
-	}
-	/// @brief 加载二进制
-	/// @param bin_vector 二进制列表
-	/// @return 返回使用数据个数
-	virtual size_t loadMainWidgetBin( const std_vector< uint8_t > &bin_vector ) {
-		return loadMainWidgetBin( bin_vector.data( ), bin_vector.size( ) );
-	}
-	/// @brief 加载二进制
-	/// @param bin_vector 二进制列表
-	/// @return 返回使用数据个数
-	virtual size_t loadMainWidgetBin( const QByteArray &bin_vector ) {
-		return loadMainWidgetBin( bin_vector.data( ), bin_vector.size( ) );
-	}
 	virtual void quickSave();
 	virtual void quickLoadFile();
 protected:

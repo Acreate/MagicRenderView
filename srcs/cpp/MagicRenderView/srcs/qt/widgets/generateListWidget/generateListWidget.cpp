@@ -1,10 +1,37 @@
-﻿#include <QPainter>
+﻿#include <QMouseEvent>
+#include <QPainter>
+#include <QPushButton>
 #include <QScrollBar>
+#include <qboxlayout.h>
+
+#include <qt/varType/I_Type.h>
+#include <qt/varType/I_Var.h>
 
 #include "GenerateListItemWidget.h"
 #include "GenerateListWidget.h"
-#include "generateAddInfoWidget.h"
 #include "generateListScrollArea.h"
+bool GenerateListWidget::insterToLayout( GenerateListItemWidget *new_list_item_widget ) {
+	int count = mainLayout->count( ) - 1;
+	size_t index = 1;
+	for( ; index < count; ++index ) {
+		QLayoutItem *layoutItem = mainLayout->itemAt( index );
+		if( layoutItem->isEmpty( ) )
+			continue;
+		auto widget = layoutItem->widget( );
+		if( widget == nullptr )
+			continue;
+		auto generateListItemWidget = qobject_cast< GenerateListItemWidget * >( widget );
+		if( generateListItemWidget == nullptr )
+			continue;
+		if( generateListItemWidget->y( ) < new_list_item_widget->y( ) )
+			continue;
+		mainLayout->insertWidget( index, new_list_item_widget );
+		return true;
+	}
+	mainLayout->insertWidget( index, new_list_item_widget );
+	return true;
+
+}
 bool GenerateListWidget::addItem( GenerateListItemWidget *new_list_item_widget ) {
 	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
@@ -17,86 +44,60 @@ bool GenerateListWidget::addItem( GenerateListItemWidget *new_list_item_widget )
 			return true;
 		}
 	generateListItemWidgets.emplace_back( new_list_item_widget );
-	return false;
+	return true;
 }
-bool GenerateListWidget::removeItem( const GenerateListItemWidget *new_list_item_widget ) {
+bool GenerateListWidget::removeItem( GenerateListItemWidget *new_list_item_widget ) {
 	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( data[ index ] == new_list_item_widget ) {
-			delete data[ index ];
 			++index;
 			for( ; index < count; ++index )
-				data[ index - 1 ] = data[ index ];
+				if( data[ index ] == nullptr )
+					break;
+				else
+					data[ index - 1 ] = data[ index ];
+			if( index == count )
+				data[ index - 1 ] = nullptr;
 			return true;
 		}
 	return false;
 }
-bool GenerateListWidget::inster( GenerateListItemWidget *new_list_item_widget, const size_t &index ) {
-	size_t count = generateListItemWidgets.size( );
-	if( count <= index )
-		return false;
-	auto data = generateListItemWidgets.data( );
-	size_t foreachIndex = 0;
-	for( ; foreachIndex < count; ++foreachIndex )
-		if( data[ foreachIndex ] == nullptr )
-			return false; // 不在管理内
-		else if( data[ foreachIndex ] == new_list_item_widget ) {
-			if( foreachIndex == index )
-				return true;
-			if( foreachIndex < index ) {
-				for( ; foreachIndex > index; --foreachIndex )
-					data[ foreachIndex ] = data[ foreachIndex - 1 ];
-				data[ index ] = new_list_item_widget;
-				return true;
-			}
-			for( ; foreachIndex < index; ++foreachIndex )
-				data[ foreachIndex ] = data[ foreachIndex + 1 ];
-			data[ index ] = new_list_item_widget;
-			return true;
-		}
-
-	return true;
-}
-bool GenerateListWidget::sortItemWidget( ) {
-	size_t count = generateListItemWidgets.size( );
-	int x = 0, y = 0, offset = 2;
-	generateAddInfoWidget->move( offset, y );
-	int width = generateAddInfoWidget->width( );
-	if( width > x )
-		x = width;
-	y += generateAddInfoWidget->height( );
-	if( count == 0 ) {
-		generateAddInfoWidget->setFixedWidth( x + offset );
-		setFixedSize( x + offset, y );
-		generateListScrollArea->setFixedSize( x + verticalScrollBar->width( ) + offset * 2, y + horizontalScrollBar->height( ) + offset );
+void GenerateListWidget::fromComponentAddItemInfo( ) {
+	using t_current_type = int64_t;
+	I_Type *type_info = new I_Type( typeid( t_current_type ), sizeof( typeid( t_current_type ) ), [] ( void *p ) {
+		delete ( t_current_type * ) p;
 		return true;
-	}
+	}, [] {
+		return new t_current_type;
+	} );
+	std_shared_ptr< I_Var > var( new I_Var( type_info ) );
+
+	auto newListItemWidget = new GenerateListItemWidget( var, this );
+	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
+	addItem( newListItemWidget );
+	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );
+}
+
+GenerateListItemWidget * GenerateListWidget::getPointWidget( const QPoint &pos ) const {
+	size_t count = generateListItemWidgets.size( );
 	auto data = generateListItemWidgets.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == nullptr ) { // 停止，并且重置所有宽度
-			count = index + 1;
-			index = 0;
-			for( ; index < count; ++index )
-				data[ index ]->setFixedWidth( x + offset );
-			generateAddInfoWidget->setFixedWidth( x + offset );
+		if( data[ index ]->geometry( ).contains( pos ) )
+			return data[ index ];
+		else if( data[ index ] == nullptr )
 			break;
-		} else {
-			data[ index ]->move( offset, y );
-			width = data[ index ]->width( );
-			if( width > x )
-				x = width;
-			y += data[ index ]->height( );
-
-		}
-	setFixedSize( x + offset, y );
-	generateListScrollArea->setFixedSize( x + verticalScrollBar->width( ) + offset * 2, y + horizontalScrollBar->height( ) + offset );
-	return true;
+	return nullptr;
 }
 GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidget( parent ) {
-	generateAddInfoWidget = new GenerateAddInfoWidget( this );
-	generateAddInfoWidget->move( 0, 0 );
+	isReleaseWidget = false;
+	selectWidget = nullptr;
+	mainLayout = new QVBoxLayout( this );
+	addItemBtn = new QPushButton( "添加", this );
+	connect( addItemBtn, &QPushButton::clicked, this, &GenerateListWidget::fromComponentAddItemInfo );
+	mainLayout->addWidget( addItemBtn, 0, Qt::AlignHCenter | Qt::AlignTop );
+	mainLayout->addSpacerItem( new QSpacerItem( 10, 10, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding ) );
 	generateListScrollArea = parent;
 	generateListScrollArea->setWidget( this );
 	generateListScrollArea->setWidgetResizable( true );
@@ -106,15 +107,19 @@ GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidg
 	verticalScrollBar = generateListScrollArea->verticalScrollBar( );
 }
 GenerateListWidget::~GenerateListWidget( ) {
-	size_t count = generateListItemWidgets.size( );
-	auto data = generateListItemWidgets.data( );
+	auto clone = generateListItemWidgets;
+	generateListItemWidgets.clear( );
+	size_t count = clone.size( );
+	auto data = clone.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr )
 			break;
-		else
+		else {
 			delete data[ index ];
-	generateListItemWidgets.clear( );
+		}
+	delete addItemBtn;
+	delete mainLayout;
 }
 std_vector< std_shared_ptr< I_Var > > GenerateListWidget::getItemVarVector( ) const {
 	std_vector< std_shared_ptr< I_Var > > result;
@@ -142,9 +147,31 @@ std_shared_ptr< I_Var > GenerateListWidget::getItemIndexVar( const size_t &index
 void GenerateListWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-
 }
 void GenerateListWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	sortItemWidget( );
+}
+void GenerateListWidget::mouseMoveEvent( QMouseEvent *event ) {
+	QWidget::mouseMoveEvent( event );
+	if( selectWidget ) {
+		if( isReleaseWidget ) {
+			mainLayout->removeWidget( selectWidget );
+			isReleaseWidget = false;
+		}
+		selectWidget->move( 0, event->pos( ).y( ) );
+	}
+}
+void GenerateListWidget::mousePressEvent( QMouseEvent *event ) {
+	QWidget::mousePressEvent( event );
+	selectWidget = getPointWidget( event->pos( ) );
+	if( selectWidget )
+		isReleaseWidget = true;
+}
+void GenerateListWidget::mouseReleaseEvent( QMouseEvent *event ) {
+	QWidget::mouseReleaseEvent( event );
+	if( selectWidget ) {
+		selectWidget->move( 0, event->pos( ).y( ) );
+		insterToLayout( selectWidget );
+	}
+	selectWidget = nullptr;
 }

@@ -26,11 +26,17 @@
 #include <qt/node/item/generate/genBinTypes.h>
 #include <qt/node/item/generate/genFloatTypes.h>
 #include <qt/node/item/generate/genIntTypes.h>
+#include <qt/node/item/generate/genQColorTypes.h>
+#include <qt/node/item/generate/genQImageTypes.h>
+#include <qt/node/item/generate/genQStringTypes.h>
 #include <qt/node/item/generate/genUIntTypes.h>
 #include <qt/node/item/info/networkInfo.h>
 #include <qt/node/item/info/pathInfo.h>
 #include <qt/node/item/info/systemInfo.h>
+#include <qt/node/item/jump/generateNodeJump.h>
+#include <qt/node/item/jump/makeNodeJimp.h>
 #include <qt/node/item/logic/ifLogic.h>
+#include <qt/node/item/mark/markPoint.h>
 #include <qt/node/item/str/strAppend.h>
 #include <qt/node/item/str/strInsert.h>
 #include <qt/node/item/str/strRemove.h>
@@ -75,6 +81,7 @@
 #include <qt/varType/isTypes/isUint32Type.h>
 #include <qt/varType/isTypes/isUint64Type.h>
 #include <qt/varType/isTypes/isUint8Type.h>
+#include <qt/varType/stacks/app/nodeDirectorStack.h>
 #include <qt/varType/stacks/base/float32Stack.h>
 #include <qt/varType/stacks/base/float64Stack.h>
 #include <qt/varType/stacks/base/int16Stack.h>
@@ -89,15 +96,6 @@
 #include <qt/varType/stacks/cpp/stdWStringStack.h>
 #include <qt/varType/stacks/qt/qColorStack.h>
 #include <qt/varType/stacks/qt/qStringStack.h>
-
-#include "../node/item/generate/genQColorTypes.h"
-#include "../node/item/generate/genQImageTypes.h"
-#include "../node/item/generate/genQStringTypes.h"
-#include "../node/item/jump/generateNodeJump.h"
-#include "../node/item/jump/makeNodeJimp.h"
-#include "../node/item/mark/markPoint.h"
-
-#include "../varType/stacks/app/nodeDirectorStack.h"
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );

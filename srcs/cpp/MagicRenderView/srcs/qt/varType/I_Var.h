@@ -16,8 +16,10 @@ protected:
 	/// @brief 变量名称
 	QString varName;
 public:
+	I_Var( I_Type *type_info ) : I_Var( type_info, "" ) { }
 	I_Var( I_Type *type_info, const QString &var_name );
 	I_Var( I_Type *type_info, const size_t &generate_code, const QString &var_name );
+	I_Var( const I_Type &type_info ) : I_Var( type_info, "" ) { }
 	I_Var( const I_Type &type_info, const QString &var_name );
 	I_Var( const I_Type &type_info, const size_t &generate_code, const QString &var_name );
 	I_Var( const I_Var &other );

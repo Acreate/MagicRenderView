@@ -24,6 +24,7 @@ class NodeOutputPort;
 class NodeInputPort;
 class NodeDirector : public QObject {
 	Q_OBJECT;
+private:
 	friend class NodeItemInfoFind;
 	friend class NodeDirectorStack;
 protected:

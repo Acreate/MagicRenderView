@@ -745,9 +745,10 @@ NodeDirector::~NodeDirector( ) {
 				delete removeItem;
 			}
 	}
-
-	nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
-	delete nodeItemCreateMenu;
+	if( nodeItemCreateMenu ) {
+		nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
+		delete nodeItemCreateMenu;
+	}
 }
 
 bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {
