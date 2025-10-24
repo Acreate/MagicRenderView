@@ -6,6 +6,13 @@
 #include <QPushButton>
 #include <qboxlayout.h>
 
+#include "../../application/application.h"
+
+#include "../../generate/varGenerate.h"
+
+#include "../../varType/I_Type.h"
+#include "../../varType/I_Var.h"
+
 void VarEditorWidget::updateLayout( ) {
 
 	auto rect = contentsRect( );
@@ -43,7 +50,19 @@ void VarEditorWidget::updateLayout( ) {
 		setFixedWidth( buffWidth );
 }
 void VarEditorWidget::initVarEditorInfo( ) {
-
+	I_Var *element = editorVar.get( );
+	auto name = element->getVarName( );
+	varNameLineEdit->setText( name );
+	QString varValue;
+	auto varPtr = element->getVarPtr( );
+	auto &info = element->getTypeInfo( )->getTypeInfo( );
+	auto varGenerate = Application::getApplicationInstancePtr( )->getVarGenerate( );
+	if( varGenerate->conver( typeid( QString ), &varValue, info, varPtr ) == false ) {
+		hide( );
+		return;
+	}
+	varVarLineEdit->setText( varValue );
+	applyVarChange->setEnabled( false );
 }
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
 	setFixedSize( 200, 250 );
@@ -55,7 +74,6 @@ VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : 
 	varVarTitile = new QLabel( tr( "变量值:" ), this );
 	varVarLineEdit = new QLineEdit( this );
 	applyVarChange = new QPushButton( tr( "确定" ), this );
-	initVarEditorInfo( );
 }
 void VarEditorWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

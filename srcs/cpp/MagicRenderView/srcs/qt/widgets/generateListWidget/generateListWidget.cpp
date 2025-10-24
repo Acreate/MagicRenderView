@@ -69,7 +69,7 @@ void GenerateListWidget::fromComponentAddItemInfo( ) {
 		delete ( t_current_type * ) p;
 		return true;
 	}, [] {
-		return new t_current_type;
+		return new t_current_type( 0 );
 	} );
 	std_shared_ptr< I_Var > var( new I_Var( type_info ) );
 
