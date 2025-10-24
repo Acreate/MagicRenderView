@@ -94,7 +94,7 @@ GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidg
 	isReleaseWidget = false;
 	selectWidget = nullptr;
 	mainLayout = new QVBoxLayout( this );
-	addItemBtn = new QPushButton( "添加", this );
+	addItemBtn = new QPushButton( tr( "添加" ), this );
 	connect( addItemBtn, &QPushButton::clicked, this, &GenerateListWidget::fromComponentAddItemInfo );
 	mainLayout->addWidget( addItemBtn, 0, Qt::AlignHCenter | Qt::AlignTop );
 	mainLayout->addSpacerItem( new QSpacerItem( 10, 10, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding ) );
@@ -107,6 +107,8 @@ GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidg
 	verticalScrollBar = generateListScrollArea->verticalScrollBar( );
 }
 GenerateListWidget::~GenerateListWidget( ) {
+	delete mainLayout;
+	delete addItemBtn;
 	auto clone = generateListItemWidgets;
 	generateListItemWidgets.clear( );
 	size_t count = clone.size( );
@@ -115,11 +117,8 @@ GenerateListWidget::~GenerateListWidget( ) {
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr )
 			break;
-		else {
+		else
 			delete data[ index ];
-		}
-	delete addItemBtn;
-	delete mainLayout;
 }
 std_vector< std_shared_ptr< I_Var > > GenerateListWidget::getItemVarVector( ) const {
 	std_vector< std_shared_ptr< I_Var > > result;
