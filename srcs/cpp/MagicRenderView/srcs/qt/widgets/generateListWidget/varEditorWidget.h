@@ -1,0 +1,52 @@
+﻿#ifndef VAREDITORWIDGET_H_H_HEAD__FILE__
+#define VAREDITORWIDGET_H_H_HEAD__FILE__
+#pragma once
+#include "GenerateListItemWidget.h"
+
+class QGridLayout;
+class QHBoxLayout;
+class QLabel;
+class QLineEdit;
+class VarEditorWidget : public QWidget {
+	Q_OBJECT;
+protected:
+	std_shared_ptr< I_Var > editorVar;
+	/*QVBoxLayout *mainLayout;
+	QHBoxLayout *varVarEditorLayout;
+	QHBoxLayout *varNameEditorLayout;*/
+
+	QLabel *titile;
+
+	QLabel *varVarTitile;
+	QLineEdit *varVarLineEdit;
+
+	QLabel *varNameTitile;
+	QLineEdit *varNameLineEdit;
+
+	QPushButton *applyVarChange;
+
+	std_function< bool( const QString & ) > nameCheckFunction;
+	std_function< bool( const QString & ) > varCheckFunction;
+protected:
+	virtual void updateLayout( );
+	virtual void initVarEditorInfo( );
+public:
+	VarEditorWidget( const std_shared_ptr< I_Var > &editor_var );
+	virtual const std_shared_ptr< I_Var > & getEditorVar( ) const { return editorVar; }
+	virtual void setEditorVar( const std_shared_ptr< I_Var > &editor_var ) {
+		editorVar = editor_var;
+		initVarEditorInfo( );
+	}
+	virtual const std_function< bool( const QString & ) > & getNameCheckFunction( ) const { return nameCheckFunction; }
+	virtual void setNameCheckFunction( const std_function< bool( const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
+	virtual const std_function< bool( const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
+	virtual void setVarCheckFunction( const std_function< bool( const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
+protected:
+	void resizeEvent( QResizeEvent *event ) override;
+	void showEvent( QShowEvent *event ) override;
+public:
+Q_SIGNALS:
+	void changeVarOverSignal( VarEditorWidget *signal_obj_ptr );
+};
+
+#endif // VAREDITORWIDGET_H_H_HEAD__FILE__

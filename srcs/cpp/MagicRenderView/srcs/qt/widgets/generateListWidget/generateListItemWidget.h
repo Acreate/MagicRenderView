@@ -4,16 +4,21 @@
 #include "GenerateListWidget.h"
 
 class I_Var;
+class VarEditorWidget;
 class GenerateListItemWidget : public QWidget {
 	Q_OBJECT;
 protected:
 	std_shared_ptr< I_Var > var;
+	VarEditorWidget *varEditorWidget;
 public:
 	GenerateListItemWidget( const std_shared_ptr< I_Var > &var, QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~GenerateListItemWidget( ) override;
 	virtual const std_shared_ptr< I_Var > & getVar( ) const { return var; }
+	virtual VarEditorWidget * getVarEditInfo( ) const { return varEditorWidget; }
+	virtual bool showVarEditorWidget() const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void mouseDoubleClickEvent( QMouseEvent *event ) override;
 Q_SIGNALS:
 	void releaseThisPtr( GenerateListItemWidget *release_node_item );
 };
