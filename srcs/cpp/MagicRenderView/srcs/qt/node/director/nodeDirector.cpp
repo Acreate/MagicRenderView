@@ -301,9 +301,10 @@ bool NodeDirector::createMenu( ) {
 }
 bool NodeDirector::resetMenu( QObject *del_ptr ) {
 	nodeItemCreateMenu = new NodeItemMenu( );
+	connect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 	return this->createMenu( );
 }
-// todo : 节点释放调用
+
 bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 	// 删除 linkVectorPairt
 
@@ -475,8 +476,10 @@ bool NodeDirector::setContentWidget( MainWidget *main_widget ) {
 	mainWidget = main_widget;
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
-	if( nodeItemCreateMenu )
+	if( nodeItemCreateMenu ) {
+		nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 		delete nodeItemCreateMenu;
+	}
 	nodeItemCreateMenu = new NodeItemMenu( );
 	connect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 
