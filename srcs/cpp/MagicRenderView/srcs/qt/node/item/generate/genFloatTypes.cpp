@@ -2,7 +2,11 @@
 
 #include <QScrollArea>
 
+#include "../../../varType/I_Type.h"
+#include "../../../varType/I_Var.h"
+
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
+#include "../../../widgets/generateListWidget/generateListWidget.h"
 
 #include "../../nodeInfoWidget/generateFloatNodeInfoWidget/generateFloatWidget.h"
 
@@ -12,9 +16,24 @@
 Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
 GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-
-	generateFloatWidget = new GenerateFloatWidget( this );
-	nodeInfoScrollArea->setWidget( generateFloatWidget );
+	generateFloatWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateFloatWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateFloatWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateFloatWidget->setVarGenerateFunction( [] {
+		using t_current_type = double;
+		auto type = new I_Type( typeid( t_current_type ), sizeof( t_current_type ), [] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		}, [] {
+			return new t_current_type( 0 );
+		} );
+		auto var = new I_Var( type );
+		return std_shared_ptr< I_Var >( var );
+	} );
 }
 bool GenFloatTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

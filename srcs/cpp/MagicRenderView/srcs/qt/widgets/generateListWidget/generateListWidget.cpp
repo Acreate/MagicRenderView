@@ -10,6 +10,8 @@
 #include "GenerateListItemWidget.h"
 #include "GenerateListWidget.h"
 #include "generateListScrollArea.h"
+
+#include "../../tools/tools.h"
 bool GenerateListWidget::insterToLayout( GenerateListItemWidget *new_list_item_widget ) {
 	int count = mainLayout->count( ) - 1;
 	size_t index = 1;
@@ -64,17 +66,30 @@ bool GenerateListWidget::removeItem( GenerateListItemWidget *new_list_item_widge
 	return false;
 }
 void GenerateListWidget::fromComponentAddItemInfo( ) {
-	if( varGenerateFunction == nullptr )
+	if( varGenerateFunction == nullptr ) {
+		tools::debug::printError( QObject::tr( "未配置正确的生成函数，请调用 setVarGenerateFunction" ) );
 		return;
+	}
+	if( varCheckFunction == nullptr ) {
+		tools::debug::printError( QObject::tr( "未配置正确的变量值校验函数，请调用 setVarCheckFunction" ) );
+		return;
+	}
+	if( nameCheckFunction == nullptr ) {
+		tools::debug::printError( QObject::tr( "未配置正确的变量名称校验函数，请调用 setNameCheckFunction" ) );
+		return;
+	}
 	auto var = varGenerateFunction( );
-	if( var == nullptr )
+	if( var == nullptr ) {
+		tools::debug::printError( QObject::tr( "变量生成失败，请检查变量生成函数，请调用 setVarCheckFunction 重新配置有效生成函数" ) );
 		return;
+	}
 	auto newListItemWidget = new GenerateListItemWidget( var, this );
 	newListItemWidget->setVarCheckFunction( varCheckFunction );
 	newListItemWidget->setNameCheckFunction( nameCheckFunction );
 	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
 	addItem( newListItemWidget );
 	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );
+	newListItemWidget->showVarEditorWidget(  );
 }
 
 GenerateListItemWidget * GenerateListWidget::getPointWidget( const QPoint &pos ) const {
@@ -88,7 +103,7 @@ GenerateListItemWidget * GenerateListWidget::getPointWidget( const QPoint &pos )
 			break;
 	return nullptr;
 }
-GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidget( parent ) {
+GenerateListWidget::GenerateListWidget( QScrollArea *parent ) : QWidget( parent ) {
 	isReleaseWidget = false;
 	selectWidget = nullptr;
 	mainLayout = new QVBoxLayout( this );

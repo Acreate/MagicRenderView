@@ -3,12 +3,12 @@
 #pragma once
 #include "../nodeItem.h"
 
-class GenerateFloatWidget;
+class GenerateListWidget;
 class GenFloatTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenerateFloatWidget* generateFloatWidget;
+	GenerateListWidget* generateFloatWidget;
 protected:
 	GenFloatTypes( );
 public:

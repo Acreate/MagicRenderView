@@ -12,10 +12,8 @@ int main( int argc, char *argv[ ] ) {
 		tools::debug::printError( "程序初始化失败" );
 		return -1;
 	}
-	//MainWindow mainwidget;
-	//mainwidget.show( );
+	MainWindow mainwidget;
+	mainwidget.show( );
 
-	GenerateListScrollArea area;
-	area.show( );
 	return app.exec( );
 }

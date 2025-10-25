@@ -26,16 +26,16 @@ protected:
 	QLineEdit *varNameLineEdit;
 
 	QPushButton *applyVarChange;
-	Application * application;
-	VarGenerate * varGenerate;
-	std_function< bool( const QString & ) > nameCheckFunction;
-	std_function< bool( const QString & ) > varCheckFunction;
+	Application *application;
+	VarGenerate *varGenerate;
+	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
+	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
 protected:
 	virtual void updateLayout( );
 	virtual void initVarEditorInfo( );
-	virtual void nameLineEditorChanged(const QString& new_text);
-	virtual void varLineEditorChanged(const QString& new_text);
-	virtual void setVarValue();
+	virtual void nameLineEditorChanged( const QString &new_text );
+	virtual void varLineEditorChanged( const QString &new_text );
+	virtual void setVarValue( );
 public:
 	VarEditorWidget( const std_shared_ptr< I_Var > &editor_var );
 	virtual const std_shared_ptr< I_Var > & getEditorVar( ) const { return editorVar; }
@@ -43,10 +43,12 @@ public:
 		editorVar = editor_var;
 		initVarEditorInfo( );
 	}
-	virtual const std_function< bool( const QString & ) > & getNameCheckFunction( ) const { return nameCheckFunction; }
-	virtual void setNameCheckFunction( const std_function< bool( const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
-	virtual const std_function< bool( const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
-	virtual void setVarCheckFunction( const std_function< bool( const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
+	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getNameCheckFunction( ) const { return nameCheckFunction; }
+	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
+	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
+	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
+	virtual void setNameEditorMsg( const QString &msg );
+	virtual void setValueEditorMsg( const QString &msg );
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 	void showEvent( QShowEvent *event ) override;

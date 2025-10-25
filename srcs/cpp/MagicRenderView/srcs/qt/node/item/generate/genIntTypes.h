@@ -4,12 +4,12 @@
 
 #include "../nodeItem.h"
 
-class GenerateIntWidget;
+class GenerateListWidget;
 class GenIntTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenerateIntWidget* generateIntWidget;
+	GenerateListWidget* generateIntWidget;
 protected:
 	GenIntTypes( );
 public:

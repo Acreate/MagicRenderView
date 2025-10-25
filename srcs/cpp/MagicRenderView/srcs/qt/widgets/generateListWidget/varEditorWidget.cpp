@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QToolTip>
 #include <qboxlayout.h>
 
 #include "../../application/application.h"
@@ -65,12 +66,12 @@ void VarEditorWidget::initVarEditorInfo( ) {
 	applyVarChange->setEnabled( false );
 }
 void VarEditorWidget::nameLineEditorChanged( const QString &new_text ) {
-	if( nameCheckFunction && nameCheckFunction( new_text ) )
+	if( nameCheckFunction && nameCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
 	applyVarChange->setEnabled( false );
 }
 void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
-	if( varCheckFunction && varCheckFunction( new_text ) )
+	if( varCheckFunction && varCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
 	applyVarChange->setEnabled( false );
 }
@@ -80,10 +81,10 @@ void VarEditorWidget::setVarValue( ) {
 		return;
 
 	QString nameText = varNameLineEdit->text( );
-	if( nameCheckFunction( nameText ) == false )
+	if( nameCheckFunction( this, nameText ) == false )
 		return;
 	QString varText = varVarLineEdit->text( );
-	if( varCheckFunction( varText ) == false )
+	if( varCheckFunction( this, varText ) == false )
 		return;
 	auto element = editorVar.get( );
 	element->setVarName( nameText );
@@ -104,6 +105,12 @@ VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : 
 	connect( varVarLineEdit, &QLineEdit::textEdited, this, &VarEditorWidget::varLineEditorChanged );
 	applyVarChange = new QPushButton( tr( "确定" ), this );
 	connect( applyVarChange, &QPushButton::clicked, this, &VarEditorWidget::setVarValue );
+}
+void VarEditorWidget::setNameEditorMsg( const QString &msg ) {
+	QToolTip::showText( varNameLineEdit->pos( ), msg );
+}
+void VarEditorWidget::setValueEditorMsg( const QString &msg ) {
+	QToolTip::showText( varVarLineEdit->pos( ), msg );
 }
 void VarEditorWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

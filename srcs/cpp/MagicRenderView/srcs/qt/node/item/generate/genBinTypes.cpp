@@ -2,9 +2,11 @@
 
 #include <QScrollArea>
 
-#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+#include "../../../varType/I_Type.h"
+#include "../../../varType/I_Var.h"
 
-#include "../../nodeInfoWidget/generateBinNodeInfoWidget/generateBinWidget.h"
+#include "../../../widgets/generateListWidget/GenerateListWidget.h"
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
@@ -13,8 +15,24 @@
 Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
 GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-	generateBinWidget = new GenerateBinWidget( this );
-	nodeInfoScrollArea->setWidget( generateBinWidget );
+	generateBinWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateBinWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateBinWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateBinWidget->setVarGenerateFunction( [] {
+		using t_current_type = uint8_t;
+		auto type = new I_Type( typeid( t_current_type ), sizeof( t_current_type ), [] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		}, [] {
+			return new t_current_type( 0 );
+		} );
+		auto var = new I_Var( type );
+		return std_shared_ptr< I_Var >( var );
+	} );
 }
 bool GenBinTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

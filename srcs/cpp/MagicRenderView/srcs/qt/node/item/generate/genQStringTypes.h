@@ -5,12 +5,12 @@
 
 #include "../nodeItem.h"
 
-class GenerateQStringWidget;
+class GenerateListWidget;
 class GenQStringTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenerateQStringWidget* generateQStringWidget;
+	GenerateListWidget* generateQStringWidget;
 protected:
 	GenQStringTypes( );
 public:

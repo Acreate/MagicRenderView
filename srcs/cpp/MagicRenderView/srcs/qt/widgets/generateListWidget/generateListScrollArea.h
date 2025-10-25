@@ -3,6 +3,8 @@
 #pragma once
 #include <QScrollArea>
 
+#include "../../node/item/generate/genBinTypes.h"
+
 class GenerateListWidget;
 class GenerateListScrollArea : public QScrollArea {
 	Q_OBJECT;

@@ -2,7 +2,11 @@
 
 #include <QScrollArea>
 
+#include "../../../varType/I_Type.h"
+#include "../../../varType/I_Var.h"
+
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
+#include "../../../widgets/generateListWidget/generateListWidget.h"
 
 #include "../../nodeInfoWidget/generateIntNodeInfoWidget/generateIntWidget.h"
 
@@ -12,9 +16,24 @@
 Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
 GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-
-	generateIntWidget = new GenerateIntWidget( this );
-	nodeInfoScrollArea->setWidget( generateIntWidget );
+	generateIntWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateIntWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateIntWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		return true;
+	} );
+	generateIntWidget->setVarGenerateFunction( [] {
+		using t_current_type = int64_t;
+		auto type = new I_Type( typeid( t_current_type ), sizeof( t_current_type ), [] ( void *p ) {
+			delete ( t_current_type * ) p;
+			return true;
+		}, [] {
+			return new t_current_type( 0 );
+		} );
+		auto var = new I_Var( type );
+		return std_shared_ptr< I_Var >( var );
+	} );
 }
 bool GenIntTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
