@@ -3,12 +3,18 @@
 #pragma once
 #include "../nodeItem.h"
 
+class GenerateListWidget;
+class GenerateListItemWidget;
+class VarEditorWidget;
 class GenerateQColorWidget;
 class GenQColorTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	GenerateQColorWidget* generateQColorWidget;
+protected:
+	virtual void changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
+	virtual void delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
 protected:
 	GenQColorTypes( );
 public:

@@ -58,8 +58,6 @@ public:
 private:
 	/// @brief 生成编号
 	size_t generateCode;
-	/// @brief 节点变量
-	std_vector< I_Var * > nodeVarVector;
 	/// @brief 节点标题名称
 	NodeItemString_Type nodeTitleName;
 	/// @brief 绑定渲染
@@ -98,6 +96,8 @@ private:
 	/// @brief 渲染所在窗口
 	MainWidget *renderMainWidget;
 protected:
+	/// @brief 节点变量
+	std_vector< I_Var * > nodeVarVector;
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 protected:

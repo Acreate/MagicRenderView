@@ -22,7 +22,7 @@ public:
 	GenerateListItemWidget( const std_shared_ptr< I_Var > &var, QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~GenerateListItemWidget( ) override;
 	virtual const std_shared_ptr< I_Var > & getVar( ) const { return var; }
-	virtual VarEditorWidget * getVarEditInfo( ) const { return varEditorWidget; }
+	virtual VarEditorWidget * getVarEditorWidget( ) const { return varEditorWidget; }
 	virtual bool showVarEditorWidget( ) const;
 	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getNameCheckFunction( ) const;
 	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function );

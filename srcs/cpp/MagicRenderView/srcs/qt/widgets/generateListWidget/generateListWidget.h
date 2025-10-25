@@ -51,6 +51,7 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 Q_SIGNALS:
 	void changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
+	void delVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
 };
 
 #endif // GENERATELISTWIDGET_H_H_HEAD__FILE__

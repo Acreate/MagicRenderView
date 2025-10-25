@@ -7,6 +7,7 @@
 
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
 #include "../../../widgets/generateListWidget/generateListWidget.h"
+#include "../../../widgets/generateListWidget/varEditorWidget.h"
 
 #include "../../nodeInfoWidget/generateIntNodeInfoWidget/generateIntWidget.h"
 
@@ -15,7 +16,22 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
-void GenIntTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+
+void GenIntTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
+void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+	size_t count = nodeVarVector.size( );
+	if( count == 0 )
+		return;
+	auto var = change_var_obj_ptr->getEditorVar( ).get( );
+	auto data = nodeVarVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == var ) {
+			auto begin = nodeVarVector.begin( );
+			nodeVarVector.erase( begin );
+			return;
+		}
 }
 GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateIntWidget = new GenerateListWidget( nodeInfoScrollArea );
@@ -29,7 +45,9 @@ GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		using t_current_type = int64_t;
 		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
 	} );
-	connect( generateIntWidget, &GenerateListWidget::changeVarOverSignal, this, &GenIntTypes::changeVarOverSignal );
+
+	connect( generateIntWidget, &GenerateListWidget::changeVarOverSignal, this, &GenIntTypes::changeVarOver );
+	connect( generateIntWidget, &GenerateListWidget::delVarOverSignal, this, &GenIntTypes::delVarOver );
 }
 bool GenIntTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

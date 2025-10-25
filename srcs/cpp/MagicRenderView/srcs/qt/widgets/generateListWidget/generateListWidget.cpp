@@ -61,6 +61,7 @@ bool GenerateListWidget::removeItem( GenerateListItemWidget *new_list_item_widge
 					data[ index - 1 ] = data[ index ];
 			if( index == count )
 				data[ index - 1 ] = nullptr;
+			emit delVarOverSignal( this, new_list_item_widget, new_list_item_widget->getVarEditorWidget( ) );
 			return true;
 		}
 	return false;

@@ -7,6 +7,7 @@
 
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
 #include "../../../widgets/generateListWidget/generateListWidget.h"
+#include "../../../widgets/generateListWidget/varEditorWidget.h"
 
 #include "../../nodeInfoWidget/generateFloatNodeInfoWidget/generateFloatWidget.h"
 
@@ -15,7 +16,22 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
-void GenFloatTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+
+void GenFloatTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
+void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+	size_t count = nodeVarVector.size( );
+	if( count == 0 )
+		return;
+	auto var = change_var_obj_ptr->getEditorVar( ).get( );
+	auto data = nodeVarVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == var ) {
+			auto begin = nodeVarVector.begin( );
+			nodeVarVector.erase( begin );
+			return;
+		}
 }
 GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateFloatWidget = new GenerateListWidget( nodeInfoScrollArea );
@@ -29,7 +45,8 @@ GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		using t_current_type = double;
 		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
 	} );
-	connect( generateFloatWidget, &GenerateListWidget::changeVarOverSignal, this, &GenFloatTypes::changeVarOverSignal );
+	connect( generateFloatWidget, &GenerateListWidget::changeVarOverSignal, this, &GenFloatTypes::changeVarOver );
+	connect( generateFloatWidget, &GenerateListWidget::delVarOverSignal, this, &GenFloatTypes::delVarOver );
 }
 bool GenFloatTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
