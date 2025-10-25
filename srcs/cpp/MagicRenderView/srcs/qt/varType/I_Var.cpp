@@ -62,3 +62,6 @@ I_Var::~I_Var( ) {
 	p = nullptr;
 	delete typeInfo;
 }
+I_Type * I_Var::generateType( const type_info &type_info, size_t memory_size, const QString &pro_type_name, const std_vector< QString > &alias_type_name, const releaseFunction &release, const createFunction &create ) {
+	return new I_Type( type_info, memory_size, pro_type_name, alias_type_name, release, create );
+}

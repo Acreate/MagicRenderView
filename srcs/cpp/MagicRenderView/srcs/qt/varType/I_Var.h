@@ -42,6 +42,42 @@ public:
 	/// @brief 获取生成代码
 	/// @return 生成代码
 	virtual size_t getGenerateCode( ) const { return generateCode; }
+protected:
+	static I_Type * generateType( const type_info &type_info, size_t memory_size, const QString &pro_type_name, const std_vector< QString > &alias_type_name, const releaseFunction &release, const createFunction &create );
+public:
+	template< typename TGenerateType >
+	static I_Var * generateVarPtr( const QString &pro_type_name, const std_vector< QString > &alias_type_name, const releaseFunction &release, const createFunction &create ) {
+		auto type = generateType( typeid( TGenerateType ), sizeof( TGenerateType ), pro_type_name, alias_type_name, release, create );
+		return new I_Var( type );
+	}
+
+	template< typename TGenerateType >
+	static I_Var * generateVarPtr( const releaseFunction &release, const createFunction &create ) {
+		return generateVarPtr< TGenerateType >( "", { }, release, create );
+	}
+
+	template< typename TGenerateType >
+	static I_Var * generateVarPtr( const QString &pro_type_name, const std_vector< QString > &alias_type_name ) {
+		auto release = [] ( void *p ) {
+			delete ( TGenerateType * ) p;
+			return true;
+		};
+		auto create = [] {
+			return new TGenerateType( 0 );
+		};
+		return generateVarPtr< TGenerateType >( pro_type_name, alias_type_name, release, create );
+	}
+	template< typename TGenerateType >
+	static I_Var * generateVarPtr( ) {
+		auto release = [] ( void *p ) {
+			delete ( TGenerateType * ) p;
+			return true;
+		};
+		auto create = [] {
+			return new TGenerateType( 0 );
+		};
+		return generateVarPtr< TGenerateType >( "", { }, release, create );
+	}
 };
 
 #endif // I_VAR_H_H_HEAD__FILE__
