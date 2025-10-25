@@ -64,16 +64,46 @@ void VarEditorWidget::initVarEditorInfo( ) {
 	varVarLineEdit->setText( varValue );
 	applyVarChange->setEnabled( false );
 }
+void VarEditorWidget::nameLineEditorChanged( const QString &new_text ) {
+	if( nameCheckFunction && nameCheckFunction( new_text ) )
+		applyVarChange->setEnabled( true );
+	applyVarChange->setEnabled( false );
+}
+void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
+	if( varCheckFunction && varCheckFunction( new_text ) )
+		applyVarChange->setEnabled( true );
+	applyVarChange->setEnabled( false );
+}
+void VarEditorWidget::setVarValue( ) {
+	if( nameCheckFunction == nullptr || varCheckFunction == nullptr )
+
+		return;
+
+	QString nameText = varNameLineEdit->text( );
+	if( nameCheckFunction( nameText ) == false )
+		return;
+	QString varText = varVarLineEdit->text( );
+	if( varCheckFunction( varText ) == false )
+		return;
+	auto element = editorVar.get( );
+	element->setVarName( nameText );
+	auto typeInfo = element->getTypeInfo( );
+	varGenerate->conver( typeInfo->getTypeInfo( ), element->getVarPtr( ), typeid( QString ), &varText );
+}
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
+	application = Application::getApplicationInstancePtr( );
+	varGenerate = application->getVarGenerate( );
 	setFixedSize( 200, 250 );
 	titile = new QLabel( tr( "变量编辑" ), this );
 
 	varNameTitile = new QLabel( tr( "变量名称:" ), this );
 	varNameLineEdit = new QLineEdit( this );
-
+	connect( varNameLineEdit, &QLineEdit::textEdited, this, &VarEditorWidget::nameLineEditorChanged );
 	varVarTitile = new QLabel( tr( "变量值:" ), this );
 	varVarLineEdit = new QLineEdit( this );
+	connect( varVarLineEdit, &QLineEdit::textEdited, this, &VarEditorWidget::varLineEditorChanged );
 	applyVarChange = new QPushButton( tr( "确定" ), this );
+	connect( applyVarChange, &QPushButton::clicked, this, &VarEditorWidget::setVarValue );
 }
 void VarEditorWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

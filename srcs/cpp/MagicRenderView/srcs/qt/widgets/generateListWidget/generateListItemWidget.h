@@ -15,7 +15,11 @@ public:
 	~GenerateListItemWidget( ) override;
 	virtual const std_shared_ptr< I_Var > & getVar( ) const { return var; }
 	virtual VarEditorWidget * getVarEditInfo( ) const { return varEditorWidget; }
-	virtual bool showVarEditorWidget() const;
+	virtual bool showVarEditorWidget( ) const;
+	virtual const std_function< bool( const QString & ) > & getNameCheckFunction( ) const;
+	virtual void setNameCheckFunction( const std_function< bool( const QString & ) > &name_check_function );
+	virtual const std_function< bool( const QString & ) > & getVarCheckFunction( ) const;
+	virtual void setVarCheckFunction( const std_function< bool( const QString & ) > &var_check_function );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseDoubleClickEvent( QMouseEvent *event ) override;

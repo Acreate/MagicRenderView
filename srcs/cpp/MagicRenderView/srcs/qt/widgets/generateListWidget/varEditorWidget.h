@@ -3,6 +3,8 @@
 #pragma once
 #include "GenerateListItemWidget.h"
 
+class Application;
+class VarGenerate;
 class QGridLayout;
 class QHBoxLayout;
 class QLabel;
@@ -24,12 +26,16 @@ protected:
 	QLineEdit *varNameLineEdit;
 
 	QPushButton *applyVarChange;
-
+	Application * application;
+	VarGenerate * varGenerate;
 	std_function< bool( const QString & ) > nameCheckFunction;
 	std_function< bool( const QString & ) > varCheckFunction;
 protected:
 	virtual void updateLayout( );
 	virtual void initVarEditorInfo( );
+	virtual void nameLineEditorChanged(const QString& new_text);
+	virtual void varLineEditorChanged(const QString& new_text);
+	virtual void setVarValue();
 public:
 	VarEditorWidget( const std_shared_ptr< I_Var > &editor_var );
 	virtual const std_shared_ptr< I_Var > & getEditorVar( ) const { return editorVar; }

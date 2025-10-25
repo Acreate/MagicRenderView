@@ -30,6 +30,18 @@ bool GenerateListItemWidget::showVarEditorWidget( ) const {
 	varEditorWidget->raise( );
 	return true;
 }
+const std_function< bool( const QString & ) > & GenerateListItemWidget::getNameCheckFunction( ) const {
+	return varEditorWidget->getNameCheckFunction( );
+}
+void GenerateListItemWidget::setNameCheckFunction( const std_function< bool( const QString & ) > &name_check_function ) {
+	varEditorWidget->setNameCheckFunction( name_check_function );
+}
+const std_function< bool( const QString & ) > & GenerateListItemWidget::getVarCheckFunction( ) const {
+	return varEditorWidget->getVarCheckFunction( );
+}
+void GenerateListItemWidget::setVarCheckFunction( const std_function< bool( const QString & ) > &var_check_function ) {
+	varEditorWidget->setVarCheckFunction( var_check_function );
+}
 void GenerateListItemWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );

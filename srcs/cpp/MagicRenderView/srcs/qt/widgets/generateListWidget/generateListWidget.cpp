@@ -64,16 +64,14 @@ bool GenerateListWidget::removeItem( GenerateListItemWidget *new_list_item_widge
 	return false;
 }
 void GenerateListWidget::fromComponentAddItemInfo( ) {
-	using t_current_type = int64_t;
-	I_Type *type_info = new I_Type( typeid( t_current_type ), sizeof( typeid( t_current_type ) ), [] ( void *p ) {
-		delete ( t_current_type * ) p;
-		return true;
-	}, [] {
-		return new t_current_type( 0 );
-	} );
-	std_shared_ptr< I_Var > var( new I_Var( type_info ) );
-
+	if( varGenerateFunction == nullptr )
+		return;
+	auto var = varGenerateFunction( );
+	if( var == nullptr )
+		return;
 	auto newListItemWidget = new GenerateListItemWidget( var, this );
+	newListItemWidget->setVarCheckFunction( varCheckFunction );
+	newListItemWidget->setNameCheckFunction( nameCheckFunction );
 	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
 	addItem( newListItemWidget );
 	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );

@@ -22,6 +22,9 @@ protected:
 	std_vector< GenerateListItemWidget * > generateListItemWidgets;
 	GenerateListItemWidget *selectWidget;
 	bool isReleaseWidget;
+	std_function<std_shared_ptr< I_Var > ()> varGenerateFunction;
+	std_function< bool( const QString & ) > nameCheckFunction;
+	std_function< bool( const QString & ) > varCheckFunction;
 protected:
 	virtual bool insterToLayout( GenerateListItemWidget *new_list_item_widget );
 	virtual bool addItem( GenerateListItemWidget *new_list_item_widget );
@@ -33,6 +36,12 @@ public:
 	~GenerateListWidget( ) override;
 	virtual std_vector< std_shared_ptr< I_Var > > getItemVarVector( ) const;
 	virtual std_shared_ptr< I_Var > getItemIndexVar( const size_t &index ) const;
+	virtual const std_function<std_shared_ptr<I_Var>()> & getVarGenerateFunction( ) const { return varGenerateFunction; }
+	virtual void setVarGenerateFunction( const std_function<std_shared_ptr<I_Var>()> &var_generate_function ) { varGenerateFunction = var_generate_function; }
+	virtual const std_function<bool(const QString &)> & getNameCheckFunction( ) const { return nameCheckFunction; }
+	virtual void setNameCheckFunction( const std_function<bool(const QString &)> &name_check_function ) { nameCheckFunction = name_check_function; }
+	virtual const std_function<bool(const QString &)> & getVarCheckFunction( ) const { return varCheckFunction; }
+	virtual void setVarCheckFunction( const std_function<bool(const QString &)> &var_check_function ) { varCheckFunction = var_check_function; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void showEvent( QShowEvent *event ) override;
