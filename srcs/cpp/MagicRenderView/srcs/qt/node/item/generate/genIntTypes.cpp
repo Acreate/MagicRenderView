@@ -27,14 +27,7 @@ GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	} );
 	generateIntWidget->setVarGenerateFunction( [] {
 		using t_current_type = int64_t;
-		auto type = new I_Type( typeid( t_current_type ), sizeof( t_current_type ), [] ( void *p ) {
-			delete ( t_current_type * ) p;
-			return true;
-		}, [] {
-			return new t_current_type( 0 );
-		} );
-		auto var = new I_Var( type );
-		return std_shared_ptr< I_Var >( var );
+		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
 	} );
 	connect( generateIntWidget, &GenerateListWidget::changeVarOverSignal, this, &GenIntTypes::changeVarOverSignal );
 }

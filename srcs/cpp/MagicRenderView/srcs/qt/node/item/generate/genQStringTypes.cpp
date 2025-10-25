@@ -27,14 +27,7 @@ GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) 
 	} );
 	generateQStringWidget->setVarGenerateFunction( [] {
 		using t_current_type = QString;
-		auto type = new I_Type( typeid( t_current_type ), sizeof( t_current_type ), [] ( void *p ) {
-			delete ( t_current_type * ) p;
-			return true;
-		}, [] {
-			return new t_current_type( );
-		} );
-		auto var = new I_Var( type );
-		return std_shared_ptr< I_Var >( var );
+		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
 	} );
 	connect( generateQStringWidget, &GenerateListWidget::changeVarOverSignal, this, &GenQStringTypes::changeVarOverSignal );
 }
