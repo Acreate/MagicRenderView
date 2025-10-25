@@ -64,18 +64,30 @@ void VarEditorWidget::initVarEditorInfo( ) {
 	}
 	varVarLineEdit->setText( varValue );
 	applyVarChange->setEnabled( false );
+	if( toolTipShowStatus ) {
+		toolTipShowStatus = true;
+		QToolTip::hideText( );
+	}
 }
 void VarEditorWidget::nameLineEditorChanged( const QString &new_text ) {
 	if( nameCheckFunction && nameCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
 	else
 		applyVarChange->setEnabled( false );
+	if( toolTipShowStatus ) {
+		toolTipShowStatus = true;
+		QToolTip::hideText( );
+	}
 }
 void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
 	if( varCheckFunction && varCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
 	else
 		applyVarChange->setEnabled( false );
+	if( toolTipShowStatus ) {
+		toolTipShowStatus = true;
+		QToolTip::hideText( );
+	}
 }
 void VarEditorWidget::setVarValue( ) {
 	QString nameText = varNameLineEdit->text( );
@@ -85,15 +97,21 @@ void VarEditorWidget::setVarValue( ) {
 	auto typeInfo = element->getTypeInfo( );
 	varGenerate->conver( typeInfo->getTypeInfo( ), element->getVarPtr( ), typeid( QString ), &varText );
 	emit changeVarOverSignal( this );
+	if( toolTipShowStatus ) {
+		toolTipShowStatus = true;
+		QToolTip::hideText( );
+	}
 	hide( );
+
 }
 VarEditorWidget::~VarEditorWidget( ) {
 	editorVar.reset( );
 }
 
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
+	toolTipShowStatus = false;
 	application = Application::getApplicationInstancePtr( );
-	application->processEvents(  );
+	application->processEvents( );
 	varGenerate = application->getVarGenerate( );
 	setFixedSize( 200, 250 );
 
@@ -111,10 +129,12 @@ VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : 
 	connect( applyVarChange, &QPushButton::clicked, this, &VarEditorWidget::setVarValue );
 }
 void VarEditorWidget::setNameEditorMsg( const QString &msg ) {
-	QToolTip::showText( varNameLineEdit->pos( ), msg );
+	toolTipShowStatus = true;
+	QToolTip::showText( mapToGlobal( varNameLineEdit->pos( ) ), msg );
 }
 void VarEditorWidget::setValueEditorMsg( const QString &msg ) {
-	QToolTip::showText( varVarLineEdit->pos( ), msg );
+	toolTipShowStatus = true;
+	QToolTip::showText( mapToGlobal( varVarLineEdit->pos( ) ), msg );
 }
 void VarEditorWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

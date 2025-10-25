@@ -30,6 +30,7 @@ protected:
 	VarGenerate *varGenerate;
 	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
 	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
+	bool toolTipShowStatus;
 protected:
 	virtual void updateLayout( );
 	virtual void initVarEditorInfo( );
