@@ -76,16 +76,8 @@ void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
 	applyVarChange->setEnabled( false );
 }
 void VarEditorWidget::setVarValue( ) {
-	if( nameCheckFunction == nullptr || varCheckFunction == nullptr )
-
-		return;
-
 	QString nameText = varNameLineEdit->text( );
-	if( nameCheckFunction( this, nameText ) == false )
-		return;
 	QString varText = varVarLineEdit->text( );
-	if( varCheckFunction( this, varText ) == false )
-		return;
 	auto element = editorVar.get( );
 	element->setVarName( nameText );
 	auto typeInfo = element->getTypeInfo( );
@@ -95,7 +87,10 @@ VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : 
 	application = Application::getApplicationInstancePtr( );
 	varGenerate = application->getVarGenerate( );
 	setFixedSize( 200, 250 );
-	titile = new QLabel( tr( "变量编辑" ), this );
+
+	QString titileText = QString( tr( "0x%1 变量编辑" ) );
+	QString overTitleText = titileText.arg( QString::number( ( size_t ) editor_var.get( ), 16 ).toUpper( ) );
+	titile = new QLabel( overTitleText, this );
 
 	varNameTitile = new QLabel( tr( "变量名称:" ), this );
 	varNameLineEdit = new QLineEdit( this );
