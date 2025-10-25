@@ -34,6 +34,7 @@ GenerateListItemWidget::GenerateListItemWidget( const std_shared_ptr< I_Var > &v
 }
 GenerateListItemWidget::~GenerateListItemWidget( ) {
 	emit releaseThisPtr( this );
+	var.reset( );
 	delete varEditorWidget;
 }
 bool GenerateListItemWidget::showVarEditorWidget( ) const {

@@ -37,6 +37,7 @@ protected:
 	virtual void varLineEditorChanged( const QString &new_text );
 	virtual void setVarValue( );
 public:
+	~VarEditorWidget( ) override;
 	VarEditorWidget( const std_shared_ptr< I_Var > &editor_var );
 	virtual const std_shared_ptr< I_Var > & getEditorVar( ) const { return editorVar; }
 	virtual void setEditorVar( const std_shared_ptr< I_Var > &editor_var ) {

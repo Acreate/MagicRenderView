@@ -22,7 +22,7 @@ void GenQImageTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLis
 	auto data = nodeVarVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == var ) {
+		if( data[ index ].get( ) == var ) {
 			auto begin = nodeVarVector.begin( );
 			nodeVarVector.erase( begin );
 			return;

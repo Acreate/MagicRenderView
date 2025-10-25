@@ -16,7 +16,6 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
-
 void GenIntTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -27,7 +26,7 @@ void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 	auto data = nodeVarVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == var ) {
+		if( data[ index ].get( ) == var ) {
 			auto begin = nodeVarVector.begin( );
 			nodeVarVector.erase( begin );
 			return;
@@ -36,14 +35,28 @@ void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateIntWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateIntWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+
+		bool result = false;
+		string.toDouble( &result );
+		return result;
+	} );
+	generateIntWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		size_t count = nodeVarVector.size( );
+		if( count == 0 )
+			return false;
+		auto data = nodeVarVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ]->getVarName( ) == string ) {
+				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				return false;
+			}
 		return true;
 	} );
-	generateIntWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
-		return true;
-	} );
-	generateIntWidget->setVarGenerateFunction( [] {
+	generateIntWidget->setVarGenerateFunction( [this] {
 		using t_current_type = int64_t;
-		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
+		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
+		nodeVarVector.emplace_back( ptr );
+		return ptr;
 	} );
 
 	connect( generateIntWidget, &GenerateListWidget::changeVarOverSignal, this, &GenIntTypes::changeVarOver );

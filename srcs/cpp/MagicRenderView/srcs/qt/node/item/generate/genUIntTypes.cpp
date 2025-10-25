@@ -25,7 +25,7 @@ void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListI
 	auto data = nodeVarVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == var ) {
+		if( data[ index ].get( ) == var ) {
 			auto begin = nodeVarVector.begin( );
 			nodeVarVector.erase( begin );
 			return;
@@ -34,14 +34,27 @@ void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListI
 GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateUintWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateUintWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		bool result = false;
+		string.toDouble( &result );
+		return result;
+	} );
+	generateUintWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		size_t count = nodeVarVector.size( );
+		if( count == 0 )
+			return false;
+		auto data = nodeVarVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ]->getVarName( ) == string ) {
+				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				return false;
+			}
 		return true;
 	} );
-	generateUintWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
-		return true;
-	} );
-	generateUintWidget->setVarGenerateFunction( [] {
+	generateUintWidget->setVarGenerateFunction( [this] {
 		using t_current_type = uint64_t;
-		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
+		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
+		nodeVarVector.emplace_back( ptr );
+		return ptr;
 	} );
 
 	connect( generateUintWidget, &GenerateListWidget::changeVarOverSignal, this, &GenUIntTypes::changeVarOver );

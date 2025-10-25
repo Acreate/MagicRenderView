@@ -58,11 +58,11 @@ NodeItem::~NodeItem( ) {
 		delete outputVectorPtr[ index ].first;
 	nodeOutputProtVector.clear( );
 
-	index = 0;
-	count = nodeVarVector.size( );
-	auto varVectorPtr = nodeVarVector.data( );
-	for( ; index < count; ++index )
-		delete varVectorPtr[ index ];
+	//index = 0;
+	//count = nodeVarVector.size( );
+	//auto varVectorPtr = nodeVarVector.data( );
+	//for( ; index < count; ++index )
+	//	delete varVectorPtr[ index ];
 	nodeVarVector.clear( );
 
 	delete nodeItemRender;

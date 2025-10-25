@@ -87,7 +87,9 @@ void VarEditorWidget::setVarValue( ) {
 	emit changeVarOverSignal( this );
 	hide( );
 }
-
+VarEditorWidget::~VarEditorWidget( ) {
+	editorVar.reset( );
+}
 
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
 	application = Application::getApplicationInstancePtr( );

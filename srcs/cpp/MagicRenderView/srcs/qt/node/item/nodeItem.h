@@ -97,7 +97,7 @@ private:
 	MainWidget *renderMainWidget;
 protected:
 	/// @brief 节点变量
-	std_vector< I_Var * > nodeVarVector;
+	std_vector< std_shared_ptr< I_Var > > nodeVarVector;
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
 protected:

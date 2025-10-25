@@ -16,7 +16,6 @@
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 Imp_StaticMetaInfo( GenQStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
-
 void GenQStringTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -27,7 +26,7 @@ void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLi
 	auto data = nodeVarVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == var ) {
+		if( data[ index ].get( ) == var ) {
 			auto begin = nodeVarVector.begin( );
 			nodeVarVector.erase( begin );
 			return;
@@ -38,12 +37,23 @@ GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) 
 	generateQStringWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		return true;
 	} );
-	generateQStringWidget->setNameCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+	generateQStringWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
+		size_t count = nodeVarVector.size( );
+		if( count == 0 )
+			return false;
+		auto data = nodeVarVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( data[ index ]->getVarName( ) == string ) {
+				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				return false;
+			}
 		return true;
 	} );
-	generateQStringWidget->setVarGenerateFunction( [] {
+	generateQStringWidget->setVarGenerateFunction( [this] {
 		using t_current_type = QString;
-		return std_shared_ptr< I_Var >( I_Var::generateVarPtr< t_current_type >( ) );
+		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
+		nodeVarVector.emplace_back( ptr );
+		return ptr;
 	} );
 	connect( generateQStringWidget, &GenerateListWidget::changeVarOverSignal, this, &GenQStringTypes::changeVarOver );
 	connect( generateQStringWidget, &GenerateListWidget::delVarOverSignal, this, &GenQStringTypes::delVarOver );
