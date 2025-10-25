@@ -68,12 +68,14 @@ void VarEditorWidget::initVarEditorInfo( ) {
 void VarEditorWidget::nameLineEditorChanged( const QString &new_text ) {
 	if( nameCheckFunction && nameCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
-	applyVarChange->setEnabled( false );
+	else
+		applyVarChange->setEnabled( false );
 }
 void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
 	if( varCheckFunction && varCheckFunction( this, new_text ) )
 		applyVarChange->setEnabled( true );
-	applyVarChange->setEnabled( false );
+	else
+		applyVarChange->setEnabled( false );
 }
 void VarEditorWidget::setVarValue( ) {
 	QString nameText = varNameLineEdit->text( );
@@ -82,9 +84,14 @@ void VarEditorWidget::setVarValue( ) {
 	element->setVarName( nameText );
 	auto typeInfo = element->getTypeInfo( );
 	varGenerate->conver( typeInfo->getTypeInfo( ), element->getVarPtr( ), typeid( QString ), &varText );
+	emit changeVarOverSignal( this );
+	hide( );
 }
+
+
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
 	application = Application::getApplicationInstancePtr( );
+	application->processEvents(  );
 	varGenerate = application->getVarGenerate( );
 	setFixedSize( 200, 250 );
 

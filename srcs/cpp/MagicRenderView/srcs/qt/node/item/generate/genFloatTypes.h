@@ -3,12 +3,16 @@
 #pragma once
 #include "../nodeItem.h"
 
+class GenerateListItemWidget;
+class VarEditorWidget;
 class GenerateListWidget;
 class GenFloatTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
 	GenerateListWidget* generateFloatWidget;
+protected:
+	virtual void changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
 protected:
 	GenFloatTypes( );
 public:

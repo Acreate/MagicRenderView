@@ -15,6 +15,8 @@
 #include "../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 Imp_StaticMetaInfo( GenQStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
+void GenQStringTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
 GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateQStringWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateQStringWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -34,6 +36,7 @@ GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) 
 		auto var = new I_Var( type );
 		return std_shared_ptr< I_Var >( var );
 	} );
+	connect( generateQStringWidget, &GenerateListWidget::changeVarOverSignal, this, &GenQStringTypes::changeVarOverSignal );
 }
 bool GenQStringTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

@@ -52,7 +52,6 @@ public:
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 	void showEvent( QShowEvent *event ) override;
-public:
 Q_SIGNALS:
 	void changeVarOverSignal( VarEditorWidget *signal_obj_ptr );
 };

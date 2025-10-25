@@ -14,6 +14,8 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenUIntTypes, QObject::tr( "无符号" ), QObject::tr( "生成" ) );
 
+void GenUIntTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
 GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateUintWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateUintWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -33,6 +35,7 @@ GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto var = new I_Var( type );
 		return std_shared_ptr< I_Var >( var );
 	} );
+	connect( generateUintWidget, &GenerateListWidget::changeVarOverSignal, this, &GenUIntTypes::changeVarOverSignal );
 }
 bool GenUIntTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

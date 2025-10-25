@@ -14,6 +14,8 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
+void GenBinTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
 GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateBinWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateBinWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -33,6 +35,8 @@ GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto var = new I_Var( type );
 		return std_shared_ptr< I_Var >( var );
 	} );
+
+	connect( generateBinWidget, &GenerateListWidget::changeVarOverSignal, this, &GenBinTypes::changeVarOverSignal );
 }
 bool GenBinTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

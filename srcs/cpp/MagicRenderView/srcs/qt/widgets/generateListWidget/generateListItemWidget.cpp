@@ -9,17 +9,27 @@
 
 #include <qt/varType/I_Var.h>
 
-
 GenerateListItemWidget::GenerateListItemWidget( const std_shared_ptr< I_Var > &var, QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), var( var ) {
 	varEditorWidget = new VarEditorWidget( var );
-	auto mainLayout = new QHBoxLayout( this );
-	QLabel *titile = new QLabel( this );
+
+	mainLayout = new QHBoxLayout( this );
+	titile = new QLabel( this );
 	titile->setText( var.get( )->getVarName( ) );
 	mainLayout->addWidget( titile );
-	QPushButton *delBtn = new QPushButton( tr( "删除" ), this );
+	delBtn = new QPushButton( tr( "删除" ), this );
 	mainLayout->addWidget( delBtn, 0, Qt::AlignRight );
 	connect( delBtn, &QPushButton::clicked, [this]( ) {
 		delete this;
+	} );
+	connect( varEditorWidget, &VarEditorWidget::changeVarOverSignal, [this] ( VarEditorWidget *signal_obj_ptr ) {
+		I_Var *element = signal_obj_ptr->getEditorVar( ).get( );
+		if( element == nullptr )
+			return;
+		if( this->var.get( ) != element )
+			return;
+		auto name = element->getVarName( );
+		titile->setText( name );
+		emit changeVarOverSignal( this, signal_obj_ptr );
 	} );
 }
 GenerateListItemWidget::~GenerateListItemWidget( ) {

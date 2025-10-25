@@ -89,7 +89,10 @@ void GenerateListWidget::fromComponentAddItemInfo( ) {
 	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
 	addItem( newListItemWidget );
 	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );
-	newListItemWidget->showVarEditorWidget(  );
+	connect( newListItemWidget, &GenerateListItemWidget::changeVarOverSignal, [this] ( GenerateListItemWidget *signal_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+		emit this->changeVarOverSignal( this, signal_obj_ptr, change_var_obj_ptr );
+	} );
+	newListItemWidget->showVarEditorWidget( );
 }
 
 GenerateListItemWidget * GenerateListWidget::getPointWidget( const QPoint &pos ) const {

@@ -4,12 +4,16 @@
 
 #include "../nodeItem.h"
 
+class GenerateListItemWidget;
+class VarEditorWidget;
 class GenerateListWidget;
 class GenBinTypes : public NodeItem {
 	Q_OBJECT;
 	Def_NodeItem_Last_StaticMetaInfo( );
 protected:
-	GenerateListWidget* generateBinWidget;
+	GenerateListWidget *generateBinWidget;
+protected:
+	virtual void changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr );
 protected:
 	GenBinTypes( );
 public:

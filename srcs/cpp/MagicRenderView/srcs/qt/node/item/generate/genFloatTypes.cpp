@@ -15,6 +15,8 @@
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
+void GenFloatTypes::changeVarOverSignal( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+}
 GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateFloatWidget = new GenerateListWidget( nodeInfoScrollArea );
 	generateFloatWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -34,6 +36,7 @@ GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto var = new I_Var( type );
 		return std_shared_ptr< I_Var >( var );
 	} );
+	connect( generateFloatWidget, &GenerateListWidget::changeVarOverSignal, this, &GenFloatTypes::changeVarOverSignal );
 }
 bool GenFloatTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(
