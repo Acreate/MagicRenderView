@@ -9,7 +9,6 @@
 #include "../../../widgets/generateListWidget/generateListWidget.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateIntNodeInfoWidget/generateIntWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/intOutputPort.h"
@@ -34,10 +33,16 @@ void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 }
 GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateIntWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateIntWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
+		result_normal_var = string;
+		return true;
+	} );
 	generateIntWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 
 		bool result = false;
 		string.toDouble( &result );
+		if( result == false )
+			var_editor_widget->setValueEditorMsg( tr( "值无法转换到整数" ) );
 		return result;
 	} );
 	generateIntWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -47,7 +52,7 @@ GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto data = nodeVarVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			if( data[ index ]->getVarName( ) == string ) {
-				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				var_editor_widget->setNameEditorMsg( tr( "存在同名变量" ) );
 				return false;
 			}
 		return true;

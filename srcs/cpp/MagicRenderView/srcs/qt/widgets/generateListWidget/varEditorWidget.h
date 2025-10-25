@@ -30,6 +30,7 @@ protected:
 	VarGenerate *varGenerate;
 	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
 	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
+	std_function< bool( VarEditorWidget *, const QString &, QString & ) > normalVarFunction;
 	bool toolTipShowStatus;
 protected:
 	virtual void updateLayout( );
@@ -49,6 +50,8 @@ public:
 	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
 	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
 	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
+	virtual const std_function<bool(VarEditorWidget *, const QString &, QString &)> & getNormalVarFunction( ) const { return normalVarFunction; }
+	virtual void setNormalVarFunction( const std_function<bool(VarEditorWidget *, const QString &, QString &)> &normal_var_function ) { normalVarFunction = normal_var_function; }
 	virtual void setNameEditorMsg( const QString &msg );
 	virtual void setValueEditorMsg( const QString &msg );
 protected:

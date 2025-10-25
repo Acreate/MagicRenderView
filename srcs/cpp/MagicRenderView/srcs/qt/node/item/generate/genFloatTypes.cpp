@@ -9,7 +9,6 @@
 #include "../../../widgets/generateListWidget/generateListWidget.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateFloatNodeInfoWidget/generateFloatWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
@@ -26,7 +25,7 @@ void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateList
 	auto data = nodeVarVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ].get(  ) == var ) {
+		if( data[ index ].get( ) == var ) {
 			auto begin = nodeVarVector.begin( );
 			nodeVarVector.erase( begin );
 			return;
@@ -34,9 +33,15 @@ void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateList
 }
 GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateFloatWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateFloatWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
+		result_normal_var = string;
+		return true;
+	} );
 	generateFloatWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		bool result = false;
 		string.toDouble( &result );
+		if( result == false )
+			var_editor_widget->setValueEditorMsg( tr( "值无法转换到浮点" ) );
 		return result;
 	} );
 	generateFloatWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -46,14 +51,14 @@ GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto data = nodeVarVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			if( data[ index ]->getVarName( ) == string ) {
-				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				var_editor_widget->setNameEditorMsg( tr( "存在同名变量" ) );
 				return false;
 			}
 		return true;
 	} );
 	generateFloatWidget->setVarGenerateFunction( [this] {
 		using t_current_type = double;
-		std_shared_ptr<I_Var> ptr( I_Var::generateVarPtr< t_current_type >( ) );
+		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
 		nodeVarVector.emplace_back( ptr );
 		return ptr;
 	} );

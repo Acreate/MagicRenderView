@@ -9,8 +9,6 @@
 #include "../../../widgets/generateListWidget/generateListWidget.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateUIntNodeInfoWidget/generateUintWidget.h"
-
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
 Imp_StaticMetaInfo( GenUIntTypes, QObject::tr( "无符号" ), QObject::tr( "生成" ) );
@@ -33,9 +31,15 @@ void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListI
 }
 GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateUintWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateUintWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
+		result_normal_var = string;
+		return true;
+	} );
 	generateUintWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		bool result = false;
 		string.toDouble( &result );
+		if( result == false )
+			var_editor_widget->setValueEditorMsg( tr( "值无法转换到无符号整数" ) );
 		return result;
 	} );
 	generateUintWidget->setNameCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
@@ -45,7 +49,7 @@ GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 		auto data = nodeVarVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			if( data[ index ]->getVarName( ) == string ) {
-				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				var_editor_widget->setNameEditorMsg( tr( "存在同名变量" ) );
 				return false;
 			}
 		return true;

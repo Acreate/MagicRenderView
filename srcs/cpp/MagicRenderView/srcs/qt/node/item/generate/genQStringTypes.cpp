@@ -9,7 +9,6 @@
 #include "../../../widgets/generateListWidget/generateListWidget.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateQStringNodeInfoWidget/generateQStringWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
@@ -34,6 +33,10 @@ void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLi
 }
 GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateQStringWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateQStringWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
+		result_normal_var = string;
+		return true;
+	} );
 	generateQStringWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		return true;
 	} );
@@ -44,7 +47,7 @@ GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) 
 		auto data = nodeVarVector.data( );
 		for( size_t index = 0; index < count; ++index )
 			if( data[ index ]->getVarName( ) == string ) {
-				var_editor_widget->setNameEditorMsg( "存在同名变量" );
+				var_editor_widget->setNameEditorMsg( tr( "存在同名变量" ) );
 				return false;
 			}
 		return true;

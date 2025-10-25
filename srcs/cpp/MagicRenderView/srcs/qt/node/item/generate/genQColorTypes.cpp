@@ -5,7 +5,6 @@
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateQColorNodeInfoWidget/generateQColorWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
@@ -32,8 +31,6 @@ void GenQColorTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLis
 }
 GenQColorTypes::GenQColorTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
-	generateQColorWidget = new GenerateQColorWidget( this );
-	nodeInfoScrollArea->setWidget( generateQColorWidget );
 }
 bool GenQColorTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

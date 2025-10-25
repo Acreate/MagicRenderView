@@ -5,7 +5,6 @@
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
 
-#include "../../nodeInfoWidget/generateQImageNodeInfoWidget/generateQImageWidget.h"
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/float/floatOutputPort.h"
@@ -30,8 +29,6 @@ void GenQImageTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLis
 }
 GenQImageTypes::GenQImageTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
-	generateQImageWidget = new GenerateQImageWidget( this );
-	nodeInfoScrollArea->setWidget( generateQImageWidget );
 }
 bool GenQImageTypes::intPortItems( MainWidget *parent ) {
 	return initNodeItem(

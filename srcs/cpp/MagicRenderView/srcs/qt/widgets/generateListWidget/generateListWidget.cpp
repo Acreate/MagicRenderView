@@ -79,6 +79,10 @@ void GenerateListWidget::fromComponentAddItemInfo( ) {
 		tools::debug::printError( QObject::tr( "未配置正确的变量名称校验函数，请调用 setNameCheckFunction" ) );
 		return;
 	}
+	if( normalVarFunction == nullptr ) {
+		tools::debug::printError( QObject::tr( "未配置正确的变量值标准化函数，请调用 setNormalVarFunction" ) );
+		return;
+	}
 	auto var = varGenerateFunction( );
 	if( var == nullptr ) {
 		tools::debug::printError( QObject::tr( "变量生成失败，请检查变量生成函数，请调用 setVarCheckFunction 重新配置有效生成函数" ) );
@@ -87,6 +91,7 @@ void GenerateListWidget::fromComponentAddItemInfo( ) {
 	auto newListItemWidget = new GenerateListItemWidget( var, this );
 	newListItemWidget->setVarCheckFunction( varCheckFunction );
 	newListItemWidget->setNameCheckFunction( nameCheckFunction );
+	newListItemWidget->setNormalVarFunction( normalVarFunction );
 	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
 	addItem( newListItemWidget );
 	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );

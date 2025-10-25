@@ -11,6 +11,8 @@
 
 #include "../../generate/varGenerate.h"
 
+#include "../../tools/tools.h"
+
 #include "../../varType/I_Type.h"
 #include "../../varType/I_Var.h"
 
@@ -90,18 +92,30 @@ void VarEditorWidget::varLineEditorChanged( const QString &new_text ) {
 	}
 }
 void VarEditorWidget::setVarValue( ) {
-	QString nameText = varNameLineEdit->text( );
-	QString varText = varVarLineEdit->text( );
-	auto element = editorVar.get( );
-	element->setVarName( nameText );
-	auto typeInfo = element->getTypeInfo( );
-	varGenerate->conver( typeInfo->getTypeInfo( ), element->getVarPtr( ), typeid( QString ), &varText );
-	emit changeVarOverSignal( this );
 	if( toolTipShowStatus ) {
 		toolTipShowStatus = true;
 		QToolTip::hideText( );
 	}
-	hide( );
+	QString varText = varVarLineEdit->text( );
+	QString normalVar;
+	if( normalVarFunction && normalVarFunction( this, varText, normalVar ) ) {
+		QString nameText = varNameLineEdit->text( );
+		auto element = editorVar.get( );
+		element->setVarName( nameText );
+		auto typeInfo = element->getTypeInfo( );
+		auto varPtr = element->getVarPtr( );
+		auto &leftTypeInfo = typeInfo->getTypeInfo( );
+		varGenerate->conver( leftTypeInfo, varPtr, typeid( QString ), &normalVar );
+		emit changeVarOverSignal( this );
+
+		hide( );
+		return;
+	}
+
+	toolTipShowStatus = true;
+	QToolTip::showText( mapToGlobal( applyVarChange->pos( ) ), tr( "无法标准化变量值" ) );
+	applyVarChange->setEnabled( false );
+	return;
 
 }
 VarEditorWidget::~VarEditorWidget( ) {
@@ -110,6 +124,11 @@ VarEditorWidget::~VarEditorWidget( ) {
 
 VarEditorWidget::VarEditorWidget( const std_shared_ptr< I_Var > &editor_var ) : editorVar( editor_var ) {
 	toolTipShowStatus = false;
+
+	nameCheckFunction = nullptr;
+	varCheckFunction = nullptr;
+	normalVarFunction = nullptr;
+
 	application = Application::getApplicationInstancePtr( );
 	application->processEvents( );
 	varGenerate = application->getVarGenerate( );
