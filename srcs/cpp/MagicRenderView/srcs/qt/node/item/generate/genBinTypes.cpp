@@ -36,7 +36,7 @@ void GenBinTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 		}
 }
 GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-	generateBinWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateBinWidget = new GenerateListWidget( generateListScrollArea );
 	generateBinWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
 		bool result = false;
 		QString number = QString::number( string.toULongLong( &result, 16 ) );

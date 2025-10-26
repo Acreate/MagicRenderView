@@ -13,6 +13,8 @@
 #include <qt/tools/tools.h>
 #include <qt/varType/I_Var.h>
 
+#include "../../widgets/generateListWidget/generateListScrollArea.h"
+
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
 
 /// @brief 输入输入端口之间的空间大小
@@ -30,10 +32,10 @@ int NodeItem::borderLeftSpace = 0;
 /// @brief 边缘右侧空间大小
 int NodeItem::borderRightSpace = 0;
 
-NodeItem::NodeItem( ) : NodeItem( new QScrollArea( ) ) {
+NodeItem::NodeItem( ) : NodeItem( new GenerateListScrollArea( ) ) {
 
 }
-NodeItem::NodeItem( QScrollArea *node_info_scroll_area ) : QObject( ), nodeInfoScrollArea( node_info_scroll_area ) {
+NodeItem::NodeItem( GenerateListScrollArea *node_info_scroll_area ) : QObject( ), generateListScrollArea( node_info_scroll_area ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
 	nodeItemRender = new QImage( 10, 10, QImage::Format_RGBA8888 );
@@ -69,7 +71,7 @@ NodeItem::~NodeItem( ) {
 	delete inputBuff;
 	delete outputBuff;
 	delete titleBuff;
-	delete nodeInfoScrollArea;
+	delete generateListScrollArea;
 }
 void NodeItem::setMainWidget( MainWidget *parent ) {
 	//setParent( parent );
@@ -488,9 +490,9 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 	return nullptr;
 }
 QWidget * NodeItem::getNodeItemWidget( ) const {
-	if( nodeInfoScrollArea == nullptr || nodeInfoScrollArea->widget( ) == nullptr )
+	if( generateListScrollArea == nullptr || generateListScrollArea->widget( ) == nullptr )
 		return nullptr;
-	return nodeInfoScrollArea;
+	return generateListScrollArea;
 }
 
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {

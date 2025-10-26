@@ -112,7 +112,7 @@ GenerateListItemWidget * GenerateListWidget::getPointWidget( const QPoint &pos )
 			break;
 	return nullptr;
 }
-GenerateListWidget::GenerateListWidget( QScrollArea *parent ) : QWidget( parent ) {
+GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidget( parent ) {
 	isReleaseWidget = false;
 	selectWidget = nullptr;
 	mainLayout = new QVBoxLayout( this );
@@ -121,10 +121,8 @@ GenerateListWidget::GenerateListWidget( QScrollArea *parent ) : QWidget( parent 
 	mainLayout->addWidget( addItemBtn, 0, Qt::AlignHCenter | Qt::AlignTop );
 	mainLayout->addSpacerItem( new QSpacerItem( 10, 10, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding ) );
 	generateListScrollArea = parent;
-	generateListScrollArea->setWidget( this );
-	generateListScrollArea->setWidgetResizable( true );
-	generateListScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-	generateListScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	generateListScrollArea->setGenerateListWidget( this );
+	generateListScrollArea->setInit(  );
 	horizontalScrollBar = generateListScrollArea->horizontalScrollBar( );
 	verticalScrollBar = generateListScrollArea->verticalScrollBar( );
 }

@@ -5,6 +5,13 @@
 #include "GenerateListWidget.h"
 GenerateListScrollArea::GenerateListScrollArea( QWidget *parent ) : QScrollArea( parent ) {
 	tools::ui::moveDisplayCenter( this, 0 );
-	generateListWidget = new GenerateListWidget( this );
-
+}
+void GenerateListScrollArea::setInit( ) {
+	setWidgetResizable( true );
+	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+}
+void GenerateListScrollArea::setGenerateListWidget( GenerateListWidget *generate_list_widget ) {
+	generateListWidget = generate_list_widget;
+	setWidget( generateListWidget );
 }

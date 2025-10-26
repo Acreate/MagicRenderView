@@ -12,6 +12,8 @@ protected:
 	GenerateListWidget *generateListWidget;
 public:
 	GenerateListScrollArea( QWidget *parent = nullptr );
+	virtual void setInit();
+	virtual void setGenerateListWidget( GenerateListWidget *generate_list_widget );
 	virtual GenerateListWidget * getGenerateListWidget( ) const { return generateListWidget; }
 };
 

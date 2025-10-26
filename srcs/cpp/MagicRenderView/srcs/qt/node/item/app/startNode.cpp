@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 #include "../../nodeInfoWidget/startNodeInfoWidget/startNodeInfoWidget.h"
 
 #include "../../prot/outputProt/impOutputPort/any/anyOutputPort.h"
@@ -11,7 +13,7 @@ Imp_StaticMetaInfo( StartNode, QObject::tr( "起始" ), QObject::tr( "软件" ) 
 StartNode::StartNode( ) : NodeItem( ) {
 
 	nodeInfoWidget = new StartNodeInfoWidget( this );
-	nodeInfoScrollArea->setWidget( nodeInfoWidget );
+	generateListScrollArea->setWidget( nodeInfoWidget );
 }
 
 bool StartNode::intPortItems( MainWidget *parent ) {

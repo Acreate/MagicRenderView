@@ -3,6 +3,7 @@
 #pragma once
 #include "../nodeItem.h"
 
+class GenerateListScrollArea;
 class GenerateListWidget;
 class GenerateListItemWidget;
 class VarEditorWidget;

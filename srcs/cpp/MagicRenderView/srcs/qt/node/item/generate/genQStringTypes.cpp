@@ -33,7 +33,7 @@ void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLi
 		}
 }
 GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-	generateQStringWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateQStringWidget = new GenerateListWidget( generateListScrollArea );
 	generateQStringWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
 
 		auto typeInfo = result_normal_var->getTypeInfo( );

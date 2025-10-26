@@ -5,6 +5,7 @@
 
 #include <alias/type_alias.h>
 
+class GenerateListScrollArea;
 class QScrollArea;
 class VarEditorWidget;
 class QScrollBar;
@@ -17,7 +18,7 @@ class GenerateListWidget : public QWidget {
 protected:
 	QVBoxLayout *mainLayout;
 	QPushButton *addItemBtn;
-	QScrollArea *generateListScrollArea;
+	GenerateListScrollArea *generateListScrollArea;
 	QScrollBar *horizontalScrollBar;
 	QScrollBar *verticalScrollBar;
 	std_vector< GenerateListItemWidget * > generateListItemWidgets;
@@ -34,7 +35,7 @@ protected:
 	virtual void fromComponentAddItemInfo( );
 	virtual GenerateListItemWidget * getPointWidget( const QPoint &pos ) const;
 public:
-	GenerateListWidget( QScrollArea *parent );
+	GenerateListWidget( GenerateListScrollArea *parent );
 	~GenerateListWidget( ) override;
 	virtual std_vector< std_shared_ptr< I_Var > > getItemVarVector( ) const;
 	virtual std_shared_ptr< I_Var > getItemIndexVar( const size_t &index ) const;

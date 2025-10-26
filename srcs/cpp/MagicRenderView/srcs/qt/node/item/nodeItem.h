@@ -9,6 +9,7 @@
 #include <alias/type_alias.h>
 #include <qt/enums/nodeItemEnum.h>
 
+class GenerateListScrollArea;
 class QScrollArea;
 class NodeItemInfoScrollAreaWidget;
 class NodePort;
@@ -43,8 +44,6 @@ protected:
 	static int borderLeftSpace;
 	/// @brief 边缘右侧空间大小
 	static int borderRightSpace;
-	/// @brief 返回窗口
-	QScrollArea *nodeInfoScrollArea;
 public:
 	using NodeItem_ParentPtr_Type = QWidget;
 	using NodeItemString_Type = QString;
@@ -96,6 +95,7 @@ private:
 	/// @brief 渲染所在窗口
 	MainWidget *renderMainWidget;
 protected:
+	GenerateListScrollArea *generateListScrollArea;
 	/// @brief 节点变量
 	std_vector< std_shared_ptr< I_Var > > nodeVarVector;
 	/// @brief 应用类指针
@@ -104,7 +104,7 @@ protected:
 	VarGenerate *varGenerate;
 protected:
 	NodeItem( );
-	NodeItem( QScrollArea *node_info_scroll_area );
+	NodeItem( GenerateListScrollArea *node_info_scroll_area );
 public:
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	~NodeItem( ) override;

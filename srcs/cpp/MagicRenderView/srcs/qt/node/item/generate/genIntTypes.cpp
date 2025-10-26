@@ -33,7 +33,7 @@ void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 		}
 }
 GenIntTypes::GenIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
-	generateIntWidget = new GenerateListWidget( nodeInfoScrollArea );
+	generateIntWidget = new GenerateListWidget( generateListScrollArea );
 	generateIntWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
 
 		auto typeInfo = result_normal_var->getTypeInfo( );
