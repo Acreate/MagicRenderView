@@ -56,8 +56,8 @@ const std_function< bool( VarEditorWidget *, const QString & ) > & GenerateListI
 void GenerateListItemWidget::setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) {
 	varEditorWidget->setVarCheckFunction( var_check_function );
 }
-const std_function< bool( VarEditorWidget *, const QString &, QString & ) > & GenerateListItemWidget::getNormalVarFunction( ) const { return varEditorWidget->getNormalVarFunction( ); }
-void GenerateListItemWidget::setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, QString & ) > &normal_var_function ) {
+const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & GenerateListItemWidget::getNormalVarFunction( ) const { return varEditorWidget->getNormalVarFunction( ); }
+void GenerateListItemWidget::setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function ) {
 	varEditorWidget->setNormalVarFunction( normal_var_function );
 }
 

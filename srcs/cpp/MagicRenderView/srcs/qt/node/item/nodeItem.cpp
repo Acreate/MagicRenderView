@@ -35,7 +35,7 @@ NodeItem::NodeItem( ) : NodeItem( new QScrollArea( ) ) {
 }
 NodeItem::NodeItem( QScrollArea *node_info_scroll_area ) : QObject( ), nodeInfoScrollArea( node_info_scroll_area ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
-
+	varGenerate = applicationInstancePtr->getVarGenerate( );
 	nodeItemRender = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	inputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );

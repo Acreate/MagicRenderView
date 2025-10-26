@@ -28,8 +28,8 @@ public:
 	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function );
 	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const;
 	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function );
-	virtual const std_function<bool(VarEditorWidget *, const QString &, QString &)> & getNormalVarFunction( ) const;
-	virtual void setNormalVarFunction( const std_function<bool(VarEditorWidget *, const QString &, QString &)> &normal_var_function );
+	virtual const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & getNormalVarFunction( ) const;
+	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseDoubleClickEvent( QMouseEvent *event ) override;

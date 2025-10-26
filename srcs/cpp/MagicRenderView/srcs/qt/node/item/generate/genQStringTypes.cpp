@@ -2,13 +2,14 @@
 
 #include <QScrollArea>
 
+#include "../../../generate/varGenerate.h"
+
 #include "../../../varType/I_Type.h"
 #include "../../../varType/I_Var.h"
 
 #include "../../../widgets/generateListWidget/generateListScrollArea.h"
 #include "../../../widgets/generateListWidget/generateListWidget.h"
 #include "../../../widgets/generateListWidget/varEditorWidget.h"
-
 
 #include "../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../prot/outputProt/impOutputPort/int/uIntOutputPort.h"
@@ -33,9 +34,11 @@ void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLi
 }
 GenQStringTypes::GenQStringTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateQStringWidget = new GenerateListWidget( nodeInfoScrollArea );
-	generateQStringWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
-		result_normal_var = string;
-		return true;
+	generateQStringWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
+
+		auto typeInfo = result_normal_var->getTypeInfo( );
+		auto &info = typeInfo->getTypeInfo( );
+		return varGenerate->conver( info, result_normal_var->getVarPtr( ), typeid( QString ), &string );
 	} );
 	generateQStringWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		return true;

@@ -3,6 +3,8 @@
 #pragma once
 #include "GenerateListItemWidget.h"
 
+#include "../../varType/I_Var.h"
+
 class Application;
 class VarGenerate;
 class QGridLayout;
@@ -30,7 +32,7 @@ protected:
 	VarGenerate *varGenerate;
 	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
 	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
-	std_function< bool( VarEditorWidget *, const QString &, QString & ) > normalVarFunction;
+	std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > normalVarFunction;
 	bool toolTipShowStatus;
 protected:
 	virtual void updateLayout( );
@@ -50,8 +52,8 @@ public:
 	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
 	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
 	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
-	virtual const std_function<bool(VarEditorWidget *, const QString &, QString &)> & getNormalVarFunction( ) const { return normalVarFunction; }
-	virtual void setNormalVarFunction( const std_function<bool(VarEditorWidget *, const QString &, QString &)> &normal_var_function ) { normalVarFunction = normal_var_function; }
+	virtual const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & getNormalVarFunction( ) const { return normalVarFunction; }
+	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function ) { normalVarFunction = normal_var_function; }
 	virtual void setNameEditorMsg( const QString &msg );
 	virtual void setValueEditorMsg( const QString &msg );
 protected:

@@ -26,7 +26,7 @@ protected:
 	std_function< std_shared_ptr< I_Var > ( ) > varGenerateFunction;
 	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
 	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
-	std_function< bool( VarEditorWidget *, const QString &, QString & ) > normalVarFunction;
+	std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > normalVarFunction;
 protected:
 	virtual bool insterToLayout( GenerateListItemWidget *new_list_item_widget );
 	virtual bool addItem( GenerateListItemWidget *new_list_item_widget );
@@ -44,8 +44,8 @@ public:
 	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
 	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
 	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
-	virtual const std_function< bool( VarEditorWidget *, const QString &, QString & ) > & getNormalVarFunction( ) const { return normalVarFunction; }
-	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, QString & ) > &normal_var_function ) { normalVarFunction = normal_var_function; }
+	virtual const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & getNormalVarFunction( ) const { return normalVarFunction; }
+	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function ) { normalVarFunction = normal_var_function; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void showEvent( QShowEvent *event ) override;

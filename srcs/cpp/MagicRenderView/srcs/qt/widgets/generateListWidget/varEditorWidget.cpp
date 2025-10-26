@@ -98,20 +98,11 @@ void VarEditorWidget::setVarValue( ) {
 	}
 	QString varText = varVarLineEdit->text( );
 	QString normalVar;
-	if( normalVarFunction && normalVarFunction( this, varText, normalVar ) ) {
-		QString nameText = varNameLineEdit->text( );
-		auto element = editorVar.get( );
-		element->setVarName( nameText );
-		auto typeInfo = element->getTypeInfo( );
-		auto varPtr = element->getVarPtr( );
-		auto &leftTypeInfo = typeInfo->getTypeInfo( );
-		varGenerate->conver( leftTypeInfo, varPtr, typeid( QString ), &normalVar );
+	if( normalVarFunction && normalVarFunction( this, varText, editorVar.get( ) ) ) {
 		emit changeVarOverSignal( this );
-
 		hide( );
 		return;
 	}
-
 	toolTipShowStatus = true;
 	QToolTip::showText( mapToGlobal( applyVarChange->pos( ) ), tr( "无法标准化变量值" ) );
 	applyVarChange->setEnabled( false );

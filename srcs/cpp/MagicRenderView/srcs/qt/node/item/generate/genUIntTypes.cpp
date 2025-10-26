@@ -2,6 +2,8 @@
 
 #include <QScrollArea>
 
+#include "../../../generate/varGenerate.h"
+
 #include "../../../varType/I_Type.h"
 #include "../../../varType/I_Var.h"
 
@@ -31,9 +33,10 @@ void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListI
 }
 GenUIntTypes::GenUIntTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateUintWidget = new GenerateListWidget( nodeInfoScrollArea );
-	generateUintWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
-		result_normal_var = string;
-		return true;
+	generateUintWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
+		auto typeInfo = result_normal_var->getTypeInfo( );
+		auto &info = typeInfo->getTypeInfo( );
+		return varGenerate->conver( info, result_normal_var->getVarPtr( ), typeid( QString ), &string );
 	} );
 	generateUintWidget->setVarCheckFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		bool result = false;

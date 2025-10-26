@@ -100,6 +100,8 @@ protected:
 	std_vector< std_shared_ptr< I_Var > > nodeVarVector;
 	/// @brief 应用类指针
 	Application *applicationInstancePtr;
+	/// @brief 变量值实例
+	VarGenerate *varGenerate;
 protected:
 	NodeItem( );
 	NodeItem( QScrollArea *node_info_scroll_area );

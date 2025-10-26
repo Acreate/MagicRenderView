@@ -2,6 +2,10 @@
 
 #include <QScrollArea>
 
+#include "../../../application/application.h"
+
+#include "../../../generate/varGenerate.h"
+
 #include "../../../varType/I_Type.h"
 #include "../../../varType/I_Var.h"
 
@@ -33,10 +37,13 @@ void GenBinTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 }
 GenBinTypes::GenBinTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateBinWidget = new GenerateListWidget( nodeInfoScrollArea );
-	generateBinWidget->setNormalVarFunction( [] ( VarEditorWidget *var_editor_widget, const QString &string, QString &result_normal_var ) {
+	generateBinWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
 		bool result = false;
-		result_normal_var = QString::number( string.toULongLong( &result, 16 ) );
-		return true;
+		QString number = QString::number( string.toULongLong( &result, 16 ) );
+
+		auto typeInfo = result_normal_var->getTypeInfo( );
+		auto &info = typeInfo->getTypeInfo( );
+		return varGenerate->conver( info, result_normal_var->getVarPtr( ), typeid( QString ), &number );
 	} );
 	generateBinWidget->setVarCheckFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string ) {
 		qsizetype length = string.length( );
