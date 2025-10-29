@@ -102,6 +102,8 @@ protected:
 	Application *applicationInstancePtr;
 	/// @brief 变量值实例
 	VarGenerate *varGenerate;
+	/// @brief 运行状态
+	bool runStatus;
 protected:
 	NodeItem( );
 	NodeItem( GenerateListScrollArea *node_info_scroll_area );
@@ -115,6 +117,10 @@ public:
 	virtual bool hasOutputPort( const NodePort *node_port );
 	virtual size_t toBinData( std_vector< uint8_t > &result_data ) const;
 	virtual size_t loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count );
+	virtual void resetRun( );
+	virtual bool getRunStatus( ) const {
+		return runStatus;
+	}
 	/// @brief 从相对坐标获取类型
 	/// @param point 基于该节点的相对位置
 	/// @return 类型

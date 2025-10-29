@@ -5,6 +5,7 @@
 #include "GenerateListWidget.h"
 GenerateListScrollArea::GenerateListScrollArea( QWidget *parent ) : QScrollArea( parent ) {
 	tools::ui::moveDisplayCenter( this, 0 );
+	generateListWidget = nullptr;
 }
 void GenerateListScrollArea::setInit( ) {
 	setWidgetResizable( true );

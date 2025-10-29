@@ -203,6 +203,10 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 void StartNodeInfoWidget::updateLayout( ) {
 	int currentWidgetWidth = this->width( );
 	int currentWidgetHeight = this->height( );
+	if( currentWidgetWidth == 0 || currentWidgetHeight == 0 ) {
+		setMinimumSize( 100, 200 );
+		return;
+	}
 
 	int topBtnWidgetWidth = topBtnWidget->width( );
 	int mid = currentWidgetWidth - topBtnWidgetWidth;

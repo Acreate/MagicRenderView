@@ -11,9 +11,9 @@
 Imp_StaticMetaInfo( StartNode, QObject::tr( "起始" ), QObject::tr( "软件" ) );
 
 StartNode::StartNode( ) : NodeItem( ) {
-
 	nodeInfoWidget = new StartNodeInfoWidget( this );
 	generateListScrollArea->setWidget( nodeInfoWidget );
+	generateListScrollArea->setInit( );
 }
 
 bool StartNode::intPortItems( MainWidget *parent ) {

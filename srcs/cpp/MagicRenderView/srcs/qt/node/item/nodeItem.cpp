@@ -42,7 +42,7 @@ NodeItem::NodeItem( GenerateListScrollArea *node_info_scroll_area ) : QObject( )
 	inputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	outputBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
-
+	runStatus = false;
 }
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
@@ -116,6 +116,9 @@ size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &sour
 	size_t resultSize = 0;
 	applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count );
 	return resultSize;
+}
+void NodeItem::resetRun( ) {
+	runStatus = false;
 }
 nodeItemEnum::Click_Type NodeItem::relativePointType( const QPoint &point ) const {
 	return relativePointType( point.x( ), point.y( ) );
