@@ -1,198 +1,114 @@
 ﻿#include "startNodeInfoWidget.h"
 
 #include <QFileDialog>
+#include <QLabel>
 #include <QPushButton>
+#include <QScrollArea>
 #include <qboxlayout.h>
+#include <qevent.h>
 
 #include <qt/application/application.h>
 #include <qt/node/director/nodeDirector.h>
 #include <qt/node/director/nodeItemInfo.h>
+#include <qt/node/item/nodeItem.h>
+#include <qt/tools/tools.h>
 
-#include "nodeModuleScrollArea.h"
-#include "nodeModuleWidget.h"
+#include "nodeItemInfoItemWidget.h"
 
-#include "../../../tools/tools.h"
-
-#include "../../item/nodeItem.h"
-void StartNodeInfoWidget::nodeItemRun( ) {
-	if( nodeModuleWidget->isEnd( ) == true )
-		return;
-	setRunBtnStatus( false );
-	std_vector< NodeItemInfo * > resultList;
-	while( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) ) {
-		if( runNodeItemInfoVector( resultList ) == false )
-			break;
-		if( nodeModuleWidget->next( ) == false )
-			break;
-	}
-	nextBtn->setEnabled( true );
-}
-bool StartNodeInfoWidget::runNodeItemInfoVector( const std_vector< NodeItemInfo * > &run_node_item_info ) {
-
-	// todo : 执行节点
-
-	runHistoryVector.emplace_back( run_node_item_info ); // 执行历史
-	return true;
-}
-void StartNodeInfoWidget::setRunBtnStatus( bool flag ) {
-	runBtn->setEnabled( flag );
-	nextBtn->setEnabled( flag );
-}
-void StartNodeInfoWidget::nodeItemRunNext( ) {
-	std_vector< NodeItemInfo * > resultList;
-	if( nodeModuleWidget->getCurrentRunNodeItemInfoVector( resultList ) == false || runNodeItemInfoVector( resultList ) || nodeModuleWidget->next( ) == false ) {
-		setRunBtnStatus( false );
-		return;
-	}
-}
-void StartNodeInfoWidget::builder( ) {
+void StartNodeInfoWidget::fillLinkNodeInfoListWidget( ) {
+	clearRenderNodeInfo( );
 	if( currentNodeItemInfo == nullptr )
 		if( nodeDirector->getNodeItemInfo( nodeItem, currentNodeItemInfo ) == false ) {
-			setRunBtnStatus( false );
+			QString msg( "[%1] 无法匹配对应的信息实例对象" );
+			msg = msg.arg( nodeItem->getMetaObjectPathName( ) );
+			tools::debug::printError( msg );
 			return;
 		}
-	runList.clear( );
-	runList.emplace_back( std_vector { currentNodeItemInfo } );
-	if( fillLinkNodeInfo( currentNodeItemInfo ) == false ) {
-		setRunBtnStatus( false );
-		tools::debug::printError( QString( QObject::tr( "%1(%2) 节点未被正确引用" ) ).arg( errorNodeItemInfo->nodeItem->getMetaObjectPathName( ) ).arg( errorNodeItemInfo->nodeItem->getGenerateCode( ) ) );
-		return;
-	}
-	nodeModuleWidget->setRunList( &runList );
-	if( nodeModuleWidget->toBegin( ) == false )
-		setRunBtnStatus( false );
-	else
-		setRunBtnStatus( true );
-}
-bool StartNodeInfoWidget::fillLinkNodeInfo( const NodeItemInfo *node_item ) {
+	using nodeItemInfoPtrVector = std_vector< NodeItemInfo * >;
+	using nodeItemInfoPtrVectorPtr = NodeItemInfo **;
+	nodeItemInfoPtrVector nodeItemLayoutBuff;
+	nodeItemInfoPtrVector nodeItemLayoutSubBuff;
+	nodeItemInfoPtrVector allRenderNodeInfoBuff;
 
-	size_t forCount = node_item->outputNodeItemVector.size( );
-	auto forArrayPtr = node_item->outputNodeItemVector.data( );
-	size_t forIndex = 0;
-	std_vector< NodeItemInfo * > runAppendVector;
-	for( ; forIndex < forCount; ++forIndex )
-		if( forArrayPtr[ forIndex ] != nullptr )
-			runAppendVector.emplace_back( forArrayPtr[ forIndex ] );
+	allRenderNodeInfoBuff = currentNodeItemInfo->outputNodeItemVector;
+	size_t count = currentNodeItemInfo->outputNodeItemVector.size( );
+	nodeItemInfoPtrVectorPtr saveNodeItemInfoArrayPtr = currentNodeItemInfo->outputNodeItemVector.data( );
+	size_t index;
 
-	forCount = node_item->inputNodeItemInfoVector.size( );
-	forArrayPtr = node_item->inputNodeItemInfoVector.data( );
-	forIndex = 0;
-	for( ; forIndex < forCount; ++forIndex )
-		if( forArrayPtr[ forIndex ] != nullptr && inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
-			return false;
-	forCount = runAppendVector.size( );
-	if( forCount != 0 ) {
-		runList.emplace_back( runAppendVector );
-		auto appendArrayPtr = runAppendVector.data( );
-		forIndex = 0;
-		for( ; forIndex < forCount; ++forIndex )
-			if( fillLinkNodeInfo( appendArrayPtr[ forIndex ] ) == false )
-				return false;
+	for( index = 0; index < count; ++index )
+		nodeItemLayoutBuff.append_range( saveNodeItemInfoArrayPtr[ index ]->outputNodeItemVector );
+	allRenderNodeInfoBuff.append_range( nodeItemLayoutBuff );
+	for( count = nodeItemLayoutBuff.size( ); count != 0; count = nodeItemLayoutBuff.size( ) ) {
+		saveNodeItemInfoArrayPtr = nodeItemLayoutBuff.data( );
+		for( index = 0; index < count; ++index )
+			nodeItemLayoutSubBuff.append_range( saveNodeItemInfoArrayPtr[ index ]->outputNodeItemVector );
+		allRenderNodeInfoBuff.append_range( nodeItemLayoutBuff );
+		nodeItemLayoutBuff = nodeItemLayoutSubBuff;
+		nodeItemLayoutSubBuff.clear( );
 	}
-	return true;
+	count = allRenderNodeInfoBuff.size( );
+	saveNodeItemInfoArrayPtr = allRenderNodeInfoBuff.data( );
+	for( index = 0; index < count; ++index ) {
+		QLabel *label = new QLabel( this );
+		allRenderNodeInfo.emplace_back( saveNodeItemInfoArrayPtr[ index ], label );
+	}
+	updateLayout( );
 }
-void StartNodeInfoWidget::removeNodeInfo( const NodeItemInfo *node_item ) {
-	if( currentNodeItemInfo == nullptr )
+void StartNodeInfoWidget::clearRenderNodeInfo( ) {
+	size_t count = allRenderNodeInfo.size( );
+	if( count == 0 )
 		return;
-	auto runListArrayCount = runList.size( );
-	if( runListArrayCount == 0 ) {
-		currentNodeItemInfo = nullptr;
-		setRunBtnStatus( false );
-		return;
-	}
-	auto runListArrayPtr = runList.data( );
-	size_t runListArrayIndex = 0;
-	for( ; runListArrayIndex < runListArrayCount; ++runListArrayIndex ) {
-		auto &subRunList = runListArrayPtr[ runListArrayIndex ];
-		auto subRunListArrayCount = subRunList.size( );
-		auto subRunListArrayPtr = subRunList.data( );
-		size_t subRunListArrayIndex = 0;
-		for( ; subRunListArrayIndex < subRunListArrayCount; ++subRunListArrayIndex )
-			if( subRunListArrayPtr[ subRunListArrayIndex ] == node_item ) {
-				currentNodeItemInfo = nullptr;
-				runList.clear( );
-				setRunBtnStatus( false );
-				return;
-			}
-	}
+	auto data = allRenderNodeInfo.data( );
+	for( size_t index = 0; index < count; ++index )
+		delete data[ index ].second;
+	allRenderNodeInfo.clear( );
 }
+void StartNodeInfoWidget::updateLayout( ) {
+	int currentWidgetWidth = this->width( );
+	updateBtn->setFixedWidth( currentWidgetWidth );
+	int miniHeight = updateBtn->height( );
+	size_t count = allRenderNodeInfo.size( );
+	if( count == 0 ) {
+		if( this->height( ) != miniHeight )
+			setMinimumHeight( miniHeight );
+		return;
+	}
+	auto data = allRenderNodeInfo.data( );
+	for( size_t index = 0; index < count; ++index ) {
+		data[ index ].second->move( 0, miniHeight );
+		miniHeight += data[ index ].second->height( );
+		data[ index ].second->setText( data[ index ].first->getNodeItem( )->getMetaObjectPathName( ) );
+	}
+
+	if( this->height( ) != miniHeight )
+		setMinimumHeight( miniHeight );
+}
+
 void StartNodeInfoWidget::updateNodeItemInfoBuilderVector( NodeItemInfo *node_item_info ) {
-	if( currentNodeItemInfo == nullptr ) {
-		setRunBtnStatus( false );
-		return;
-	}
-	if( hasNodeInfo( node_item_info->nodeItem ) )
-		setRunBtnStatus( false );
+	if( currentNodeItemInfo == nullptr )
+		if( nodeDirector->getNodeItemInfo( nodeItem, currentNodeItemInfo ) == false ) {
+			QString msg( "[%1] 无法匹配对应的信息实例对象" );
+			msg = msg.arg( nodeItem->getMetaObjectPathName( ) );
+			tools::debug::printError( msg );
+			return;
+		}
+	allRenderNodeInfo.clear( );
 }
 
-bool StartNodeInfoWidget::hasNodeInfo( const NodeItem *node_item ) {
-	for( auto &subNodeItemInfoVector : runList )
-		for( auto &nodeItemInfo : subNodeItemInfoVector )
-			if( nodeItemInfo->nodeItem == nodeItem )
-				return true;
-	return false;
-}
-bool StartNodeInfoWidget::inputNodeItemLegitimate( const NodeItemInfo *input_node_item ) {
-	errorNodeItemInfo = nullptr;
-	std_vector< NodeItemInfo * > inAppendVector;
-	auto forCount = input_node_item->inputNodeItemInfoVector.size( );
-	if( forCount == 0 )
-		if( input_node_item->nodeItem->getNodeMetaType( ) != nodeItemEnum::Node_Item_Type::Begin ) {
-			errorNodeItemInfo = input_node_item;
-			return false;
-		} else
-			return true;
-
-	auto forArrayPtr = input_node_item->inputNodeItemInfoVector.data( );
-	auto forIndex = 0;
-	for( ; forIndex < forCount; ++forIndex )
-		if( forArrayPtr[ forIndex ] != nullptr )
-			if( hasNodeInfo( forArrayPtr[ forIndex ]->nodeItem ) == false ) {
-				errorNodeItemInfo = forArrayPtr[ forIndex ];
-				return false; // 找不到已运行
-			} else
-				inAppendVector.emplace_back( forArrayPtr[ forIndex ] );
-	forCount = inAppendVector.size( );
-	if( forCount == 0 )
-		return true;
-	forArrayPtr = inAppendVector.data( );
-	forIndex = 0;
-	for( ; forIndex < forCount; ++forIndex )
-		if( inputNodeItemLegitimate( forArrayPtr[ forIndex ] ) == false )
-			return false;
-	return true;
-}
 StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node_item ) {
-	topBtnWidget = new QWidget( this );
-	bottomBtnWidget = new QWidget( this );
-	nodeModuleScrollArea = new NodeModuleScrollArea( &runList, this );
-	nodeModuleWidget = nodeModuleScrollArea->getNodeModuleWidget( );
+	setMinimumSize( 100, 200 );
 	currentNodeItemInfo = nullptr;
-	QHBoxLayout *qhBoxLayout = new QHBoxLayout( topBtnWidget );
-
-	runBtn = new QPushButton( topBtnWidget );
-	runBtn->setText( QObject::tr( "运行" ) );
-	connect( runBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::nodeItemRun );
-	qhBoxLayout->addWidget( runBtn );
-
-	builderBtn = new QPushButton( topBtnWidget );
-	builderBtn->setText( QObject::tr( "编译" ) );
-	connect( builderBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::builder );
-	qhBoxLayout->addWidget( builderBtn );
-
-	qhBoxLayout = new QHBoxLayout( bottomBtnWidget );
-	nextBtn = new QPushButton( QObject::tr( "下一步" ), bottomBtnWidget );
-	qhBoxLayout->addWidget( nextBtn );
-	connect( nextBtn, &QPushButton::clicked, this, &StartNodeInfoWidget::nodeItemRunNext );
-
 	application = Application::getApplicationInstancePtr( );
 	nodeDirector = application->getNodeDirector( );
 	varGenerate = application->getVarGenerate( );
 
-	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
-	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::removeNodeInfo );
+	updateBtn = new QPushButton( tr( "更新" ), this );
 
-	setRunBtnStatus( false );
+	connect( updateBtn, &QPushButton::clicked, [this] {
+		this->fillLinkNodeInfoListWidget( );
+	} );
+	connect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
+	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
 	connect( nodeItem, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_ptr ) {
 		if( release_ptr != nodeItem )
 			return;
@@ -200,34 +116,12 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	} );
 }
 
-void StartNodeInfoWidget::updateLayout( ) {
-	int currentWidgetWidth = this->width( );
-	int currentWidgetHeight = this->height( );
-	if( currentWidgetWidth == 0 || currentWidgetHeight == 0 ) {
-		setMinimumSize( 100, 200 );
-		return;
-	}
-
-	int topBtnWidgetWidth = topBtnWidget->width( );
-	int mid = currentWidgetWidth - topBtnWidgetWidth;
-	mid /= 2;
-	topBtnWidget->move( mid, 0 );
-
-	int toolWidgetWidth = bottomBtnWidget->width( );
-	int bottomHeight = bottomBtnWidget->height( );
-	mid = currentWidgetWidth - toolWidgetWidth;
-	mid /= 2;
-	bottomBtnWidget->move( mid, currentWidgetHeight - bottomHeight );
-
-	nodeModuleScrollArea->move( 0, bottomHeight );
-	int topBtnHeight = topBtnWidget->height( );
-	nodeModuleScrollArea->setFixedSize( currentWidgetWidth, currentWidgetHeight - topBtnHeight - bottomHeight );
-}
 void StartNodeInfoWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	updateLayout( );
 }
 void StartNodeInfoWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
-	updateLayout( );
+
+	if( allRenderNodeInfo.size( ) == 0 )
+		fillLinkNodeInfoListWidget( );
 }

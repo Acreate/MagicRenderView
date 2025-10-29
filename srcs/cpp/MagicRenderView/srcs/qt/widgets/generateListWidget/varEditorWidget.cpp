@@ -96,9 +96,10 @@ void VarEditorWidget::setVarValue( ) {
 		toolTipShowStatus = true;
 		QToolTip::hideText( );
 	}
+	I_Var *element = editorVar.get( );
+	auto name = element->getVarName( );
 	QString varText = varVarLineEdit->text( );
-	QString normalVar;
-	if( normalVarFunction && normalVarFunction( this, varText, editorVar.get( ) ) ) {
+	if( normalVarFunction && normalVarFunction( this, varText, varNameLineEdit->text( ), element ) ) {
 		emit changeVarOverSignal( this );
 		hide( );
 		return;

@@ -24,13 +24,14 @@ public:
 	virtual const std_shared_ptr< I_Var > & getVar( ) const { return var; }
 	virtual VarEditorWidget * getVarEditorWidget( ) const { return varEditorWidget; }
 	virtual bool showVarEditorWidget( ) const;
-	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getNameCheckFunction( ) const;
-	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function );
-	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const;
-	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function );
-	virtual const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & getNormalVarFunction( ) const;
-	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function );
+	virtual const CheckStringFunction & getNameCheckFunction( ) const;
+	virtual void setNameCheckFunction( const CheckStringFunction &name_check_function );
+	virtual const CheckStringFunction & getVarCheckFunction( ) const;
+	virtual void setVarCheckFunction( const CheckStringFunction &var_check_function );
+	virtual const NormalVarFunction & getNormalVarFunction( ) const;
+	virtual void setNormalVarFunction( const NormalVarFunction &normal_var_function );
 protected:
+	void hideEvent( QHideEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseDoubleClickEvent( QMouseEvent *event ) override;
 Q_SIGNALS:

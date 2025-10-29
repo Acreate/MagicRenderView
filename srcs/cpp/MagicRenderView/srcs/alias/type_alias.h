@@ -12,6 +12,8 @@
 
 #include <QObject>
 
+class I_Var;
+class VarEditorWidget;
 /// @brief 事件类型
 using t_event_type = decltype(QEvent::Type::AcceptDropsChange);
 
@@ -64,6 +66,9 @@ using std_lock_grad_mutex = std::lock_guard< std_mutex >;
 using createFunction = std_function< void *( ) >;
 /// @brief 释放函数
 using releaseFunction = std_function< bool( void *p ) >;
+
+using CheckStringFunction = std_function< bool( VarEditorWidget *, const QString & ) >;
+using NormalVarFunction = std_function< bool( VarEditorWidget *, const QString &, const QString &, I_Var * ) >;
 
 /// @brief 比较运算符
 /// @param righth_type_ 比较数
@@ -333,6 +338,5 @@ class Type_Alias {
 public:
 	virtual ~Type_Alias( ) { }
 };
-
 
 #endif // TYPE_ALIAS_H_H_HEAD__FILE__

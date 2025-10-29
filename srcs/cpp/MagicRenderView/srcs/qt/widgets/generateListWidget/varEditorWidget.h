@@ -3,8 +3,6 @@
 #pragma once
 #include "GenerateListItemWidget.h"
 
-#include "../../varType/I_Var.h"
-
 class Application;
 class VarGenerate;
 class QGridLayout;
@@ -30,9 +28,9 @@ protected:
 	QPushButton *applyVarChange;
 	Application *application;
 	VarGenerate *varGenerate;
-	std_function< bool( VarEditorWidget *, const QString & ) > nameCheckFunction;
-	std_function< bool( VarEditorWidget *, const QString & ) > varCheckFunction;
-	std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > normalVarFunction;
+	CheckStringFunction nameCheckFunction;
+	CheckStringFunction varCheckFunction;
+	NormalVarFunction normalVarFunction;
 	bool toolTipShowStatus;
 protected:
 	virtual void updateLayout( );
@@ -48,12 +46,12 @@ public:
 		editorVar = editor_var;
 		initVarEditorInfo( );
 	}
-	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getNameCheckFunction( ) const { return nameCheckFunction; }
-	virtual void setNameCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &name_check_function ) { nameCheckFunction = name_check_function; }
-	virtual const std_function< bool( VarEditorWidget *, const QString & ) > & getVarCheckFunction( ) const { return varCheckFunction; }
-	virtual void setVarCheckFunction( const std_function< bool( VarEditorWidget *, const QString & ) > &var_check_function ) { varCheckFunction = var_check_function; }
-	virtual const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > & getNormalVarFunction( ) const { return normalVarFunction; }
-	virtual void setNormalVarFunction( const std_function< bool( VarEditorWidget *, const QString &, I_Var * ) > &normal_var_function ) { normalVarFunction = normal_var_function; }
+	virtual const CheckStringFunction & getNameCheckFunction( ) const { return nameCheckFunction; }
+	virtual void setNameCheckFunction( const CheckStringFunction &name_check_function ) { nameCheckFunction = name_check_function; }
+	virtual const CheckStringFunction & getVarCheckFunction( ) const { return varCheckFunction; }
+	virtual void setVarCheckFunction( const CheckStringFunction &var_check_function ) { varCheckFunction = var_check_function; }
+	virtual const NormalVarFunction & getNormalVarFunction( ) const { return normalVarFunction; }
+	virtual void setNormalVarFunction( const NormalVarFunction &normal_var_function ) { normalVarFunction = normal_var_function; }
 	virtual void setNameEditorMsg( const QString &msg );
 	virtual void setValueEditorMsg( const QString &msg );
 protected:

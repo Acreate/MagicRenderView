@@ -36,8 +36,8 @@ void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateList
 }
 GenFloatTypes::GenFloatTypes( ) : NodeItem( new GenerateListScrollArea( ) ) {
 	generateFloatWidget = new GenerateListWidget( generateListScrollArea );
-	generateFloatWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, I_Var *result_normal_var ) {
-
+	generateFloatWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
+		result_normal_var->setVarName( title );
 		auto typeInfo = result_normal_var->getTypeInfo( );
 		auto &info = typeInfo->getTypeInfo( );
 		return varGenerate->conver( info, result_normal_var->getVarPtr( ), typeid( QString ), &string );
