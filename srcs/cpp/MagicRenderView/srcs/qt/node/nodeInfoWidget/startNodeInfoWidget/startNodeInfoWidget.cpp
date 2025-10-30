@@ -1,10 +1,8 @@
 ﻿#include "startNodeInfoWidget.h"
 
 #include <QFileDialog>
-#include <QLabel>
 #include <QPainter>
 #include <QPushButton>
-#include <QScrollArea>
 #include <qboxlayout.h>
 #include <qevent.h>
 
@@ -198,13 +196,20 @@ void StartNodeInfoWidget::mouseDoubleClickEvent( QMouseEvent *event ) {
 	auto data = allRenderNodeInfo.data( );
 	auto clickPos = event->pos( );
 	int clickPosY = clickPos.y( );
+	int clickPosX = clickPos.x( );
 	size_t index = count - 1; // 比较最后一个
 	int maxPosY = data[ index ].second.second.y( );
 	if( clickPosY > maxPosY ) {
 		maxPosY = data[ index ].second.first->height( ) + maxPosY;
 		if( maxPosY < clickPosY )
 			return; // 在末尾的下面
-		clickNodeItemSig( this, data[ index ].first );
+		maxPosY = data[ index ].second.second.x( );
+		if( clickPosX < maxPosY )
+			return; // 超出左侧范围
+		maxPosY += data[ index ].second.first->width( ) + maxPosY;
+		if( clickPosX > maxPosY )
+			return; // 超出右范围
+		emit clickNodeItemSig( this, data[ index ].first );
 		QWidget *nodeItemWidget = data[ index ].first->nodeItem->getNodeItemWidget( );
 		if( nodeItemWidget ) {
 			nodeItemWidget->show( );
@@ -225,7 +230,13 @@ void StartNodeInfoWidget::mouseDoubleClickEvent( QMouseEvent *event ) {
 			maxPosY = data[ index ].second.first->height( ) + maxPosY;
 			if( maxPosY < clickPosY )
 				return; // 未知异常
-			clickNodeItemSig( this, data[ index ].first );
+			maxPosY = data[ index ].second.second.x( );
+			if( clickPosX < maxPosY )
+				return; // 超出左侧范围
+			maxPosY += data[ index ].second.first->width( ) + maxPosY;
+			if( clickPosX > maxPosY )
+				return; // 超出右范围
+			emit clickNodeItemSig( this, data[ index ].first );
 			QWidget *nodeItemWidget = data[ index ].first->nodeItem->getNodeItemWidget( );
 			if( nodeItemWidget ) {
 				nodeItemWidget->show( );
