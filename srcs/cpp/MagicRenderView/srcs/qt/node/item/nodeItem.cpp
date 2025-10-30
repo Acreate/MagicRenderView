@@ -380,20 +380,14 @@ bool NodeItem::updateOutputLayout( ) {
 	return true;
 }
 bool NodeItem::updateTitleLayout( ) {
-	auto font = applicationInstancePtr->getFont( );
-	QFontMetrics fontMetrics( font );
-	auto boundingRect = fontMetrics.boundingRect( nodeTitleName );
 
-	titleWidth = boundingRect.width( ) + boundingRect.x( );
-	titleHeight = fontMetrics.height( );
+	QPainter painter;
+	auto renderTextToImage = applicationInstancePtr->renderTextToImage( &painter, nodeTitleName );
+	titleWidth = renderTextToImage->width( );
+	titleHeight = renderTextToImage->height( );
 
-	int leading = fontMetrics.leading( );
-	int descent = fontMetrics.descent( );
-	int y = titleHeight - leading - descent;
 	if( getNodeItemWidget( ) ) {
-
 		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
-
 		int imageHeight = nodeItemWidgetIco->height( );
 		if( titleHeight < imageHeight )
 			titleHeight = imageHeight;
@@ -402,36 +396,23 @@ bool NodeItem::updateTitleLayout( ) {
 		if( titleBuff->size( ) != newSize ) {
 			*titleBuff = titleBuff->scaled( newSize );
 			if( titleBuff->isNull( ) ) {
+				delete renderTextToImage;
 				tools::debug::printError( "标题适配失败[" + getMetaObjectPathName( ) + "]" );
 				return false;
 			}
 		}
 
 		titleBuff->fill( 0 );
-		QPainter painter( titleBuff );
-		painter.setFont( font );
-		painter.drawText( 0, y, nodeTitleName );
+		painter.begin( titleBuff );
+		painter.drawImage( 0, 0, *renderTextToImage );
 		titleWidth += 20;
 		imageHeight = ( titleHeight - imageHeight ) / 2;
 		painter.drawImage( titleWidth, imageHeight, *nodeItemWidgetIco );
 		titleWidth += imageWidth;
 		painter.end( );
-	} else {
-		QSize newSize( titleWidth, titleHeight );
-		if( titleBuff->size( ) != newSize ) {
-			*titleBuff = titleBuff->scaled( newSize );
-			if( titleBuff->isNull( ) ) {
-				tools::debug::printError( "标题适配失败[" + getMetaObjectPathName( ) + "]" );
-				return false;
-			}
-		}
-		titleBuff->fill( 0 );
-		QPainter painter( titleBuff );
-		painter.setFont( font );
-		painter.drawText( 0, y, nodeTitleName );
-		painter.end( );
-	}
-
+	} else
+		*titleBuff = *renderTextToImage;
+	delete renderTextToImage;
 	return true;
 }
 bool NodeItem::integrateLayout( ) {
