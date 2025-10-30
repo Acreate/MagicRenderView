@@ -68,7 +68,6 @@ void GenerateListItemWidget::hideEvent( QHideEvent *event ) {
 void GenerateListItemWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-	//painter.fillRect( contentsRect( ), Qt::GlobalColor::blue );
 	int penWidth = 5;
 	int doublePenWidth = penWidth * 2;
 	auto pen = painter.pen( );

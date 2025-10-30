@@ -13,8 +13,6 @@
 #include <qt/node/item/nodeItem.h>
 #include <qt/tools/tools.h>
 
-#include "nodeItemInfoItemWidget.h"
-
 void StartNodeInfoWidget::fillLinkNodeInfoListWidget( ) {
 	clearRenderNodeInfo( );
 	if( currentNodeItemInfo == nullptr )
@@ -49,8 +47,7 @@ void StartNodeInfoWidget::fillLinkNodeInfoListWidget( ) {
 	count = allRenderNodeInfoBuff.size( );
 	saveNodeItemInfoArrayPtr = allRenderNodeInfoBuff.data( );
 	for( index = 0; index < count; ++index ) {
-		QLabel *label = new QLabel( this );
-		allRenderNodeInfo.emplace_back( saveNodeItemInfoArrayPtr[ index ], label );
+		// todo : 生成节点
 	}
 	updateLayout( );
 }
@@ -60,7 +57,7 @@ void StartNodeInfoWidget::clearRenderNodeInfo( ) {
 		return;
 	auto data = allRenderNodeInfo.data( );
 	for( size_t index = 0; index < count; ++index )
-		delete data[ index ].second;
+		delete data[ index ].second.first;
 	allRenderNodeInfo.clear( );
 }
 void StartNodeInfoWidget::updateLayout( ) {
@@ -68,19 +65,28 @@ void StartNodeInfoWidget::updateLayout( ) {
 	updateBtn->setFixedWidth( currentWidgetWidth );
 	int miniHeight = updateBtn->height( );
 	size_t count = allRenderNodeInfo.size( );
+	auto miniSize = minimumSize( );
 	if( count == 0 ) {
-		if( this->height( ) != miniHeight )
+		if( miniSize.height( ) < miniHeight )
 			setMinimumHeight( miniHeight );
 		return;
 	}
+	miniHeight += 5;
 	auto data = allRenderNodeInfo.data( );
+
+	int itemWidgetHeight;
+	int itemWidgetWidth;
+
 	for( size_t index = 0; index < count; ++index ) {
-		data[ index ].second->move( 0, miniHeight );
-		miniHeight += data[ index ].second->height( );
-		data[ index ].second->setText( data[ index ].first->getNodeItem( )->getMetaObjectPathName( ) );
+		data[ index ].second.second = QPoint( 0, miniHeight );
+		itemWidgetWidth = data[ index ].second.first->width( );
+		if( currentWidgetWidth < itemWidgetWidth )
+			currentWidgetWidth = itemWidgetWidth;
+		itemWidgetHeight = data[ index ].second.first->height( );
+		miniHeight += itemWidgetHeight + 5;
 	}
 
-	if( this->height( ) != miniHeight )
+	if( miniSize.height( ) < miniHeight || miniSize.width( ) < currentWidgetWidth )
 		setMinimumHeight( miniHeight );
 }
 
@@ -115,9 +121,52 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 		deleteLater( );
 	} );
 }
+void StartNodeInfoWidget::mouseDoubleClickEvent( QMouseEvent *event ) {
+	QWidget::mouseDoubleClickEvent( event );
+
+	size_t count = allRenderNodeInfo.size( );
+	if( count == 0 )
+		return;
+	auto data = allRenderNodeInfo.data( );
+	size_t index = 0;
+	auto clickPos = event->pos( );
+	int clickPosY = clickPos.y( );
+	count = count - 1; // 比较最后一个
+	int maxPosY = data[ count ].second.second.y( );
+	if( clickPosY > maxPosY ) {
+		maxPosY = data[ count ].second.first->height( ) + maxPosY;
+		if( maxPosY > clickPosY )
+			return; // 在末尾的下面
+		clickNodeItemSig( this, data[ count ].first );
+		return;
+	}
+
+	maxPosY = data[ index ].second.second.y( );
+	if( clickPosY < maxPosY )
+		return;// 在开始的前面
+
+	index += 1; // 不检测第一个
+	count += 1; // 重复最后一个
+	for( ; index < count; ++index )
+		if( maxPosY = data[ index ].second.second.y( ), clickPosY < maxPosY ) {
+			// 如果坐标小于第二个，则检查第一个高度
+			index -= 1;
+			maxPosY = data[ index ].second.first->height( ) + maxPosY;
+			if( maxPosY > clickPosY )
+				return; // 未知异常
+			clickNodeItemSig( this, data[ count ].first );
+			return;
+		}
+
+}
+void StartNodeInfoWidget::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+
+}
 
 void StartNodeInfoWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
+	updateLayout( );
 }
 void StartNodeInfoWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
