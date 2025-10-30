@@ -2,6 +2,7 @@
 
 #include <QFontDatabase>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QProcess>
 #include <QSettings>
 #include <QWidget>
@@ -364,6 +365,122 @@ QString Application::normalKeyAppendWidgetName( const QString &key, QWidget *wid
 		return normalKey( key, widget );
 	return normalKeyAppendEnd( key, widget, appendStr );
 }
+QImage * Application::renderTextToImage( QPainter *painter, const QString &render_text ) const {
+	qint64 renderStrCount = render_text.length( );
+	if( renderStrCount == 0 )
+		return nullptr;
+	auto element = font.get( );
+	QFontMetrics fm( *element );
+	int descent = fm.descent( );
+	int ascent = fm.ascent( );
+	int height = ascent - descent;
+	auto charData = render_text.data( );
+	QChar checkChar = charData[ 0 ];
+	int leftBearing = -fm.leftBearing( checkChar );
+	checkChar = charData[ renderStrCount - 1 ];
+	int rightBearing = -fm.rightBearing( checkChar );
+	int averageCharWidth = fm.averageCharWidth( );
+	int horizontalAdvance = averageCharWidth * renderStrCount + leftBearing + rightBearing;
+	QImage *image = new QImage( horizontalAdvance, ascent, QImage::Format_RGBA8888 );
+	image->fill( 0 );
+	painter->begin( image );
+	painter->setFont( *element );
+	painter->drawText( leftBearing, height, render_text );
+	painter->end( );
+	return image;
+}
+QImage * Application::renderTextToImageAtRectBound( QPainter *painter, const QString &render_text, const QColor &rect_bound_color, const int &bound_width ) const {
+	qint64 renderStrCount = render_text.length( );
+	if( renderStrCount == 0 )
+		return nullptr;
+	auto element = font.get( );
+	QFontMetrics fm( *element );
+	int descent = fm.descent( );
+	int ascent = fm.ascent( );
+	int height = ascent - descent + bound_width;
+	auto charData = render_text.data( );
+	QChar checkChar = charData[ 0 ];
+	int leftBearing = -fm.leftBearing( checkChar );
+	checkChar = charData[ renderStrCount - 1 ];
+	int rightBearing = -fm.rightBearing( checkChar );
+	int averageCharWidth = fm.averageCharWidth( );
+	int horizontalAdvance = averageCharWidth * renderStrCount + leftBearing + rightBearing;
+	int iamgeHeight = ascent + bound_width * 2;
+	horizontalAdvance = horizontalAdvance + bound_width * 2;
+	QImage *image = new QImage( horizontalAdvance, iamgeHeight, QImage::Format_RGBA8888 );
+	image->fill( 0 );
+	painter->begin( image );
+	painter->setFont( *element );
+	painter->drawText( leftBearing + bound_width, height, render_text );
+
+	auto pen = painter->pen( );
+	pen.setColor( rect_bound_color );
+	pen.setWidth( bound_width );
+	painter->setPen( pen );
+	painter->drawRect( 0, 0, horizontalAdvance - bound_width, iamgeHeight - bound_width );
+	painter->end( );
+	return image;
+}
+QImage * Application::renderTextToImageAtFontColor( QPainter *painter, const QString &render_text, const QColor &pen_color ) const {
+	qint64 renderStrCount = render_text.length( );
+	if( renderStrCount == 0 )
+		return nullptr;
+	auto element = font.get( );
+	QFontMetrics fm( *element );
+	int descent = fm.descent( );
+	int ascent = fm.ascent( );
+	int height = ascent - descent;
+	auto charData = render_text.data( );
+	QChar checkChar = charData[ 0 ];
+	int leftBearing = -fm.leftBearing( checkChar );
+	checkChar = charData[ renderStrCount - 1 ];
+	int rightBearing = -fm.rightBearing( checkChar );
+	int averageCharWidth = fm.averageCharWidth( );
+	int horizontalAdvance = averageCharWidth * renderStrCount + leftBearing + rightBearing;
+	QImage *image = new QImage( horizontalAdvance, ascent, QImage::Format_RGBA8888 );
+	image->fill( 0 );
+	painter->begin( image );
+	painter->setFont( *element );
+	painter->setPen( pen_color );
+	painter->drawText( leftBearing, height, render_text );
+	painter->end( );
+	return image;
+}
+QImage * Application::renderTextToImageAtFontColorAndRectBound( QPainter *painter, const QString &render_text, const QColor &pen_color, const QColor &rect_bound_color, const int &bound_width ) const {
+	qint64 renderStrCount = render_text.length( );
+	if( renderStrCount == 0 )
+		return nullptr;
+	auto element = font.get( );
+	QFontMetrics fm( *element );
+	int descent = fm.descent( );
+	int ascent = fm.ascent( );
+	int height = ascent - descent + bound_width;
+	auto charData = render_text.data( );
+	QChar checkChar = charData[ 0 ];
+	int leftBearing = -fm.leftBearing( checkChar );
+	checkChar = charData[ renderStrCount - 1 ];
+	int rightBearing = -fm.rightBearing( checkChar );
+	int averageCharWidth = fm.averageCharWidth( );
+	int horizontalAdvance = averageCharWidth * renderStrCount + leftBearing + rightBearing;
+	int iamgeHeight = ascent + bound_width * 2;
+	horizontalAdvance = horizontalAdvance + bound_width * 2;
+	QImage *image = new QImage( horizontalAdvance, iamgeHeight, QImage::Format_RGBA8888 );
+	image->fill( 0 );
+	painter->begin( image );
+	painter->setFont( *element );
+	auto pen = painter->pen( );
+	pen.setColor( pen_color );
+	painter->setPen( pen );
+	painter->drawText( leftBearing + bound_width, height, render_text );
+	
+	pen.setColor( rect_bound_color );
+	pen.setWidth( bound_width );
+	painter->setPen( pen );
+	painter->drawRect( 0, 0, horizontalAdvance - bound_width, iamgeHeight - bound_width );
+	painter->end( );
+	return image;
+}
+
 bool Application::notify( QObject *object, QEvent *event ) {
 	switch( event->type( ) ) {
 		case QEvent::Quit :

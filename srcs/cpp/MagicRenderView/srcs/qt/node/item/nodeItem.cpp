@@ -387,6 +387,9 @@ bool NodeItem::updateTitleLayout( ) {
 	titleWidth = boundingRect.width( ) + boundingRect.x( );
 	titleHeight = fontMetrics.height( );
 
+	int leading = fontMetrics.leading( );
+	int descent = fontMetrics.descent( );
+	int y = titleHeight - leading - descent;
 	if( getNodeItemWidget( ) ) {
 
 		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
@@ -407,9 +410,6 @@ bool NodeItem::updateTitleLayout( ) {
 		titleBuff->fill( 0 );
 		QPainter painter( titleBuff );
 		painter.setFont( font );
-		int leading = fontMetrics.leading( );
-		int descent = fontMetrics.descent( );
-		int y = titleHeight - leading - descent;
 		painter.drawText( 0, y, nodeTitleName );
 		titleWidth += 20;
 		imageHeight = ( titleHeight - imageHeight ) / 2;
@@ -428,9 +428,6 @@ bool NodeItem::updateTitleLayout( ) {
 		titleBuff->fill( 0 );
 		QPainter painter( titleBuff );
 		painter.setFont( font );
-		int leading = fontMetrics.leading( );
-		int descent = fontMetrics.descent( );
-		int y = titleHeight - leading - descent;
 		painter.drawText( 0, y, nodeTitleName );
 		painter.end( );
 	}

@@ -2,6 +2,7 @@
 
 #include <QFileDialog>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>
 #include <qboxlayout.h>
@@ -46,8 +47,14 @@ void StartNodeInfoWidget::fillLinkNodeInfoListWidget( ) {
 	}
 	count = allRenderNodeInfoBuff.size( );
 	saveNodeItemInfoArrayPtr = allRenderNodeInfoBuff.data( );
+	auto font = application->getFont( );
+	QPainter painter;
 	for( index = 0; index < count; ++index ) {
 		// todo : 生成节点
+		auto metaObjectPathName = saveNodeItemInfoArrayPtr[ index ]->nodeItem->getMetaObjectPathName( );
+		auto renderTextToImage = application->renderTextToImage( &painter, metaObjectPathName );
+		auto renderPair = std_pairt( renderTextToImage, QPoint( ) );
+		allRenderNodeInfo.emplace_back( saveNodeItemInfoArrayPtr[ index ], renderPair );
 	}
 	updateLayout( );
 }
@@ -152,16 +159,23 @@ void StartNodeInfoWidget::mouseDoubleClickEvent( QMouseEvent *event ) {
 			// 如果坐标小于第二个，则检查第一个高度
 			index -= 1;
 			maxPosY = data[ index ].second.first->height( ) + maxPosY;
-			if( maxPosY > clickPosY )
+			if( maxPosY < clickPosY )
 				return; // 未知异常
-			clickNodeItemSig( this, data[ count ].first );
+			clickNodeItemSig( this, data[ index ].first );
 			return;
 		}
 
 }
 void StartNodeInfoWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-
+	size_t count = allRenderNodeInfo.size( );
+	if( count == 0 )
+		return;
+	QPainter painter( this );
+	auto data = allRenderNodeInfo.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		painter.drawImage( data[ index ].second.second, *data[ index ].second.first );
 }
 
 void StartNodeInfoWidget::resizeEvent( QResizeEvent *event ) {

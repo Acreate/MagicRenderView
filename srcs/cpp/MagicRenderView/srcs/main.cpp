@@ -1,9 +1,8 @@
-﻿#include <qfile.h>
+﻿
+#include <qfile.h>
 
 #include "qt/application/application.h"
 #include "qt/tools/tools.h"
-#include "qt/varType/I_Var.h"
-#include "qt/widgets/generateListWidget/generateListScrollArea.h"
 #include "qt/windows/mainWindow.h"
 
 int main( int argc, char *argv[ ] ) {
@@ -13,7 +12,9 @@ int main( int argc, char *argv[ ] ) {
 		tools::debug::printError( "程序初始化失败" );
 		return -1;
 	}
+	
 	MainWindow mainwidget;
 	mainwidget.show( );
+
 	return app.exec( );
 }

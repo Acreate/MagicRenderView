@@ -66,7 +66,7 @@ protected:
 	VarGenerate *varGenerate;
 	NodeDirector *nodeDirector;
 	std_shared_ptr< QFont > font;
-	QImage* nodeItemWidgetIco;
+	QImage *nodeItemWidgetIco;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -84,6 +84,11 @@ public:
 		*font = new_font;
 	}
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
+public:
+	virtual QImage * renderTextToImage( QPainter *painter, const QString &render_text ) const;
+	virtual QImage * renderTextToImageAtRectBound( QPainter *painter, const QString &render_text, const QColor &rect_bound_color, const int &bound_width ) const;
+	virtual QImage * renderTextToImageAtFontColor( QPainter *painter, const QString &render_text, const QColor &pen_color ) const;
+	virtual QImage * renderTextToImageAtFontColorAndRectBound( QPainter *painter, const QString &render_text, const QColor &pen_color, const QColor &rect_bound_color, const int &bound_width ) const;
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };
