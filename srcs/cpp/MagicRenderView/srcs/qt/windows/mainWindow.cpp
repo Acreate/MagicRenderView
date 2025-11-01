@@ -75,6 +75,18 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 
+	currentMenu = new QMenu( "项目", this );
+	mainMenuBar->addMenu( currentMenu );
+	currentAction = currentMenu->addAction( "编译" );
+	connect( currentAction, &QAction::triggered, [this]( ) {
+		auto nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem(  );
+		
+	} );
+	//currentAction = currentMenu->addAction( "退出" );
+	//connect( currentAction, &QAction::triggered, [this]( ) {
+	//	Application::getApplicationInstancePtr( )->quitApp( );
+	//} );
+
 	currentMenu = mainMenuBar->addMenu( "快速菜单" );
 
 	currentAction = currentMenu->addAction( "快速保存" );
@@ -98,6 +110,9 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 		else
 			normalSave( );
 	} );
+
+	
+	
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );

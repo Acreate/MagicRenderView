@@ -14,6 +14,7 @@ class NodeInputPort;
 class NodePortLinkInfo : public QObject {
 	Q_OBJECT;
 protected:
+	friend class NodeItemBuilderObj;
 	friend class NodeDirector;
 	friend class NodeItemBuilderLink;
 	friend class NodeDirectorStack;

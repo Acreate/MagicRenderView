@@ -385,8 +385,13 @@ bool NodeItem::updateTitleLayout( ) {
 	auto renderTextToImage = applicationInstancePtr->renderTextToImage( &painter, nodeTitleName );
 	titleWidth = renderTextToImage->width( );
 	titleHeight = renderTextToImage->height( );
-
+	auto codeRender = applicationInstancePtr->renderTextToImage( &painter, QString::number( generateCode ) );
+	applicationInstancePtr->mergeHorizontalImage( codeRender, renderTextToImage, 20, *titleBuff );
+	delete codeRender;
 	if( getNodeItemWidget( ) ) {
+		*renderTextToImage = *titleBuff;
+		titleWidth = renderTextToImage->width( );
+		titleHeight = renderTextToImage->height( );
 		auto nodeItemWidgetIco = applicationInstancePtr->getNodeItemWidgetIco( );
 		int imageHeight = nodeItemWidgetIco->height( );
 		if( titleHeight < imageHeight )
@@ -410,8 +415,8 @@ bool NodeItem::updateTitleLayout( ) {
 		painter.drawImage( titleWidth, imageHeight, *nodeItemWidgetIco );
 		titleWidth += imageWidth;
 		painter.end( );
-	} else
-		*titleBuff = *renderTextToImage;
+	}
+
 	delete renderTextToImage;
 	return true;
 }
@@ -421,6 +426,7 @@ bool NodeItem::integrateLayout( ) {
 	nodeItemHeith = inputBuffHeight > outputBuffHeight ? inputBuffHeight : outputBuffHeight;
 	// 得到输入输出端的面板宽度
 	nodeItemWidth = outputBuffWidth + inputBuffWidth + midPortSpace;
+
 	// 面板宽度与标题宽度比较，获取最大值
 	nodeItemWidth = titleWidth > nodeItemWidth ? titleWidth : nodeItemWidth;
 
@@ -476,15 +482,7 @@ QWidget * NodeItem::getNodeItemWidget( ) const {
 	return generateListScrollArea;
 }
 
-bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
-	if( parent == nullptr )
-		return false;
-
-	nodeOutputProtVector.clear( );
-	nodeInputProtVector.clear( );
-	*nodeItemRender = nodeItemRender->scaled( 10, 10 );
-	*inputBuff = inputBuff->scaled( 10, 10 );
-	*outputBuff = outputBuff->scaled( 10, 10 );
+void NodeItem::updateLayout( ) {
 
 	inputBuffHeight = 0;
 	inputBuffWidth = 0;
@@ -496,13 +494,6 @@ bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainW
 	inputBuff->fill( 0 );
 	outputBuff->fill( 0 );
 	titleBuff->fill( 0 );
-
-	if( NodeItem::intPortItems( parent ) == false )
-		return false;
-
-	if( init_function( parent ) == false )
-		return false;
-
 	// 更新标题渲染布局
 	updateTitleLayout( );
 	// 更新输入渲染布局
@@ -511,5 +502,20 @@ bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainW
 	updateOutputLayout( );
 	// 更新整体渲染布局
 	integrateLayout( );
+}
+bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
+	if( parent == nullptr )
+		return false;
+
+	nodeOutputProtVector.clear( );
+	nodeInputProtVector.clear( );
+
+	if( NodeItem::intPortItems( parent ) == false )
+		return false;
+
+	if( init_function( parent ) == false )
+		return false;
+
+	//updateLayout( );
 	return true;
 }

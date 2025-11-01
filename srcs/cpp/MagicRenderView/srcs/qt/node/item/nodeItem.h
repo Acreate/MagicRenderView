@@ -19,8 +19,9 @@ class NodeInputPort;
 class NodeItem : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_NodeItem_StaticMetaInfo( );
-public:
+private:
 	friend class MainWidget;
+	friend class NodeItemBuilderObj;
 	friend class I_Stack;
 	friend class AppNodeItemStack;
 	friend class NodeItemInfoWidget;
@@ -231,6 +232,8 @@ public:
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
 	virtual QWidget * getNodeItemWidget( ) const;
+	/// @brief 更新布局
+	void updateLayout( );
 Q_SIGNALS:
 	void releaseThisPtr( NodeItem *release_node_item );
 public: // 二进制相关

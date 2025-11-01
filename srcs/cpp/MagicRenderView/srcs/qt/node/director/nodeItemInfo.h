@@ -13,6 +13,7 @@ class NodeItem;
 class NodeItemInfo : public QObject {
 	Q_OBJECT;
 private:
+	friend class NodeItemBuilderObj;
 	friend class NodeDirector;
 	friend class NodeDirectorStack;
 	friend class StartNodeInfoWidget;

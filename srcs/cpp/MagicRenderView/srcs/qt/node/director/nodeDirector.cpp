@@ -14,16 +14,15 @@
 #include <qt/varType/I_Var.h>
 #include <qt/widgets/mainWidget/mainWidget.h>
 
+#include "nodeItemBuilderObj.h"
 #include "nodeItemGenerateInfo.h"
 #include "nodeItemInfo.h"
 #include "nodePortLinkInfo.h"
 
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
-
 	connect( this, &NodeDirector::nodeItemInfoMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
 	connect( this, &NodeDirector::nodeItemNormalMsgPrintfSignal, this, &NodeDirector::nodeItemNormalMsgPrintf );
 	connect( this, &NodeDirector::nodeItemErrorMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
-	connect( this, &NodeDirector::nodeItemSelectsSignal, this, &NodeDirector::nodeItemSelects );
 }
 NodeItemInfoScrollAreaWidget * NodeDirector::requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr ) {
 	return nullptr;
@@ -371,6 +370,16 @@ bool NodeDirector::sortNodeItemInfo( ) {
 	nodeItemInfoVector = buff;
 	return true;
 }
+void NodeDirector::updateNodeItemInfo( ) {
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return;
+	auto nodeItemArrayPtr = nodeItemInfoVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( nodeItemArrayPtr[ index ] )
+			nodeItemArrayPtr[ index ]->nodeItem->updateLayout( );
+}
 bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code ) {
 
 	size_t count = nodeItemInfoVector.size( );
@@ -446,8 +455,6 @@ void NodeDirector::nodeItemInfoMsgPrintf( NodeItem *node_item, const QString &no
 }
 void NodeDirector::nodeItemNormalMsgPrintf( NodeItem *node_item, const QString &normal_msg ) {
 }
-void NodeDirector::nodeItemSelects( const std_vector< NodeItem * > &node_item_select_vector ) {
-}
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = nodeItemInfoVector.size( );
@@ -510,6 +517,7 @@ NodeItem * NodeDirector::createNodeItem( const QString &dir_name, const QString 
 size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 
 	new_node_item->setMainWidget( mainWidget );
+
 	if( new_node_item->intPortItems( mainWidget ) == false )
 		return 0;
 	size_t count = nodeItemInfoVector.size( );
@@ -519,29 +527,15 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr ) {
 			data[ index ] = nodeItemInfo;
+			new_node_item->generateCode = index + 1;
 			break;
 		}
 	if( index == count ) {
 		nodeItemInfoVector.emplace_back( nodeItemInfo );
 		++count;
-		data = nodeItemInfoVector.data( ); // 更新基址
+		new_node_item->generateCode = count;
 	}
-	size_t checkCode = count;
-	for( ; index < count; ++index )
-		if( data[ index ] == nullptr || data[ index ]->nodeItem->generateCode != ( index + 1 ) ) { // 掉链子了
-			checkCode = index + 1;
-			index = 0; // 重新遍历
-			for( ; index < count; ++index )
-				if( data[ index ] == nullptr || data[ index ]->nodeItem->generateCode == checkCode ) {
-					index = checkCode + 1;
-					checkCode = count;
-					break;
-				}
-			if( index == count )
-				break;
 
-		}
-	new_node_item->generateCode = checkCode;
 	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
 	connect( new_node_item, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
@@ -549,7 +543,9 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 	connect( nodeItemInfo, &NodeItemInfo::releaseThisPtr, this, &NodeDirector::releaseNodeItemInfoSignal );
 	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChangeOutputNodeItem, this, &NodeDirector::nodeItemInfoRefChangeOutputNodeItem );
 	connect( nodeItemInfo, &NodeItemInfo::nodeItemInfoRefChangeInputNodeItem, this, &NodeDirector::nodeItemInfoRefChangeInputNodeItem );
+	new_node_item->updateLayout( );
 	emit generateNodeItemSignal( new_node_item );
+	emit nodeItemFocusSignal( new_node_item );
 	return new_node_item->generateCode;
 }
 bool NodeDirector::getLinkOutPorts( const NodeInputPort *input_port, std_vector< NodeOutputPort * > &result_vector ) const {
@@ -752,6 +748,20 @@ NodeDirector::~NodeDirector( ) {
 		nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 		delete nodeItemCreateMenu;
 	}
+}
+NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return nullptr;
+	NodeItemBuilderObj *result = new NodeItemBuilderObj( this );
+	auto nodeItemInfoArrayPtr = nodeItemInfoVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		result->addBuilderNodeItem( nodeItemInfoArrayPtr[ index ] );
+	if( result->builderNodeItemVector( ) == false ) {
+		delete result;
+		return nullptr;
+	}
+	return result;
 }
 
 bool NodeDirector::nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr ) {

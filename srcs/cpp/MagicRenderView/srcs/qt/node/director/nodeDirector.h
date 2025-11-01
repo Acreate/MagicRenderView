@@ -8,6 +8,7 @@
 
 #include <qt/enums/nodeItemEnum.h>
 
+class NodeItemBuilderObj;
 class QPainter;
 class NodePort;
 class VarGenerate;
@@ -47,16 +48,16 @@ protected:
 	virtual bool resetMenu( QObject *del_ptr );
 	virtual bool rleaseNodeItem( NodeItem *release );
 	virtual bool sortNodeItemInfo( );
+	virtual void updateNodeItemInfo( );
 	virtual bool connectLink( const size_t &input_nodeitem_code, const size_t &input_prot_code, const size_t &output_nodeitem_code, const size_t &outut_prot_code );
 protected:
 	virtual void nodeItemErrorMsgPrintf( NodeItem *node_item, const QString &error_msg );
 	virtual void nodeItemInfoMsgPrintf( NodeItem *node_item, const QString &normal_msg );
 	virtual void nodeItemNormalMsgPrintf( NodeItem *node_item, const QString &normal_msg );
-	virtual void nodeItemSelects( const std_vector< NodeItem * > &node_item_select_vector );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
-
+	virtual NodeItemBuilderObj * builderNodeItem( );
 	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 	virtual bool nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr );
 	virtual bool nodeItemInfRightConverVar( NodeItemInfo *output_node_item_ptr );
@@ -116,7 +117,7 @@ Q_SIGNALS:
 	void nodeItemErrorMsgPrintfSignal( NodeItem *node_item, const QString &error_msg );
 	void nodeItemInfoMsgPrintfSignal( NodeItem *node_item, const QString &normal_msg );
 	void nodeItemNormalMsgPrintfSignal( NodeItem *node_item, const QString &normal_msg );
-	void nodeItemSelectsSignal( const std_vector< NodeItem * > &node_item_select_vector );
+	void nodeItemFocusSignal( NodeItem *node_item_select );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

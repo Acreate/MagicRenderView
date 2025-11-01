@@ -40,7 +40,7 @@ MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags
 	connect( nodeDirector, &NodeDirector::linkNodePortSignal, this, &MainWidget::linkNodePortEvent );
 	connect( nodeDirector, &NodeDirector::unlinkNodePortSignal, this, &MainWidget::unlinkNodePortEvent );
 	connect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &MainWidget::releaseNodeItemInfoObj );
-	connect( nodeDirector, &NodeDirector::generateNodeItemSignal, this, &MainWidget::generateNodeItem );
+	connect( nodeDirector, &NodeDirector::nodeItemFocusSignal, this, &MainWidget::nodeItemFocus );
 }
 MainWidget::~MainWidget( ) {
 	appInstance->syncAppValueIniFile( );
@@ -102,7 +102,7 @@ void MainWidget::unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePor
 void MainWidget::releaseNodeItemInfoObj( NodeItemInfo *release_ptr ) {
 	update( );
 }
-void MainWidget::generateNodeItem( NodeItem *create_ptr ) {
+void MainWidget::nodeItemFocus( NodeItem *create_ptr ) {
 	ensureVisibleToItemNode( create_ptr );
 	update( );
 }

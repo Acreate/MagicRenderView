@@ -1,5 +1,4 @@
-﻿
-#include <qfile.h>
+﻿#include <qfile.h>
 
 #include "qt/application/application.h"
 #include "qt/tools/tools.h"
@@ -12,7 +11,7 @@ int main( int argc, char *argv[ ] ) {
 		tools::debug::printError( "程序初始化失败" );
 		return -1;
 	}
-	
+
 	MainWindow mainwidget;
 	mainwidget.show( );
 

@@ -26,8 +26,20 @@ namespace nodeItemEnum {
 		Jump, // 回路，运行该节点之后，整个渲染流程回到最近的 Point 权节点，具备完整跳转权。
 	};
 	Q_ENUM_NS( Node_Item_Type );
+
+	enum class Node_Item_Builder_Type {
+		None,
+		Warning,
+		Error,
+		Finish,
+		Last,
+		Start,
+	};
+	Q_ENUM_NS( Node_Item_Builder_Type );
+
 	bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
 	bool getEnumName( const Click_Type &enum_var, QString &result_str );
+	bool getEnumName( const Node_Item_Builder_Type &enum_var, QString &result_str );
 }
 
 #define Def_First_Mate_Node_Type( node_Item_enum_type_value ) \

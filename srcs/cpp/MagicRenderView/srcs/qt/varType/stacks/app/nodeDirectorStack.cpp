@@ -65,10 +65,12 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 	QString nodeItemCodeName;
 	size_t outPortCount;
 	QString inputPortName;
+	QString outputPortName;
 	NodePortLinkInfo *nodePortLinkInfo;
 	std::pair< NodeItem *, std::vector< std::pair< NodeOutputPort *, QAction * > > > *outPortArrayPtr;
 	size_t outPortIndex;
 	subBuff.clear( );
+	subCount = 0;
 	for( ; nodeItemIndex < nodeItemCount; ++nodeItemIndex ) {
 
 		nodePortLinkInfo = nodePortLinkInfoArrayPtr[ nodeItemIndex ];
@@ -92,8 +94,8 @@ bool NodeDirectorStack::toBinVector( const type_info &target_type_info, const vo
 			auto &pair = outPortArrayPtr[ outPortIndex ];
 			nodeItemCodeName = linkName.arg( pair.first->generateCode );
 			for( auto &[ prot, action ] : pair.second ) {
-				inputPortName = nodeItemCodeName.arg( prot->generateCode );
-				fillBinVector( inputPortName, buff );
+				outputPortName = nodeItemCodeName.arg( prot->generateCode );
+				fillBinVector( outputPortName, buff );
 				subBuff.append_range( buff );
 			}
 		}
@@ -218,6 +220,7 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 		mod -= count;
 	}
 	nodeDirector->sortNodeItemInfo( );
+	nodeDirector->updateNodeItemInfo( );
 	// 连接数量
 	count = fillObjVector( &nodeInfoCount, sizeof( nodeInfoCount ), offerPtr, mod );
 
@@ -300,6 +303,7 @@ bool NodeDirectorStack::toOBjVector( const type_info &target_type_info, void *ta
 				tools::debug::printError( msg.arg( inputNodeItemCode ).arg( inputNodeItemPortCode ).arg( outputNodeItemCode ).arg( outputNodeItemPortCode ) );
 				return false;
 			}
+			
 			offerPtr = offerPtr + count;
 			mod -= count;
 		}

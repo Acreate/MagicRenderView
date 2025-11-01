@@ -89,6 +89,12 @@ public:
 	virtual QImage * renderTextToImageAtRectBound( QPainter *painter, const QString &render_text, const QColor &rect_bound_color, const int &bound_width ) const;
 	virtual QImage * renderTextToImageAtFontColor( QPainter *painter, const QString &render_text, const QColor &pen_color ) const;
 	virtual QImage * renderTextToImageAtFontColorAndRectBound( QPainter *painter, const QString &render_text, const QColor &pen_color, const QColor &rect_bound_color, const int &bound_width ) const;
+	/// @brief 水平合成
+	/// @param first 第一个填充
+	/// @param scond 第二个填充
+	/// @param space 间距
+	/// @param result_image 合成后的图像返回
+	virtual void mergeHorizontalImage( const QImage *first, const QImage *scond, int space, QImage& result_image ) const;
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

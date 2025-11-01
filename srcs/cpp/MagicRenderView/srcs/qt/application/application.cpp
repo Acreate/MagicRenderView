@@ -478,6 +478,19 @@ QImage * Application::renderTextToImageAtFontColorAndRectBound( QPainter *painte
 	painter->end( );
 	return image;
 }
+void Application::mergeHorizontalImage( const QImage *first, const QImage *scond, int space, QImage &result_image ) const {
+	int firstWidth = first->width( ) + space;
+	int newSizeWidth = firstWidth + scond->width( );
+	int firstHeight = first->height( );
+	int sondHeight = scond->height( );
+	if( firstHeight < sondHeight )
+		firstHeight = sondHeight;
+	result_image = result_image.scaled( newSizeWidth, firstHeight );
+	result_image.fill( 0 );
+	QPainter painter( &result_image );
+	painter.drawImage( 0, 0, *first );
+	painter.drawImage( firstWidth, 0, *scond );
+}
 
 bool Application::notify( QObject *object, QEvent *event ) {
 	switch( event->type( ) ) {
