@@ -29,6 +29,9 @@ protected:
 	virtual void sortNodeItemVector( std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
 		sortNodeItemVector( result_out_node_item_info_ptr.data( ), result_out_node_item_info_ptr.size( ) );
 	}
+	/// @brief 检查编译数组当中的依赖是否完整
+	/// @return true 表示完整
+	virtual bool checkNodeItemBuilderVector( );
 	/// @brief 移动对象到指定位置
 	/// @param node_item_info_array_ptr 操作数组
 	/// @param inster_node_item_info_source_point 拷贝位置

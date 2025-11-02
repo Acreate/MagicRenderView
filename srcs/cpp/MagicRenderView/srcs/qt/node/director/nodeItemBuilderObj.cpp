@@ -38,40 +38,17 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 			runNodeItemInfoVector.append_range( resultOutNodeItemInfoPtr );
 			resultOutNodeItemInfoPtr.clear( );
 		}
+	// 检查
+	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 	currentVectorCount = runNodeItemInfoVector.size( );
-	currentVectorIndex = 0;
-	if( currentVectorCount == 0 ) {
+	if( checkNodeItemBuilderVector( ) == false ) {
+		currentVectorIndex = 0;
+		currentVectorCount = 0;
 		runNodeItemInfoArrayPtr = nullptr;
 		runNodeItemInfoVector.clear( );
 		return false;
 	}
-	// 检查
-	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
-	currentVectorCount = runNodeItemInfoVector.size( );
-	size_t checkIndex;
-	size_t checkInputIndex;
-	for( ; currentVectorIndex < currentVectorCount; ++currentVectorIndex ) {
-		auto &inputNodeItemVector = runNodeItemInfoArrayPtr[ currentVectorIndex ]->getInputNodeItemVector( );
-		size_t inputCount = inputNodeItemVector.size( );
-		if( inputCount == 0 )
-			continue;
-		auto inputArrayPtr = inputNodeItemVector.data( );
-		for( checkInputIndex = 0; checkInputIndex < inputCount; ++checkInputIndex ) {
-			for( checkIndex = 0; checkIndex < currentVectorCount; ++checkIndex )
-				if( runNodeItemInfoArrayPtr[ checkIndex ] == inputArrayPtr[ checkInputIndex ] )
-					break;
-			if( checkIndex != currentVectorCount ) {
-				auto metaObjectPathName = inputArrayPtr[ checkInputIndex ]->nodeItem->getMetaObjectPathName( );
-				QString msg( "%1->%2 未存在输入依赖链当中" );
-				tools::debug::printError( msg.arg( metaObjectPathName ).arg( inputArrayPtr[ checkInputIndex ]->nodeItem->generateCode ) );
-				currentVectorIndex = 0;
-				currentVectorCount = 0;
-				runNodeItemInfoArrayPtr = nullptr;
-				runNodeItemInfoVector.clear( );
-				return false;
-			}
-		}
-	}
+
 	// 排序
 	sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
 	return true;
@@ -93,8 +70,43 @@ bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_v
 	return true;
 }
 void NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
+	QString msg( "编译队列未实现，请实现该函数" );
+	tools::debug::printError( msg );
 }
 
+bool NodeItemBuilderObj::checkNodeItemBuilderVector( ) {
+	if( currentVectorCount == 0 || runNodeItemInfoArrayPtr == nullptr ) {
+		QString msg( "编译队列非法，请检查数量与指针起始地址是否正确" );
+		tools::debug::printError( msg );
+		return false;
+	}
+	size_t checkIndex;
+	size_t checkInputIndex;
+	for( currentVectorIndex = 0; currentVectorIndex < currentVectorCount; ++currentVectorIndex ) {
+		auto &inputNodeItemVector = runNodeItemInfoArrayPtr[ currentVectorIndex ]->getInputNodeItemVector( );
+		size_t inputCount = inputNodeItemVector.size( );
+		if( inputCount == 0 )
+			continue;
+		auto inputArrayPtr = inputNodeItemVector.data( );
+		for( checkInputIndex = 0; checkInputIndex < inputCount; ++checkInputIndex ) {
+			for( checkIndex = 0; checkIndex < currentVectorCount; ++checkIndex )
+				if( inputArrayPtr[ checkInputIndex ]->nodeItem->getNodeMetaType( ) == nodeItemEnum::Node_Item_Type::Begin || runNodeItemInfoArrayPtr[ checkIndex ] == inputArrayPtr[ checkInputIndex ] )
+					break;
+			if( checkIndex == currentVectorCount ) {
+				auto metaObjectPathName = inputArrayPtr[ checkInputIndex ]->nodeItem->getMetaObjectPathName( );
+				QString msg( "%1->%2 未存在输入依赖链当中" );
+				tools::debug::printError( msg.arg( metaObjectPathName ).arg( inputArrayPtr[ checkInputIndex ]->nodeItem->generateCode ) );
+				currentVectorIndex = 0;
+				currentVectorCount = 0;
+				runNodeItemInfoArrayPtr = nullptr;
+				runNodeItemInfoVector.clear( );
+				return false;
+			}
+		}
+	}
+	currentVectorIndex = 0;
+	return true;
+}
 void NodeItemBuilderObj::moveNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_source_point, const size_t &inster_node_item_info_target_point ) {
 	if( node_item_info_array_ptr == nullptr || inster_node_item_info_target_point == inster_node_item_info_source_point )
 		return;
