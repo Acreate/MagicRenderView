@@ -25,7 +25,7 @@ protected:
 	virtual bool addBuilderNodeItem( NodeItemInfo *node_item_info );
 	virtual bool builderNodeItemVector( );
 	virtual bool fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr );
-	virtual void sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count );
+	virtual size_t sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count );
 	virtual void sortNodeItemVector( std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
 		sortNodeItemVector( result_out_node_item_info_ptr.data( ), result_out_node_item_info_ptr.size( ) );
 	}

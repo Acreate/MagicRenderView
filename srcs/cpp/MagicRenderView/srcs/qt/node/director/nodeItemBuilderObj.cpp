@@ -52,7 +52,10 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 		return false;
 	}
 	// 排序
-	sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
+	currentVectorCount = sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
+	runNodeItemInfoVector.resize( currentVectorCount );
+	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
+	currentVectorIndex = 0;
 	return true;
 }
 bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
@@ -71,9 +74,49 @@ bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_v
 			fillNodeItemVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
 	return true;
 }
-void NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
-	QString msg( "编译队列未实现，请实现该函数" );
-	tools::debug::printError( msg );
+size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
+
+	size_t newCount = 0;
+	currentVectorIndex = 0;
+	for( ; currentVectorIndex < inster_node_item_info_count; ++currentVectorIndex )
+		if( node_item_info_array_ptr[ currentVectorIndex ] != nullptr )
+			newCount += 1;
+
+	size_t buffIndex = 0;
+	currentVectorIndex = 0;
+	using node_item_info_ptr_t = NodeItemInfo *;
+	node_item_info_ptr_t *buff = new node_item_info_ptr_t [ newCount ];
+	for( ; currentVectorIndex < inster_node_item_info_count; ++currentVectorIndex )
+		if( node_item_info_array_ptr[ currentVectorIndex ] != nullptr )
+			buff[ buffIndex++ ] = node_item_info_array_ptr[ currentVectorIndex ];
+
+	buffIndex = 0;
+	currentVectorIndex = 0;
+	size_t inputIndex;
+	size_t inputArrayCount;
+	NodeItemInfo **inputArrayPtr;
+	// 排序
+	for( ; buffIndex < newCount; ++buffIndex ) {
+		inputArrayCount = buff[ buffIndex ]->inputNodeItemInfoVector.size( );
+		if( inputArrayCount == 0 ) {
+			node_item_info_array_ptr[ currentVectorIndex ] = buff[ buffIndex ];
+			++currentVectorIndex;
+			continue;
+		}
+		inputArrayPtr = buff[ buffIndex ]->inputNodeItemInfoVector.data( );
+		// 输入全部等于 nullptr 时，放入无输入队列 (Begin 类型即 nullptr)
+		inputIndex = 0;
+		for( ; inputIndex < inputArrayCount; ++inputIndex )
+			if( inputArrayPtr[ inputIndex ] != nullptr && inputArrayPtr[ inputIndex ]->nodeItem->getNodeMetaType( ) != nodeItemEnum::Node_Item_Type::Begin )
+				break;
+		if( inputIndex < inputArrayCount )
+			continue;
+		node_item_info_array_ptr[ currentVectorIndex ] = buff[ buffIndex ];
+		++currentVectorIndex;
+	}
+
+	delete[] buff;
+	return newCount;
 }
 
 bool NodeItemBuilderObj::checkNodeItemBuilderVector( ) {
