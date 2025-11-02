@@ -29,12 +29,15 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	runNodeItemInfoArrayPtr = nullptr;
 	runNodeItemInfoVector.clear( );
 	currentVectorCount = startNodeItemInfoVector.size( );
-	if( currentVectorCount == 0 )
+	if( currentVectorCount == 0 ) {
+		QString msg( "请加入开始节点到序列当中" );
+		tools::debug::printError( msg );
 		return false;
+	}
 	runNodeItemInfoArrayPtr = startNodeItemInfoVector.data( );
 	std_vector< NodeItemInfo * > resultOutNodeItemInfoPtr;
 	for( ; currentVectorIndex < currentVectorCount; ++currentVectorIndex )
-		if( fillNodeItemVector( runNodeItemInfoArrayPtr[ currentVectorIndex ], resultOutNodeItemInfoPtr ) == true ) {
+		if( runNodeItemInfoArrayPtr[ currentVectorIndex ] && fillNodeItemVector( runNodeItemInfoArrayPtr[ currentVectorIndex ], resultOutNodeItemInfoPtr ) == true ) {
 			runNodeItemInfoVector.append_range( resultOutNodeItemInfoPtr );
 			resultOutNodeItemInfoPtr.clear( );
 		}
@@ -48,13 +51,11 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 		runNodeItemInfoVector.clear( );
 		return false;
 	}
-
 	// 排序
 	sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
 	return true;
 }
 bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
-
 	size_t count = node_item_info->outputNodeItemVector.size( );
 	if( count == 0 )
 		return false;
@@ -66,7 +67,8 @@ bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_v
 	for( newCount = 0; newCount < count; ++newCount )
 		dataTargetPtr[ oldCount + newCount ] = copySourceArrayPtr[ newCount ];
 	for( newCount = 0; newCount < count; ++newCount )
-		fillNodeItemVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
+		if( copySourceArrayPtr[ newCount ] )
+			fillNodeItemVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
 	return true;
 }
 void NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
@@ -83,6 +85,8 @@ bool NodeItemBuilderObj::checkNodeItemBuilderVector( ) {
 	size_t checkIndex;
 	size_t checkInputIndex;
 	for( currentVectorIndex = 0; currentVectorIndex < currentVectorCount; ++currentVectorIndex ) {
+		if( runNodeItemInfoArrayPtr[ currentVectorIndex ] == nullptr )
+			continue;
 		auto &inputNodeItemVector = runNodeItemInfoArrayPtr[ currentVectorIndex ]->getInputNodeItemVector( );
 		size_t inputCount = inputNodeItemVector.size( );
 		if( inputCount == 0 )
@@ -90,7 +94,7 @@ bool NodeItemBuilderObj::checkNodeItemBuilderVector( ) {
 		auto inputArrayPtr = inputNodeItemVector.data( );
 		for( checkInputIndex = 0; checkInputIndex < inputCount; ++checkInputIndex ) {
 			for( checkIndex = 0; checkIndex < currentVectorCount; ++checkIndex )
-				if( inputArrayPtr[ checkInputIndex ]->nodeItem->getNodeMetaType( ) == nodeItemEnum::Node_Item_Type::Begin || runNodeItemInfoArrayPtr[ checkIndex ] == inputArrayPtr[ checkInputIndex ] )
+				if( inputArrayPtr[ checkInputIndex ] == nullptr || inputArrayPtr[ checkInputIndex ]->nodeItem->getNodeMetaType( ) == nodeItemEnum::Node_Item_Type::Begin || runNodeItemInfoArrayPtr[ checkIndex ] == inputArrayPtr[ checkInputIndex ] )
 					break;
 			if( checkIndex == currentVectorCount ) {
 				auto metaObjectPathName = inputArrayPtr[ checkInputIndex ]->nodeItem->getMetaObjectPathName( );

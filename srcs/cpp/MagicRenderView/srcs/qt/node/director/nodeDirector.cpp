@@ -147,9 +147,8 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 			tools::debug::printError( msg.arg( inputParentNodeItem->getMetaObjectPathName( ) ) );
 			return;
 		}
-
-		outputInfo->removeInputNodeItemInfo( inputInfo );
-		inputInfo->removeOutputNodeItemInfo( outputInfo );
+		if( outputInfo->removeOutputNodeItemInfo( inputInfo ) == false )tools::debug::printError( QString( "异常的输出节点删除操作 %1 -> %2" ).arg( outputInfo->nodeItem->getMetaObjectPathName( ) ).arg( inputInfo->nodeItem->getMetaObjectPathName( ) ) );
+		if( inputInfo->removeInputNodeItemInfo( outputInfo ) == false )tools::debug::printError( QString( "异常的输入节点删除操作 %2 <- %1" ).arg( outputInfo->nodeItem->getMetaObjectPathName( ) ).arg( inputInfo->nodeItem->getMetaObjectPathName( ) ) );
 		emit unlinkNodePortSignal( this, sender_obj_ptr, input_port, output_port );
 	} );
 	return true;
