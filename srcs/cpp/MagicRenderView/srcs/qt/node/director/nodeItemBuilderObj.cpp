@@ -95,11 +95,15 @@ size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_arr
 	size_t inputIndex;
 	size_t inputArrayCount;
 	NodeItemInfo **inputArrayPtr;
+	size_t nullPtrIndex = 0;
 	// 排序
 	for( ; buffIndex < newCount; ++buffIndex ) {
 		inputArrayCount = buff[ buffIndex ]->inputNodeItemInfoVector.size( );
 		if( inputArrayCount == 0 ) {
 			node_item_info_array_ptr[ currentVectorIndex ] = buff[ buffIndex ];
+			buff[ buffIndex ] = buff[ nullPtrIndex ];
+			buff[ nullPtrIndex ] = nullptr;
+			++nullPtrIndex;
 			++currentVectorIndex;
 			continue;
 		}
@@ -113,6 +117,9 @@ size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_arr
 			continue;
 		node_item_info_array_ptr[ currentVectorIndex ] = buff[ buffIndex ];
 		++currentVectorIndex;
+		buff[ buffIndex ] = buff[ nullPtrIndex ];
+		buff[ nullPtrIndex ] = nullptr;
+		++nullPtrIndex;
 	}
 
 	delete[] buff;
