@@ -17,6 +17,7 @@ private:
 	friend class NodeDirector;
 	friend class NodeDirectorStack;
 	friend class StartNodeInfoWidget;
+	friend class NodeItemInfoVector;
 protected:
 	NodeItem *nodeItem;
 	QMenu *manageMenu;
@@ -74,6 +75,32 @@ Q_SIGNALS:
 	void requestNodeItemInfoConverVar( NodeItemInfo *left_node_item_ptr, NodeItemInfo *right_node_item_ptr );
 	void nodeItemInfoRefChangeInputNodeItem( NodeItemInfo *node_item_info );
 	void nodeItemInfoRefChangeOutputNodeItem( NodeItemInfo *node_item_info );
+};
+
+class NodeItemInfoVector {
+public:
+	using NodeItemInfoStdVector = std_vector< NodeItemInfoVector >;
+	using NodeItemInfoArrayPtr = NodeItemInfo **;
+public:
+	/// @brief 移动对象到指定位置
+	/// @param node_item_info_array_ptr 操作数组
+	/// @param inster_node_item_info_source_point 拷贝位置
+	/// @param inster_node_item_info_target_point 覆盖位置
+	static void moveNodeItemVector( NodeItemInfoArrayPtr node_item_info_array_ptr, const size_t &inster_node_item_info_source_point, const size_t &inster_node_item_info_target_point );
+	/// @brief 格式化输出到字符串
+	/// @param node_item_info 格式化数组起始地址
+	/// @param count 数组个数
+	/// @param join_string 拼接字符串
+	/// @return 格式化好的字符串
+	static QString formatNodeInfoPath( NodeItemInfoArrayPtr node_item_info, const size_t &count, const QString &join_string );
+	/// @brief 填充数据
+	/// @param source_node_item_info_array_ptr 检查填充数组
+	/// @param source_node_item_info_array_count 检查填充数组个数
+	/// @param target_node_item_info_array_ptr 被填充的数组
+	/// @param target_node_item_info_array_count 被填充的最大数量
+	/// @param fill_check_function 填充条件
+	/// @return 填充个数
+	static size_t fillNodeItemInfoVector( NodeItemInfoArrayPtr source_node_item_info_array_ptr, const size_t &source_node_item_info_array_count, NodeItemInfoArrayPtr target_node_item_info_array_ptr, const size_t &target_node_item_info_array_count, const std_function< bool( NodeItemInfo *check ) > &fill_check_function );
 };
 
 #endif // NODEITEMINFO_H_H_HEAD__FILE__

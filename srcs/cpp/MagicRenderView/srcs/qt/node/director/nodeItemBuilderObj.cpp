@@ -53,9 +53,18 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	}
 	// 排序
 	currentVectorCount = sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
+	if( currentVectorCount == 0 ) {
+		currentVectorIndex = 0;
+		currentVectorCount = 0;
+		runNodeItemInfoArrayPtr = nullptr;
+		runNodeItemInfoVector.clear( );
+		return false;
+	}
 	runNodeItemInfoVector.resize( currentVectorCount );
 	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 	currentVectorIndex = 0;
+	auto buffOut = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
+	tools::debug::printInfo( buffOut );
 	return true;
 }
 bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
@@ -73,16 +82,6 @@ bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_v
 		if( copySourceArrayPtr[ newCount ] )
 			fillNodeItemVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
 	return true;
-}
-
-QString formatNodeInfoPath( NodeItemInfo **node_item_info, const size_t &count, const QString &join_string ) {
-	QStringList out;
-	QString formatString( "%1(%2)" );
-	for( size_t index = 0; index < count; ++index )
-		out.append( formatString.arg( node_item_info[ index ]->getNodeItem( )->getMetaObjectPathName( ) ).arg( node_item_info[ index ]->getNodeItem( )->getGenerateCode( ) ) );
-
-	out.removeLast( );
-	return out.join( join_string );
 }
 
 size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
@@ -137,41 +136,30 @@ size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_arr
 	auto buffArratOffsetPtr = buff + nullPtrIndex;
 	// 末尾
 	auto nodeItemInfoArratOffsetCount = newCount - nullPtrIndex;
-	// 输出总堆栈
-	std_vector< NodeItemInfo * > outList;
-	// 输出堆栈
-	std_vector< NodeItemInfo * > outStackList;
-	size_t outIndex;
-	NodeItemInfo **outArrayPtr;
-	NodeItemInfo *itemInfo;
-	size_t outCount;
-	// 真正的起始节点
-	for( buffIndex = 0; buffIndex < nullPtrIndex; ++buffIndex ) {
 
-		itemInfo = node_item_info_array_ptr[ buffIndex ];
-		outCount = itemInfo->outputNodeItemVector.size( );
-		if( outCount == 0 )
-			continue; // 跳过，不加入输入列表
-		outList.append_range( itemInfo->outputNodeItemVector );
-		do {
-			outStackList.clear( );
-			outArrayPtr = itemInfo->outputNodeItemVector.data( );
-			for( outIndex = 0; outIndex < outCount; ++outIndex )
-				if( outArrayPtr[ outIndex ] )
-					outStackList.append_range( outArrayPtr[ outIndex ]->outputNodeItemVector );
-			if( outStackList.size( ) == 0 )
-				break;
-			outList.append_range( outStackList );
-		} while( true );
-		// todo : 输出
-		tools::debug::printInfo( formatNodeInfoPath( outList.data( ), outList.size( ), ", " ) );
-		outCount = outList.size( );
-		outArrayPtr = outList.data(  );
+	size_t useCount;
+	do {
+		useCount = NodeItemInfoVector::fillNodeItemInfoVector( buffArratOffsetPtr, nodeItemInfoArratOffsetCount, nodeItemInfoArratOffsetPtr, nodeItemInfoArratOffsetCount, [&nullPtrIndex, node_item_info_array_ptr] ( NodeItemInfo *check ) {
+			for( auto inputNodeItem : check->inputNodeItemInfoVector ) {
+				for( size_t compIndex = 0; compIndex < nullPtrIndex; ++compIndex )
+					if( inputNodeItem == node_item_info_array_ptr[ compIndex ] )
+						return true;
+				return false;
+			}
+			return false;
+		} );
+		if( useCount == 0 ) {
+			auto buffOut = NodeItemInfoVector::formatNodeInfoPath( buff, newCount, ", " );
+			auto srcOut = NodeItemInfoVector::formatNodeInfoPath( node_item_info_array_ptr, newCount, ", " );
+			QString msg( "buff > %1\nsrc > %2" );
+			tools::debug::printError( msg.arg( buffOut ).arg( srcOut ) );
+			newCount = 0;
+			break;
+		} else if( nullPtrIndex == newCount )
+			break;
+		nullPtrIndex += useCount;
+	} while( true );
 
-		
-		
-		outList.clear( );
-	}
 	delete[] buff;
 	return newCount;
 }
@@ -210,21 +198,6 @@ bool NodeItemBuilderObj::checkNodeItemBuilderVector( ) {
 	}
 	currentVectorIndex = 0;
 	return true;
-}
-void NodeItemBuilderObj::moveNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_source_point, const size_t &inster_node_item_info_target_point ) {
-	if( node_item_info_array_ptr == nullptr || inster_node_item_info_target_point == inster_node_item_info_source_point )
-		return;
-	size_t index = inster_node_item_info_source_point;
-	auto nodeItemInfo = node_item_info_array_ptr[ index ];
-	if( inster_node_item_info_target_point < inster_node_item_info_source_point )
-		// 数据后移
-		for( ; index > inster_node_item_info_target_point; --index )
-			node_item_info_array_ptr[ index ] = node_item_info_array_ptr[ index - 1 ];
-	else
-		// 数据前移
-		for( ; index < inster_node_item_info_target_point; ++index )
-			node_item_info_array_ptr[ index ] = node_item_info_array_ptr[ index + 1 ];
-	node_item_info_array_ptr[ index ] = nodeItemInfo;
 }
 NodeItemBuilderObj::~NodeItemBuilderObj( ) { }
 nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::builderStatus( ) const {

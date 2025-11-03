@@ -32,11 +32,6 @@ protected:
 	/// @brief 检查编译数组当中的依赖是否完整
 	/// @return true 表示完整
 	virtual bool checkNodeItemBuilderVector( );
-	/// @brief 移动对象到指定位置
-	/// @param node_item_info_array_ptr 操作数组
-	/// @param inster_node_item_info_source_point 拷贝位置
-	/// @param inster_node_item_info_target_point 覆盖位置
-	virtual void moveNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_source_point, const size_t &inster_node_item_info_target_point );
 public:
 	~NodeItemBuilderObj( ) override;
 	virtual nodeItemEnum::Node_Item_Builder_Type builderStatus( ) const;
