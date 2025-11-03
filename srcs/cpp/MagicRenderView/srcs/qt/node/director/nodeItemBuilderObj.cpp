@@ -11,6 +11,8 @@ NodeItemBuilderObj::NodeItemBuilderObj( QObject *parent ) : QObject( parent ), m
 	runNodeItemInfoArrayPtr = nullptr;
 }
 bool NodeItemBuilderObj::addBuilderNodeItem( NodeItemInfo *node_item_info ) {
+	if( node_item_info == nullptr )
+		return false;
 	auto nodeMetaType = node_item_info->nodeItem->getNodeMetaType( );
 	if( nodeMetaType != nodeItemEnum::Node_Item_Type::Begin )
 		return false;
@@ -51,6 +53,7 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 		runNodeItemInfoVector.clear( );
 		return false;
 	}
+	tools::debug::printInfo( NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " ) );
 	// 排序
 	currentVectorCount = sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
 	if( currentVectorCount == 0 ) {
@@ -63,8 +66,8 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	runNodeItemInfoVector.resize( currentVectorCount );
 	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 	currentVectorIndex = 0;
-	auto buffOut = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
-	tools::debug::printInfo( buffOut );
+	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
+	tools::debug::printInfo( QString( "生成编译:%1" ).arg( infoMsg ) );
 	return true;
 }
 bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
@@ -155,10 +158,12 @@ size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_arr
 			tools::debug::printError( msg.arg( buffOut ).arg( srcOut ) );
 			newCount = 0;
 			break;
-		} else if( nullPtrIndex == newCount )
-			break;
+		}
 		nullPtrIndex += useCount;
-	} while( true );
+		buffArratOffsetPtr = buff + nullPtrIndex;
+		nodeItemInfoArratOffsetPtr = node_item_info_array_ptr + nullPtrIndex;
+		nodeItemInfoArratOffsetCount = newCount - nullPtrIndex;
+	} while( nullPtrIndex != newCount );
 
 	delete[] buff;
 	return newCount;

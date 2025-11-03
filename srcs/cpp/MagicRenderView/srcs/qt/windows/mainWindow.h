@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItemBuilderObj;
 class MainScrollAreaWidget;
 class NodeItem;
 class ItemWidget;
@@ -33,16 +34,18 @@ protected:
 	QString currentSaveFilePath;
 	/// @brief 文件保存路径 key
 	QString savefilePathKey;
+	/// @brief 编译对象
+	NodeItemBuilderObj *nodeItemBuilderObj;
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
-	virtual void overSave();
-	virtual void normalSave();
-	virtual void overLoadFile();
-	virtual void normalLoadFile();
-	virtual void quickSave();
-	virtual void quickLoadFile();
+	virtual void overSave( );
+	virtual void normalSave( );
+	virtual void overLoadFile( );
+	virtual void normalLoadFile( );
+	virtual void quickSave( );
+	virtual void quickLoadFile( );
 protected:
 	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;

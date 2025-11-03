@@ -141,6 +141,7 @@ bool NodeItemInfo::inInputNodeItemInfo( NodeItem *input_ref_ptr ) const {
 				return false;
 			data = subVector.data( );
 			index = 0;
+			subBufferVector.clear( );
 			for( ; index < count; ++index )
 				if( data[ index ] != nullptr )
 					if( data[ index ]->nodeItem == input_ref_ptr )
@@ -180,7 +181,6 @@ QString NodeItemInfoVector::formatNodeInfoPath( NodeItemInfoArrayPtr node_item_i
 	QString formatString( "%1(%2)" );
 	for( size_t index = 0; index < count; ++index )
 		out.append( formatString.arg( node_item_info[ index ]->getNodeItem( )->getMetaObjectPathName( ) ).arg( node_item_info[ index ]->getNodeItem( )->getGenerateCode( ) ) );
-	out.removeLast( );
 	return out.join( join_string );
 }
 size_t NodeItemInfoVector::fillNodeItemInfoVector( NodeItemInfoArrayPtr source_node_item_info_array_ptr, const size_t &source_node_item_info_array_count, NodeItemInfoArrayPtr target_node_item_info_array_ptr, const size_t &target_node_item_info_array_count, const std_function< bool( NodeItemInfo *check ) > &fill_check_function ) {

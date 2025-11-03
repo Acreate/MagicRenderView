@@ -12,8 +12,10 @@
 #include <qt/widgets/mainWidget/mainScrollAreaWidget.h>
 #include <qt/widgets/mainWidget/mainWidget.h>
 
-MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
+#include "../node/director/nodeItemBuilderObj.h"
 
+MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
+	nodeItemBuilderObj = nullptr;
 	setWindowToIndexScreenCentre( 0 );
 
 	appInstance = Application::getApplicationInstancePtr( );
@@ -79,8 +81,10 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	mainMenuBar->addMenu( currentMenu );
 	currentAction = currentMenu->addAction( "编译" );
 	connect( currentAction, &QAction::triggered, [this]( ) {
-		auto nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem(  );
-		
+		if( nodeItemBuilderObj )
+			delete nodeItemBuilderObj;
+		nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
+
 	} );
 	//currentAction = currentMenu->addAction( "退出" );
 	//connect( currentAction, &QAction::triggered, [this]( ) {
@@ -111,8 +115,6 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 			normalSave( );
 	} );
 
-	
-	
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
@@ -125,6 +127,7 @@ MainWindow::~MainWindow( ) {
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
 	appInstance->syncAppValueIniFile( );
+	delete nodeItemBuilderObj;
 }
 void MainWindow::setWindowToIndexScreenCentre( size_t index ) {
 	tools::ui::moveDisplayCenter( this, index );
@@ -221,7 +224,7 @@ void MainWindow::normalLoadFile( ) {
 }
 void MainWindow::quickSave( ) {
 	QString workPath = QDir::currentPath( );
-	
+
 	QString normalKey = appInstance->normalKeyAppendEnd( keyFirst, this, savefilePathKey );
 	workPath = appInstance->getAppIniValue( normalKey, workPath ).toString( );
 
@@ -244,7 +247,7 @@ void MainWindow::quickSave( ) {
 	}
 }
 void MainWindow::quickLoadFile( ) {
-	overLoadFile(  );
+	overLoadFile( );
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );
