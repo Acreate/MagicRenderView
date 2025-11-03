@@ -74,6 +74,17 @@ bool NodeItemBuilderObj::fillNodeItemVector( NodeItemInfo *node_item_info, std_v
 			fillNodeItemVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
 	return true;
 }
+
+QString formatNodeInfoPath( NodeItemInfo **node_item_info, const size_t &count, const QString &join_string ) {
+	QStringList out;
+	QString formatString( "%1(%2)" );
+	for( size_t index = 0; index < count; ++index )
+		out.append( formatString.arg( node_item_info[ index ]->getNodeItem( )->getMetaObjectPathName( ) ).arg( node_item_info[ index ]->getNodeItem( )->getGenerateCode( ) ) );
+
+	out.removeLast( );
+	return out.join( join_string );
+}
+
 size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count ) {
 
 	size_t newCount = 0;
@@ -121,7 +132,46 @@ size_t NodeItemBuilderObj::sortNodeItemVector( NodeItemInfo **node_item_info_arr
 		buff[ nullPtrIndex ] = nullptr;
 		++nullPtrIndex;
 	}
+	// 存储的起始地址
+	auto nodeItemInfoArratOffsetPtr = node_item_info_array_ptr + nullPtrIndex;
+	auto buffArratOffsetPtr = buff + nullPtrIndex;
+	// 末尾
+	auto nodeItemInfoArratOffsetCount = newCount - nullPtrIndex;
+	// 输出总堆栈
+	std_vector< NodeItemInfo * > outList;
+	// 输出堆栈
+	std_vector< NodeItemInfo * > outStackList;
+	size_t outIndex;
+	NodeItemInfo **outArrayPtr;
+	NodeItemInfo *itemInfo;
+	size_t outCount;
+	// 真正的起始节点
+	for( buffIndex = 0; buffIndex < nullPtrIndex; ++buffIndex ) {
 
+		itemInfo = node_item_info_array_ptr[ buffIndex ];
+		outCount = itemInfo->outputNodeItemVector.size( );
+		if( outCount == 0 )
+			continue; // 跳过，不加入输入列表
+		outList.append_range( itemInfo->outputNodeItemVector );
+		do {
+			outStackList.clear( );
+			outArrayPtr = itemInfo->outputNodeItemVector.data( );
+			for( outIndex = 0; outIndex < outCount; ++outIndex )
+				if( outArrayPtr[ outIndex ] )
+					outStackList.append_range( outArrayPtr[ outIndex ]->outputNodeItemVector );
+			if( outStackList.size( ) == 0 )
+				break;
+			outList.append_range( outStackList );
+		} while( true );
+		// todo : 输出
+		tools::debug::printInfo( formatNodeInfoPath( outList.data( ), outList.size( ), ", " ) );
+		outCount = outList.size( );
+		outArrayPtr = outList.data(  );
+
+		
+		
+		outList.clear( );
+	}
 	delete[] buff;
 	return newCount;
 }

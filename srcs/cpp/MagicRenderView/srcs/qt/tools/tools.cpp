@@ -99,9 +99,11 @@ void tools::debug::printError( const std::wstring &msg, size_t start_index, size
 	size_t count = wstringVector.size( );
 	if( count >= last_remove_count )
 		count -= last_remove_count;
+	QDateTime dateTime = QDateTime::currentDateTime( );
 	stringStreamType wss;
 	auto appName = qApp->applicationDisplayName( ).toStdWString( );
-	wss << L"\n================\t" << appName << " !\t============\n" << msg << L"\n" << L"---------------------------------\n";
+	std::wstring stdWString = dateTime.toString( "yyyy年MM月dd日hh时mm分ss秒.z" ).toStdWString( );
+	wss << L"\n================\t" << appName << L" !\t============-> " << stdWString << "\n" << msg << L"\n" << L"---------------------------------\n";
 	stringType *data = wstringVector.data( );
 	for( ; start_index < count; ++start_index )
 		wss << data[ start_index ] << L'\n';
@@ -127,7 +129,9 @@ void tools::debug::printInfo( const QString &info_msg ) {
 	QFileInfo homePath( cmake_value_CMAKE_HOME_DIRECTORY );
 	QFileInfo sourcePath( currentCodeSourceFile );
 	currentCodeSourceFile = sourcePath.absoluteFilePath( ).remove( homePath.absoluteFilePath( ) );
-	qDebug( ) << "== 消息显示::=> " << applicationName.toStdString( ).c_str( ) << "\n!"
+	QDateTime dateTime = QDateTime::currentDateTime( );
+	auto dateTimeFormat = dateTime.toString( "yyyy年MM月dd日hh时mm分ss秒.z" ).toStdString( );
+	qDebug( ) << "== 消息显示::=> " << applicationName.toStdString( ).c_str( ) << " " << dateTimeFormat.c_str( ) << "\n!"
 		<< "(" << description.toStdString( ).c_str( ) << ")"
 		<< currentCodeSourceFile.toStdString( ).c_str( )
 		<< "[" << line.toStdString( ).c_str( ) << "]"

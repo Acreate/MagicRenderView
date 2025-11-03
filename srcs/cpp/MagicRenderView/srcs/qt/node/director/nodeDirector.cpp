@@ -345,6 +345,8 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 					nodeitemPtrData[ index ]->removeInputNodeItemInfo( itemInfo );
 				}
 			delete itemInfo;
+			sortNodeItemInfo( );
+			updateNodeItemInfo( );
 		}
 	}
 	return true;
@@ -527,15 +529,30 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 		if( data[ index ] == nullptr ) {
 			data[ index ] = nodeItemInfo;
 			new_node_item->generateCode = index + 1;
+			index = 0;
 			break;
 		}
 	if( index == count ) {
 		nodeItemInfoVector.emplace_back( nodeItemInfo );
-		++count;
-		new_node_item->generateCode = count;
+		new_node_item->generateCode = count + 1;
 	}
 
-	new_node_item->move( mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) ) );
+	QPoint mapFromGlobal = mainWidget->mapFromGlobal( nodeItemCreateMenu->pos( ) );
+	auto size = mainWidget->contentsRect( ).size( );
+	int targetHeight = size.height( );
+	int targetWidth = size.width( );
+	int targetY = mapFromGlobal.y( );
+	int targetX = mapFromGlobal.x( );
+	if( targetY < 0 )
+		mapFromGlobal.setY( 0 );
+	else if( targetY > targetHeight )
+		mapFromGlobal.setY( targetHeight );
+	if( targetX < 0 )
+		mapFromGlobal.setX( 0 );
+	else if( targetX > targetWidth )
+		mapFromGlobal.setX( targetWidth );
+
+	new_node_item->move( mapFromGlobal );
 	connect( new_node_item, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_node_item ) {
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
