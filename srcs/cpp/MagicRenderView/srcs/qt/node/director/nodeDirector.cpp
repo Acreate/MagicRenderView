@@ -361,11 +361,7 @@ bool NodeDirector::sortNodeItemInfo( ) {
 	for( ; index < count; ++index )
 		if( nodeItemArrayPtr[ index ] != nullptr && maxCount < nodeItemArrayPtr[ index ]->nodeItem->generateCode )
 			maxCount = nodeItemArrayPtr[ index ]->nodeItem->generateCode;
-	if( maxCount <= count ) {
-		for( ; index < count; ++index )
-			NodeItemInfoVector::moveNodeItemVector( nodeItemArrayPtr, nodeItemArrayPtr[ index ]->nodeItem->generateCode, count );
-		return true;
-	}
+	
 	std_vector< NodeItemInfo * > buff( maxCount, nullptr );
 
 	auto buffArrayPtr = buff.data( );
