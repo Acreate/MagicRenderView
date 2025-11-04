@@ -21,6 +21,7 @@ class NodeItem : public QObject, public Type_Alias {
 	Def_NodeItem_StaticMetaInfo( );
 private:
 	friend class MainWidget;
+	friend class NodeItemBuilderModule;
 	friend class NodeItemBuilderObj;
 	friend class I_Stack;
 	friend class AppNodeItemStack;

@@ -20,6 +20,7 @@ class NodePort : public QObject, public Type_Alias {
 	Q_OBJECT;
 	Def_Last_StaticMetaInfo( );
 private:
+	friend class NodeItemBuilderModule;
 	friend class NodeItemBuilderObj;
 	friend class NodeItem;
 	friend class NodeDirector;
