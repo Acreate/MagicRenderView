@@ -27,7 +27,7 @@ bool NodeItemBuilderObj::addBuilderNodeItem( NodeItemInfo *node_item_info ) {
 }
 bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	currentVectorIndex = 0;
-	if( NodeItemInfoVector::builderNodeItemVector( runNodeItemInfoVector, startNodeItemInfoVector ) == false ) {
+	if( NodeItemInfoVector::builderNodeItemVector( startNodeItemInfoVector, runNodeItemInfoVector ) == false ) {
 		currentVectorCount = 0;
 		runNodeItemInfoArrayPtr = nullptr;
 		return false;

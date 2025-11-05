@@ -90,7 +90,7 @@ public:
 	/// @param count 数组个数
 	/// @param join_string 拼接字符串
 	/// @return 格式化好的字符串
-	static QString formatNodeInfoPath(const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string );
+	static QString formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string );
 	/// @brief 填充数据
 	/// @param source_node_item_info_array_ptr 检查填充数组
 	/// @param source_node_item_info_array_count 检查填充数组个数
@@ -99,13 +99,25 @@ public:
 	/// @param fill_check_function 填充条件
 	/// @return 填充个数
 	static size_t fillNodeItemInfoVector( NodeItemInfo **source_node_item_info_array_ptr, const size_t &source_node_item_info_array_count, NodeItemInfo **target_node_item_info_array_ptr, const size_t &target_node_item_info_array_count, const std_function< bool( NodeItemInfo *check ) > &fill_check_function );
-
-	static bool builderNodeItemVector( std_vector< NodeItemInfo * > &runNodeItemInfoVector, std_vector< NodeItemInfo * > &startNodeItemInfoVector );
-
-	static bool fillNodeItemVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr );
-
-	static bool checkNodeItemBuilderVector( NodeItemInfo *const*runNodeItemInfoArrayPtr, const size_t &currentVectorCount );
-
+	/// @brief 编译节点序列，使节点按照依赖实现返回顺序序列
+	/// @param start_node_item_info_vector 返回依赖序列
+	/// @param result_run_node_item_info_vector 编译节点序列
+	/// @return 失败返回 false
+	static bool builderNodeItemVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, std_vector< NodeItemInfo * > &result_run_node_item_info_vector );
+	/// @brief 填充输出节点到指定序列当中，没有返回 false
+	/// @param node_item_info 目标节点
+	/// @param result_out_node_item_info_ptr 填充目标
+	/// @return 不存在输出返回 false
+	static bool fillOutputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr );
+	/// @brief 检查数组依赖是否正确，返回第一个数组当中找不到依赖的节点
+	/// @param runNodeItemInfoArrayPtr 检查数组
+	/// @param currentVectorCount 数组个数
+	/// @return 第一个找不到依赖的节点
+	static const NodeItemInfo * checkNodeItemBuilderVector( const NodeItemInfo *const*runNodeItemInfoArrayPtr, const size_t &currentVectorCount );
+	/// @brief 根据依赖进行排序，尾部依赖前部
+	/// @param node_item_info_array_ptr 排序数组
+	/// @param inster_node_item_info_count 排序个数
+	/// @return 排序个数，返回可能小于排序个数，因为排序存在未知依赖，这是节点不在排序列表当中
 	static size_t sortNodeItemVector( NodeItemInfo **node_item_info_array_ptr, const size_t &inster_node_item_info_count );
 };
 
