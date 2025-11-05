@@ -194,15 +194,13 @@ size_t NodeItemInfoVector::fillNodeItemInfoVector( NodeItemInfo **source_node_it
 			target_node_item_info_array_ptr[ fillCount++ ] = source_node_item_info_array_ptr[ sourceIndex ];
 	return fillCount;
 }
-bool NodeItemInfoVector::builderNodeItemVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, std_vector< NodeItemInfo * > &result_run_node_item_info_vector ) {
+bool NodeItemInfoVector::builderNodeItemVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, std_vector< NodeItemInfo * > &result_run_node_item_info_vector, const NodeItemInfo *&result_first_error_node_item_info_ptr ) {
+	result_first_error_node_item_info_ptr = nullptr;
 	auto currentVectorCount = start_node_item_info_vector.size( );
-	if( currentVectorCount == 0 ) {
-		QString msg( "请加入开始节点到序列当中" );
-		tools::debug::printError( msg );
+	if( currentVectorCount == 0 )
 		return false;
-	}
-	auto startNodeItemInfoArrayPtr = start_node_item_info_vector.data( );
 	result_run_node_item_info_vector.clear( );
+	auto startNodeItemInfoArrayPtr = start_node_item_info_vector.data( );
 	std_vector< NodeItemInfo * > resultOutNodeItemInfoPtr;
 	size_t currentVectorIndex = 0;
 	for( ; currentVectorIndex < currentVectorCount; ++currentVectorIndex )
@@ -211,27 +209,18 @@ bool NodeItemInfoVector::builderNodeItemVector( const std_vector< NodeItemInfo *
 			resultOutNodeItemInfoPtr.clear( );
 		}
 	// 检查
-	auto runNodeItemInfoArrayPtr = result_run_node_item_info_vector.data( );
 	currentVectorCount = result_run_node_item_info_vector.size( );
-	auto errorNodeItemInfoPtr = checkNodeItemBuilderVector( runNodeItemInfoArrayPtr, currentVectorCount );
-	if( errorNodeItemInfoPtr != nullptr ) {
-		auto metaObjectPathName = errorNodeItemInfoPtr->nodeItem->getMetaObjectPathName( );
-		QString msg( "%1->%2 未存在输入依赖链当中" );
-		tools::debug::printError( msg.arg( metaObjectPathName ).arg( errorNodeItemInfoPtr->nodeItem->generateCode ) );
-		result_run_node_item_info_vector.clear( );
+	if( currentVectorCount == 0 )
 		return false;
-	}
-	tools::debug::printInfo( NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " ) );
+	auto runNodeItemInfoArrayPtr = result_run_node_item_info_vector.data( );
+	result_first_error_node_item_info_ptr = checkNodeItemBuilderVector( runNodeItemInfoArrayPtr, currentVectorCount );
+	if( result_first_error_node_item_info_ptr != nullptr )
+		return false;
 	// 排序
 	currentVectorCount = sortNodeItemVector( runNodeItemInfoArrayPtr, currentVectorCount );
-	if( currentVectorCount == 0 ) {
-		result_run_node_item_info_vector.clear( );
+	if( currentVectorCount == 0 )
 		return false;
-	}
 	result_run_node_item_info_vector.resize( currentVectorCount );
-	runNodeItemInfoArrayPtr = result_run_node_item_info_vector.data( );
-	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
-	tools::debug::printInfo( QString( "生成编译:%1" ).arg( infoMsg ) );
 	return true;
 }
 bool NodeItemInfoVector::fillOutputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr ) {
@@ -251,11 +240,8 @@ bool NodeItemInfoVector::fillOutputNodeItemAtVector( NodeItemInfo *node_item_inf
 	return true;
 }
 const NodeItemInfo * NodeItemInfoVector::checkNodeItemBuilderVector( const NodeItemInfo *const*const runNodeItemInfoArrayPtr, const size_t &currentVectorCount ) {
-	if( currentVectorCount == 0 || runNodeItemInfoArrayPtr == nullptr ) {
-		QString msg( "编译队列非法，请检查数量与指针起始地址是否正确" );
-		tools::debug::printError( msg );
+	if( currentVectorCount == 0 || runNodeItemInfoArrayPtr == nullptr )
 		return nullptr;
-	}
 	size_t checkIndex;
 	size_t checkInputIndex;
 	size_t currentVectorIndex;

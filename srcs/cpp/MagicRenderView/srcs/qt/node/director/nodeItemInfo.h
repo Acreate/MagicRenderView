@@ -102,8 +102,9 @@ public:
 	/// @brief 编译节点序列，使节点按照依赖实现返回顺序序列
 	/// @param start_node_item_info_vector 返回依赖序列
 	/// @param result_run_node_item_info_vector 编译节点序列
+	/// @param result_first_error_node_item_info_ptr
 	/// @return 失败返回 false
-	static bool builderNodeItemVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, std_vector< NodeItemInfo * > &result_run_node_item_info_vector );
+	static bool builderNodeItemVector( const std_vector<NodeItemInfo *> &start_node_item_info_vector, std_vector<NodeItemInfo *> &result_run_node_item_info_vector, const NodeItemInfo *&result_first_error_node_item_info_ptr );
 	/// @brief 填充输出节点到指定序列当中，没有返回 false
 	/// @param node_item_info 目标节点
 	/// @param result_out_node_item_info_ptr 填充目标
