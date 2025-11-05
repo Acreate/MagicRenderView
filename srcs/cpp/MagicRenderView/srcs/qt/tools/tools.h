@@ -116,9 +116,10 @@ namespace tools {
 		/// @param vector 序列
 		template< typename TUnity >
 		void sortNullPtr( std_vector< TUnity > &vector ) {
-			sortNullPtr( vector.data( ), vector.size( ) );
+			auto arrayPtr = vector.data( );
+			vector::sortNullPtr( arrayPtr, vector.size( ) );
 		}
-		
+
 		/// @brief 删除非
 		/// @tparam TUnity 
 		/// @param array_ptr 
@@ -126,7 +127,7 @@ namespace tools {
 		/// @return 
 		template< typename TUnity >
 		int removeNullPtr( TUnity *array_ptr, const size_t &array_count ) {
-			sortNullPtr( array_ptr, array_ptr );
+			vector::sortNullPtr( array_ptr, array_count );
 			size_t index = 0;
 			for( ; index < array_count; ++index )
 				if( array_ptr[ index ] == nullptr )
@@ -135,7 +136,7 @@ namespace tools {
 		}
 		template< typename TUnity >
 		int removeNullPtr( std_vector< TUnity > &vector ) {
-			auto resultSize = removeNullPtr( vector.data( ), vector.size( ) );
+			auto resultSize = vector::removeNullPtr( vector.data( ), vector.size( ) );
 			vector.resize( resultSize );
 			return resultSize;
 		}

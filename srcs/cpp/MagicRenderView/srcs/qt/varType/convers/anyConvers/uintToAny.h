@@ -1,11 +1,13 @@
-﻿#ifndef ANYTOANY_H_H_HEAD__FILE__
-#define ANYTOANY_H_H_HEAD__FILE__
+﻿#ifndef UINTTOANY_H_H_HEAD__FILE__
+#define UINTTOANY_H_H_HEAD__FILE__
 #pragma once
+
+
 #include "../../I_Conver.h"
 
-class AnyToAny : public I_Conver {
+class UintToAny : public I_Conver {
 public:
 	bool supportType( const type_info &left_type_info, const type_info &right_type_info ) const override;
 };
 
-#endif // ANYTOANY_H_H_HEAD__FILE__
+#endif // UINTTOANY_H_H_HEAD__FILE__

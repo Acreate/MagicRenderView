@@ -27,7 +27,7 @@ public:
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
 	virtual bool fillTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值赋予于右值加上左值
 	/// @param left_type_info 左值类型
@@ -36,7 +36,7 @@ public:
 	/// @param right 右值指针
 	/// @return 成功加上返回 true
 	virtual bool addTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值赋值于右值减去左值
 	/// @param left_type_info 左值类型
@@ -45,7 +45,7 @@ public:
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
 	virtual bool subTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值赋值于右值乘以左值
 	/// @param left_type_info 左值类型
@@ -54,7 +54,7 @@ public:
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
 	virtual bool mulTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值赋值于右值除以左值
 	/// @param left_type_info 左值类型
@@ -63,7 +63,7 @@ public:
 	/// @param right 右值指针
 	/// @return 成功赋值返回 true
 	virtual bool divTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值是否等于左值
 	/// @param left_type_info 左值类型
@@ -73,7 +73,7 @@ public:
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
 	virtual bool equThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值是否大于左值
 	/// @param left_type_info 左值类型
@@ -83,7 +83,7 @@ public:
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
 	virtual bool greaterThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值是否小于左值
 	/// @param left_type_info 左值类型
@@ -93,7 +93,7 @@ public:
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
 	virtual bool lessThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值是否大于等于左值
 	/// @param left_type_info 左值类型
@@ -103,7 +103,7 @@ public:
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
 	virtual bool greaterOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 	/// @brief 右值是否小于于等于左值
 	/// @param left_type_info 左值类型
@@ -113,7 +113,7 @@ public:
 	/// @param result_bool 返回结果
 	/// @return 成功比较返回 true
 	virtual bool lessOrEquThanTarget( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, bool *result_bool ) {
-		return false;
+		return supportType( left_type_info, right_type_info );
 	}
 
 	template< typename t_left_type, typename t_right_type >

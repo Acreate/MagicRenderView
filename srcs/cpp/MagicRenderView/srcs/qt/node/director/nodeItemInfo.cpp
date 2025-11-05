@@ -240,7 +240,7 @@ bool NodeItemInfoVector::fillOutputNodeItemAtVector( NodeItemInfo *node_item_inf
 	return true;
 }
 bool NodeItemInfoVector::fillInputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_in_node_item_info_ptr ) {
-	size_t count = node_item_info->outputNodeItemVector.size( );
+	size_t count = node_item_info->inputNodeItemInfoVector.size( );
 	if( count == 0 )
 		return false;
 	auto copySourceArrayPtr = node_item_info->inputNodeItemInfoVector.data( );

@@ -98,6 +98,12 @@
 #include <qt/varType/stacks/qt/qColorStack.h>
 #include <qt/varType/stacks/qt/qStringStack.h>
 
+#include "../varType/convers/anyConvers/floatToAny.h"
+#include "../varType/convers/anyConvers/intToAny.h"
+#include "../varType/convers/anyConvers/nullToAnyType.h"
+#include "../varType/convers/anyConvers/stringToAny.h"
+#include "../varType/convers/anyConvers/uintToAny.h"
+
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	QString displayName = applicationDisplayName( );
 	writeSettingPath = applicationDirPath( ) + "/" + displayName + "/progress/";
@@ -246,6 +252,11 @@ bool Application::init( ) {
 	varGenerate->appendConverInstance< NullToAny >( );
 
 	varGenerate->appendConverInstance< AnyToAny >( );
+	varGenerate->appendConverInstance< FloatToAny >( );
+	varGenerate->appendConverInstance< IntToAny >( );
+	varGenerate->appendConverInstance< NullToAnyType >( );
+	varGenerate->appendConverInstance< StringToAny >( );
+	varGenerate->appendConverInstance< UintToAny >( );
 
 	// todo : 序列化支持
 	varGenerate->appendStackInstance< Float32Stack >( );
