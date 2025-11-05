@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItemBuilderModule;
 class NodeItemInfo;
 class NodeItemBuilderObj : public QObject {
 	Q_OBJECT;
@@ -17,6 +18,7 @@ protected:
 	QString msg;
 	std_vector< NodeItemInfo * > startNodeItemInfoVector;
 	std_vector< NodeItemInfo * > runNodeItemInfoVector;
+	std_vector< NodeItemBuilderModule * > subNodeItemBuilderModuleVector;
 	size_t currentVectorIndex;
 	size_t currentVectorCount;
 	NodeItemInfo **runNodeItemInfoArrayPtr;

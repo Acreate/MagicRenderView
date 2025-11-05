@@ -23,10 +23,12 @@ protected:
 protected:
 	static std_vector< NodeItemInfo * > findEndAtStartNode( NodeItemInfo *end_node_info_ptr );
 public:
-	static std_vector< NodeItemBuilderModule * > generateNodeItemBuilderModuleVector( const NodeItemInfo **node_item_info_array_ptr, const size_t &node_item_info_array_count );
+	static std_vector< NodeItemBuilderModule * > generateModuleVector( NodeItemInfo **node_item_info_array_ptr, const size_t &node_item_info_array_count );
 public:
 	virtual nodeItemEnum::Node_Item_Builder_Type getModuleBuilderStaus( ) const { return moduleBuilderStaus; }
 	virtual const QString & getMsg( ) const { return msg; }
+	virtual const std_vector< NodeItemInfo * > & getStartNodeItemInfoVector( ) const { return startNodeItemInfoVector; }
+	virtual const std_vector< NodeItemInfo * > & getRunNodeItemInfoVector( ) const { return runNodeItemInfoVector; }
 };
 
 #endif // NODEITEMBUILDERMODULE_H_H_HEAD__FILE__

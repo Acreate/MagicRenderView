@@ -104,12 +104,17 @@ public:
 	/// @param result_run_node_item_info_vector 编译节点序列
 	/// @param result_first_error_node_item_info_ptr
 	/// @return 失败返回 false
-	static bool builderNodeItemVector( const std_vector<NodeItemInfo *> &start_node_item_info_vector, std_vector<NodeItemInfo *> &result_run_node_item_info_vector, const NodeItemInfo *&result_first_error_node_item_info_ptr );
+	static bool builderNodeItemVector( const std_vector< NodeItemInfo * > &start_node_item_info_vector, std_vector< NodeItemInfo * > &result_run_node_item_info_vector, const NodeItemInfo *&result_first_error_node_item_info_ptr );
 	/// @brief 填充输出节点到指定序列当中，没有返回 false
 	/// @param node_item_info 目标节点
 	/// @param result_out_node_item_info_ptr 填充目标
 	/// @return 不存在输出返回 false
 	static bool fillOutputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_out_node_item_info_ptr );
+	/// @brief 填充输入节点到指定序列当中，没有返回 false
+	/// @param node_item_info 目标节点
+	/// @param result_in_node_item_info_ptr 填充目标
+	/// @return 不存在输入返回 false
+	static bool fillInputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_in_node_item_info_ptr );
 	/// @brief 检查数组依赖是否正确，返回第一个数组当中找不到依赖的节点
 	/// @param runNodeItemInfoArrayPtr 检查数组
 	/// @param currentVectorCount 数组个数

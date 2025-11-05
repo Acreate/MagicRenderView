@@ -239,6 +239,22 @@ bool NodeItemInfoVector::fillOutputNodeItemAtVector( NodeItemInfo *node_item_inf
 			fillOutputNodeItemAtVector( copySourceArrayPtr[ newCount ], result_out_node_item_info_ptr );
 	return true;
 }
+bool NodeItemInfoVector::fillInputNodeItemAtVector( NodeItemInfo *node_item_info, std_vector< NodeItemInfo * > &result_in_node_item_info_ptr ) {
+	size_t count = node_item_info->outputNodeItemVector.size( );
+	if( count == 0 )
+		return false;
+	auto copySourceArrayPtr = node_item_info->inputNodeItemInfoVector.data( );
+	size_t oldCount = result_in_node_item_info_ptr.size( );
+	size_t newCount = count + oldCount;
+	result_in_node_item_info_ptr.resize( newCount );
+	auto dataTargetPtr = result_in_node_item_info_ptr.data( );
+	for( newCount = 0; newCount < count; ++newCount )
+		dataTargetPtr[ oldCount + newCount ] = copySourceArrayPtr[ newCount ];
+	for( newCount = 0; newCount < count; ++newCount )
+		if( copySourceArrayPtr[ newCount ] )
+			fillInputNodeItemAtVector( copySourceArrayPtr[ newCount ], result_in_node_item_info_ptr );
+	return true;
+}
 const NodeItemInfo * NodeItemInfoVector::checkNodeItemBuilderVector( const NodeItemInfo *const*const runNodeItemInfoArrayPtr, const size_t &currentVectorCount ) {
 	if( currentVectorCount == 0 || runNodeItemInfoArrayPtr == nullptr )
 		return nullptr;

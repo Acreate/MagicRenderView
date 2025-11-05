@@ -1,5 +1,6 @@
 ﻿#include "nodeItemBuilderObj.h"
 
+#include "nodeItemBuilderModule.h"
 #include "nodeItemInfo.h"
 
 #include "../../tools/tools.h"
@@ -28,6 +29,9 @@ bool NodeItemBuilderObj::addBuilderNodeItem( NodeItemInfo *node_item_info ) {
 bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	currentVectorIndex = 0;
 	currentVectorCount = startNodeItemInfoVector.size( );
+	for( auto elemt : subNodeItemBuilderModuleVector )
+		delete elemt;
+	subNodeItemBuilderModuleVector.clear( );
 	if( currentVectorCount == 0 ) {
 		QString msg( "请加入开始节点到序列当中" );
 		tools::debug::printError( msg );
@@ -44,7 +48,15 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 	}
 	currentVectorCount = runNodeItemInfoVector.size( );
 	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
+	subNodeItemBuilderModuleVector = NodeItemBuilderModule::generateModuleVector( runNodeItemInfoArrayPtr, currentVectorCount );
 	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
+	QStringList subModeMsg;
+	for( auto subMode : subNodeItemBuilderModuleVector ) {
+		auto nodeItemInfos = subMode->getRunNodeItemInfoVector( );
+		subModeMsg.append( "\t" + NodeItemInfoVector::formatNodeInfoPath( nodeItemInfos.data( ), nodeItemInfos.size( ), ", " ) );
+	}
+	if( subModeMsg.size( ) )
+		infoMsg += "\n" + subModeMsg.join( "\n" );
 	tools::debug::printInfo( QString( "生成编译:%1" ).arg( infoMsg ) );
 	return true;
 }

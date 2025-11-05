@@ -2,7 +2,6 @@
 #define TOOLS_H_H_HEAD__FILE__
 #pragma once
 
-
 #include <alias/type_alias.h>
 
 class QWindow;
@@ -82,7 +81,7 @@ namespace tools {
 		}
 		/// @brief 返回调用函数信息
 		/// @return 调用函数的信息
-		void printInfo( const QString& info_msg);
+		void printInfo( const QString &info_msg );
 		/// @brief 格式化到 qt 字符串
 		/// @param str 格式化的字符串
 		/// @param  ... 参数列表
@@ -91,6 +90,55 @@ namespace tools {
 	}
 	namespace vector {
 
+		/// @brief 对数组进行 nullptr 值排序，非 nullptr 排列在开始
+		/// @tparam TUnity 类型
+		/// @param array_ptr 数组
+		/// @param array_count 数组个数
+		template< typename TUnity >
+		void sortNullPtr( TUnity *array_ptr, const size_t &array_count ) {
+			size_t index;
+			size_t subindex;
+			// 查找第一个 nullptr
+			for( index = 0; index < array_count; ++index )
+				if( array_ptr[ index ] == nullptr ) {
+					// 匹配后续的第一个非 nullptr
+					subindex = index + 1;
+					for( ; subindex < array_count; ++subindex )
+						if( array_ptr[ subindex ] != nullptr ) {
+							array_ptr[ index ] = array_ptr[ subindex ];
+							array_ptr[ subindex ] = nullptr;
+							break;
+						}
+				}
+		}
+		/// @brief 对序列进行 nullptr 值排序，非 nullptr 排列在开始
+		/// @tparam TUnity 类型
+		/// @param vector 序列
+		template< typename TUnity >
+		void sortNullPtr( std_vector< TUnity > &vector ) {
+			sortNullPtr( vector.data( ), vector.size( ) );
+		}
+		
+		/// @brief 删除非
+		/// @tparam TUnity 
+		/// @param array_ptr 
+		/// @param array_count 
+		/// @return 
+		template< typename TUnity >
+		int removeNullPtr( TUnity *array_ptr, const size_t &array_count ) {
+			sortNullPtr( array_ptr, array_ptr );
+			size_t index = 0;
+			for( ; index < array_count; ++index )
+				if( array_ptr[ index ] == nullptr )
+					break;
+			return index;
+		}
+		template< typename TUnity >
+		int removeNullPtr( std_vector< TUnity > &vector ) {
+			auto resultSize = removeNullPtr( vector.data( ), vector.size( ) );
+			vector.resize( resultSize );
+			return resultSize;
+		}
 		/// @brief 遍历序列，根据函数返回决定是否结束遍历
 		/// @brief 在临时构成 find_unity_function 当中，使用该方式调用
 		/// @code tools::vector::forInVector<int>( { 1, 2, 3, 4 }, [] ( int &p ) {		return true;	} ); @endcode 
