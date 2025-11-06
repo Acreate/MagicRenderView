@@ -20,6 +20,7 @@ protected:
 	NodeItemInfo **runNodeItemInfoArrayPtr;
 protected:
 	NodeItemBuilderModule( ) { }
+	virtual bool builderNodeItemVector( );
 protected:
 	static std_vector< NodeItemInfo * > findEndAtStartNode( NodeItemInfo *end_node_info_ptr );
 public:

@@ -5,6 +5,30 @@
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
+bool NodeItemBuilderModule::builderNodeItemVector( ) {
+	currentVectorIndex = 0;
+	currentVectorCount = startNodeItemInfoVector.size( );
+	if( currentVectorCount == 0 ) {
+		QString msg( "请加入开始节点到序列当中" );
+		tools::debug::printError( msg );
+		runNodeItemInfoArrayPtr = nullptr;
+		return false;
+	}
+	const NodeItemInfo *error_node_item = nullptr;
+	if( NodeItemInfoVector::builderNodeItemVector( startNodeItemInfoVector, runNodeItemInfoVector, error_node_item ) == false ) {
+		if( error_node_item )
+			tools::debug::printError( QString( "%1->%2 未存在输入依赖链当中" ).arg( error_node_item->nodeItem->getMetaObjectPathName( ) ).arg( error_node_item->nodeItem->generateCode ) );
+		currentVectorCount = 0;
+		runNodeItemInfoArrayPtr = nullptr;
+		return false;
+	}
+	currentVectorCount = runNodeItemInfoVector.size( );
+	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
+
+	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
+	tools::debug::printInfo( QString( "生成子模块编译:%1" ).arg( infoMsg ) );
+	return true;
+}
 std_vector< NodeItemInfo * > NodeItemBuilderModule::findEndAtStartNode( NodeItemInfo *end_node_info_ptr ) {
 
 	std_vector< NodeItemInfo * > result;
@@ -76,10 +100,16 @@ std_vector< NodeItemBuilderModule * > NodeItemBuilderModule::generateModuleVecto
 			if( element != nullptr )
 				continue;
 			element = new NodeItemBuilderModule;
+
 			element->startNodeItemInfoVector = endAtStartNode;
+			if( element->builderNodeItemVector( ) == false ) {
+				auto formatNodeInfoPath = NodeItemInfoVector::formatNodeInfoPath( element->startNodeItemInfoVector.data( ), element->startNodeItemInfoVector.size( ), ", " );
+				QString msg( "异常列表 : %1(%2)->[%3]" );
+				tools::debug::printError( msg.arg( node_item_info_array_ptr[ index ]->nodeItem->getMetaObjectPathName( ) ).arg( node_item_info_array_ptr[ index ]->nodeItem->generateCode ).arg( formatNodeInfoPath ) );
+				delete element;
+				continue;
+			}
 			result.emplace_back( element );
 		}
-
 	return result;
-
 }

@@ -178,7 +178,7 @@ void NodeItemInfoVector::moveNodeItemVector( NodeItemInfo **node_item_info_array
 			node_item_info_array_ptr[ index ] = node_item_info_array_ptr[ index + 1 ];
 	node_item_info_array_ptr[ index ] = nodeItemInfo;
 }
-QString NodeItemInfoVector::formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string ) {
+const QString && NodeItemInfoVector::formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string ) {
 	QStringList out;
 	QString formatString( "%1(%2)" );
 	for( size_t index = 0; index < count; ++index )
