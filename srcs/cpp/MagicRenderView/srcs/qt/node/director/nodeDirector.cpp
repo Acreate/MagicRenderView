@@ -116,9 +116,6 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false;
 	}
 
-	QString msg( "input_port = %1,output_port =%2" );
-	tools::debug::printInfo( msg.arg( input_port->title ).arg( output_port->title ) );
-
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
