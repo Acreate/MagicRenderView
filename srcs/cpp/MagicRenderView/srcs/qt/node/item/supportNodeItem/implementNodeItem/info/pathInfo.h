@@ -12,6 +12,5 @@ protected:
 	PathInfo( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 #endif // PATHINFO_H_H_HEAD__FILE__

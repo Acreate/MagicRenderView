@@ -12,6 +12,5 @@ protected:
 	StrInsert( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 #endif // STRINSERT_H_H_HEAD__FILE__

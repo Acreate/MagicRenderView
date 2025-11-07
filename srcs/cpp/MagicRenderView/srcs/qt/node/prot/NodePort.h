@@ -29,6 +29,8 @@ private:
 protected:
 	/// @brief 生成代码
 	size_t generateCode = 0;
+	/// @brief 多链接标识。false 标识单链接
+	bool multiLinkPort = false;
 	/// @brief 绑定渲染
 	QImage *nodePortRender;
 	/// @brief 图标

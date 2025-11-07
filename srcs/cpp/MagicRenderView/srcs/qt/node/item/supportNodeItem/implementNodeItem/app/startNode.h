@@ -15,6 +15,5 @@ protected:
 	StartNode( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Begin );
 };
 #endif // STARTNODE_H_H_HEAD__FILE__

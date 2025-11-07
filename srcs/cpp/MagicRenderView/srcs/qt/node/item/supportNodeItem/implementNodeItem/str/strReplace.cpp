@@ -5,7 +5,7 @@
 
 Imp_StaticMetaInfo( StrReplace, QObject::tr( "替换" ), QObject::tr( "字符" ) );
 
-StrReplace::StrReplace( ){
+StrReplace::StrReplace( ) {
 }
 bool StrReplace::intPortItems( MainWidget *parent ) {
 
@@ -14,11 +14,11 @@ bool StrReplace::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< StringInputPort >( "原始字符串" );
-			addInputProt< StringInputPort >( "匹配目标字符串" );
-			addInputProt< StringInputPort >( "替换目标字符串" );
-			
-			addOutputProt<StringOutputPort>( "结果" );
+			addInputProt< StringInputPort >( "原始字符串", false );
+			addInputProt< StringInputPort >( "匹配目标字符串", false );
+			addInputProt< StringInputPort >( "替换目标字符串", false );
+
+			addOutputProt< StringOutputPort >( "结果" );
 			return true;
 		} );
 }

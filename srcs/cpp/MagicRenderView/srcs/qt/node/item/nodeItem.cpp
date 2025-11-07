@@ -80,7 +80,7 @@ void NodeItem::setMainWidget( MainWidget *parent ) {
 bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ inputPortPtr, pos ] : nodeInputProtVector )
 		if( inputPortPtr == input_port_ptr ) {
-			result_pos = QPoint { pos.first + borderLeftSpace + nodePosX + inputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + inputPortPtr->height( ) / 2 };
+			result_pos = QPoint { pos.first.first + borderLeftSpace + nodePosX + inputPortPtr->getIcoWidth( ) / 2, pos.first.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + inputPortPtr->height( ) / 2 };
 			return true;
 		}
 	return false;
@@ -88,7 +88,20 @@ bool NodeItem::getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoin
 bool NodeItem::getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const {
 	for( auto &[ onputPortPtr, pos ] : nodeOutputProtVector )
 		if( onputPortPtr == output_port_ptr ) {
-			result_pos = QPoint { pos.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + onputPortPtr->width( ) - onputPortPtr->getIcoWidth( ) / 2, pos.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + output_port_ptr->height( ) / 2 };
+			result_pos = QPoint { pos.first.first + borderLeftSpace + inputBuffWidth + midPortSpace + nodePosX + onputPortPtr->width( ) - onputPortPtr->getIcoWidth( ) / 2, pos.first.second + titleHeight + titleToPortSpace + borderTopSpace + nodePosY + output_port_ptr->height( ) / 2 };
+			return true;
+		}
+	return false;
+}
+bool NodeItem::getMultiLinkPortStatus( const NodePort *get_node_port_multi_link_obj_ptr, bool &result_node_port_multi_link_status ) const {
+	size_t count = nodeInputProtVector.size( );
+	result_node_port_multi_link_status = false;
+	if( count == 0 )
+		return false;
+	auto data = nodeInputProtVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( data[ index ].first == get_node_port_multi_link_obj_ptr ) {
+			result_node_port_multi_link_status = data[ index ].second.second;
 			return true;
 		}
 	return false;
@@ -176,7 +189,7 @@ NodeInputPort * NodeItem::getNodeInputAtRelativePointType( int x, int y ) const 
 	drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	do
 		// 从末尾开始判定，如果当前 y 大于端口的 y 所在，则返回这个
-		if( --count, y > ( data[ count ].second.second + drawY ) )
+		if( --count, y > ( data[ count ].second.first.second + drawY ) )
 			return data[ count ].first;
 	while( count > 0 );
 	// 最后返回
@@ -214,7 +227,7 @@ NodeOutputPort * NodeItem::getNodeOutputPortAtRelativePointType( int x, int y ) 
 	drawY = borderTopSpace + titleToPortSpace + titleHeight;
 	do
 		// 从末尾开始判定，如果当前 y 大于端口的 y 所在，则返回这个
-		if( --count, y > ( data[ count ].second.second + drawY ) )
+		if( --count, y > ( data[ count ].second.first.second + drawY ) )
 			return data[ count ].first;
 	while( count > 0 );
 	// 最后返回
@@ -247,8 +260,8 @@ NodeOutputPort * NodeItem::getOutputPort( const QString &output_port_name ) cons
 	return nullptr;
 }
 
-bool NodeItem::appendInputProt( NodeInputPort *input_prot ) {
-	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { 0, 0 } ) );
+bool NodeItem::appendInputProt( NodeInputPort *input_prot, const bool support_multi_link_status ) {
+	nodeInputProtVector.emplace_back( TPortWidgetPort< TNodePortInputPortPtr >( input_prot, { { 0, 0 }, support_multi_link_status } ) );
 	input_prot->generateCode = nodeInputProtVector.size( );
 	return true;
 }
@@ -266,7 +279,7 @@ bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
 }
 bool NodeItem::appendOutputProt( NodeOutputPort *output_prot ) {
 
-	nodeOutputProtVector.emplace_back( TPortWidgetPort< TNodePortOutputPortPtr >( output_prot, { 0, 0 } ) );
+	nodeOutputProtVector.emplace_back( TPortWidgetPort< TNodePortOutputPortPtr >( output_prot, { { 0, 0 }, false } ) );
 	output_prot->generateCode = nodeOutputProtVector.size( );
 	return true;
 }
@@ -324,8 +337,8 @@ bool NodeItem::updateInputLayout( ) {
 		NodeInputPort *nodeInputPort = pair.first;
 		auto nodePortRender = nodeInputPort->getNodePortRender( );
 		painter.drawImage( 0, width, *nodePortRender );
-		pair.second.first = 0;
-		pair.second.second = width;
+		pair.second.first.first = 0;
+		pair.second.first.second = width;
 		width += nodePortRender->height( ) + portSpace;
 	}
 	painter.end( );
@@ -371,9 +384,9 @@ bool NodeItem::updateOutputLayout( ) {
 		auto &pair = drawPortDataPtr[ index ];
 		NodeOutputPort *nodeOutputPort = pair.first;
 		auto nodePortRender = nodeOutputPort->getNodePortRender( );
-		pair.second.first = outputBuffWidth - nodePortRender->width( );
-		painter.drawImage( pair.second.first, width, *nodePortRender );
-		pair.second.second = width;
+		pair.second.first.first = outputBuffWidth - nodePortRender->width( );
+		painter.drawImage( pair.second.first.first, width, *nodePortRender );
+		pair.second.first.second = width;
 		width += nodePortRender->height( ) + portSpace;
 	}
 	painter.end( );

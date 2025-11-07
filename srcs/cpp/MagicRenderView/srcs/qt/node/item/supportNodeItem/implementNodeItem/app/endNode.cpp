@@ -13,7 +13,7 @@ bool EndNode::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< AnyInputPort >( "返回" );
+			addInputProt< AnyInputPort >( "返回", true );
 			return true;
 		} );
 }

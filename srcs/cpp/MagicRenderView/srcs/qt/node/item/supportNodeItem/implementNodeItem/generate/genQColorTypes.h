@@ -21,7 +21,6 @@ protected:
 	GenQColorTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( GenerateVar );
 };
 
 #endif // GENQCOLORTYPES_H_H_HEAD__FILE__

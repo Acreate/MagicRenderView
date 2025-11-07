@@ -11,6 +11,5 @@ protected:
 	GenerateNodeJump( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( ReleaseVar );
 };
 #endif // GENERATENODEJUMP_H_H_HEAD__FILE__

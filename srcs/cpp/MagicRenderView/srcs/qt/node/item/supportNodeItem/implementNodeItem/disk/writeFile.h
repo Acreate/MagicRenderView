@@ -10,7 +10,6 @@ protected:
 	WriteFile( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 
 #endif // WRITEFILE_H_H_HEAD__FILE__

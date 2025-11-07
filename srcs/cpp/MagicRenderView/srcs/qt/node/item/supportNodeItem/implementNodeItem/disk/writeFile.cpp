@@ -15,8 +15,8 @@ bool WriteFile::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
-			addInputProt< StringInputPort >( "文件路径" );
-			addInputProt< BinInputPort >( "二进制" );
+			addInputProt< StringInputPort >( "文件路径", false );
+			addInputProt< BinInputPort >( "二进制", false );
 			addOutputProt< AnyOutputPort >( "下一步" );
 			return true;
 		} );

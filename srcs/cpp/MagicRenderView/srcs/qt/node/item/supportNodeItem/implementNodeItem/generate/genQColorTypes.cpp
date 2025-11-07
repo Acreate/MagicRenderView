@@ -36,7 +36,7 @@ bool GenQColorTypes::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
-			addInputProt< AnyInputPort >( "任意" );
+			addInputProt< AnyInputPort >( "任意", true );
 			addOutputProt< QColorOutputPort >( "列表" );
 			return true;
 		} );

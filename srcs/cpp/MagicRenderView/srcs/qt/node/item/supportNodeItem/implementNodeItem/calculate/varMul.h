@@ -12,6 +12,5 @@ protected:
 	VarMul( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 #endif // VARMUL_H_H_HEAD__FILE__

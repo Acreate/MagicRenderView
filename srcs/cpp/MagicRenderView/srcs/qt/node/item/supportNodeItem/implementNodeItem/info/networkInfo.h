@@ -11,7 +11,6 @@ protected:
 	NetworkInfo( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 
 #endif // NETWORKINFO_H_H_HEAD__FILE__

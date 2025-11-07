@@ -4,6 +4,8 @@
 #include <qt/node/nodeItemMenu/nodeItemMenu.h>
 #include <qt/node/prot/outputProt/nodeOutputPort.h>
 
+#include "../prot/inputProt/nodeInputPort.h"
+
 NodePortLinkInfo::~NodePortLinkInfo( ) {
 	emit releaseThis( this );
 	delete removeLinkMenu;
@@ -24,9 +26,9 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 				for( size_t pairIndex = 0; pairIndex < pairCount; ++pairIndex )
 					if( pairArratData[ pairIndex ].first == link_output_port )
 						return true; // 已经链接，即刻返回
-				QString actionTitleFrom( "删除 %1[%2] 输入" );
+				QString actionTitleFrom( "%3 删除 %1[%2] 输入" );
 				QString activeTitle;
-				activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
+				activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) ).arg( inputPort->getTitle( ) );
 				auto removeAction = removeLinkMenu->addAction( activeTitle );
 				connect( removeAction, &QAction::triggered, [this, link_output_port] {
 					unLink( link_output_port );
@@ -37,9 +39,9 @@ bool NodePortLinkInfo::link( NodeOutputPort *link_output_port ) {
 			}
 	}
 
-	QString actionTitleFrom( "删除 %1[%2] 输入" );
+	QString actionTitleFrom( "%3 删除 %1[%2] 输入" );
 	QString activeTitle;
-	activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) );
+	activeTitle = actionTitleFrom.arg( link_output_port->getParentItem( )->getNodeTitleName( ) ).arg( link_output_port->getTitle( ) ).arg( inputPort->getTitle( ) );
 	auto removeAction = removeLinkMenu->addAction( activeTitle );
 	connect( removeAction, &QAction::triggered, [this, link_output_port] {
 		unLink( link_output_port );

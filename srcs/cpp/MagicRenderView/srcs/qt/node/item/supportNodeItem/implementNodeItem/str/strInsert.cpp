@@ -15,10 +15,10 @@ bool StrInsert::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< StringInputPort >( "原始字符串" );
-			addInputProt< UIntInputPort >( "插入位置" );
-			addInputProt< StringInputPort >( "插入字符串" );
-			addOutputProt<StringOutputPort>( "结果" );
+			addInputProt< StringInputPort >( "原始字符串", false );
+			addInputProt< UIntInputPort >( "插入位置", false );
+			addInputProt< StringInputPort >( "插入字符串", false );
+			addOutputProt< StringOutputPort >( "结果" );
 			return true;
 		} );
 }

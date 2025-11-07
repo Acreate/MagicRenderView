@@ -17,7 +17,7 @@ bool ReadImage::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
-			addInputProt< StringInputPort >( "文件路径" );
+			addInputProt< StringInputPort >( "文件路径", false );
 			// 初始化输出端口
 			addOutputProt< QImageOutputPort >( "图像" );
 			addOutputProt< IntOutputPort >( "红" );

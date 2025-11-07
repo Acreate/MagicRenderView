@@ -12,8 +12,8 @@ bool VarDiv::intPortItems( MainWidget *parent ) {
 	return initNodeItem( parent, [this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-		addInputProt< FloatInputPort >( "被除数" );
-		addInputProt< FloatInputPort >( "除数" );
+		addInputProt< FloatInputPort >( "被除数", false  );
+		addInputProt< FloatInputPort >( "除数" , false );
 		addOutputProt< FloatOutputPort >( "结果" );
 		return true;
 	} );

@@ -56,9 +56,24 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	if( input_port == nullptr || output_port == nullptr )
 		return false; // 同一个节点或者为 nullptr
 	NodeItem *inputNodeItem = input_port->parentItem;
+	if( inputNodeItem == nullptr ) {
+		tools::debug::printError( QString( QObject::tr( "%1 非法端口引用 0x%2 异常->未知错误" ) ).arg( input_port->getMetaObjectPathName( ) ).arg( QString::number( ( size_t ) input_port, 16 ).toUpper( ) ) );
+		return false;
+	}
 	NodeItem *outputNodeItem = output_port->parentItem;
+	if( outputNodeItem == nullptr ) {
+		tools::debug::printError( QString( QObject::tr( "%1 非法端口引用 0x%2 异常->未知错误" ) ).arg( output_port->getMetaObjectPathName( ) ).arg( QString::number( ( size_t ) output_port, 16 ).toUpper( ) ) );
+		return false;
+	}
 	if( inputNodeItem == outputNodeItem )
 		return false; // 同一个节点或者为 nullptr
+
+	bool multiStatus = false;
+	bool callResultBool = inputNodeItem->getMultiLinkPortStatus( input_port, multiStatus );
+	if( callResultBool == false ) {
+		tools::debug::printError( QString( QObject::tr( "%1 非法端口引用 %2 异常->未知错误" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
+		return false;
+	}
 	const I_Type *inputPorVarType = input_port->getVarType( );
 	if( inputPorVarType == nullptr ) {
 		tools::debug::printError( QString( QObject::tr( "%1 输入端口不存在变量指向" ) ).arg( input_port->getMetaObjectPathName( ) ) );
@@ -89,10 +104,6 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		tools::debug::printError( QString( QObject::tr( "输入端 %1 不存在节点具象化信息" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
 		return false;
 	}
-	//if( inputNodeItemInfo->inOutputNodeItemInfo( outputNodeItem ) ) {
-	//	tools::debug::printError( QString( "%1 引用 %2 异常->引用循环" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
-	//	return false;
-	//}
 
 	if( outputNodeItemInfo->appendOutputNodeItemInfo( inputNodeItemInfo ) == false ) {
 		tools::debug::printError( QString( "%1 引用 %2 异常->未知错误" ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( outputNodeItem->getMetaObjectPathName( ) ) );
@@ -105,12 +116,53 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 		return false;
 	}
 
+	QString msg( "input_port = %1,output_port =%2" );
+	tools::debug::printInfo( msg.arg( input_port->title ).arg( output_port->title ) );
+
 	size_t count = linkVectorPairt.size( );
 	auto data = linkVectorPairt.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port )
-			return data[ index ]->link( output_port );
+		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port ) {
+			if( multiStatus == true )
+				return data[ index ]->link( output_port );
+			auto outputPorts = data[ index ]->outputPorts;
+
+			std::pair< NodeItem *, std::vector< std::pair< NodeOutputPort *, QAction * > > > *outputNodeItemArrayPtr;
+			size_t outputArrayCount;
+			std::pair< NodeOutputPort *, QAction * > *outputArrayPtr;
+			size_t outputArrayIndex;
+
+			count = outputPorts.size( );
+			outputNodeItemArrayPtr = outputPorts.data( );
+
+			for( index = 0; index < count; ++index ) {
+				outputArrayCount = outputNodeItemArrayPtr[ index ].second.size( );
+				if( outputArrayCount == 0 )
+					continue;
+				outputArrayPtr = outputNodeItemArrayPtr[ index ].second.data( );
+				outputArrayIndex = 0;
+				for( index = 0; index < count; ++index )
+					if( outputArrayPtr[ outputArrayIndex ].first == output_port )
+						return true;
+			}
+
+			callResultBool = data[ index ]->link( output_port );
+			if( callResultBool == false )
+				return false;
+
+			for( index = 0; index < count; ++index ) {
+				outputArrayCount = outputNodeItemArrayPtr[ index ].second.size( );
+				if( outputArrayCount == 0 )
+					continue;
+				outputArrayPtr = outputNodeItemArrayPtr[ index ].second.data( );
+				outputArrayIndex = 0;
+				for( index = 0; index < count; ++index )
+					if( outputArrayPtr[ outputArrayIndex ].first )
+						linkUnInstallPort( input_port, outputArrayPtr[ outputArrayIndex ].first );
+			}
+			return true;
+		}
 	// 没有链接对象就创建
 	auto newLinkObjPtr = new NodePortLinkInfo( input_port );
 

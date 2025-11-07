@@ -5,7 +5,7 @@
 
 Imp_StaticMetaInfo( SystemInfo, QObject::tr( "系统" ), QObject::tr( "信息" ) );
 
-SystemInfo::SystemInfo( ){
+SystemInfo::SystemInfo( ) {
 }
 bool SystemInfo::intPortItems( MainWidget *parent ) {
 
@@ -16,7 +16,7 @@ bool SystemInfo::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 
-			addInputProt< AnyInputPort >( "任意" );
+			addInputProt< AnyInputPort >( "任意", true );
 			addOutputProt< StringOutputPort >( "系统全名" );
 			addOutputProt< StringOutputPort >( "文件名" );
 			addOutputProt< StringOutputPort >( "基本名" );

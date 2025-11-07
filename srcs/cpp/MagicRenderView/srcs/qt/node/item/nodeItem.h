@@ -55,8 +55,12 @@ public:
 	using TConstNodePortInputPortPtr = const NodeInputPort *;
 	using TConstNodePortOutputPortPtr = const NodeOutputPort *;
 	using TNodeProtPoint = std::pair< int, int >;
+	/// @brief 端口映射列表
+	/// @tparam TPortTypePtr 端口对象指针
+	/// @param TNodeProtPoint 对象坐标
+	/// @param bool 对象链接是否支持多对象
 	template< typename TPortTypePtr >
-	using TPortWidgetPort = std_pairt< TPortTypePtr, TNodeProtPoint >;
+	using TPortWidgetPort = std_pairt< TPortTypePtr, std_pairt< TNodeProtPoint, bool > >;
 private:
 	/// @brief 生成编号
 	size_t generateCode;
@@ -116,8 +120,8 @@ public:
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
+	virtual bool getMultiLinkPortStatus( const NodePort *get_node_port_multi_link_obj_ptr, bool &result_node_port_multi_link_status ) const;
 	virtual void setPortLinkPort( NodePort *left_node_prot, NodePort *right_node_port ) { }
-	virtual size_t getPortLinkCount( NodePort *prot ) { return 0; }
 	virtual bool builderLinkProtValue( ) { return true; }
 	virtual void clearPorkLink( ) { }
 	virtual bool hasInputPort( const NodePort *node_port );
@@ -202,8 +206,9 @@ public:
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
+	/// @param support_multi_link_status
 	/// @return 成功返回 true
-	virtual bool appendInputProt( TNodePortInputPortPtr input_prot );
+	virtual bool appendInputProt( TNodePortInputPortPtr input_prot, bool support_multi_link_status );
 	/// @brief 删除输入接口
 	/// @param input_prot 输入接口对象指针 
 	/// @return 成功返回 true
@@ -261,10 +266,10 @@ protected:
 		requires requires ( ttype *p, TNodePortInputPortPtr port ) {
 			port = p;
 		}
-	bool addInputProt( const QString &prot_name ) {
+	bool addInputProt( const QString &prot_name, const bool support_multi_link_status ) {
 		auto outputProt = new ttype( this );
 		outputProt->setTitle( prot_name );
-		return appendInputProt( outputProt );
+		return appendInputProt( outputProt, support_multi_link_status );
 	}
 };
 

@@ -11,7 +11,6 @@ protected:
 	Array(  );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 
 #endif // ARRAY_H_H_HEAD__FILE__

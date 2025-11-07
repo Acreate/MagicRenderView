@@ -11,7 +11,6 @@ protected:
 	MakeNodeJump( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Jump );
 };
 
 

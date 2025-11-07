@@ -14,7 +14,7 @@ bool AppInfo::intPortItems( MainWidget *parent ) {
 		setNodeTitleName( getMetaObjectName( ) );
 		addOutputProt< StringOutputPort >( "软件全路径名称" );
 		addOutputProt< StringOutputPort >( "参数列表" );
-		addInputProt< AnyInputPort >( "任意" );
+		addInputProt< AnyInputPort >( "任意", false );
 		return true;
 	} );
 }

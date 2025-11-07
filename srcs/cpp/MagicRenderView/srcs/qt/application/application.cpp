@@ -45,9 +45,9 @@
 #include <qt/node/item/supportNodeItem/implementNodeItem/str/strSplit.h>
 #include <qt/node/item/supportNodeItem/implementNodeItem/str/strSub.h>
 #include <qt/node/item/supportNodeItem/implementNodeItem/struct/array.h>
-#include <qt/node/item/time/timeDataConver.h>
-#include <qt/node/item/time/timeDataInfo.h>
-#include <qt/node/item/time/timeInfo.h>
+#include <qt/node/item/supportNodeItem/implementNodeItem/time/timeDataConver.h>
+#include <qt/node/item/supportNodeItem/implementNodeItem/time/timeDataInfo.h>
+#include <qt/node/item/supportNodeItem/implementNodeItem/time/timeInfo.h>
 #include <qt/tools/tools.h>
 #include <qt/varType/convers/anyConvers/anyToAny.h>
 #include <qt/varType/convers/floatToConvers/floatToFloat.h>

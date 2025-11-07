@@ -20,6 +20,5 @@ protected:
 	GenQStringTypes( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( GenerateVar );
 };
 #endif // GENQSTRINGTYPES_H_H_HEAD__FILE__

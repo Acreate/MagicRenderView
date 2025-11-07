@@ -14,7 +14,6 @@
 #include "../../../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../../../prot/outputProt/impOutputPort/int/intOutputPort.h"
 
-
 Imp_StaticMetaInfo( GenIntTypes, QObject::tr( "整数" ), QObject::tr( "生成" ) );
 
 void GenIntTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -35,7 +34,7 @@ void GenIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 }
 GenIntTypes::GenIntTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( ) ) {
 	generateIntWidget = new GenerateListWidget( generateListScrollArea );
-	generateIntWidget->setNormalVarFunction(  [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
+	generateIntWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
 		result_normal_var->setVarName( title );
 		auto typeInfo = result_normal_var->getTypeInfo( );
 		auto &info = typeInfo->getTypeInfo( );
@@ -78,7 +77,7 @@ bool GenIntTypes::intPortItems( MainWidget *parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
 			// 初始化输入端口
-			addInputProt< AnyInputPort >( "任意" );
+			addInputProt< AnyInputPort >( "任意", true );
 			addOutputProt< IntOutputPort >( "列表" );
 			return true;
 		} );

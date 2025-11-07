@@ -12,6 +12,5 @@ protected:
 	StrRemove(  );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 #endif // STRREMOVE_H_H_HEAD__FILE__

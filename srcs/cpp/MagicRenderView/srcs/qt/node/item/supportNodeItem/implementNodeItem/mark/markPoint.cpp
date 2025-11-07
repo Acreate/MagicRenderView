@@ -5,7 +5,7 @@
 
 Imp_StaticMetaInfo( MarkPoint, QObject::tr( "点" ), QObject::tr( "坐标" ) );
 
-MarkPoint::MarkPoint( )  {
+MarkPoint::MarkPoint( ) {
 }
 bool MarkPoint::intPortItems( MainWidget *parent ) {
 
@@ -14,7 +14,7 @@ bool MarkPoint::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< AnyInputPort >( "继续" );
+			addInputProt< AnyInputPort >( "继续", false );
 			addOutputProt< AnyOutputPort >( "继续" );
 			return true;
 		} );

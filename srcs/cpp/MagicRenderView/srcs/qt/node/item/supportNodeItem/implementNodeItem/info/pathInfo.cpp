@@ -1,12 +1,13 @@
 ﻿#include "./pathInfo.h"
 
+#include "../../../../prot/inputProt/inpInputPort/any/anyInputPort.h"
 #include "../../../../prot/inputProt/inpInputPort/string/stringInputPort.h"
 #include "../../../../prot/outputProt/impOutputPort/bin/binOutputPort.h"
 #include "../../../../prot/outputProt/impOutputPort/string/stringOutputPort.h"
 
 Imp_StaticMetaInfo( PathInfo, QObject::tr( "路径" ), QObject::tr( "信息" ) );
 
-PathInfo::PathInfo( )  {
+PathInfo::PathInfo( ) {
 }
 bool PathInfo::intPortItems( MainWidget *parent ) {
 
@@ -16,8 +17,9 @@ bool PathInfo::intPortItems( MainWidget *parent ) {
 
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
+			addInputProt< AnyInputPort >( "任意" , true);
 			// 初始化输入端口
-			addInputProt< StringInputPort >( "文件路径" );
+			addInputProt< StringInputPort >( "文件路径", false );
 			// 初始化输出端口
 			addOutputProt< StringOutputPort >( "全路径" );
 			addOutputProt< StringOutputPort >( "目录" );

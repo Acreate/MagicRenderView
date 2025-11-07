@@ -5,7 +5,7 @@
 
 Imp_StaticMetaInfo( IfLogic, QObject::tr( "如果" ), QObject::tr( "逻辑" ) );
 
-IfLogic::IfLogic( )  {
+IfLogic::IfLogic( ) {
 }
 bool IfLogic::intPortItems( MainWidget *parent ) {
 
@@ -14,7 +14,7 @@ bool IfLogic::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< BoolInputPort >( "条件" );
+			addInputProt< BoolInputPort >( "条件", false );
 			addOutputProt< AnyOutputPort >( "继续" );
 			return true;
 		} );

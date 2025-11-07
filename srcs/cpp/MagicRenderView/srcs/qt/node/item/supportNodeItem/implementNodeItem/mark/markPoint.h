@@ -11,7 +11,6 @@ protected:
 	MarkPoint( );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Mark );
 };
 
 #endif // MARKPOINT_H_H_HEAD__FILE__

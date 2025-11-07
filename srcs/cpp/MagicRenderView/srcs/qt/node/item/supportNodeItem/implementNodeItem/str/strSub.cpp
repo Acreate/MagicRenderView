@@ -5,7 +5,7 @@
 
 Imp_StaticMetaInfo( StrSub, QObject::tr( "提取" ), QObject::tr( "字符" ) );
 
-StrSub::StrSub( )  {
+StrSub::StrSub( ) {
 }
 bool StrSub::intPortItems( MainWidget *parent ) {
 
@@ -14,9 +14,9 @@ bool StrSub::intPortItems( MainWidget *parent ) {
 		[this] ( MainWidget *main_widget_parent ) {
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< StringInputPort >( "原始字符串" );
-			addInputProt< StringInputPort >( "删除字符串" );
-			addOutputProt<StringOutputPort>( "结果" );
+			addInputProt< StringInputPort >( "原始字符串", false );
+			addInputProt< StringInputPort >( "删除字符串", false );
+			addOutputProt< StringOutputPort >( "结果" );
 			return true;
 		} );
 }

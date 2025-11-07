@@ -12,6 +12,5 @@ protected:
 	StrSub(  );
 public:
 	bool intPortItems( MainWidget *parent ) override;
-	Def_Last_Mate_Node_Type( Process );
 };
 #endif // STRSUB_H_H_HEAD__FILE__
