@@ -116,6 +116,10 @@ public:
 	virtual void setMainWidget( MainWidget *parent );
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
+	virtual void setPortLinkPort( NodePort *left_node_prot, NodePort *right_node_port ) { }
+	virtual size_t getPortLinkCount( NodePort *prot ) { return 0; }
+	virtual bool builderLinkProtValue( ) { return true; }
+	virtual void clearPorkLink( ) { }
 	virtual bool hasInputPort( const NodePort *node_port );
 	virtual bool hasOutputPort( const NodePort *node_port );
 	virtual size_t toBinData( std_vector< uint8_t > &result_data ) const;

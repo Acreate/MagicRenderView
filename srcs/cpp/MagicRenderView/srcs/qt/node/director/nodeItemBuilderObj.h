@@ -7,6 +7,8 @@
 
 #include <alias/type_alias.h>
 
+class VarGenerate;
+class Application;
 class NodeItemBuilderModule;
 class NodeItemInfo;
 class NodeItemBuilderObj : public QObject {
@@ -22,10 +24,14 @@ protected:
 	size_t currentVectorIndex;
 	size_t currentVectorCount;
 	NodeItemInfo **runNodeItemInfoArrayPtr;
+	Application *applicationInstancePtr;
+	VarGenerate *varGenerate;
+	NodeDirector *nodeDirector;
 protected:
 	NodeItemBuilderObj( QObject *parent = nullptr );
 	virtual bool addBuilderNodeItem( NodeItemInfo *node_item_info );
 	virtual bool builderNodeItemVector( );
+	virtual bool fillCurrentRunNodeItemValue( );
 public:
 	~NodeItemBuilderObj( ) override;
 	virtual nodeItemEnum::Node_Item_Builder_Type builderStatus( ) const;
