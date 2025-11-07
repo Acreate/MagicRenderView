@@ -68,12 +68,6 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	if( inputNodeItem == outputNodeItem )
 		return false; // 同一个节点或者为 nullptr
 
-	bool multiStatus = false;
-	bool callResultBool = inputNodeItem->getMultiLinkPortStatus( input_port, multiStatus );
-	if( callResultBool == false ) {
-		tools::debug::printError( QString( QObject::tr( "%1 非法端口引用 %2 异常->未知错误" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
-		return false;
-	}
 	const I_Type *inputPorVarType = input_port->getVarType( );
 	if( inputPorVarType == nullptr ) {
 		tools::debug::printError( QString( QObject::tr( "%1 输入端口不存在变量指向" ) ).arg( input_port->getMetaObjectPathName( ) ) );
@@ -121,6 +115,12 @@ bool NodeDirector::linkInstallPort( NodeInputPort *input_port, NodeOutputPort *o
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] != nullptr && data[ index ]->inputPort == input_port ) {
+			bool multiStatus = false;
+			bool callResultBool = inputNodeItem->getMultiLinkPortStatus( input_port, multiStatus );
+			if( callResultBool == false ) {
+				tools::debug::printError( QString( QObject::tr( "%1 非法端口引用 %2 异常->未知错误" ) ).arg( inputNodeItem->getMetaObjectPathName( ) ).arg( inputNodeItem->getMetaObjectPathName( ) ) );
+				return false;
+			}
 			if( multiStatus == true )
 				return data[ index ]->link( output_port );
 			auto outputPorts = data[ index ]->outputPorts;
