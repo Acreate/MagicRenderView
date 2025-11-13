@@ -127,11 +127,6 @@ void MainWindow::initIcons( ) {
 }
 void MainWindow::initMainWindowShowStatus( ) {
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
-	auto currentMaxSize = maximumSize( );
-	auto currentMiniSize = minimumSize( );
-	setFixedSize( size );
-	setMinimumSize( currentMiniSize );
-	setMaximumSize( currentMaxSize );
 
 	Qt::WindowStates windowStates( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), this->windowState( ).toInt( ) ).toInt( ) );
 	setWindowState( windowStates );
@@ -141,7 +136,7 @@ void MainWindow::initMainWindowShowStatus( ) {
 		makePos = false;
 
 	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
-	move( point );
+	setGeometry( QRect( point, size ) );
 	oldPos = buffPos = point;
 
 	mainScrollArea = new MainScrollAreaWidget( this );
