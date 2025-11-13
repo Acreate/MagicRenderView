@@ -2,6 +2,7 @@
 
 #include <QDockWidget>
 #include <QFileDialog>
+#include <QToolBar>
 #include <QMenuBar>
 #include <QMouseEvent>
 #include <QShortcut>
@@ -14,14 +15,106 @@
 
 #include "../node/director/nodeItemBuilderObj.h"
 
-MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
-	nodeItemBuilderObj = nullptr;
-	setWindowToIndexScreenCentre( 0 );
+void MainWindow::initMenuActions( ) {
 
-	appInstance = Application::getApplicationInstancePtr( );
-	keyFirst = "Application/MainWindow";
-	savefilePathKey = "saveFilePath";
+	saveAction = new QAction( "保存...", this );
+	connect( saveAction, &QAction::triggered, [this]( ) {
+		normalSave( );
+	} );
+	saveAsAction = new QAction( "另存为...", this );
+	connect( saveAsAction, &QAction::triggered, [this]( ) {
+		overSave( );
+	} );
 
+	loadAction = new QAction( "加载...", this );
+	connect( loadAction, &QAction::triggered, this, &MainWindow::normalLoadFile );
+
+	resetAppAction = new QAction( "重启", this );
+	connect( resetAppAction, &QAction::triggered, [this]( ) {
+		Application::getApplicationInstancePtr( )->resetApp( );
+	} );
+
+	quitAppAction = new QAction( "退出", this );
+	connect( quitAppAction, &QAction::triggered, [this]( ) {
+		Application::getApplicationInstancePtr( )->quitApp( );
+	} );
+	QIcon icon( ":/appIcon/builder_action.png" );
+	builderNodeItemAction = new QAction( icon, "编译", this );
+	connect( builderNodeItemAction, &QAction::triggered, [this]( ) {
+		if( nodeItemBuilderObj )
+			delete nodeItemBuilderObj;
+		nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
+
+	} );
+	resetRunNodeItemAction = new QAction( "重置编译状态", this );
+	runDisposableAllNodeItemAction = new QAction( "全部运行", this );
+	runListAllNodeItemAction = new QAction( "链式运行", this );
+	runNodeItemAllNodeItemAction = new QAction( "节点式运行", this );
+
+	quickSaveCurrentAction = new QAction( "快速保存", this );
+	connect( quickSaveCurrentAction, &QAction::triggered, this, &MainWindow::quickSave );
+
+	quickLoadCurrentAction = new QAction( "快速加载", this );
+	connect( quickLoadCurrentAction, &QAction::triggered, this, &MainWindow::quickLoadFile );
+
+}
+void MainWindow::initShortcut( ) {
+	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
+	connect( shortcut, &QShortcut::activated, [this]( ) {
+		mainWidget->copyNodeItemActionInfo( );
+	} );
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this );
+	connect( shortcut, &QShortcut::activated, [this]( ) {
+		mainWidget->pasteNodeItemActionInfo( );
+	} );
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
+	connect( shortcut, &QShortcut::activated, [this]( ) {
+		if( currentSaveFilePath.isEmpty( ) )
+			overSave( );
+		else
+			normalSave( );
+	} );
+}
+void MainWindow::initMenuBar( ) {
+
+	mainMenuBar = menuBar( );
+	if( mainMenuBar == nullptr )
+		mainMenuBar = new QMenuBar( this );
+
+	QMenu *currentMenu = new QMenu( "文件", this );
+	mainMenuBar->addMenu( currentMenu );
+	currentMenu->addAction( saveAction );
+	currentMenu->addAction( saveAsAction );
+	currentMenu->addAction( loadAction );
+
+	currentMenu = new QMenu( "配置", this );
+	mainMenuBar->addMenu( currentMenu );
+	currentMenu = currentMenu->addMenu( "重启&&退出" );
+	currentMenu->addAction( resetAppAction );
+	currentMenu->addAction( quitAppAction );
+
+	currentMenu = new QMenu( "项目", this );
+	mainMenuBar->addMenu( currentMenu );
+	currentMenu->addAction( builderNodeItemAction );
+
+	currentMenu = mainMenuBar->addMenu( "快速菜单" );
+	currentMenu->addAction( quickSaveCurrentAction );
+	currentMenu->addAction( quickLoadCurrentAction );
+
+}
+void MainWindow::initToolBar( ) {
+	QString title = "编译工具";
+	QToolBar *toolBar = addToolBar( title );
+	toolBar->setObjectName( title );
+	toolBar->setAllowedAreas( Qt::TopToolBarArea );
+	toolBar->setFloatable( false );
+	toolBar->setMovable( false );
+	toolBar->addAction( builderNodeItemAction );
+	toolBar->addAction( runDisposableAllNodeItemAction );
+	toolBar->addAction( runListAllNodeItemAction );
+	toolBar->addAction( runNodeItemAllNodeItemAction );
+}
+void MainWindow::initMainWindowShowStatus( ) {
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
 	setBaseSize( size );
 
@@ -42,79 +135,19 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 
 	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
 	this->restoreState( extendState.toByteArray( ) );
+}
+MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
+	nodeItemBuilderObj = nullptr;
+	setWindowToIndexScreenCentre( 0 );
 
-	mainMenuBar = menuBar( );
-	if( mainMenuBar == nullptr )
-		mainMenuBar = new QMenuBar( this );
-
-	QMenu *currentMenu = new QMenu( "文件", this );
-	mainMenuBar->addMenu( currentMenu );
-
-	QAction *currentAction;
-
-	currentAction = currentMenu->addAction( "保存..." );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		normalSave( );
-	} );
-
-	currentAction = currentMenu->addAction( "另存为..." );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		overSave( );
-	} );
-
-	currentAction = currentMenu->addAction( "加载..." );
-	connect( currentAction, &QAction::triggered, this, &MainWindow::normalLoadFile );
-
-	currentMenu = new QMenu( "配置", this );
-	mainMenuBar->addMenu( currentMenu );
-	currentMenu = currentMenu->addMenu( "重启&&退出" );
-	currentAction = currentMenu->addAction( "重启" );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		Application::getApplicationInstancePtr( )->resetApp( );
-	} );
-	currentAction = currentMenu->addAction( "退出" );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		Application::getApplicationInstancePtr( )->quitApp( );
-	} );
-
-	currentMenu = new QMenu( "项目", this );
-	mainMenuBar->addMenu( currentMenu );
-	currentAction = currentMenu->addAction( "编译" );
-	connect( currentAction, &QAction::triggered, [this]( ) {
-		if( nodeItemBuilderObj )
-			delete nodeItemBuilderObj;
-		nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
-
-	} );
-	//currentAction = currentMenu->addAction( "退出" );
-	//connect( currentAction, &QAction::triggered, [this]( ) {
-	//	Application::getApplicationInstancePtr( )->quitApp( );
-	//} );
-
-	currentMenu = mainMenuBar->addMenu( "快速菜单" );
-
-	currentAction = currentMenu->addAction( "快速保存" );
-	connect( currentAction, &QAction::triggered, this, &MainWindow::quickSave );
-
-	currentAction = currentMenu->addAction( "快速加载" );
-	connect( currentAction, &QAction::triggered, this, &MainWindow::quickLoadFile );
-
-	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
-	connect( shortcut, &QShortcut::activated, [this]( ) {
-		mainWidget->copyNodeItemActionInfo( );
-	} );
-	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this );
-	connect( shortcut, &QShortcut::activated, [this]( ) {
-		mainWidget->pasteNodeItemActionInfo( );
-	} );
-	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
-	connect( shortcut, &QShortcut::activated, [this]( ) {
-		if( currentSaveFilePath.isEmpty( ) )
-			overSave( );
-		else
-			normalSave( );
-	} );
-
+	appInstance = Application::getApplicationInstancePtr( );
+	keyFirst = "Application/MainWindow";
+	savefilePathKey = "saveFilePath";
+	initMenuActions( );
+	initMenuBar( );
+	initShortcut( );
+	initToolBar( );
+	initMainWindowShowStatus( );
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );

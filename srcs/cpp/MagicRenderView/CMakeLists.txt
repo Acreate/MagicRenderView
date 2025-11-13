@@ -6,14 +6,26 @@ message( "name = " ${prject_name} ) # # 当前文件名配置为项目名称
 project( ${prject_name} VERSION 0.1 )
 message( "============ ${CURRENT_FOLDER}" )
 
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 get_path_sources( project_src_file PATHS "${CMAKE_CURRENT_LIST_DIR}/srcs" LANGUAGES CXX C )
 
-qt_add_resources(
-    image_sources
+list( APPEND image_sources 
     "${CMAKE_CURRENT_LIST_DIR}/qrc/resource.qrc"
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/actionIcon.qrc"
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/font.qrc"
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/nodeItemIcon.qrc"
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/png.qrc"
+)
+qt_add_resources(
+    resource_qrc
+	${image_sources} 
 )
 
-list( APPEND project_src_file ${image_sources}  )
+list( APPEND project_src_file ${image_sources} ${resource_qrc}  )
 
 set( app_run_bin "${Project_Run_Bin_Path}/${prject_name}" )
 set( app_static_lib_bin "${Project_Run_Static_Lib_Path}/${prject_name}" )

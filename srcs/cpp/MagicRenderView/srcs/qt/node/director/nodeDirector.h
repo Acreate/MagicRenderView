@@ -26,7 +26,6 @@ class NodeInputPort;
 class NodeDirector : public QObject {
 	Q_OBJECT;
 private:
-	friend class NodeItemInfoFind;
 	friend class NodeDirectorStack;
 protected:
 	/// @brief 绑定的主窗口
@@ -70,7 +69,6 @@ public:
 	virtual QMenu * getNodeItemCraeteMenu( ) const {
 		return nodeItemCreateMenu;
 	}
-	virtual NodeItemInfoScrollAreaWidget * requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr );
 	virtual bool linkInstallPort( NodePort *first_port, NodePort *scond_port );
 	virtual bool linkUnInstallPort( NodePort *first_port, NodePort *scond_port );
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );

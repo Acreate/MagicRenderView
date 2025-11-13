@@ -11,7 +11,7 @@ Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "out
 NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
-	if( ico->load( ":/ico/info_node.png" ) == false || ico->isNull( ) )
+	if( ico->load( ":/nodeitemIco/info_node.png" ) == false || ico->isNull( ) )
 		tools::debug::printError( QString( QObject::tr( "加载图标失败[%1]" ) ).arg( getMetaObjectPathName( ) ) );
 	icoItemHeith = ico->height( );
 	icoItemWidth = ico->width( );

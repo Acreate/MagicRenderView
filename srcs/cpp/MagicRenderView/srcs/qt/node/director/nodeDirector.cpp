@@ -24,9 +24,7 @@ NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
 	connect( this, &NodeDirector::nodeItemNormalMsgPrintfSignal, this, &NodeDirector::nodeItemNormalMsgPrintf );
 	connect( this, &NodeDirector::nodeItemErrorMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
 }
-NodeItemInfoScrollAreaWidget * NodeDirector::requestGetNodeEditorWidget( const type_info &request_type, NodeItem *request_node_item_ptr ) {
-	return nullptr;
-}
+
 bool NodeDirector::linkInstallPort( NodePort *first_port, NodePort *scond_port ) {
 	if( first_port == nullptr || scond_port == nullptr || scond_port == first_port )
 		return false; // 同一个节点或者为 nullptr

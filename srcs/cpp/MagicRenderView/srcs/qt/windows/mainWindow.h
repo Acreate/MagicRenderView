@@ -15,6 +15,31 @@ class Application;
 class MainWidget;
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
+protected: // action 列表
+	/// @brief 保存
+	QAction *saveAction;
+	/// @brief 另存为
+	QAction *saveAsAction;
+	/// @brief 加载
+	QAction *loadAction;
+	/// @brief 重启app
+	QAction *resetAppAction;
+	/// @brief 退出app
+	QAction *quitAppAction;
+	/// @brief 编译列表
+	QAction *builderNodeItemAction;
+	/// @brief 重置运行状态
+	QAction *resetRunNodeItemAction;
+	/// @brief 一次性运行完毕
+	QAction *runDisposableAllNodeItemAction;
+	/// @brief 链式运行完毕
+	QAction *runListAllNodeItemAction;
+	/// @brief 节点式运行
+	QAction *runNodeItemAllNodeItemAction;
+	/// @brief 快速保存
+	QAction *quickSaveCurrentAction;
+	/// @brief 快速加载
+	QAction *quickLoadCurrentAction;
 protected:
 	/// @brief 应用实例
 	Application *appInstance;
@@ -36,6 +61,12 @@ protected:
 	QString savefilePathKey;
 	/// @brief 编译对象
 	NodeItemBuilderObj *nodeItemBuilderObj;
+protected:
+	virtual void initMenuActions( );
+	virtual void initShortcut( );
+	virtual void initMenuBar( );
+	virtual void initToolBar( );
+	virtual void initMainWindowShowStatus( );
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWindow( ) override;
