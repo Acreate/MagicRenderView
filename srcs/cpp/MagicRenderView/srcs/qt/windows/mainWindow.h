@@ -66,6 +66,7 @@ protected:
 	virtual void initShortcut( );
 	virtual void initMenuBar( );
 	virtual void initToolBar( );
+	virtual void initIcons( );
 	virtual void initMainWindowShowStatus( );
 public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );

@@ -17,44 +17,43 @@
 
 void MainWindow::initMenuActions( ) {
 
-	saveAction = new QAction( "保存...", this );
+	saveAction = new QAction( tr( "保存..." ), this );
 	connect( saveAction, &QAction::triggered, [this]( ) {
 		normalSave( );
 	} );
-	saveAsAction = new QAction( "另存为...", this );
+	saveAsAction = new QAction( tr( "另存为..." ), this );
 	connect( saveAsAction, &QAction::triggered, [this]( ) {
 		overSave( );
 	} );
 
-	loadAction = new QAction( "加载...", this );
+	loadAction = new QAction( tr( "加载..." ), this );
 	connect( loadAction, &QAction::triggered, this, &MainWindow::normalLoadFile );
 
-	resetAppAction = new QAction( "重启", this );
+	resetAppAction = new QAction( tr( "重启" ), this );
 	connect( resetAppAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->resetApp( );
 	} );
 
-	quitAppAction = new QAction( "退出", this );
+	quitAppAction = new QAction( tr( "退出" ), this );
 	connect( quitAppAction, &QAction::triggered, [this]( ) {
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
-	QIcon icon( ":/appIcon/builder_action.png" );
-	builderNodeItemAction = new QAction( icon, "编译", this );
+	builderNodeItemAction = new QAction( tr( "编译" ), this );
 	connect( builderNodeItemAction, &QAction::triggered, [this]( ) {
 		if( nodeItemBuilderObj )
 			delete nodeItemBuilderObj;
 		nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
 
 	} );
-	resetRunNodeItemAction = new QAction( "重置编译状态", this );
-	runDisposableAllNodeItemAction = new QAction( "全部运行", this );
-	runListAllNodeItemAction = new QAction( "链式运行", this );
-	runNodeItemAllNodeItemAction = new QAction( "节点式运行", this );
+	resetRunNodeItemAction = new QAction( tr( "重置编译状态" ), this );
+	runDisposableAllNodeItemAction = new QAction( tr( "全部运行" ), this );
+	runListAllNodeItemAction = new QAction( tr( "链式运行" ), this );
+	runNodeItemAllNodeItemAction = new QAction( tr( "节点式运行" ), this );
 
-	quickSaveCurrentAction = new QAction( "快速保存", this );
+	quickSaveCurrentAction = new QAction( tr( "快速保存" ), this );
 	connect( quickSaveCurrentAction, &QAction::triggered, this, &MainWindow::quickSave );
 
-	quickLoadCurrentAction = new QAction( "快速加载", this );
+	quickLoadCurrentAction = new QAction( tr( "快速加载" ), this );
 	connect( quickLoadCurrentAction, &QAction::triggered, this, &MainWindow::quickLoadFile );
 
 }
@@ -81,29 +80,29 @@ void MainWindow::initMenuBar( ) {
 	if( mainMenuBar == nullptr )
 		mainMenuBar = new QMenuBar( this );
 
-	QMenu *currentMenu = new QMenu( "文件", this );
+	QMenu *currentMenu = new QMenu( tr( "文件" ), this );
 	mainMenuBar->addMenu( currentMenu );
 	currentMenu->addAction( saveAction );
 	currentMenu->addAction( saveAsAction );
 	currentMenu->addAction( loadAction );
 
-	currentMenu = new QMenu( "配置", this );
+	currentMenu = new QMenu( tr( "配置" ), this );
 	mainMenuBar->addMenu( currentMenu );
-	currentMenu = currentMenu->addMenu( "重启&&退出" );
+	currentMenu = currentMenu->addMenu( tr( "重启&&退出" ) );
 	currentMenu->addAction( resetAppAction );
 	currentMenu->addAction( quitAppAction );
 
-	currentMenu = new QMenu( "项目", this );
+	currentMenu = new QMenu( tr( "项目" ), this );
 	mainMenuBar->addMenu( currentMenu );
 	currentMenu->addAction( builderNodeItemAction );
 
-	currentMenu = mainMenuBar->addMenu( "快速菜单" );
+	currentMenu = mainMenuBar->addMenu( tr( "快速菜单" ) );
 	currentMenu->addAction( quickSaveCurrentAction );
 	currentMenu->addAction( quickLoadCurrentAction );
 
 }
 void MainWindow::initToolBar( ) {
-	QString title = "编译工具";
+	QString title = tr( "编译工具" );
 	QToolBar *toolBar = addToolBar( title );
 	toolBar->setObjectName( title );
 	toolBar->setAllowedAreas( Qt::TopToolBarArea );
@@ -113,6 +112,9 @@ void MainWindow::initToolBar( ) {
 	toolBar->addAction( runDisposableAllNodeItemAction );
 	toolBar->addAction( runListAllNodeItemAction );
 	toolBar->addAction( runNodeItemAllNodeItemAction );
+}
+void MainWindow::initIcons( ) {
+	builderNodeItemAction->setIcon( QIcon( ":/appIcon/builder_action.png" ) );
 }
 void MainWindow::initMainWindowShowStatus( ) {
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
@@ -147,6 +149,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	initMenuBar( );
 	initShortcut( );
 	initToolBar( );
+	initIcons( );
 	initMainWindowShowStatus( );
 }
 MainWindow::~MainWindow( ) {
