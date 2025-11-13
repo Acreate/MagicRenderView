@@ -48,7 +48,7 @@ void MainWindow::initMenuActions( ) {
 	resetRunNodeItemAction = new QAction( tr( "重置编译状态" ), this );
 	runDisposableAllNodeItemAction = new QAction( tr( "全部运行" ), this );
 	runListAllNodeItemAction = new QAction( tr( "链式运行" ), this );
-	runNodeItemAllNodeItemAction = new QAction( tr( "节点式运行" ), this );
+	runNodeItemNodeItemAction = new QAction( tr( "节点式运行" ), this );
 
 	quickSaveCurrentAction = new QAction( tr( "快速保存" ), this );
 	connect( quickSaveCurrentAction, &QAction::triggered, this, &MainWindow::quickSave );
@@ -95,6 +95,10 @@ void MainWindow::initMenuBar( ) {
 	currentMenu = new QMenu( tr( "项目" ), this );
 	mainMenuBar->addMenu( currentMenu );
 	currentMenu->addAction( builderNodeItemAction );
+	currentMenu->addAction( resetRunNodeItemAction );
+	currentMenu->addAction( runDisposableAllNodeItemAction );
+	currentMenu->addAction( runListAllNodeItemAction );
+	currentMenu->addAction( runNodeItemNodeItemAction );
 
 	currentMenu = mainMenuBar->addMenu( tr( "快速菜单" ) );
 	currentMenu->addAction( quickSaveCurrentAction );
@@ -109,12 +113,17 @@ void MainWindow::initToolBar( ) {
 	toolBar->setFloatable( false );
 	toolBar->setMovable( false );
 	toolBar->addAction( builderNodeItemAction );
+	toolBar->addAction( resetRunNodeItemAction );
 	toolBar->addAction( runDisposableAllNodeItemAction );
 	toolBar->addAction( runListAllNodeItemAction );
-	toolBar->addAction( runNodeItemAllNodeItemAction );
+	toolBar->addAction( runNodeItemNodeItemAction );
 }
 void MainWindow::initIcons( ) {
 	builderNodeItemAction->setIcon( QIcon( ":/appIcon/builder_action.png" ) );
+	resetRunNodeItemAction->setIcon( QIcon( ":/appIcon/re_builder_action.png" ) );
+	runListAllNodeItemAction->setIcon( QIcon( ":/appIcon/player_list_action.png" ) );
+	runDisposableAllNodeItemAction->setIcon( QIcon( ":/appIcon/player_all_action.png" ) );
+	runNodeItemNodeItemAction->setIcon( QIcon( ":/appIcon/player_node_action.png" ) );
 }
 void MainWindow::initMainWindowShowStatus( ) {
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );

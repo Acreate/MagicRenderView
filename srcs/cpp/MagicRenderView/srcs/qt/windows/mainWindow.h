@@ -35,7 +35,7 @@ protected: // action 列表
 	/// @brief 链式运行完毕
 	QAction *runListAllNodeItemAction;
 	/// @brief 节点式运行
-	QAction *runNodeItemAllNodeItemAction;
+	QAction *runNodeItemNodeItemAction;
 	/// @brief 快速保存
 	QAction *quickSaveCurrentAction;
 	/// @brief 快速加载

@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>appIcon/builder_action.png</file>
+        <file>appIcon/re_builder_action.png</file>
+        <file>appIcon/player_all_action.png</file>
+        <file>appIcon/player_list_action.png</file>
+        <file>appIcon/player_node_action.png</file>
     </qresource>
 </RCC>
