@@ -127,7 +127,11 @@ void MainWindow::initIcons( ) {
 }
 void MainWindow::initMainWindowShowStatus( ) {
 	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
-	setBaseSize( size );
+	auto currentMaxSize = maximumSize( );
+	auto currentMiniSize = minimumSize( );
+	setFixedSize( size );
+	setMinimumSize( currentMiniSize );
+	setMaximumSize( currentMaxSize );
 
 	Qt::WindowStates windowStates( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), this->windowState( ).toInt( ) ).toInt( ) );
 	setWindowState( windowStates );
