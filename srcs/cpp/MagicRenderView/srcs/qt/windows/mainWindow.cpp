@@ -126,7 +126,8 @@ void MainWindow::initIcons( ) {
 	runNodeItemNodeItemAction->setIcon( QIcon( ":/appIcon/player_node_action.png" ) );
 }
 void MainWindow::initMainWindowShowStatus( ) {
-	QSize size = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
+	windowSize = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) ).toSize( );
+	oldPos = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
 
 	Qt::WindowStates windowStates( appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), this->windowState( ).toInt( ) ).toInt( ) );
 	setWindowState( windowStates );
@@ -135,16 +136,12 @@ void MainWindow::initMainWindowShowStatus( ) {
 	else
 		makePos = false;
 
-	QPoint point = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), this->pos( ) ).toPoint( );
-	setGeometry( QRect( point, size ) );
-	oldPos = buffPos = point;
-
-	mainScrollArea = new MainScrollAreaWidget( this );
-	mainWidget = new MainWidget( mainScrollArea );
-	setCentralWidget( mainScrollArea );
-
 	auto extendState = appInstance->getAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
 	this->restoreState( extendState.toByteArray( ) );
+
+	resize( windowSize );
+	move( oldPos );
+	oldPos = buffPos = oldPos;
 }
 MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( parent, flags ) {
 	nodeItemBuilderObj = nullptr;
@@ -153,6 +150,11 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	appInstance = Application::getApplicationInstancePtr( );
 	keyFirst = "Application/MainWindow";
 	savefilePathKey = "saveFilePath";
+
+	mainScrollArea = new MainScrollAreaWidget( this );
+	mainWidget = new MainWidget( mainScrollArea );
+	setCentralWidget( mainScrollArea );
+
 	initMenuActions( );
 	initMenuBar( );
 	initShortcut( );
@@ -161,7 +163,8 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	initMainWindowShowStatus( );
 }
 MainWindow::~MainWindow( ) {
-	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), this->contentsRect( ).size( ) );
+	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), windowSize );
+	
 	Qt::WindowStates windowState = this->windowState( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), windowState.toInt( ) );
 
@@ -169,6 +172,7 @@ MainWindow::~MainWindow( ) {
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), buffPos );
 	else
 		appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "pos" ), oldPos );
+
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "extendState" ), this->saveState( ) );
 	appInstance->syncAppValueIniFile( );
 	delete nodeItemBuilderObj;
@@ -308,6 +312,7 @@ void MainWindow::changeEvent( QEvent *event ) {
 			else {
 				makePos = true;
 				oldPos = buffPos = this->pos( );
+				windowSize = this->size( );
 			}
 			break;
 	}

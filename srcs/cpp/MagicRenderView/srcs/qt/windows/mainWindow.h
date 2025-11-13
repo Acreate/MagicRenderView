@@ -53,6 +53,8 @@ protected:
 	MainWidget *mainWidget;
 	/// @brief 记录窗口最大化，最小化，全屏之前的坐标位置
 	QPoint oldPos, buffPos;
+	/// @brief 记录窗口大小
+	QSize windowSize;
 	/// @brief 是否记录坐标
 	bool makePos;
 	/// @brief 当前使用的路径
