@@ -7,6 +7,8 @@
 
 #include <alias/type_alias.h>
 
+#include "../enums/nodeItemEnum.h"
+
 class NodeItemBuilderObj;
 class MainScrollAreaWidget;
 class NodeItem;
@@ -74,12 +76,20 @@ public:
 	MainWindow( QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags( ) );
 	~MainWindow( ) override;
 	void setWindowToIndexScreenCentre( size_t index );
+protected:
 	virtual void overSave( );
 	virtual void normalSave( );
 	virtual void overLoadFile( );
 	virtual void normalLoadFile( );
 	virtual void quickSave( );
 	virtual void quickLoadFile( );
+	virtual void builderAllNodeItem( );
+	virtual void runAllNodeItem( );
+	virtual void runListNodeItem( );
+	virtual void runToNextNodeItem( );
+	virtual void resetStartNodeItem( );
+	virtual void builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	virtual void builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result );
 protected:
 	void resizeEvent( QResizeEvent *resize_event ) override;
 	void changeEvent( QEvent * ) override;
@@ -87,7 +97,8 @@ protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void closeEvent( QCloseEvent *event ) override;
 public:
-	virtual void createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect );;
+	virtual void createNewItemWidget( ItemWidget *generate_new_item_widget, const QRect &contents_rect, const QRect &contents_item_widget_united_rect );
+
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

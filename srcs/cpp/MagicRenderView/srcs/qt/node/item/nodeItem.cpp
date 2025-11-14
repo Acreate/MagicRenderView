@@ -516,6 +516,11 @@ void NodeItem::updateLayout( ) {
 	// 更新整体渲染布局
 	integrateLayout( );
 }
+nodeItemEnum::Node_Item_Result_Type NodeItem::run( QString &result_msg ) const {
+	if( nodeItemFcuntion )
+		return nodeItemFcuntion( result_msg );
+	return nodeItemEnum::Node_Item_Result_Type::NotImplementation;
+}
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {
 	if( parent == nullptr )
 		return false;

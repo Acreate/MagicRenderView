@@ -111,6 +111,8 @@ protected:
 	VarGenerate *varGenerate;
 	/// @brief 运行状态
 	bool runStatus;
+	/// @brief 函数执行
+	std_function< nodeItemEnum::Node_Item_Result_Type ( QString & ) > nodeItemFcuntion;
 protected:
 	NodeItem( );
 	NodeItem( GenerateListScrollArea *node_info_scroll_area );
@@ -245,6 +247,10 @@ public:
 	virtual QWidget * getNodeItemWidget( ) const;
 	/// @brief 更新布局
 	void updateLayout( );
+	/// @brief 执行节点函数
+	/// @param result_msg 错误返回的信息 
+	/// @return 执行返回结果
+	virtual nodeItemEnum::Node_Item_Result_Type run( QString &result_msg ) const;
 Q_SIGNALS:
 	void releaseThisPtr( NodeItem *release_node_item );
 public: // 二进制相关
@@ -257,19 +263,25 @@ protected:
 		requires requires ( ttype *p, TNodePortOutputPortPtr port ) {
 			port = p;
 		}
-	bool addOutputProt( const QString &prot_name ) {
+	ttype * addOutputProt( const QString &prot_name ) {
 		auto outputProt = new ttype( this );
 		outputProt->setTitle( prot_name );
-		return appendOutputProt( outputProt );
+		if( appendOutputProt( outputProt ) )
+			return outputProt;
+		delete outputProt;
+		return nullptr;
 	}
 	template< typename ttype >
 		requires requires ( ttype *p, TNodePortInputPortPtr port ) {
 			port = p;
 		}
-	bool addInputProt( const QString &prot_name, const bool support_multi_link_status ) {
-		auto outputProt = new ttype( this );
-		outputProt->setTitle( prot_name );
-		return appendInputProt( outputProt, support_multi_link_status );
+	ttype * addInputProt( const QString &prot_name, const bool support_multi_link_status ) {
+		auto inputProt = new ttype( this );
+		inputProt->setTitle( prot_name );
+		if( appendInputProt( inputProt, support_multi_link_status ) )
+			return inputProt;
+		delete inputProt;
+		return nullptr;
 	}
 };
 

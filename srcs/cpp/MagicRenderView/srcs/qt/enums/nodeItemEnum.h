@@ -27,6 +27,16 @@ namespace nodeItemEnum {
 	};
 	Q_ENUM_NS( Node_Item_Type );
 
+	enum class Node_Item_Result_Type {
+		/// @brief 没实现
+		NotImplementation,
+		/// @brief 正确返回
+		Finish,
+		/// @brief 参数异常
+		Param_Error,
+	};
+	Q_ENUM_NS( Node_Item_Result_Type );
+
 	enum class Node_Item_Builder_Type {
 		None,
 		Warning,

@@ -16,7 +16,6 @@
 #include "../node/director/nodeItemBuilderObj.h"
 
 void MainWindow::initMenuActions( ) {
-
 	saveAction = new QAction( tr( "保存..." ), this );
 	connect( saveAction, &QAction::triggered, [this]( ) {
 		normalSave( );
@@ -39,16 +38,15 @@ void MainWindow::initMenuActions( ) {
 		Application::getApplicationInstancePtr( )->quitApp( );
 	} );
 	builderNodeItemAction = new QAction( tr( "编译" ), this );
-	connect( builderNodeItemAction, &QAction::triggered, [this]( ) {
-		if( nodeItemBuilderObj )
-			delete nodeItemBuilderObj;
-		nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
-
-	} );
+	connect( builderNodeItemAction, &QAction::triggered, this, &MainWindow::builderAllNodeItem );
 	resetRunNodeItemAction = new QAction( tr( "重置编译状态" ), this );
+	connect( resetRunNodeItemAction, &QAction::triggered, this, &MainWindow::resetStartNodeItem );
 	runDisposableAllNodeItemAction = new QAction( tr( "全部运行" ), this );
+	connect( runDisposableAllNodeItemAction, &QAction::triggered, this, &MainWindow::runAllNodeItem );
 	runListAllNodeItemAction = new QAction( tr( "链式运行" ), this );
+	connect( runListAllNodeItemAction, &QAction::triggered, this, &MainWindow::runListNodeItem );
 	runNodeItemNodeItemAction = new QAction( tr( "节点式运行" ), this );
+	connect( runNodeItemNodeItemAction, &QAction::triggered, this, &MainWindow::runToNextNodeItem );
 
 	quickSaveCurrentAction = new QAction( tr( "快速保存" ), this );
 	connect( quickSaveCurrentAction, &QAction::triggered, this, &MainWindow::quickSave );
@@ -164,7 +162,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 }
 MainWindow::~MainWindow( ) {
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "size" ), windowSize );
-	
+
 	Qt::WindowStates windowState = this->windowState( );
 	appInstance->setAppIniValue( appInstance->normalKeyAppendEnd( keyFirst, this, "windowState" ), windowState.toInt( ) );
 
@@ -296,6 +294,41 @@ void MainWindow::quickSave( ) {
 }
 void MainWindow::quickLoadFile( ) {
 	overLoadFile( );
+}
+void MainWindow::builderAllNodeItem( ) {
+	if( nodeItemBuilderObj )
+		delete nodeItemBuilderObj;
+	nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
+	if( nodeItemBuilderObj == nullptr ) {
+		tools::debug::printError( "无法创建正确的编译对象" );
+		return;
+	}
+	connect( nodeItemBuilderObj, &NodeItemBuilderObj::error_node_item_signal, this, &MainWindow::builderObjAtRunTheErrorNodeItem );
+	connect( nodeItemBuilderObj, &NodeItemBuilderObj::finish_node_item_signal, this, &MainWindow::builderObjAtRunTheFinishNodeItem );
+}
+void MainWindow::runAllNodeItem( ) {
+	if( nodeItemBuilderObj == nullptr )
+		return;
+	nodeItemBuilderObj->runAllNodeItem( );
+}
+void MainWindow::runListNodeItem( ) {
+	if( nodeItemBuilderObj == nullptr )
+		return;
+	nodeItemBuilderObj->runListNodeItem( );
+}
+void MainWindow::runToNextNodeItem( ) {
+	if( nodeItemBuilderObj == nullptr )
+		return;
+	nodeItemBuilderObj->nextNodeItem( );
+}
+void MainWindow::resetStartNodeItem( ) {
+	if( nodeItemBuilderObj == nullptr )
+		return;
+	nodeItemBuilderObj->toStartNodeItem( );
+}
+void MainWindow::builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+}
+void MainWindow::builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result ) {
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );

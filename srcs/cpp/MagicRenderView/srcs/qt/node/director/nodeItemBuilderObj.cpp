@@ -1,4 +1,4 @@
-﻿#include "nodeItemBuilderObj.h"
+﻿#include "./nodeItemBuilderObj.h"
 
 #include "nodeDirector.h"
 #include "nodeItemBuilderModule.h"
@@ -9,7 +9,7 @@
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
-NodeItemBuilderObj::NodeItemBuilderObj( QObject *parent ) : QObject( parent ), moduleBuilderStaus( nodeItemEnum::Node_Item_Builder_Type::None ) {
+NodeItemBuilderObj::NodeItemBuilderObj( QObject *parent ) : QObject( parent ) {
 	currentVectorIndex = 0;
 	currentVectorCount = 0;
 	runNodeItemInfoArrayPtr = nullptr;
@@ -33,6 +33,10 @@ bool NodeItemBuilderObj::addBuilderNodeItem( NodeItemInfo *node_item_info ) {
 	return true;
 }
 bool NodeItemBuilderObj::builderNodeItemVector( ) {
+	currentNodeItemBuilderModuleVectorIndex = 0;
+	currentNodeItemBuilderModuleVectorCount = 0;
+	runNodeItemBuilderModuleArrayPtr = nullptr;
+
 	currentVectorIndex = 0;
 	currentVectorCount = startNodeItemInfoVector.size( );
 	for( auto elemt : subNodeItemBuilderModuleVector )
@@ -52,20 +56,29 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 		runNodeItemInfoArrayPtr = nullptr;
 		return false;
 	}
+
 	currentVectorCount = runNodeItemInfoVector.size( );
 	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 	subNodeItemBuilderModuleVector = NodeItemBuilderModule::generateModuleVector( runNodeItemInfoArrayPtr, currentVectorCount );
+
+	currentNodeItemBuilderModuleVectorCount = subNodeItemBuilderModuleVector.size( );
+	runNodeItemBuilderModuleArrayPtr = subNodeItemBuilderModuleVector.data( );
+
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
 	varGenerate = applicationInstancePtr->getVarGenerate( );
 	nodeDirector = applicationInstancePtr->getNodeDirector( );
 	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
-	QStringList subModeMsg;
-	for( auto subMode : subNodeItemBuilderModuleVector ) {
-		auto nodeItemInfos = subMode->getRunNodeItemInfoVector( );
-		subModeMsg.append( "\t" + NodeItemInfoVector::formatNodeInfoPath( nodeItemInfos.data( ), nodeItemInfos.size( ), ", " ) );
-	}
-	if( subModeMsg.size( ) )
+	if( currentNodeItemBuilderModuleVectorCount != 0 ) {
+		QStringList subModeMsg;
+		for( ; currentNodeItemBuilderModuleVectorIndex < currentNodeItemBuilderModuleVectorCount; ++currentNodeItemBuilderModuleVectorIndex ) {
+			auto subMode = runNodeItemBuilderModuleArrayPtr[ currentNodeItemBuilderModuleVectorIndex ];
+			auto nodeItemInfos = subMode->getRunNodeItemInfoVector( );
+			subModeMsg.append( "\t" + NodeItemInfoVector::formatNodeInfoPath( nodeItemInfos.data( ), nodeItemInfos.size( ), ", " ) );
+		}
 		infoMsg += "\n" + subModeMsg.join( "\n" );
+		currentNodeItemBuilderModuleVectorIndex = 0;
+	}
+
 	tools::debug::printInfo( QString( "生成编译:%1" ).arg( infoMsg ) );
 	return true;
 }
@@ -101,28 +114,75 @@ bool NodeItemBuilderObj::fillCurrentRunNodeItemValue( ) {
 	return true;
 }
 NodeItemBuilderObj::~NodeItemBuilderObj( ) { }
-nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::builderStatus( ) const {
-	return moduleBuilderStaus;
-}
-nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runCurrentNodeItem( ) {
+
+nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runCurrentNodeItem( nodeItemEnum::Node_Item_Result_Type &node_item_result, QString &error_info ) {
 	if( currentVectorIndex == currentVectorCount )
 		return nodeItemEnum::Node_Item_Builder_Type::Error;
-
+	NodeItem *nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
+	node_item_result = nodeItem->run( error_info );
 	return nodeItemEnum::Node_Item_Builder_Type::Finish;
 }
+
 nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::nextNodeItem( ) {
+	if( runNodeItemInfoArrayPtr == nullptr )
+		return nodeItemEnum::Node_Item_Builder_Type::None;
 	if( currentVectorIndex == currentVectorCount )
 		return nodeItemEnum::Node_Item_Builder_Type::Last;
-	return nodeItemEnum::Node_Item_Builder_Type::Finish;
+	QString errorInfo;
+	NodeItem *nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
+	nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( errorInfo );
+	auto nodeBuilderObjResult = nodeItemEnum::Node_Item_Builder_Type::Error;
+	if( nodeItemResult != nodeItemEnum::Node_Item_Result_Type::Finish ) {
+		emit error_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult, errorInfo, nodeBuilderObjResult );
+	} else {
+		emit finish_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult );
+		++currentVectorIndex;
+	}
+	return nodeBuilderObjResult;
 }
 nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::toStartNodeItem( ) {
-	if( currentVectorIndex == currentVectorCount )
-		return nodeItemEnum::Node_Item_Builder_Type::Last;
+	if( nullptr == runNodeItemInfoArrayPtr )
+		return nodeItemEnum::Node_Item_Builder_Type::None;
+	currentVectorIndex = 0;
+	currentVectorCount = runNodeItemInfoVector.size( );
+	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 	return nodeItemEnum::Node_Item_Builder_Type::Start;
 }
-bool NodeItemBuilderObj::getInfo( QString &result_msg ) const {
-	if( moduleBuilderStaus == nodeItemEnum::Node_Item_Builder_Type::None )
-		return false;
-	result_msg = msg;
-	return true;
+nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runAllNodeItem( ) {
+	if( runNodeItemInfoArrayPtr == nullptr )
+		return nodeItemEnum::Node_Item_Builder_Type::None;
+	if( currentVectorIndex == currentVectorCount )
+		return nodeItemEnum::Node_Item_Builder_Type::Last;
+	QString errorInfo;
+	NodeItem *nodeItem;
+	auto nodeBuilderObjResult = nodeItemEnum::Node_Item_Builder_Type::Error;
+	while( currentVectorIndex != currentVectorCount ) {
+		nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
+		nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( errorInfo );
+		if( nodeItemResult != nodeItemEnum::Node_Item_Result_Type::Finish ) {
+			emit error_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult, errorInfo, nodeBuilderObjResult );
+			return nodeBuilderObjResult;
+		} else
+		emit finish_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult );
+		++currentVectorIndex;
+	}
+	// todo : 运行链表
+	return nodeBuilderObjResult;
+}
+nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runListNodeItem( ) {
+	if( runNodeItemInfoArrayPtr == nullptr )
+		return nodeItemEnum::Node_Item_Builder_Type::None;
+	if( currentVectorIndex == currentVectorCount )
+		return nodeItemEnum::Node_Item_Builder_Type::Last;
+	QString errorInfo;
+	NodeItem *nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
+	nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( errorInfo );
+	auto nodeBuilderObjResult = nodeItemEnum::Node_Item_Builder_Type::Error;
+	if( nodeItemResult != nodeItemEnum::Node_Item_Result_Type::Finish ) {
+		emit error_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult, errorInfo, nodeBuilderObjResult );
+	} else {
+		emit finish_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult );
+		++currentVectorIndex;
+	}
+	return nodeBuilderObjResult;
 }

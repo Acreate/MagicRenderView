@@ -7,6 +7,7 @@
 
 #include <alias/type_alias.h>
 
+class NodeItem;
 class VarGenerate;
 class Application;
 class NodeItemBuilderModule;
@@ -16,11 +17,13 @@ class NodeItemBuilderObj : public QObject {
 private:
 	friend class NodeDirector;
 protected:
-	nodeItemEnum::Node_Item_Builder_Type moduleBuilderStaus;
-	QString msg;
 	std_vector< NodeItemInfo * > startNodeItemInfoVector;
 	std_vector< NodeItemInfo * > runNodeItemInfoVector;
 	std_vector< NodeItemBuilderModule * > subNodeItemBuilderModuleVector;
+	size_t currentNodeItemBuilderModuleVectorIndex;
+	size_t currentNodeItemBuilderModuleVectorCount;
+	NodeItemBuilderModule **runNodeItemBuilderModuleArrayPtr;
+	
 	size_t currentVectorIndex;
 	size_t currentVectorCount;
 	NodeItemInfo **runNodeItemInfoArrayPtr;
@@ -32,13 +35,16 @@ protected:
 	virtual bool addBuilderNodeItem( NodeItemInfo *node_item_info );
 	virtual bool builderNodeItemVector( );
 	virtual bool fillCurrentRunNodeItemValue( );
+	virtual nodeItemEnum::Node_Item_Builder_Type runCurrentNodeItem( nodeItemEnum::Node_Item_Result_Type &node_item_result, QString &error_info );
 public:
 	~NodeItemBuilderObj( ) override;
-	virtual nodeItemEnum::Node_Item_Builder_Type builderStatus( ) const;
-	virtual nodeItemEnum::Node_Item_Builder_Type runCurrentNodeItem( );
 	virtual nodeItemEnum::Node_Item_Builder_Type nextNodeItem( );
 	virtual nodeItemEnum::Node_Item_Builder_Type toStartNodeItem( );
-	virtual bool getInfo( QString &result_msg ) const;
+	virtual nodeItemEnum::Node_Item_Builder_Type runAllNodeItem( );
+	virtual nodeItemEnum::Node_Item_Builder_Type runListNodeItem( );
+Q_SIGNALS:
+	void error_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	void finish_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result );
 };
 
 #endif // NODEITEMBUILDEROBJ_H_H_HEAD__FILE__
