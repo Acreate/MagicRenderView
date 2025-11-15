@@ -39,19 +39,28 @@ bool NodeItemBuilderModule::builderNodeItemVector( ) {
 	tools::debug::printInfo( QString( "生成子模块编译:%1" ).arg( infoMsg ) );
 	return true;
 }
-bool NodeItemBuilderModule::runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
-	if( fillCurrentRunNodeItemValue( 0, node_item_ptr, builder_result, error_item_result, error_msg ) == false ) {
-		emit error_node_item_signal( this, node_item_ptr->nodeItem, error_item_result, error_msg, builder_result );
+bool NodeItemBuilderModule::runCurrentItemNodeInfo( size_t begin_index, const TFRunResultFunction &fill_param_run_error_function, const TFRunResultFunction &fill_run_error_function, const std_function< bool ( const size_t &, NodeItemInfo * ) > &finish_function ) {
+	if( runNodeItemInfoArrayPtr == nullptr )
+		return fill_run_error_function( begin_index, nullptr, nodeItemEnum::Node_Item_Result_Type::NotImplementation, "未实现调用", nodeItemEnum::Node_Item_Builder_Type::None );
+	if( runItemNodeInfo( begin_index, runNodeItemInfoArrayPtr[ currentVectorIndex ], fill_param_run_error_function, fill_run_error_function, finish_function ) == false )
 		return false;
-	}
+	++currentVectorIndex;
+	return true;
+}
+bool NodeItemBuilderModule::isLastNodeItem( ) const {
+	return currentVectorIndex == currentVectorCount;
+}
+bool NodeItemBuilderModule::runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, const TFRunResultFunction &fill_param_run_error_function, const TFRunResultFunction &fill_run_error_function, const std_function< bool ( const size_t &, NodeItemInfo * ) > &finish_function ) {
+	nodeItemEnum::Node_Item_Builder_Type builder_result;
+	nodeItemEnum::Node_Item_Result_Type error_item_result;
+	QString error_msg;
+	if( fillCurrentRunNodeItemValue( begin_index, node_item_ptr, builder_result, error_item_result, error_msg ) == false )
+		return fill_param_run_error_function( begin_index, node_item_ptr, error_item_result, error_msg, builder_result );
 	NodeItem *nodeItem = node_item_ptr->nodeItem;
 	error_item_result = nodeItem->run( error_msg );
-	if( error_item_result != nodeItemEnum::Node_Item_Result_Type::Finish ) {
-		emit error_node_item_signal( this, node_item_ptr->nodeItem, error_item_result, error_msg, builder_result );
-		return false;
-	} else
-	emit finish_node_item_signal( this, node_item_ptr->nodeItem, error_item_result );
-	return true;
+	if( error_item_result != nodeItemEnum::Node_Item_Result_Type::Finish )
+		return fill_run_error_function( begin_index, node_item_ptr, error_item_result, error_msg, builder_result );
+	return finish_function( begin_index, node_item_ptr );
 }
 bool NodeItemBuilderModule::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
 

@@ -14,6 +14,8 @@ class NodeItem;
 class NodeItemInfo;
 class NodeItemBuilderModule : public QObject {
 	Q_OBJECT;
+public:
+	using TFRunResultFunction = std_function< bool( const size_t &, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) >;
 protected:
 	nodeItemEnum::Node_Item_Builder_Type moduleBuilderStaus;
 	QString msg;
@@ -27,11 +29,8 @@ protected:
 	NodeDirector *nodeDirector;
 protected:
 	NodeItemBuilderModule( );
-	virtual bool builderNodeItemVector( );
-
-	bool runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
-
-	bool fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
+	virtual bool fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
+	virtual bool runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, const TFRunResultFunction &fill_param_run_error_function, const TFRunResultFunction &fill_run_error_function, const std_function<bool(const size_t &, NodeItemInfo *)> &finish_function );
 protected:
 	static std_vector< NodeItemInfo * > findEndAtStartNode( NodeItemInfo *end_node_info_ptr );
 public:
@@ -41,6 +40,9 @@ public:
 	virtual const QString & getMsg( ) const { return msg; }
 	virtual const std_vector< NodeItemInfo * > & getStartNodeItemInfoVector( ) const { return startNodeItemInfoVector; }
 	virtual const std_vector< NodeItemInfo * > & getRunNodeItemInfoVector( ) const { return runNodeItemInfoVector; }
+	virtual bool builderNodeItemVector( );
+	virtual bool runCurrentItemNodeInfo( size_t begin_index, const TFRunResultFunction &fill_param_run_error_function, const TFRunResultFunction &fill_run_error_function, const std_function<bool(const size_t &, NodeItemInfo *)> &finish_function );
+	virtual bool isLastNodeItem( ) const;
 Q_SIGNALS:
 	void error_node_item_signal( NodeItemBuilderModule *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
 	void finish_node_item_signal( NodeItemBuilderModule *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result );

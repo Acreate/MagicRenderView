@@ -56,6 +56,7 @@ protected:
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
+
 	virtual NodeItemBuilderObj * builderNodeItem( );
 	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 	virtual bool nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr );
