@@ -23,7 +23,7 @@ protected:
 	size_t currentNodeItemBuilderModuleVectorIndex;
 	size_t currentNodeItemBuilderModuleVectorCount;
 	NodeItemBuilderModule **runNodeItemBuilderModuleArrayPtr;
-	
+
 	size_t currentVectorIndex;
 	size_t currentVectorCount;
 	NodeItemInfo **runNodeItemInfoArrayPtr;
@@ -34,7 +34,8 @@ protected:
 	NodeItemBuilderObj( QObject *parent = nullptr );
 	virtual bool addBuilderNodeItem( NodeItemInfo *node_item_info );
 	virtual bool builderNodeItemVector( );
-	virtual bool fillCurrentRunNodeItemValue( );
+	virtual bool fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
+	virtual bool runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
 	virtual nodeItemEnum::Node_Item_Builder_Type runCurrentNodeItem( nodeItemEnum::Node_Item_Result_Type &node_item_result, QString &error_info );
 public:
 	~NodeItemBuilderObj( ) override;
