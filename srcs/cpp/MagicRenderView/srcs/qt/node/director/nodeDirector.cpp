@@ -20,9 +20,7 @@
 #include "nodePortLinkInfo.h"
 
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
-	connect( this, &NodeDirector::nodeItemInfoMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
-	connect( this, &NodeDirector::nodeItemNormalMsgPrintfSignal, this, &NodeDirector::nodeItemNormalMsgPrintf );
-	connect( this, &NodeDirector::nodeItemErrorMsgPrintfSignal, this, &NodeDirector::nodeItemErrorMsgPrintf );
+
 }
 
 bool NodeDirector::linkInstallPort( NodePort *first_port, NodePort *scond_port ) {
@@ -498,12 +496,6 @@ bool NodeDirector::connectLink( const size_t &input_nodeitem_code, const size_t 
 	}
 	return resultOk;
 }
-void NodeDirector::nodeItemErrorMsgPrintf( NodeItem *node_item, const QString &error_msg ) {
-}
-void NodeDirector::nodeItemInfoMsgPrintf( NodeItem *node_item, const QString &normal_msg ) {
-}
-void NodeDirector::nodeItemNormalMsgPrintf( NodeItem *node_item, const QString &normal_msg ) {
-}
 
 bool NodeDirector::getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link ) {
 	size_t linkCount = nodeItemInfoVector.size( );
@@ -777,6 +769,16 @@ size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &
 		return resultCount;
 	return 0;
 }
+void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+	errorNodeItemInfo.sender_sig_obj_ptr = sender_sig_obj_ptr;
+	errorNodeItemInfo.begin_inde = begin_inde;
+	errorNodeItemInfo.error_node_item_ptr = error_node_item_ptr;
+	errorNodeItemInfo.node_item_result = node_item_result;
+	errorNodeItemInfo.msg = msg;
+	errorNodeItemInfo.info_type = info_type;
+}
+void NodeDirector::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
+}
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
@@ -812,6 +814,11 @@ NodeDirector::~NodeDirector( ) {
 		nodeItemCreateMenu->disconnect( nodeItemCreateMenu, &QMenu::destroyed, this, &NodeDirector::resetMenu );
 		delete nodeItemCreateMenu;
 	}
+}
+
+void NodeDirector::setSelectNodeItemVector( const std_vector< NodeItem * > &select_node_item_vector ) {
+	selectNodeItemVector = select_node_item_vector;
+	nodeItemFocusSignal( selectNodeItemVector.at( selectNodeItemVector.size( ) - 1 ) );
 }
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 	size_t count = nodeItemInfoVector.size( );

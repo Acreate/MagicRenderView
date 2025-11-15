@@ -90,7 +90,7 @@ public:
 	/// @param count 数组个数
 	/// @param join_string 拼接字符串
 	/// @return 格式化好的字符串
-	static const QString && formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string );
+	static QString formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string );
 	/// @brief 填充数据
 	/// @param source_node_item_info_array_ptr 检查填充数组
 	/// @param source_node_item_info_array_count 检查填充数组个数

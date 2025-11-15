@@ -326,9 +326,11 @@ void MainWindow::resetStartNodeItem( ) {
 		return;
 	nodeItemBuilderObj->toStartNodeItem( );
 }
-void MainWindow::builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+void MainWindow::builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+	
 }
-void MainWindow::builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result ) {
+void MainWindow::builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
+	
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );

@@ -114,7 +114,11 @@ bool NodeItemBuilderObj::fillCurrentRunNodeItemValue( size_t begin_index, NodeIt
 	return true;
 }
 
-NodeItemBuilderObj::~NodeItemBuilderObj( ) { }
+NodeItemBuilderObj::~NodeItemBuilderObj( ) {
+	for( auto elemt : subNodeItemBuilderModuleVector )
+		delete elemt.second;
+	subNodeItemBuilderModuleVector.clear( );
+}
 
 nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runCurrentNodeItem( NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
 	if( currentVectorIndex != currentVectorCount ) {
@@ -220,9 +224,9 @@ nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runListNodeItem( ) {
 	nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( errorInfo );
 	auto nodeBuilderObjResult = nodeItemEnum::Node_Item_Builder_Type::Error;
 	if( nodeItemResult != nodeItemEnum::Node_Item_Result_Type::Finish ) {
-		emit error_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult, errorInfo, nodeBuilderObjResult );
+		emit error_node_item_signal( this, 0, runNodeItemInfoArrayPtr[ currentVectorIndex ], nodeItemResult, errorInfo, nodeBuilderObjResult );
 	} else {
-		emit finish_node_item_signal( this, runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem, nodeItemResult );
+		emit finish_node_item_signal( this, 0, runNodeItemInfoArrayPtr[ currentVectorIndex ] );
 		++currentVectorIndex;
 	}
 	return nodeBuilderObjResult;

@@ -178,12 +178,13 @@ void NodeItemInfoVector::moveNodeItemVector( NodeItemInfo **node_item_info_array
 			node_item_info_array_ptr[ index ] = node_item_info_array_ptr[ index + 1 ];
 	node_item_info_array_ptr[ index ] = nodeItemInfo;
 }
-const QString && NodeItemInfoVector::formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string ) {
+QString NodeItemInfoVector::formatNodeInfoPath( const NodeItemInfo *const*node_item_info, const size_t &count, const QString &join_string ) {
 	QStringList out;
 	QString formatString( "%1(%2)" );
 	for( size_t index = 0; index < count; ++index )
 		out.append( formatString.arg( node_item_info[ index ]->getNodeItem( )->getMetaObjectPathName( ) ).arg( node_item_info[ index ]->getNodeItem( )->getGenerateCode( ) ) );
-	return out.join( join_string );
+	QString result = out.join( join_string );
+	return result;
 }
 size_t NodeItemInfoVector::fillNodeItemInfoVector( NodeItemInfo **source_node_item_info_array_ptr, const size_t &source_node_item_info_array_count, NodeItemInfo **target_node_item_info_array_ptr, const size_t &target_node_item_info_array_count, const std_function< bool( NodeItemInfo *check ) > &fill_check_function ) {
 	size_t fillCount = 0;
