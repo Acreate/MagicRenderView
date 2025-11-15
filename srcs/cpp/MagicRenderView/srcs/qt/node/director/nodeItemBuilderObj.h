@@ -46,6 +46,7 @@ public:
 Q_SIGNALS:
 	void error_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
 	void finish_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr );
+	void reset_builder_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr );
 };
 
 #endif // NODEITEMBUILDEROBJ_H_H_HEAD__FILE__

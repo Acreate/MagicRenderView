@@ -177,6 +177,7 @@ nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::toStartNodeItem( ) {
 	for( currentNodeItemBuilderModuleVectorIndex = 0; currentNodeItemBuilderModuleVectorIndex < currentNodeItemBuilderModuleVectorCount; ++currentNodeItemBuilderModuleVectorIndex )
 		runNodeItemBuilderModuleArrayPtr[ currentNodeItemBuilderModuleVectorIndex ].first = 0;
 	currentNodeItemBuilderModuleVectorIndex = 0;
+	reset_builder_node_item_signal( this );
 	return nodeItemEnum::Node_Item_Builder_Type::Start;
 }
 bool NodeItemBuilderObj::runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {

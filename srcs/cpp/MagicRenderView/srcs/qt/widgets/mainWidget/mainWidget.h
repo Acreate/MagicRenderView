@@ -10,6 +10,7 @@
 
 #include <qt/enums/nodeItemEnum.h>
 
+class NodeItemBuilderObj;
 class MainScrollAreaWidget;
 class NodeItemInfo;
 class NodePortLinkInfo;
@@ -83,6 +84,8 @@ protected:
 	virtual void unlinkNodePortEvent( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	virtual void releaseNodeItemInfoObj( NodeItemInfo *release_ptr );
 	virtual void nodeItemFocus( NodeItem *create_ptr );
+	virtual void errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	virtual void finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;

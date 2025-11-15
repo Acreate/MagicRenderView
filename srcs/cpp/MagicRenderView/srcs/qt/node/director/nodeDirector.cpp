@@ -777,8 +777,6 @@ void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const 
 	errorNodeItemInfo.msg = msg;
 	errorNodeItemInfo.infoType = info_type;
 }
-void NodeDirector::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
-}
 
 NodeDirector::~NodeDirector( ) {
 	emit releaseThisSignal( this );
@@ -818,7 +816,6 @@ NodeDirector::~NodeDirector( ) {
 
 void NodeDirector::setSelectNodeItemVector( const std_vector< NodeItem * > &select_node_item_vector ) {
 	selectNodeItemVector = select_node_item_vector;
-	nodeItemFocusSignal( selectNodeItemVector.at( selectNodeItemVector.size( ) - 1 ) );
 }
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 	size_t count = nodeItemInfoVector.size( );
@@ -832,6 +829,17 @@ NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 		delete result;
 		return nullptr;
 	}
+	connect( result, &NodeItemBuilderObj::finish_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
+		errorNodeItem( sender_sig_obj_ptr, begin_inde, nullptr, nodeItemEnum::Node_Item_Result_Type::Finish, "", nodeItemEnum::Node_Item_Builder_Type::None );
+		finish_node_item_signal( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
+	} );
+	connect( result, &NodeItemBuilderObj::error_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+		errorNodeItem( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
+		emit error_node_item_signal( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
+	} );
+	connect( result, &NodeItemBuilderObj::reset_builder_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr ) {
+		error_node_item_signal( sender_sig_obj_ptr, 0, nullptr, nodeItemEnum::Node_Item_Result_Type::NotImplementation, "reset_builder_node_item_signal", nodeItemEnum::Node_Item_Builder_Type::None );
+	} );
 	return result;
 }
 

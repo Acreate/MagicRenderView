@@ -17,8 +17,9 @@
 
 #include <qt/node/item/nodeItem.h>
 
+#include "../../node/director/nodeItemInfo.h"
+
 MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
-	errorNodeItem = nullptr;
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );
 	scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
@@ -106,6 +107,12 @@ void MainWidget::releaseNodeItemInfoObj( NodeItemInfo *release_ptr ) {
 void MainWidget::nodeItemFocus( NodeItem *create_ptr ) {
 	ensureVisibleToItemNode( create_ptr );
 	update( );
+}
+void MainWidget::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+	nodeItemFocus( error_node_item_ptr->getNodeItem( ) );
+}
+void MainWidget::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
+	nodeItemFocus( finish_node_item_ptr->getNodeItem( ) );
 }
 
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
