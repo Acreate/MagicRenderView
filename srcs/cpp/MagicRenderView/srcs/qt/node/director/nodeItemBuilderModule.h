@@ -7,6 +7,10 @@
 
 #include "../../enums/nodeItemEnum.h"
 
+class NodeDirector;
+class VarGenerate;
+class Application;
+class NodeItem;
 class NodeItemInfo;
 class NodeItemBuilderModule : public QObject {
 	Q_OBJECT;
@@ -18,9 +22,16 @@ protected:
 	size_t currentVectorIndex;
 	size_t currentVectorCount;
 	NodeItemInfo **runNodeItemInfoArrayPtr;
+	Application *applicationInstancePtr;
+	VarGenerate *varGenerate;
+	NodeDirector *nodeDirector;
 protected:
-	NodeItemBuilderModule( ) { }
+	NodeItemBuilderModule( );
 	virtual bool builderNodeItemVector( );
+
+	bool runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
+
+	bool fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
 protected:
 	static std_vector< NodeItemInfo * > findEndAtStartNode( NodeItemInfo *end_node_info_ptr );
 public:
@@ -30,6 +41,9 @@ public:
 	virtual const QString & getMsg( ) const { return msg; }
 	virtual const std_vector< NodeItemInfo * > & getStartNodeItemInfoVector( ) const { return startNodeItemInfoVector; }
 	virtual const std_vector< NodeItemInfo * > & getRunNodeItemInfoVector( ) const { return runNodeItemInfoVector; }
+Q_SIGNALS:
+	void error_node_item_signal( NodeItemBuilderModule *sender_sig_obj_ptr, const NodeItem *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	void finish_node_item_signal( NodeItemBuilderModule *sender_sig_obj_ptr, const NodeItem *finish_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result );
 };
 
 #endif // NODEITEMBUILDERMODULE_H_H_HEAD__FILE__

@@ -79,6 +79,9 @@ bool nodeItemEnum::getEnumName( const Node_Item_Builder_Type &enum_var, QString 
 		case Node_Item_Builder_Type::Start :
 			result_str = QObject::tr( "起始" );
 			return true;
+		case Node_Item_Builder_Type::Fill_Param_Error :
+			result_str = QObject::tr( "填充参数错误" );
+			return true;
 	}
 	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );
 	return false;;

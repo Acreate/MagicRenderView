@@ -39,6 +39,7 @@ namespace nodeItemEnum {
 
 	enum class Node_Item_Builder_Type {
 		None,
+		Fill_Param_Error,
 		Warning,
 		Error,
 		Finish,

@@ -1,10 +1,16 @@
 ﻿#include "nodeItemBuilderModule.h"
 
+#include "nodeDirector.h"
 #include "nodeItemInfo.h"
+
+#include "../../application/application.h"
 
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
+NodeItemBuilderModule::NodeItemBuilderModule( ) {
+
+}
 bool NodeItemBuilderModule::builderNodeItemVector( ) {
 	currentVectorIndex = 0;
 	currentVectorCount = startNodeItemInfoVector.size( );
@@ -22,11 +28,59 @@ bool NodeItemBuilderModule::builderNodeItemVector( ) {
 		runNodeItemInfoArrayPtr = nullptr;
 		return false;
 	}
+	applicationInstancePtr = Application::getApplicationInstancePtr( );
+	varGenerate = applicationInstancePtr->getVarGenerate( );
+	nodeDirector = applicationInstancePtr->getNodeDirector( );
+
 	currentVectorCount = runNodeItemInfoVector.size( );
 	runNodeItemInfoArrayPtr = runNodeItemInfoVector.data( );
 
 	QString infoMsg = NodeItemInfoVector::formatNodeInfoPath( runNodeItemInfoArrayPtr, currentVectorCount, ", " );
 	tools::debug::printInfo( QString( "生成子模块编译:%1" ).arg( infoMsg ) );
+	return true;
+}
+bool NodeItemBuilderModule::runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
+	if( fillCurrentRunNodeItemValue( 0, node_item_ptr, builder_result, error_item_result, error_msg ) == false ) {
+		emit error_node_item_signal( this, node_item_ptr->nodeItem, error_item_result, error_msg, builder_result );
+		return false;
+	}
+	NodeItem *nodeItem = node_item_ptr->nodeItem;
+	error_item_result = nodeItem->run( error_msg );
+	if( error_item_result != nodeItemEnum::Node_Item_Result_Type::Finish ) {
+		emit error_node_item_signal( this, node_item_ptr->nodeItem, error_item_result, error_msg, builder_result );
+		return false;
+	} else
+	emit finish_node_item_signal( this, node_item_ptr->nodeItem, error_item_result );
+	return true;
+}
+bool NodeItemBuilderModule::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
+
+	NodeItem *outputPortNodeItem = node_item_ptr->nodeItem;
+	auto nodeMetaType = outputPortNodeItem->getNodeMetaType( );
+	QString msg( "%1(%2) 节点异常，未识别节点" );
+	switch( nodeMetaType ) {
+		case nodeItemEnum::Node_Item_Type::None :
+			tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
+			break;
+		case nodeItemEnum::Node_Item_Type::Begin :
+		case nodeItemEnum::Node_Item_Type::End :
+		case nodeItemEnum::Node_Item_Type::GenerateVar :
+		case nodeItemEnum::Node_Item_Type::Mark :
+		case nodeItemEnum::Node_Item_Type::Jump :
+			return true;
+	}
+
+	std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > resultVector;
+	if( nodeDirector->getLinkInputPorts( outputPortNodeItem, resultVector ) == false ) {
+		msg = "%1(%2) 节点异常，输入接口为0";
+		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
+		return false;
+	}
+	if( false ) {
+		msg = "%1(%2) 节点异常，输入接口未满足最低要求";
+		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
+		return false;
+	}
 	return true;
 }
 std_vector< NodeItemInfo * > NodeItemBuilderModule::findEndAtStartNode( NodeItemInfo *end_node_info_ptr ) {
