@@ -770,12 +770,12 @@ size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &
 	return 0;
 }
 void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
-	errorNodeItemInfo.sender_sig_obj_ptr = sender_sig_obj_ptr;
-	errorNodeItemInfo.begin_inde = begin_inde;
-	errorNodeItemInfo.error_node_item_ptr = error_node_item_ptr;
-	errorNodeItemInfo.node_item_result = node_item_result;
+	errorNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
+	errorNodeItemInfo.beginIndex = begin_inde;
+	errorNodeItemInfo.errorNodeItemPtr = error_node_item_ptr;
+	errorNodeItemInfo.nodeItemResult = node_item_result;
 	errorNodeItemInfo.msg = msg;
-	errorNodeItemInfo.info_type = info_type;
+	errorNodeItemInfo.infoType = info_type;
 }
 void NodeDirector::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
 }
