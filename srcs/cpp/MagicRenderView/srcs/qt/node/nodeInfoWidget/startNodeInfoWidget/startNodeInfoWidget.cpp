@@ -184,6 +184,8 @@ StartNodeInfoWidget::StartNodeInfoWidget( NodeItem *node_item ) : nodeItem( node
 	connect( nodeItem, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_ptr ) {
 		if( release_ptr != nodeItem )
 			return;
+		disconnect( nodeDirector, &NodeDirector::nodeItemInfoRefChangeInputNodeItem, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
+		disconnect( nodeDirector, &NodeDirector::releaseNodeItemInfoSignal, this, &StartNodeInfoWidget::updateNodeItemInfoBuilderVector );
 		deleteLater( );
 	} );
 }

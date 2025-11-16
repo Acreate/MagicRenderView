@@ -9,6 +9,7 @@
 #include <alias/type_alias.h>
 #include <qt/enums/nodeItemEnum.h>
 
+class I_Type;
 class GenerateListScrollArea;
 class QScrollArea;
 class NodeItemInfoScrollAreaWidget;
@@ -102,6 +103,7 @@ private:
 	/// @brief 渲染所在窗口
 	MainWidget *renderMainWidget;
 protected:
+	std_shared_ptr< I_Type > nodeTypeInfo = nullptr;
 	GenerateListScrollArea *generateListScrollArea;
 	/// @brief 节点变量
 	std_vector< std_shared_ptr< I_Var > > nodeVarVector;
@@ -117,6 +119,7 @@ protected:
 	NodeItem( );
 	NodeItem( GenerateListScrollArea *node_info_scroll_area );
 public:
+	virtual const I_Type * const getNodeTypeInfo( ) const { return nodeTypeInfo.get( ); }
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	~NodeItem( ) override;
 	virtual void setMainWidget( MainWidget *parent );

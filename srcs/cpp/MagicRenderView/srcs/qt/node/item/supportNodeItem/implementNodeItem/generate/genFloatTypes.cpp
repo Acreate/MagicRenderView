@@ -16,6 +16,7 @@
 
 Imp_StaticMetaInfo( GenFloatTypes, QObject::tr( "浮点" ), QObject::tr( "生成" ) );
 
+using t_current_type = double;
 void GenFloatTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -33,6 +34,7 @@ void GenFloatTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateList
 		}
 }
 GenFloatTypes::GenFloatTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( ) ) {
+	nodeTypeInfo = std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) );
 	generateFloatWidget = new GenerateListWidget( generateListScrollArea );
 	generateFloatWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
 		result_normal_var->setVarName( title );
@@ -61,7 +63,6 @@ GenFloatTypes::GenFloatTypes( ) : GenerateVarNodeItem( new GenerateListScrollAre
 		return true;
 	} );
 	generateFloatWidget->setVarGenerateFunction( [this] {
-		using t_current_type = double;
 		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
 		nodeVarVector.emplace_back( ptr );
 		return ptr;

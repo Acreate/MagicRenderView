@@ -13,6 +13,8 @@
 #include <qt/tools/tools.h>
 #include <qt/varType/I_Var.h>
 
+#include "../../varType/I_Type.h"
+
 #include "../../widgets/generateListWidget/generateListScrollArea.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
@@ -119,18 +121,44 @@ bool NodeItem::hasOutputPort( const NodePort *node_port ) {
 	return false;
 }
 size_t NodeItem::toBinData( std_vector< uint8_t > &result_data ) const {
-	size_t dataCount = 0;
+
+	size_t dataCount = nodeVarVector.size( );
 	size_t resultSize = 0;
-	applicationInstancePtr->getVarGenerate( )->toBinVector( typeid( size_t ), &dataCount, result_data, resultSize );
-	
-	
-	
-	return resultSize;
+	varGenerate->toBinVector( typeid( size_t ), &dataCount, result_data, resultSize );
+
+	if( dataCount == 0 || nodeTypeInfo == nullptr )
+		return result_data.size( );
+
+	std_vector< uint8_t > buff;
+	auto saveNodeArrayPtr = nodeVarVector.data( );
+
+	QString proTypeName = nodeTypeInfo->getProTypeName( );
+	varGenerate->toBinVector( typeid( QString ), &proTypeName, buff, resultSize );
+	result_data.append_range( buff );
+
+	auto aliasTypeName = nodeTypeInfo->getAliasTypeName( );
+	QStringList stringList( aliasTypeName.begin( ), aliasTypeName.end( ) );
+	proTypeName = stringList.join( "," );
+	varGenerate->toBinVector( typeid( QString ), &proTypeName, buff, resultSize );
+	result_data.append_range( buff );
+
+	resultSize = 0;
+	for( ; resultSize < dataCount; ++resultSize ) {
+		auto var = saveNodeArrayPtr[ resultSize ].get( );
+		varGenerate->toBinVector( var->getTypeInfo( )->getTypeInfo( ), var->getVarPtr( ), buff, resultSize );
+		result_data.append_range( buff );
+	}
+
+	return result_data.size( );
 }
 size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
+	// todo : 加载数据
 	size_t dataCount = 0;
 	size_t resultSize = 0;
-	applicationInstancePtr->getVarGenerate( )->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count );
+	if( varGenerate->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count ) == 0 )
+		return 0;
+	if( dataCount == 0 )
+		return resultSize;
 	return resultSize;
 }
 void NodeItem::resetRun( ) {
@@ -454,7 +482,7 @@ bool NodeItem::integrateLayout( ) {
 		tools::debug::printError( "节点渲染适配大小失败[" + getStaticMetaObjectName( ) + "]" );
 		return false;
 	}
-	
+
 	nodeItemRender->fill( QColor( 239, 208, 89, 255 ) );
 
 	QPainter painter( nodeItemRender );

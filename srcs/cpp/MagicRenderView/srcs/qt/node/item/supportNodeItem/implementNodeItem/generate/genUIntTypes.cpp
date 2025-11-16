@@ -16,6 +16,7 @@
 
 Imp_StaticMetaInfo( GenUIntTypes, QObject::tr( "无符号" ), QObject::tr( "生成" ) );
 
+using t_current_type = uint64_t;
 void GenUIntTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -33,6 +34,7 @@ void GenUIntTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListI
 		}
 }
 GenUIntTypes::GenUIntTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( ) ) {
+	nodeTypeInfo = std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) );
 	generateUintWidget = new GenerateListWidget( generateListScrollArea );
 	generateUintWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
 		result_normal_var->setVarName( title );
@@ -60,7 +62,6 @@ GenUIntTypes::GenUIntTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea(
 		return true;
 	} );
 	generateUintWidget->setVarGenerateFunction( [this] {
-		using t_current_type = uint64_t;
 		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
 		nodeVarVector.emplace_back( ptr );
 		return ptr;

@@ -16,6 +16,8 @@
 
 Imp_StaticMetaInfo( GenBinTypes, QObject::tr( "二进制" ), QObject::tr( "生成" ) );
 
+using t_current_type = uint8_t;
+
 void GenBinTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenBinTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -33,6 +35,8 @@ void GenBinTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListIt
 		}
 }
 GenBinTypes::GenBinTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( ) ) {
+
+	nodeTypeInfo = std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) );
 	generateBinWidget = new GenerateListWidget( generateListScrollArea );
 	generateBinWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
 		result_normal_var->setVarName( title );
@@ -73,7 +77,6 @@ GenBinTypes::GenBinTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( )
 		return true;
 	} );
 	generateBinWidget->setVarGenerateFunction( [this] {
-		using t_current_type = uint8_t;
 		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
 		nodeVarVector.emplace_back( ptr );
 		return ptr;

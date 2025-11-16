@@ -16,6 +16,7 @@
 
 Imp_StaticMetaInfo( GenQStringTypes, QObject::tr( "字符" ), QObject::tr( "生成" ) );
 
+using t_current_type = QString;
 void GenQStringTypes::changeVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
 }
 void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateListItemWidget *change_item_var_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
@@ -33,6 +34,7 @@ void GenQStringTypes::delVarOver( GenerateListWidget *signal_obj_ptr, GenerateLi
 		}
 }
 GenQStringTypes::GenQStringTypes( ) : GenerateVarNodeItem( new GenerateListScrollArea( ) ) {
+	nodeTypeInfo = std_shared_ptr< I_Type >( new I_Type( typeid( t_current_type ) ) );
 	generateQStringWidget = new GenerateListWidget( generateListScrollArea );
 	generateQStringWidget->setNormalVarFunction( [this] ( VarEditorWidget *var_editor_widget, const QString &string, const QString &title, I_Var *result_normal_var ) {
 		result_normal_var->setVarName( title );
@@ -56,7 +58,6 @@ GenQStringTypes::GenQStringTypes( ) : GenerateVarNodeItem( new GenerateListScrol
 		return true;
 	} );
 	generateQStringWidget->setVarGenerateFunction( [this] {
-		using t_current_type = QString;
 		std_shared_ptr< I_Var > ptr( I_Var::generateVarPtr< t_current_type >( ) );
 		nodeVarVector.emplace_back( ptr );
 		return ptr;

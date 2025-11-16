@@ -228,7 +228,7 @@ public:
 	/// @return 失败返回 false
 	virtual bool getTypeInfoGenerateInfo( const type_info &generate_type_info, I_Type *&result_info, size_t &start_index ) const;
 
-	/// @brief 目标为整数
+	/// @brief 获取类型的字符串形式
 	/// @param check_type_info 类型识别
 	/// @param check_type_data_ptr 识别对象指针
 	/// @param check_type_data_count 检查对象指向内存的数量
@@ -411,7 +411,7 @@ public:
 		size_t index = 0;
 		return getTypeInfoGenerateInfo( generate_type_info, result_info, index );
 	}
-	/// @brief 目标为整数
+	/// @brief 获取类型的字符串形式
 	/// @param check_type_info 类型识别
 	/// @param check_type_data_ptr 识别对象指针
 	/// @param check_type_data_count 检查对象指向内存的数量

@@ -67,6 +67,18 @@ public:
 		};
 		return generateVarPtr< TGenerateType >( pro_type_name, alias_type_name, release, create );
 	}
+
+	template< typename TGenerateType >
+	static I_Var * generateVarPtr( const QString &pro_type_name, const TGenerateType &defalut_var = 0 ) {
+		auto release = [] ( void *p ) {
+			delete ( TGenerateType * ) p;
+			return true;
+		};
+		auto create = [defalut_var] {
+			return new TGenerateType( defalut_var );
+		};
+		return generateVarPtr< TGenerateType >( pro_type_name, { }, release, create );
+	}
 	template< typename TGenerateType >
 	static I_Var * generateVarPtr( const TGenerateType &defalut_var = 0 ) {
 		auto release = [] ( void *p ) {
