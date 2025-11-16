@@ -398,9 +398,8 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 			drawNodeItemSelectorAndFinish( painter_target );
 		else
 			drawNodeItemSelector( painter_target );
-		return;
-	}
-	if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
+
+	} else if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
 		drawNodeItemError( painter_target );
 	else if( finishNodeItemInfo.finishNodeItemPtr != nullptr )
 		drawNodeItemFinish( painter_target );
@@ -995,7 +994,7 @@ void NodeDirector::setSelectNodeItemVector( const std_vector< const NodeItem * >
 				targetArrayPtr[ selectIndex ] = linkArrayDataPtr[ index ];
 	updateNodeItemSort( );
 }
-void NodeDirector::setSelectNodeItemVector( const NodeItem *select_node_item ) {
+void NodeDirector::setSelectNodeItem( const NodeItem *select_node_item ) {
 	NodeItemInfo *resultNodeItemInfo;
 	if( getNodeItemInfo( select_node_item, resultNodeItemInfo ) == false )
 		return;

@@ -67,12 +67,12 @@ public:
 	virtual const NodeItemFinishInfo & getFinishNodeItemInfo( ) const { return finishNodeItemInfo; }
 	virtual const std_vector< NodeItemInfo * > & getSelectNodeItemVector( ) const { return selectNodeItemVector; }
 	virtual void setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector );
-	virtual void setSelectNodeItemVector( const NodeItem *select_node_item );
+	virtual void setSelectNodeItem( const NodeItem *select_node_item );
 	virtual void setSelectNodeItemVector( const std_vector< NodeItemInfo * > &select_node_item_vector ) {
 		setSelectNodeItemVector( select_node_item_vector );
 	}
-	virtual void setSelectNodeItemVector( const NodeItemInfo *select_node_item ) {
-		setSelectNodeItemVector( select_node_item );
+	virtual void setSelectNodeItem( const NodeItemInfo *select_node_item ) {
+		setSelectNodeItem( select_node_item );
 	}
 	virtual NodeItemBuilderObj * builderNodeItem( );
 	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );

@@ -152,6 +152,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				case nodeItemEnum::Click_Type::Space :
 				case nodeItemEnum::Click_Type::Title :
 					ensureVisibleToItemNode( leftScondSelectItem );
+					nodeDirector->setSelectNodeItem( leftScondSelectItem );
 					break;
 				case nodeItemEnum::Click_Type::InputPort :
 				case nodeItemEnum::Click_Type::OutputPort :
