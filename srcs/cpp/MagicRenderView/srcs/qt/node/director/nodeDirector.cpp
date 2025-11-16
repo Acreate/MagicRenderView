@@ -602,6 +602,13 @@ bool NodeDirector::rleaseNodeItem( NodeItem *release ) {
 					nodeitemPtrData[ index ]->removeOutputNodeItemInfo( itemInfo );
 					nodeitemPtrData[ index ]->removeInputNodeItemInfo( itemInfo );
 				}
+
+			if( errorNodeItemInfo.errorNodeItemPtr && itemInfo == errorNodeItemInfo.errorNodeItemPtr )
+				errorNodeItemInfo.clear( );
+			else if( finishNodeItemInfo.finishNodeItemPtr && itemInfo == finishNodeItemInfo.finishNodeItemPtr )
+				finishNodeItemInfo.clear( );
+
+			removeSelectNodeItem( itemInfo );
 			delete itemInfo;
 			sortNodeItemInfo( );
 			updateNodeItemInfo( );
@@ -807,6 +814,7 @@ size_t NodeDirector::appendNodeItem( NodeItem *new_node_item ) {
 
 	new_node_item->move( mapFromGlobal );
 	connect( new_node_item, &NodeItem::releaseThisPtr, [this] ( NodeItem *release_node_item ) {
+
 		rleaseNodeItem( release_node_item ); // 管理对象的所有信息
 	} );
 	connect( nodeItemInfo, &NodeItemInfo::releaseThisPtr, this, &NodeDirector::releaseNodeItemInfoSignal );
@@ -1135,6 +1143,20 @@ void NodeDirector::appendSelectNodeItem( const NodeItem *select_node_item ) {
 	selectNodeItemVector.resize( 1 + count );
 	selectNodeItemVector.data( )[ count ] = resultNodeItemInfo;
 	updateNodeItemSort( );
+}
+void NodeDirector::removeSelectNodeItem( const NodeItemInfo *select_node_item ) {
+	removeSelectNodeItem( select_node_item->nodeItem );
+}
+void NodeDirector::removeSelectNodeItem( const NodeItem *select_node_item ) {
+	size_t count = selectNodeItemVector.size( );
+	if( count == 0 )
+		return;
+	auto selectNodeItemInfoArrayPtr = selectNodeItemVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( selectNodeItemInfoArrayPtr[ index ] != nullptr && selectNodeItemInfoArrayPtr[ index ]->nodeItem == select_node_item ) {
+			selectNodeItemVector.erase( index + selectNodeItemVector.begin( ) );
+			break;
+		}
 }
 void NodeDirector::setSelectNodeItemVector( const std_vector< NodeItemInfo * > &select_node_item_info_vector ) {
 	size_t count = select_node_item_info_vector.size( );

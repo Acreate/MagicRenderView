@@ -19,6 +19,8 @@
 
 #include "../../node/director/nodeItemInfo.h"
 
+#include "../generateListWidget/generateListScrollArea.h"
+
 MainWidget::MainWidget( MainScrollAreaWidget *scroll_area, Qt::WindowFlags flags ) : QWidget( scroll_area, flags ) {
 	scrollArea = scroll_area;
 	scrollArea->setWidgetResizable( true );

@@ -247,7 +247,7 @@ public:
 	/// @param index 布局序列下标
 	/// @return 成功返回输入端口，失败返回 nullptr
 	virtual TNodePortInputPortPtr formIndexNodeInputPort( const size_t &index );
-	virtual QWidget * getNodeItemWidget( ) const;
+	virtual GenerateListScrollArea * getNodeItemWidget( ) const;
 	/// @brief 更新布局
 	void updateLayout( );
 	/// @brief 执行节点函数

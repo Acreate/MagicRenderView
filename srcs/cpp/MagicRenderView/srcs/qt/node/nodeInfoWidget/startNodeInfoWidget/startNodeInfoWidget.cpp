@@ -12,6 +12,8 @@
 #include <qt/node/item/nodeItem.h>
 #include <qt/tools/tools.h>
 
+#include "../../../widgets/generateListWidget/generateListScrollArea.h"
+
 void StartNodeInfoWidget::fillLinkNodeInfoListWidget( ) {
 	clearRenderNodeInfo( );
 	if( currentNodeItemInfo == nullptr )

@@ -88,16 +88,7 @@ void GenerateListWidget::fromComponentAddItemInfo( ) {
 		tools::debug::printError( QObject::tr( "变量生成失败，请检查变量生成函数，请调用 setVarCheckFunction 重新配置有效生成函数" ) );
 		return;
 	}
-	auto newListItemWidget = new GenerateListItemWidget( var, this );
-	newListItemWidget->setVarCheckFunction( varCheckFunction );
-	newListItemWidget->setNameCheckFunction( nameCheckFunction );
-	newListItemWidget->setNormalVarFunction( normalVarFunction );
-	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
-	addItem( newListItemWidget );
-	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );
-	connect( newListItemWidget, &GenerateListItemWidget::changeVarOverSignal, [this] ( GenerateListItemWidget *signal_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
-		emit this->changeVarOverSignal( this, signal_obj_ptr, change_var_obj_ptr );
-	} );
+	auto newListItemWidget = appendVar( var );
 	newListItemWidget->showVarEditorWidget( );
 }
 
@@ -122,7 +113,7 @@ GenerateListWidget::GenerateListWidget( GenerateListScrollArea *parent ) : QWidg
 	mainLayout->addSpacerItem( new QSpacerItem( 10, 10, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding ) );
 	generateListScrollArea = parent;
 	generateListScrollArea->setGenerateListWidget( this );
-	generateListScrollArea->setInit(  );
+	generateListScrollArea->setInit( );
 	horizontalScrollBar = generateListScrollArea->horizontalScrollBar( );
 	verticalScrollBar = generateListScrollArea->verticalScrollBar( );
 }
@@ -162,6 +153,24 @@ std_shared_ptr< I_Var > GenerateListWidget::getItemIndexVar( const size_t &index
 	if( data[ index ] == nullptr )
 		return nullptr;
 	return data[ index ]->getVar( );
+}
+GenerateListItemWidget * GenerateListWidget::appendVar( const std_shared_ptr< I_Var > &append_var ) {
+	if( append_var.get( ) == nullptr )
+		return nullptr;
+	auto newListItemWidget = new GenerateListItemWidget( append_var, this );
+	newListItemWidget->setVarCheckFunction( varCheckFunction );
+	newListItemWidget->setNameCheckFunction( nameCheckFunction );
+	newListItemWidget->setNormalVarFunction( normalVarFunction );
+	mainLayout->insertWidget( mainLayout->count( ) - 1, newListItemWidget );
+	if( addItem( newListItemWidget ) == false ) {
+		delete newListItemWidget;
+		return nullptr;
+	}
+	connect( newListItemWidget, &GenerateListItemWidget::releaseThisPtr, this, &GenerateListWidget::removeItem );
+	connect( newListItemWidget, &GenerateListItemWidget::changeVarOverSignal, [this] ( GenerateListItemWidget *signal_obj_ptr, VarEditorWidget *change_var_obj_ptr ) {
+		emit this->changeVarOverSignal( this, signal_obj_ptr, change_var_obj_ptr );
+	} );
+	return newListItemWidget;
 }
 void GenerateListWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );

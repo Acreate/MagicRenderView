@@ -48,6 +48,7 @@ public:
 	virtual void setVarCheckFunction( const CheckStringFunction &var_check_function ) { varCheckFunction = var_check_function; }
 	virtual const NormalVarFunction & getNormalVarFunction( ) const { return normalVarFunction; }
 	virtual void setNormalVarFunction( const NormalVarFunction &normal_var_function ) { normalVarFunction = normal_var_function; }
+	virtual GenerateListItemWidget * appendVar( const std_shared_ptr< I_Var > &append_var );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void showEvent( QShowEvent *event ) override;

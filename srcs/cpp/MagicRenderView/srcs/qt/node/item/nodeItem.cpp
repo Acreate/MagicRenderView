@@ -15,6 +15,7 @@
 
 #include "../../varType/I_Type.h"
 
+#include "../../widgets/generateListWidget/GenerateListWidget.h"
 #include "../../widgets/generateListWidget/generateListScrollArea.h"
 
 Imp_StaticMetaInfo( NodeItem, QObject::tr( "NodeItem" ), QObject::tr( "item" ) );
@@ -145,21 +146,82 @@ size_t NodeItem::toBinData( std_vector< uint8_t > &result_data ) const {
 	resultSize = 0;
 	for( ; resultSize < dataCount; ++resultSize ) {
 		auto var = saveNodeArrayPtr[ resultSize ].get( );
+		proTypeName = var->getVarName( );
+		varGenerate->toBinVector( typeid( QString ), &proTypeName, buff, resultSize );
+		result_data.append_range( buff );
 		varGenerate->toBinVector( var->getTypeInfo( )->getTypeInfo( ), var->getVarPtr( ), buff, resultSize );
 		result_data.append_range( buff );
 	}
-
 	return result_data.size( );
 }
 size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
-	// todo : 加载数据
+
 	size_t dataCount = 0;
 	size_t resultSize = 0;
-	if( varGenerate->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count ) == 0 )
+	bool resultBool;
+	resultBool = varGenerate->toOBjVector( typeid( size_t ), &dataCount, resultSize, source_data_ptr, source_data_count );
+	if( resultBool == false )
 		return 0;
 	if( dataCount == 0 )
 		return resultSize;
-	return resultSize;
+
+	if( nodeTypeInfo == nullptr )
+		return 0;
+	auto mod = source_data_count - resultSize;
+	if( mod > source_data_count || mod == 0 )
+		return 0;
+	auto offsetPtr = source_data_ptr + resultSize;
+	QString proTypeName;
+	resultBool = varGenerate->toOBjVector( typeid( QString ), &proTypeName, resultSize, offsetPtr, mod );
+	if( resultBool == false )
+		return 0;
+	offsetPtr = offsetPtr + resultSize;
+	mod = mod - resultSize;
+	QString aliasTypeName;
+	resultBool = varGenerate->toOBjVector( typeid( QString ), &aliasTypeName, resultSize, offsetPtr, mod );
+	if( resultBool == false )
+		return 0;
+	offsetPtr = offsetPtr + resultSize;
+	mod = mod - resultSize;
+
+	I_Var *createPtr;
+	std_vector< std_shared_ptr< I_Var > > varBuff;
+	size_t index = 0;
+	for( ; index < dataCount; ++index ) {
+		createPtr = nullptr;
+		varGenerate->createCheckTypeName( nodeTypeInfo->getTypeInfo( ), proTypeName, [&createPtr] ( I_Var *create_var_ptr ) {
+			createPtr = create_var_ptr;
+			return true;
+		} );
+		if( createPtr == nullptr )
+			return 0;
+		resultBool = varGenerate->toOBjVector( typeid( QString ), &proTypeName, resultSize, offsetPtr, mod );
+		if( resultBool == false || mod < resultSize )
+			return 0;
+
+		createPtr->setVarName( proTypeName );
+
+		mod = mod - resultSize;
+		offsetPtr = offsetPtr + resultSize;
+
+		auto &targetTypeInfo = createPtr->getTypeInfo( )->getTypeInfo( );
+		resultBool = varGenerate->toOBjVector( targetTypeInfo, createPtr->getVarPtr( ), resultSize, offsetPtr, mod );
+		if( resultBool == false || mod < resultSize )
+			return 0;
+		mod = mod - resultSize;
+		offsetPtr = offsetPtr + resultSize;
+		varBuff.emplace_back( std_shared_ptr< I_Var >( createPtr ) );
+	}
+	auto nodePtah = getMetaObjectPathName( );
+	auto generateListScrollArea = getNodeItemWidget( );
+	auto generateListWidget = generateListScrollArea->getGenerateListWidget( );
+	auto varArrayPtr = varBuff.data( );
+	dataCount = varBuff.size( );
+	index = 0;
+	for( ; index < dataCount; ++index )
+		if( generateListWidget->appendVar( varArrayPtr[ index ] ) == nullptr )
+			return 0;
+	return offsetPtr - source_data_ptr;
 }
 void NodeItem::resetRun( ) {
 	runStatus = false;
@@ -521,7 +583,7 @@ NodeInputPort * NodeItem::formIndexNodeInputPort( const size_t &index ) {
 		return nodeInputProtVector.data( )[ index ].first;
 	return nullptr;
 }
-QWidget * NodeItem::getNodeItemWidget( ) const {
+GenerateListScrollArea * NodeItem::getNodeItemWidget( ) const {
 	if( generateListScrollArea == nullptr || generateListScrollArea->widget( ) == nullptr )
 		return nullptr;
 	return generateListScrollArea;

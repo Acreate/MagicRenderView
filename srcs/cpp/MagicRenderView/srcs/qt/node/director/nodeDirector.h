@@ -69,6 +69,8 @@ public:
 	virtual void setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector );
 	virtual void setSelectNodeItem( const NodeItem *select_node_item );
 	virtual void appendSelectNodeItem( const NodeItem *select_node_item );
+	virtual void removeSelectNodeItem( const NodeItemInfo *select_node_item );
+	virtual void removeSelectNodeItem( const NodeItem *select_node_item );
 	virtual void setSelectNodeItemVector( const std_vector< NodeItemInfo * > &select_node_item_info_vector );
 	virtual void setSelectNodeItem( const NodeItemInfo *select_node_item );
 	virtual void appendSelectNodeItem( const NodeItemInfo *select_node_item );
