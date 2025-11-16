@@ -286,18 +286,16 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 	if( count == 0 )
 		return;
 	size_t index = 0;
-	count -= 1;
 	auto data = nodeItemInfoVector.data( );
+	const NodeItemInfo *errorNodeItemInfoPtr = errorNodeItemInfo.errorNodeItemPtr;
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr ) {
-			NodeItem *nodeItem = data[ index ]->nodeItem;
-			if( nodeItem == nullptr )
-				continue;
-			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		} else if( data[ index ] == finishNodeItemInfo.finishNodeItemPtr )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		else if( data[ index ] == errorNodeItemInfoPtr )
 			break;
-	QPoint pos = data[ index ]->nodeItem->getPos( );
-	QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+
+	QPoint pos = errorNodeItemInfoPtr->nodeItem->getPos( );
+	QImage *nodeItemRender = errorNodeItemInfoPtr->nodeItem->getNodeItemRender( );
 	painter_target.drawImage( pos, *nodeItemRender );
 	auto pen = painter_target.pen( );
 	auto oldPen = pen;
@@ -308,7 +306,7 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 	int drawPenWidthSin = drawPenWidth / 2;
 	pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
 	QSize size = nodeItemRender->size( );
-	size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+	size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
 	painter_target.drawRect( QRect { pos, size } );
 	painter_target.setPen( oldPen );
 }
@@ -318,18 +316,16 @@ void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
 	if( count == 0 )
 		return;
 	size_t index = 0;
-	count -= 1;
 	auto data = nodeItemInfoVector.data( );
+	const NodeItemInfo *finishNodeItemInfoPtr = finishNodeItemInfo.finishNodeItemPtr;
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr ) {
-			NodeItem *nodeItem = data[ index ]->nodeItem;
-			if( nodeItem == nullptr )
-				continue;
-			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		} else if( data[ index ] == finishNodeItemInfo.finishNodeItemPtr )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		else if( data[ index ] == finishNodeItemInfoPtr )
 			break;
-	QPoint pos = data[ index ]->nodeItem->getPos( );
-	QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+
+	QPoint pos = finishNodeItemInfoPtr->nodeItem->getPos( );
+	QImage *nodeItemRender = finishNodeItemInfoPtr->nodeItem->getNodeItemRender( );
 	painter_target.drawImage( pos, *nodeItemRender );
 	auto pen = painter_target.pen( );
 	auto oldPen = pen;
@@ -340,7 +336,7 @@ void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
 	int drawPenWidthSin = drawPenWidth / 2;
 	pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
 	QSize size = nodeItemRender->size( );
-	size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+	size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
 	painter_target.drawRect( QRect { pos, size } );
 	painter_target.setPen( oldPen );
 }
@@ -350,18 +346,15 @@ void NodeDirector::drawNodeItemSelectorAndFinish( QPainter &painter_target ) con
 	if( count == 0 )
 		return;
 	size_t index = 0;
-	count -= 1;
 	auto data = nodeItemInfoVector.data( );
+	const NodeItemInfo *finishNodeItemInfoPtr = finishNodeItemInfo.finishNodeItemPtr;
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr ) {
-			NodeItem *nodeItem = data[ index ]->nodeItem;
-			if( nodeItem == nullptr )
-				continue;
-			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		} else if( data[ index ] == finishNodeItemInfo.finishNodeItemPtr )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		else if( data[ index ] == finishNodeItemInfoPtr )
 			break;
-	QPoint pos = data[ index ]->nodeItem->getPos( );
-	QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+	QPoint pos = finishNodeItemInfoPtr->nodeItem->getPos( );
+	QImage *nodeItemRender = finishNodeItemInfoPtr->nodeItem->getNodeItemRender( );
 	painter_target.drawImage( pos, *nodeItemRender );
 	auto pen = painter_target.pen( );
 	auto oldPen = pen;
@@ -372,27 +365,65 @@ void NodeDirector::drawNodeItemSelectorAndFinish( QPainter &painter_target ) con
 	int drawPenWidthSin = drawPenWidth / 2;
 	pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
 	QSize size = nodeItemRender->size( );
-	size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+	size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
 	painter_target.drawRect( QRect { pos, size } );
+
+	data = selectNodeItemVector.data( );
+	count = selectNodeItemVector.size( );
+	index = 0;
+	pen.setColor( 0x0B448E );
+	painter_target.setPen( pen );
+	for( ; index < count; ++index )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr ) {
+			NodeItem *nodeItem = data[ index ]->nodeItem;
+			nodeItemRender = nodeItem->getNodeItemRender( );
+			pos = nodeItem->getPos( );
+			painter_target.drawImage( pos, *nodeItemRender );
+			pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
+			size = nodeItemRender->size( );
+			size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
+			painter_target.drawRect( QRect { pos, size } );
+		}
 	painter_target.setPen( oldPen );
 }
 void NodeDirector::drawNodeItemSelector( QPainter &painter_target ) const {
 
-	size_t count;
-	size_t index;
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return;
+	auto selectArratPtr = selectNodeItemVector.data( );
+	auto selectArratCount = selectNodeItemVector.size( );
+	auto selectArratIndex = 0;
+	size_t index = 0;
+	auto data = nodeItemInfoVector.data( );
+	for( ; index < count; ++index )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		else if( data[ index ] == selectArratPtr[ selectArratIndex ] )
+			break;
 
-	count = nodeItemInfoVector.size( );
-	index = 0;
-	if( count > 0 ) {
-		auto data = nodeItemInfoVector.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] != nullptr ) {
-				NodeItem *nodeItem = data[ index ]->nodeItem;
-				if( nodeItem == nullptr )
-					continue;
-				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-			}
-	}
+	QPoint pos;
+	QImage *nodeItemRender;
+	auto pen = painter_target.pen( );
+	auto oldPen = pen;
+	QSize size;
+	int drawPenWidth = 8;
+	pen.setWidth( drawPenWidth );
+	pen.setColor( 0x0B448E );
+	painter_target.setPen( pen );
+	int drawPenWidthSin = drawPenWidth / 2;
+	for( ; selectArratIndex < selectArratCount; ++selectArratIndex )
+		if( selectArratPtr[ selectArratIndex ] != nullptr && selectArratPtr[ selectArratIndex ]->nodeItem != nullptr ) {
+			NodeItem *nodeItem = selectArratPtr[ selectArratIndex ]->nodeItem;
+			nodeItemRender = nodeItem->getNodeItemRender( );
+			pos = nodeItem->getPos( );
+			painter_target.drawImage( pos, *nodeItemRender );
+			pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
+			size = nodeItemRender->size( );
+			size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
+			painter_target.drawRect( QRect { pos, size } );
+		}
+	painter_target.setPen( oldPen );
 }
 void NodeDirector::drawNodeItemSelectorAndError( QPainter &painter_target ) const {
 
@@ -402,16 +433,14 @@ void NodeDirector::drawNodeItemSelectorAndError( QPainter &painter_target ) cons
 	size_t index = 0;
 	count -= 1;
 	auto data = nodeItemInfoVector.data( );
+	const NodeItemInfo *errorNodeItemInfoPtr = errorNodeItemInfo.errorNodeItemPtr;
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr ) {
-			NodeItem *nodeItem = data[ index ]->nodeItem;
-			if( nodeItem == nullptr )
-				continue;
-			painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-		} else if( data[ index ] == finishNodeItemInfo.finishNodeItemPtr )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		else if( data[ index ] == errorNodeItemInfoPtr )
 			break;
-	QPoint pos = data[ index ]->nodeItem->getPos( );
-	QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+	QPoint pos = errorNodeItemInfoPtr->nodeItem->getPos( );
+	QImage *nodeItemRender = errorNodeItemInfoPtr->nodeItem->getNodeItemRender( );
 	painter_target.drawImage( pos, *nodeItemRender );
 	auto pen = painter_target.pen( );
 	auto oldPen = pen;
@@ -422,47 +451,38 @@ void NodeDirector::drawNodeItemSelectorAndError( QPainter &painter_target ) cons
 	int drawPenWidthSin = drawPenWidth / 2;
 	pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
 	QSize size = nodeItemRender->size( );
-	size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+	size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
 	painter_target.drawRect( QRect { pos, size } );
 
 	data = selectNodeItemVector.data( );
 	count = selectNodeItemVector.size( );
 	index = 0;
-	pen.setColor( 0xFFFF );
+	pen.setColor( 0x0B448E );
 	painter_target.setPen( pen );
 	for( ; index < count; ++index )
-		if( data[ index ] != nullptr ) {
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr ) {
 			NodeItem *nodeItem = data[ index ]->nodeItem;
-			if( nodeItem == nullptr )
-				continue;
 			nodeItemRender = nodeItem->getNodeItemRender( );
 			pos = nodeItem->getPos( );
 			painter_target.drawImage( pos, *nodeItemRender );
 			pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
 			size = nodeItemRender->size( );
-			size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+			size = QSize( size.width( ) + drawPenWidth, size.height( ) + drawPenWidth );
 			painter_target.drawRect( QRect { pos, size } );
 		}
 	painter_target.setPen( oldPen );
-
 }
 void NodeDirector::drawNodeItemNormal( QPainter &painter_target ) const {
 
-	size_t count;
-	size_t index;
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return;
+	size_t index = 0;
+	auto data = nodeItemInfoVector.data( );
+	for( ; index < count; ++index )
+		if( data[ index ] != nullptr && data[ index ]->nodeItem != nullptr )
+			painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
 
-	count = nodeItemInfoVector.size( );
-	index = 0;
-	if( count > 0 ) {
-		auto data = nodeItemInfoVector.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] != nullptr ) {
-				NodeItem *nodeItem = data[ index ]->nodeItem;
-				if( nodeItem == nullptr )
-					continue;
-				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-			}
-	}
 }
 void NodeDirector::draw( QPainter &painter_target ) const {
 
