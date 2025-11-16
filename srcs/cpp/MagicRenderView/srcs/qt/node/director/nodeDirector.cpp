@@ -1002,6 +1002,30 @@ void NodeDirector::setSelectNodeItem( const NodeItem *select_node_item ) {
 	selectNodeItemVector.data( )[ 0 ] = resultNodeItemInfo;
 	updateNodeItemSort( );
 }
+void NodeDirector::appendSelectNodeItem( const NodeItem *select_node_item ) {
+	NodeItemInfo *resultNodeItemInfo;
+	if( getNodeItemInfo( select_node_item, resultNodeItemInfo ) == false )
+		return;
+
+	size_t count = selectNodeItemVector.size( );
+	if( count != 0 ) {
+		auto nodeItemInfoArrayPtr = selectNodeItemVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( nodeItemInfoArrayPtr[ index ] == resultNodeItemInfo ) {
+				count -= 1;
+				for( ; index < count; ++index )
+					nodeItemInfoArrayPtr[ index ] = nodeItemInfoArrayPtr[ index + 1 ];
+				nodeItemInfoArrayPtr[ index ] = resultNodeItemInfo;
+				updateNodeItemSort( );
+				return;
+			}
+	}
+
+	selectNodeItemVector.resize( 1 + count );
+	selectNodeItemVector.data( )[ count ] = resultNodeItemInfo;
+	updateNodeItemSort( );
+}
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 	size_t count = nodeItemInfoVector.size( );
 	if( count == 0 )
