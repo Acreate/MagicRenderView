@@ -133,6 +133,7 @@ protected:
 	virtual void drawNodeItemNormal( QPainter &painter_target ) const;
 public:
 	virtual void draw( QPainter &painter_target ) const;
+	virtual void updateBuff( );
 protected:
 	virtual void errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
 	virtual void finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *finish_node_item_ptr );
