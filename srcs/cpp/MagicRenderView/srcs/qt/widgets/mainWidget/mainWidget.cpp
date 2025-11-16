@@ -204,20 +204,23 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				case nodeItemEnum::Click_Type::None :
 					break;
 				case nodeItemEnum::Click_Type::InputPort :
-					nodeDirector->setRaise( leftScondSelectItem );
+					//nodeDirector->setRaise( leftScondSelectItem );
+					nodeDirector->setSelectNodeItem( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case nodeItemEnum::Click_Type::OutputPort :
-					nodeDirector->setRaise( leftScondSelectItem );
+					//nodeDirector->setRaise( leftScondSelectItem );
+					nodeDirector->setSelectNodeItem( leftScondSelectItem );
 					leftScondSelecttPort->getPos( modPoint );
 					leftFirstSelectItem = leftScondSelectItem;
 					leftFirstSelectPort = leftScondSelecttPort;
 					break;
 				case nodeItemEnum::Click_Type::Space :
 				case nodeItemEnum::Click_Type::Title :
-					nodeDirector->setRaise( leftScondSelectItem );
+					//nodeDirector->setRaise( leftScondSelectItem );
+					nodeDirector->setSelectNodeItem( leftScondSelectItem );
 					modPoint = fromGlobalPressPoint - leftScondSelectItem->getPos( );
 					// 相同节点
 					if( leftFirstSelectItem == leftScondSelectItem ) {

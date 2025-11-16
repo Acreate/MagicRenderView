@@ -91,8 +91,6 @@ public:
 	virtual bool linkUnInstallPort( NodePort *first_port, NodePort *scond_port );
 	virtual bool linkInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
 	virtual bool linkUnInstallPort( NodeInputPort *input_port, NodeOutputPort *output_port );
-	virtual bool setRaise( const NodeItem *raise_node_item );
-	virtual bool setRaise( const NodePort *raise_node_port );
 	virtual NodeItem * getLastNodeItem( );
 	virtual std_vector< NodeItem * > getNodeItems( ) const;
 	virtual std_vector< QImage * > getNodeItemRenders( ) const;
@@ -123,6 +121,8 @@ public:
 	virtual size_t loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count );
 protected:
 	virtual void updateNodeItemSort( );
+	virtual bool setRaise( const NodeItem *raise_node_item );
+	virtual bool setRaise( const NodePort *raise_node_port );
 protected:
 	virtual void drawNodeItemLine( QPainter &painter_target ) const;
 	virtual void drawNodeItemError( QPainter &painter_target ) const;

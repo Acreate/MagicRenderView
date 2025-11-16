@@ -314,13 +314,13 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 	}
 }
 void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
-
 	size_t count;
 	size_t index;
 
 	count = nodeItemInfoVector.size( );
 	index = 0;
 	if( count > 0 ) {
+		count -= 1;
 		auto data = nodeItemInfoVector.data( );
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr ) {
@@ -329,6 +329,21 @@ void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
 					continue;
 				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
 			}
+		QPoint pos = data[ index ]->nodeItem->getPos( );
+		QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+		painter_target.drawImage( pos, *nodeItemRender );
+		auto pen = painter_target.pen( );
+		auto oldPen = pen;
+		pen.setColor( QColor( 89, 239, 203 ) );
+		int drawPenWidth = 8;
+		pen.setWidth( drawPenWidth );
+		painter_target.setPen( pen );
+		int drawPenWidthSin = drawPenWidth / 2;
+		pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
+		QSize size = nodeItemRender->size( );
+		size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+		painter_target.drawRect( QRect { pos, size } );
+		painter_target.setPen( oldPen );
 	}
 }
 void NodeDirector::drawNodeItemSelectorAndFinish( QPainter &painter_target ) const {
@@ -921,7 +936,6 @@ void NodeDirector::updateNodeItemSort( ) {
 				for( ; index < count; index++ )
 					data[ index ] = data[ index + 1 ];
 				data[ index ] = makeItem;
-				mainWidget->update( );
 				return; // 检测到了
 			}
 	};
@@ -1078,8 +1092,8 @@ void NodeDirector::clearSelect( ) {
 }
 void NodeDirector::clearHighight( ) {
 	selectNodeItemVector.clear( );
-	errorNodeItemInfo.clear(  );
-	finishNodeItemInfo.clear(  );
+	errorNodeItemInfo.clear( );
+	finishNodeItemInfo.clear( );
 	updateNodeItemSort( );
 }
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
