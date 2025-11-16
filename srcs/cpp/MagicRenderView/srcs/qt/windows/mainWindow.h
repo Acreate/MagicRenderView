@@ -47,6 +47,8 @@ protected: // action 列表
 protected:
 	/// @brief 应用实例
 	Application *appInstance;
+	/// @brief 节点导演
+	NodeDirector *nodeDirector;
 	/// @brief ini 关键字
 	QString keyFirst;
 	/// @brief 窗口的工具栏菜单

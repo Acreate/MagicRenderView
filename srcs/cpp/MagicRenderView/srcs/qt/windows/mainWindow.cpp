@@ -54,6 +54,10 @@ void MainWindow::initMenuActions( ) {
 	quickLoadCurrentAction = new QAction( tr( "快速加载" ), this );
 	connect( quickLoadCurrentAction, &QAction::triggered, this, &MainWindow::quickLoadFile );
 
+	resetRunNodeItemAction->setEnabled( false );
+	runDisposableAllNodeItemAction->setEnabled( false );
+	runListAllNodeItemAction->setEnabled( false );
+	runNodeItemNodeItemAction->setEnabled( false );
 }
 void MainWindow::initShortcut( ) {
 	QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
@@ -146,6 +150,7 @@ MainWindow::MainWindow( QWidget *parent, Qt::WindowFlags flags ) : QMainWindow( 
 	setWindowToIndexScreenCentre( 0 );
 
 	appInstance = Application::getApplicationInstancePtr( );
+	nodeDirector = appInstance->getNodeDirector( );
 	keyFirst = "Application/MainWindow";
 	savefilePathKey = "saveFilePath";
 
@@ -298,27 +303,41 @@ void MainWindow::quickLoadFile( ) {
 void MainWindow::builderAllNodeItem( ) {
 	if( nodeItemBuilderObj )
 		delete nodeItemBuilderObj;
-	nodeItemBuilderObj = Application::getApplicationInstancePtr( )->getNodeDirector( )->builderNodeItem( );
+	nodeItemBuilderObj = nodeDirector->builderNodeItem( );
 	if( nodeItemBuilderObj == nullptr ) {
+		nodeDirector->clearHighight( );
+		resetRunNodeItemAction->setEnabled( false );
+		runDisposableAllNodeItemAction->setEnabled( false );
+		runListAllNodeItemAction->setEnabled( false );
+		runNodeItemNodeItemAction->setEnabled( false );
 		tools::debug::printError( "无法创建正确的编译对象" );
 		return;
 	}
+	resetRunNodeItemAction->setEnabled( true );
+	runDisposableAllNodeItemAction->setEnabled( true );
+	runListAllNodeItemAction->setEnabled( true );
+	runNodeItemNodeItemAction->setEnabled( true );
+	nodeDirector->clearHighight( );
 	connect( nodeItemBuilderObj, &NodeItemBuilderObj::error_node_item_signal, this, &MainWindow::builderObjAtRunTheErrorNodeItem );
 	connect( nodeItemBuilderObj, &NodeItemBuilderObj::finish_node_item_signal, this, &MainWindow::builderObjAtRunTheFinishNodeItem );
 }
 void MainWindow::runAllNodeItem( ) {
 	if( nodeItemBuilderObj == nullptr )
 		return;
+	nodeDirector->clearSelect( );
 	nodeItemBuilderObj->runAllNodeItem( );
 }
 void MainWindow::runListNodeItem( ) {
 	if( nodeItemBuilderObj == nullptr )
 		return;
+	nodeDirector->clearSelect( );
 	nodeItemBuilderObj->runListNodeItem( );
 }
 void MainWindow::runToNextNodeItem( ) {
 	if( nodeItemBuilderObj == nullptr )
 		return;
+
+	nodeDirector->clearSelect( );
 	nodeItemBuilderObj->nextNodeItem( );
 }
 void MainWindow::resetStartNodeItem( ) {
@@ -327,9 +346,11 @@ void MainWindow::resetStartNodeItem( ) {
 	nodeItemBuilderObj->toStartNodeItem( );
 }
 void MainWindow::builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+	nodeDirector->clearSelect( );
 	mainWidget->update( );
 }
 void MainWindow::builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
+	nodeDirector->clearSelect( );
 	mainWidget->update( );
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {

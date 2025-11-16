@@ -302,9 +302,14 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 		auto pen = painter_target.pen( );
 		auto oldPen = pen;
 		pen.setColor( Qt::GlobalColor::red );
-		pen.setWidth( 4 );
+		int drawPenWidth = 8;
+		pen.setWidth( drawPenWidth );
 		painter_target.setPen( pen );
-		painter_target.drawRect( QRect { pos, nodeItemRender->size( ) } );
+		int drawPenWidthSin = drawPenWidth / 2;
+		pos = QPoint( pos.x( ) - drawPenWidthSin, pos.y( ) - drawPenWidthSin );
+		QSize size = nodeItemRender->size( );
+		size = QSize( size.width( ) + drawPenWidthSin, size.height( ) + drawPenWidthSin );
+		painter_target.drawRect( QRect { pos, size } );
 		painter_target.setPen( oldPen );
 	}
 }
@@ -897,8 +902,10 @@ void NodeDirector::updateNodeItemSort( ) {
 
 	// 节点个数
 	size_t count = nodeItemInfoVector.size( );
-	if( count == 0 )
+	if( count == 0 ) {
+		mainWidget->update( );
 		return;
+	}
 
 	// 节点数组指针
 	auto data = nodeItemInfoVector.data( );
@@ -914,6 +921,7 @@ void NodeDirector::updateNodeItemSort( ) {
 				for( ; index < count; index++ )
 					data[ index ] = data[ index + 1 ];
 				data[ index ] = makeItem;
+				mainWidget->update( );
 				return; // 检测到了
 			}
 	};
@@ -924,12 +932,15 @@ void NodeDirector::updateNodeItemSort( ) {
 	else if( finishNodeItemInfo.finishNodeItemPtr )
 		sortToLast( finishNodeItemInfo.finishNodeItemPtr );
 
-	if( selectCount == 0 )
+	if( selectCount == 0 ) {
+		mainWidget->update( );
 		return;
+	}
 	auto selectNodeItemVectorData = selectNodeItemVector.data( );
 	size_t selectIndex = 0;
 	for( ; selectIndex < selectCount; ++selectIndex )
 		sortToLast( selectNodeItemVectorData[ selectIndex ] );
+	mainWidget->update( );
 }
 
 void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
@@ -987,11 +998,14 @@ NodeDirector::~NodeDirector( ) {
 void NodeDirector::setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector ) {
 	size_t selectCount = select_node_item_vector.size( );
 	selectNodeItemVector.resize( selectCount );
-	if( selectCount == 0 )
+	if( selectCount == 0 ) {
+		updateNodeItemSort( );
 		return;
+	}
 	size_t linkCount = nodeItemInfoVector.size( );
 	if( linkCount == 0 ) {
 		selectNodeItemVector.resize( 0 );
+		updateNodeItemSort( );
 		return;
 	}
 	auto selectArratPtr = select_node_item_vector.data( );
@@ -1037,6 +1051,35 @@ void NodeDirector::appendSelectNodeItem( const NodeItem *select_node_item ) {
 
 	selectNodeItemVector.resize( 1 + count );
 	selectNodeItemVector.data( )[ count ] = resultNodeItemInfo;
+	updateNodeItemSort( );
+}
+void NodeDirector::setSelectNodeItemVector( const std_vector< NodeItemInfo * > &select_node_item_info_vector ) {
+	size_t count = select_node_item_info_vector.size( );
+	if( count == 0 ) {
+		clearSelect( );
+		return;
+	}
+	std_vector< const NodeItem * > nodeItemInfoVector( count );
+	auto sourceArrayPtr = select_node_item_info_vector.data( );
+	auto desArrayPtr = nodeItemInfoVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		desArrayPtr[ index ] = sourceArrayPtr[ index ]->nodeItem;
+	setSelectNodeItemVector( nodeItemInfoVector );
+}
+void NodeDirector::setSelectNodeItem( const NodeItemInfo *select_node_item ) {
+	setSelectNodeItem( select_node_item->nodeItem );
+}
+void NodeDirector::appendSelectNodeItem( const NodeItemInfo *select_node_item ) {
+	appendSelectNodeItem( select_node_item->nodeItem );
+}
+void NodeDirector::clearSelect( ) {
+	selectNodeItemVector.clear( );
+	updateNodeItemSort( );
+}
+void NodeDirector::clearHighight( ) {
+	selectNodeItemVector.clear( );
+	errorNodeItemInfo.clear(  );
+	finishNodeItemInfo.clear(  );
 	updateNodeItemSort( );
 }
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
