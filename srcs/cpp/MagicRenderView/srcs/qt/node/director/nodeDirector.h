@@ -9,6 +9,7 @@
 #include <qt/enums/nodeItemEnum.h>
 
 #include "nodeItemErrorInfo.h"
+#include "nodeItemFinishInfo.h"
 
 class NodeItemBuilderObj;
 class QPainter;
@@ -50,6 +51,8 @@ protected:
 	std_vector< NodeItem * > selectNodeItemVector;
 	/// @brief 错误节点列表
 	NodeItemErrorInfo errorNodeItemInfo;
+	/// @brief 运行完成节点
+	NodeItemFinishInfo finishNodeItemInfo;
 protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
@@ -61,7 +64,7 @@ public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
 	virtual const NodeItemErrorInfo & getErrorNodeItemInfo( ) const { return errorNodeItemInfo; }
-
+	virtual const NodeItemFinishInfo & getFinishNodeItemInfo( ) const { return finishNodeItemInfo; }
 	virtual const std_vector< NodeItem * > & getSelectNodeItemVector( ) const { return selectNodeItemVector; }
 	virtual void setSelectNodeItemVector( const std_vector< NodeItem * > &select_node_item_vector );
 	virtual NodeItemBuilderObj * builderNodeItem( );
@@ -114,13 +117,16 @@ public:
 protected:
 	virtual void drawNodeItemLine( QPainter &painter_target ) const;
 	virtual void drawNodeItemError( QPainter &painter_target ) const;
+	virtual void drawNodeItemFinish( QPainter &painter_target ) const;
 	virtual void drawNodeItemSelector( QPainter &painter_target ) const;
 	virtual void drawNodeItemSelectorAndError( QPainter &painter_target ) const;
+	virtual void drawNodeItemSelectorAndFinish( QPainter &painter_target ) const;
 	virtual void drawNodeItemNormal( QPainter &painter_target ) const;
 public:
 	virtual void draw( QPainter &painter_target ) const;
 protected:
-	virtual void errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	virtual void errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	virtual void finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *finish_node_item_ptr );
 Q_SIGNALS:
 	void linkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
 	void unlinkNodePortSignal( NodeDirector *sender_director_ptr, NodePortLinkInfo *control_obj_ptr, NodeInputPort *input_port, NodeOutputPort *link_output_port );
@@ -129,9 +135,10 @@ Q_SIGNALS:
 	void generateNodeItemSignal( NodeItem *create_ptr );
 	void nodeItemInfoRefChangeInputNodeItem( NodeItemInfo *node_item_info );
 	void nodeItemInfoRefChangeOutputNodeItem( NodeItemInfo *node_item_info );
-	void error_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
-	void finish_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr );
+	void error_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
+	void finish_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *finish_node_item_ptr );
 	void nodeItemFocusSignal( NodeItem *node_item_select );
+	void reset_builder_node_item_signal( NodeItemBuilderObj *sender_sig_obj_ptr );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

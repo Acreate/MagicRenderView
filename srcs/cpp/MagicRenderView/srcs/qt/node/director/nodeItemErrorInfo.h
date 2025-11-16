@@ -30,6 +30,14 @@ public:
 	virtual nodeItemEnum::Node_Item_Result_Type getNodeItemResult( ) const { return nodeItemResult; }
 	virtual const QString & getMsg( ) const { return msg; }
 	virtual nodeItemEnum::Node_Item_Builder_Type getInfoType( ) const { return infoType; }
+	virtual void clear( ) {
+		nodeItemResult = nodeItemEnum::Node_Item_Result_Type::NotImplementation;
+		senderSigObjPtr = nullptr;
+		beginIndex = 0;
+		errorNodeItemPtr = nullptr;
+		msg.clear( );
+		infoType = nodeItemEnum::Node_Item_Builder_Type::None;
+	}
 };
 
 #endif // NODEITEMERRORINFO_H_H_HEAD__FILE__

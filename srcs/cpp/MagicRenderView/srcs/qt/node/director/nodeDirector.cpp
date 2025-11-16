@@ -287,6 +287,7 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 	count = nodeItemInfoVector.size( );
 	index = 0;
 	if( count > 0 ) {
+		count -= 1;
 		auto data = nodeItemInfoVector.data( );
 		for( ; index < count; ++index )
 			if( data[ index ] != nullptr ) {
@@ -295,7 +296,12 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 					continue;
 				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
 			}
+		painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
 	}
+}
+void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
+}
+void NodeDirector::drawNodeItemSelectorAndFinish( QPainter &painter_target ) const {
 }
 void NodeDirector::drawNodeItemSelector( QPainter &painter_target ) const {
 
@@ -844,13 +850,22 @@ size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &
 	return 0;
 }
 
-void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
+void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
 	errorNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
-	errorNodeItemInfo.beginIndex = begin_inde;
+	errorNodeItemInfo.beginIndex = begin_index;
 	errorNodeItemInfo.errorNodeItemPtr = error_node_item_ptr;
 	errorNodeItemInfo.nodeItemResult = node_item_result;
 	errorNodeItemInfo.msg = msg;
 	errorNodeItemInfo.infoType = info_type;
+	if( error_node_item_ptr && error_node_item_ptr->nodeItem )
+		setRaise( error_node_item_ptr->nodeItem );
+}
+void NodeDirector::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *finish_node_item_ptr ) {
+	finishNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
+	finishNodeItemInfo.beginIndex = begin_index;
+	finishNodeItemInfo.finishNodeItemPtr = finish_node_item_ptr;
+	if( finish_node_item_ptr && finish_node_item_ptr->nodeItem )
+		setRaise( finish_node_item_ptr->nodeItem );
 }
 
 NodeDirector::~NodeDirector( ) {
@@ -905,15 +920,19 @@ NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 		return nullptr;
 	}
 	connect( result, &NodeItemBuilderObj::finish_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
-		errorNodeItem( sender_sig_obj_ptr, begin_inde, nullptr, nodeItemEnum::Node_Item_Result_Type::Finish, "", nodeItemEnum::Node_Item_Builder_Type::None );
-		finish_node_item_signal( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
+		finishNodeItem( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
+		errorNodeItemInfo.clear( );
+		emit finish_node_item_signal( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
 	} );
 	connect( result, &NodeItemBuilderObj::error_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
 		errorNodeItem( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
+		finishNodeItemInfo.clear( );
 		emit error_node_item_signal( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
 	} );
 	connect( result, &NodeItemBuilderObj::reset_builder_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr ) {
-		error_node_item_signal( sender_sig_obj_ptr, 0, nullptr, nodeItemEnum::Node_Item_Result_Type::NotImplementation, "reset_builder_node_item_signal", nodeItemEnum::Node_Item_Builder_Type::None );
+		errorNodeItemInfo.clear( );
+		finishNodeItemInfo.clear( );
+		emit reset_builder_node_item_signal( sender_sig_obj_ptr );
 	} );
 	return result;
 }
