@@ -327,10 +327,10 @@ void MainWindow::resetStartNodeItem( ) {
 	nodeItemBuilderObj->toStartNodeItem( );
 }
 void MainWindow::builderObjAtRunTheErrorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
-	
+	mainWidget->update( );
 }
 void MainWindow::builderObjAtRunTheFinishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
-	
+	mainWidget->update( );
 }
 void MainWindow::resizeEvent( QResizeEvent *resize_event ) {
 	QMainWindow::resizeEvent( resize_event );

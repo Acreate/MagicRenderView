@@ -296,7 +296,16 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 					continue;
 				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
 			}
-		painter_target.drawImage( data[ index ]->nodeItem->getPos( ), *data[ index ]->nodeItem->getNodeItemRender( ) );
+		QPoint pos = data[ index ]->nodeItem->getPos( );
+		QImage *nodeItemRender = data[ index ]->nodeItem->getNodeItemRender( );
+		painter_target.drawImage( pos, *nodeItemRender );
+		auto pen = painter_target.pen( );
+		auto oldPen = pen;
+		pen.setColor( Qt::GlobalColor::red );
+		pen.setWidth( 4 );
+		painter_target.setPen( pen );
+		painter_target.drawRect( QRect { pos, nodeItemRender->size( ) } );
+		painter_target.setPen( oldPen );
 	}
 }
 void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
@@ -977,7 +986,7 @@ NodeDirector::~NodeDirector( ) {
 
 void NodeDirector::setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector ) {
 	size_t selectCount = select_node_item_vector.size( );
-	selectNodeItemVector.resize( selectCount, nullptr );
+	selectNodeItemVector.resize( selectCount );
 	if( selectCount == 0 )
 		return;
 	size_t linkCount = nodeItemInfoVector.size( );
@@ -988,8 +997,12 @@ void NodeDirector::setSelectNodeItemVector( const std_vector< const NodeItem * >
 	auto selectArratPtr = select_node_item_vector.data( );
 	auto linkArrayDataPtr = nodeItemInfoVector.data( );
 	auto targetArrayPtr = selectNodeItemVector.data( );
-	for( size_t selectIndex = 0; selectIndex < selectCount; ++selectIndex )
-		for( size_t index = 0; index < linkCount; ++index )
+	size_t selectIndex;
+	for( selectIndex = 0; selectIndex < selectCount; ++selectIndex )
+		targetArrayPtr[ selectIndex ] = nullptr;
+	size_t index;
+	for( selectIndex = 0; selectIndex < selectCount; ++selectIndex )
+		for( index = 0; index < linkCount; ++index )
 			if( linkArrayDataPtr[ index ] != nullptr && linkArrayDataPtr[ index ]->nodeItem == selectArratPtr[ selectIndex ] )
 				targetArrayPtr[ selectIndex ] = linkArrayDataPtr[ index ];
 	updateNodeItemSort( );
