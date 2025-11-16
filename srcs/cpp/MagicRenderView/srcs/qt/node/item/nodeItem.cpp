@@ -122,6 +122,9 @@ size_t NodeItem::toBinData( std_vector< uint8_t > &result_data ) const {
 	size_t dataCount = 0;
 	size_t resultSize = 0;
 	applicationInstancePtr->getVarGenerate( )->toBinVector( typeid( size_t ), &dataCount, result_data, resultSize );
+	
+	
+	
 	return resultSize;
 }
 size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count ) {
