@@ -451,7 +451,8 @@ bool NodeItem::integrateLayout( ) {
 		tools::debug::printError( "节点渲染适配大小失败[" + getStaticMetaObjectName( ) + "]" );
 		return false;
 	}
-	nodeItemRender->fill( qRgb( 31, 172, 236 ) );
+	
+	nodeItemRender->fill( QColor( 239, 208, 89, 255 ) );
 
 	QPainter painter( nodeItemRender );
 	// 绘制标题

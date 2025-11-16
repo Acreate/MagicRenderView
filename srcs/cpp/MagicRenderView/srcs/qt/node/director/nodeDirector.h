@@ -84,7 +84,6 @@ public:
 	virtual bool setRaise( const NodeItem *raise_node_item );
 	virtual bool setRaise( const NodePort *raise_node_port );
 	virtual NodeItem * getLastNodeItem( );
-	virtual void draw( QPainter &painter_target ) const;
 	virtual std_vector< NodeItem * > getNodeItems( ) const;
 	virtual std_vector< QImage * > getNodeItemRenders( ) const;
 
@@ -112,6 +111,14 @@ public:
 	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
 	virtual size_t toDataBin( std_vector< uint8_t > &result_data_vector );
 	virtual size_t loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count );
+protected:
+	virtual void drawNodeItemLine( QPainter &painter_target ) const;
+	virtual void drawNodeItemError( QPainter &painter_target ) const;
+	virtual void drawNodeItemSelector( QPainter &painter_target ) const;
+	virtual void drawNodeItemSelectorAndError( QPainter &painter_target ) const;
+	virtual void drawNodeItemNormal( QPainter &painter_target ) const;
+public:
+	virtual void draw( QPainter &painter_target ) const;
 protected:
 	virtual void errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type );
 Q_SIGNALS:

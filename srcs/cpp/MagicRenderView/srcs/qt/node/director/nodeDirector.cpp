@@ -249,29 +249,16 @@ NodeItem * NodeDirector::getLastNodeItem( ) {
 		return nullptr;
 	return nodeItemInfoVector.data( )[ count - 1 ]->nodeItem;
 }
-void NodeDirector::draw( QPainter &painter_target ) const {
+void NodeDirector::drawNodeItemLine( QPainter &painter_target ) const {
 
-	size_t count = nodeItemInfoVector.size( );
-	size_t index = 0;
-	if( count > 0 ) {
-		auto data = nodeItemInfoVector.data( );
-		for( ; index < count; ++index )
-			if( data[ index ] != nullptr ) {
-				NodeItem *nodeItem = data[ index ]->nodeItem;
-				if( nodeItem == nullptr )
-					continue;
-				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
-			}
-	}
-
-	count = linkVectorPairt.size( );
+	size_t count = linkVectorPairt.size( );
 	if( count > 0 ) {
 		QPoint inport;
 		QPoint outport;
 		size_t outIndex;
 
 		auto nodePortLinkInfo = linkVectorPairt.data( );
-		index = 0;
+		size_t index = 0;
 		size_t outPortCount;
 		std::pair< NodeItem *, std::vector< std::pair< NodeOutputPort *, QAction * > > > *outPortData;
 		for( ; index < count; ++index )
@@ -292,6 +279,93 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 					}
 				}
 	}
+}
+void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
+}
+void NodeDirector::drawNodeItemSelector( QPainter &painter_target ) const {
+
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
+}
+void NodeDirector::drawNodeItemSelectorAndError( QPainter &painter_target ) const {
+
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
+}
+void NodeDirector::drawNodeItemNormal( QPainter &painter_target ) const {
+
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
+}
+void NodeDirector::draw( QPainter &painter_target ) const {
+
+	if( selectNodeItemVector.size( ) != 0 ) {
+		if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
+			drawNodeItemSelectorAndError( painter_target );
+		else
+			drawNodeItemSelector( painter_target );
+		return;
+	}
+	if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
+		drawNodeItemError( painter_target );
+	else
+		drawNodeItemNormal( painter_target );
+
+	drawNodeItemLine( painter_target );
 }
 std_vector< NodeItem * > NodeDirector::getNodeItems( ) const {
 	std_vector< NodeItem * > result;
@@ -769,6 +843,7 @@ size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &
 		return resultCount;
 	return 0;
 }
+
 void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
 	errorNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
 	errorNodeItemInfo.beginIndex = begin_inde;
