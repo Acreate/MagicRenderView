@@ -48,7 +48,7 @@ protected:
 	/// @brief 对象生成实例
 	VarGenerate *varGenerate = nullptr;
 	/// @brief 选择节点列表
-	std_vector< NodeItem * > selectNodeItemVector;
+	std_vector< NodeItemInfo * > selectNodeItemVector;
 	/// @brief 错误节点列表
 	NodeItemErrorInfo errorNodeItemInfo;
 	/// @brief 运行完成节点
@@ -65,8 +65,15 @@ public:
 	~NodeDirector( ) override;
 	virtual const NodeItemErrorInfo & getErrorNodeItemInfo( ) const { return errorNodeItemInfo; }
 	virtual const NodeItemFinishInfo & getFinishNodeItemInfo( ) const { return finishNodeItemInfo; }
-	virtual const std_vector< NodeItem * > & getSelectNodeItemVector( ) const { return selectNodeItemVector; }
-	virtual void setSelectNodeItemVector( const std_vector< NodeItem * > &select_node_item_vector );
+	virtual const std_vector< NodeItemInfo * > & getSelectNodeItemVector( ) const { return selectNodeItemVector; }
+	virtual void setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector );
+	virtual void setSelectNodeItemVector( const NodeItem *select_node_item );
+	virtual void setSelectNodeItemVector( const std_vector< NodeItemInfo * > &select_node_item_vector ) {
+		setSelectNodeItemVector( select_node_item_vector );
+	}
+	virtual void setSelectNodeItemVector( const NodeItemInfo *select_node_item ) {
+		setSelectNodeItemVector( select_node_item );
+	}
 	virtual NodeItemBuilderObj * builderNodeItem( );
 	virtual bool getNodeItemInfo( const NodeItem *get_nodeitem_ptr, NodeItemInfo *&result_link );
 	virtual bool nodeItemInfoLeftConverVar( NodeItemInfo *input_node_item_ptr );
@@ -114,6 +121,8 @@ public:
 	virtual bool renderLinkListHasNodeItem( const NodeInputPort *input_port, const NodeItem *node_item_ptr );
 	virtual size_t toDataBin( std_vector< uint8_t > &result_data_vector );
 	virtual size_t loadDataBin( const uint8_t *source_data_ptr, const size_t &source_data_count );
+protected:
+	virtual void updateNodeItemSort( );
 protected:
 	virtual void drawNodeItemLine( QPainter &painter_target ) const;
 	virtual void drawNodeItemError( QPainter &painter_target ) const;

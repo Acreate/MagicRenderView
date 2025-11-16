@@ -300,8 +300,40 @@ void NodeDirector::drawNodeItemError( QPainter &painter_target ) const {
 	}
 }
 void NodeDirector::drawNodeItemFinish( QPainter &painter_target ) const {
+
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
 }
 void NodeDirector::drawNodeItemSelectorAndFinish( QPainter &painter_target ) const {
+
+	size_t count;
+	size_t index;
+
+	count = nodeItemInfoVector.size( );
+	index = 0;
+	if( count > 0 ) {
+		auto data = nodeItemInfoVector.data( );
+		for( ; index < count; ++index )
+			if( data[ index ] != nullptr ) {
+				NodeItem *nodeItem = data[ index ]->nodeItem;
+				if( nodeItem == nullptr )
+					continue;
+				painter_target.drawImage( nodeItem->getPos( ), *nodeItem->getNodeItemRender( ) );
+			}
+	}
 }
 void NodeDirector::drawNodeItemSelector( QPainter &painter_target ) const {
 
@@ -362,12 +394,16 @@ void NodeDirector::draw( QPainter &painter_target ) const {
 	if( selectNodeItemVector.size( ) != 0 ) {
 		if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
 			drawNodeItemSelectorAndError( painter_target );
+		else if( finishNodeItemInfo.finishNodeItemPtr != nullptr )
+			drawNodeItemSelectorAndFinish( painter_target );
 		else
 			drawNodeItemSelector( painter_target );
 		return;
 	}
 	if( errorNodeItemInfo.errorNodeItemPtr != nullptr )
 		drawNodeItemError( painter_target );
+	else if( finishNodeItemInfo.finishNodeItemPtr != nullptr )
+		drawNodeItemFinish( painter_target );
 	else
 		drawNodeItemNormal( painter_target );
 
@@ -849,6 +885,44 @@ size_t NodeDirector::loadDataBin( const uint8_t *source_data_ptr, const size_t &
 		return resultCount;
 	return 0;
 }
+void NodeDirector::updateNodeItemSort( ) {
+
+	// 节点个数
+	size_t count = nodeItemInfoVector.size( );
+	if( count == 0 )
+		return;
+
+	// 节点数组指针
+	auto data = nodeItemInfoVector.data( );
+	// 下标
+	size_t index;
+	auto sortToLast = [&] ( const NodeItemInfo *raise_node_item ) {
+		for( index = 0; index < count; ++index )
+			if( data[ index ] == raise_node_item ) {
+				count -= 1;
+				if( index == count )
+					return;
+				auto *makeItem = data[ index ];
+				for( ; index < count; index++ )
+					data[ index ] = data[ index + 1 ];
+				data[ index ] = makeItem;
+				return; // 检测到了
+			}
+	};
+
+	size_t selectCount = selectNodeItemVector.size( );
+	if( errorNodeItemInfo.errorNodeItemPtr )
+		sortToLast( errorNodeItemInfo.errorNodeItemPtr );
+	else if( finishNodeItemInfo.finishNodeItemPtr )
+		sortToLast( finishNodeItemInfo.finishNodeItemPtr );
+
+	if( selectCount == 0 )
+		return;
+	auto selectNodeItemVectorData = selectNodeItemVector.data( );
+	size_t selectIndex = 0;
+	for( ; selectIndex < selectCount; ++selectIndex )
+		sortToLast( selectNodeItemVectorData[ selectIndex ] );
+}
 
 void NodeDirector::errorNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_index, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
 	errorNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
@@ -864,8 +938,6 @@ void NodeDirector::finishNodeItem( NodeItemBuilderObj *sender_sig_obj_ptr, const
 	finishNodeItemInfo.senderSigObjPtr = sender_sig_obj_ptr;
 	finishNodeItemInfo.beginIndex = begin_index;
 	finishNodeItemInfo.finishNodeItemPtr = finish_node_item_ptr;
-	if( finish_node_item_ptr && finish_node_item_ptr->nodeItem )
-		setRaise( finish_node_item_ptr->nodeItem );
 }
 
 NodeDirector::~NodeDirector( ) {
@@ -904,8 +976,32 @@ NodeDirector::~NodeDirector( ) {
 	}
 }
 
-void NodeDirector::setSelectNodeItemVector( const std_vector< NodeItem * > &select_node_item_vector ) {
-	selectNodeItemVector = select_node_item_vector;
+void NodeDirector::setSelectNodeItemVector( const std_vector< const NodeItem * > &select_node_item_vector ) {
+	size_t selectCount = select_node_item_vector.size( );
+	selectNodeItemVector.resize( selectCount, nullptr );
+	if( selectCount == 0 )
+		return;
+	size_t linkCount = nodeItemInfoVector.size( );
+	if( linkCount == 0 ) {
+		selectNodeItemVector.resize( 0 );
+		return;
+	}
+	auto selectArratPtr = select_node_item_vector.data( );
+	auto linkArrayDataPtr = nodeItemInfoVector.data( );
+	auto targetArrayPtr = selectNodeItemVector.data( );
+	for( size_t selectIndex = 0; selectIndex < selectCount; ++selectIndex )
+		for( size_t index = 0; index < linkCount; ++index )
+			if( linkArrayDataPtr[ index ] != nullptr && linkArrayDataPtr[ index ]->nodeItem == selectArratPtr[ selectIndex ] )
+				targetArrayPtr[ selectIndex ] = linkArrayDataPtr[ index ];
+	updateNodeItemSort( );
+}
+void NodeDirector::setSelectNodeItemVector( const NodeItem *select_node_item ) {
+	NodeItemInfo *resultNodeItemInfo;
+	if( getNodeItemInfo( select_node_item, resultNodeItemInfo ) == false )
+		return;
+	selectNodeItemVector.resize( 1 );
+	selectNodeItemVector.data( )[ 0 ] = resultNodeItemInfo;
+	updateNodeItemSort( );
 }
 NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 	size_t count = nodeItemInfoVector.size( );
@@ -922,16 +1018,19 @@ NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 	connect( result, &NodeItemBuilderObj::finish_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
 		finishNodeItem( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
 		errorNodeItemInfo.clear( );
+		updateNodeItemSort( );
 		emit finish_node_item_signal( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
 	} );
 	connect( result, &NodeItemBuilderObj::error_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) {
 		errorNodeItem( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
 		finishNodeItemInfo.clear( );
+		updateNodeItemSort( );
 		emit error_node_item_signal( sender_sig_obj_ptr, begin_inde, error_node_item_ptr, node_item_result, msg, info_type );
 	} );
 	connect( result, &NodeItemBuilderObj::reset_builder_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr ) {
 		errorNodeItemInfo.clear( );
 		finishNodeItemInfo.clear( );
+		updateNodeItemSort( );
 		emit reset_builder_node_item_signal( sender_sig_obj_ptr );
 	} );
 	return result;
