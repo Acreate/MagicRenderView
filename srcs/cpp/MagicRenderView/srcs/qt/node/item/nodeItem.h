@@ -112,12 +112,13 @@ protected:
 	/// @brief 变量值实例
 	VarGenerate *varGenerate;
 	/// @brief 运行状态
-	bool runStatus;
+	size_t runStatus;
 	/// @brief 函数执行
-	std_function< nodeItemEnum::Node_Item_Result_Type ( QString & ) > nodeItemFcuntion;
+	std_function< nodeItemEnum::Node_Item_Result_Type ( const size_t &, QString & ) > nodeItemFcuntion;
 protected:
 	NodeItem( );
 	NodeItem( GenerateListScrollArea *node_info_scroll_area );
+	virtual bool appendVar( NodePort *app_port, const std_shared_ptr< I_Var > &append_var );
 public:
 	virtual const I_Type * const getNodeTypeInfo( ) const { return nodeTypeInfo.get( ); }
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
@@ -137,6 +138,7 @@ public:
 	virtual size_t toBinData( std_vector< uint8_t > &result_data ) const;
 	virtual size_t loadBinData( const uint8_t *source_data_ptr, const size_t &source_data_count );
 	virtual void resetRun( );
+	virtual void resetRun( const size_t &index );
 	virtual bool getRunStatus( ) const {
 		return runStatus;
 	}
@@ -254,9 +256,10 @@ public:
 	/// @brief 更新布局
 	void updateLayout( );
 	/// @brief 执行节点函数
+	/// @param index
 	/// @param result_msg 错误返回的信息 
 	/// @return 执行返回结果
-	virtual nodeItemEnum::Node_Item_Result_Type run( QString &result_msg ) const;
+	virtual nodeItemEnum::Node_Item_Result_Type run( const size_t &index, QString &result_msg ) const;
 Q_SIGNALS:
 	void releaseThisPtr( NodeItem *release_node_item );
 public: // 二进制相关

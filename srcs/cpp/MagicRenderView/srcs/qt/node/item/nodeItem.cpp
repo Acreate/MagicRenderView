@@ -47,6 +47,11 @@ NodeItem::NodeItem( GenerateListScrollArea *node_info_scroll_area ) : QObject( )
 	titleBuff = new QImage( 10, 10, QImage::Format_RGBA8888 );
 	runStatus = false;
 }
+bool NodeItem::appendVar( NodePort *app_port, const std_shared_ptr< I_Var > &append_var ) {
+	QString msg( "%1 节点未实现 appendVar 功能" );
+	tools::debug::printError( msg.arg( getMetaObjectPathName( ) ) );
+	return false;
+}
 NodeItem::~NodeItem( ) {
 	emit releaseThisPtr( this );
 	size_t index = 0;
@@ -120,6 +125,8 @@ bool NodeItem::setPortLinkPort( const NodePort *left_node_prot, const NodePort *
 	auto arrayPtr = nodeInputProtVector.data( );
 	for( size_t index = 0; index < arrayCount; ++index )
 		if( arrayPtr[ index ].first == left_node_prot ) {
+			if( arrayPtr[ index ].first->isArray( ) )
+				return appendVar( arrayPtr[ index ].first, right_node_port->varPtr );
 			arrayPtr[ index ].first->varPtr = right_node_port->varPtr;
 			return true;
 		}
@@ -280,7 +287,10 @@ size_t NodeItem::loadBinData( const uint8_t *source_data_ptr, const size_t &sour
 	return offsetPtr - source_data_ptr;
 }
 void NodeItem::resetRun( ) {
-	runStatus = false;
+	runStatus = 0;
+}
+void NodeItem::resetRun( const size_t &index ) {
+	runStatus = index;
 }
 nodeItemEnum::Click_Type NodeItem::relativePointType( const QPoint &point ) const {
 	return relativePointType( point.x( ), point.y( ) );
@@ -666,9 +676,9 @@ void NodeItem::updateLayout( ) {
 	// 更新整体渲染布局
 	integrateLayout( );
 }
-nodeItemEnum::Node_Item_Result_Type NodeItem::run( QString &result_msg ) const {
+nodeItemEnum::Node_Item_Result_Type NodeItem::run( const size_t &index, QString &result_msg ) const {
 	if( nodeItemFcuntion )
-		return nodeItemFcuntion( result_msg );
+		return nodeItemFcuntion( index, result_msg );
 	return nodeItemEnum::Node_Item_Result_Type::NotImplementation;
 }
 bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function ) {

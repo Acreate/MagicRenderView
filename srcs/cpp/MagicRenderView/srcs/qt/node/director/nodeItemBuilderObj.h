@@ -36,7 +36,7 @@ protected:
 	virtual bool builderNodeItemVector( );
 	virtual bool fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
 	virtual bool runItemNodeInfo( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
-	virtual nodeItemEnum::Node_Item_Builder_Type runCurrentNodeItem( NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
+	virtual nodeItemEnum::Node_Item_Builder_Type runCurrentNodeItem( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg );
 public:
 	~NodeItemBuilderObj( ) override;
 	virtual nodeItemEnum::Node_Item_Builder_Type nextNodeItem( );

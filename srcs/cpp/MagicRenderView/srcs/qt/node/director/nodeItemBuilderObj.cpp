@@ -88,7 +88,6 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 }
 bool NodeItemBuilderObj::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
 
-	/// todo : 填充节点
 	NodeItem *inputPortNodeItem = node_item_ptr->nodeItem;
 	auto nodeMetaType = inputPortNodeItem->getNodeMetaType( );
 	QString msg( "%1(%2) 节点异常，未识别节点" );
@@ -133,11 +132,11 @@ NodeItemBuilderObj::~NodeItemBuilderObj( ) {
 	subNodeItemBuilderModuleVector.clear( );
 }
 
-nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runCurrentNodeItem( NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
+nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runCurrentNodeItem( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
 	if( currentVectorIndex != currentVectorCount ) {
 		NodeItem *nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
-		error_item_result = nodeItem->run( error_msg );
-		emit finish_node_item_signal( this, 0, node_item_ptr );
+		error_item_result = nodeItem->run( begin_index, error_msg );
+		emit finish_node_item_signal( this, begin_index, node_item_ptr );
 		return nodeItemEnum::Node_Item_Builder_Type::Finish;
 	}
 	if( currentNodeItemBuilderModuleVectorIndex != currentNodeItemBuilderModuleVectorCount ) {
@@ -198,7 +197,9 @@ bool NodeItemBuilderObj::runItemNodeInfo( size_t begin_index, NodeItemInfo *node
 		emit error_node_item_signal( this, begin_index, node_item_ptr, error_item_result, error_msg, builder_result );
 		return false;
 	}
-	builder_result = runCurrentNodeItem( node_item_ptr, builder_result, error_item_result, error_msg );
+	builder_result = runCurrentNodeItem( begin_index, node_item_ptr, builder_result, error_item_result, error_msg );
+	if( builder_result != nodeItemEnum::Node_Item_Builder_Type::Finish )
+		return false;
 	return true;
 }
 nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runAllNodeItem( ) {
@@ -207,7 +208,7 @@ nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runAllNodeItem( ) {
 	if( currentVectorIndex == currentVectorCount )
 		return nodeItemEnum::Node_Item_Builder_Type::Last;
 	QString errorInfo;
-	NodeItemInfo *nodeItemPtr;
+	NodeItemInfo *nodeItemPtr = nullptr;
 	nodeItemEnum::Node_Item_Result_Type nodeItemResult;
 	nodeItemEnum::Node_Item_Builder_Type nodeBuilderObjResult;
 	while( currentVectorIndex != currentVectorCount ) {
@@ -235,7 +236,7 @@ nodeItemEnum::Node_Item_Builder_Type NodeItemBuilderObj::runListNodeItem( ) {
 		return nodeItemEnum::Node_Item_Builder_Type::Last;
 	QString errorInfo;
 	NodeItem *nodeItem = runNodeItemInfoArrayPtr[ currentVectorIndex ]->nodeItem;
-	nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( errorInfo );
+	nodeItemEnum::Node_Item_Result_Type nodeItemResult = nodeItem->run( 0, errorInfo );
 	auto nodeBuilderObjResult = nodeItemEnum::Node_Item_Builder_Type::Error;
 	if( nodeItemResult != nodeItemEnum::Node_Item_Result_Type::Finish ) {
 		emit error_node_item_signal( this, 0, runNodeItemInfoArrayPtr[ currentVectorIndex ], nodeItemResult, errorInfo, nodeBuilderObjResult );

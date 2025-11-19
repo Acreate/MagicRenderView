@@ -8,10 +8,13 @@
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
+#include "../prot/inputProt/nodeInputPort.h"
+#include "../prot/outputProt/nodeOutputPort.h"
 NodeItemBuilderModule::NodeItemBuilderModule( ) {
 
 }
 bool NodeItemBuilderModule::builderNodeItemVector( ) {
+	runCount = 0;
 	currentVectorIndex = 0;
 	currentVectorCount = startNodeItemInfoVector.size( );
 	if( currentVectorCount == 0 ) {
@@ -57,39 +60,46 @@ bool NodeItemBuilderModule::runItemNodeInfo( size_t begin_index, NodeItemInfo *n
 	if( fillCurrentRunNodeItemValue( begin_index, node_item_ptr, builder_result, error_item_result, error_msg ) == false )
 		return fill_param_run_error_function( begin_index, node_item_ptr, error_item_result, error_msg, builder_result );
 	NodeItem *nodeItem = node_item_ptr->nodeItem;
-	error_item_result = nodeItem->run( error_msg );
+	error_item_result = nodeItem->run( runCount, error_msg );
 	if( error_item_result != nodeItemEnum::Node_Item_Result_Type::Finish )
 		return fill_run_error_function( begin_index, node_item_ptr, error_item_result, error_msg, builder_result );
 	return finish_function( begin_index, node_item_ptr );
 }
 bool NodeItemBuilderModule::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
-	/// todo : 填充节点
-	NodeItem *outputPortNodeItem = node_item_ptr->nodeItem;
-	auto nodeMetaType = outputPortNodeItem->getNodeMetaType( );
+	NodeItem *inputPortNodeItem = node_item_ptr->nodeItem;
+	auto nodeMetaType = inputPortNodeItem->getNodeMetaType( );
 	QString msg( "%1(%2) 节点异常，未识别节点" );
 	switch( nodeMetaType ) {
 		case nodeItemEnum::Node_Item_Type::None :
-			tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
+			tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ) );
 			break;
 		case nodeItemEnum::Node_Item_Type::Begin :
 		case nodeItemEnum::Node_Item_Type::End :
+			++runCount;
 		case nodeItemEnum::Node_Item_Type::GenerateVar :
 		case nodeItemEnum::Node_Item_Type::Mark :
 		case nodeItemEnum::Node_Item_Type::Jump :
 			return true;
 	}
 
-	std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > resultVector;
-	if( nodeDirector->getLinkInputPorts( outputPortNodeItem, resultVector ) == false ) {
-		msg = "%1(%2) 节点异常，输入接口为0";
-		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
-		return false;
+	auto nodeItemInfos = node_item_ptr->inputNodeItemInfoVector;
+	for( auto &outNodeItem : nodeItemInfos ) {
+		std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > resultVector;
+		if( nodeDirector->getLinkInputPorts( outNodeItem->nodeItem, resultVector ) == false ) {
+			msg = "%1(%2) 节点异常，输入接口为0";
+			tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ) );
+			return false;
+		}
+		for( auto &[ input,outputPortVector ] : resultVector ) {
+			for( auto &outputPort : outputPortVector )
+				if( inputPortNodeItem->setPortLinkPort( input, outputPort ) == false ) {
+					msg = "%1(%2) 节点异常，端口非法[%3 <=> %4]";
+					tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ).arg( input->getMetaObjectPathName( ) ).arg( outputPort->getMetaObjectPathName( ) ) );
+					return false;
+				}
+		}
 	}
-	if( false ) {
-		msg = "%1(%2) 节点异常，输入接口未满足最低要求";
-		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
-		return false;
-	}
+
 	return true;
 }
 std_vector< NodeItemInfo * > NodeItemBuilderModule::findEndAtStartNode( NodeItemInfo *end_node_info_ptr ) {

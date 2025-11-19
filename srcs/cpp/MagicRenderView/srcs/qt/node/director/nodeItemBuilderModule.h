@@ -17,6 +17,8 @@ class NodeItemBuilderModule : public QObject {
 public:
 	using TFRunResultFunction = std_function< bool( const size_t &, const NodeItemInfo *error_node_item_ptr, nodeItemEnum::Node_Item_Result_Type node_item_result, const QString &msg, nodeItemEnum::Node_Item_Builder_Type info_type ) >;
 protected:
+	/// @brief 运行计数
+	size_t runCount;
 	nodeItemEnum::Node_Item_Builder_Type moduleBuilderStaus;
 	QString msg;
 	std_vector< NodeItemInfo * > startNodeItemInfoVector;
