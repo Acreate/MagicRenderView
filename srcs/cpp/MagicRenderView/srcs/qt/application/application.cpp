@@ -119,6 +119,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	nodeDirector = new NodeDirector( );
 	nodeItemWidgetIco = new QImage( ":/nodeitemIco/ui_w_font.png" );
 	*nodeItemWidgetIco = nodeItemWidgetIco->scaled( 16, 16 );
+	dateTime = QDateTime::currentDateTime( );
 }
 Application::~Application( ) {
 	delete nodeDirector;

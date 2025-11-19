@@ -17,6 +17,9 @@ bool StrAppend::intPortItems( MainWidget *parent ) {
 			addInputProt< StringInputPort >( "第一字符串", false );
 			addInputProt< StringInputPort >( "第二字符串", false );
 			addOutputProt< StringOutputPort >( "结果" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

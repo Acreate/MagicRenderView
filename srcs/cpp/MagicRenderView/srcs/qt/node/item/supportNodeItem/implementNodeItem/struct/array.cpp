@@ -18,6 +18,9 @@ bool Array::intPortItems( MainWidget *parent ) {
 			addInputProt< UIntInputPort >( "下标", false );
 			addOutputProt< AnyOutputPort >( "元素值" );
 			addOutputProt< UIntOutputPort >( "数据量" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

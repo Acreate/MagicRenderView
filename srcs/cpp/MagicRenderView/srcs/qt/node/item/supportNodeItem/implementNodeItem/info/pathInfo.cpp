@@ -17,7 +17,7 @@ bool PathInfo::intPortItems( MainWidget *parent ) {
 
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< AnyInputPort >( "任意" , true);
+			addInputProt< AnyInputPort >( "任意", true );
 			// 初始化输入端口
 			addInputProt< StringInputPort >( "文件路径", false );
 			// 初始化输出端口
@@ -30,6 +30,9 @@ bool PathInfo::intPortItems( MainWidget *parent ) {
 			addOutputProt< StringOutputPort >( "创建日期" );
 			addOutputProt< StringOutputPort >( "最后修改日期" );
 			addOutputProt< BinOutputPort >( "是否文件" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 
 			return true;
 		} );

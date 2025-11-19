@@ -80,6 +80,9 @@ bool GenIntTypes::intPortItems( MainWidget *parent ) {
 			// 初始化输入端口
 			addInputProt< AnyInputPort >( "任意", true );
 			addOutputProt< IntOutputPort >( "列表" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

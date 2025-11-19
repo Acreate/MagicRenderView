@@ -15,6 +15,9 @@ bool VarMod::intPortItems( MainWidget *parent ) {
 		addInputProt< FloatInputPort >( "被除数", false );
 		addInputProt< FloatInputPort >( "除数", false );
 		addOutputProt< FloatOutputPort >( "结果" );
+		this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+			return nodeItemEnum::Node_Item_Result_Type::Finish;
+		};
 		return true;
 	} );
 

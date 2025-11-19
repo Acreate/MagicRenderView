@@ -26,6 +26,9 @@ bool ReadImage::intPortItems( MainWidget *parent ) {
 			addOutputProt< IntOutputPort >( "透" );
 			addOutputProt< IntOutputPort >( "宽" );
 			addOutputProt< IntOutputPort >( "高" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

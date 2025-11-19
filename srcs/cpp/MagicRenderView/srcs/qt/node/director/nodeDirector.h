@@ -53,6 +53,7 @@ protected:
 	NodeItemErrorInfo errorNodeItemInfo;
 	/// @brief 运行完成节点
 	NodeItemFinishInfo finishNodeItemInfo;
+	QDateTime builderDataTime;
 protected:
 	virtual bool createMenu( );
 	virtual bool resetMenu( QObject *del_ptr );
@@ -63,6 +64,7 @@ protected:
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
+	virtual const QDateTime & getBuilderDataTime( ) const { return builderDataTime; }
 	virtual const NodeItemErrorInfo & getErrorNodeItemInfo( ) const { return errorNodeItemInfo; }
 	virtual const NodeItemFinishInfo & getFinishNodeItemInfo( ) const { return finishNodeItemInfo; }
 	virtual const std_vector< NodeItemInfo * > & getSelectNodeItemVector( ) const { return selectNodeItemVector; }
@@ -113,7 +115,7 @@ public:
 	virtual bool getLinkInputPorts( const NodePort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
 
 	virtual bool getLinkOutPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const;
-	virtual bool getLinkInputPorts( const NodeItem *input_port_node_item, std_vector_pairt<NodeInputPort *, std_vector<NodeOutputPort *>> &result_vector ) const;
+	virtual bool getLinkInputPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const;
 
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;

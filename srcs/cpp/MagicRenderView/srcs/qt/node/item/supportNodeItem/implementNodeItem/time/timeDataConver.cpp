@@ -6,7 +6,7 @@
 
 Imp_StaticMetaInfo( TimeDataConver, QObject::tr( "时间转换" ), QObject::tr( "软件" ) );
 
-TimeDataConver::TimeDataConver( )  {
+TimeDataConver::TimeDataConver( ) {
 }
 bool TimeDataConver::intPortItems( MainWidget *parent ) {
 	return initNodeItem( parent, [this] ( MainWidget *main_widget_parent ) {
@@ -21,6 +21,9 @@ bool TimeDataConver::intPortItems( MainWidget *parent ) {
 		addOutputProt< UIntOutputPort >( "间隔合计分" );
 		addOutputProt< UIntOutputPort >( "间隔合计秒" );
 		addOutputProt< UIntOutputPort >( "间隔合计毫秒" );
+		this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+			return nodeItemEnum::Node_Item_Result_Type::Finish;
+		};
 		return true;
 	} );
 }

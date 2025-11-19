@@ -23,6 +23,9 @@ bool SystemInfo::intPortItems( MainWidget *parent ) {
 			addOutputProt< StringOutputPort >( "域名" );
 			addOutputProt< StringOutputPort >( "拥有者" );
 			addOutputProt< StringOutputPort >( "创建日期" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 
 			return true;
 		} );

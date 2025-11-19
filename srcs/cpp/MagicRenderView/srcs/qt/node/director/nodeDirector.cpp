@@ -1172,6 +1172,7 @@ NodeItemBuilderObj * NodeDirector::builderNodeItem( ) {
 		delete result;
 		return nullptr;
 	}
+	builderDataTime = QDateTime::currentDateTime( );
 	connect( result, &NodeItemBuilderObj::finish_node_item_signal, [this] ( NodeItemBuilderObj *sender_sig_obj_ptr, const size_t &begin_inde, const NodeItemInfo *finish_node_item_ptr ) {
 		finishNodeItem( sender_sig_obj_ptr, begin_inde, finish_node_item_ptr );
 		errorNodeItemInfo.clear( );

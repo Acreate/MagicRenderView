@@ -18,6 +18,9 @@ bool WriteImage::intPortItems( MainWidget *parent ) {
 			addInputProt< StringInputPort >( "文件路径", false );
 			addInputProt< QImageInputPort >( "图像", false );
 			addOutputProt< AnyOutputPort >( "下一步" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

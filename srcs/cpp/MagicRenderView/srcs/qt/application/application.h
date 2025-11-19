@@ -3,6 +3,7 @@
 #pragma once
 
 #include <QApplication>
+#include <QDateTime>
 #include <QVariant>
 #include <qfont.h>
 
@@ -67,6 +68,7 @@ protected:
 	NodeDirector *nodeDirector;
 	std_shared_ptr< QFont > font;
 	QImage *nodeItemWidgetIco;
+	QDateTime dateTime;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -84,7 +86,7 @@ public:
 		*font = new_font;
 	}
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
-public:
+	virtual const QDateTime & getAppInstanceDateTime( ) const { return dateTime; }
 	virtual QImage * renderTextToImage( QPainter *painter, const QString &render_text ) const;
 	virtual QImage * renderTextToImageAtRectBound( QPainter *painter, const QString &render_text, const QColor &rect_bound_color, const int &bound_width ) const;
 	virtual QImage * renderTextToImageAtFontColor( QPainter *painter, const QString &render_text, const QColor &pen_color ) const;
@@ -94,7 +96,7 @@ public:
 	/// @param scond 第二个填充
 	/// @param space 间距
 	/// @param result_image 合成后的图像返回
-	virtual void mergeHorizontalImage( const QImage *first, const QImage *scond, int space, QImage& result_image ) const;
+	virtual void mergeHorizontalImage( const QImage *first, const QImage *scond, int space, QImage &result_image ) const;
 protected:
 	bool notify( QObject *, QEvent * ) override;
 };

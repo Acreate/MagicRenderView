@@ -19,6 +19,9 @@ bool StrReplace::intPortItems( MainWidget *parent ) {
 			addInputProt< StringInputPort >( "替换目标字符串", false );
 
 			addOutputProt< StringOutputPort >( "结果" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }

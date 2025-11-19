@@ -16,6 +16,9 @@ bool MakeNodeJump::intPortItems( MainWidget *parent ) {
 			setNodeTitleName( getMetaObjectName( ) );
 			addInputProt< BoolInputPort >( "返回条件", false );
 			addOutputProt< AnyOutputPort >( "继续" );
+			this->nodeItemFcuntion = [] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
+				return nodeItemEnum::Node_Item_Result_Type::Finish;
+			};
 			return true;
 		} );
 }
