@@ -9,6 +9,9 @@
 #include "../../tools/tools.h"
 
 #include "../item/nodeItem.h"
+
+#include "../prot/inputProt/nodeInputPort.h"
+#include "../prot/outputProt/nodeOutputPort.h"
 NodeItemBuilderObj::NodeItemBuilderObj( QObject *parent ) : QObject( parent ) {
 	currentVectorIndex = 0;
 	currentVectorCount = 0;
@@ -85,32 +88,42 @@ bool NodeItemBuilderObj::builderNodeItemVector( ) {
 }
 bool NodeItemBuilderObj::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
 
-	NodeItem *outputPortNodeItem = node_item_ptr->nodeItem;
-	auto nodeMetaType = outputPortNodeItem->getNodeMetaType( );
+	/// todo : 填充节点
+	NodeItem *inputPortNodeItem = node_item_ptr->nodeItem;
+	auto nodeMetaType = inputPortNodeItem->getNodeMetaType( );
 	QString msg( "%1(%2) 节点异常，未识别节点" );
+	nodeItemEnum::Node_Item_Result_Type nodeItemResult;
 	switch( nodeMetaType ) {
 		case nodeItemEnum::Node_Item_Type::None :
-			tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
+			tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ) );
 			break;
 		case nodeItemEnum::Node_Item_Type::Begin :
 		case nodeItemEnum::Node_Item_Type::End :
 		case nodeItemEnum::Node_Item_Type::GenerateVar :
 		case nodeItemEnum::Node_Item_Type::Mark :
 		case nodeItemEnum::Node_Item_Type::Jump :
+
 			return true;
 	}
 
-	std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > resultVector;
-	if( nodeDirector->getLinkInputPorts( outputPortNodeItem, resultVector ) == false ) {
-		msg = "%1(%2) 节点异常，输入接口为0";
-		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
-		return false;
+	auto nodeItemInfos = node_item_ptr->inputNodeItemInfoVector;
+	for( auto &outNodeItem : nodeItemInfos ) {
+		std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > resultVector;
+		if( nodeDirector->getLinkInputPorts( outNodeItem->nodeItem, resultVector ) == false ) {
+			msg = "%1(%2) 节点异常，输入接口为0";
+			tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ) );
+			return false;
+		}
+		for( auto &[ input,outputPortVector ] : resultVector ) {
+			for( auto &outputPort : outputPortVector )
+				if( inputPortNodeItem->setPortLinkPort( input, outputPort ) == false ) {
+					msg = "%1(%2) 节点异常，端口非法[%3 <=> %4]";
+					tools::debug::printError( msg.arg( inputPortNodeItem->getMetaObjectPathName( ) ).arg( inputPortNodeItem->generateCode ).arg( input->getMetaObjectPathName( ) ).arg( outputPort->getMetaObjectPathName( ) ) );
+					return false;
+				}
+		}
 	}
-	if( false ) {
-		msg = "%1(%2) 节点异常，输入接口未满足最低要求";
-		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );
-		return false;
-	}
+
 	return true;
 }
 

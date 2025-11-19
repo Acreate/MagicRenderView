@@ -6,7 +6,8 @@
 #include "../../../../../appType/any.h"
 Imp_StaticMetaInfo( AnyInputPort, QObject::tr( "any" ), QObject::tr( "inputPort" ) );
 AnyInputPort::AnyInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
-	typePtr = new I_Type(
+
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -16,6 +17,6 @@ AnyInputPort::AnyInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

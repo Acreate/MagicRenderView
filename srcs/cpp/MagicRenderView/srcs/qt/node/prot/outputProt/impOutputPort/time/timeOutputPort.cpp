@@ -5,8 +5,7 @@
 #include <QDateTime>
 Imp_StaticMetaInfo( TimeOutputPort, QObject::tr( "time" ), QObject::tr( "output" ) );
 TimeOutputPort::TimeOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
-
-	typePtr = new I_Type(
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -16,6 +15,6 @@ TimeOutputPort::TimeOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

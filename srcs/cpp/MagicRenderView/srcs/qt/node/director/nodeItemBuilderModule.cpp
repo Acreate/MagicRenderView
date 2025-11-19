@@ -63,7 +63,7 @@ bool NodeItemBuilderModule::runItemNodeInfo( size_t begin_index, NodeItemInfo *n
 	return finish_function( begin_index, node_item_ptr );
 }
 bool NodeItemBuilderModule::fillCurrentRunNodeItemValue( size_t begin_index, NodeItemInfo *node_item_ptr, nodeItemEnum::Node_Item_Builder_Type &builder_result, nodeItemEnum::Node_Item_Result_Type &error_item_result, QString &error_msg ) {
-
+	/// todo : 填充节点
 	NodeItem *outputPortNodeItem = node_item_ptr->nodeItem;
 	auto nodeMetaType = outputPortNodeItem->getNodeMetaType( );
 	QString msg( "%1(%2) 节点异常，未识别节点" );
@@ -79,7 +79,7 @@ bool NodeItemBuilderModule::fillCurrentRunNodeItemValue( size_t begin_index, Nod
 			return true;
 	}
 
-	std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > resultVector;
+	std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > resultVector;
 	if( nodeDirector->getLinkInputPorts( outputPortNodeItem, resultVector ) == false ) {
 		msg = "%1(%2) 节点异常，输入接口为0";
 		tools::debug::printError( msg.arg( outputPortNodeItem->getMetaObjectPathName( ) ).arg( outputPortNodeItem->generateCode ) );

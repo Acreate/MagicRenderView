@@ -97,12 +97,11 @@ bool NodePortLinkInfo::releaseNodeItemPtr( NodeItem *link_node_item ) {
 	}
 	return false;
 }
-bool NodePortLinkInfo::getLink( NodeItem *link_node_item, std_vector< NodeOutputPort * > &result_link ) {
+bool NodePortLinkInfo::getLink( const NodeItem *link_node_item, std_vector< NodeOutputPort * > &result_link ) {
 
 	size_t count = outputPorts.size( );
 	if( count != 0 ) {
 		auto data = outputPorts.data( );
-
 		for( size_t index = 0; index < count; ++index )
 			if( data[ index ].first == link_node_item ) {
 				count = data[ index ].second.size( );

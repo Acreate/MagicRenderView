@@ -113,7 +113,7 @@ public:
 	virtual bool getLinkInputPorts( const NodePort *output_port, std_vector< NodeInputPort * > &result_vector ) const;
 
 	virtual bool getLinkOutPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const;
-	virtual bool getLinkInputPorts( const NodeItem *output_port_node_item, std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > &result_vector ) const;
+	virtual bool getLinkInputPorts( const NodeItem *input_port_node_item, std_vector_pairt<NodeInputPort *, std_vector<NodeOutputPort *>> &result_vector ) const;
 
 	virtual bool getLinkControlMenu( const NodePort *input_port, QMenu * &result_menu_ptr ) const;
 	virtual bool getLinkControlMenu( const NodeInputPort *input_port, QMenu * &result_menu_ptr ) const;

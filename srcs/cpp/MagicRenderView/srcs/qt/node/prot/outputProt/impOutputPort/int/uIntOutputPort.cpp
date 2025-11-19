@@ -4,8 +4,7 @@
 #include <qt/varType/I_Var.h>
 Imp_StaticMetaInfo( UIntOutputPort, QObject::tr( "uint" ), QObject::tr( "output" ) );
 UIntOutputPort::UIntOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
-
-	typePtr = new I_Type(
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -15,6 +14,6 @@ UIntOutputPort::UIntOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

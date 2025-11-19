@@ -5,7 +5,7 @@
 #include <qt/appType/any.h>
 Imp_StaticMetaInfo( AnyOutputPort, QObject::tr( "any" ), QObject::tr( "output" ) );
 AnyOutputPort::AnyOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
-	typePtr = new I_Type(
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -15,6 +15,6 @@ AnyOutputPort::AnyOutputPort( NodeItem *parent ) : NodeOutputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

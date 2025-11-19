@@ -892,49 +892,22 @@ bool NodeDirector::getLinkOutPorts( const NodeItem *input_port_node_item, std_ve
 	return result_vector.size( ) != 0;
 
 }
-bool NodeDirector::getLinkInputPorts( const NodeItem *output_port_node_item, std_vector_pairt< NodeOutputPort *, std_vector< NodeInputPort * > > &result_vector ) const {
+bool NodeDirector::getLinkInputPorts( const NodeItem *input_port_node_item, std_vector_pairt< NodeInputPort *, std_vector< NodeOutputPort * > > &result_vector ) const {
 
 	size_t linkArrayCount = linkVectorPairt.size( );
 	if( linkArrayCount == 0 )
 		return false;
-
-	size_t findInputCount = output_port_node_item->nodeOutputProtVector.size( );
-	if( findInputCount == 0 )
-		return true;
 	result_vector.clear( );
 	auto linkArrayPtr = linkVectorPairt.data( );
-	auto inputPortArrayPtr = output_port_node_item->nodeOutputProtVector.data( );
 	size_t linkArrayIndex = 0;
-	size_t inputPortArrayIndex;
-	std_vector< NodeOutputPort * > nodeOutputPorts;
-	std_vector< NodeInputPort * > appendInputPortBuff;
-	for( ; linkArrayIndex < linkArrayCount; ++linkArrayIndex )
-		if( linkArrayPtr[ linkArrayIndex ]->getLink( nodeOutputPorts ) == false )
+	std_vector< NodeOutputPort * > resultLink;
+	for( ; linkArrayIndex < linkArrayCount; ++linkArrayIndex ) {
+		if( linkArrayPtr[ linkArrayIndex ]->getLink( input_port_node_item, resultLink ) == false )
 			continue;
-		else
-			for( inputPortArrayIndex = 0; linkArrayIndex < linkArrayCount; ++linkArrayIndex ) {
-				for( auto outputPort : nodeOutputPorts )
-					if( inputPortArrayPtr[ inputPortArrayIndex ].first == outputPort ) {
-						bool isAppend = false;
-						for( auto &[ resultOutputPort,resultInputPortVector ] : result_vector ) {
-							if( resultOutputPort == outputPort ) {
-								for( auto input : resultInputPortVector )
-									if( input == linkArrayPtr[ linkArrayIndex ]->inputPort ) {
-										isAppend = true;
-										break;
-									}
-								if( isAppend == false ) {
-									resultInputPortVector.emplace_back( linkArrayPtr[ linkArrayIndex ]->inputPort );
-									isAppend = true;
-								}
-								break;
-							}
-						}
-						if( isAppend == false )
-							result_vector.emplace_back( outputPort, std_vector { linkArrayPtr[ linkArrayIndex ]->inputPort } );
-						break;
-					}
-			}
+		if( resultLink.size( ) == 0 )
+			continue;
+		result_vector.emplace_back( linkArrayPtr[ linkArrayIndex ]->getInputPort( ), resultLink );
+	}
 	return result_vector.size( ) != 0;
 
 }

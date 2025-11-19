@@ -5,7 +5,8 @@
 Imp_StaticMetaInfo( TimeInputPort, QObject::tr( "time" ), QObject::tr( "inputPort" ) );
 TimeInputPort::TimeInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 
-	typePtr = new I_Type(
+
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -15,6 +16,6 @@ TimeInputPort::TimeInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

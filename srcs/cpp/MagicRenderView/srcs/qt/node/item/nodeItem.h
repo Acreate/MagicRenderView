@@ -126,7 +126,10 @@ public:
 	virtual bool getInputPortPos( TConstNodePortInputPortPtr input_port_ptr, QPoint &result_pos ) const;
 	virtual bool getOutputPortPos( TConstNodePortOutputPortPtr output_port_ptr, QPoint &result_pos ) const;
 	virtual bool getMultiLinkPortStatus( const NodePort *get_node_port_multi_link_obj_ptr, bool &result_node_port_multi_link_status ) const;
-	virtual void setPortLinkPort( NodePort *left_node_prot, NodePort *right_node_port ) { }
+	virtual bool setPortLinkPort( const NodePort *left_node_prot, const NodePort *right_node_port );
+	virtual bool setPortLinkPort( const NodePort *left_node_prot, const std_shared_ptr< I_Var > &bind_var );
+	virtual bool setPortLinkPort( const QString &left_node_prot, const std_shared_ptr< I_Var > &bind_var );
+	virtual bool setPortLinkPort( const QString &left_node_prot, const NodePort *right_node_port );
 	virtual bool builderLinkProtValue( ) { return true; }
 	virtual void clearPorkLink( ) { }
 	virtual bool hasInputPort( const NodePort *node_port );

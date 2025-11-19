@@ -51,6 +51,7 @@ namespace nodeItemEnum {
 	bool getEnumName( const Node_Item_Type &enum_var, QString &result_str );
 	bool getEnumName( const Click_Type &enum_var, QString &result_str );
 	bool getEnumName( const Node_Item_Builder_Type &enum_var, QString &result_str );
+	bool getEnumName( const Node_Item_Result_Type &enum_var, QString &result_str );
 }
 
 #define Def_First_Mate_Node_Type( node_Item_enum_type_value ) \

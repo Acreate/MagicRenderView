@@ -109,6 +109,62 @@ bool NodeItem::getMultiLinkPortStatus( const NodePort *get_node_port_multi_link_
 		}
 	return false;
 }
+bool NodeItem::setPortLinkPort( const NodePort *left_node_prot, const NodePort *right_node_port ) {
+	auto arrayCount = nodeInputProtVector.size( );
+	if( arrayCount == 0 )
+		return false;
+	if( left_node_prot->isOutputPort( ) == true )
+		return false;
+	if( right_node_port->isOutputPort( ) == false )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < arrayCount; ++index )
+		if( arrayPtr[ index ].first == left_node_prot ) {
+			arrayPtr[ index ].first->varPtr = right_node_port->varPtr;
+			return true;
+		}
+	return false;
+}
+bool NodeItem::setPortLinkPort( const NodePort *left_node_prot, const std_shared_ptr< I_Var > &bind_var ) {
+	auto arrayCount = nodeInputProtVector.size( );
+	if( arrayCount == 0 )
+		return false;
+	if( left_node_prot->isOutputPort( ) == true )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < arrayCount; ++index )
+		if( arrayPtr[ index ].first == left_node_prot ) {
+			arrayPtr[ index ].first->varPtr = bind_var;
+			return true;
+		}
+	return false;
+}
+bool NodeItem::setPortLinkPort( const QString &left_node_prot, const std_shared_ptr< I_Var > &bind_var ) {
+	auto arrayCount = nodeInputProtVector.size( );
+	if( arrayCount == 0 )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < arrayCount; ++index )
+		if( arrayPtr[ index ].first->title == left_node_prot ) {
+			arrayPtr[ index ].first->varPtr = bind_var;
+			return true;
+		}
+	return false;
+}
+bool NodeItem::setPortLinkPort( const QString &left_node_prot, const NodePort *right_node_port ) {
+	auto arrayCount = nodeInputProtVector.size( );
+	if( arrayCount == 0 )
+		return false;
+	if( right_node_port->isOutputPort( ) == false )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < arrayCount; ++index )
+		if( arrayPtr[ index ].first->title == left_node_prot ) {
+			arrayPtr[ index ].first->varPtr = right_node_port->varPtr;
+			return true;
+		}
+	return false;
+}
 bool NodeItem::hasInputPort( const NodePort *node_port ) {
 	for( auto &[ inputPort, pos ] : nodeInputProtVector )
 		if( inputPort == node_port )

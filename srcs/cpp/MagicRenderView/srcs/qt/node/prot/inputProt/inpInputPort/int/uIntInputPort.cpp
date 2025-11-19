@@ -4,7 +4,7 @@
 Imp_StaticMetaInfo( UIntInputPort, QObject::tr( "uint" ), QObject::tr( "inputPort" ) );
 UIntInputPort::UIntInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 
-	typePtr = new I_Type(
+	auto typePtr = new I_Type(
 		typeid( t_current_type ),
 		sizeof( t_current_type ),
 		[] ( void *p ) {
@@ -14,6 +14,6 @@ UIntInputPort::UIntInputPort( NodeItem *parent ) : NodeInputPort( parent ) {
 		[]( ) ->void * {
 			return new t_current_type( );
 		} );
-	varPtr = new I_Var( typePtr, title );
+	varPtr.reset( new I_Var( typePtr, title ) );
 	setTitle( getMetaObjectName( ) );
 }

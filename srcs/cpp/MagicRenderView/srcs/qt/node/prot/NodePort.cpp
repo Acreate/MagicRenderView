@@ -16,14 +16,11 @@ NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRe
 	icoItemHeith = ico->height( );
 	icoItemWidth = ico->width( );
 	varPtr = nullptr;
-	typePtr = nullptr;
 	nodePortRender->fill( 0 );
 }
 NodePort::~NodePort( ) {
 	delete nodePortRender;
 	delete ico;
-	if( varPtr )
-		delete varPtr;
 }
 
 void NodePort::setTitle( const QString &title ) {
@@ -77,4 +74,10 @@ bool NodePort::renderLayout( bool ico_is_end ) {
 		return false;
 	}
 	return true;
+}
+const I_Type * NodePort::getVarType( ) const {
+	auto element = varPtr.get( );
+	if( element )
+		return element->getTypeInfo( );
+	return nullptr;
 }

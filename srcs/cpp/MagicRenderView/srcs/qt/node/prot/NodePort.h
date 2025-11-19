@@ -51,10 +51,8 @@ protected:
 	Application *applicationInstancePtr;
 	/// @brief 变量生成实例
 	VarGenerate *varGenerate;
-	/// @brief 变量类型
-	I_Type *typePtr;
 	/// @brief 变量指针
-	I_Var *varPtr;
+	std_shared_ptr< I_Var > varPtr;
 	/// @brief 链接的序<节点序号，输出端口名称>
 	std_vector_pairt< size_t, QString > linkOutputVector;
 public:
@@ -85,11 +83,9 @@ public:
 	virtual QSize getSize( ) const { return QSize( portItemWidth, portItemHeith ); }
 	virtual bool updateProtLayout( ) = 0;
 	virtual const I_Var * getVar( ) const {
-		return varPtr;
+		return varPtr.get( );
 	}
-	virtual const I_Type * getVarType( ) const {
-		return typePtr;
-	}
+	virtual const I_Type * getVarType( ) const;
 	virtual NodeItem * getParentItem( ) const { return parentItem; }
 	virtual bool isOutputPort( ) const {
 		return false;

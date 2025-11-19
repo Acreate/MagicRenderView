@@ -17,6 +17,7 @@ public:
 	~NodeInputPort( ) override {
 		emit inputPorDelete( this );
 	}
+	bool isOutputPort( ) const override { return false; }
 	bool updateProtLayout( ) override;
 	bool getPos( QPoint &result_pos ) const override;
 };

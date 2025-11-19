@@ -251,7 +251,7 @@ public:
 	/// @param create_is_right_call_back_function 创建成功时，会调用该函数，需要用户保存，并且返回 true，若返回 false，则自动释放
 	/// @param start_index 开始下标
 	/// @return 若成功创建并且调用create_is_right_call_back_function则返回 true（create_is_right_call_back_function 返回 false 时，仍然返回 true）
-	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var * create_var_ptr ) > &create_is_right_call_back_function, size_t &start_index ) const;
+	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function, size_t &start_index ) const;
 
 	/// @brief 校验是否支持左值与右值操作
 	/// @param left_type_info 左值类型
@@ -437,7 +437,7 @@ public:
 	/// @param create_name 创建的类型名称
 	/// @param create_is_right_call_back_function 创建成功时，会调用该函数，需要用户保存，并且返回 true，若返回 false，则自动释放
 	/// @return 若成功创建并且调用create_is_right_call_back_function则返回 true（create_is_right_call_back_function 返回 false 时，仍然返回 true）
-	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var * create_var_ptr ) > &create_is_right_call_back_function ) const {
+	virtual bool createCheckTypeName( const type_info &check_type_info, const QString &create_name, const std_function< bool( I_Var *create_var_ptr ) > &create_is_right_call_back_function ) const {
 		size_t index = 0;
 		return createCheckTypeName( check_type_info, create_name, create_is_right_call_back_function, index );
 	}
@@ -589,6 +589,21 @@ public:
 	bool appendNodeItemGenerateInstance( ) {
 		return appendNodeItemGenerateInstance< ttype >( { } );
 	}
+	//template< typename TType >
+	//std_shared_ptr< I_Var > createType( const QString &var_name ) {
+	//	auto typePtr = new I_Type(
+	//		typeid( TType ),
+	//		sizeof( TType ),
+	//		[] ( void *p ) {
+	//			delete ( TType * ) p;
+	//			return true;
+	//		},
+	//		[]( ) ->void * {
+	//			return new TType( );
+	//		} );
+	//	std_shared_ptr< I_Var > result( new I_Var( typePtr, var_name ) );
+	//	return result;
+	//}
 
 };
 
