@@ -216,7 +216,7 @@ public:
 protected:
 	/// @brief 增加一个输入接口
 	/// @param input_prot 输入接口对象指针
-	/// @param support_multi_link_status
+	/// @param support_multi_link_status 是否允许多链接
 	/// @return 成功返回 true
 	virtual bool appendInputProt( TNodePortInputPortPtr input_prot, bool support_multi_link_status );
 	/// @brief 删除输入接口
@@ -268,6 +268,10 @@ protected:
 	virtual bool initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function );
 	// 模版
 protected:
+	/// @brief 增加一个输出端口
+	/// @tparam ttype 端口类型
+	/// @param prot_name 端口名称
+	/// @return 成功返回类型对象指针，失败返回 nullptr
 	template< typename ttype >
 		requires requires ( ttype *p, TNodePortOutputPortPtr port ) {
 			port = p;
@@ -280,6 +284,11 @@ protected:
 		delete outputProt;
 		return nullptr;
 	}
+	/// @brief 增加一个输入端口
+	/// @tparam ttype 端口类型
+	/// @param prot_name 端口名称
+	/// @param support_multi_link_status 是否支持多接入
+	/// @return 成功返回类型对象指针，失败返回 nullptr
 	template< typename ttype >
 		requires requires ( ttype *p, TNodePortInputPortPtr port ) {
 			port = p;
