@@ -5,6 +5,8 @@
 #include <qt/varType/I_IsType.h>
 #include <qt/varType/I_Stack.h>
 
+#include "../varType/I_Var.h"
+
 bool VarGenerate::appendSortMap( const nodeItemEnum::Node_Item_Type &enum_type, const QString &dir_name, const QString &type_pro_name, const std_shared_ptr< I_Type > &type_ptr ) {
 
 	// 查找已经存在的列表
@@ -111,6 +113,15 @@ bool VarGenerate::conver( const type_info &left_type_info, void *left, const typ
 	QString msg( "未发现 %1 与 %2 类型的转换" );
 	tools::debug::printError( msg.arg( left_type_info.name( ) ).arg( right_type_info.name( ) ) );
 	return false;
+}
+bool VarGenerate::conver( const I_Var *left_type_info, const type_info &right_type_info, const void *right, size_t &start_index ) const {
+	return conver( left_type_info->getTypeInfo( )->getTypeInfo( ), left_type_info->getVarPtr( ), right_type_info, right );
+}
+bool VarGenerate::conver( const I_Var *left_type_info, const I_Var *right_type_info, size_t &start_index ) const {
+	return conver( left_type_info->getTypeInfo( )->getTypeInfo( ), left_type_info->getVarPtr( ), right_type_info->getTypeInfo( )->getTypeInfo( ), right_type_info->getVarPtr( ), start_index );
+}
+bool VarGenerate::conver( const type_info &left_type_info, void *left, const I_Var *right_type_info, size_t &start_index ) const {
+	return conver( left_type_info, left, right_type_info->getTypeInfo( )->getTypeInfo( ), right_type_info->getVarPtr( ), start_index );
 }
 bool VarGenerate::add( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, size_t &start_index ) const {
 	size_t count = converVector.size( );

@@ -112,6 +112,26 @@ public:
 	/// @param start_index 开始下标
 	/// @return left 值被 right 改变时，返回 true。否则返回 false
 	virtual bool conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right, size_t &start_index ) const;
+	/// @brief 类型转换赋值
+	/// @param left_type_info 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @param start_index 开始下标
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const I_Var *left_type_info, const type_info &right_type_info, const void *right, size_t &start_index ) const;
+	/// @brief 类型转换赋值
+	/// @param left_type_info 被赋值
+	/// @param right_type_info 赋值
+	/// @param start_index 开始下标
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const I_Var *left_type_info, const I_Var *right_type_info, size_t &start_index ) const;
+	/// @brief 类型转换赋值
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info 赋值
+	/// @param start_index 开始下标
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const type_info &left_type_info, void *left, const I_Var *right_type_info, size_t &start_index ) const;
 
 	/// @brief 类型加法
 	/// @param left_type_info left 类型信息
@@ -270,6 +290,32 @@ public:
 	virtual bool conver( const type_info &left_type_info, void *left, const type_info &right_type_info, const void *right ) const {
 		size_t index = 0;
 		return conver( left_type_info, left, right_type_info, right, index );
+	}
+	/// @brief 类型转换赋值
+	/// @param left_type_info 被赋值
+	/// @param right_type_info right 类型信息
+	/// @param right 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const I_Var *left_type_info, const type_info &right_type_info, const void *right ) const {
+		size_t index = 0;
+		return conver( left_type_info, right_type_info, right, index );
+	}
+	/// @brief 类型转换赋值
+	/// @param left_type_info 被赋值
+	/// @param right_type_info 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const I_Var *left_type_info, const I_Var *right_type_info ) const {
+		size_t index = 0;
+		return conver( left_type_info, right_type_info, index );
+	}
+	/// @brief 类型转换赋值
+	/// @param left_type_info left 类型信息
+	/// @param left 被赋值
+	/// @param right_type_info 赋值
+	/// @return left 值被 right 改变时，返回 true。否则返回 false
+	virtual bool conver( const type_info &left_type_info, void *left, const I_Var *right_type_info ) const {
+		size_t index = 0;
+		return conver( left_type_info, left, right_type_info, index );
 	}
 	/// @brief 类型加法
 	/// @param left_type_info left 类型信息
@@ -589,6 +635,7 @@ public:
 	bool appendNodeItemGenerateInstance( ) {
 		return appendNodeItemGenerateInstance< ttype >( { } );
 	}
+
 	//template< typename TType >
 	//std_shared_ptr< I_Var > createType( const QString &var_name ) {
 	//	auto typePtr = new I_Type(

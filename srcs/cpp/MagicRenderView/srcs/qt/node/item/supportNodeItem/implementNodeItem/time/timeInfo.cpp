@@ -4,6 +4,8 @@
 
 #include "../../../../../application/application.h"
 
+#include "../../../../../generate/varGenerate.h"
+
 #include "../../../../../varType/I_Var.h"
 
 #include "../../../../director/nodeDirector.h"
@@ -26,14 +28,19 @@ bool TimeInfo::intPortItems( MainWidget *parent ) {
 		auto currentTimeOutPort = addOutputProt< TimeOutputPort >( "当前时间" );
 		auto currentFrameOutPort = addOutputProt< UIntOutputPort >( "当前帧数" );
 		this->nodeItemFcuntion = [&startRunTimePort, this, &runTimeOutPort, &currentTimeOutPort, &currentFrameOutPort] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
-			QDateTime *dateTime = ( QDateTime * ) startRunTimePort->getVar( )->getVarPtr( );
-			*dateTime = applicationInstancePtr->getAppInstanceDateTime( );
-			dateTime = ( QDateTime * ) runTimeOutPort->getVar( )->getVarPtr( );
-			*dateTime = applicationInstancePtr->getNodeDirector( )->getBuilderDataTime( );
-			auto currentDateTime = ( QDateTime * ) currentTimeOutPort->getVar( )->getVarPtr( );
-			*currentDateTime = QDateTime::currentDateTime( );
-			uint64_t *frame = ( uint64_t * ) currentFrameOutPort->getVar( )->getVarPtr( );
-			*frame = ( *currentDateTime - *dateTime ).count( );
+			const QDateTime &appInstanceDateTime = applicationInstancePtr->getAppInstanceDateTime( );
+			auto &rightTypeInfo = typeid( QDateTime );
+			if( varGenerate->conver( startRunTimePort->getVar( ), rightTypeInfo, &appInstanceDateTime ) == false )
+				return nodeItemEnum::Node_Item_Result_Type::Param_Error;
+			const QDateTime &nodeBuilderDateTime = applicationInstancePtr->getNodeDirector( )->getBuilderDataTime( );
+			if( varGenerate->conver( runTimeOutPort->getVar( ), rightTypeInfo, &nodeBuilderDateTime ) == false )
+				return nodeItemEnum::Node_Item_Result_Type::Param_Error;
+			QDateTime currentDateTime = QDateTime::currentDateTime( );
+			if( varGenerate->conver( currentTimeOutPort->getVar( ), rightTypeInfo, &currentDateTime ) == false )
+				return nodeItemEnum::Node_Item_Result_Type::Param_Error;
+			uint64_t frame = ( currentDateTime - nodeBuilderDateTime ).count( );
+			if( varGenerate->conver( currentFrameOutPort->getVar( ), typeid( uint64_t ), &frame ) == false )
+				return nodeItemEnum::Node_Item_Result_Type::Param_Error;
 			return nodeItemEnum::Node_Item_Result_Type::Finish;
 		};
 		return true;

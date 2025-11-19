@@ -2,6 +2,8 @@
 
 #include <QDateTime>
 
+#include "../../../../../generate/varGenerate.h"
+
 #include "../../../../../varType/I_Var.h"
 
 #include "../../../../prot/inputProt/inpInputPort/time/timeInputPort.h"
@@ -24,15 +26,17 @@ bool TimeDataInfo::intPortItems( MainWidget *parent ) {
 		auto secondOutPort = addOutputProt< UIntOutputPort >( "秒" );
 		auto msOutPort = addOutputProt< UIntOutputPort >( "毫秒" );
 		this->nodeItemFcuntion = [&] ( const size_t &index, QString &result_msg )->nodeItemEnum::Node_Item_Result_Type {
-			auto varPtr = ( QDateTime * ) timeInputPort->getVar( )->getVarPtr( );
-			auto date = varPtr->date( );
+			QDateTime dataTime;
+			if( varGenerate->conver( typeid( QDateTime ), &dataTime, timeInputPort->getVar( ) ) == false )
+				return nodeItemEnum::Node_Item_Result_Type::Param_Error;
+			auto date = dataTime.date( );
 			auto year = ( uint64_t * ) yearOutPort->getVar( )->getVarPtr( );
 			*year = date.year( );
 			auto mon = ( uint64_t * ) monOutPort->getVar( )->getVarPtr( );
 			*mon = date.month( );
 			auto day = ( uint64_t * ) dayOutPort->getVar( )->getVarPtr( );
 			*day = date.day( );
-			auto time = varPtr->time( );
+			auto time = dataTime.time( );
 			auto hour = ( uint64_t * ) hourOutPort->getVar( )->getVarPtr( );
 			*hour = time.hour( );
 			auto minute = ( uint64_t * ) minuteOutPort->getVar( )->getVarPtr( );
