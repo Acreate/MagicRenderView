@@ -20,5 +20,7 @@ public:
 	bool isOutputPort( ) const override { return false; }
 	bool updateProtLayout( ) override;
 	bool getPos( QPoint &result_pos ) const override;
+protected:
+	virtual bool setInputPortVar( const type_info &var_type_info, const void *set_new_var_ptr );
 };
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__
