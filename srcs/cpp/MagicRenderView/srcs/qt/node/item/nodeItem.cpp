@@ -48,8 +48,23 @@ NodeItem::NodeItem( GenerateListScrollArea *node_info_scroll_area ) : QObject( )
 	runStatus = false;
 }
 bool NodeItem::appendVar( NodePort *app_port, const std_shared_ptr< I_Var > &append_var ) {
-	QString msg( "%1 节点未实现 appendVar 功能" );
-	tools::debug::printError( msg.arg( getMetaObjectPathName( ) ) );
+	auto count = nodeInputProtVector.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ].first == app_port )
+			return arrayPtr[ index ].first->appendVar( append_var );
+	return false;
+}
+bool NodeItem::appendVar( const QString &app_port_name, const std_shared_ptr< I_Var > &append_var ) {
+	auto count = nodeInputProtVector.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = nodeInputProtVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ].first->title == app_port_name )
+			return arrayPtr[ index ].first->appendVar( append_var );
 	return false;
 }
 NodeItem::~NodeItem( ) {
@@ -141,6 +156,8 @@ bool NodeItem::setPortLinkPort( const NodePort *left_node_prot, const std_shared
 	auto arrayPtr = nodeInputProtVector.data( );
 	for( size_t index = 0; index < arrayCount; ++index )
 		if( arrayPtr[ index ].first == left_node_prot ) {
+			if( arrayPtr[ index ].first->isArray( ) )
+				return arrayPtr[ index ].first->appendVar( bind_var );
 			arrayPtr[ index ].first->varPtr = bind_var;
 			return true;
 		}
@@ -153,6 +170,8 @@ bool NodeItem::setPortLinkPort( const QString &left_node_prot, const std_shared_
 	auto arrayPtr = nodeInputProtVector.data( );
 	for( size_t index = 0; index < arrayCount; ++index )
 		if( arrayPtr[ index ].first->title == left_node_prot ) {
+			if( arrayPtr[ index ].first->isArray( ) )
+				return arrayPtr[ index ].first->appendVar( bind_var );
 			arrayPtr[ index ].first->varPtr = bind_var;
 			return true;
 		}
@@ -167,6 +186,8 @@ bool NodeItem::setPortLinkPort( const QString &left_node_prot, const NodePort *r
 	auto arrayPtr = nodeInputProtVector.data( );
 	for( size_t index = 0; index < arrayCount; ++index )
 		if( arrayPtr[ index ].first->title == left_node_prot ) {
+			if( arrayPtr[ index ].first->isArray( ) )
+				return arrayPtr[ index ].first->appendVar( right_node_port->varPtr );
 			arrayPtr[ index ].first->varPtr = right_node_port->varPtr;
 			return true;
 		}
@@ -424,6 +445,7 @@ bool NodeItem::appendInputProt( NodeInputPort *input_prot, const bool support_mu
 	input_prot->generateCode = nodeInputProtVector.size( );
 	return true;
 }
+
 bool NodeItem::removeInputProt( TConstNodePortInputPortPtr input_prot ) {
 	size_t count = nodeInputProtVector.size( ), index = 0;
 	if( count == 0 )
@@ -696,4 +718,10 @@ bool NodeItem::initNodeItem( MainWidget *parent, const std_function< bool( MainW
 
 	//updateLayout( );
 	return true;
+}
+std_vector< std_shared_ptr< I_Var > > & NodeItem::getPortVarVector( NodePort *get_node_port_var_vector ) const {
+	return get_node_port_var_vector->varVector;
+}
+std_shared_ptr< I_Var > & NodeItem::getPortVar( NodePort *get_node_port_var_vector ) const {
+	return get_node_port_var_vector->varPtr;
 }

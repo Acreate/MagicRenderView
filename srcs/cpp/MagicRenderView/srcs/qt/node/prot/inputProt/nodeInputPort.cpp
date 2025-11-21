@@ -6,6 +6,7 @@
 #include <qt/node/item/nodeItem.h>
 
 #include "../../../generate/varGenerate.h"
+#include <qt/varType/I_Var.h>
 
 Imp_StaticMetaInfo( NodeInputPort, QObject::tr( "NodeInputPort" ), QObject::tr( "inputProt" ) );
 

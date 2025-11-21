@@ -119,8 +119,9 @@ protected:
 	NodeItem( );
 	NodeItem( GenerateListScrollArea *node_info_scroll_area );
 	virtual bool appendVar( NodePort *app_port, const std_shared_ptr< I_Var > &append_var );
+	virtual bool appendVar( const QString &app_port_name, const std_shared_ptr< I_Var > &append_var );
 public:
-	virtual const I_Type * const getNodeTypeInfo( ) const { return nodeTypeInfo.get( ); }
+	virtual const I_Type * getNodeTypeInfo( ) const { return nodeTypeInfo.get( ); }
 	virtual MainWidget * getRenderMainWidget( ) const { return renderMainWidget; }
 	~NodeItem( ) override;
 	virtual void setMainWidget( MainWidget *parent );
@@ -266,6 +267,8 @@ public: // 二进制相关
 	// 扩展功能
 protected:
 	virtual bool initNodeItem( MainWidget *parent, const std_function< bool( MainWidget *main_widget_parent ) > &init_function );
+	virtual std_vector< std_shared_ptr< I_Var > > & getPortVarVector( NodePort *get_node_port_var_vector ) const;
+	virtual std_shared_ptr< I_Var > & getPortVar( NodePort *get_node_port_var_vector ) const;
 	// 模版
 protected:
 	/// @brief 增加一个输出端口

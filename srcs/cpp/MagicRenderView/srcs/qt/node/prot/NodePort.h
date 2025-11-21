@@ -53,6 +53,8 @@ protected:
 	VarGenerate *varGenerate;
 	/// @brief 变量指针
 	std_shared_ptr< I_Var > varPtr;
+	/// @brief 数组类型使用
+	std_vector< std_shared_ptr< I_Var > > varVector;
 	/// @brief 链接的序<节点序号，输出端口名称>
 	std_vector_pairt< size_t, QString > linkOutputVector;
 public:
@@ -86,6 +88,7 @@ public:
 		return varPtr.get( );
 	}
 	virtual const I_Type * getVarType( ) const;
+	virtual bool appendVar( const std_shared_ptr< I_Var > &append_elemt );
 	virtual NodeItem * getParentItem( ) const { return parentItem; }
 	virtual bool isOutputPort( ) const {
 		return false;
@@ -96,4 +99,6 @@ Q_SIGNALS:
 	void outputPorDelete( NodeOutputPort *remove_output_port );
 	void inputPorDelete( NodeInputPort *remove_input_port );
 };
+
+
 #endif // NODEPORT_H_H_HEAD__FILE__

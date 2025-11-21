@@ -7,6 +7,10 @@
 #include <qt/tools/tools.h>
 #include <qt/varType/I_Var.h>
 
+#include "../../generate/varGenerate.h"
+
+#include "../../varType/I_Type.h"
+
 Imp_StaticMetaInfo( NodePort, QObject::tr( "NodeOutputPort" ), QObject::tr( "outputProt" ) );
 NodePort::NodePort( NodeItem *parent_item ) : QObject( parent_item ), nodePortRender( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), ico( new QImage( 16, 16, QImage::Format_RGBA8888 ) ), parentItem( parent_item ) {
 	applicationInstancePtr = Application::getApplicationInstancePtr( );
@@ -80,4 +84,18 @@ const I_Type * NodePort::getVarType( ) const {
 	if( element )
 		return element->getTypeInfo( );
 	return nullptr;
+}
+bool NodePort::appendVar( const std_shared_ptr< I_Var > &append_elemt ) {
+	auto rightTypeInfo = append_elemt->getTypeInfo( );
+	auto leftTypeInfo = varPtr->getTypeInfo( );
+	if( varGenerate->supportType( leftTypeInfo->getTypeInfo( ), rightTypeInfo->getTypeInfo( ) ) == false )
+		return false;
+	I_Var *var = new I_Var( *rightTypeInfo, append_elemt->getGenerateCode( ), append_elemt->getVarName( ) );
+	if( varGenerate->conver( var, append_elemt.get( ) ) == false ) {
+		delete var;
+		return false;
+	}
+	std_shared_ptr< I_Var > clone( var );
+	varVector.emplace_back( clone );
+	return true;
 }

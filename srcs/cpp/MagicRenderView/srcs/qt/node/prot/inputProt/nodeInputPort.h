@@ -23,4 +23,6 @@ public:
 protected:
 	virtual bool setInputPortVar( const type_info &var_type_info, const void *set_new_var_ptr );
 };
+
+
 #endif // NODEINPUTPORT_H_H_HEAD__FILE__
