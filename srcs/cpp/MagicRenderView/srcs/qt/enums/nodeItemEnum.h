@@ -34,6 +34,8 @@ namespace nodeItemEnum {
 		Finish,
 		/// @brief 参数异常
 		Param_Error,
+		/// @brief 返回异常
+		Result_Error,
 	};
 	Q_ENUM_NS( Node_Item_Result_Type );
 

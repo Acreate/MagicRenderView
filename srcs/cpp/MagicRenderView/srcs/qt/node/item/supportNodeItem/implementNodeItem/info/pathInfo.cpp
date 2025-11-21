@@ -17,7 +17,6 @@ bool PathInfo::intPortItems( MainWidget *parent ) {
 
 			// 初始化节点名称
 			setNodeTitleName( getMetaObjectName( ) );
-			addInputProt< AnyInputPort >( "任意", true );
 			// 初始化输入端口
 			addInputProt< StringInputPort >( "文件路径", false );
 			// 初始化输出端口

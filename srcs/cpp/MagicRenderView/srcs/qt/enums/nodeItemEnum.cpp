@@ -89,7 +89,6 @@ bool nodeItemEnum::getEnumName( const Node_Item_Builder_Type &enum_var, QString 
 bool nodeItemEnum::getEnumName( const Node_Item_Result_Type &enum_var, QString &result_str ) {
 	
 	switch( enum_var ) {
-
 		case Node_Item_Result_Type::NotImplementation:
 			result_str = QObject::tr( "未实现" );
 			break;
@@ -98,6 +97,9 @@ bool nodeItemEnum::getEnumName( const Node_Item_Result_Type &enum_var, QString &
 			break;
 		case Node_Item_Result_Type::Param_Error:
 			result_str = QObject::tr( "参数错误" );
+			break;
+		case Node_Item_Result_Type::Result_Error:
+			result_str = QObject::tr( "返回错误" );
 			break;
 	}
 	tools::debug::printError( QString( "发现未知宏值 : %1" ).arg( ( size_t ) enum_var ) );

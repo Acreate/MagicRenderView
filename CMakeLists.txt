@@ -24,7 +24,7 @@ include( GNUInstallDirs )
 get_cmake_separator( _cmake_sep )
 init_std_builder_path()
 
-find_package( Qt6 QUIET COMPONENTS Widgets Core LinguistTools )
+find_package( Qt6 QUIET COMPONENTS Widgets Core LinguistTools Network )
 if( NOT Qt6_FOUND OR NOT EXISTS "${Qt6_DIR}" )
     # # 使用 qt6
     set( Qt6_DIR "C:/Qt/6.10.0/msvc2022_64/lib/cmake/QT6/" )
