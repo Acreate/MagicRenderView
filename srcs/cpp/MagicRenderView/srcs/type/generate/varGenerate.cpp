@@ -4,6 +4,8 @@
 
 #include <type/stack/infoStack.h>
 
+#include "../serializeData/stackSerialize.h"
+
 #define Generate_InfoStack_Unity( Target_Stack_Obj, Fill_Ptr, Def_Var, Type_Name_, ...) \
 	Fill_Ptr = InfoStackGenerate::generateInfoStack( \
  			Type_Name_Unity(Type_Name_), \
@@ -100,12 +102,21 @@ void VarGenerate::realeaseStackVector( std::vector< InfoStack * > &clear_redunda
 		delete arrayPtr[ index ];
 	clear_redundancy_vector.clear( );
 }
+void VarGenerate::realeaseStackSerialize( std::vector< StackSerialize * > &clear_redundancy_vector ) {
+	size_t count = clear_redundancy_vector.size( );
+	auto arrayPtr = clear_redundancy_vector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		delete arrayPtr[ index ];
+	clear_redundancy_vector.clear( );
+}
 VarGenerate::~VarGenerate( ) {
 	realeaseStackVector( stacksUnityVector );
 	realeaseStackVector( stacksVectorVector );
 	realeaseStackVector( stacksListVector );
 	realeaseStackVector( stacksVectorPairtVector );
 	realeaseStackVector( stacksListPairtVector );
+	realeaseStackSerialize( stackSerializeVector );
 }
 void * VarGenerate::create( const std::vector< InfoStack * > &stacks_vector, const QString &type_name ) {
 	size_t count = stacks_vector.size( );
@@ -155,6 +166,17 @@ bool VarGenerate::getTypeName( const std::vector< InfoStack * > &clear_redundanc
 		}
 	return false;
 }
+bool VarGenerate::getObjPtrAtTypeName( const std::vector< InfoStack * > &clear_redundancy_vector, const void *check_obj_ptr, QString &result_type_name ) {
+	size_t count = clear_redundancy_vector.size( );
+	auto arrayPtr = clear_redundancy_vector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( arrayPtr[ index ]->hasVarPtr( check_obj_ptr ) ) {
+			result_type_name = arrayPtr[ index ]->getTypeName( );
+			return true;
+		}
+	return false;
+}
 bool VarGenerate::getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
 	QString typeInfoName = type_info_ref.name( );
 	if( getTypeName( stacksUnityVector, typeInfoName, result_type_name ) )
@@ -181,6 +203,19 @@ std::list< std::pair< void *, void * > > * VarGenerate::createAtListAnyPairtObjP
 	if( count == 0 )
 		return nullptr;
 	return ( std::list< std::pair< void *, void * > > * ) stacksListPairtVector.data( )[ 0 ]->createTypePtr( );
+}
+bool VarGenerate::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) {
+	if( getObjPtrAtTypeName( stacksUnityVector, check_obj_ptr, result_type_name ) )
+		return true;
+	if( getObjPtrAtTypeName( stacksVectorVector, check_obj_ptr, result_type_name ) )
+		return true;
+	if( getObjPtrAtTypeName( stacksListVector, check_obj_ptr, result_type_name ) )
+		return true;
+	if( getObjPtrAtTypeName( stacksVectorPairtVector, check_obj_ptr, result_type_name ) )
+		return true;
+	if( getObjPtrAtTypeName( stacksListPairtVector, check_obj_ptr, result_type_name ) )
+		return true;
+	return false;
 }
 bool VarGenerate::realease( const void *delete_obj_ptr ) {
 	if( realease( stacksUnityVector, delete_obj_ptr ) )

@@ -9,11 +9,13 @@ MainWidget::MainWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( p
 	drawLinkWidget = new DrawLinkWidget( this );
 	drawNodeWidget = new DrawNodeWidget( this );
 	appInstancePtr = Application::getInstancePtr( );
-	nodeDirector = appInstancePtr->getNodeDirector(  );
+	nodeDirector = appInstancePtr->getNodeDirector( );
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	auto newSize = event->size( );
-	drawLinkWidget->resize( newSize );
 	drawNodeWidget->resize( newSize );
+	drawLinkWidget->resize( newSize );
+	drawNodeWidget->raise( );
+	drawLinkWidget->raise( );
 }

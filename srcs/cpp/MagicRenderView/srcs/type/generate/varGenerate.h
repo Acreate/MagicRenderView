@@ -3,6 +3,7 @@
 #pragma once
 #include <qstring.h>
 #include <vector>
+class StackSerialize;
 class InfoStack;
 class VarGenerate {
 protected:
@@ -11,8 +12,10 @@ protected:
 	std::vector< InfoStack * > stacksListVector;
 	std::vector< InfoStack * > stacksVectorPairtVector;
 	std::vector< InfoStack * > stacksListPairtVector;
+	std::vector< StackSerialize * > stackSerializeVector;
 protected:
 	virtual void realeaseStackVector( std::vector< InfoStack * > &clear_redundancy_vector );
+	virtual void realeaseStackSerialize( std::vector< StackSerialize * > &clear_redundancy_vector );
 public:
 	VarGenerate( );
 	virtual ~VarGenerate( );
@@ -23,12 +26,14 @@ protected:
 	virtual void * createAtListObjPtr( const QString &type_name );
 	virtual bool realease( const std::vector< InfoStack * > &clear_redundancy_vector, const void *delete_obj_ptr );
 	virtual bool getTypeName( const std::vector< InfoStack * > &clear_redundancy_vector, const QString &type_info_name, QString &result_type_name );
+	virtual bool getObjPtrAtTypeName( const std::vector< InfoStack * > &clear_redundancy_vector, const void *check_obj_ptr, QString &result_type_name );
 	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name );
 	virtual void clearRedundancy( );
 	virtual void clearRedundancy( std::vector< InfoStack * > &clear_redundancy_vector );
 public:
 	virtual std::vector< std::pair< void *, void * > > * createAtVectorAnyPairtObjPtr( );
 	virtual std::list< std::pair< void *, void * > > * createAtListAnyPairtObjPtr( );
+	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
 	template< typename TTypeName >
 	TTypeName * createAtUnityObjPtr( ) {
