@@ -1,20 +1,26 @@
 ﻿#include "application.h"
 
-#include "../director/nodeDirector.h"
+#include <app/director/nodeDirector.h>
+#include <app/printfInfo/printfInfo.h>
 
-#include "../printfInfo/printfInfo.h"
+#include <type/generate/varGenerate.h>
+
 Application *Application::instance = nullptr;
 Application * Application::getInstancePtr( ) {
 	return instance;
 }
-void Application::setInstancePtr( Application *new_instance ) {
-	instance = new_instance;
-}
+
 Application::Application( int &argc, char **const argv, const int i ) : QApplication( argc, argv, i ) {
-	nodeDirector = new NodeDirector;
-	printfInfo = new PrintfInfo;
 }
 Application::~Application( ) {
 	delete nodeDirector;
 	delete printfInfo;
+	delete varGenerate;
+}
+bool Application::init( ) {
+	Application::instance = this;
+	nodeDirector = new NodeDirector;
+	printfInfo = new PrintfInfo;
+	varGenerate = new VarGenerate;
+	return true;
 }

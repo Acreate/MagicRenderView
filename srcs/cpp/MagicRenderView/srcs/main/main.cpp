@@ -1,22 +1,18 @@
-﻿#include "../app/applicationInstance/application.h"
-#include "../app/printfInfo/printfInfo.h"
+﻿#include <app/applicationInstance/application.h>
 
-#include "../win/mainWindow/mainWindow.h"
+#include <win/mainWindow/mainWindow.h>
 
-void pr( ) {
-	Application::getInstancePtr( )->getPrintfInfo( )->info( "提示" );
-}
+#include "../type/generate/varGenerate.h"
 
-void prs( ) {
-	pr( );
-}
 int main( int argc, char *argv[ ] ) {
 
 	Application app( argc, argv );
-	Application::setInstancePtr( &app );
-	prs( );
+	if( app.init( ) == false )
+		return -1;
+
 	MainWindow mainwidget;
 	mainwidget.show( );
 
-	return app.exec( );
+	int exec = app.exec( );
+	return exec;
 }
