@@ -43,12 +43,12 @@ bool AnyPtrPairStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t AnyPtrPairStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t AnyPtrPairStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type AnyPtrPairStack::getType( ) {
 	return TypeEnum::Type::Pair;
+}
+uint64_t AnyPtrPairStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }

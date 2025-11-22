@@ -13,7 +13,7 @@ Int16UnityStack::Int16UnityStack( ) {
 	Stack_Type_Name( int16_t, "int16", "short" );
 }
 void * Int16UnityStack::createTypePtr( ) {
-	auto createObjPtr = new int16_t;
+	auto createObjPtr = new int16_t( 0 );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool Int16UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t Int16UnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t Int16UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type Int16UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t Int16UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }

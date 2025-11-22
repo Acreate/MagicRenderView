@@ -13,7 +13,7 @@ UInt16UnityStack::UInt16UnityStack( ) {
 	Stack_Type_Name( uint16_t, "uint16", "unsigned short" );
 }
 void * UInt16UnityStack::createTypePtr( ) {
-	auto createObjPtr = new uint16_t;
+	auto createObjPtr = new uint16_t( 0 );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool UInt16UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t UInt16UnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t UInt16UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type UInt16UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t UInt16UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }

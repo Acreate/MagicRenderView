@@ -13,7 +13,7 @@ Float64UnityStack::Float64UnityStack( ) {
 	Stack_Type_Name( double, "float64", "double64", "double_t" );
 }
 void * Float64UnityStack::createTypePtr( ) {
-	auto createObjPtr = new double;
+	auto createObjPtr = new double( 0 );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool Float64UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t Float64UnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t Float64UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type Float64UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t Float64UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }

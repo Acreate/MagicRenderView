@@ -13,7 +13,7 @@ StringUnityStack::StringUnityStack( ) {
 	Stack_Type_Name( QString, "string" );
 }
 void * StringUnityStack::createTypePtr( ) {
-	auto createObjPtr = new QString;
+	auto createObjPtr = new QString( "" );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool StringUnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t StringUnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t StringUnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type StringUnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t StringUnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }

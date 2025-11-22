@@ -26,10 +26,25 @@ public:
 	virtual uint64_t size( ) const;
 	virtual void * const* arrayPtr( ) const;
 	virtual void ** arrayPtr( );
-	virtual uint64_t toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) =0;
-	virtual uint64_t toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) = 0;
 	virtual TypeEnum::Type getType( ) = 0;
+public:
 	friend bool operator==( const InfoStack &lhs, const InfoStack &rhs );
 	friend bool operator!=( const InfoStack &lhs, const InfoStack &rhs ) { return !( lhs == rhs ); }
+protected:
+	virtual uint64_t toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) = 0;
+public:
+	virtual uint64_t toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data );
+	virtual uint64_t getTypeNameAtData( std::vector< uint8_t > &result_data );
+	virtual uint64_t getDataAtTypeName( const uint8_t *source_ptr, const size_t &source_count, QString &result_type_name );
+	virtual uint64_t toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) = 0;
+protected:
+	virtual uint64_t toVector( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result );
+	virtual uint64_t toVector( const void *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {
+		return toVector( ( uint8_t * ) ptr, ptr_size, result );
+	}
+	template< typename TSourceType >
+	uint64_t toVector( const void *ptr, std::vector< uint8_t > &result ) {
+		return toVector( ( const uint8_t * ) ptr, sizeof( TSourceType ), result );
+	}
 };
 #endif // INFOSTACK_H_H_HEAD__FILE__

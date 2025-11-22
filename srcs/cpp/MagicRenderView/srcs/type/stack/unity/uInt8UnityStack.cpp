@@ -13,7 +13,7 @@ UInt8UnityStack::UInt8UnityStack( ) {
 	Stack_Type_Name( uint8_t, "uint8", "unsigned char" );
 }
 void * UInt8UnityStack::createTypePtr( ) {
-	auto createObjPtr = new uint8_t;
+	auto createObjPtr = new uint8_t( 0 );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool UInt8UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t UInt8UnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t UInt8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type UInt8UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t UInt8UnityStack::toVectorData( void *obj_start_ptr, std::vector<uint8_t> &result_data ) {
+	return 0;
 }

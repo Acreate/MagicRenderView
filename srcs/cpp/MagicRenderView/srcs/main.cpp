@@ -2,6 +2,7 @@
 
 #include <win/mainWindow.h>
 
+
 int main( int argc, char *argv[ ] ) {
 
 	Application app( argc, argv );

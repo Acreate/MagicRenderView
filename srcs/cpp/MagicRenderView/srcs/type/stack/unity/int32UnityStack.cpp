@@ -13,7 +13,7 @@ Int32UnityStack::Int32UnityStack( ) {
 	Stack_Type_Name( int32_t, "int32", "int" );
 }
 void * Int32UnityStack::createTypePtr( ) {
-	auto createObjPtr = new int32_t;
+	auto createObjPtr = new int32_t( 0 );
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -43,12 +43,12 @@ bool Int32UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t Int32UnityStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	return 0;
-}
 uint64_t Int32UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
 TypeEnum::Type Int32UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
+}
+uint64_t Int32UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	return 0;
 }
