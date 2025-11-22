@@ -23,6 +23,9 @@ public:
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
 	virtual bool getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool );
 	virtual void * create( const QString &create_type_name );
+	virtual uint64_t toVar( const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr );
+	virtual uint64_t toVector( const void *ptr, std::vector< uint8_t > &result );
+public:
 	template< typename TCreateType >
 	TCreateType * create( ) {
 		return ( TCreateType * ) create( typeid( TCreateType ).name( ) );

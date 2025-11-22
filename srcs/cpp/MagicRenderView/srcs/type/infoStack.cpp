@@ -60,7 +60,7 @@ uint64_t InfoStack::getTypeNameAtData( std::vector< uint8_t > &result_data ) {
 	if( converVar != count )
 		return 0;
 	converVar *= sizeof( QChar ) / sizeof( uint8_t );
-	if( toVector< uint64_t >( &converVar, buff ) == 0 )
+	if( fillTypeVarAtVector< uint64_t >( &converVar, buff ) == 0 )
 		return 0;
 	result_data.append_range( buff );
 	QChar *data = typeName.data( );
@@ -90,6 +90,50 @@ uint64_t InfoStack::toVector( const uint8_t *ptr, const size_t &ptr_size, std::v
 	for( size_t index = 0; index < ptr_size; ++index )
 		data[ index ] = ptr[ index ];
 	return ptr_size;
+}
+uint64_t InfoStack::toVar( const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count ) {
+	if( source_count < target_var_count )
+		return 0;
+	for( size_t index = 0; index < target_var_count; ++index )
+		target_var_ptr[ index ] = source_ptr[ index ];
+	return target_var_count;
+}
+template<>
+uint64_t InfoStack::fillTypeVarAtVector< QString >( const void *ptr, std::vector< uint8_t > &result ) {
+	QString *stringPtr = ( QString * ) ptr;
+	std::vector< uint8_t > buff;
+	qint64 count = stringPtr->size( );
+	if( count <= 0 )
+		return 0;
+	uint64_t converVar = count;
+	if( converVar != count )
+		return 0;
+	converVar *= sizeof( QChar ) / sizeof( uint8_t );
+	if( fillTypeVarAtVector< uint64_t >( &converVar, buff ) == 0 )
+		return 0;
+	result.append_range( buff );
+	QChar *data = stringPtr->data( );
+	if( toVector( data, converVar, buff ) == 0 )
+		return 0;
+	result.append_range( buff );
+	return result.size( );
+}
+template<>
+uint64_t InfoStack::fillTypeVectorAtVar< QString >( const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+	QString *stringPtr = ( QString * ) target_var_ptr;
+	uint64_t converVar = *( uint64_t * ) source_ptr;
+	size_t sizeTypeCount = sizeof( uint64_t );
+	size_t mod = source_count - sizeTypeCount;
+	if( mod < converVar )
+		return 0;
+	auto offset = source_ptr + sizeTypeCount;
+	size_t newSize = converVar / ( sizeof( QChar ) / sizeof( uint8_t ) );
+	stringPtr->resize( newSize );
+	auto data = ( uint8_t * ) stringPtr->data( );
+	size_t index = 0;
+	for( ; index < converVar; ++index )
+		data[ index ] = offset[ index ];
+	return converVar + sizeTypeCount;
 }
 bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
 	if( lhs.typeName == rhs.typeName )

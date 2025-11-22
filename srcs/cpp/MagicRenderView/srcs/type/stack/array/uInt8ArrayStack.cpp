@@ -43,7 +43,7 @@ bool UInt8ArrayStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t UInt8ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
+uint64_t UInt8ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	return 0;
 }
 TypeEnum::Type UInt8ArrayStack::getType( ) {
