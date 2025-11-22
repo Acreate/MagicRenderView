@@ -6,8 +6,6 @@
 class AnyPtrPairStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::pair< void *, void * >;
-public:
 	AnyPtrPairStack( );
 	~AnyPtrPairStack( ) override;
 	void * createTypePtr( ) override;

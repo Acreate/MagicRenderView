@@ -6,8 +6,6 @@
 class StringArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::vector< QString >;
-public:
 	StringArrayStack( );
 	~StringArrayStack( ) override;
 	void * createTypePtr( ) override;

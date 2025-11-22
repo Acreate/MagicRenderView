@@ -6,8 +6,6 @@
 class Int8ArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::vector< int8_t >;
-public:
 	Int8ArrayStack( );
 	~Int8ArrayStack( ) override;
 	void * createTypePtr( ) override;

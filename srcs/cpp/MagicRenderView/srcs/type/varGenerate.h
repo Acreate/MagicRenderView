@@ -14,16 +14,56 @@ protected:
 public:
 	VarGenerate( );
 	~VarGenerate( ) override;
-protected:
-	virtual void * create( const QString &create_type_name );
 public:
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
 	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
+	virtual void * create( const QString &create_type_name );
 	template< typename TCreateType >
 	TCreateType * create( ) {
 		return ( TCreateType * ) create( typeid( TCreateType ).name( ) );
 	}
+
+	template< typename TCreateType >
+	TCreateType * cast_ptr( void *ptr ) {
+		if( ptr == nullptr )
+			return nullptr;
+		QString converTypeName;
+		// 检查是否存在指定的类型
+		if( getObjPtrAtTypeName( ptr, converTypeName ) == false )
+			return nullptr;
+		QString typeInfoName = typeid( TCreateType ).name( );
+		QString targetTypeName;
+		// 获取转换的目标匹配类型名称
+		if( getTypeName( typeInfoName, targetTypeName ) == false )
+			return nullptr;
+		// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+		if( targetTypeName != converTypeName )
+			return nullptr;
+		// 同一类型返回转换后的类型对象指针
+		return ( TCreateType * ) ptr;
+	}
+
+	template< typename TCreateType >
+	const TCreateType * cast_ptr( const void *ptr ) {
+		if( ptr == nullptr )
+			return nullptr;
+		QString converTypeName;
+		// 检查是否存在指定的类型
+		if( getObjPtrAtTypeName( ptr, converTypeName ) == false )
+			return nullptr;
+		QString typeInfoName = typeid( TCreateType ).name( );
+		QString targetTypeName;
+		// 获取转换的目标匹配类型名称
+		if( getTypeName( typeInfoName, targetTypeName ) == false )
+			return nullptr;
+		// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+		if( targetTypeName != converTypeName )
+			return nullptr;
+		// 同一类型返回转换后的类型对象指针
+		return ( const TCreateType * ) ptr;
+	}
+
 };
 #endif // VARGENERATE_H_H_HEAD__FILE__

@@ -2,6 +2,7 @@
 
 #include <type/infoStack.h>
 
+#include "stack/array/anyArrayStack.h"
 #include "stack/array/float32ArrayStack.h"
 #include "stack/array/float64ArrayStack.h"
 #include "stack/array/int16ArrayStack.h"
@@ -13,7 +14,6 @@
 #include "stack/array/uInt32ArrayStack.h"
 #include "stack/array/uInt64ArrayStack.h"
 #include "stack/array/uInt8ArrayStack.h"
-#include "stack/arrayPair/anyPtrPairArrayStack.h"
 #include "stack/pair/anyPtrPairStack.h"
 #include "stack/unity/float32UnityStack.h"
 #include "stack/unity/float64UnityStack.h"
@@ -54,8 +54,7 @@ VarGenerate::VarGenerate( ) {
 	emplace_back_type( StringArrayStack );
 
 	emplace_back_type( AnyPtrPairStack );
-	emplace_back_type( AnyPtrPairArrayStack );
-
+	emplace_back_type( AnyArrayStack );
 }
 
 VarGenerate::~VarGenerate( ) {

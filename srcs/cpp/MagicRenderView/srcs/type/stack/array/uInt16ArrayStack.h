@@ -6,8 +6,6 @@
 class UInt16ArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::vector< uint16_t >;
-public:
 	UInt16ArrayStack( );
 	~UInt16ArrayStack( ) override;
 	void * createTypePtr( ) override;

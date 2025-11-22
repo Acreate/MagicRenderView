@@ -6,8 +6,6 @@
 class Float64ArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::vector< double >;
-public:
 	Float64ArrayStack( );
 	~Float64ArrayStack( ) override;
 	void * createTypePtr( ) override;

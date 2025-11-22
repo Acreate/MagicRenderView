@@ -25,6 +25,16 @@ bool InfoStack::hasVarPtr( const void *check_obj_ptr ) const {
 			return true;
 	return false;
 }
+uint64_t InfoStack::size( ) const {
+	size_t count = allVarPtrVector.size( );
+	if( count == 0 )
+		return 0;
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ] == nullptr )
+			return index + 1;
+	return count;
+}
 bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
 	if( lhs.typeName == rhs.typeName )
 		return true;

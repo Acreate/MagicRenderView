@@ -6,8 +6,6 @@
 class StringUnityStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = QString;
-public:
 	StringUnityStack( );
 	~StringUnityStack( ) override;
 	void * createTypePtr( ) override;

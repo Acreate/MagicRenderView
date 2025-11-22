@@ -1,18 +1,18 @@
-﻿#include "uInt8ArrayStack.h"
+﻿#include "anyArrayStack.h"
 
-UInt8ArrayStack::~UInt8ArrayStack( ) {
+AnyArrayStack::~AnyArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( nullptr == arrayPtr[ index ] )
-			delete ( std::vector< uint8_t > * ) arrayPtr[ index ];
+			delete ( std::vector< void * > * ) arrayPtr[ index ];
 	allVarPtrVector.clear( );
 }
-UInt8ArrayStack::UInt8ArrayStack( ) {
-	Stack_Type_Name( std::vector< uint8_t >, "vector<uint8_t>", "uint8_t[]", "uint8_tArray", "vector<uint8>", "uint8[]", "uint8Array" );
+AnyArrayStack::AnyArrayStack( ) {
+	Stack_Type_Name( std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
 }
-void * UInt8ArrayStack::createTypePtr( ) {
-	auto createObjPtr = new std::vector< uint8_t >;
+void * AnyArrayStack::createTypePtr( ) {
+	auto createObjPtr = new std::vector< void * >;
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -23,14 +23,14 @@ void * UInt8ArrayStack::createTypePtr( ) {
 	allVarPtrVector.emplace_back( createObjPtr );
 	return createObjPtr;
 }
-bool UInt8ArrayStack::deleteTypePtr( const void *delete_obj_ptr ) {
+bool AnyArrayStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	size_t count = allVarPtrVector.size( );
 	if( count == 0 )
 		return false;
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( delete_obj_ptr == arrayPtr[ index ] ) {
-			delete ( std::vector< uint8_t > * ) arrayPtr[ index ];
+			delete ( std::vector< void * > * ) arrayPtr[ index ];
 			count -= 1;
 			for( ; index < count; --count )
 				if( nullptr == arrayPtr[ count ] ) {
@@ -42,12 +42,12 @@ bool UInt8ArrayStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	return false;
 }
 
-uint64_t UInt8ArrayStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+uint64_t AnyArrayStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
 	return 0;
 }
-uint64_t UInt8ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
+uint64_t AnyArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) {
 	return 0;
 }
-TypeEnum::Type UInt8ArrayStack::getType( ) {
+TypeEnum::Type AnyArrayStack::getType( ) {
 	return TypeEnum::Type::Unity;
 }

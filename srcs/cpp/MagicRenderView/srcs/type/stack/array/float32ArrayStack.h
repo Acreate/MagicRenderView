@@ -6,8 +6,6 @@
 class Float32ArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = std::vector< float >;
-public:
 	Float32ArrayStack( );
 	~Float32ArrayStack( ) override;
 	void * createTypePtr( ) override;

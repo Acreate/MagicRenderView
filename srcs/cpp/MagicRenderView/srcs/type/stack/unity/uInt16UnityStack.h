@@ -6,8 +6,6 @@
 class UInt16UnityStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = uint16_t;
-public:
 	UInt16UnityStack( );
 	~UInt16UnityStack( ) override;
 	void * createTypePtr( ) override;

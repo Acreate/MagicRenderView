@@ -9,7 +9,7 @@ UInt64UnityStack::~UInt64UnityStack( ) {
 	allVarPtrVector.clear( );
 }
 UInt64UnityStack::UInt64UnityStack( ) {
-	Stack_Type_Name( uint64_t );
+	Stack_Type_Name( uint64_t, "uint64", "unsigned long long" );
 }
 void * UInt64UnityStack::createTypePtr( ) {
 	auto createObjPtr = new uint64_t;

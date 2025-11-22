@@ -6,8 +6,6 @@
 class Float32UnityStack : public InfoStack {
 	Q_OBJECT;
 public:
-	using t_current_type = float;
-public:
 	Float32UnityStack( );
 	~Float32UnityStack( ) override;
 	void * createTypePtr( ) override;
