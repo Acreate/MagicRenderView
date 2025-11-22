@@ -3,12 +3,9 @@
 #pragma once
 #include <QObject>
 #include <vector>
-#include <functional>
 #include <qstring.h>
 
 #include "../enums/typeEnum.h"
-#define AliasTypeNames( _Type , ...) aliasTypeNames =std::vector< QString >( {typeid( _Type ).name(   ), __VA_ARGS__ } )
-#define Stack_Type_Name( _Type, ... ) typeName = #_Type; AliasTypeNames(_Type,__VA_ARGS__ )
 class InfoStack : public QObject {
 	Q_OBJECT;
 protected:
@@ -27,6 +24,8 @@ public:
 	virtual bool isAliasTypeNames( const QString &check_type_name ) const;
 	virtual bool hasVarPtr( const void *check_obj_ptr ) const;
 	virtual uint64_t size( ) const;
+	virtual void * const* arrayPtr( ) const;
+	virtual void ** arrayPtr( );
 	virtual uint64_t toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) =0;
 	virtual uint64_t toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, std::vector< void * > &result_data ) = 0;
 	virtual TypeEnum::Type getType( ) = 0;

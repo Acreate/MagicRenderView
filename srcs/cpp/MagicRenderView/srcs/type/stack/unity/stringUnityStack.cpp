@@ -1,5 +1,6 @@
 ﻿#include "stringUnityStack.h"
 
+#include <define/macro.h>
 StringUnityStack::~StringUnityStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );

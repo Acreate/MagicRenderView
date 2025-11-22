@@ -35,6 +35,12 @@ uint64_t InfoStack::size( ) const {
 			return index + 1;
 	return count;
 }
+void * const* InfoStack::arrayPtr( ) const {
+	return allVarPtrVector.data( );
+}
+void ** InfoStack::arrayPtr( ) {
+	return allVarPtrVector.data( );
+}
 bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
 	if( lhs.typeName == rhs.typeName )
 		return true;

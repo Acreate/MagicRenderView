@@ -1,5 +1,6 @@
 ﻿#include "float64ArrayStack.h"
 
+#include <define/macro.h>
 Float64ArrayStack::~Float64ArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
@@ -49,5 +50,5 @@ uint64_t Float64ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &o
 	return 0;
 }
 TypeEnum::Type Float64ArrayStack::getType( ) {
-	return TypeEnum::Type::Unity;
+	return TypeEnum::Type::Array;
 }

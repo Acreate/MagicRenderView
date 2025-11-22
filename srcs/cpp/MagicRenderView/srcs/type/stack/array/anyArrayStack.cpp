@@ -1,5 +1,7 @@
 ﻿#include "anyArrayStack.h"
 
+#include <define/macro.h>
+
 AnyArrayStack::~AnyArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
@@ -49,5 +51,5 @@ uint64_t AnyArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_m
 	return 0;
 }
 TypeEnum::Type AnyArrayStack::getType( ) {
-	return TypeEnum::Type::Unity;
+	return TypeEnum::Type::Array;
 }

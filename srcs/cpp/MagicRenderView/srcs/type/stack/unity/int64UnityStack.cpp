@@ -1,5 +1,6 @@
 ﻿#include "int64UnityStack.h"
 
+#include <define/macro.h>
 Int64UnityStack::~Int64UnityStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );

@@ -1,5 +1,6 @@
 ﻿#include "float32UnityStack.h"
 
+#include <define/macro.h>
 Float32UnityStack::~Float32UnityStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );

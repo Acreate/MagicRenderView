@@ -1,5 +1,6 @@
 ﻿#include "uInt8UnityStack.h"
 
+#include <define/macro.h>
 UInt8UnityStack::~UInt8UnityStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );

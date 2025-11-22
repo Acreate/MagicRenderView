@@ -50,5 +50,5 @@ uint64_t AnyPtrPairStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj
 	return 0;
 }
 TypeEnum::Type AnyPtrPairStack::getType( ) {
-	return TypeEnum::Type::Unity;
+	return TypeEnum::Type::Pair;
 }

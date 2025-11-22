@@ -5,6 +5,8 @@
 #include <qstring.h>
 #include <vector>
 
+#include "../enums/typeEnum.h"
+
 class StackSerialize;
 class InfoStack;
 class VarGenerate : public QObject {
@@ -19,6 +21,7 @@ public:
 	virtual bool realease( const void *delete_obj_ptr );
 	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
+	virtual bool getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool );
 	virtual void * create( const QString &create_type_name );
 	template< typename TCreateType >
 	TCreateType * create( ) {

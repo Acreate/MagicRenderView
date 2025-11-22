@@ -99,6 +99,17 @@ bool VarGenerate::getTypeName( const QString &type_info_ref, QString &result_typ
 		}
 	return false;
 }
+bool VarGenerate::getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool ) {
+	size_t count = stacks.size( );
+	auto arrayPtr = stacks.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( arrayPtr[ index ]->hasVarPtr( check_obj_ptr ) ) {
+			result_bool = arrayPtr[ index ]->getType( );
+			return true;
+		}
+	return false;
+}
 
 bool VarGenerate::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) {
 	size_t count = stacks.size( );
