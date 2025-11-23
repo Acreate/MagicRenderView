@@ -10,14 +10,7 @@ AnyArrayStack::~AnyArrayStack( ) {
 
 }
 AnyArrayStack::AnyArrayStack( ) {
-	Stack_Type_Name( std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
-	newObjTypeFunction = [] {
-		return new std::vector< void * >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< void * > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
 }
 
 uint64_t AnyArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

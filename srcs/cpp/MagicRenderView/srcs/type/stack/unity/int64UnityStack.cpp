@@ -5,14 +5,7 @@ Int64UnityStack::~Int64UnityStack( ) {
 
 }
 Int64UnityStack::Int64UnityStack( ) {
-	Stack_Type_Name( int64_t, "int64", "long long" );
-	newObjTypeFunction = [] {
-		return new int64_t;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( int64_t * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( 0,int64_t, "int64", "long long" );	
 }
 
 uint64_t Int64UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

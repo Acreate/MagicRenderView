@@ -5,14 +5,7 @@ UInt64ArrayStack::~UInt64ArrayStack( ) {
 
 }
 UInt64ArrayStack::UInt64ArrayStack( ) {
-	Stack_Type_Name( std::vector<uint64_t>, "vector<uint64_t>", "uint64_t[]", "uint64_tArray", "vector<uint64>", "uint64[]", "uint64Array" );
-	newObjTypeFunction = [] {
-		return new std::vector< uint64_t >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< uint64_t > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( , std::vector<uint64_t>, "vector<uint64_t>", "uint64_t[]", "uint64_tArray", "vector<uint64>", "uint64[]", "uint64Array" );
 }
 
 uint64_t UInt64ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

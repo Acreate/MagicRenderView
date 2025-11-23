@@ -8,12 +8,16 @@
 #include "../enums/typeEnum.h"
 class InfoStack : public QObject {
 	Q_OBJECT;
+private:
+	std::function< void*( ) > newObjTypeFunction;
+	std::function< bool( void * ) > deleteObjTypeFunction;
+protected:
+	virtual void setNewObjTypeFunction( const std::function< void *( ) > &new_obj_type_function ) { newObjTypeFunction = new_obj_type_function; }
+	virtual void setDeleteObjTypeFunction( const std::function< bool( void * ) > &delete_obj_type_function ) { deleteObjTypeFunction = delete_obj_type_function; }
 protected:
 	QString typeName;
 	std::vector< QString > aliasTypeNames;
 	std::vector< void * > allVarPtrVector;
-	std::function< void*( ) > newObjTypeFunction;
-	std::function< bool( void * ) > deleteObjTypeFunction;
 protected:
 	InfoStack( );
 public:

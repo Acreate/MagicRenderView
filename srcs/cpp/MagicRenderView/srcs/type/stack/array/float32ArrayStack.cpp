@@ -5,14 +5,7 @@ Float32ArrayStack::~Float32ArrayStack( ) {
 
 }
 Float32ArrayStack::Float32ArrayStack( ) {
-	Stack_Type_Name( std::vector<float>, "vector<float>", "float[]", "floatArray", "vector<double32>", "double32[]", "double32Array", "vector<float32>", "float32[]", "float32Array" );
-	newObjTypeFunction = [] {
-		return new std::vector< float >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< float > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( , std::vector<float>, "vector<float>", "float[]", "floatArray", "vector<double32>", "double32[]", "double32Array", "vector<float32>", "float32[]", "float32Array" );
 }
 
 uint64_t Float32ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

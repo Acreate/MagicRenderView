@@ -5,14 +5,8 @@ UInt32UnityStack::~UInt32UnityStack( ) {
 
 }
 UInt32UnityStack::UInt32UnityStack( ) {
-	Stack_Type_Name( uint32_t, "uint32", "unsigned int" );
-	newObjTypeFunction = [] {
-		return new uint32_t;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( uint32_t * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( 0, uint32_t, "uint32", "unsigned int" );
+
 }
 
 uint64_t UInt32UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

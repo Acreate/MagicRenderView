@@ -5,14 +5,7 @@ Int16UnityStack::~Int16UnityStack( ) {
 
 }
 Int16UnityStack::Int16UnityStack( ) {
-	Stack_Type_Name( int16_t, "int16", "short" );
-	newObjTypeFunction = [] {
-		return new int16_t;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( int16_t * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( 0, int16_t, "int16", "short" );
 }
 
 uint64_t Int16UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

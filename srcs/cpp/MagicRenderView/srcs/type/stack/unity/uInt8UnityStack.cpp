@@ -5,14 +5,15 @@ UInt8UnityStack::~UInt8UnityStack( ) {
 
 }
 UInt8UnityStack::UInt8UnityStack( ) {
-	Stack_Type_Name( uint8_t, "uint8", "unsigned char" );
-	newObjTypeFunction = [] {
-		return new uint8_t;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( uint8_t * ) delete_obj_ptr;
+	Stack_Type_Name( 0, uint8_t, "uint8", "unsigned char" );
+
+	setNewObjTypeFunction( [] {
+		return new uint64_t;
+	} );
+	setDeleteObjTypeFunction( [] ( void *delete_obj_ptr ) {
+		delete ( uint64_t * ) delete_obj_ptr;
 		return true;
-	};
+	} );
 }
 
 uint64_t UInt8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

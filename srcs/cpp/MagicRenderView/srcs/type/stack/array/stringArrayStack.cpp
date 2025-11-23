@@ -10,14 +10,7 @@ StringArrayStack::~StringArrayStack( ) {
 	allVarPtrVector.clear( );
 }
 StringArrayStack::StringArrayStack( ) {
-	Stack_Type_Name( std::vector< QString >, "vector<QString>", "QString[]", "QStringArray", "vector<String>", "String[]", "StringArray" );
-	newObjTypeFunction = [] {
-		return new std::vector< QString >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< QString > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( , std::vector< QString >, "vector<QString>", "QString[]", "QStringArray", "vector<String>", "String[]", "StringArray" );
 }
 
 uint64_t StringArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

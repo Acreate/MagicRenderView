@@ -5,14 +5,8 @@ StringUnityStack::~StringUnityStack( ) {
 
 }
 StringUnityStack::StringUnityStack( ) {
-	Stack_Type_Name( QString, "string" );
-	newObjTypeFunction = [] {
-		return new QString;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( QString * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( "", QString, "string" );
+
 }
 
 uint64_t StringUnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

@@ -5,14 +5,7 @@ Int8UnityStack::~Int8UnityStack( ) {
 
 }
 Int8UnityStack::Int8UnityStack( ) {
-	Stack_Type_Name( int8_t, "int8", "char" );
-	newObjTypeFunction = [] {
-		return new int8_t;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( int8_t * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( 0, int8_t, "int8", "char" );
 }
 
 uint64_t Int8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

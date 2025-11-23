@@ -5,14 +5,7 @@ Int16ArrayStack::~Int16ArrayStack( ) {
 
 }
 Int16ArrayStack::Int16ArrayStack( ) {
-	Stack_Type_Name( std::vector< int16_t >, "vector<int16_t>", "int16_t[]", "int16_tArray", "vector<int16>", "int16[]", "int16Array" );
-	newObjTypeFunction = [] {
-		return new std::vector< int16_t >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< int16_t > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name(  , std::vector< int16_t >, "vector<int16_t>", "int16_t[]", "int16_tArray", "vector<int16>", "int16[]", "int16Array" );
 }
 
 uint64_t Int16ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

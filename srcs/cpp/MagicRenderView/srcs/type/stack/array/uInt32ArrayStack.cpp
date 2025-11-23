@@ -5,14 +5,8 @@ UInt32ArrayStack::~UInt32ArrayStack( ) {
 
 }
 UInt32ArrayStack::UInt32ArrayStack( ) {
-	Stack_Type_Name( std::vector<uint32_t>, "vector<uint32_t>", "uint32_t[]", "uint32_tArray", "vector<uint32>", "uint32[]", "uint32Array" );
-	newObjTypeFunction = [] {
-		return new std::vector< uint32_t >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( std::vector< uint32_t > * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( , std::vector<uint32_t>, "vector<uint32_t>", "uint32_t[]", "uint32_tArray", "vector<uint32>", "uint32[]", "uint32Array" );
+
 }
 
 uint64_t UInt32ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

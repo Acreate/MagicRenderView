@@ -10,13 +10,13 @@ AnyPtrPairStack::~AnyPtrPairStack( ) {
 AnyPtrPairStack::AnyPtrPairStack( ) {
 	typeName = "std::pair< void *, void * >";
 	aliasTypeNames = std::vector< QString >( { typeid( std::pair< void *, void * > ).name( ), "pair< void *, void * >", "pair" } );
-	newObjTypeFunction = [] {
-		return new std::pair< void *, void * >;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
+	setNewObjTypeFunction( [] {
+		return new std::pair< void *, void * >( nullptr, nullptr );
+	} );
+	setDeleteObjTypeFunction( [] ( void *delete_obj_ptr ) {
 		delete ( std::pair< void *, void * > * ) delete_obj_ptr;
 		return true;
-	};
+	} );
 }
 
 uint64_t AnyPtrPairStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

@@ -5,14 +5,7 @@ Float32UnityStack::~Float32UnityStack( ) {
 
 }
 Float32UnityStack::Float32UnityStack( ) {
-	Stack_Type_Name( float, "float32", "double32", "float_t" );
-	newObjTypeFunction = [] {
-		return new float;
-	};
-	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
-		delete ( float * ) delete_obj_ptr;
-		return true;
-	};
+	Stack_Type_Name( 0.0f, float, "float32", "double32", "float_t" );
 }
 
 uint64_t Float32UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

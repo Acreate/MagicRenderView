@@ -1,19 +1,33 @@
 ﻿#include "infoStack.h"
 #include <QDebug>
-InfoStack::InfoStack( ) {
 
+#include "../app/application.h"
+#include "../app/printfInfo.h"
+InfoStack::InfoStack( ) {
+	newObjTypeFunction = nullptr;
+	deleteObjTypeFunction = nullptr;
 }
 InfoStack::~InfoStack( ) {
-	size_t count = allVarPtrVector.size( );
-	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nullptr != arrayPtr[ index ] )
-			deleteObjTypeFunction( arrayPtr[ index ] );
-		else
-			break;
-	allVarPtrVector.clear( );
+
+	if( deleteObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrintfInfo( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" );
+	} else {
+		size_t count = allVarPtrVector.size( );
+		auto arrayPtr = allVarPtrVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( nullptr != arrayPtr[ index ] )
+				deleteObjTypeFunction( arrayPtr[ index ] );
+			else
+				break;
+		allVarPtrVector.clear( );
+	}
+
 }
 void * InfoStack::createTypePtr( ) {
+	if( newObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrintfInfo( )->error( "未初始化创建函数表达式，请初始化 newObjTypeFunction 函数指向调用" );
+		return nullptr;
+	}
 	auto createObjPtr = newObjTypeFunction( );
 	if( createObjPtr == nullptr )
 		return nullptr;
@@ -28,6 +42,10 @@ void * InfoStack::createTypePtr( ) {
 	return createObjPtr;
 }
 bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
+	if( deleteObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrintfInfo( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" );
+		return false;
+	}
 	size_t count = allVarPtrVector.size( );
 	if( count == 0 )
 		return false;
