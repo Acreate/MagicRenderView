@@ -60,9 +60,8 @@ uint64_t InfoStack::getTypeNameAtData( std::vector< uint8_t > &result_data ) {
 	if( converVar != count )
 		return 0;
 	converVar *= sizeof( QChar ) / sizeof( uint8_t );
-	if( fillTypeVarAtVector< uint64_t >( &converVar, buff ) == 0 )
+	if( fillTypeVarAtVector< uint64_t >( &converVar, result_data ) == 0 )
 		return 0;
-	result_data.append_range( buff );
 	QChar *data = typeName.data( );
 	if( toVector( data, converVar, buff ) == 0 )
 		return 0;
@@ -109,9 +108,8 @@ uint64_t InfoStack::fillTypeVarAtVector< QString >( const void *ptr, std::vector
 	if( converVar != count )
 		return 0;
 	converVar *= sizeof( QChar ) / sizeof( uint8_t );
-	if( fillTypeVarAtVector< uint64_t >( &converVar, buff ) == 0 )
+	if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == 0 )
 		return 0;
-	result.append_range( buff );
 	QChar *data = stringPtr->data( );
 	if( toVector( data, converVar, buff ) == 0 )
 		return 0;
