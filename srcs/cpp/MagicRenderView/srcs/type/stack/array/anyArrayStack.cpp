@@ -101,7 +101,8 @@ uint64_t AnyArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t 
 	result_data.append_range( buff );
 	auto arrayPtr = vector->data( );
 	for( size_t index = 0; index < arraySize; ++index ) {
-		count = varGenerate->toVector( arrayPtr + index, buff );
+		void **ptr = arrayPtr + index;
+		count = varGenerate->toVector( *ptr, buff );
 		if( count == 0 )
 			return 0;
 		result_data.append_range( buff );

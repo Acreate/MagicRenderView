@@ -105,6 +105,58 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 	qDebug( ) << "";
 }
 
+template< typename TTestFirstType >
+void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &array_count ) {
+	auto name = typeid( std::vector< void * > ).name( );
+	qDebug( ) << "";
+	qDebug( ) << name;
+	auto instancePtr = Application::getInstancePtr( );
+	auto varGenerate = instancePtr->getVarGenerate( );
+	auto checkVar = varGenerate->create< std::vector< void * > >( );
+	if( checkVar ) {
+		checkVar->resize( array_count, nullptr );
+		QStringList data;
+		auto arrayDataPtr = checkVar->data( );
+		for( size_t index = 0; index < array_count; ++index ) {
+			auto unityVar = varGenerate->create< TTestFirstType >( );
+			if( unityVar == nullptr ) {
+				auto name = typeid( std::vector< void * > ).name( );
+				qDebug( ) << "单元创建失败:" << name;
+				return;
+			}
+			*unityVar = first_var_value;
+			arrayDataPtr[ index ] = unityVar;
+			data.append( QString( "%1" ).arg( *unityVar ) );
+		}
+		qDebug( ) << "序列化值:" << data.join( ", " );
+		std::vector< uint8_t > buff;
+		uint64_t count = varGenerate->toVector( checkVar, buff );
+		if( count ) {
+			void *converPtr = nullptr;
+			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			if( count ) {
+				data.clear( );
+				auto castPtr = varGenerate->cast_ptr< std::vector< void * > >( converPtr );
+				arrayDataPtr = castPtr->data( );
+				for( size_t index = 0; index < array_count; ++index ) {
+					auto unityVar = varGenerate->cast_ptr< TTestFirstType >( arrayDataPtr[ index ] );
+					if( unityVar == nullptr ) {
+						auto name = typeid( std::vector< void * > ).name( );
+						qDebug( ) << "单元转换失败:" << name;
+						return;
+					}
+					data.append( QString( "%1" ).arg( *unityVar ) );
+				}
+				qDebug( ) << "反序列化:" << data.join( ", " );
+			} else
+				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+		} else
+			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+	} else
+		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+	qDebug( ) << "";
+}
+
 void testVarGener( ) {
 	testVarGener< float >( 155.2 );
 	testVarGener< double >( 255.1 );
@@ -116,9 +168,10 @@ void testVarGener( ) {
 	testVarGener< uint16_t >( -255.1 );
 	testVarGener< uint32_t >( -255.1 );
 	testVarGener< uint64_t >( -255.1 );
-	testVarGener< QString >( "255.1" );
+	testVarGener< QString >( "255.1，含糊" );
 	testPairVarGener< int32_t, QString >( 0, "" );
 	testPairVarGener< int32_t, QString >( 888, "323" );
+	testPairVarGener< int32_t, QString >( 888, "323汉文化" );
 	testArrayVarGener< float >( 155.2, 5 );
 	testArrayVarGener< double >( 255.1, 5 );
 	testArrayVarGener< uint8_t >( -547, 5 );
@@ -130,6 +183,8 @@ void testVarGener( ) {
 	testArrayVarGener< int32_t >( 547, 5 );
 	testArrayVarGener< int64_t >( 547, 5 );
 	testArrayVarGener< QString >( "547", 5 );
+	testAnyArrayVarGener< QString >( "", 5 );
+	testAnyArrayVarGener< QString >( "985单元", 5 );
 }
 int main( int argc, char *argv[ ] ) {
 
