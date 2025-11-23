@@ -30,9 +30,9 @@ void PrinterDirector::error( const QString &msg ) const {
 		QString sourceFrom( "%1\n-------------------" );
 		qstringBuff.append( sourceFrom.arg( msg ) );
 		qsizetype removeStartLen = applicationName.size( ) + 1;
-		sourceFrom = "\t=>%1 [ %2 : %3 ]";
+		sourceFrom = "\t(%4)=>%1 [ %2 : %3 ]";
 		qsizetype lastIndexOf;
-		for( size_t index = 0; index < stackTraceEntriesCount; ++index ) {
+		for( size_t index = 0; index < stackTraceEntriesCount; ) {
 			auto &stacktraceEntry = arrayPtr[ index ];
 			auto sourceFile = QString::fromStdString( stacktraceEntry.source_file( ) );
 			sourceFile = absPath->relativeFilePath( sourceFile );
@@ -40,7 +40,8 @@ void PrinterDirector::error( const QString &msg ) const {
 			lastIndexOf = description.lastIndexOf( "+0x" );
 			description = description.mid( removeStartLen, lastIndexOf - removeStartLen );
 			auto sourceLine = QString::number( stacktraceEntry.source_line( ) );
-			auto appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine );
+			++index;
+			auto appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine ).arg( index );
 			qstringBuff << appendElement;
 		}
 		qstringBuff.append( QString( "==============   ==============" ) );

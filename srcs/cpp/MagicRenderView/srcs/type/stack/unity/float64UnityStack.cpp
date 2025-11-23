@@ -4,8 +4,11 @@
 Float64UnityStack::~Float64UnityStack( ) {
 
 }
-Float64UnityStack::Float64UnityStack( ) {
+bool Float64UnityStack::init( ) {
 	Stack_Type_Name( 0, double, "float64", "double64", "double_t" );
+	return true;
+}
+Float64UnityStack::Float64UnityStack( ) {
 }
 
 uint64_t Float64UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

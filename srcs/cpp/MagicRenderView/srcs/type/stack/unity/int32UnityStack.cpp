@@ -4,8 +4,11 @@
 Int32UnityStack::~Int32UnityStack( ) {
 
 }
-Int32UnityStack::Int32UnityStack( ) {
+bool Int32UnityStack::init( ) {
 	Stack_Type_Name( 0, int32_t, "int32", "int" );
+	return true;
+}
+Int32UnityStack::Int32UnityStack( ) {
 }
 
 uint64_t Int32UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

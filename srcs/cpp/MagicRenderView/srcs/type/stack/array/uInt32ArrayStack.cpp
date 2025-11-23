@@ -4,8 +4,11 @@
 UInt32ArrayStack::~UInt32ArrayStack( ) {
 
 }
-UInt32ArrayStack::UInt32ArrayStack( ) {
+bool UInt32ArrayStack::init( ) {
 	Stack_Type_Name( , std::vector<uint32_t>, "vector<uint32_t>", "uint32_t[]", "uint32_tArray", "vector<uint32>", "uint32[]", "uint32Array" );
+	return true;
+}
+UInt32ArrayStack::UInt32ArrayStack( ) {
 
 }
 

@@ -4,8 +4,11 @@
 Int8ArrayStack::~Int8ArrayStack( ) {
 
 }
+bool Int8ArrayStack::init( ) {
+	Stack_Type_Name( , std::vector<int8_t>, "vector<int8_t>", "int8_t[]", "int8_tArray", "vector<int8>", "int8[]", "int8Array" );
+	return true;
+}
 Int8ArrayStack::Int8ArrayStack( ) {
-	Stack_Type_Name(  , std::vector<int8_t>, "vector<int8_t>", "int8_t[]", "int8_tArray", "vector<int8>", "int8[]", "int8Array" );
 }
 
 uint64_t Int8ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

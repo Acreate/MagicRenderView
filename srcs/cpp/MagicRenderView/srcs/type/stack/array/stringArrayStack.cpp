@@ -9,8 +9,11 @@ StringArrayStack::~StringArrayStack( ) {
 			delete ( std::vector< QString > * ) arrayPtr[ index ];
 	allVarPtrVector.clear( );
 }
-StringArrayStack::StringArrayStack( ) {
+bool StringArrayStack::init( ) {
 	Stack_Type_Name( , std::vector< QString >, "vector<QString>", "QString[]", "QStringArray", "vector<String>", "String[]", "StringArray" );
+	return true;
+}
+StringArrayStack::StringArrayStack( ) {
 }
 
 uint64_t StringArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

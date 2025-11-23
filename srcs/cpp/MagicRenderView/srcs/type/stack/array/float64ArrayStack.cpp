@@ -4,8 +4,11 @@
 Float64ArrayStack::~Float64ArrayStack( ) {
 
 }
+bool Float64ArrayStack::init( ) {
+	Stack_Type_Name( , std::vector<double>, "vector<double>", "double[]", "doubleArray", "vector<double64>", "double64[]", "double64Array", "vector<float64>", "float64[]", "float64Array" );
+	return true;
+}
 Float64ArrayStack::Float64ArrayStack( ) {
-	Stack_Type_Name( ,std::vector<double>, "vector<double>", "double[]", "doubleArray", "vector<double64>", "double64[]", "double64Array", "vector<float64>", "float64[]", "float64Array" );
 }
 
 uint64_t Float64ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

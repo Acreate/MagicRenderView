@@ -4,8 +4,11 @@
 Int64ArrayStack::~Int64ArrayStack( ) {
 
 }
-Int64ArrayStack::Int64ArrayStack( ) {
+bool Int64ArrayStack::init( ) {
 	Stack_Type_Name( , std::vector< int64_t >, "vector<int64_t>", "int64_t[]", "int64_tArray", "vector<int64>", "int64[]", "int64Array" );
+	return true;
+}
+Int64ArrayStack::Int64ArrayStack( ) {
 }
 
 uint64_t Int64ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

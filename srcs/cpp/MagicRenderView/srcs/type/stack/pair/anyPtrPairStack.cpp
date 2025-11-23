@@ -7,7 +7,7 @@
 AnyPtrPairStack::~AnyPtrPairStack( ) {
 
 }
-AnyPtrPairStack::AnyPtrPairStack( ) {
+bool AnyPtrPairStack::init( ) {
 	typeName = "std::pair< void *, void * >";
 	aliasTypeNames = std::vector< QString >( { typeid( std::pair< void *, void * > ).name( ), "pair< void *, void * >", "pair" } );
 	setNewObjTypeFunction( [] {
@@ -17,6 +17,9 @@ AnyPtrPairStack::AnyPtrPairStack( ) {
 		delete ( std::pair< void *, void * > * ) delete_obj_ptr;
 		return true;
 	} );
+	return true;
+}
+AnyPtrPairStack::AnyPtrPairStack( ) {
 }
 
 uint64_t AnyPtrPairStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

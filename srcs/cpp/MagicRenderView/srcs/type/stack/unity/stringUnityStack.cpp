@@ -4,9 +4,11 @@
 StringUnityStack::~StringUnityStack( ) {
 
 }
-StringUnityStack::StringUnityStack( ) {
+bool StringUnityStack::init( ) {
 	Stack_Type_Name( "", QString, "string" );
-
+	return true;
+}
+StringUnityStack::StringUnityStack( ) {
 }
 
 uint64_t StringUnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

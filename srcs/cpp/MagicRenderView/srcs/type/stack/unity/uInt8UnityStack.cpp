@@ -4,16 +4,11 @@
 UInt8UnityStack::~UInt8UnityStack( ) {
 
 }
-UInt8UnityStack::UInt8UnityStack( ) {
+bool UInt8UnityStack::init( ) {
 	Stack_Type_Name( 0, uint8_t, "uint8", "unsigned char" );
-
-	setNewObjTypeFunction( [] {
-		return new uint64_t;
-	} );
-	setDeleteObjTypeFunction( [] ( void *delete_obj_ptr ) {
-		delete ( uint64_t * ) delete_obj_ptr;
-		return true;
-	} );
+	return true;
+}
+UInt8UnityStack::UInt8UnityStack( ) {
 }
 
 uint64_t UInt8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

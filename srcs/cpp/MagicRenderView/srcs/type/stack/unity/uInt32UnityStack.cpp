@@ -4,8 +4,11 @@
 UInt32UnityStack::~UInt32UnityStack( ) {
 
 }
-UInt32UnityStack::UInt32UnityStack( ) {
+bool UInt32UnityStack::init( ) {
 	Stack_Type_Name( 0, uint32_t, "uint32", "unsigned int" );
+	return true;
+}
+UInt32UnityStack::UInt32UnityStack( ) {
 
 }
 

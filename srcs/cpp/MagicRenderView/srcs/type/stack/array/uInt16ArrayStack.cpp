@@ -4,8 +4,11 @@
 UInt16ArrayStack::~UInt16ArrayStack( ) {
 
 }
-UInt16ArrayStack::UInt16ArrayStack( ) {
+bool UInt16ArrayStack::init( ) {
 	Stack_Type_Name( , std::vector< uint16_t >, "vector<uint16_t>", "uint16_t[]", "uint16_tArray", "vector<uint16>", "uint16[]", "uint16Array" );
+	return true;
+}
+UInt16ArrayStack::UInt16ArrayStack( ) {
 
 }
 

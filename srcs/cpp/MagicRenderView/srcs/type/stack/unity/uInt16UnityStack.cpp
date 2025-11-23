@@ -4,8 +4,11 @@
 UInt16UnityStack::~UInt16UnityStack( ) {
 
 }
-UInt16UnityStack::UInt16UnityStack( ) {
+bool UInt16UnityStack::init( ) {
 	Stack_Type_Name( 0, uint16_t, "uint16", "unsigned short" );
+	return true;
+}
+UInt16UnityStack::UInt16UnityStack( ) {
 
 }
 

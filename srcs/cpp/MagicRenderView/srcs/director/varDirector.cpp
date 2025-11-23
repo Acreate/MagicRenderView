@@ -70,6 +70,7 @@ bool VarDirector::init( ) {
 
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyArrayStack );
+	count = stacks.size( );
 	arrayPtr = stacks.data( );
 	index = 0;
 	for( ; index < count; ++index )

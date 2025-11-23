@@ -4,8 +4,11 @@
 Int16UnityStack::~Int16UnityStack( ) {
 
 }
-Int16UnityStack::Int16UnityStack( ) {
+bool Int16UnityStack::init( ) {
 	Stack_Type_Name( 0, int16_t, "int16", "short" );
+	return true;
+}
+Int16UnityStack::Int16UnityStack( ) {
 }
 
 uint64_t Int16UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

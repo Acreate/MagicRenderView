@@ -4,8 +4,11 @@
 Int8UnityStack::~Int8UnityStack( ) {
 
 }
-Int8UnityStack::Int8UnityStack( ) {
+bool Int8UnityStack::init( ) {
 	Stack_Type_Name( 0, int8_t, "int8", "char" );
+	return true;
+}
+Int8UnityStack::Int8UnityStack( ) {
 }
 
 uint64_t Int8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

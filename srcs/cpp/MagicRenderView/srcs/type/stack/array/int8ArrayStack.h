@@ -8,7 +8,8 @@ class Int8ArrayStack : public InfoStack {
 public:
 	Int8ArrayStack( );
 	~Int8ArrayStack( ) override;
-
+protected:
+	bool init( ) override;
 public:
 	uint64_t toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) override;
 	TypeEnum::Type getType( ) override;

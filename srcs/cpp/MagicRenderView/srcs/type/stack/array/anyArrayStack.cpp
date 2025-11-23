@@ -9,8 +9,12 @@
 AnyArrayStack::~AnyArrayStack( ) {
 
 }
-AnyArrayStack::AnyArrayStack( ) {
+bool AnyArrayStack::init( ) {
 	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
+	return true;
+}
+AnyArrayStack::AnyArrayStack( ) {
+
 }
 
 uint64_t AnyArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

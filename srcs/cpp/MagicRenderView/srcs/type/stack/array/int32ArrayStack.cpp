@@ -4,8 +4,11 @@
 Int32ArrayStack::~Int32ArrayStack( ) {
 
 }
-Int32ArrayStack::Int32ArrayStack( ) {
+bool Int32ArrayStack::init( ) {
 	Stack_Type_Name( , std::vector< int32_t >, "vector<int32_t>", "int32_t[]", "int32_tArray", "vector<int32>", "int32[]", "int32Array" );
+	return true;
+}
+Int32ArrayStack::Int32ArrayStack( ) {
 }
 
 uint64_t Int32ArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
