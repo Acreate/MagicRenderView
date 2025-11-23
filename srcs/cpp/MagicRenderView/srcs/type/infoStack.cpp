@@ -102,14 +102,14 @@ uint64_t InfoStack::fillTypeVarAtVector< QString >( const void *ptr, std::vector
 	QString *stringPtr = ( QString * ) ptr;
 	std::vector< uint8_t > buff;
 	qint64 count = stringPtr->size( );
-	if( count <= 0 )
-		return 0;
 	uint64_t converVar = count;
 	if( converVar != count )
 		return 0;
 	converVar *= sizeof( QChar ) / sizeof( uint8_t );
 	if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == 0 )
 		return 0;
+	if( converVar == 0 )
+		return result.size( );
 	QChar *data = stringPtr->data( );
 	if( toVector( data, converVar, buff ) == 0 )
 		return 0;
@@ -121,6 +121,8 @@ uint64_t InfoStack::fillTypeVectorAtVar< QString >( const uint8_t *source_ptr, c
 	QString *stringPtr = ( QString * ) target_var_ptr;
 	uint64_t converVar = *( uint64_t * ) source_ptr;
 	size_t sizeTypeCount = sizeof( uint64_t );
+	if( converVar == 0 ) // 字符串为空时，直接返回长度匹配大小
+		return sizeTypeCount;
 	size_t mod = source_count - sizeTypeCount;
 	if( mod < converVar )
 		return 0;

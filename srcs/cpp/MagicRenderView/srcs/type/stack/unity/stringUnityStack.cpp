@@ -70,13 +70,11 @@ TypeEnum::Type StringUnityStack::getType( ) {
 uint64_t StringUnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
 	std::vector< uint8_t > buff;
 	uint64_t count;
-	count = getTypeNameAtData( buff );
+	count = getTypeNameAtData( result_data );
 	if( count == 0 )
 		return 0;
-	result_data.clear( );
-	result_data.append_range( buff );
 	count = fillTypeVarAtVector< QString >( obj_start_ptr, buff );
-	if( count == 0 )
+	if( count == 0 ) // 字符串为空时，该返回为 0
 		return 0;
 	result_data.append_range( buff );
 	return result_data.size( );

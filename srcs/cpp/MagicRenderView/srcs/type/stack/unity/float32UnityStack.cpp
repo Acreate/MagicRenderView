@@ -69,11 +69,9 @@ TypeEnum::Type Float32UnityStack::getType( ) {
 uint64_t Float32UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
 	std::vector< uint8_t > buff;
 	uint64_t count;
-	count = getTypeNameAtData( buff );
+	count = getTypeNameAtData( result_data );
 	if( count == 0 )
 		return 0;
-	result_data.clear( );
-	result_data.append_range( buff );
 	count = fillTypeVarAtVector< float >( obj_start_ptr, buff );
 	if( count == 0 )
 		return 0;

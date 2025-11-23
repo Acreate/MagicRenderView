@@ -8,6 +8,9 @@
 #include "type/stack/unity/float32UnityStack.h"
 template< typename TTestType >
 void testVarGener( const TTestType &default_var ) {
+	auto name = typeid( TTestType ).name( );
+	qDebug( ) << "";
+	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
 	auto varGenerate = instancePtr->getVarGenerate( );
 	auto checkVar = varGenerate->create< TTestType >( );
@@ -23,13 +26,49 @@ void testVarGener( const TTestType &default_var ) {
 				auto castPtr = varGenerate->cast_ptr< TTestType >( converPtr );
 				qDebug( ) << "反序列化:" << *castPtr;
 			} else
-				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + typeid( TTestType ).name( ) );
+				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
 		} else
-			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + typeid( TTestType ).name( ) );
+			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
 	} else
-		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + typeid( TTestType ).name( ) );
+		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
 	qDebug( ) << "";
 }
+
+template< typename TTestFirstType, typename TTestScondType >
+void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondType &scond_var_varlue ) {
+	auto name = typeid( std::pair< void *, void * > ).name( );
+	qDebug( ) << "";
+	qDebug( ) << name;
+	auto instancePtr = Application::getInstancePtr( );
+	auto varGenerate = instancePtr->getVarGenerate( );
+	auto checkVar = varGenerate->create< std::pair< void *, void * > >( );
+	if( checkVar ) {
+		auto first = varGenerate->create< TTestFirstType >( );
+		auto scond = varGenerate->create< TTestScondType >( );
+		*first = first_var_value;
+		*scond = scond_var_varlue;
+		checkVar->first = first;
+		checkVar->second = scond;
+		qDebug( ) << "序列化值:" << *first << ", " << *scond;
+		std::vector< uint8_t > buff;
+		uint64_t count = varGenerate->toVector( checkVar, buff );
+		if( count ) {
+			void *converPtr = nullptr;
+			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			if( count ) {
+				auto castPtr = varGenerate->cast_ptr< std::pair< void *, void * > >( converPtr );
+				first = varGenerate->cast_ptr< int32_t >( castPtr->first );
+				scond = varGenerate->cast_ptr< QString >( castPtr->second );
+				qDebug( ) << "反序列化:" << *first << ", " << *scond;
+			} else
+				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+		} else
+			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+	} else
+		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+	qDebug( ) << "";
+}
+
 void testVarGener( ) {
 	testVarGener< float >( 155.2 );
 	testVarGener< double >( 255.1 );
@@ -42,6 +81,8 @@ void testVarGener( ) {
 	testVarGener< uint32_t >( -255.1 );
 	testVarGener< uint64_t >( -255.1 );
 	testVarGener< QString >( "255.1" );
+	testPairVarGener< int32_t, QString >( 0, "" );
+	testPairVarGener< int32_t, QString >( 888, "323" );
 }
 int main( int argc, char *argv[ ] ) {
 
@@ -49,6 +90,7 @@ int main( int argc, char *argv[ ] ) {
 	if( app.init( ) == false )
 		return -1;
 	testVarGener( );
+	return 0;
 	MainWindow mainwidget;
 	mainwidget.show( );
 
