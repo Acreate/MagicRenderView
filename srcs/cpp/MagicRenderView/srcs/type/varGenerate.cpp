@@ -88,6 +88,16 @@ uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_cou
 			return userCount;
 	return 0;
 }
+uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
+	size_t count = stacks.size( );
+	auto arrayPtr = stacks.data( );
+	size_t index = 0;
+	uint64_t userCount;
+	for( ; index < count; ++index )
+		if( userCount = arrayPtr[ index ]->toObj( source_ptr, source_count, *target_var_ptr ), userCount != 0 )
+			return userCount;
+	return 0;
+}
 uint64_t VarGenerate::toVector( const void *ptr, std::vector< uint8_t > &result ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
