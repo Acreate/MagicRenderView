@@ -1,8 +1,8 @@
 ﻿#include "anyPtrPairStack.h"
 
-#include "../../varGenerate.h"
+#include <app/application.h>
 
-#include "../../../app/application.h"
+#include <director/varDirector.h>
 
 AnyPtrPairStack::~AnyPtrPairStack( ) {
 
@@ -30,13 +30,13 @@ uint64_t AnyPtrPairStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj
 	auto offset = obj_start_ptr + count;
 	auto mod = obj_memory_size - count;
 	std::pair< void *, void * > buffVar;
-	VarGenerate *varGenerate = Application::getInstancePtr( )->getVarGenerate( );
-	count = varGenerate->toVar( offset, mod, buffVar.first );
+	auto *varDirector = Application::getInstancePtr( )->getVarDirector( );
+	count = varDirector->toVar( offset, mod, buffVar.first );
 	if( count == 0 )
 		return 0;
 	offset = offset + count;
 	mod = mod - count;
-	count = varGenerate->toVar( offset, mod, buffVar.second );
+	count = varDirector->toVar( offset, mod, buffVar.second );
 	if( count == 0 )
 		return 0;
 	offset = offset + count;
@@ -54,13 +54,13 @@ uint64_t AnyPtrPairStack::toVectorData( void *obj_start_ptr, std::vector< uint8_
 	count = getTypeNameAtData( result_data );
 	if( count == 0 )
 		return 0;
-	VarGenerate *varGenerate = Application::getInstancePtr( )->getVarGenerate( );
+	auto *varDirector = Application::getInstancePtr( )->getVarDirector( );
 	std::pair< void *, void * > *converPtr = ( std::pair< void *, void * > * ) ( obj_start_ptr );
-	count = varGenerate->toVector( converPtr->first, buff );
+	count = varDirector->toVector( converPtr->first, buff );
 	if( count == 0 )
 		return 0;
 	result_data.append_range( buff );
-	count = varGenerate->toVector( converPtr->second, buff );
+	count = varDirector->toVector( converPtr->second, buff );
 	if( count == 0 )
 		return 0;
 	result_data.append_range( buff );

@@ -2,34 +2,35 @@
 #include <QDebug>
 
 #include "../app/application.h"
-#include "../app/printfInfo.h"
 
-#include "../type/varGenerate.h"
+#include "../director/printerDirector.h"
+#include "../director/varDirector.h"
+
 template< typename TTestType >
 void testVarGener( const TTestType &default_var ) {
 	auto name = typeid( TTestType ).name( );
 	qDebug( ) << "";
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
-	auto varGenerate = instancePtr->getVarGenerate( );
-	auto checkVar = varGenerate->create< TTestType >( );
+	auto varDirector = instancePtr->getVarDirector( );
+	auto checkVar = varDirector->create< TTestType >( );
 	if( checkVar ) {
 		*checkVar = default_var;
 		qDebug( ) << "序列化值:" << *checkVar;
 		std::vector< uint8_t > buff;
-		uint64_t count = varGenerate->toVector( checkVar, buff );
+		uint64_t count = varDirector->toVector( checkVar, buff );
 		if( count ) {
 			void *converPtr = nullptr;
-			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
 			if( count ) {
-				auto castPtr = varGenerate->cast_ptr< TTestType >( converPtr );
+				auto castPtr = varDirector->cast_ptr< TTestType >( converPtr );
 				qDebug( ) << "反序列化:" << *castPtr;
 			} else
-				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
 		} else
-			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
 	} else
-		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
 	qDebug( ) << "";
 }
 
@@ -39,32 +40,32 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 	qDebug( ) << "";
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
-	auto varGenerate = instancePtr->getVarGenerate( );
-	auto checkVar = varGenerate->create< std::pair< void *, void * > >( );
+	auto varDirector = instancePtr->getVarDirector( );
+	auto checkVar = varDirector->create< std::pair< void *, void * > >( );
 	if( checkVar ) {
-		auto first = varGenerate->create< TTestFirstType >( );
-		auto scond = varGenerate->create< TTestScondType >( );
+		auto first = varDirector->create< TTestFirstType >( );
+		auto scond = varDirector->create< TTestScondType >( );
 		*first = first_var_value;
 		*scond = scond_var_varlue;
 		checkVar->first = first;
 		checkVar->second = scond;
 		qDebug( ) << "序列化值:" << *first << ", " << *scond;
 		std::vector< uint8_t > buff;
-		uint64_t count = varGenerate->toVector( checkVar, buff );
+		uint64_t count = varDirector->toVector( checkVar, buff );
 		if( count ) {
 			void *converPtr = nullptr;
-			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
 			if( count ) {
-				auto castPtr = varGenerate->cast_ptr< std::pair< void *, void * > >( converPtr );
-				first = varGenerate->cast_ptr< int32_t >( castPtr->first );
-				scond = varGenerate->cast_ptr< QString >( castPtr->second );
+				auto castPtr = varDirector->cast_ptr< std::pair< void *, void * > >( converPtr );
+				first = varDirector->cast_ptr< int32_t >( castPtr->first );
+				scond = varDirector->cast_ptr< QString >( castPtr->second );
 				qDebug( ) << "反序列化:" << *first << ", " << *scond;
 			} else
-				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
 		} else
-			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
 	} else
-		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
 	qDebug( ) << "";
 }
 
@@ -74,8 +75,8 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 	qDebug( ) << "";
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
-	auto varGenerate = instancePtr->getVarGenerate( );
-	auto checkVar = varGenerate->create< std::vector< TTestFirstType > >( );
+	auto varDirector = instancePtr->getVarDirector( );
+	auto checkVar = varDirector->create< std::vector< TTestFirstType > >( );
 	if( checkVar ) {
 		checkVar->resize( array_count, first_var_value );
 		QStringList data;
@@ -84,23 +85,23 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 			data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
 		qDebug( ) << "序列化值:" << data.join( ", " );
 		std::vector< uint8_t > buff;
-		uint64_t count = varGenerate->toVector( checkVar, buff );
+		uint64_t count = varDirector->toVector( checkVar, buff );
 		if( count ) {
 			void *converPtr = nullptr;
-			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
 			if( count ) {
 				data.clear( );
-				auto castPtr = varGenerate->cast_ptr< std::vector< TTestFirstType > >( converPtr );
+				auto castPtr = varDirector->cast_ptr< std::vector< TTestFirstType > >( converPtr );
 				arrayDataPtr = castPtr->data( );
 				for( size_t index = 0; index < array_count; ++index )
 					data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
 				qDebug( ) << "反序列化:" << data.join( ", " );
 			} else
-				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
 		} else
-			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
 	} else
-		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
 	qDebug( ) << "";
 }
 
@@ -110,14 +111,14 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 	qDebug( ) << "";
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
-	auto varGenerate = instancePtr->getVarGenerate( );
-	auto checkVar = varGenerate->create< std::vector< void * > >( );
+	auto varDirector = instancePtr->getVarDirector( );
+	auto checkVar = varDirector->create< std::vector< void * > >( );
 	if( checkVar ) {
 		checkVar->resize( array_count, nullptr );
 		QStringList data;
 		auto arrayDataPtr = checkVar->data( );
 		for( size_t index = 0; index < array_count; ++index ) {
-			auto unityVar = varGenerate->create< TTestFirstType >( );
+			auto unityVar = varDirector->create< TTestFirstType >( );
 			if( unityVar == nullptr ) {
 				auto name = typeid( std::vector< void * > ).name( );
 				qDebug( ) << "单元创建失败:" << name;
@@ -129,16 +130,16 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 		}
 		qDebug( ) << "序列化值:" << data.join( ", " );
 		std::vector< uint8_t > buff;
-		uint64_t count = varGenerate->toVector( checkVar, buff );
+		uint64_t count = varDirector->toVector( checkVar, buff );
 		if( count ) {
 			void *converPtr = nullptr;
-			count = varGenerate->toVar( buff.data( ), buff.size( ), converPtr );
+			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
 			if( count ) {
 				data.clear( );
-				auto castPtr = varGenerate->cast_ptr< std::vector< void * > >( converPtr );
+				auto castPtr = varDirector->cast_ptr< std::vector< void * > >( converPtr );
 				arrayDataPtr = castPtr->data( );
 				for( size_t index = 0; index < array_count; ++index ) {
-					auto unityVar = varGenerate->cast_ptr< TTestFirstType >( arrayDataPtr[ index ] );
+					auto unityVar = varDirector->cast_ptr< TTestFirstType >( arrayDataPtr[ index ] );
 					if( unityVar == nullptr ) {
 						auto name = typeid( std::vector< void * > ).name( );
 						qDebug( ) << "单元转换失败:" << name;
@@ -148,11 +149,11 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 				}
 				qDebug( ) << "反序列化:" << data.join( ", " );
 			} else
-				instancePtr->getPrintfInfo( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
 		} else
-			instancePtr->getPrintfInfo( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
 	} else
-		instancePtr->getPrintfInfo( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
 	qDebug( ) << "";
 }
 

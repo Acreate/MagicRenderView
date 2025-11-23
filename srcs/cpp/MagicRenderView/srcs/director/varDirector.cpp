@@ -1,34 +1,49 @@
-﻿#include "varGenerate.h"
+﻿#include "varDirector.h"
 
 #include <type/infoStack.h>
+#include <type/stack/array/anyArrayStack.h>
+#include <type/stack/array/float32ArrayStack.h>
+#include <type/stack/array/float64ArrayStack.h>
+#include <type/stack/array/int16ArrayStack.h>
+#include <type/stack/array/int32ArrayStack.h>
+#include <type/stack/array/int64ArrayStack.h>
+#include <type/stack/array/int8ArrayStack.h>
+#include <type/stack/array/stringArrayStack.h>
+#include <type/stack/array/uInt16ArrayStack.h>
+#include <type/stack/array/uInt32ArrayStack.h>
+#include <type/stack/array/uInt64ArrayStack.h>
+#include <type/stack/array/uInt8ArrayStack.h>
+#include <type/stack/pair/anyPtrPairStack.h>
+#include <type/stack/unity/float32UnityStack.h>
+#include <type/stack/unity/float64UnityStack.h>
+#include <type/stack/unity/int16UnityStack.h>
+#include <type/stack/unity/int32UnityStack.h>
+#include <type/stack/unity/int64UnityStack.h>
+#include <type/stack/unity/int8UnityStack.h>
+#include <type/stack/unity/stringUnityStack.h>
+#include <type/stack/unity/uInt16UnityStack.h>
+#include <type/stack/unity/uInt32UnityStack.h>
+#include <type/stack/unity/uInt64UnityStack.h>
+#include <type/stack/unity/uInt8UnityStack.h>
 
-#include "stack/array/anyArrayStack.h"
-#include "stack/array/float32ArrayStack.h"
-#include "stack/array/float64ArrayStack.h"
-#include "stack/array/int16ArrayStack.h"
-#include "stack/array/int32ArrayStack.h"
-#include "stack/array/int64ArrayStack.h"
-#include "stack/array/int8ArrayStack.h"
-#include "stack/array/stringArrayStack.h"
-#include "stack/array/uInt16ArrayStack.h"
-#include "stack/array/uInt32ArrayStack.h"
-#include "stack/array/uInt64ArrayStack.h"
-#include "stack/array/uInt8ArrayStack.h"
-#include "stack/pair/anyPtrPairStack.h"
-#include "stack/unity/float32UnityStack.h"
-#include "stack/unity/float64UnityStack.h"
-#include "stack/unity/int16UnityStack.h"
-#include "stack/unity/int32UnityStack.h"
-#include "stack/unity/int64UnityStack.h"
-#include "stack/unity/int8UnityStack.h"
-#include "stack/unity/stringUnityStack.h"
-#include "stack/unity/uInt16UnityStack.h"
-#include "stack/unity/uInt32UnityStack.h"
-#include "stack/unity/uInt64UnityStack.h"
-#include "stack/unity/uInt8UnityStack.h"
+#include "printerDirector.h"
+
+#include "../app/application.h"
+
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
-VarGenerate::VarGenerate( ) {
+bool VarDirector::init( ) {
+	size_t count = stacks.size( );
+	InfoStack **arrayPtr;
+	size_t index;
+	if( count != 0 ) {
+		arrayPtr = stacks.data( );
+		index = 0;
+		for( ; index < count; ++index )
+			delete arrayPtr[ index ];
+		stacks.clear( );
+	}
+
 	emplace_back_type( UInt8UnityStack );
 	emplace_back_type( UInt16UnityStack );
 	emplace_back_type( UInt32UnityStack );
@@ -55,9 +70,22 @@ VarGenerate::VarGenerate( ) {
 
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyArrayStack );
+	arrayPtr = stacks.data( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( arrayPtr[ index ]->init( ) == false ) {
+			auto className = arrayPtr[ index ]->metaObject( )->className( );
+			QString msg( "[ %1 ]堆栈类初始化失败" );
+			Application::getInstancePtr( )->getPrinterDirector( )->error( msg.arg( className ) );
+			return false;
+		}
+	return true;
+}
+VarDirector::VarDirector( ) {
+
 }
 
-VarGenerate::~VarGenerate( ) {
+VarDirector::~VarDirector( ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -65,7 +93,7 @@ VarGenerate::~VarGenerate( ) {
 		delete arrayPtr[ index ];
 	stacks.clear( );
 }
-void * VarGenerate::create( const QString &create_type_name ) {
+void * VarDirector::create( const QString &create_type_name ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -78,7 +106,7 @@ void * VarGenerate::create( const QString &create_type_name ) {
 			return arrayPtr[ index ]->createTypePtr( );
 	return nullptr;
 }
-uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr ) {
+uint64_t VarDirector::toVar( const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -88,7 +116,7 @@ uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_cou
 			return userCount;
 	return 0;
 }
-uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
+uint64_t VarDirector::toVar( const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -98,7 +126,7 @@ uint64_t VarGenerate::toVar( const uint8_t *source_ptr, const size_t &source_cou
 			return userCount;
 	return 0;
 }
-uint64_t VarGenerate::toVector( const void *ptr, std::vector< uint8_t > &result ) {
+uint64_t VarDirector::toVector( const void *ptr, std::vector< uint8_t > &result ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -108,11 +136,11 @@ uint64_t VarGenerate::toVector( const void *ptr, std::vector< uint8_t > &result 
 			return userCount;
 	return 0;
 }
-bool VarGenerate::getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
+bool VarDirector::getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
 	QString typeInfoName = type_info_ref.name( );
 	return getTypeName( typeInfoName, result_type_name );
 }
-bool VarGenerate::getTypeName( const QString &type_info_ref, QString &result_type_name ) {
+bool VarDirector::getTypeName( const QString &type_info_ref, QString &result_type_name ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -129,7 +157,7 @@ bool VarGenerate::getTypeName( const QString &type_info_ref, QString &result_typ
 		}
 	return false;
 }
-bool VarGenerate::getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool ) {
+bool VarDirector::getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -141,7 +169,7 @@ bool VarGenerate::getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &resu
 	return false;
 }
 
-bool VarGenerate::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) {
+bool VarDirector::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -152,7 +180,7 @@ bool VarGenerate::getObjPtrAtTypeName( const void *check_obj_ptr, QString &resul
 		}
 	return false;
 }
-bool VarGenerate::realease( const void *delete_obj_ptr ) {
+bool VarDirector::realease( const void *delete_obj_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;

@@ -1,6 +1,7 @@
-﻿#ifndef VARGENERATE_H_H_HEAD__FILE__
-#define VARGENERATE_H_H_HEAD__FILE__
+﻿#ifndef VARDIRECTOR_H_H_HEAD__FILE__
+#define VARDIRECTOR_H_H_HEAD__FILE__
 #pragma once
+
 #include <QObject>
 #include <qstring.h>
 #include <vector>
@@ -9,13 +10,16 @@
 
 class StackSerialize;
 class InfoStack;
-class VarGenerate : public QObject {
+class VarDirector : public QObject {
 	Q_OBJECT;
+	friend class Application;
 protected:
 	std::vector< InfoStack * > stacks;
+protected:
+	virtual bool init();
 public:
-	VarGenerate( );
-	~VarGenerate( ) override;
+	VarDirector( );
+	~VarDirector( ) override;
 public:
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
@@ -73,4 +77,4 @@ public:
 	}
 
 };
-#endif // VARGENERATE_H_H_HEAD__FILE__
+#endif // VARDIRECTOR_H_H_HEAD__FILE__

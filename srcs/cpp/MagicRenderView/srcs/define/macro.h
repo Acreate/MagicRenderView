@@ -2,7 +2,7 @@
 #define MACRO_H_H_HEAD__FILE__
 #pragma once
 
-#define AliasTypeNames( _Type , ...) aliasTypeNames =std::vector< QString >( {typeid( _Type ).name(   ), __VA_ARGS__ } )
+#define AliasTypeNames(  _Type , ...) aliasTypeNames =std::vector< QString >( {typeid( _Type ).name(   ), __VA_ARGS__ } )
 #define Stack_Type_Name( Def_var_value, _Type, ... ) typeName = #_Type;\
 	AliasTypeNames(_Type,__VA_ARGS__ ); \
 	setNewObjTypeFunction( [] {  \

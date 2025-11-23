@@ -1,8 +1,8 @@
 ﻿#include "application.h"
 
-#include "nodeDirector.h"
-#include "printfInfo.h"
-#include <type/varGenerate.h>
+#include "../director/nodeDirector.h"
+#include "../director/printerDirector.h"
+#include "../director/varDirector.h"
 
 Application *Application::instance = nullptr;
 Application * Application::getInstancePtr( ) {
@@ -13,13 +13,19 @@ Application::Application( int &argc, char **const argv, const int i ) : QApplica
 }
 Application::~Application( ) {
 	delete nodeDirector;
-	delete printfInfo;
-	delete varGenerate;
+	delete printerDirector;
+	delete varDirector;
 }
 bool Application::init( ) {
 	Application::instance = this;
+	printerDirector = new PrinterDirector;
+	varDirector = new VarDirector;
 	nodeDirector = new NodeDirector;
-	printfInfo = new PrintfInfo;
-	varGenerate = new VarGenerate;
+	if( printerDirector->init( ) == false )
+		return false;
+	if( varDirector->init( ) == false )
+		return false;
+	if( nodeDirector->init( ) == false )
+		return false;
 	return true;
 }

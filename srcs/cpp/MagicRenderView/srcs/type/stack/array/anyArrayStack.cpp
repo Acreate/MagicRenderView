@@ -1,10 +1,10 @@
 ﻿#include "anyArrayStack.h"
 
+#include <app/application.h>
+
 #include <define/macro.h>
 
-#include "../../varGenerate.h"
-
-#include "../../../app/application.h"
+#include <director/varDirector.h>
 
 AnyArrayStack::~AnyArrayStack( ) {
 
@@ -32,11 +32,11 @@ uint64_t AnyArrayStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_m
 	mod = mod - count;
 	std::vector< void * > buffVar( arrayCount );
 
-	auto varGenerate = Application::getInstancePtr( )->getVarGenerate( );
+	auto varDirector = Application::getInstancePtr( )->getVarDirector( );
 	auto arrayPtr = buffVar.data( );
 	for( size_t index = 0; index < arrayCount; ++index ) {
 		void **targetVarPtr = arrayPtr + index;
-		count = varGenerate->toVar( offset, mod, targetVarPtr );
+		count = varDirector->toVar( offset, mod, targetVarPtr );
 		if( count == 0 )
 			return 0;
 		offset = offset + count;
@@ -62,12 +62,12 @@ uint64_t AnyArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t 
 	count = fillTypeVarAtVector< uint64_t >( &arraySize, buff );
 	if( count == 0 )
 		return 0;
-	auto varGenerate = Application::getInstancePtr( )->getVarGenerate( );
+	auto varDirector = Application::getInstancePtr( )->getVarDirector( );
 	result_data.append_range( buff );
 	auto arrayPtr = vector->data( );
 	for( size_t index = 0; index < arraySize; ++index ) {
 		void **ptr = arrayPtr + index;
-		count = varGenerate->toVector( *ptr, buff );
+		count = varDirector->toVector( *ptr, buff );
 		if( count == 0 )
 			return 0;
 		result_data.append_range( buff );
