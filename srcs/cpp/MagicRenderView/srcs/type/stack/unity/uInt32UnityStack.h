@@ -8,8 +8,6 @@ class UInt32UnityStack : public InfoStack {
 public:
 	UInt32UnityStack( );
 	~UInt32UnityStack( ) override;
-	void * createTypePtr( ) override;
-	bool deleteTypePtr( const void *delete_obj_ptr ) override;
 	uint64_t toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) override;
 	TypeEnum::Type getType( ) override;
 protected:

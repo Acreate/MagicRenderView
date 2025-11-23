@@ -12,14 +12,18 @@ protected:
 	QString typeName;
 	std::vector< QString > aliasTypeNames;
 	std::vector< void * > allVarPtrVector;
+	std::function< void*( ) > newObjTypeFunction;
+	std::function< bool( void * ) > deleteObjTypeFunction;
 protected:
-	InfoStack( ) { }
+	InfoStack( );
 public:
 	~InfoStack( ) override;
+public:
+	virtual void * createTypePtr( );
+	virtual bool deleteTypePtr( const void *delete_obj_ptr );
+public:
 	virtual const QString & getTypeName( ) const { return typeName; }
 	virtual const std::vector< QString > & getAliasTypeNames( ) const { return aliasTypeNames; }
-	virtual void * createTypePtr( ) = 0;
-	virtual bool deleteTypePtr( const void *delete_obj_ptr ) = 0;
 	virtual bool isTypeName( const QString &check_type_name ) const;
 	virtual bool isAliasTypeNames( const QString &check_type_name ) const;
 	virtual bool hasVarPtr( const void *check_obj_ptr ) const;

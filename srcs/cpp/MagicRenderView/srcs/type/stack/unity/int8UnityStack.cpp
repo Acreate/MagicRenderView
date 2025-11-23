@@ -2,45 +2,17 @@
 
 #include <define/macro.h>
 Int8UnityStack::~Int8UnityStack( ) {
-	size_t count = allVarPtrVector.size( );
-	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] )
-			delete ( int8_t * ) arrayPtr[ index ];
-	allVarPtrVector.clear( );
+
 }
 Int8UnityStack::Int8UnityStack( ) {
 	Stack_Type_Name( int8_t, "int8", "char" );
-}
-void * Int8UnityStack::createTypePtr( ) {
-	auto createObjPtr = new int8_t( 0 );
-	size_t count = allVarPtrVector.size( );
-	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] ) {
-			arrayPtr[ index ] = createObjPtr;
-			return createObjPtr;
-		}
-	allVarPtrVector.emplace_back( createObjPtr );
-	return createObjPtr;
-}
-bool Int8UnityStack::deleteTypePtr( const void *delete_obj_ptr ) {
-	size_t count = allVarPtrVector.size( );
-	if( count == 0 )
-		return false;
-	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( delete_obj_ptr == arrayPtr[ index ] ) {
-			delete ( int8_t * ) arrayPtr[ index ];
-			count -= 1;
-			for( ; index < count; --count )
-				if( nullptr == arrayPtr[ count ] ) {
-					arrayPtr[ index ] = arrayPtr[ count ];
-					return true;
-				}
-			return true;
-		}
-	return false;
+	newObjTypeFunction = [] {
+		return new int8_t;
+	};
+	deleteObjTypeFunction = [] ( void *delete_obj_ptr ) {
+		delete ( int8_t * ) delete_obj_ptr;
+		return true;
+	};
 }
 
 uint64_t Int8UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

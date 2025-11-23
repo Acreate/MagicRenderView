@@ -1,6 +1,50 @@
 ﻿#include "infoStack.h"
+#include <QDebug>
+InfoStack::InfoStack( ) {
 
+}
 InfoStack::~InfoStack( ) {
+	size_t count = allVarPtrVector.size( );
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nullptr != arrayPtr[ index ] )
+			deleteObjTypeFunction( arrayPtr[ index ] );
+		else
+			break;
+	allVarPtrVector.clear( );
+}
+void * InfoStack::createTypePtr( ) {
+	auto createObjPtr = newObjTypeFunction( );
+	if( createObjPtr == nullptr )
+		return nullptr;
+	size_t count = allVarPtrVector.size( );
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nullptr == arrayPtr[ index ] ) {
+			arrayPtr[ index ] = createObjPtr;
+			return arrayPtr[ index ];
+		}
+	allVarPtrVector.emplace_back( createObjPtr );
+	return createObjPtr;
+}
+bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
+	size_t count = allVarPtrVector.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( delete_obj_ptr == arrayPtr[ index ] ) {
+			if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+				return false;
+			count -= 1;
+			for( ; index < count; --count )
+				if( nullptr == arrayPtr[ count ] ) {
+					arrayPtr[ index ] = arrayPtr[ count ];
+					return true;
+				}
+			return true;
+		}
+	return false;
 }
 bool InfoStack::isTypeName( const QString &check_type_name ) const {
 	return check_type_name == typeName;
@@ -20,7 +64,7 @@ bool InfoStack::hasVarPtr( const void *check_obj_ptr ) const {
 	if( count == 0 )
 		return false;
 	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
+	for( size_t index = 0; index < count && arrayPtr[ index ] != nullptr; ++index )
 		if( arrayPtr[ index ] == check_obj_ptr )
 			return true;
 	return false;
