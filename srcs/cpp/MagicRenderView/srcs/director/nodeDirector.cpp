@@ -1,6 +1,77 @@
 ﻿#include "nodeDirector.h"
+#include <QMenu>
+
+#include <node/stack/nodeStack.h>
+
+#include "../node/node/node.h"
+#include "../node/stack/baseNodeStack/baseNodeStack.h"
 
 bool NodeDirector::init( ) {
+	size_t count;
+	size_t index;
+	NodeStack **nodeStackArrayPtr;
+
+	if( nodeCreateMenu ) {
+		std::vector< QMenu * > releaseMenu;
+		auto actions = nodeCreateMenu->actions( );
+		count = actions.size( );
+		auto actionArrayPtr = actions.data( );
+		QMenu *castPtr = nullptr;
+		for( index = 0; index < count; ++index )
+			if( castPtr = qobject_cast< QMenu * >( actionArrayPtr[ index ] ), castPtr != nullptr )
+				releaseMenu.emplace_back( castPtr );
+			else
+				delete actionArrayPtr[ index ];
+		count = releaseMenu.size( );
+		auto menuArrayPtr = releaseMenu.data( );
+		for( index = 0; index < count; ++index )
+			delete menuArrayPtr[ index ];
+		delete nodeCreateMenu;
+	}
+	count = nodeStacks.size( );
+	if( count ) {
+		nodeStackArrayPtr = nodeStacks.data( );
+		for( index = 0; index < count; ++index )
+			delete nodeStackArrayPtr[ index ];
+		nodeStacks.clear( );
+	}
+	nodeCreateMenu = new QMenu;
+	// 这里加入节点窗口创建函数
+	nodeStacks.emplace_back( new BaseNodeStack );
+
+	count = nodeStacks.size( );
+	nodeStackArrayPtr = nodeStacks.data( );
+	for( index = 0; index < count; ++index )
+		if( nodeStackArrayPtr[ index ]->init( ) == false )
+			return false;
 	return true;
 }
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) { }
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ) {
+
+}
+NodeDirector::~NodeDirector( ) {
+	auto count = nodeStacks.size( );
+	if( count ) {
+		auto nodeStackArrayPtr = nodeStacks.data( );
+		for( decltype(count) index = 0; index < count; ++index )
+			delete nodeStackArrayPtr[ index ];
+		nodeStacks.clear( );
+	}
+	delete nodeCreateMenu;
+}
+Node * NodeDirector::createNode( const QString &stack_name, const QString &node_type_name ) {
+	auto count = nodeStacks.size( );
+	if( count == 0 )
+		return nullptr;
+	auto nodeStackArrayPtr = nodeStacks.data( );
+	for( decltype(count) index = 0; index < count; ++index )
+		if( nodeStackArrayPtr[ index ]->objectName( ) == stack_name ) {
+			Node *node = nodeStackArrayPtr[ index ]->createNode( node_type_name );
+			if( node == nullptr )
+				return nullptr;
+			connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
+			connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
+			connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
+		}
+	return nullptr;
+}

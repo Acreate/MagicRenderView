@@ -11,38 +11,21 @@ bool Float32UnityStack::init( ) {
 Float32UnityStack::Float32UnityStack( ) {
 }
 
-uint64_t Float32UnityStack::toObj( const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
-	uint64_t count;
-	QString converTypeName;
-	count = getDataAtTypeName( obj_start_ptr, obj_memory_size, converTypeName );
-	if( count == 0 )
-		return 0;
-	if( converTypeName != this->typeName )
-		return 0;
-	auto offset = obj_start_ptr + count;
-	auto mod = obj_memory_size - count;
+using t_current_unity_type = float;
+bool Float32UnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	float buffVar;
-	count = fillTypeVectorAtVar< float >( offset, mod, &buffVar );
-	if( count == 0 )
-		return 0;
-	offset = offset + count;
-	auto createPtr = ( float * ) createTypePtr( );
+	if( fillTypeVectorAtVar< t_current_unity_type >( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
+		return false;
+	auto createPtr = ( t_current_unity_type * ) createTypePtr( );
 	*createPtr = buffVar;
 	result_obj_ptr = createPtr;
-	return offset - obj_start_ptr;
+	return true;
 }
 TypeEnum::Type Float32UnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
 }
-uint64_t Float32UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	std::vector< uint8_t > buff;
-	uint64_t count;
-	count = getTypeNameAtData( result_data );
-	if( count == 0 )
-		return 0;
-	count = fillTypeVarAtVector< float >( obj_start_ptr, buff );
-	if( count == 0 )
-		return 0;
-	result_data.append_range( buff );
-	return result_data.size( );
+bool Float32UnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	if( fillTypeVarAtVector< t_current_unity_type >( obj_start_ptr, result_data ) == false )
+		return false;
+	return true;
 }

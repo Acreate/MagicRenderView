@@ -103,99 +103,91 @@ void * const* InfoStack::arrayPtr( ) const {
 void ** InfoStack::arrayPtr( ) {
 	return allVarPtrVector.data( );
 }
-uint64_t InfoStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	size_t count = allVarPtrVector.size( );
-	if( count == 0 )
-		return 0;
+
+bool InfoStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	auto result_count = allVarPtrVector.size( );
+	if( result_count == 0 )
+		return false;
 	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( obj_start_ptr == arrayPtr[ index ] )
-			return toVectorData( arrayPtr[ index ], result_data );
-	return 0;
-}
-uint64_t InfoStack::getTypeNameAtData( std::vector< uint8_t > &result_data ) {
 	std::vector< uint8_t > buff;
-	qint64 count = typeName.size( );
-	if( count <= 0 )
-		return 0;
-	uint64_t converVar = count;
-	if( converVar != count )
-		return 0;
-	converVar *= sizeof( QChar ) / sizeof( uint8_t );
-	if( fillTypeVarAtVector< uint64_t >( &converVar, result_data ) == 0 )
-		return 0;
-	QChar *data = typeName.data( );
-	if( toVector( data, converVar, buff ) == 0 )
-		return 0;
-	result_data.append_range( buff );
-	return result_data.size( );
+	for( size_t index = 0; index < result_count; ++index )
+		if( obj_start_ptr == arrayPtr[ index ] ) {
+			if( toVectorData( arrayPtr[ index ], buff ) == false )
+				return false;
+			if( getTypeNameAtData( result_data ) == false )
+				return false;
+			result_data.append_range( buff );
+			return true;
+		}
+	return false;
 }
-uint64_t InfoStack::getDataAtTypeName( const uint8_t *source_ptr, const size_t &source_count, QString &result_type_name ) {
+bool InfoStack::getTypeNameAtData( std::vector< uint8_t > &result_data ) {
+	return fillTypeVarAtVector< QString >( &typeName, result_data );
+}
+bool InfoStack::getDataAtTypeName( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QString &result_type_name ) {
 	uint64_t converVar = *( uint64_t * ) source_ptr;
-	size_t sizeTypeCount = sizeof( uint64_t );
-	size_t mod = source_count - sizeTypeCount;
+	result_count = sizeof( uint64_t );
+	size_t mod = source_count - result_count;
 	if( mod < converVar )
-		return 0;
-	auto offset = source_ptr + sizeTypeCount;
+		return false;
+	auto offset = source_ptr + result_count;
 	size_t newSize = converVar / ( sizeof( QChar ) / sizeof( uint8_t ) );
 	result_type_name.resize( newSize );
 	auto data = ( uint8_t * ) result_type_name.data( );
 	size_t index = 0;
 	for( ; index < converVar; ++index )
 		data[ index ] = offset[ index ];
-	return converVar + sizeTypeCount;
+	result_count = converVar + result_count;
+	return true;
 }
-uint64_t InfoStack::toVector( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {
+bool InfoStack::fillVectorTarget( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {
 	result.resize( ptr_size );
 	auto data = result.data( );
 	for( size_t index = 0; index < ptr_size; ++index )
 		data[ index ] = ptr[ index ];
-	return ptr_size;
+	return true;
 }
-uint64_t InfoStack::toVar( const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count ) {
+bool InfoStack::fillObjTarget( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count ) {
 	if( source_count < target_var_count )
-		return 0;
+		return false;
 	for( size_t index = 0; index < target_var_count; ++index )
 		target_var_ptr[ index ] = source_ptr[ index ];
-	return target_var_count;
+	result_count = target_var_count;
+	return true;
 }
 template<>
-uint64_t InfoStack::fillTypeVarAtVector< QString >( const void *ptr, std::vector< uint8_t > &result ) {
+bool InfoStack::fillTypeVarAtVector< QString >( const void *ptr, std::vector< uint8_t > &result ) {
 	QString *stringPtr = ( QString * ) ptr;
 	std::vector< uint8_t > buff;
-	qint64 count = stringPtr->size( );
-	uint64_t converVar = count;
-	if( converVar != count )
-		return 0;
-	converVar *= sizeof( QChar ) / sizeof( uint8_t );
-	if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == 0 )
-		return 0;
+	auto local8Bit = stringPtr->toUtf8( );
+	auto converVar = local8Bit.size( );
+	if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+		return false;
 	if( converVar == 0 )
-		return result.size( );
-	QChar *data = stringPtr->data( );
-	if( toVector( data, converVar, buff ) == 0 )
-		return 0;
+		return true;
+	char *data = local8Bit.data( );
+	if( fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
+		return false;
 	result.append_range( buff );
-	return result.size( );
+	return true;
 }
 template<>
-uint64_t InfoStack::fillTypeVectorAtVar< QString >( const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+bool InfoStack::fillTypeVectorAtVar< QString >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
 	QString *stringPtr = ( QString * ) target_var_ptr;
-	uint64_t converVar = *( uint64_t * ) source_ptr;
+	result_count = *( uint64_t * ) source_ptr;
 	size_t sizeTypeCount = sizeof( uint64_t );
-	if( converVar == 0 ) // 字符串为空时，直接返回长度匹配大小
-		return sizeTypeCount;
+
+	if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+		result_count = sizeTypeCount;
+		return true;
+	}
 	size_t mod = source_count - sizeTypeCount;
-	if( mod < converVar )
-		return 0;
+	if( mod < result_count )
+		return false;
 	auto offset = source_ptr + sizeTypeCount;
-	size_t newSize = converVar / ( sizeof( QChar ) / sizeof( uint8_t ) );
-	stringPtr->resize( newSize );
-	auto data = ( uint8_t * ) stringPtr->data( );
-	size_t index = 0;
-	for( ; index < converVar; ++index )
-		data[ index ] = offset[ index ];
-	return converVar + sizeTypeCount;
+	*stringPtr = QString::fromUtf8( ( const char * ) offset, result_count );
+	result_count = result_count + sizeTypeCount;
+	return result_count;
 }
 bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
 	if( lhs.typeName == rhs.typeName )

@@ -16,13 +16,12 @@ void testVarGener( const TTestType &default_var ) {
 	auto checkVar = varDirector->create< TTestType >( );
 	if( checkVar ) {
 		*checkVar = default_var;
-		qDebug( ) << "序列化值:" << *checkVar;
 		std::vector< uint8_t > buff;
-		uint64_t count = varDirector->toVector( checkVar, buff );
-		if( count ) {
+		uint64_t count;
+		if( varDirector->toVector( checkVar, buff ) ) {
+			qDebug( ) << "序列化值:" << *checkVar;
 			void *converPtr = nullptr;
-			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
-			if( count ) {
+			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				auto castPtr = varDirector->cast_ptr< TTestType >( converPtr );
 				qDebug( ) << "反序列化:" << *castPtr;
 			} else
@@ -49,13 +48,12 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 		*scond = scond_var_varlue;
 		checkVar->first = first;
 		checkVar->second = scond;
-		qDebug( ) << "序列化值:" << *first << ", " << *scond;
 		std::vector< uint8_t > buff;
-		uint64_t count = varDirector->toVector( checkVar, buff );
-		if( count ) {
+		uint64_t count;
+		if( varDirector->toVector( checkVar, buff ) ) {
+			qDebug( ) << "序列化值:" << *first << ", " << *scond;
 			void *converPtr = nullptr;
-			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
-			if( count ) {
+			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				auto castPtr = varDirector->cast_ptr< std::pair< void *, void * > >( converPtr );
 				first = varDirector->cast_ptr< int32_t >( castPtr->first );
 				scond = varDirector->cast_ptr< QString >( castPtr->second );
@@ -79,23 +77,26 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 	auto checkVar = varDirector->create< std::vector< TTestFirstType > >( );
 	if( checkVar ) {
 		checkVar->resize( array_count, first_var_value );
-		QStringList data;
-		auto arrayDataPtr = checkVar->data( );
-		for( size_t index = 0; index < array_count; ++index )
-			data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
-		qDebug( ) << "序列化值:" << data.join( ", " );
 		std::vector< uint8_t > buff;
-		uint64_t count = varDirector->toVector( checkVar, buff );
-		if( count ) {
+		uint64_t count;
+		if( varDirector->toVector( checkVar, buff ) ) {
+			QStringList data;
+			auto arrayDataPtr = checkVar->data( );
+			for( size_t index = 0; index < array_count; ++index )
+				data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
+			qDebug( ) << "序列化值:" << data.join( ", " );
 			void *converPtr = nullptr;
-			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
-			if( count ) {
+			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
 				auto castPtr = varDirector->cast_ptr< std::vector< TTestFirstType > >( converPtr );
-				arrayDataPtr = castPtr->data( );
-				for( size_t index = 0; index < array_count; ++index )
-					data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
-				qDebug( ) << "反序列化:" << data.join( ", " );
+				auto arratCount = castPtr->size( );
+				if( arratCount == array_count ) {
+					arrayDataPtr = castPtr->data( );
+					for( size_t index = 0; index < array_count; ++index )
+						data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
+					qDebug( ) << "反序列化:" << data.join( ", " );
+				} else
+					instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败[数量不匹配] " ) + name );
 			} else
 				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
 		} else
@@ -128,13 +129,12 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 			arrayDataPtr[ index ] = unityVar;
 			data.append( QString( "%1" ).arg( *unityVar ) );
 		}
-		qDebug( ) << "序列化值:" << data.join( ", " );
 		std::vector< uint8_t > buff;
-		uint64_t count = varDirector->toVector( checkVar, buff );
-		if( count ) {
+		uint64_t count;
+		if( varDirector->toVector( checkVar, buff ) ) {
+			qDebug( ) << "序列化值:" << data.join( ", " );
 			void *converPtr = nullptr;
-			count = varDirector->toVar( buff.data( ), buff.size( ), converPtr );
-			if( count ) {
+			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
 				auto castPtr = varDirector->cast_ptr< std::vector< void * > >( converPtr );
 				arrayDataPtr = castPtr->data( );
@@ -183,6 +183,9 @@ void TestCodeSources::testVarGener( ) {
 	::testArrayVarGener< int32_t >( 547, 5 );
 	::testArrayVarGener< int64_t >( 547, 5 );
 	::testArrayVarGener< QString >( "547", 5 );
+	::testArrayVarGener< QString >( "", 5 );
+	::testArrayVarGener< QString >( "985单元", 5 );
+	::testAnyArrayVarGener< int64_t >( 999, 5 );
 	::testAnyArrayVarGener< QString >( "", 5 );
 	::testAnyArrayVarGener< QString >( "985单元", 5 );
 }

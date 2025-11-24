@@ -107,35 +107,39 @@ void * VarDirector::create( const QString &create_type_name ) {
 			return arrayPtr[ index ]->createTypePtr( );
 	return nullptr;
 }
-uint64_t VarDirector::toVar( const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr ) {
-	size_t count = stacks.size( );
-	auto arrayPtr = stacks.data( );
-	size_t index = 0;
-	uint64_t userCount;
-	for( ; index < count; ++index )
-		if( userCount = arrayPtr[ index ]->toObj( source_ptr, source_count, target_var_ptr ), userCount != 0 )
-			return userCount;
-	return 0;
+bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
+	return toVar( result_count, source_ptr, source_count, *target_var_ptr );
 }
-uint64_t VarDirector::toVar( const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
+bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
-	uint64_t userCount;
-	for( ; index < count; ++index )
-		if( userCount = arrayPtr[ index ]->toObj( source_ptr, source_count, *target_var_ptr ), userCount != 0 )
-			return userCount;
-	return 0;
+	QString converTypeName;
+	const uint8_t *offset;
+	size_t mod;
+	if( InfoStack::fillTypeVectorAtVar< QString >( result_count, source_ptr, source_count, &converTypeName ) == false )
+		return false;
+	for( ; index < count; ++index ) {
+		if( converTypeName != arrayPtr[ index ]->typeName )
+			continue;
+		offset = source_ptr + result_count;
+		mod = source_count - result_count;
+		if( arrayPtr[ index ]->toObj( result_count, offset, mod, target_var_ptr ) == false )
+			break;
+		offset = offset + result_count;
+		result_count = offset - source_ptr;
+		return true;
+	}
+	return false;
 }
-uint64_t VarDirector::toVector( const void *ptr, std::vector< uint8_t > &result ) {
+bool VarDirector::toVector( const void *ptr, std::vector< uint8_t > &result ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
-	uint64_t userCount;
 	for( ; index < count; ++index )
-		if( userCount = arrayPtr[ index ]->toData( ptr, result ), userCount != 0 )
-			return userCount;
-	return 0;
+		if( arrayPtr[ index ]->toData( ptr, result ) )
+			return true;
+	return false;
 }
 bool VarDirector::getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
 	QString typeInfoName = type_info_ref.name( );
