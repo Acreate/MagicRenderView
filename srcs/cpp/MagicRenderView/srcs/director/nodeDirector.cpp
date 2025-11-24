@@ -17,7 +17,6 @@ bool NodeDirector::init( ) {
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
-	
 
 	// 这里加入节点窗口创建函数
 	nodeStacks.emplace_back( new BaseNodeStack );
@@ -37,8 +36,11 @@ bool NodeDirector::init( ) {
 		}
 	// 初始化菜单
 	nodeCreateMenu = new QMenu;
-	for( index = 0; index < count; ++index )
+	for( index = 0; index < count; ++index ) {
+		connect( nodeStackArrayPtr[ index ], &NodeStack::finish_create_signal, this, &NodeDirector::finish_create_signal );
+		connect( nodeStackArrayPtr[ index ], &NodeStack::error_create_signal, this, &NodeDirector::error_create_signal );
 		nodeCreateMenu->addMenu( nodeStackArrayPtr[ index ]->getMainMenu( ) );
+	}
 
 	return true;
 }
