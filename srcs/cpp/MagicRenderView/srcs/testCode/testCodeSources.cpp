@@ -13,8 +13,8 @@ void testVarGener( const TTestType &default_var ) {
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
 	auto varDirector = instancePtr->getVarDirector( );
-	auto checkVar = varDirector->create< TTestType >( );
-	if( checkVar ) {
+	TTestType *checkVar;
+	if( varDirector->create< TTestType >( checkVar ) ) {
 		*checkVar = default_var;
 		std::vector< uint8_t > buff;
 		uint64_t count;
@@ -22,7 +22,8 @@ void testVarGener( const TTestType &default_var ) {
 			qDebug( ) << "序列化值:" << *checkVar;
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
-				auto castPtr = varDirector->cast_ptr< TTestType >( converPtr );
+				TTestType *castPtr;
+				varDirector->cast_ptr< TTestType >( converPtr, castPtr );
 				qDebug( ) << "反序列化:" << *castPtr;
 			} else
 				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
@@ -40,10 +41,12 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
 	auto varDirector = instancePtr->getVarDirector( );
-	auto checkVar = varDirector->create< std::pair< void *, void * > >( );
-	if( checkVar ) {
-		auto first = varDirector->create< TTestFirstType >( );
-		auto scond = varDirector->create< TTestScondType >( );
+	std::pair< void *, void * > *checkVar;
+	if( varDirector->create< std::pair< void *, void * > >( checkVar ) ) {
+		TTestFirstType *first;
+		varDirector->create< TTestFirstType >( first );
+		TTestScondType *scond;
+		varDirector->create< TTestScondType >( scond );
 		*first = first_var_value;
 		*scond = scond_var_varlue;
 		checkVar->first = first;
@@ -54,9 +57,10 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 			qDebug( ) << "序列化值:" << *first << ", " << *scond;
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
-				auto castPtr = varDirector->cast_ptr< std::pair< void *, void * > >( converPtr );
-				first = varDirector->cast_ptr< int32_t >( castPtr->first );
-				scond = varDirector->cast_ptr< QString >( castPtr->second );
+				std::pair< void *, void * > *castPtr;
+				varDirector->cast_ptr< std::pair< void *, void * > >( converPtr, castPtr );
+				varDirector->cast_ptr< int32_t >( castPtr->first, first );
+				varDirector->cast_ptr< QString >( castPtr->second, scond );
 				qDebug( ) << "反序列化:" << *first << ", " << *scond;
 			} else
 				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
@@ -74,8 +78,8 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
 	auto varDirector = instancePtr->getVarDirector( );
-	auto checkVar = varDirector->create< std::vector< TTestFirstType > >( );
-	if( checkVar ) {
+	std::vector< TTestFirstType > *checkVar;
+	if( varDirector->create< std::vector< TTestFirstType > >( checkVar ) ) {
 		checkVar->resize( array_count, first_var_value );
 		std::vector< uint8_t > buff;
 		uint64_t count;
@@ -88,7 +92,8 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
-				auto castPtr = varDirector->cast_ptr< std::vector< TTestFirstType > >( converPtr );
+				std::vector< TTestFirstType > *castPtr;
+				varDirector->cast_ptr< std::vector< TTestFirstType > >( converPtr, castPtr );
 				auto arratCount = castPtr->size( );
 				if( arratCount == array_count ) {
 					arrayDataPtr = castPtr->data( );
@@ -113,14 +118,14 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 	qDebug( ) << name;
 	auto instancePtr = Application::getInstancePtr( );
 	auto varDirector = instancePtr->getVarDirector( );
-	auto checkVar = varDirector->create< std::vector< void * > >( );
-	if( checkVar ) {
+	std::vector< void * > *checkVar;
+	if( varDirector->create< std::vector< void * > >( checkVar ) ) {
 		checkVar->resize( array_count, nullptr );
 		QStringList data;
 		auto arrayDataPtr = checkVar->data( );
+		TTestFirstType *unityVar;
 		for( size_t index = 0; index < array_count; ++index ) {
-			auto unityVar = varDirector->create< TTestFirstType >( );
-			if( unityVar == nullptr ) {
+			if( varDirector->create< TTestFirstType >( unityVar ) == false ) {
 				auto name = typeid( std::vector< void * > ).name( );
 				qDebug( ) << "单元创建失败:" << name;
 				return;
@@ -136,11 +141,12 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
-				auto castPtr = varDirector->cast_ptr< std::vector< void * > >( converPtr );
+				std::vector< void * > *castPtr;
+				varDirector->cast_ptr< std::vector< void * > >( converPtr, castPtr );
 				arrayDataPtr = castPtr->data( );
+				TTestFirstType *unityVar;
 				for( size_t index = 0; index < array_count; ++index ) {
-					auto unityVar = varDirector->cast_ptr< TTestFirstType >( arrayDataPtr[ index ] );
-					if( unityVar == nullptr ) {
+					if( varDirector->cast_ptr< TTestFirstType >( arrayDataPtr[ index ], unityVar ) == false ) {
 						auto name = typeid( std::vector< void * > ).name( );
 						qDebug( ) << "单元转换失败:" << name;
 						return;

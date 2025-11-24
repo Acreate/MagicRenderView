@@ -32,7 +32,12 @@ bool AnyPtrPairStack::toObj( uint64_t &result_count, const uint8_t *obj_start_pt
 	if( varDirector->toVar( result_count, offset, mod, buffVar.second ) == false )
 		return false;
 	offset = offset + result_count;
-	auto createPtr = ( std::pair< void *, void * > * ) createTypePtr( );
+	
+	void *sourcePtr;
+	if( createTypePtr( sourcePtr ) == false )
+		return false;
+	auto createPtr = ( std::pair< void *, void * > * ) sourcePtr;
+	
 	*createPtr = buffVar;
 	result_obj_ptr = createPtr;
 	result_count = offset - obj_start_ptr;

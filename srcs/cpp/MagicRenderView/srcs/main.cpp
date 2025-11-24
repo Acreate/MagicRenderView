@@ -9,7 +9,7 @@ int main( int argc, char *argv[ ] ) {
 	Application app( argc, argv );
 	if( app.init( ) == false )
 		return -1;
-	//TestCodeSources::testVarGener( );
+	TestCodeSources::testVarGener( );
 
 	int exec = app.exec( );
 	return exec;

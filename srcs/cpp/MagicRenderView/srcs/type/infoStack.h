@@ -26,7 +26,7 @@ protected:
 public:
 	~InfoStack( ) override;
 public:
-	virtual void * createTypePtr( );
+	virtual bool createTypePtr( void *&result_create_obj_ptr );
 	virtual bool deleteTypePtr( const void *delete_obj_ptr );
 public:
 	virtual const QString & getTypeName( ) const { return typeName; }

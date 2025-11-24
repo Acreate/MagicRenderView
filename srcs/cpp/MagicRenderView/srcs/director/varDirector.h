@@ -32,54 +32,60 @@ public:
 		return getTypeName( typeInfoName, result_type_name );
 	}
 	virtual bool getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool );
-	virtual void * create( const QString &create_type_name );
+	virtual bool create( const QString &create_type_name, void *&result_create_obj_ptr );
 	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr );
 	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr );
 	virtual bool toVector( const void *ptr, std::vector< uint8_t > &result );
 public:
 	template< typename TCreateType >
-	TCreateType * create( ) {
-		return ( TCreateType * ) create( typeid( TCreateType ).name( ) );
+	bool create( TCreateType * &result_ptr ) {
+		void *result_create_ptr;
+		if( create( typeid( TCreateType ).name( ), result_create_ptr ) == false )
+			return false;
+		result_ptr = ( TCreateType * ) result_create_ptr;
+		return true;
 	}
 
 	template< typename TCreateType >
-	TCreateType * cast_ptr( void *ptr ) {
+	bool cast_ptr( void *ptr, TCreateType * &result_ptr ) {
 		if( ptr == nullptr )
-			return nullptr;
+			return false;
 		QString converTypeName;
 		// 检查是否存在指定的类型
 		if( getObjPtrAtTypeName( ptr, converTypeName ) == false )
-			return nullptr;
+			return false;
 		QString typeInfoName = typeid( TCreateType ).name( );
 		QString targetTypeName;
 		// 获取转换的目标匹配类型名称
 		if( getTypeName( typeInfoName, targetTypeName ) == false )
-			return nullptr;
+			return false;
 		// 如果目标类型名称与当前类型名称不相等，则不是同一类型
 		if( targetTypeName != converTypeName )
-			return nullptr;
+			return false;
 		// 同一类型返回转换后的类型对象指针
-		return ( TCreateType * ) ptr;
+		result_ptr = ( TCreateType * ) ptr;
+		return true;
 	}
 
 	template< typename TCreateType >
-	const TCreateType * cast_ptr( const void *ptr ) {
+	bool cast_ptr( const void *ptr, const TCreateType * &result_ptr ) {
 		if( ptr == nullptr )
-			return nullptr;
+			return false;
 		QString converTypeName;
 		// 检查是否存在指定的类型
 		if( getObjPtrAtTypeName( ptr, converTypeName ) == false )
-			return nullptr;
+			return false;
 		QString typeInfoName = typeid( TCreateType ).name( );
 		QString targetTypeName;
 		// 获取转换的目标匹配类型名称
 		if( getTypeName( typeInfoName, targetTypeName ) == false )
-			return nullptr;
+			return false;
 		// 如果目标类型名称与当前类型名称不相等，则不是同一类型
 		if( targetTypeName != converTypeName )
-			return nullptr;
+			return false;
 		// 同一类型返回转换后的类型对象指针
-		return ( const TCreateType * ) ptr;
+		result_ptr = ( const TCreateType * ) ptr;
+		return true;
 	}
 
 };

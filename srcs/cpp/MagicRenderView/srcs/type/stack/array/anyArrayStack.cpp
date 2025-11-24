@@ -32,7 +32,10 @@ bool AnyArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr,
 		mod = mod - result_count )
 		if( varDirector->toVar( result_count, offset, mod, ( arrayPtr + index ) ) == false )
 			return false;
-	auto createPtr = ( std::vector< void * > * ) createTypePtr( );
+	void *sourcePtr;
+	if( createTypePtr( sourcePtr ) == false )
+		return false;
+	auto createPtr = ( std::vector< void * > * ) sourcePtr;
 	*createPtr = buffVar;
 	result_obj_ptr = createPtr;
 	result_count = offset - obj_start_ptr;

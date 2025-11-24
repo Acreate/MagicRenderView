@@ -23,23 +23,23 @@ InfoStack::~InfoStack( ) {
 	}
 
 }
-void * InfoStack::createTypePtr( ) {
+bool InfoStack::createTypePtr( void *&result_create_obj_ptr ) {
 	if( newObjTypeFunction == nullptr ) {
 		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 newObjTypeFunction 函数指向调用" );
-		return nullptr;
+		return false;
 	}
-	auto createObjPtr = newObjTypeFunction( );
-	if( createObjPtr == nullptr )
-		return nullptr;
+	result_create_obj_ptr = newObjTypeFunction( );
+	if( result_create_obj_ptr == nullptr )
+		return false;
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( nullptr == arrayPtr[ index ] ) {
-			arrayPtr[ index ] = createObjPtr;
+			arrayPtr[ index ] = result_create_obj_ptr;
 			return arrayPtr[ index ];
 		}
-	allVarPtrVector.emplace_back( createObjPtr );
-	return createObjPtr;
+	allVarPtrVector.emplace_back( result_create_obj_ptr );
+	return true;
 }
 bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	if( deleteObjTypeFunction == nullptr ) {

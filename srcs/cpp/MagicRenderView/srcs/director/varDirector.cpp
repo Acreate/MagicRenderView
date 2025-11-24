@@ -98,18 +98,18 @@ VarDirector::~VarDirector( ) {
 		delete arrayPtr[ index ];
 	stacks.clear( );
 }
-void * VarDirector::create( const QString &create_type_name ) {
+bool VarDirector::create( const QString &create_type_name, void *&result_create_obj_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( arrayPtr[ index ]->isTypeName( create_type_name ) )
-			return arrayPtr[ index ]->createTypePtr( );
+			return arrayPtr[ index ]->createTypePtr( result_create_obj_ptr );
 	index = 0;
 	for( ; index < count; ++index )
 		if( arrayPtr[ index ]->isAliasTypeNames( create_type_name ) )
-			return arrayPtr[ index ]->createTypePtr( );
-	return nullptr;
+			return arrayPtr[ index ]->createTypePtr( result_create_obj_ptr );
+	return false;
 }
 bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
 	return toVar( result_count, source_ptr, source_count, *target_var_ptr );
