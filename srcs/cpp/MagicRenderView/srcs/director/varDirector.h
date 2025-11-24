@@ -8,6 +8,7 @@
 
 #include "../enums/typeEnum.h"
 
+class PrinterDirector;
 class StackSerialize;
 class InfoStack;
 class VarDirector : public QObject {
@@ -15,6 +16,8 @@ class VarDirector : public QObject {
 	friend class Application;
 protected:
 	std::vector< InfoStack * > stacks;
+	Application *instancePtr;
+	PrinterDirector *printerDirector;
 protected:
 	virtual bool init( );
 public:
@@ -23,8 +26,11 @@ public:
 public:
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
-	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
+	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
+		QString typeInfoName = type_info_ref.name( );
+		return getTypeName( typeInfoName, result_type_name );
+	}
 	virtual bool getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool );
 	virtual void * create( const QString &create_type_name );
 	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr );

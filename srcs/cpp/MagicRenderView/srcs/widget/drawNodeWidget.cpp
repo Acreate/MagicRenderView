@@ -6,3 +6,6 @@ DrawNodeWidget::DrawNodeWidget( QWidget *parent, const Qt::WindowFlags &f ) : QW
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
 }
+bool DrawNodeWidget::addNode( Node *add_node ) {
+	return false;
+}

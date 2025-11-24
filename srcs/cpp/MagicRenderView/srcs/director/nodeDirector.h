@@ -4,6 +4,8 @@
 #include <QObject>
 
 #include <enums/nodeEnum.h>
+
+class PrinterDirector;
 class Node;
 class NodeStack;
 class QMenu;
@@ -14,10 +16,13 @@ private:
 protected:
 	QMenu *nodeCreateMenu;
 	std::vector< NodeStack * > nodeStacks;
+	Application *instancePtr;
+	PrinterDirector *printerDirector;
 protected:
 	virtual bool init( );
 public:
 	NodeDirector( QObject *parent = nullptr );
+	void releaseMenu( );
 	~NodeDirector( ) override;
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
@@ -41,6 +46,14 @@ Q_SIGNALS:
 	/// @param code_line 信号发生行号
 	/// @param code_file_name 信号发生文件
 	void finish_node_signal( Node *finish_node, size_t code_line, const QString &code_file_name );
+	/// @brief 成功创建节点信号
+	/// @param create_name 节点名称
+	void finish_create_signal( const QString &create_name );
+	/// @brief 节点创建失败信号
+	/// @param create_name 节点名称
+	/// @param error_type_info 错误类型
+	/// @param error_msg 失败信息
+	void error_create_signal( const QString &create_name, NodeEnum::CreateType error_type_info, const QString &error_msg );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__

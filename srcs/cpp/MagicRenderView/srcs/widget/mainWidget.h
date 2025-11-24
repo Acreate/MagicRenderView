@@ -20,6 +20,7 @@ protected:
 	/// @brief 构造/析构 
 public:
 	MainWidget( QWidget *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	virtual bool init();
 	/// @brief 获取成员变量函数调用
 public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }

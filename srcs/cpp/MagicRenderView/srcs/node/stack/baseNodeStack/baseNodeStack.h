@@ -8,8 +8,6 @@ class BaseNodeStack : public NodeStack {
 protected:
 	bool init( ) override;
 public:
-	QMenu * toMenu( ) override;
-public:
 	BaseNodeStack( QObject *parent = nullptr );
 };
 

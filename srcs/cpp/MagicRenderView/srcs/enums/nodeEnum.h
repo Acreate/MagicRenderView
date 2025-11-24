@@ -16,9 +16,17 @@ namespace NodeEnum {
 		Run,
 		Other
 	};
+	enum class CreateType {
+		MainWindow_Nullptr,
+		MainWidget_Nullptr,
+		DrawNodeWidget_Nullptr,
+		DrawNodeWidget_Add,
+		Node_Parent,
+	};
 	Q_NAMESPACE;
 	Q_ENUM_NS( ErrorType );
 	Q_ENUM_NS( AdviseType );
+	Q_ENUM_NS( CreateType );
 };
 
 #endif // NODEENUM_H_H_HEAD__FILE__

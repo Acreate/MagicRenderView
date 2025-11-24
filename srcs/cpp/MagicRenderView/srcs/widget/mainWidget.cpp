@@ -6,11 +6,19 @@
 
 #include "../app/application.h"
 
-MainWidget::MainWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+MainWidget::MainWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ) {
+
+}
+bool MainWidget::init( ) {
+	if( drawLinkWidget )
+		delete drawLinkWidget;
+	if( drawNodeWidget )
+		delete drawNodeWidget;
 	drawLinkWidget = new DrawLinkWidget( this );
 	drawNodeWidget = new DrawNodeWidget( this );
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
+	return true;
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );

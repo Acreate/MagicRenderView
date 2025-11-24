@@ -3,20 +3,44 @@
 #pragma once
 #include <QObject>
 
+#include "../../enums/nodeEnum.h"
+
+class PrinterDirector;
+class Application;
+class QAction;
 class Node;
 class QMenu;
 class NodeStack : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
 protected:
-	virtual bool init( ) = 0;
+	using QActionTriggered = void(QAction::*)( bool );
+protected:
+	virtual bool init( );
+	virtual bool createMenuAtNodeType( const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
+	virtual bool connectCreateNodeAction( QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function<Node *()> &action_click_function );
 protected:
 	std::vector< std::pair< QString, std::function< Node *( ) > > > nodeGenerate;
+	QMenu *mainMenu;
+	std::vector< std::pair< std::vector< QString >, QAction * > > actions;
+	std::vector< std::pair< std::vector< QString >, QMenu * > > subMenus;
+	Application *instancePtr;
+	PrinterDirector *printerDirector;
 public:
 	NodeStack( QObject *parent = nullptr );
+	void releaseMainMenu( );
 	~NodeStack( ) override;
 	virtual Node * createNode( const QString &node_type_name );
-	virtual QMenu * toMenu( ) = 0;
+	virtual QMenu * getMainMenu( ) const { return mainMenu; }
+Q_SIGNALS:
+	/// @brief 成功创建节点信号
+	/// @param create_name 节点名称
+	void finish_create_signal( const QString &create_name );
+	/// @brief 节点创建失败信号
+	/// @param create_name 节点名称
+	/// @param error_type_info 错误类型
+	/// @param error_msg 失败信息
+	void error_create_signal( const QString &create_name, NodeEnum::CreateType error_type_info, const QString &error_msg );
 };
 
 #endif // NODESTACK_H_H_HEAD__FILE__

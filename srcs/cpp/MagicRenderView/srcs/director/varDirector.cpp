@@ -33,6 +33,8 @@
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
 bool VarDirector::init( ) {
+	instancePtr = Application::getInstancePtr( );
+	printerDirector = instancePtr->getPrinterDirector( );
 	size_t count = stacks.size( );
 	InfoStack **arrayPtr;
 	size_t index;
@@ -72,12 +74,14 @@ bool VarDirector::init( ) {
 	emplace_back_type( AnyArrayStack );
 	count = stacks.size( );
 	arrayPtr = stacks.data( );
-	index = 0;
-	for( ; index < count; ++index )
+	for( index = 0; index < count; ++index )
 		if( arrayPtr[ index ]->init( ) == false ) {
 			auto className = arrayPtr[ index ]->metaObject( )->className( );
-			QString msg( "[ %1 ]堆栈类初始化失败" );
-			Application::getInstancePtr( )->getPrinterDirector( )->error( msg.arg( className ) );
+			QString msg( "[ %1 ]变量堆栈类初始化失败" );
+			printerDirector->error( msg.arg( className ) );
+			for( index = 0; index < count; ++index )
+				delete arrayPtr[ index ];
+			stacks.clear( );
 			return false;
 		}
 	return true;
@@ -141,10 +145,7 @@ bool VarDirector::toVector( const void *ptr, std::vector< uint8_t > &result ) {
 			return true;
 	return false;
 }
-bool VarDirector::getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
-	QString typeInfoName = type_info_ref.name( );
-	return getTypeName( typeInfoName, result_type_name );
-}
+
 bool VarDirector::getTypeName( const QString &type_info_ref, QString &result_type_name ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );

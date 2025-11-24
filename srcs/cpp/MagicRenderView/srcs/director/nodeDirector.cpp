@@ -3,53 +3,49 @@
 
 #include <node/stack/nodeStack.h>
 
+#include "printerDirector.h"
+
+#include "../app/application.h"
+
 #include "../node/node/node.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
 
 bool NodeDirector::init( ) {
+	instancePtr = Application::getInstancePtr( );
+	printerDirector = instancePtr->getPrinterDirector( );
+	releaseMenu( );
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
+	
 
-	if( nodeCreateMenu ) {
-		std::vector< QMenu * > releaseMenu;
-		auto actions = nodeCreateMenu->actions( );
-		count = actions.size( );
-		auto actionArrayPtr = actions.data( );
-		QMenu *castPtr = nullptr;
-		for( index = 0; index < count; ++index )
-			if( castPtr = qobject_cast< QMenu * >( actionArrayPtr[ index ] ), castPtr != nullptr )
-				releaseMenu.emplace_back( castPtr );
-			else
-				delete actionArrayPtr[ index ];
-		count = releaseMenu.size( );
-		auto menuArrayPtr = releaseMenu.data( );
-		for( index = 0; index < count; ++index )
-			delete menuArrayPtr[ index ];
-		delete nodeCreateMenu;
-	}
-	count = nodeStacks.size( );
-	if( count ) {
-		nodeStackArrayPtr = nodeStacks.data( );
-		for( index = 0; index < count; ++index )
-			delete nodeStackArrayPtr[ index ];
-		nodeStacks.clear( );
-	}
-	nodeCreateMenu = new QMenu;
 	// 这里加入节点窗口创建函数
 	nodeStacks.emplace_back( new BaseNodeStack );
 
+	// 初始化列表
 	count = nodeStacks.size( );
 	nodeStackArrayPtr = nodeStacks.data( );
 	for( index = 0; index < count; ++index )
-		if( nodeStackArrayPtr[ index ]->init( ) == false )
+		if( nodeStackArrayPtr[ index ]->init( ) == false ) {
+			auto className = nodeStackArrayPtr[ index ]->metaObject( )->className( );
+			QString msg( "[ %1 ]节点堆栈类初始化失败" );
+			printerDirector->error( msg.arg( className ) );
+			for( index = 0; index < count; ++index )
+				delete nodeStackArrayPtr[ index ];
+			nodeStacks.clear( );
 			return false;
+		}
+	// 初始化菜单
+	nodeCreateMenu = new QMenu;
+	for( index = 0; index < count; ++index )
+		nodeCreateMenu->addMenu( nodeStackArrayPtr[ index ]->getMainMenu( ) );
+
 	return true;
 }
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ) {
 
 }
-NodeDirector::~NodeDirector( ) {
+void NodeDirector::releaseMenu( ) {
 	auto count = nodeStacks.size( );
 	if( count ) {
 		auto nodeStackArrayPtr = nodeStacks.data( );
@@ -58,6 +54,10 @@ NodeDirector::~NodeDirector( ) {
 		nodeStacks.clear( );
 	}
 	delete nodeCreateMenu;
+	nodeCreateMenu = nullptr;
+}
+NodeDirector::~NodeDirector( ) {
+	releaseMenu( );
 }
 Node * NodeDirector::createNode( const QString &stack_name, const QString &node_type_name ) {
 	auto count = nodeStacks.size( );
