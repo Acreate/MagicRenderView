@@ -22,13 +22,18 @@ bool UInt64ArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_p
 	for( size_t index = 0; index < arrayCount; ++index, offset = offset + result_count, mod = mod - result_count )
 		if( fillTypeVectorAtVar< t_current_unity_type >( result_count, offset, mod, arrayPtr + index ) == false )
 			return false;
-	void *sourcePtr;
-	if( createTypePtr( sourcePtr ) == false )
-		return false;
-	auto createPtr = ( std::vector< t_current_unity_type > * ) sourcePtr;
-	*createPtr = buffVar;
-	result_obj_ptr = createPtr;
 	result_count = offset - obj_start_ptr;
+	if( hasVarPtr( result_obj_ptr ) == false ) {
+		void *sourcePtr;
+		if( createTypePtr( sourcePtr ) == false )
+			return false;
+		auto createPtr = ( std::vector< t_current_unity_type > * ) sourcePtr;
+		*createPtr = buffVar;
+		result_obj_ptr = createPtr;
+		return true;
+	}
+	auto createPtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;
+	*createPtr = buffVar;
 	return true;
 }
 TypeEnum::Type UInt64ArrayStack::getType( ) {

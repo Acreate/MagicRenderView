@@ -3,6 +3,7 @@
 
 #include "../app/application.h"
 
+#include "../director/iniDirector.h"
 #include "../director/printerDirector.h"
 #include "../director/varDirector.h"
 
@@ -194,4 +195,16 @@ void TestCodeSources::testVarGener( ) {
 	::testAnyArrayVarGener< int64_t >( 999, 5 );
 	::testAnyArrayVarGener< QString >( "", 5 );
 	::testAnyArrayVarGener< QString >( "985单元", 5 );
+}
+void TestCodeSources::testAppSaveBin( ) {
+	auto instancePtr = Application::getInstancePtr( );
+	auto iniDirector = instancePtr->getIniDirector(  );
+	std::vector< uint8_t > buff = std::vector< uint8_t > { 1, 2, 3, 4 };
+	iniDirector->setVar( "第1", buff );
+	buff = std::vector< uint8_t > { 15, 16, 17, 18 };
+	iniDirector->setVar( "第2", buff );
+	QString saveFile = "保存bin.bin";
+	iniDirector->synchronousVarToFile( saveFile );
+	iniDirector->clearVar( );
+	iniDirector->synchronousFileToVar( saveFile );
 }

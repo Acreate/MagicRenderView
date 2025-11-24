@@ -16,12 +16,18 @@ bool UInt64UnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_p
 	t_current_unity_type buffVar;
 	if( fillTypeVectorAtVar< t_current_unity_type >( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
 		return false;
-	void *sourcePtr;
-	if( createTypePtr( sourcePtr ) == false )
-		return false;
-	auto createPtr = ( t_current_unity_type * ) sourcePtr;
+	if( hasVarPtr( result_obj_ptr ) == false ) {
+		void *sourcePtr = nullptr;
+		if( createTypePtr( sourcePtr ) == false )
+			return false;
+		auto createPtr = ( t_current_unity_type * ) sourcePtr;
+		*createPtr = buffVar;
+		result_obj_ptr = createPtr;
+		return true;
+	}
+
+	auto createPtr = ( t_current_unity_type * ) result_obj_ptr;
 	*createPtr = buffVar;
-	result_obj_ptr = createPtr;
 	return true;
 }
 TypeEnum::Type UInt64UnityStack::getType( ) {

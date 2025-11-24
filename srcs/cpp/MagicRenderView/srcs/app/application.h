@@ -3,6 +3,7 @@
 #pragma once
 #include <QApplication>
 
+class IniDirector;
 class MainWindow;
 class VarDirector;
 class PrinterDirector;
@@ -17,10 +18,9 @@ protected:
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
+	IniDirector *iniDirector;
 protected:
 	MainWindow *mainWindow;
-protected:
-	std::vector< std::pair< QString, std::vector< uint8_t > > > iniData;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -29,14 +29,7 @@ public:
 	virtual PrinterDirector * getPrinterDirector( ) const { return printerDirector; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
-	virtual bool setVar( const QString &var_key, const std::vector< uint8_t > &var_value );
-	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value );
-	virtual bool removeVar( const QString &result_var_key );
-	virtual bool synchronousFileToVar( const QString &file_path_name );
-	virtual bool synchronousVarToFile( const QString &file_path_name );
-	virtual void clearVar( ) {
-		iniData.clear( );
-	}
+	virtual IniDirector * getIniDirector( ) const { return iniDirector; }
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__

@@ -13,11 +13,10 @@ protected:
 	QString applicationName;
 	QDir *absPath;
 	Application *instancePtr;
-protected:
-	virtual bool init( );
 public:
 	PrinterDirector( );
 	~PrinterDirector( ) override;
+	virtual bool init( );
 	virtual void error( const QString &msg ) const;
 	virtual void info( const QString &msg ) const;
 	virtual std::vector< std::stacktrace_entry > getStacktrace( ) const;

@@ -18,12 +18,11 @@ protected:
 	std::vector< NodeStack * > nodeStacks;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
-protected:
-	virtual bool init( );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	void releaseMenu( );
 	~NodeDirector( ) override;
+	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
 Q_SIGNALS:

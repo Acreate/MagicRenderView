@@ -78,6 +78,8 @@ bool InfoStack::isAliasTypeNames( const QString &check_type_name ) const {
 	return false;
 }
 bool InfoStack::hasVarPtr( const void *check_obj_ptr ) const {
+	if( check_obj_ptr == nullptr )
+		return false;
 	size_t count = allVarPtrVector.size( );
 	if( count == 0 )
 		return false;

@@ -18,12 +18,11 @@ protected:
 	std::vector< InfoStack * > stacks;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
-protected:
-	virtual bool init( );
 public:
 	VarDirector( );
 	~VarDirector( ) override;
 public:
+	virtual bool init( );
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );

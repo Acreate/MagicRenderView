@@ -5,6 +5,7 @@
 class TestCodeSources {
 public:
 	static void testVarGener( );
+	static void testAppSaveBin( );
 };
 
 #endif // file_mac_H_HEAD__FILE__
