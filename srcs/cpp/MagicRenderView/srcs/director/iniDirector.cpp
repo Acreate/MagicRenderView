@@ -99,7 +99,7 @@ bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 
 	return false;
 }
-bool IniDirector::synchronousVarToFile( const QString &file_path_name ) {
+bool IniDirector::synchronousVarToFile( const QString &file_path_name ) const {
 	VarDirector newVarDirector;
 	if( newVarDirector.init( ) == false ) {
 		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ) );

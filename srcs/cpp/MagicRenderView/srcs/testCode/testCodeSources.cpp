@@ -1,5 +1,6 @@
 ﻿#include "testCodeSources.h"
 #include <QDebug>
+#include <qfileinfo.h>
 
 #include "../app/application.h"
 
@@ -200,15 +201,14 @@ void TestCodeSources::testVarGener( ) {
 }
 void TestCodeSources::testAppSaveBin( ) {
 	auto instancePtr = Application::getInstancePtr( );
-	auto iniDirector = instancePtr->getIniDirector( );
 	std::vector< uint8_t > buff = std::vector< uint8_t > { 1, 2, 3, 4 };
-	iniDirector->setVar( "第1", buff );
+	instancePtr->setVar( "第1", buff );
 	buff = std::vector< uint8_t > { 15, 16, 17, 18 };
-	iniDirector->setVar( "第2", buff );
+	instancePtr->setVar( "第2", buff );
 	QString saveFile = "保存bin.bin";
-	iniDirector->synchronousVarToFile( saveFile );
-	iniDirector->clearVar( );
-	iniDirector->synchronousFileToVar( saveFile );
+	instancePtr->synchronousVarToFile( );
+	instancePtr->clearVar( );
+	instancePtr->synchronousFileToVar( );
 }
 void TestCodeSources::testEnumConver( ) {
 	auto instancePtr = Application::getInstancePtr( );
@@ -243,11 +243,58 @@ void TestCodeSources::testEnumConver( ) {
 		printerDirector->error( "枚举转字符串失败 [NodeEnum::AdviseType]" );
 
 }
+void TestCodeSources::testAppFile( ) {
+
+	auto instancePtr = Application::getInstancePtr( );
+	auto printerDirector = instancePtr->getPrinterDirector( );
+
+	if( instancePtr->hasDir( "." ) )
+		printerDirector->info( "存在路径[.]" );
+	else
+		printerDirector->info( "非法路径[.]" );
+
+	if( instancePtr->hasFile( "." ) )
+		printerDirector->info( "存在文件[.]" );
+	else
+		printerDirector->info( "非法文件[.]" );
+	if( instancePtr->createFile( "./45/file" ) )
+		printerDirector->info( "创建文件[./45/file]成功" );
+	else
+		printerDirector->info( "创建文件[./45/file]失败" );
+	QFileInfo getPathInfo;
+	if( instancePtr->getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
+		printerDirector->info( "获取路径[./4541/88]成功" );
+		QString outMsg( "获取路径[%1]是%2" );
+		if( getPathInfo.isFile( ) )
+			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "文件" ) );
+		else
+			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "目录" ) );
+	} else
+		printerDirector->info( "获取路径[./4541/88]失败" );
+
+}
+void TestCodeSources::testAppMoveWidget( ) {
+
+	auto instancePtr = Application::getInstancePtr( );
+	auto printerDirector = instancePtr->getPrinterDirector( );
+	if( instancePtr->widgetMoveTargetDispyer( 1 ) )
+		printerDirector->info( "移动成功到 0 号屏幕" );
+	else
+		printerDirector->info( "移动失败，0 号屏幕不存在" );
+	if( instancePtr->widgetAllMoveTargetDispyer( 0 ) )
+		printerDirector->info( "全部移动成功到 0 号屏幕" );
+	else
+		printerDirector->info( "全部移动失败，0 号屏幕不存在" );
+}
 /// @brief 运行测试函数
 /// @return 返回 true，表示继续程序，否则退出 
 bool TestCodeSources::testAll( ) {
-	TestCodeSources::testEnumConver( );
-	TestCodeSources::testVarGener( );
-	TestCodeSources::testAppSaveBin( );
+	//TestCodeSources::testEnumConver( );
+	//TestCodeSources::testVarGener( );
+	//TestCodeSources::testAppFile( );
+	//TestCodeSources::testAppSaveBin( );
+	//TestCodeSources::testAppMoveWidget( );
+
+	//return false;
 	return true;
 }

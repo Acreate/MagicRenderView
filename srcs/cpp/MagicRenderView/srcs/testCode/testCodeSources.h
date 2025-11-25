@@ -7,6 +7,8 @@ public:
 	static void testVarGener( );
 	static void testAppSaveBin( );
 	static void testEnumConver( );
+	static void testAppFile( );
+	static void testAppMoveWidget( );
 	static bool testAll( );
 };
 

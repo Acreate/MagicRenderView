@@ -17,7 +17,7 @@ public:
 	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value );
 	virtual bool removeVar( const QString &result_var_key );
 	virtual bool synchronousFileToVar( const QString &file_path_name );
-	virtual bool synchronousVarToFile( const QString &file_path_name );
+	virtual bool synchronousVarToFile( const QString &file_path_name ) const;
 	virtual void clearVar( ) {
 		iniData.clear( );
 	}

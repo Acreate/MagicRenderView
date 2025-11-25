@@ -26,8 +26,8 @@ void PrinterDirector::error( const QString &msg ) const {
 	if( stackTraceEntriesCount > 2 ) {
 		stackTraceEntriesCount -= 2;
 		QStringList qstringBuff;
-		qstringBuff.append( QString( "============== %1 ============== 错误消息" ).arg( applicationName ) );
-		QString sourceFrom( "%1\n-------------------" );
+		qstringBuff.append( QString( "\n\n============== %1 ============== 错误消息" ).arg( applicationName ) );
+		QString sourceFrom( "\n%1\n\n-------------------" );
 		qstringBuff.append( sourceFrom.arg( msg ) );
 		qsizetype removeStartLen = applicationName.size( ) + 1;
 		sourceFrom = "\t(%4)=>%1 [ %2 : %3 ]";
@@ -44,7 +44,7 @@ void PrinterDirector::error( const QString &msg ) const {
 			auto appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine ).arg( index );
 			qstringBuff << appendElement;
 		}
-		qstringBuff.append( QString( "==============   ==============" ) );
+		qstringBuff.append( QString( "==============   ==============\n" ) );
 		qDebug( ) << qstringBuff.join( "\n" ).toStdString( ).c_str( );
 	}
 }
@@ -55,8 +55,8 @@ void PrinterDirector::info( const QString &msg ) const {
 	if( stackTraceEntriesCount > 3 ) {
 		stackTraceEntriesCount -= 3;
 		QStringList qstringBuff;
-		qstringBuff.append( QString( "============== %1 ============== 提示消息" ).arg( applicationName ) );
-		QString sourceFrom( "%1\n-------------------" );
+		qstringBuff.append( QString( "\n\n============== %1 ============== 提示消息" ).arg( applicationName ) );
+		QString sourceFrom( "\n%1\n\n-------------------" );
 		qstringBuff.append( sourceFrom.arg( msg ) );
 		qsizetype removeStartLen = applicationName.size( ) + 1;
 		sourceFrom = "\t=>%1 [ %2 : %3 ]";
@@ -74,7 +74,7 @@ void PrinterDirector::info( const QString &msg ) const {
 		auto appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine );
 		qstringBuff << appendElement;
 
-		qstringBuff.append( QString( "==============   ==============" ) );
+		qstringBuff.append( QString( "==============   ==============\n" ) );
 		qDebug( ) << qstringBuff.join( "\n" ).toStdString( ).c_str( );
 	}
 }
