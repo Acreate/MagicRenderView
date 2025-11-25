@@ -7,6 +7,8 @@
 #include "../director/printerDirector.h"
 #include "../director/varDirector.h"
 
+#include "../enums/nodeEnum.h"
+
 template< typename TTestType >
 void testVarGener( const TTestType &default_var ) {
 	auto name = typeid( TTestType ).name( );
@@ -198,7 +200,7 @@ void TestCodeSources::testVarGener( ) {
 }
 void TestCodeSources::testAppSaveBin( ) {
 	auto instancePtr = Application::getInstancePtr( );
-	auto iniDirector = instancePtr->getIniDirector(  );
+	auto iniDirector = instancePtr->getIniDirector( );
 	std::vector< uint8_t > buff = std::vector< uint8_t > { 1, 2, 3, 4 };
 	iniDirector->setVar( "第1", buff );
 	buff = std::vector< uint8_t > { 15, 16, 17, 18 };
@@ -207,4 +209,45 @@ void TestCodeSources::testAppSaveBin( ) {
 	iniDirector->synchronousVarToFile( saveFile );
 	iniDirector->clearVar( );
 	iniDirector->synchronousFileToVar( saveFile );
+}
+void TestCodeSources::testEnumConver( ) {
+	auto instancePtr = Application::getInstancePtr( );
+	auto printerDirector = instancePtr->getPrinterDirector( );
+	QString enum_string;
+	NodeEnum::ErrorType result_ErrorType_var;
+	NodeEnum::AdviseType result_AdviseType_var;
+	enum_string = "Other";
+	if( NodeEnum::converEnum( enum_string, result_ErrorType_var ) ) {
+		printerDirector->info( enum_string );
+	} else
+		printerDirector->error( "字符串转枚举失败 [NodeEnum::ErrorType]" );
+
+	enum_string = "Result";
+	if( NodeEnum::converEnum( enum_string, result_AdviseType_var ) ) {
+		printerDirector->info( enum_string );
+	} else
+		printerDirector->error( "字符串转枚举失败 [NodeEnum::AdviseType]" );
+
+	result_ErrorType_var = NodeEnum::ErrorType::Other;
+	enum_string.clear( );
+	if( NodeEnum::converQString( result_ErrorType_var, enum_string ) ) {
+		printerDirector->info( enum_string );
+	} else
+		printerDirector->error( "枚举转字符串失败 [NodeEnum::ErrorType]" );
+
+	result_AdviseType_var = NodeEnum::AdviseType::Result;
+	enum_string.clear( );
+	if( NodeEnum::converQString( result_AdviseType_var, enum_string ) ) {
+		printerDirector->info( enum_string );
+	} else
+		printerDirector->error( "枚举转字符串失败 [NodeEnum::AdviseType]" );
+
+}
+/// @brief 运行测试函数
+/// @return 返回 true，表示继续程序，否则退出 
+bool TestCodeSources::testAll( ) {
+	TestCodeSources::testEnumConver( );
+	TestCodeSources::testVarGener( );
+	TestCodeSources::testAppSaveBin( );
+	return true;
 }

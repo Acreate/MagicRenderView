@@ -11,6 +11,7 @@ class Node : public QWidget {
 public:
 	Node( QWidget *parent, const Qt::WindowFlags &f );
 	virtual bool init( QWidget *parent ) = 0;
+	
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "未实现" ) );
 Q_SIGNALS:

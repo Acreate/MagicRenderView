@@ -10,6 +10,7 @@
 bool IniDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
+	iniData.clear( );
 	return true;
 }
 bool IniDirector::setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) {
@@ -49,7 +50,7 @@ bool IniDirector::removeVar( const QString &result_var_key ) {
 bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 	VarDirector newVarDirector;
 	if( newVarDirector.init( ) == false ) {
-		printerDirector->error( "无法初始化一个新的堆栈管理" );
+		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ) );
 		return false;
 	} else {
 		QFile file( file_path_name );
@@ -101,7 +102,7 @@ bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 bool IniDirector::synchronousVarToFile( const QString &file_path_name ) {
 	VarDirector newVarDirector;
 	if( newVarDirector.init( ) == false ) {
-		printerDirector->error( "无法初始化一个新的堆栈管理" );
+		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ) );
 		return false;
 	} else {
 		QFile file( file_path_name );
