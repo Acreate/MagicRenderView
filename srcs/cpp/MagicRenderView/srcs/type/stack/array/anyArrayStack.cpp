@@ -31,7 +31,7 @@ bool AnyArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr,
 	auto arrayPtr = buffVar.data( );
 	for( size_t index = 0; index < arrayCount; ++index, offset = offset + result_count,
 		mod = mod - result_count )
-		if( varDirector->toVar( result_count, offset, mod, ( arrayPtr + index ) ) == false )
+		if( varDirector->toVar( result_count, offset, mod, *( arrayPtr + index ) ) == false )
 			return false;
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {

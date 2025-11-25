@@ -22,6 +22,8 @@ public:
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
+	bool event( QEvent *event ) override;
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

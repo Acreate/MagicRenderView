@@ -32,3 +32,10 @@ void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
 	nodeCreateMenu->popup( mapToGlobal( event->pos( ) ) );
 }
+void MainWindow::resizeEvent( QResizeEvent *event ) {
+	QMainWindow::resizeEvent( event );
+	
+}
+bool MainWindow::event( QEvent *event ) {
+	return QMainWindow::event( event );
+}

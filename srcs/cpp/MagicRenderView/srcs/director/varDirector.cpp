@@ -111,10 +111,10 @@ bool VarDirector::create( const QString &create_type_name, void *&result_create_
 			return arrayPtr[ index ]->createTypePtr( result_create_obj_ptr );
 	return false;
 }
-bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr ) {
-	return toVar( result_count, source_ptr, source_count, *target_var_ptr );
-}
+
 bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr ) {
+	if( source_ptr == nullptr || source_count == 0 )
+		return false;
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;

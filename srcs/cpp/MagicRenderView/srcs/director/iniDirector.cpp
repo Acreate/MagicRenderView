@@ -59,6 +59,8 @@ bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 		QByteArray readAll = file.readAll( );
 		file.close( );
 		qint64 qsizetype = readAll.size( );
+		if( qsizetype == 0 )
+			return true;
 		size_t readDataCount = qsizetype;
 		if( readDataCount != abs( qsizetype ) )
 			return false;

@@ -1,6 +1,8 @@
 ﻿#include "application.h"
 
 #include <QDir>
+#include <QMetaEnum>
+#include <QResizeEvent>
 #include <QScreen>
 #include <qfile.h>
 #include <qfileinfo.h>
@@ -20,6 +22,10 @@ Application * Application::getInstancePtr( ) {
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ), mainWindow( nullptr ), iniDirector( nullptr ), varDirector( nullptr ), printerDirector( nullptr ), nodeDirector( nullptr ) {
 }
 Application::~Application( ) {
+	if( synchronousWindowInfoToVar( ) == false )
+		printerDirector->error( "窗口状态保存异常" );
+	if( synchronousVarToFile( ) == false )
+		printerDirector->error( "程序信息保存异常" );
 	if( mainWindow )
 		delete mainWindow;
 	if( nodeDirector )
@@ -31,9 +37,65 @@ Application::~Application( ) {
 	if( printerDirector )
 		delete printerDirector;
 }
+bool Application::notify( QObject *object, QEvent *event ) {
+	if( object == mainWindow ) {
+		bool notify = QApplication::notify( object, event );
+		auto type = event->type( );
+		QWindowStateChangeEvent *windowStateChangeEvent;
+		QResizeEvent *resizeEvent;
+		QMoveEvent *moveEvent;
+		switch( type ) {
+			case QEvent::Resize :
+				resizeEvent = static_cast< QResizeEvent * >( event );
+				if( resizeEvent ) {
+					mainWindowBuffSize = resizeEvent->oldSize( );
+					mainWindowSize = resizeEvent->size( );
+				}
+				break;
+			case QEvent::Move :
+
+				moveEvent = static_cast< QMoveEvent * >( event );
+				if( moveEvent ) {
+					mainWindowBuffPoint = moveEvent->oldPos( );
+					mainWindowPoint = moveEvent->pos( );
+				}
+				break;
+			case QEvent::WindowStateChange :
+				windowStateChangeEvent = static_cast< QWindowStateChangeEvent * >( event );
+				if( windowStateChangeEvent ) {
+					auto currentWindowStates = mainWindow->windowState( );
+					mainWindowState = windowStateChangeEvent->oldState( );
+					if( currentWindowStates == Qt::WindowMaximized && mainWindowState == Qt::WindowNoState ) {
+						mainWindowSize = mainWindowBuffSize;
+						mainWindowPoint = mainWindowBuffPoint;
+					}
+				}
+				break;
+
+		}
+
+		return notify;
+	}
+	return QApplication::notify( object, event );
+}
+
+bool Application::event( QEvent *event ) {
+	return QApplication::event( event );
+
+}
 bool Application::init( ) {
 	Application::instance = this;
-
+	auto currentApplcationDirPath = applicationDirPath( );
+	auto appName = applicationName( );
+	iniSaveFilePathName = currentApplcationDirPath + QDir::separator( ) + "settings" + QDir::separator( ) + appName + ".status";
+	QFileInfo filePermission( iniSaveFilePathName );
+	iniSaveFilePathName = filePermission.absoluteFilePath( );
+	if( createFile( iniSaveFilePathName ) == false )
+		return false;
+	if( getPathHasFileInfo( iniSaveFilePathName, filePermission ) == false )
+		return false;
+	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
+		return false;
 	if( mainWindow )
 		delete mainWindow;
 	if( nodeDirector )
@@ -60,22 +122,157 @@ bool Application::init( ) {
 		return false;
 	if( mainWindow->init( ) == false )
 		return false;
+	if( synchronousFileToVar( ) == false )
+		return false;
+	if( synchronousVarToWindowInfo( ) == false )
+		return false;
+
 	return true;
 }
-bool Application::setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) {
+bool Application::setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) const {
 	return iniDirector->setVar( var_key, var_value );
 }
-bool Application::getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value ) {
+bool Application::getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value ) const {
 	return iniDirector->getVar( result_var_key, result_var_value );
 }
-bool Application::removeVar( const QString &result_var_key ) {
+bool Application::removeVar( const QString &result_var_key ) const {
 	return iniDirector->removeVar( result_var_key );
 }
-bool Application::synchronousFileToVar( ) {
+bool Application::synchronousFileToVar( ) const {
 	return iniDirector->synchronousFileToVar( iniSaveFilePathName );
 }
 bool Application::synchronousVarToFile( ) const {
 	return iniDirector->synchronousVarToFile( iniSaveFilePathName );
+}
+bool Application::synchronousWindowInfoToVar( ) const {
+	if( mainWindow == nullptr )
+		return false;
+	VarDirector director;
+	if( director.init( ) == false )
+		return false;
+	std::vector< uint8_t > *data;
+	if( director.create( data ) == false )
+		return false;
+	int64_t *int64Value;
+	if( director.create( int64Value ) == false )
+		return false;
+
+	*int64Value = 1;
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "!Application::synchronousWindowInfoToVar", *data );
+
+	*int64Value = mainWindowSize.width( );
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "width", *data );
+
+	*int64Value = mainWindowSize.height( );;
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "height", *data );
+
+	*int64Value = mainWindowPoint.x( );
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "x", *data );
+
+	*int64Value = mainWindowPoint.y( );
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "y", *data );
+	// 窗口状态
+	QByteArray mainWindowStateArray = mainWindow->saveState( );
+	qsizetype newCount = mainWindowStateArray.size( );
+	data->resize( newCount );
+	auto dataArrayPtr = data->data( );
+	char *sourceArrayPtr = mainWindowStateArray.data( );
+
+	qsizetype index = 0;
+	for( ; index < newCount; ++index )
+		dataArrayPtr[ index ] = sourceArrayPtr[ index ];
+	setVar( "@saveState", *data );
+
+	// 显示状态
+	Qt::WindowStates windowShowStates = mainWindow->windowState( );
+	*int64Value = windowShowStates.toInt( );
+	if( director.toVector( int64Value, *data ) == false )
+		return false;
+	setVar( "#windowState", *data );
+
+	return true;
+}
+bool Application::synchronousVarToWindowInfo( ) {
+	VarDirector director;
+	if( director.init( ) == false )
+		return false;
+	std::vector< uint8_t > *data;
+	if( director.create( data ) == false )
+		return false;
+	int64_t *int64Value;
+	if( director.create( int64Value ) == false )
+		return false;
+	size_t userCount;
+	uint8_t *dataArrayPtr;
+	void *converVarPtr = int64Value;
+	size_t dataArrayCount;
+
+	getVar( "!Application::synchronousWindowInfoToVar", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	if( dataArrayPtr == nullptr || dataArrayCount == 0 )
+		return true; // 未存在匹配的存储标识
+
+	getVar( "width", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
+		return false;
+	mainWindowSize.setWidth( *int64Value );
+
+	getVar( "height", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
+		return false;
+	mainWindowSize.setHeight( *int64Value );
+
+	mainWindow->resize( mainWindowSize );
+
+	getVar( "x", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
+		return false;
+	mainWindowPoint.setX( *int64Value );
+
+	getVar( "y", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
+		return false;
+	mainWindowPoint.setY( *int64Value );
+
+	mainWindow->move( mainWindowPoint );
+
+	getVar( "#windowState", *data );
+	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
+		return false;
+	Qt::WindowStates state( *int64Value );
+	mainWindow->setWindowState( state );
+
+	getVar( "@saveState", *data );
+	dataArrayPtr = data->data( );
+	dataArrayCount = data->size( );
+	QByteArray mainWindowState;
+	mainWindowState.resize( dataArrayCount );
+	auto targetDataPtr = mainWindowState.data( );
+	userCount = 0;
+	for( ; userCount < dataArrayCount; ++userCount )
+		targetDataPtr[ userCount ] = dataArrayPtr[ userCount ];
+	mainWindow->restoreState( mainWindowState );
+
+	return true;
 }
 void Application::clearVar( ) {
 	iniDirector->clearVar( );

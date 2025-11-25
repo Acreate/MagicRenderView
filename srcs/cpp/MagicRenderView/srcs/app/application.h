@@ -23,20 +23,33 @@ protected:
 protected:
 	MainWindow *mainWindow;
 protected:
+	QSize mainWindowBuffSize;
+	QSize mainWindowSize;
+	QPoint mainWindowBuffPoint;
+	QPoint mainWindowPoint;
+	Qt::WindowStates mainWindowState;
+protected:
 	QString iniSaveFilePathName;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
+
+	bool notify( QObject *, QEvent * ) override;
+protected:
+	bool event( QEvent * ) override;
+public:
 	virtual bool init( );
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
 	virtual PrinterDirector * getPrinterDirector( ) const { return printerDirector; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
-	virtual bool setVar( const QString &var_key, const std::vector< uint8_t > &var_value );
-	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value );
-	virtual bool removeVar( const QString &result_var_key );
-	virtual bool synchronousFileToVar( );
+	virtual bool setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) const;
+	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value ) const;
+	virtual bool removeVar( const QString &result_var_key ) const;
+	virtual bool synchronousFileToVar( ) const;
 	virtual bool synchronousVarToFile( ) const;
+	virtual bool synchronousWindowInfoToVar( ) const;
+	virtual bool synchronousVarToWindowInfo( );
 	virtual void clearVar( );
 	virtual bool createFile( const QString &create_file_path_name ) const;
 	virtual bool removeFile( const QString &remove_file_path_name ) const;

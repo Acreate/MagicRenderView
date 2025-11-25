@@ -33,7 +33,6 @@ public:
 	virtual bool getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &result_bool );
 	virtual bool create( const QString &create_type_name, void *&result_create_obj_ptr );
 	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr );
-	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void **target_var_ptr );
 	virtual bool toVector( const void *ptr, std::vector< uint8_t > &result );
 public:
 	template< typename TCreateType >
