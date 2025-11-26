@@ -14,7 +14,7 @@ bool PrinterDirector::init( ) {
 		delete absPath;
 	absPath = new QDir( Cmake_Source_Dir );
 	sourceDirPathName = absPath->absolutePath( );
-
+	logSaveFilePathName = instancePtr->getLogSaveFilePathName( );
 	return true;
 }
 PrinterDirector::PrinterDirector( ) : absPath( nullptr ) { }
@@ -26,6 +26,7 @@ void PrinterDirector::error( const QString &msg ) const {
 	auto arrayPtr = stacktraceEntries.data( );
 	size_t stackTraceEntriesCount = stacktraceEntries.size( );
 	if( stackTraceEntriesCount > 2 ) {
+
 		stackTraceEntriesCount -= 2;
 		QStringList qstringBuff;
 		QDateTime dateTime = QDateTime::currentDateTime( );
@@ -61,7 +62,12 @@ void PrinterDirector::error( const QString &msg ) const {
 			++outLineCount;
 		}
 		qstringBuff.append( QString( "==============   ==============\n" ) );
-		qDebug( ) << qstringBuff.join( "\n" ).toStdString( ).c_str( );
+		QString logOutString = qstringBuff.join( "\n" );
+		qDebug( ) << logOutString.toStdString( ).c_str( );
+		QFile file( logSaveFilePathName );
+		if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Append ) == false )
+			return;
+		file.write( logOutString.toUtf8( ) );
 	}
 }
 void PrinterDirector::info( const QString &msg ) const {
@@ -92,7 +98,12 @@ void PrinterDirector::info( const QString &msg ) const {
 		qstringBuff << appendElement;
 
 		qstringBuff.append( QString( "==============   ==============\n" ) );
-		qDebug( ) << qstringBuff.join( "\n" ).toStdString( ).c_str( );
+		QString logOutString = qstringBuff.join( "\n" );
+		qDebug( ) << logOutString.toStdString( ).c_str( );
+		QFile file( logSaveFilePathName );
+		if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Append ) == false )
+			return;
+		file.write( logOutString.toUtf8( ) );
 	}
 }
 std::vector< std::stacktrace_entry > PrinterDirector::getStacktrace( ) const {

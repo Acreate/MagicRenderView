@@ -14,6 +14,7 @@ protected:
 	QDir *absPath;
 	Application *instancePtr;
 	QString sourceDirPathName;
+	QString logSaveFilePathName;
 public:
 	PrinterDirector( );
 	~PrinterDirector( ) override;

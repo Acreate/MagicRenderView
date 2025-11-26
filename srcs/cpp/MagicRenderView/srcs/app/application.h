@@ -29,7 +29,10 @@ protected:
 	QPoint mainWindowPoint;
 	Qt::WindowStates mainWindowState;
 protected:
+	QDateTime *appInitRunDataTime;
+protected:
 	QString iniSaveFilePathName;
+	QString logSaveFilePathName;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -39,6 +42,9 @@ protected:
 	bool event( QEvent * ) override;
 public:
 	virtual bool init( );
+	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }
+	virtual const QString & getIniSaveFilePathName( ) const { return iniSaveFilePathName; }
+	virtual const QString & getLogSaveFilePathName( ) const { return logSaveFilePathName; }
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
 	virtual PrinterDirector * getPrinterDirector( ) const { return printerDirector; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
