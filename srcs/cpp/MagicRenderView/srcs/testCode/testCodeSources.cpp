@@ -289,11 +289,11 @@ void TestCodeSources::testAppMoveWidget( ) {
 /// @brief 运行测试函数
 /// @return 返回 true，表示继续程序，否则退出 
 bool TestCodeSources::testAll( ) {
-	//TestCodeSources::testEnumConver( );
-	//TestCodeSources::testVarGener( );
-	//TestCodeSources::testAppFile( );
-	//TestCodeSources::testAppSaveBin( );
-	//TestCodeSources::testAppMoveWidget( );
+	TestCodeSources::testEnumConver( );
+	TestCodeSources::testVarGener( );
+	TestCodeSources::testAppFile( );
+	TestCodeSources::testAppSaveBin( );
+	TestCodeSources::testAppMoveWidget( );
 
 	//return false;
 	return true;

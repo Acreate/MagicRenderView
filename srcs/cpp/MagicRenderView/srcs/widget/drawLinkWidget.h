@@ -7,6 +7,8 @@ class Application;
 class NodeDirector;
 class DrawLinkWidget : public QWidget {
 	Q_OBJECT;
+	friend class MainWidget;
+	friend class MainWindow;
 protected:
 	Application *appInstancePtr;
 	NodeDirector *nodeDirector;

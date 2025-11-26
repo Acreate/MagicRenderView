@@ -1,6 +1,8 @@
 ﻿#include "stringUnityStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 StringUnityStack::~StringUnityStack( ) {
 
 }

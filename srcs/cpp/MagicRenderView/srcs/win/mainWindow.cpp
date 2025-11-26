@@ -7,6 +7,8 @@
 
 #include "../director/nodeDirector.h"
 
+#include "../widget/drawLinkWidget.h"
+#include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 
@@ -20,21 +22,28 @@ bool MainWindow::init( ) {
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 	if( mainWidget->init( ) == false )
 		return false;
-	show( );
-	if( isHidden( ) )
-		return false;
+	hide( );
 	instancePtr = Application::getInstancePtr( );
 	nodeDirector = instancePtr->getNodeDirector( );
 	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
+	drawNodeWidget = mainWidget->getDrawNodeWidget( );
+	drawLinkWidget = mainWidget->getDrawLinkWidget( );
 	return true;
+}
+MainWindow::~MainWindow( ) {
+	delete drawNodeWidget;
+	delete drawLinkWidget;
+	delete mainWidget;
+	delete mainWidgetScrollArea;
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
-	nodeCreateMenu->popup( mapToGlobal( event->pos( ) ) );
+	drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
+	nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
-	
+
 }
 bool MainWindow::event( QEvent *event ) {
 	return QMainWindow::event( event );

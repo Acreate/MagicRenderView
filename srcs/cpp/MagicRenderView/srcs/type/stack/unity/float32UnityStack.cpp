@@ -1,6 +1,8 @@
 ﻿#include "float32UnityStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Float32UnityStack::~Float32UnityStack( ) {
 
 }

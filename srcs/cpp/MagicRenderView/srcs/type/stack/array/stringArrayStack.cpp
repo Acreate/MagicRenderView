@@ -1,6 +1,8 @@
 ﻿#include "stringArrayStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 StringArrayStack::~StringArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );

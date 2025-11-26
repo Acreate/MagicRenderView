@@ -1,6 +1,8 @@
 ﻿#include "float64ArrayStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Float64ArrayStack::~Float64ArrayStack( ) {
 
 }

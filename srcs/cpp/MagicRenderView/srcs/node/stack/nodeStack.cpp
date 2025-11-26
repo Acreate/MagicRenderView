@@ -210,6 +210,7 @@ bool NodeStack::connectCreateNodeAction( QAction *connect_qaction_ptr, QActionTr
 			delete node;
 			return;
 		}
+		node->show( );
 	} );
 	return true;
 }

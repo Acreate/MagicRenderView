@@ -1,6 +1,8 @@
 ﻿#include "float32ArrayStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Float32ArrayStack::~Float32ArrayStack( ) {
 
 }

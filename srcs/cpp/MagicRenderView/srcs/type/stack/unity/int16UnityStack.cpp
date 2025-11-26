@@ -1,6 +1,8 @@
 ﻿#include "int16UnityStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Int16UnityStack::~Int16UnityStack( ) {
 
 }

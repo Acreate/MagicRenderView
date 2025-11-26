@@ -1,8 +1,10 @@
 ﻿#include "infoStack.h"
 
-#include "../app/application.h"
+#include <app/application.h>
 
-#include "../director/printerDirector.h"
+#include <director/printerDirector.h>
+
+#include <tools/infoTool.h>
 InfoStack::InfoStack( ) {
 	newObjTypeFunction = nullptr;
 	deleteObjTypeFunction = nullptr;
@@ -142,22 +144,6 @@ bool InfoStack::getDataAtTypeName( uint64_t &result_count, const uint8_t *source
 	result_count = converVar + result_count;
 	return true;
 }
-bool infoTool::fillVectorTarget( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {
-	result.resize( ptr_size );
-	auto data = result.data( );
-	for( size_t index = 0; index < ptr_size; ++index )
-		data[ index ] = ptr[ index ];
-	return true;
-}
-bool infoTool::fillObjTarget( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count ) {
-	if( source_count < target_var_count )
-		return false;
-	for( size_t index = 0; index < target_var_count; ++index )
-		target_var_ptr[ index ] = source_ptr[ index ];
-	result_count = target_var_count;
-	return true;
-}
-
 bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
 	if( lhs.typeName == rhs.typeName )
 		return true;

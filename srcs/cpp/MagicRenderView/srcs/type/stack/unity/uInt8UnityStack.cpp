@@ -1,6 +1,8 @@
 ﻿#include "uInt8UnityStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 UInt8UnityStack::~UInt8UnityStack( ) {
 
 }

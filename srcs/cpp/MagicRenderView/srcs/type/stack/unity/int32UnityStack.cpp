@@ -1,6 +1,8 @@
 ﻿#include "int32UnityStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Int32UnityStack::~Int32UnityStack( ) {
 
 }

@@ -1,6 +1,8 @@
 ﻿#include "int32ArrayStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Int32ArrayStack::~Int32ArrayStack( ) {
 
 }

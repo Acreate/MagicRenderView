@@ -25,6 +25,7 @@
 #include <type/stack/unity/uInt32UnityStack.h>
 #include <type/stack/unity/uInt64UnityStack.h>
 #include <type/stack/unity/uInt8UnityStack.h>
+#include <tools/infoTool.h>
 
 #include "printerDirector.h"
 

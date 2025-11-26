@@ -55,7 +55,8 @@ void NodeDirector::releaseMenu( ) {
 			delete nodeStackArrayPtr[ index ];
 		nodeStacks.clear( );
 	}
-	delete nodeCreateMenu;
+	if( nodeCreateMenu )
+		delete nodeCreateMenu;
 	nodeCreateMenu = nullptr;
 }
 NodeDirector::~NodeDirector( ) {

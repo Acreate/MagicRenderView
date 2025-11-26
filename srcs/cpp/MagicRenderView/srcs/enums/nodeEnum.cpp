@@ -23,7 +23,7 @@ bool NodeEnum::converEnum( const QString &enum_string, ErrorType &result_enum_ty
 bool NodeEnum::converEnum( const QString &enum_string, AdviseType &result_enum_type_var ) {
 	QMetaEnum metaEnum = QMetaEnum::fromType< AdviseType >( );
 	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
-	
+
 	if( optional.has_value( ) == false )
 		return false;
 	auto *varPtr = optional.operator->( );
@@ -43,7 +43,7 @@ bool NodeEnum::converEnum( const QString &enum_string, AdviseType &result_enum_t
 bool NodeEnum::converEnum( const QString &enum_string, CreateType &result_enum_type_var ) {
 	QMetaEnum metaEnum = QMetaEnum::fromType< CreateType >( );
 	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
-	
+
 	if( optional.has_value( ) == false )
 		return false;
 	auto *varPtr = optional.operator->( );
@@ -63,7 +63,7 @@ bool NodeEnum::converEnum( const QString &enum_string, CreateType &result_enum_t
 bool NodeEnum::converEnum( const QString &enum_string, NodeType &result_enum_type_var ) {
 	QMetaEnum metaEnum = QMetaEnum::fromType< NodeType >( );
 	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
-	
+
 	if( optional.has_value( ) == false )
 		return false;
 	auto *varPtr = optional.operator->( );
@@ -75,6 +75,25 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeType &result_enum_typ
 		case NodeType::Point :
 		case NodeType::Jump :
 		case NodeType::Logic :
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
+bool NodeEnum::converEnum( const QString &enum_string, NodeClickType &result_enum_type_var ) {
+	QMetaEnum metaEnum = QMetaEnum::fromType< NodeType >( );
+	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
+
+	if( optional.has_value( ) == false )
+		return false;
+	auto *varPtr = optional.operator->( );
+	result_enum_type_var = ( NodeClickType ) *varPtr;
+	switch( result_enum_type_var ) {
+		case NodeClickType::None :
+		case NodeClickType::Titile :
+		case NodeClickType::InputPort :
+		case NodeClickType::OutputPort :
 			break;
 		default :
 			return false;
@@ -161,6 +180,27 @@ bool NodeEnum::converQString( const NodeType &enum_type_var, QString &result_enu
 			break;
 		case NodeType::Logic :
 			result_enum_string = "Logic";
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
+
+bool NodeEnum::converQString( const NodeClickType &enum_type_var, QString &result_enum_string ) {
+	switch( enum_type_var ) {
+
+		case NodeClickType::None :
+			result_enum_string = "None";
+			break;
+		case NodeClickType::Titile :
+			result_enum_string = "Titile";
+			break;
+		case NodeClickType::InputPort :
+			result_enum_string = "InputPort";
+			break;
+		case NodeClickType::OutputPort :
+			result_enum_string = "OutputPort";
 			break;
 		default :
 			return false;

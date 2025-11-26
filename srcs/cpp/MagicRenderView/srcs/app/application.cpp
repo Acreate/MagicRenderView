@@ -142,7 +142,10 @@ bool Application::init( ) {
 		return false;
 	if( synchronousVarToWindowInfo( ) == false )
 		return false;
-
+	mainWindow->show( );
+	if( mainWindow->isHidden( ) )
+		return false;
+	mainWindow->raise( );
 	return true;
 }
 bool Application::setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) const {

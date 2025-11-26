@@ -1,6 +1,8 @@
 ﻿#include "int8ArrayStack.h"
 
 #include <define/macro.h>
+#include <tools/infoTool.h>
+
 Int8ArrayStack::~Int8ArrayStack( ) {
 
 }

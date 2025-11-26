@@ -5,6 +5,8 @@
 #include <define/macro.h>
 
 #include <director/varDirector.h>
+#include <tools/infoTool.h>
+
 
 AnyArrayStack::~AnyArrayStack( ) {
 
