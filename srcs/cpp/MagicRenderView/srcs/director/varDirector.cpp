@@ -121,7 +121,7 @@ bool VarDirector::toVar( size_t &result_count, const uint8_t *source_ptr, const 
 	QString converTypeName;
 	const uint8_t *offset;
 	size_t mod;
-	if( InfoStack::fillTypeVectorAtVar< QString >( result_count, source_ptr, source_count, &converTypeName ) == false )
+	if( infoTool::fillTypeVectorAtVar< QString >( result_count, source_ptr, source_count, &converTypeName ) == false )
 		return false;
 	for( ; index < count; ++index ) {
 		if( converTypeName != arrayPtr[ index ]->typeName )

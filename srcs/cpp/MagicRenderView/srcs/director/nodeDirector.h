@@ -9,6 +9,7 @@ class PrinterDirector;
 class Node;
 class NodeStack;
 class QMenu;
+class Application;
 class NodeDirector : public QObject {
 	Q_OBJECT;
 private:

@@ -1,6 +1,7 @@
 ﻿#include "application.h"
 
 #include <QDir>
+#include <QMetaEnum>
 #include <QResizeEvent>
 #include <QScreen>
 #include <qfile.h>
@@ -82,7 +83,6 @@ bool Application::notify( QObject *object, QEvent *event ) {
 
 bool Application::event( QEvent *event ) {
 	return QApplication::event( event );
-
 }
 bool Application::init( ) {
 	Application::instance = this;
@@ -274,7 +274,8 @@ bool Application::synchronousVarToWindowInfo( ) {
 	getVar( "#windowState", *data );
 	if( director.toVar( userCount, dataArrayPtr, dataArrayCount, converVarPtr ) == false )
 		return false;
-	Qt::WindowStates state( *int64Value );
+	auto metaEnum = QMetaEnum::fromType< Qt::WindowStates >( );
+	Qt::WindowStates state = static_cast< Qt::WindowStates >( metaEnum.value( *int64Value ) );
 	mainWindow->setWindowState( state );
 
 	getVar( "@saveState", *data );

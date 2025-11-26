@@ -78,7 +78,11 @@ qt_generate_deploy_cmake_script_inatll_job( scrpt_path_ "${prject_name}" )
 set( cmake_definitions_env_out "${CMAKE_CURRENT_LIST_DIR}/auto_generate_files/macro/" )
 configure_temp_files( ${cmake_definitions_env_out} "${prject_name}" )
 
-if( WIN32 )
+if(MINGW)
+   ## target_compile_options( "${prject_name}" PRIVATE "-rdynamic" )
+endif()
+
+if( MSVC )
     target_compile_options( "${prject_name}" PRIVATE "/utf-8" )
 endif()
 

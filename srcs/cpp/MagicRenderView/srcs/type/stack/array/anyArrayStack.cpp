@@ -21,7 +21,7 @@ using t_current_unity_type = void *;
 bool AnyArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 
 	uint64_t arrayCount = 0;
-	if( fillTypeVectorAtVar< uint64_t >( result_count, obj_start_ptr, obj_memory_size, &arrayCount ) == false )
+	if( infoTool::fillTypeVectorAtVar< uint64_t >( result_count, obj_start_ptr, obj_memory_size, &arrayCount ) == false )
 		return false;
 	auto offset = obj_start_ptr + result_count;
 	auto mod = obj_memory_size - result_count;
@@ -54,7 +54,7 @@ bool AnyArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &r
 	std::vector< uint8_t > buff;
 	std::vector< t_current_unity_type > *vector = ( std::vector< t_current_unity_type > * ) obj_start_ptr;
 	uint64_t arraySize = vector->size( );
-	if( fillTypeVarAtVector< uint64_t >( &arraySize, buff ) == false )
+	if( infoTool::fillTypeVarAtVector< uint64_t >( &arraySize, buff ) == false )
 		return false;
 	auto varDirector = Application::getInstancePtr( )->getVarDirector( );
 	result_data.append_range( buff );

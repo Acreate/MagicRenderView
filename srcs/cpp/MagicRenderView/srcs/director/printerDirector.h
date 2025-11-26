@@ -6,6 +6,7 @@
 #include <stacktrace>
 class QDir;
 class QString;
+class Application;
 class PrinterDirector : QObject {
 	Q_OBJECT;
 	friend class Application;

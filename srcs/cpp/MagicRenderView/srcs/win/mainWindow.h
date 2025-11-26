@@ -5,6 +5,7 @@
 class NodeDirector;
 class MainWidgetScrollArea;
 class MainWidget;
+class Application;
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
 	friend class Application;

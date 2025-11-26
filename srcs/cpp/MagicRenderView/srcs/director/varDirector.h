@@ -3,6 +3,7 @@
 #pragma once
 
 #include <QObject>
+#include <typeinfo>
 #include <qstring.h>
 #include <vector>
 
@@ -11,6 +12,7 @@
 class PrinterDirector;
 class StackSerialize;
 class InfoStack;
+class Application;
 class VarDirector : public QObject {
 	Q_OBJECT;
 	friend class Application;
@@ -26,7 +28,7 @@ public:
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
 	virtual bool realease( const void *delete_obj_ptr );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
-	virtual bool getTypeName( const type_info &type_info_ref, QString &result_type_name ) {
+    virtual bool getTypeName( const std::type_info &type_info_ref, QString &result_type_name ) {
 		QString typeInfoName = type_info_ref.name( );
 		return getTypeName( typeInfoName, result_type_name );
 	}
