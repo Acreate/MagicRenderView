@@ -29,7 +29,7 @@
 
 #include "printerDirector.h"
 
-#include "../app/application.h"
+#include <app/application.h>
 
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
