@@ -1,18 +1,17 @@
 ﻿#include "application.h"
 
 #include <QDir>
-#include <QMetaEnum>
 #include <QResizeEvent>
 #include <QScreen>
 #include <qfile.h>
 #include <qfileinfo.h>
 
-#include "../director/iniDirector.h"
-#include "../director/nodeDirector.h"
-#include "../director/printerDirector.h"
-#include "../director/varDirector.h"
+#include <director/iniDirector.h>
+#include <director/nodeDirector.h>
+#include <director/printerDirector.h>
+#include <director/varDirector.h>
 
-#include "../win/mainWindow.h"
+#include <win/mainWindow.h>
 
 Application *Application::instance = nullptr;
 Application * Application::getInstancePtr( ) {

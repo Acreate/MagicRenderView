@@ -175,30 +175,39 @@ bool NodeStack::connectCreateNodeAction( QAction *connect_qaction_ptr, QActionTr
 		auto node = action_click_function( );
 		MainWindow *mainWindow = instancePtr->getMainWindow( );
 		if( mainWindow == nullptr ) {
+			auto errorMsg = tr( "无法匹配主窗口[Application::]getMainWindow( )" );
+			printerDirector->error( errorMsg );
+			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg );
 			delete node;
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, tr( "无法匹配主窗口[Application::]getMainWindow( )" ) );
 			return;
 		}
 		MainWidget *mainWidget = mainWindow->getMainWidget( );
 		if( mainWidget == nullptr ) {
+			auto errorMsg = tr( "无法匹配主渲染组件[MainWindow::getMainWidget()]" );
+			printerDirector->error( errorMsg );
+			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, errorMsg );
 			delete node;
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, tr( "无法匹配主渲染组件[MainWindow::getMainWidget()]" ) );
 			return;
 		}
 		DrawNodeWidget *drawNodeWidget = mainWidget->getDrawNodeWidget( );
 		if( drawNodeWidget == nullptr ) {
+			auto errorMsg = tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" );
+			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg );
 			delete node;
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" ) );
 			return;
 		}
 		if( drawNodeWidget->addNode( node ) == false ) {
+			auto errorMsg = tr( "节点添加失败[DrawNodeWidget::addNode( Node *add_node )]" );
+			printerDirector->error( errorMsg );
+			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg );
 			delete node;
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, tr( "初始化失败" ) );
 			return;
 		}
 		if( node->parent( ) != drawNodeWidget ) {
+			auto errorMsg = tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" );
+			printerDirector->error( errorMsg );
+			emit error_create_signal( node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg );
 			delete node;
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::Node_Parent, tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" ) );
 			return;
 		}
 	} );

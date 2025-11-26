@@ -13,6 +13,8 @@ bool PrinterDirector::init( ) {
 	if( absPath )
 		delete absPath;
 	absPath = new QDir( Cmake_Source_Dir );
+	sourceDirPathName = absPath->absolutePath( );
+
 	return true;
 }
 PrinterDirector::PrinterDirector( ) : absPath( nullptr ) { }
@@ -26,23 +28,37 @@ void PrinterDirector::error( const QString &msg ) const {
 	if( stackTraceEntriesCount > 2 ) {
 		stackTraceEntriesCount -= 2;
 		QStringList qstringBuff;
-		qstringBuff.append( QString( "\n\n============== %1 ============== 错误消息" ).arg( applicationName ) );
+		QDateTime dateTime = QDateTime::currentDateTime( );
+		qstringBuff.append( QString( "\n\n============== %1 ============== 错误消息(%2)" ).arg( applicationName ).arg( dateTime.toString( "yyyy-MM-dd hh:mm:ss.z" ) ) );
 		QString sourceFrom( "\n%1\n\n-------------------" );
 		qstringBuff.append( sourceFrom.arg( msg ) );
 		qsizetype removeStartLen = applicationName.size( ) + 1;
 		sourceFrom = "\t(%4)=>%1 [ %2 : %3 ]";
 		qsizetype lastIndexOf;
-		for( size_t index = 0; index < stackTraceEntriesCount; ) {
+		size_t outLineCount = 1;
+		QFileInfo fileInfo;
+		QString sourceFile;
+		QString description;
+		QString sourceLine;
+		QString appendElement;
+		for( size_t index = 0; index < stackTraceEntriesCount; ++index ) {
 			auto &stacktraceEntry = arrayPtr[ index ];
-			auto sourceFile = QString::fromStdString( stacktraceEntry.source_file( ) );
+			auto line = stacktraceEntry.source_line( );
+			if( line == 0 )
+				continue;
+			sourceFile = QString::fromStdString( stacktraceEntry.source_file( ) );
+			fileInfo.setFile( sourceFile );
+			sourceFile = fileInfo.absoluteFilePath( );
+			if( sourceFile.startsWith( sourceDirPathName ) == false )
+				continue;
 			sourceFile = absPath->relativeFilePath( sourceFile );
-			auto description = QString::fromStdString( stacktraceEntry.description( ) );
+			description = QString::fromStdString( stacktraceEntry.description( ) );
 			lastIndexOf = description.lastIndexOf( "+0x" );
 			description = description.mid( removeStartLen, lastIndexOf - removeStartLen );
-			auto sourceLine = QString::number( stacktraceEntry.source_line( ) );
-			++index;
-			auto appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine ).arg( index );
+			sourceLine = QString::number( line );
+			appendElement = sourceFrom.arg( sourceFile ).arg( description ).arg( sourceLine ).arg( outLineCount );
 			qstringBuff << appendElement;
+			++outLineCount;
 		}
 		qstringBuff.append( QString( "==============   ==============\n" ) );
 		qDebug( ) << qstringBuff.join( "\n" ).toStdString( ).c_str( );
@@ -55,7 +71,8 @@ void PrinterDirector::info( const QString &msg ) const {
 	if( stackTraceEntriesCount > 3 ) {
 		stackTraceEntriesCount -= 3;
 		QStringList qstringBuff;
-		qstringBuff.append( QString( "\n\n============== %1 ============== 提示消息" ).arg( applicationName ) );
+		QDateTime dateTime = QDateTime::currentDateTime( );
+		qstringBuff.append( QString( "\n\n============== %1 ============== 提示消息(%2)" ).arg( applicationName ).arg( dateTime.toString( "yyyy-MM-dd hh:mm:ss.z" ) ) );
 		QString sourceFrom( "\n%1\n\n-------------------" );
 		qstringBuff.append( sourceFrom.arg( msg ) );
 		qsizetype removeStartLen = applicationName.size( ) + 1;

@@ -13,6 +13,7 @@ protected:
 	QString applicationName;
 	QDir *absPath;
 	Application *instancePtr;
+	QString sourceDirPathName;
 public:
 	PrinterDirector( );
 	~PrinterDirector( ) override;
