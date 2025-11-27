@@ -5,6 +5,7 @@
 
 #include <enums/nodeEnum.h>
 
+class VarDirector;
 class PrinterDirector;
 class Node;
 class NodeStack;
@@ -19,6 +20,8 @@ protected:
 	std::vector< NodeStack * > nodeStacks;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
+	VarDirector *varDirector;
+	VarDirector *nodeVarDirector;
 public:
 	NodeDirector( QObject *parent = nullptr );
 	void releaseMenu( );

@@ -54,7 +54,7 @@ bool InputPort::unlink( OutputPort *output_port_obj_port ) {
 	auto linkThisOutputPortArrayPtr = linkThisOutputPortVector.data( );
 	size_t index;
 	for( index = 0; index < count; ++index )
-		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port )
+		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port || linkThisOutputPortArrayPtr[ index ] == nullptr )
 			break;
 	if( index == count )
 		return false; // 不存在链接
@@ -64,7 +64,7 @@ bool InputPort::unlink( OutputPort *output_port_obj_port ) {
 		if( linkThisOutputPortArrayPtr[ index ] == nullptr )
 			break;// 遭遇第一个 nullptr,则退出
 		else // 后面一个元素，覆盖前面一个元素
-			linkThisOutputPortArrayPtr[ index ] == linkThisOutputPortArrayPtr[ index + 1 ];
+			linkThisOutputPortArrayPtr[ index ] = linkThisOutputPortArrayPtr[ index + 1 ];
 	linkThisOutputPortArrayPtr[ index ] = nullptr; // 最后一个元素覆盖为 0
 
 	disconnect( output_port_obj_port, &OutputPort::release_node_signal, this, &InputPort::unlink );

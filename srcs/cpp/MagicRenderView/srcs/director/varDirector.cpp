@@ -187,7 +187,7 @@ bool VarDirector::getObjPtrAtTypeName( const void *check_obj_ptr, QString &resul
 		}
 	return false;
 }
-bool VarDirector::realease( const void *delete_obj_ptr ) {
+bool VarDirector::release( const void *delete_obj_ptr ) {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;

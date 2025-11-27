@@ -3,10 +3,12 @@
 #pragma once
 
 #include <QWidget>
+#include <typeinfo>
 
-#include "../../enums/nodeEnum.h"
+#include <enums/nodeEnum.h>
 
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
+class NodeRunFunctionTypeInfo;
 class VarDirector;
 class Application;
 class NodePortLinkInfo;
@@ -18,15 +20,22 @@ class NodeDirector;
 class Node : public QWidget {
 	Q_OBJECT;
 	friend class NodeDirector;
+	friend class NodeStack;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
-protected:
+private:
 	NodeClickInfo *nodeClickInfo;
 	std::vector< InputPort * > inputPortVector;
 	std::vector< OutputPort * > outputPortVector;
-	std::vector< Node * > *inputNodeVector;
-	std::vector< Node * > *outputNodeVector;
+	std::vector< Node * > inputNodeVector;
+	std::vector< Node * > outputNodeVector;
+	VarDirector *nodeVarDirector;
+protected:
+	VarDirector *nodeFunctionVarDirector;
+	using NodeFunctionResultType = void *;
+	using NodeFunctionType = std::function< NodeFunctionResultType( ) >;
+	NodeFunctionType nodeFunction;
 protected:
 	/// @brief 节点端口发生释放时，产生该信号
 	/// @param signal_port 释放的源端口对象指针
@@ -36,36 +45,34 @@ protected:
 	/// @param signal_port 链接的源端口对象指针
 	/// @param target_prot 链接的目标端口对象指针
 	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 删除输入依赖节点
+	/// @param remove_target 输入依赖节点
+	virtual void removeInputNode( Node *remove_target );
 public:
 	~Node( ) override;
 	Node( QWidget *parent, const Qt::WindowFlags &f );
 	virtual NodeClickInfo * getNodeClickInfo( ) const { return nodeClickInfo; }
+	virtual bool init( QWidget *parent );
+	virtual bool runFunction( NodeFunctionResultType &result_var_ptr ) const;
+	virtual InputPort * getInputPort( const QString &port_name ) const;
+	virtual OutputPort * getOutputPort( const QString &port_name ) const;
+	virtual bool updateLayout( ) = 0;
 protected:
-	/// @brief 尝试删除输入依赖目标，当目标仍然存在依赖时，删除失败，并且返回 false
-	/// @param remove_target_ref_node 删除的目标
-	/// @return true 表示成功删除
-	virtual bool removeRefInputPortNode( Node *remove_target_ref_node );
-	/// @brief 尝试删除输出依赖目标，当目标仍然存在依赖时，删除失败，并且返回 false
-	/// @param remove_target_ref_node 删除的目标
-	/// @return true 表示成功删除
-	virtual bool removeRefOutputPortNode( Node *remove_target_ref_node );
-	/// @brief 检查 this 的输入端口是否存在指定的节点 OutputPort 依赖
-	/// @param output_port_ref_node 检查的输入节点
-	/// @return true 表示 this 存在 output_port_ref_node 节点 OutputPort 依赖
-	virtual bool inputPortHasRefNode( Node *output_port_ref_node );
-	/// @brief 检查 this 的输入端口是否存在指定的节点 InputPort 依赖
-	/// @param input_port_ref_node 检查的输入节点
-	/// @return true 表示 this 存在 input_port_ref_node 节点 InputPort 依赖
-	virtual bool outputPortHasRefNode( Node *input_port_ref_node );
+	/// @brief 增加一个输入端口
+	/// @param input_port 输入端
+	/// @return 失败返回 false
+	virtual bool appendInputPort( InputPort *input_port );
+	/// @brief 增加一个输出端口
+	/// @param output_port 输出端口
+	/// @return 失败返回 false
+	virtual bool appendOutputPort( OutputPort *output_port );
 	virtual void setNodeClickInfo( OutputPort *const output_port );
 	virtual void setNodeClickInfo( InputPort *const input_port );
 	virtual void clearNodeClickInfo( );
 	virtual void setNodeTitleClickInfo( );
 	virtual void setNodeOtherClickInfo( );
-public:
-	virtual bool init( QWidget *parent );
-	virtual InputPort * getInputPort( const QString &port_name ) const;
-	virtual OutputPort * getOutputPort( const QString &port_name ) const;
+	virtual void * createVar( const QString &type_name );
+	virtual void * createVar( const std::type_info &std_type_info );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
@@ -77,11 +84,19 @@ Q_SIGNALS:
 	/// @brief 节点端口发生释放时，产生该信号
 	/// @param signal_port 释放的源端口对象指针
 	/// @param target_prot 释放的目标端口对象指针
-	void release_link_signal( OutputPort *signal_port, InputPort *target_prot );
+	void release_link_signal( InputPort *signal_port, OutputPort *target_prot );
 	/// @brief 节点端口发生链接时，产生该信号
 	/// @param signal_port 链接的源端口对象指针
 	/// @param target_prot 链接的目标端口对象指针
-	void create_link_signal( OutputPort *signal_port, InputPort *target_prot );
+	void create_link_signal( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 节点依赖发生释放时候，产生该信号
+	/// @param signal_node 依赖节点
+	/// @param ref_node 被删除的依赖
+	void release_ref_node_signal( Node *signal_node, Node *ref_node );
+	/// @brief 节点依赖发生增持时候，产生该信号
+	/// @param signal_node 依赖节点
+	/// @param ref_node 被增持的依赖
+	void create_ref_node_signal( Node *signal_node, Node *ref_node );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param code_line 信号发生行号

@@ -214,7 +214,45 @@ bool NodeStack::connectCreateNodeAction( QAction *connect_qaction_ptr, QActionTr
 	} );
 	return true;
 }
-NodeStack::NodeStack( QObject *parent ) : QObject( parent ), mainMenu( nullptr ) { }
+bool NodeStack::appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function ) {
+	std::function< Node *( ) > generateFunction = [generate_function, this] {
+		Node *generateNode = generate_function( );
+		generateNode->nodeVarDirector = nodeVarDirector;
+		return generateNode;
+	};
+	nodeGenerate.insert( nodeGenerate.begin( ), std::pair( name, generateFunction ) );
+	return true;
+}
+bool NodeStack::fromNodeGenerateCreateMenu( ) {
+
+	mainMenu = new QMenu( objectName( ) );
+	size_t index;
+	size_t count = nodeGenerate.size( );
+	auto nodeArrayPtr = nodeGenerate.data( );
+	for( index = 0; index < count; ++index )
+		if( createMenuAtNodeType( nodeArrayPtr[ index ].first, nodeArrayPtr[ index ].second ) == false ) {
+			QString msg( "[ %1 ]节点菜单对象初始化失败" );
+			printerDirector->error( msg.arg( nodeArrayPtr[ index ].first ) );
+			releaseMainMenu( );
+			nodeGenerate.clear( );
+			return false;
+		}
+	count = subMenus.size( );
+	index = 0;
+	auto subMenuArrayPtr = subMenus.data( );
+	for( ; index < count; ++index )
+		if( subMenuArrayPtr[ index ].first.size( ) == 1 )
+			mainMenu->addMenu( subMenuArrayPtr[ index ].second );
+
+	auto actionArrayPtr = actions.data( );
+	count = actions.size( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( actionArrayPtr[ index ].first.size( ) == 1 )
+			mainMenu->addAction( actionArrayPtr[ index ].second );
+	return true;
+}
+NodeStack::NodeStack( VarDirector *node_var_director, QObject *parent ) : QObject( parent ), mainMenu( nullptr ), nodeVarDirector( node_var_director ) { }
 void NodeStack::releaseMainMenu( ) {
 	size_t count;
 	size_t index;

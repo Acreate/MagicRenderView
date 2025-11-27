@@ -9,6 +9,7 @@ public:
 	JumpNode(  QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) )
 		: Node( parent, f ) { }
 	bool init( QWidget *parent ) override;
+	bool updateLayout( ) override;
 	Def_Satatic_NodeTypeName( Node::tr( "控制/跳转" ) );
 };
 

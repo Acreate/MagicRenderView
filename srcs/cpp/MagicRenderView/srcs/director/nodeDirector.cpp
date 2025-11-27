@@ -4,6 +4,7 @@
 #include <node/stack/nodeStack.h>
 
 #include "printerDirector.h"
+#include "varDirector.h"
 
 #include "../app/application.h"
 
@@ -13,13 +14,17 @@
 bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
+	varDirector = instancePtr->getVarDirector( );
 	releaseMenu( );
+	if( nodeVarDirector )
+		delete nodeVarDirector;
+	nodeVarDirector = new VarDirector;
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
 
 	// 这里加入节点窗口创建函数
-	nodeStacks.emplace_back( new BaseNodeStack );
+	nodeStacks.emplace_back( new BaseNodeStack( nodeVarDirector ) );
 
 	// 初始化列表
 	count = nodeStacks.size( );
@@ -44,7 +49,7 @@ bool NodeDirector::init( ) {
 
 	return true;
 }
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ), nodeVarDirector( nullptr ) {
 
 }
 void NodeDirector::releaseMenu( ) {
@@ -61,6 +66,8 @@ void NodeDirector::releaseMenu( ) {
 }
 NodeDirector::~NodeDirector( ) {
 	releaseMenu( );
+	if( nodeVarDirector )
+		delete nodeVarDirector;
 }
 Node * NodeDirector::createNode( const QString &stack_name, const QString &node_type_name ) {
 	auto count = nodeStacks.size( );

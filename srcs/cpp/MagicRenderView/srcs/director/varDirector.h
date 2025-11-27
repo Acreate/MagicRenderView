@@ -26,7 +26,7 @@ public:
 public:
 	virtual bool init( );
 	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
-	virtual bool realease( const void *delete_obj_ptr );
+	virtual bool release( const void *delete_obj_ptr );
 	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
     virtual bool getTypeName( const std::type_info &type_info_ref, QString &result_type_name ) {
 		QString typeInfoName = type_info_ref.name( );
