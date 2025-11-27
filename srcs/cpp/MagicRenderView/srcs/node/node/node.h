@@ -7,6 +7,8 @@
 #include "../../enums/nodeEnum.h"
 
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
+class VarDirector;
+class Application;
 class NodePortLinkInfo;
 class NodeRefLinkInfo;
 class InputPort;
@@ -17,25 +19,51 @@ class Node : public QWidget {
 	Q_OBJECT;
 	friend class NodeDirector;
 protected:
+	Application *instancePtr;
+	VarDirector *varDirector;
+protected:
 	NodeClickInfo *nodeClickInfo;
 	std::vector< InputPort * > inputPortVector;
 	std::vector< OutputPort * > outputPortVector;
-	std::vector< NodePortLinkInfo * > nodePortLinkInfoVector;
-	NodeRefLinkInfo *nodeRefLinkInfo;
+	std::vector< Node * > *inputNodeVector;
+	std::vector< Node * > *outputNodeVector;
+protected:
+	/// @brief 节点端口发生释放时，产生该信号
+	/// @param signal_port 释放的源端口对象指针
+	/// @param target_prot 释放的目标端口对象指针
+	virtual void releaseLink( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 节点端口发生链接时，产生该信号
+	/// @param signal_port 链接的源端口对象指针
+	/// @param target_prot 链接的目标端口对象指针
+	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
 public:
 	~Node( ) override;
 	Node( QWidget *parent, const Qt::WindowFlags &f );
 	virtual NodeClickInfo * getNodeClickInfo( ) const { return nodeClickInfo; }
 protected:
+	/// @brief 尝试删除输入依赖目标，当目标仍然存在依赖时，删除失败，并且返回 false
+	/// @param remove_target_ref_node 删除的目标
+	/// @return true 表示成功删除
+	virtual bool removeRefInputPortNode( Node *remove_target_ref_node );
+	/// @brief 尝试删除输出依赖目标，当目标仍然存在依赖时，删除失败，并且返回 false
+	/// @param remove_target_ref_node 删除的目标
+	/// @return true 表示成功删除
+	virtual bool removeRefOutputPortNode( Node *remove_target_ref_node );
+	/// @brief 检查 this 的输入端口是否存在指定的节点 OutputPort 依赖
+	/// @param output_port_ref_node 检查的输入节点
+	/// @return true 表示 this 存在 output_port_ref_node 节点 OutputPort 依赖
+	virtual bool inputPortHasRefNode( Node *output_port_ref_node );
+	/// @brief 检查 this 的输入端口是否存在指定的节点 InputPort 依赖
+	/// @param input_port_ref_node 检查的输入节点
+	/// @return true 表示 this 存在 input_port_ref_node 节点 InputPort 依赖
+	virtual bool outputPortHasRefNode( Node *input_port_ref_node );
 	virtual void setNodeClickInfo( OutputPort *const output_port );
 	virtual void setNodeClickInfo( InputPort *const input_port );
 	virtual void clearNodeClickInfo( );
 	virtual void setNodeTitleClickInfo( );
 	virtual void setNodeOtherClickInfo( );
-	virtual bool link( OutputPort *signal_port, InputPort *target_prot );
-	virtual bool unlink( OutputPort *signal_port, InputPort *target_prot );
 public:
-	virtual bool init( QWidget *parent ) = 0;
+	virtual bool init( QWidget *parent );
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 protected:

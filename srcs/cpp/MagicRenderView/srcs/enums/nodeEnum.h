@@ -4,18 +4,21 @@
 #include <QObject>
 
 namespace NodeEnum {
+	/// @brief 错误类型
 	enum class ErrorType {
 		Param,
 		Result,
 		Run,
 		Other
 	};
+	/// @brief 建议类型
 	enum class AdviseType {
 		Param,
 		Result,
 		Run,
 		Other
 	};
+	/// @brief 创建的错误类型
 	enum class CreateType {
 		MainWindow_Nullptr,
 		MainWidget_Nullptr,
@@ -23,6 +26,7 @@ namespace NodeEnum {
 		DrawNodeWidget_Add,
 		Node_Parent,
 	};
+	/// @brief 节点类型
 	enum class NodeType {
 		Begin,
 		End,
@@ -31,6 +35,7 @@ namespace NodeEnum {
 		Jump,
 		Logic,
 	};
+	/// @brief 点击节点返回类型
 	enum class NodeClickType {
 		None,
 		Titile,
