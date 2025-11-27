@@ -27,23 +27,27 @@ bool InputPort::refOutputPortHasPort( OutputPort *output_port ) {
 }
 
 bool InputPort::link( OutputPort *output_port_obj_port ) {
+	if( output_port_obj_port->varTypeName != varTypeName )
+		return false;
 	size_t count = linkThisOutputPortVector.size( );
 	auto linkThisOutputPortArrayPtr = linkThisOutputPortVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port )
 			return true;
-	QString outputPortTypeName;
-	if( varDirector->getObjPtrAtTypeName( output_port_obj_port->getVarPtr( ), outputPortTypeName ) == false )
-		return false;
-	if( outputPortTypeName != varTypeName )
-		return false;
 	linkThisOutputPortVector.emplace_back( output_port_obj_port );
 	connect( output_port_obj_port, &OutputPort::release_node_signal, this, &InputPort::unlink );
 	emit create_link_signal( this, output_port_obj_port );
 
-	output_port_obj_port->link( this );
-
+	count = output_port_obj_port->linkThisInputPortVector.size( );
+	auto linkThisInputPortArrayPtr = output_port_obj_port->linkThisInputPortVector.data( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( linkThisInputPortArrayPtr[ index ] == this )
+			return true;
+	output_port_obj_port->linkThisInputPortVector.emplace_back( this );
+	connect( this, &InputPort::release_node_signal, output_port_obj_port, &OutputPort::unlink );
+	emit output_port_obj_port->create_link_signal( output_port_obj_port, this );
 	return true;
 }
 bool InputPort::unlink( OutputPort *output_port_obj_port ) {
@@ -58,7 +62,19 @@ bool InputPort::unlink( OutputPort *output_port_obj_port ) {
 	linkThisOutputPortVector.erase( linkThisOutputPortVector.begin( ) + index );
 	disconnect( output_port_obj_port, &OutputPort::release_node_signal, this, &InputPort::unlink );
 	emit release_link_signal( this, output_port_obj_port );
-	output_port_obj_port->unlink( this );
+
+	count = output_port_obj_port->linkThisInputPortVector.size( );
+	auto linkThisInputPortPortArrayPtr = output_port_obj_port->linkThisInputPortVector.data( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( linkThisInputPortPortArrayPtr[ index ] == this )
+			break;
+	if( index == count )
+		return false;
+	output_port_obj_port->linkThisInputPortVector.erase( output_port_obj_port->linkThisInputPortVector.begin( ) + index );
+	disconnect( this, &InputPort::release_node_signal, output_port_obj_port, &OutputPort::unlink );
+	emit output_port_obj_port->release_link_signal( output_port_obj_port, this );
+
 	return true;
 }
 InputPort::~InputPort( ) {
