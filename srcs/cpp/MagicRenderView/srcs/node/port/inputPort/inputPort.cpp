@@ -4,6 +4,8 @@
 
 #include "../../../director/varDirector.h"
 
+#include "../../../tools/vectorTools.h"
+
 #include "../outputPort/outputPort.h"
 
 InputPort::InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent ) : QObject( parent ), instancePtr( instance_ptr ), varDirector( var_director ), name( name ), node( node ) { }
@@ -29,52 +31,44 @@ bool InputPort::refOutputPortHasPort( OutputPort *output_port ) {
 bool InputPort::link( OutputPort *output_port_obj_port ) {
 	if( output_port_obj_port->varTypeName != varTypeName )
 		return false;
+	size_t index = 0;
 	size_t count = linkThisOutputPortVector.size( );
 	auto linkThisOutputPortArrayPtr = linkThisOutputPortVector.data( );
-	size_t index = 0;
 	for( ; index < count; ++index )
-		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port )
-			return true;
-	linkThisOutputPortVector.emplace_back( output_port_obj_port );
+		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port || linkThisOutputPortArrayPtr[ index ] == nullptr )
+			break;
+
+	if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port )
+		return true; // 已经存在 output_port_obj_port 元素
+
+	if( index == count )// 序列末尾，则追加
+		linkThisOutputPortVector.emplace_back( output_port_obj_port );
+	else // linkThisOutputPortArrayPtr[ index ] == nullptr 则赋值
+		linkThisOutputPortArrayPtr[ index ] = output_port_obj_port;
 	connect( output_port_obj_port, &OutputPort::release_node_signal, this, &InputPort::unlink );
 	emit create_link_signal( this, output_port_obj_port );
-
-	count = output_port_obj_port->linkThisInputPortVector.size( );
-	auto linkThisInputPortArrayPtr = output_port_obj_port->linkThisInputPortVector.data( );
-	index = 0;
-	for( ; index < count; ++index )
-		if( linkThisInputPortArrayPtr[ index ] == this )
-			return true;
-	output_port_obj_port->linkThisInputPortVector.emplace_back( this );
-	connect( this, &InputPort::release_node_signal, output_port_obj_port, &OutputPort::unlink );
-	emit output_port_obj_port->create_link_signal( output_port_obj_port, this );
 	return true;
 }
 bool InputPort::unlink( OutputPort *output_port_obj_port ) {
 	size_t count = linkThisOutputPortVector.size( );
 	auto linkThisOutputPortArrayPtr = linkThisOutputPortVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
+	size_t index;
+	for( index = 0; index < count; ++index )
 		if( linkThisOutputPortArrayPtr[ index ] == output_port_obj_port )
 			break;
 	if( index == count )
-		return false;
-	linkThisOutputPortVector.erase( linkThisOutputPortVector.begin( ) + index );
+		return false; // 不存在链接
+	linkThisOutputPortArrayPtr[ index ] = nullptr;
+	count -= 1;
+	for( ; index < count; ++index )
+		if( linkThisOutputPortArrayPtr[ index ] == nullptr )
+			break;// 遭遇第一个 nullptr,则退出
+		else // 后面一个元素，覆盖前面一个元素
+			linkThisOutputPortArrayPtr[ index ] == linkThisOutputPortArrayPtr[ index + 1 ];
+	linkThisOutputPortArrayPtr[ index ] = nullptr; // 最后一个元素覆盖为 0
+
 	disconnect( output_port_obj_port, &OutputPort::release_node_signal, this, &InputPort::unlink );
 	emit release_link_signal( this, output_port_obj_port );
-
-	count = output_port_obj_port->linkThisInputPortVector.size( );
-	auto linkThisInputPortPortArrayPtr = output_port_obj_port->linkThisInputPortVector.data( );
-	index = 0;
-	for( ; index < count; ++index )
-		if( linkThisInputPortPortArrayPtr[ index ] == this )
-			break;
-	if( index == count )
-		return false;
-	output_port_obj_port->linkThisInputPortVector.erase( output_port_obj_port->linkThisInputPortVector.begin( ) + index );
-	disconnect( this, &InputPort::release_node_signal, output_port_obj_port, &OutputPort::unlink );
-	emit output_port_obj_port->release_link_signal( output_port_obj_port, this );
-
 	return true;
 }
 InputPort::~InputPort( ) {

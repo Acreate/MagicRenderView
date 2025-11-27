@@ -20,14 +20,9 @@ protected:
 	Node *node;
 	QString varTypeName;
 	void *varPtr;
-	std::vector< InputPort * > linkThisInputPortVector;
 public:
 	OutputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent = nullptr );
 	~OutputPort( ) override;
-	virtual bool link( InputPort *input_port_obj_port );
-	virtual bool unlink( InputPort *input_port_obj_port );
-	virtual bool refInputPortHasNode( Node *input_port_node );
-	virtual bool refInputPortHasPort( InputPort *input_port );
 	virtual const QString & getName( ) const { return name; }
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual Node * getNode( ) const { return node; }
