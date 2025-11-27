@@ -1,0 +1,9 @@
+﻿#ifndef FLOATVECTOROUTPUTPORT_H_H_HEAD__FILE__
+#define FLOATVECTOROUTPUTPORT_H_H_HEAD__FILE__
+#pragma once
+
+class FloatVectorOutputPort {
+	
+};
+
+#endif // FLOATVECTOROUTPUTPORT_H_H_HEAD__FILE__

@@ -30,7 +30,7 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( PointNode );
 	emaplace_back_node( IfNode );
 	emaplace_back_node( WhileNode );
-	return fromNodeGenerateCreateMenu( );
+	return true;
 }
 
 BaseNodeStack::BaseNodeStack( VarDirector *node_var_director, QObject *parent ) : NodeStack( node_var_director, parent ) {

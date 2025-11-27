@@ -8,7 +8,7 @@
 
 #include "../outputPort/outputPort.h"
 
-InputPort::InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent ) : QObject( parent ), instancePtr( instance_ptr ), varDirector( var_director ), name( name ), node( node ) { }
+InputPort::InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QWidget *parent ) : QWidget( parent ), instancePtr( instance_ptr ), varDirector( var_director ), name( name ), node( node ) { }
 bool InputPort::refOutputPortHasNode( Node *output_port_node ) {
 	size_t count = linkThisOutputPortVector.size( );
 	auto outputPortArrayPtr = linkThisOutputPortVector.data( );

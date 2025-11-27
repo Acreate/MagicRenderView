@@ -11,51 +11,10 @@
 #include <node/port/inputPort/inputPort.h>
 #include <node/port/outputPort/outputPort.h>
 
+#include "../../director/nodeDirector.h"
 #include "../../director/printerDirector.h"
 
 #include "../nodeType/nodeRunFunctionTypeInfo.h"
-void Node::releaseLink( InputPort *signal_port, OutputPort *target_prot ) {
-	emit this->release_link_signal( signal_port, target_prot );
-	Node *targetNode = target_prot->node;
-	size_t count = inputPortVector.size( );
-	auto inputPortArrayPtr = inputPortVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( inputPortArrayPtr[ index ]->refOutputPortHasNode( targetNode ) )
-			return;
-	count = inputNodeVector.size( );
-	auto refNodeArrayPtr = inputNodeVector.data( );
-	index = 0;
-	for( ; index < count; ++index )
-		if( refNodeArrayPtr[ index ] == targetNode || refNodeArrayPtr[ index ] == nullptr )
-			break;
-	if( refNodeArrayPtr[ index ] == nullptr )
-		return;
-	count -= 1;
-	for( ; index < count; ++index )
-		if( refNodeArrayPtr[ index ] == nullptr )
-			break;
-		else
-			refNodeArrayPtr[ index ] = refNodeArrayPtr[ index + 1 ];
-	emit this->release_ref_node_signal( this, targetNode );
-}
-void Node::createLink( InputPort *signal_port, OutputPort *target_prot ) {
-	emit this->create_link_signal( signal_port, target_prot );
-	Node *targetNode = target_prot->node;
-
-	size_t count = inputNodeVector.size( );
-	auto refNodeArrayPtr = inputNodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( refNodeArrayPtr[ index ] == targetNode || refNodeArrayPtr[ index ] == nullptr )
-			break;
-	if( index == count )
-		inputNodeVector.emplace_back( targetNode );
-	else if( refNodeArrayPtr[ index ] == nullptr )
-		refNodeArrayPtr[ index ] = targetNode;
-	connect( targetNode, &Node::release_node_signal, this, &Node::removeInputNode );
-	emit this->create_ref_node_signal( this, targetNode );
-}
 void Node::removeInputNode( Node *remove_target ) {
 	size_t count = inputNodeVector.size( );
 	auto refNodeArrayPtr = inputNodeVector.data( );
@@ -105,8 +64,8 @@ bool Node::appendInputPort( InputPort *input_port ) {
 	}
 	input_port->setParent( this );
 	inputPortVector.emplace_back( input_port );
-	connect( input_port, &InputPort::release_link_signal, this, &Node::releaseLink );
-	connect( input_port, &InputPort::create_link_signal, this, &Node::createLink );
+	connect( input_port, &InputPort::release_link_signal, nodeDirector, &NodeDirector::release_link_signal );
+	connect( input_port, &InputPort::create_link_signal, nodeDirector, &NodeDirector::create_link_signal );
 	return true;
 }
 bool Node::appendOutputPort( OutputPort *output_port ) {
@@ -187,13 +146,13 @@ bool Node::init( QWidget *parent ) {
 	if( nodeFunctionVarDirector )
 		delete nodeFunctionVarDirector;
 	nodeFunctionVarDirector = new VarDirector;
-	nodeFunction = [] { return nullptr; };
+	nodeFunction = [] { };
 	return true;
 }
-bool Node::runFunction( NodeFunctionResultType &result_var_ptr ) const {
+bool Node::runFunction( ) const {
 	if( nodeFunction == nullptr )
 		return false;
-	result_var_ptr = nodeFunction( );
+	nodeFunction( );
 	return true;
 }
 InputPort * Node::getInputPort( const QString &port_name ) const {

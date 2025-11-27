@@ -24,6 +24,7 @@ class Node : public QWidget {
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
+	NodeDirector *nodeDirector;
 private:
 	NodeClickInfo *nodeClickInfo;
 	std::vector< InputPort * > inputPortVector;
@@ -33,18 +34,10 @@ private:
 	VarDirector *nodeVarDirector;
 protected:
 	VarDirector *nodeFunctionVarDirector;
-	using NodeFunctionResultType = void *;
+	using NodeFunctionResultType = void ;
 	using NodeFunctionType = std::function< NodeFunctionResultType( ) >;
 	NodeFunctionType nodeFunction;
 protected:
-	/// @brief 节点端口发生释放时，产生该信号
-	/// @param signal_port 释放的源端口对象指针
-	/// @param target_prot 释放的目标端口对象指针
-	virtual void releaseLink( InputPort *signal_port, OutputPort *target_prot );
-	/// @brief 节点端口发生链接时，产生该信号
-	/// @param signal_port 链接的源端口对象指针
-	/// @param target_prot 链接的目标端口对象指针
-	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
 	/// @brief 删除输入依赖节点
 	/// @param remove_target 输入依赖节点
 	virtual void removeInputNode( Node *remove_target );
@@ -53,7 +46,7 @@ public:
 	Node( QWidget *parent, const Qt::WindowFlags &f );
 	virtual NodeClickInfo * getNodeClickInfo( ) const { return nodeClickInfo; }
 	virtual bool init( QWidget *parent );
-	virtual bool runFunction( NodeFunctionResultType &result_var_ptr ) const;
+	virtual bool runFunction(  ) const;
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual bool updateLayout( ) = 0;

@@ -1,0 +1,9 @@
+﻿#ifndef STRINGVECTOROUTPUTPORT_H_H_HEAD__FILE__
+#define STRINGVECTOROUTPUTPORT_H_H_HEAD__FILE__
+#pragma once
+
+class StringVectorOutputPort {
+	
+};
+
+#endif // STRINGVECTOROUTPUTPORT_H_H_HEAD__FILE__

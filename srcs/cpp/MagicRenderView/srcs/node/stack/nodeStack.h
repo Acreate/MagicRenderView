@@ -15,11 +15,8 @@ class NodeStack : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
 protected:
-	using QActionTriggered = void(QAction::*)( bool );
 protected:
 	virtual bool init( );
-	virtual bool createMenuAtNodeType( const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
-	virtual bool connectCreateNodeAction( QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 private:
 	std::vector< std::pair< QString, std::function< Node *( ) > > > nodeGenerate;
 	QMenu *mainMenu;
@@ -31,7 +28,6 @@ protected:
 	VarDirector *nodeVarDirector;
 protected:
 	virtual bool appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function );
-	virtual bool fromNodeGenerateCreateMenu( );
 public:
 	NodeStack( VarDirector *node_var_director, QObject *parent = nullptr );
 	void releaseMainMenu( );

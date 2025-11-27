@@ -5,6 +5,9 @@
 
 #include <enums/nodeEnum.h>
 
+class OutputPort;
+class QAction;
+class InputPort;
 class VarDirector;
 class PrinterDirector;
 class Node;
@@ -15,6 +18,7 @@ class NodeDirector : public QObject {
 	Q_OBJECT;
 private:
 	friend class Application;
+	using QActionTriggered = void(QAction::*)( bool );
 protected:
 	QMenu *nodeCreateMenu;
 	std::vector< NodeStack * > nodeStacks;
@@ -22,6 +26,15 @@ protected:
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
+protected:
+	/// @brief 节点端口发生释放时，产生该信号
+	/// @param signal_port 释放的源端口对象指针
+	/// @param target_prot 释放的目标端口对象指针
+	virtual void releaseLink( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 节点端口发生链接时，产生该信号
+	/// @param signal_port 链接的源端口对象指针
+	/// @param target_prot 链接的目标端口对象指针
+	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	void releaseMenu( );
@@ -29,7 +42,30 @@ public:
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
+protected:
+	bool fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
+	bool createMenuAtNodeType( NodeStack *node_stack_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
+	bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 Q_SIGNALS:
+	/// @brief 节点被释放信号
+	/// @param release_node 释放指针
+	void release_node_signal( Node *release_node );
+	/// @brief 节点端口发生释放时，产生该信号
+	/// @param signal_port 释放的源端口对象指针
+	/// @param target_prot 释放的目标端口对象指针
+	void release_link_signal( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 节点端口发生链接时，产生该信号
+	/// @param signal_port 链接的源端口对象指针
+	/// @param target_prot 链接的目标端口对象指针
+	void create_link_signal( InputPort *signal_port, OutputPort *target_prot );
+	/// @brief 节点依赖发生释放时候，产生该信号
+	/// @param signal_node 依赖节点
+	/// @param ref_node 被删除的依赖
+	void release_ref_node_signal( Node *signal_node, Node *ref_node );
+	/// @brief 节点依赖发生增持时候，产生该信号
+	/// @param signal_node 依赖节点
+	/// @param ref_node 被增持的依赖
+	void create_ref_node_signal( Node *signal_node, Node *ref_node );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param code_line 信号发生行号

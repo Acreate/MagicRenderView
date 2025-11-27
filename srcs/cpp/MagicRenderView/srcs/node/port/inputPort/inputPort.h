@@ -2,16 +2,19 @@
 #define INPUTPORT_H_H_HEAD__FILE__
 #pragma once
 #include <QObject>
+#include <QWidget>
 class Application;
 class VarDirector;
 class OutputPort;
 class NodePortLinkInfo;
 class Node;
-class InputPort : public QObject {
+class InputPort : public QWidget {
 	Q_OBJECT;
 private:
 	friend class Node;
 	friend class OutputPort;
+	friend class NodeDirector;
+	friend class NodeStack;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
@@ -22,7 +25,7 @@ protected:
 	void *varPtr;
 	std::vector< OutputPort * > linkThisOutputPortVector;
 public:
-	InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent = nullptr );
+	InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QWidget *parent = nullptr );
 	virtual bool refOutputPortHasNode( Node *output_port_node );
 	virtual bool refOutputPortHasPort( OutputPort *output_port );
 	virtual bool link( OutputPort *output_port_obj_port );
@@ -31,6 +34,7 @@ public:
 	virtual const QString & getName( ) const { return name; }
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual Node * getNode( ) const { return node; }
+	virtual bool init( ) = 0;
 	~InputPort( ) override;
 Q_SIGNALS:
 	/// @brief 节点被释放信号

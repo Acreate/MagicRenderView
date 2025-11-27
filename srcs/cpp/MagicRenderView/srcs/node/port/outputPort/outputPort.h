@@ -12,6 +12,8 @@ class OutputPort : public QObject {
 private:
 	friend class Node;
 	friend class InputPort;
+	friend class NodeDirector;
+	friend class NodeStack;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
