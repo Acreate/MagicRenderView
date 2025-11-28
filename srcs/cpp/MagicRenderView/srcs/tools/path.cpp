@@ -33,42 +33,45 @@ path::pathTree::pathTree( const QString &root_file_name ) {
 	}
 }
 bool path::pathTree::appSubPath( const QString &sub_file_path ) {
-	auto normalPathSeparator = path::normalPathSeparatorToPath( sub_file_path );
-	QStringList fileNameList = normalPathSeparator.split( "/" );
-	qsizetype count = fileNameList.size( );
+	auto normalPathSeparator = path::normalPathSeparatorSplitPath( sub_file_path );
+	qsizetype count = normalPathSeparator.size( ), index = 0;
 	if( count == 0 )
 		return false;
-	QString *stringArrayPtr = fileNameList.data( );
-	auto firstName = stringArrayPtr[ 0 ];
-	if( firstName != name )
-		return false;
-	qsizetype index = 1, subPthArrayIndex;
-	count -= 1;
-	pathTree *checkPtr = this;
-	pathTree **subPathArrayPtr;
-	size_t subPthArrayCount;
-	QString currentName;
+	auto data = normalPathSeparator.data( );
+	pathTree *currentPathTreePtr = this;
+	size_t subCount;
+	pathTree **subData;
+	size_t subIndex;
+	QString appendName;
+	pathTree *newPathTreePtr;
 	for( ; index < count; ++index ) {
-		currentName = stringArrayPtr[ index ];
-		subPathArrayPtr = checkPtr->subPath.data( );
-		subPthArrayCount = checkPtr->subPath.size( );
-		for( subPthArrayIndex = 0; subPthArrayIndex < subPthArrayCount; ++subPthArrayIndex )
-			if( subPathArrayPtr[ subPthArrayIndex ]->name == currentName ) {
-				checkPtr = subPathArrayPtr[ subPthArrayIndex ];
+		appendName = data[ index ];
+		subCount = currentPathTreePtr->subPath.size( );
+		subData = currentPathTreePtr->subPath.data( );
+		for( subIndex = 0; subIndex < subCount; ++subIndex )
+			if( subData[ subIndex ]->name == appendName ) {
+				currentPathTreePtr = subData[ subIndex ];
 				break;
 			}
-		if( subPthArrayIndex == subPthArrayCount )
-			return false;
+		if( subIndex != subCount )
+			continue; // 目录已经存在
+		newPathTreePtr = new pathTree( appendName );
+		currentPathTreePtr->subPath.emplace_back( newPathTreePtr );
+		currentPathTreePtr = newPathTreePtr;
 	}
-	currentName = stringArrayPtr[ index ];
-	subPathArrayPtr = checkPtr->subPath.data( );
-	subPthArrayCount = checkPtr->subPath.size( );
-	for( subPthArrayIndex = 0; subPthArrayIndex < subPthArrayCount; ++subPthArrayIndex )
-		if( subPathArrayPtr[ subPthArrayIndex ]->name == currentName )
-			return true; // 已经存在
-	pathTree *subTree = new pathTree( currentName );
-	checkPtr->subPath.emplace_back( subTree );
 	return true;
+}
+QString path::pathTree::toQString( const size_t index, const QChar fill_char ) const {
+	QString tabChar( index, fill_char );
+	QString result = tabChar + name;
+	size_t currentCount = subPath.size( );
+	if( currentCount == 0 )
+		return result;
+	auto currentData = subPath.data( );
+	size_t currentIndex = 0;
+	for( ; currentIndex < currentCount; ++currentIndex )
+		result = result + '\n' + currentData[ currentIndex ]->toQString( index + 1, fill_char );
+	return result;
 }
 QString path::normalPathSeparatorToPath( const QString &normal_target_path ) {
 	QString result;

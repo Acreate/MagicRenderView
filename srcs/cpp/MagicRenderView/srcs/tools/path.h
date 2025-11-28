@@ -16,6 +16,7 @@ namespace path {
 		virtual const QString & getName( ) const { return name; }
 		virtual const std::vector< pathTree * > & getSubPath( ) const { return subPath; }
 		virtual bool appSubPath( const QString &sub_file_path );
+		virtual QString toQString( const size_t index = 0, const QChar fill_char = '\t' ) const;
 	};
 	/// @brief 标准化路径符，使用 / 替换 \\ ，去除重复的路径符
 	/// @param normal_target_path 变化的路径

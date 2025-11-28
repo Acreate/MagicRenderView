@@ -275,9 +275,21 @@ void TestCodeSources::testAppFile( ) {
 		printerDirector->info( "获取路径[./4541/88]失败" );
 	printerDirector->info( path::normalPathSeparatorToPath( "/1/2//3/////4" ) );
 	printerDirector->info( path::normalPathSeparatorToPath( "1/2//3/////4" ) );
-	path::pathTree pathTree("..../123/456");
-	pathTree.appSubPath( "123/123/45" );
-	pathTree.appSubPath( "123/784/45" );
+	path::pathTree pathTree( "..../123/456" );
+	if( pathTree.appSubPath( "123/123/45" ) == false ) {
+		printerDirector->error( "123/123/45 配置异常" );
+	} else
+		printerDirector->info( pathTree.toQString( ) );
+	
+	if( pathTree.appSubPath( "123/784/45" ) == false ) {
+		printerDirector->error( "123/123/45 配置异常" );
+	} else
+		printerDirector->info( pathTree.toQString( ) );
+	
+	if( pathTree.appSubPath( "123/784/1" ) == false ) {
+		printerDirector->error( "123/123/1 配置异常" );
+	} else
+		printerDirector->info( pathTree.toQString( ) );
 }
 void TestCodeSources::testAppMoveWidget( ) {
 
