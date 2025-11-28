@@ -57,13 +57,6 @@ public:
 	virtual bool synchronousWindowInfoToVar( ) const;
 	virtual bool synchronousVarToWindowInfo( );
 	virtual void clearVar( );
-	virtual bool createFile( const QString &create_file_path_name ) const;
-	virtual bool removeFile( const QString &remove_file_path_name ) const;
-	virtual bool createDir( const QString &create_file_path_name ) const;
-	virtual bool removeDir( const QString &remove_file_path_name ) const;
-	virtual bool hasFile( const QString &check_file_path_name ) const;
-	virtual bool hasDir( const QString &check_dir_path_name ) const;
-	virtual bool getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &result_file_info ) const;
 	virtual bool widgetMoveTargetDispyer( QWidget *move_widget, const size_t &displyer_index ) const;
 	virtual bool widgetMoveTargetDispyer( const size_t &displyer_index ) const;
 	virtual bool widgetAllMoveTargetDispyer( const size_t &displyer_index ) const;

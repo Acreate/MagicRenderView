@@ -14,15 +14,10 @@ bool NodeStack::init( ) {
 	return true;
 }
 bool NodeStack::appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function ) {
-	std::function< Node *( ) > generateFunction = [generate_function, this] {
-		Node *generateNode = generate_function( );
-		generateNode->nodeVarDirector = nodeVarDirector;
-		return generateNode;
-	};
-	nodeGenerate.insert( nodeGenerate.begin( ), std::pair( name, generateFunction ) );
+	nodeGenerate.insert( nodeGenerate.begin( ), std::pair( name, generate_function ) );
 	return true;
 }
-NodeStack::NodeStack( VarDirector *node_var_director, QObject *parent ) : QObject( parent ), mainMenu( nullptr ), nodeVarDirector( node_var_director ) { }
+NodeStack::NodeStack( QObject *parent ) : QObject( parent ), mainMenu( nullptr ) { }
 void NodeStack::releaseMainMenu( ) {
 	size_t count;
 	size_t index;

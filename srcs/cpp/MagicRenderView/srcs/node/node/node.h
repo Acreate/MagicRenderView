@@ -7,6 +7,8 @@
 
 #include <enums/nodeEnum.h>
 
+#include "../../director/varDirector.h"
+
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
 class NodeRunFunctionTypeInfo;
 class VarDirector;
@@ -34,8 +36,8 @@ private:
 	VarDirector *nodeVarDirector;
 protected:
 	VarDirector *nodeFunctionVarDirector;
-	using NodeFunctionResultType = void ;
-	using NodeFunctionType = std::function< NodeFunctionResultType( ) >;
+	using NodeFunctionResultType = void;
+	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
 	NodeFunctionType nodeFunction;
 protected:
 	/// @brief 删除输入依赖节点
@@ -46,7 +48,6 @@ public:
 	Node( QWidget *parent, const Qt::WindowFlags &f );
 	virtual NodeClickInfo * getNodeClickInfo( ) const { return nodeClickInfo; }
 	virtual bool init( QWidget *parent );
-	virtual bool runFunction(  ) const;
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual bool updateLayout( ) = 0;

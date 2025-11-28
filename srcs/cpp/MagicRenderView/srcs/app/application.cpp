@@ -14,6 +14,8 @@
 
 #include <win/mainWindow.h>
 
+#include "../tools/path.h"
+
 Application *Application::instance = nullptr;
 Application * Application::getInstancePtr( ) {
 	return instance;
@@ -94,9 +96,9 @@ bool Application::init( ) {
 	iniSaveFilePathName = currentApplcationDirPath + "/settings/" + appName + ".status";
 	QFileInfo filePermission( iniSaveFilePathName );
 	iniSaveFilePathName = filePermission.absoluteFilePath( );
-	if( createFile( iniSaveFilePathName ) == false )
+	if( path::createFile( iniSaveFilePathName ) == false )
 		return false;
-	if( getPathHasFileInfo( iniSaveFilePathName, filePermission ) == false )
+	if( path::getPathHasFileInfo( iniSaveFilePathName, filePermission ) == false )
 		return false;
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
@@ -104,10 +106,10 @@ bool Application::init( ) {
 		appName + appInitRunDataTime->toString( "! yyyy_MM_dd hh_mm_s.z" ) + ".log";
 	filePermission.setFile( logSaveFilePathName );
 	logSaveFilePathName = filePermission.absoluteFilePath( );
-	removeFile( logSaveFilePathName );
-	if( createFile( logSaveFilePathName ) == false )
+	path::removeFile( logSaveFilePathName );
+	if( path::createFile( logSaveFilePathName ) == false )
 		return false;
-	if( getPathHasFileInfo( logSaveFilePathName, filePermission ) == false )
+	if( path::getPathHasFileInfo( logSaveFilePathName, filePermission ) == false )
 		return false;
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
@@ -296,98 +298,6 @@ bool Application::synchronousVarToWindowInfo( ) {
 }
 void Application::clearVar( ) {
 	iniDirector->clearVar( );
-}
-bool Application::createFile( const QString &create_file_path_name ) const {
-	QFileInfo createFilePath( create_file_path_name );
-	if( createFilePath.exists( ) ) {
-		if( createFilePath.isFile( ) )
-			return true;
-		QDir removeDir;
-		if( removeDir.remove( create_file_path_name ) == false )
-			return false;
-		QFile createFile( create_file_path_name );
-		if( createFile.open( QIODeviceBase::NewOnly ) == false )
-			return false;
-		return true;
-	}
-	auto dir = createFilePath.dir( );
-	auto absolutePath = dir.absolutePath( );
-	if( dir.mkpath( absolutePath ) == false )
-		return false;
-	QFile createFile( create_file_path_name );
-	if( createFile.open( QIODeviceBase::NewOnly ) == false )
-		return false;
-	return true;
-}
-bool Application::removeFile( const QString &remove_file_path_name ) const {
-	QFileInfo removeFilePathInfo( remove_file_path_name );
-	if( removeFilePathInfo.exists( ) == false )
-		return true;
-	if( removeFilePathInfo.isDir( ) == true )
-		return false;
-	QDir removePath;
-	if( removePath.remove( remove_file_path_name ) == false )
-		return false;
-	return true;
-}
-bool Application::createDir( const QString &create_file_path_name ) const {
-	QFileInfo createDirPathInfo( create_file_path_name );
-	if( createDirPathInfo.exists( ) ) {
-		if( createDirPathInfo.isDir( ) )
-			return true;
-		QDir createFilePath;
-		if( createFilePath.remove( create_file_path_name ) == false )
-			return false;
-		if( createFilePath.mkdir( create_file_path_name ) == false )
-			return false;
-		return true;
-	}
-	QDir createDirPath( create_file_path_name );
-	if( createDirPath.mkpath( create_file_path_name ) == false )
-		return false;
-	return true;
-}
-bool Application::removeDir( const QString &remove_file_path_name ) const {
-	QFileInfo removeFilePathInfo( remove_file_path_name );
-	if( removeFilePathInfo.exists( ) == false )
-		return true;
-	if( removeFilePathInfo.isFile( ) == true )
-		return false;
-	QDir removePath;
-	if( removePath.remove( remove_file_path_name ) == false )
-		return false;
-	return true;
-}
-bool Application::hasFile( const QString &check_file_path_name ) const {
-	QFileInfo checkFilePathInfo( check_file_path_name );
-	if( checkFilePathInfo.exists( ) == false )
-		return false;
-	if( checkFilePathInfo.isFile( ) == false )
-		return false;
-	return true;
-}
-bool Application::hasDir( const QString &check_dir_path_name ) const {
-	QFileInfo checkFilePathInfo( check_dir_path_name );
-	if( checkFilePathInfo.exists( ) == false )
-		return false;
-	if( checkFilePathInfo.isDir( ) == false )
-		return false;
-	return true;
-}
-bool Application::getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &result_file_info ) const {
-	result_file_info.setFile( check_dir_path_name );
-	if( result_file_info.exists( ) )
-		return true;
-	auto dir = result_file_info.dir( );
-	do {
-		result_file_info.setFile( dir.absolutePath( ) );
-		if( result_file_info.exists( ) )
-			return true;
-		if( result_file_info.isRoot( ) )
-			return false;
-		dir = result_file_info.dir( );
-	} while( true );
-	return false;
 }
 bool Application::widgetMoveTargetDispyer( QWidget *move_widget, const size_t &displyer_index ) const {
 	auto screenList = screens( );

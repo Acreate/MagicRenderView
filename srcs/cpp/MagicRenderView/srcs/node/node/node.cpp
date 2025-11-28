@@ -146,15 +146,10 @@ bool Node::init( QWidget *parent ) {
 	if( nodeFunctionVarDirector )
 		delete nodeFunctionVarDirector;
 	nodeFunctionVarDirector = new VarDirector;
-	nodeFunction = [] { };
+	nodeFunction = [] ( VarDirector *var_director ) { };
 	return true;
 }
-bool Node::runFunction( ) const {
-	if( nodeFunction == nullptr )
-		return false;
-	nodeFunction( );
-	return true;
-}
+
 InputPort * Node::getInputPort( const QString &port_name ) const {
 	size_t count = inputPortVector.size( );
 	if( count == 0 )

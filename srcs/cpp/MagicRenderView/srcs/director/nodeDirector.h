@@ -5,6 +5,7 @@
 
 #include <enums/nodeEnum.h>
 
+class NodeClickInfo;
 class OutputPort;
 class QAction;
 class InputPort;
@@ -42,6 +43,7 @@ public:
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
+	virtual NodeClickInfo * getNodeAtPos( const QPoint &point );
 protected:
 	bool fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
 	bool createMenuAtNodeType( NodeStack *node_stack_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );

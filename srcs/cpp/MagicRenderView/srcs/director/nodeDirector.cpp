@@ -26,6 +26,8 @@ bool NodeDirector::init( ) {
 	if( nodeVarDirector )
 		delete nodeVarDirector;
 	nodeVarDirector = new VarDirector;
+	if( nodeVarDirector->init( ) == false )
+		return false;
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
@@ -171,6 +173,9 @@ Node * NodeDirector::createNode( const QString &stack_name, const QString &node_
 			connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
 			connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
 		}
+	return nullptr;
+}
+NodeClickInfo * NodeDirector::getNodeAtPos( const QPoint &point ) {
 	return nullptr;
 }
 bool NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) {
@@ -323,9 +328,12 @@ bool NodeDirector::createMenuAtNodeType( NodeStack *node_stack_ptr, const QStrin
 	auto action = new QAction( nameVectorArratPtr[ nameVectorCount ] );
 	using QActionTriggered = void(QAction::*)( bool );
 	QActionTriggered triggered = &QAction::triggered;
-	if( connectCreateNodeAction( node_stack_ptr, action, triggered, node_type_name, action_click_function ) == false )
-		return false;
 	node_stack_ptr->actions.emplace_back( compVector, action );
+	if( connectCreateNodeAction( node_stack_ptr, action, triggered, node_type_name, action_click_function ) == false ) {
+		QString msg( "[ %1 ]节点菜单对象无法创建对应的 QAction 信号" );
+		printerDirector->error( msg.arg( appendUnity ) );
+		return false;
+	}
 	// 路径数量大于 0，则寻找挂靠
 	compVectorArrayCount -= 1;
 	if( compVectorArrayCount != 0 ) {

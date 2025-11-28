@@ -8,7 +8,7 @@ class BaseNodeStack : public NodeStack {
 protected:
 	bool init( ) override;
 public:
-	BaseNodeStack( VarDirector *node_var_director, QObject *parent = nullptr );
+	BaseNodeStack( QObject *parent = nullptr );
 };
 
 #endif // BASENODESTACK_H_H_HEAD__FILE__

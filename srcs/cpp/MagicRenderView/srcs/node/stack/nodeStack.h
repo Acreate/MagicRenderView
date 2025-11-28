@@ -25,11 +25,10 @@ private:
 protected:
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
-	VarDirector *nodeVarDirector;
 protected:
 	virtual bool appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function );
 public:
-	NodeStack( VarDirector *node_var_director, QObject *parent = nullptr );
+	NodeStack( QObject *parent = nullptr );
 	void releaseMainMenu( );
 	~NodeStack( ) override;
 	virtual Node * createNode( const QString &node_type_name );

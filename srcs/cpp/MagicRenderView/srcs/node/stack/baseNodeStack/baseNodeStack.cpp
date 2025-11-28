@@ -33,6 +33,6 @@ bool BaseNodeStack::init( ) {
 	return true;
 }
 
-BaseNodeStack::BaseNodeStack( VarDirector *node_var_director, QObject *parent ) : NodeStack( node_var_director, parent ) {
+BaseNodeStack::BaseNodeStack( QObject *parent ) : NodeStack(  parent ) {
 
 }

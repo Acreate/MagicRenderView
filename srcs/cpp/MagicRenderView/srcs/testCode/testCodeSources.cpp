@@ -10,6 +10,8 @@
 
 #include "../enums/nodeEnum.h"
 
+#include "../tools/path.h"
+
 template< typename TTestType >
 void testVarGener( const TTestType &default_var ) {
 	auto name = typeid( TTestType ).name( );
@@ -248,21 +250,21 @@ void TestCodeSources::testAppFile( ) {
 	auto instancePtr = Application::getInstancePtr( );
 	auto printerDirector = instancePtr->getPrinterDirector( );
 
-	if( instancePtr->hasDir( "." ) )
+	if( path::hasDir( "." ) )
 		printerDirector->info( "存在路径[.]" );
 	else
 		printerDirector->info( "非法路径[.]" );
 
-	if( instancePtr->hasFile( "." ) )
+	if( path::hasFile( "." ) )
 		printerDirector->info( "存在文件[.]" );
 	else
 		printerDirector->info( "非法文件[.]" );
-	if( instancePtr->createFile( "./45/file" ) )
+	if( path::createFile( "./45/file" ) )
 		printerDirector->info( "创建文件[./45/file]成功" );
 	else
 		printerDirector->info( "创建文件[./45/file]失败" );
 	QFileInfo getPathInfo;
-	if( instancePtr->getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
+	if( path::getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
 		printerDirector->info( "获取路径[./4541/88]成功" );
 		QString outMsg( "获取路径[%1]是%2" );
 		if( getPathInfo.isFile( ) )
