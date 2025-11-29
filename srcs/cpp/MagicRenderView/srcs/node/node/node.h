@@ -24,33 +24,28 @@ class Node : public QWidget {
 	friend class NodeDirector;
 	friend class NodeStack;
 protected:
+	using NodeFunctionResultType = void;
+	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
+protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
 	NodeDirector *nodeDirector;
-private:
 	NodeClickInfo *nodeClickInfo;
 	std::vector< InputPort * > inputPortVector;
 	std::vector< OutputPort * > outputPortVector;
-	std::vector< Node * > inputNodeVector;
-	std::vector< Node * > outputNodeVector;
+	NodeRefLinkInfo *nodeRefLinkInfoPtr;
 	VarDirector *nodeVarDirector;
-protected:
-	VarDirector *nodeFunctionVarDirector;
-	using NodeFunctionResultType = void;
-	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
 	NodeFunctionType nodeFunction;
-protected:
-	/// @brief 删除输入依赖节点
-	/// @param remove_target 输入依赖节点
-	virtual void removeInputNode( Node *remove_target );
 public:
 	~Node( ) override;
 	Node( QWidget *parent, const Qt::WindowFlags &f );
-	virtual NodeClickInfo * getNodeClickInfo( ) const { return nodeClickInfo; }
-	virtual bool init( QWidget *parent );
+	virtual const NodeClickInfo & getNodeClickInfo( ) const { return *nodeClickInfo; }
+	virtual bool init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info, NodeClickInfo *node_click_info );
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
+	virtual const NodeRefLinkInfo & getNodeRefLinkInfoPtr( ) const { return *nodeRefLinkInfoPtr; }
 	virtual bool updateLayout( ) = 0;
+	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 protected:
 	/// @brief 增加一个输入端口
 	/// @param input_port 输入端
@@ -65,8 +60,6 @@ protected:
 	virtual void clearNodeClickInfo( );
 	virtual void setNodeTitleClickInfo( );
 	virtual void setNodeOtherClickInfo( );
-	virtual void * createVar( const QString &type_name );
-	virtual void * createVar( const std::type_info &std_type_info );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
@@ -75,22 +68,6 @@ Q_SIGNALS:
 	/// @brief 节点被释放信号
 	/// @param release_node 释放指针
 	void release_node_signal( Node *release_node );
-	/// @brief 节点端口发生释放时，产生该信号
-	/// @param signal_port 释放的源端口对象指针
-	/// @param target_prot 释放的目标端口对象指针
-	void release_link_signal( InputPort *signal_port, OutputPort *target_prot );
-	/// @brief 节点端口发生链接时，产生该信号
-	/// @param signal_port 链接的源端口对象指针
-	/// @param target_prot 链接的目标端口对象指针
-	void create_link_signal( InputPort *signal_port, OutputPort *target_prot );
-	/// @brief 节点依赖发生释放时候，产生该信号
-	/// @param signal_node 依赖节点
-	/// @param ref_node 被删除的依赖
-	void release_ref_node_signal( Node *signal_node, Node *ref_node );
-	/// @brief 节点依赖发生增持时候，产生该信号
-	/// @param signal_node 依赖节点
-	/// @param ref_node 被增持的依赖
-	void create_ref_node_signal( Node *signal_node, Node *ref_node );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param code_line 信号发生行号

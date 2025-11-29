@@ -19,9 +19,6 @@ protected:
 	virtual bool init( );
 private:
 	std::vector< std::pair< QString, std::function< Node *( ) > > > nodeGenerate;
-	QMenu *mainMenu;
-	std::vector< std::pair< std::vector< QString >, QAction * > > actions;
-	std::vector< std::pair< std::vector< QString >, QMenu * > > subMenus;
 protected:
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
@@ -29,10 +26,8 @@ protected:
 	virtual bool appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function );
 public:
 	NodeStack( QObject *parent = nullptr );
-	void releaseMainMenu( );
 	~NodeStack( ) override;
 	virtual Node * createNode( const QString &node_type_name );
-	virtual QMenu * getMainMenu( ) const { return mainMenu; }
 Q_SIGNALS:
 	/// @brief 成功创建节点信号
 	/// @param create_name 节点名称

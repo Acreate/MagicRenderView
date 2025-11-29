@@ -11,12 +11,13 @@
 
 #include "../../../win/mainWindow.h"
 
-#include "../../node/control/beginNode.h"
-#include "../../node/control/endNode.h"
-#include "../../node/control/jumpNode.h"
-#include "../../node/control/pointNode.h"
-#include "../../node/logic/ifNode.h"
-#include "../../node/logic/whileNode.h"
+#include "../../node/imp/beginNodes/startNode.h"
+#include "../../node/imp/endNodes/resultNode.h"
+#include "../../node/imp/generateNodes/intGenerateNode.h"
+#include "../../node/imp/jumpNodes/gotoNode.h"
+#include "../../node/imp/logicNodes/ifNode.h"
+#include "../../node/imp/pointNodes/makeNode.h"
+#include "../../node/imp/processNodes/intAddNode.h"
 
 #define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::nodeTypeName( ), [] { return new _Type( ); }  )
 bool BaseNodeStack::init( ) {
@@ -24,15 +25,17 @@ bool BaseNodeStack::init( ) {
 		return false;
 	QString name = tr( "基础节点" );
 	setObjectName( name );
-	emaplace_back_node( BeginNode );
-	emaplace_back_node( EndNode );
-	emaplace_back_node( JumpNode );
-	emaplace_back_node( PointNode );
+	appendNodeGenerateUnity( StartNode::nodeTypeName( ), [] { return new StartNode( ); } );
+	emaplace_back_node( StartNode );
+	emaplace_back_node( ResultNode );
+	emaplace_back_node( IntGenerateNode );
+	emaplace_back_node( GotoNode );
 	emaplace_back_node( IfNode );
-	emaplace_back_node( WhileNode );
+	emaplace_back_node( MakeNode );
+	emaplace_back_node( IntAddNode );
 	return true;
 }
 
-BaseNodeStack::BaseNodeStack( QObject *parent ) : NodeStack(  parent ) {
+BaseNodeStack::BaseNodeStack( QObject *parent ) : NodeStack( parent ) {
 
 }

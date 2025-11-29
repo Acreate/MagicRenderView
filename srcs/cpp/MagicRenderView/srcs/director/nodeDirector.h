@@ -45,7 +45,7 @@ public:
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
 	virtual NodeClickInfo * getNodeAtPos( const QPoint &point );
 protected:
-	bool fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
+	QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
 	bool createMenuAtNodeType( NodeStack *node_stack_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 	bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 Q_SIGNALS:
