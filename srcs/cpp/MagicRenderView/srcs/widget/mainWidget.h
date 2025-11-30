@@ -3,6 +3,8 @@
 #pragma once
 #include <QWidget>
 
+class MainWidgetScrollArea;
+class Node;
 class Application;
 class NodeDirector;
 class DrawLinkWidget;
@@ -11,16 +13,18 @@ class MainWidget : public QWidget {
 	Q_OBJECT;
 	/// @brief 不可获取成员变量
 protected:
-	Application * appInstancePtr;
+	Application *appInstancePtr;
 	NodeDirector *nodeDirector;
 	/// @brief 可获取成员变量
 protected:
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
+	MainWidgetScrollArea *mainWidgetScrollArea;
 	/// @brief 构造/析构 
 public:
-	MainWidget( QWidget *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
-	virtual bool init();
+	MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	virtual bool ensureVisible( Node *target );
+	virtual bool init( );
 	/// @brief 获取成员变量函数调用
 public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
