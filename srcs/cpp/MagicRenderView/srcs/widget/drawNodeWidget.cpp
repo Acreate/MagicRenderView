@@ -74,8 +74,9 @@ DrawNodeWidget::~DrawNodeWidget( ) {
 		}
 	}
 }
-bool DrawNodeWidget::addNode( Node *add_node ) {
-	add_node->setParent( this );
+bool DrawNodeWidget::addNode( Node *add_node, NodeRefLinkInfo *node_ref_link_info ) {
+	if( add_node->init( this, node_ref_link_info ) == false )
+		return false;
 	QPoint fromGlobal = mapFromGlobal( menuPopPoint );
 	add_node->move( fromGlobal );
 	appendVector( add_node );

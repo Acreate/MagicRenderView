@@ -1,4 +1,5 @@
 ﻿#include "node.h"
+
 #include <QPainter>
 
 #include <app/application.h>
@@ -8,12 +9,8 @@
 #include <node/port/inputPort/inputPort.h>
 #include <node/port/outputPort/outputPort.h>
 
-#include "../../director/nodeDirector.h"
-#include "../../director/printerDirector.h"
+#include <director/printerDirector.h>
 
-#include "../nodeInfo/nodeClickInfo.h"
-
-#include "../nodeType/nodeRunFunctionTypeInfo.h"
 Node::~Node( ) {
 	emit release_node_signal( this );
 	size_t count, index;
@@ -35,7 +32,7 @@ Node::~Node( ) {
 }
 Node::Node( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) { }
 bool Node::appendInputPort( InputPort *input_port ) {
-	
+
 	return true;
 }
 bool Node::appendOutputPort( OutputPort *output_port ) {
@@ -53,39 +50,8 @@ bool Node::appendOutputPort( OutputPort *output_port ) {
 	return true;
 }
 
-void Node::setNodeClickInfo( OutputPort *const output_port ) {
-	nodeClickInfo->clickType = NodeEnum::NodeClickType::OutputPort;
-	nodeClickInfo->clickNode = this;
-	nodeClickInfo->inputPort = nullptr;
-	nodeClickInfo->outputPort = output_port;
-}
-void Node::setNodeClickInfo( InputPort *const input_port ) {
-	nodeClickInfo->clickType = NodeEnum::NodeClickType::InputPort;
-	nodeClickInfo->clickNode = this;
-	nodeClickInfo->inputPort = input_port;
-	nodeClickInfo->outputPort = nullptr;
-}
-void Node::clearNodeClickInfo( ) {
-	nodeClickInfo->clickType = NodeEnum::NodeClickType::None;
-	nodeClickInfo->clickNode = nullptr;
-	nodeClickInfo->inputPort = nullptr;
-	nodeClickInfo->outputPort = nullptr;
-}
-void Node::setNodeTitleClickInfo( ) {
-	nodeClickInfo->clickType = NodeEnum::NodeClickType::Titile;
-	nodeClickInfo->clickNode = this;
-	nodeClickInfo->inputPort = nullptr;
-	nodeClickInfo->outputPort = nullptr;
-}
-void Node::setNodeOtherClickInfo( ) {
-	nodeClickInfo->clickType = NodeEnum::NodeClickType::None;
-	nodeClickInfo->clickNode = this;
-	nodeClickInfo->inputPort = nullptr;
-	nodeClickInfo->outputPort = nullptr;
-}
-bool Node::init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info, NodeClickInfo *node_click_info ) {
+bool Node::init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
 	nodeRefLinkInfoPtr = node_ref_link_info;
-	nodeClickInfo = node_click_info;
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	size_t count, index;

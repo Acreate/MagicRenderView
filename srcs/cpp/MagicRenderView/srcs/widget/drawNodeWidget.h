@@ -3,6 +3,9 @@
 #pragma once
 #include <QWidget>
 
+#include "../node/nodeInfo/nodeClickInfo.h"
+#include "../node/nodeInfo/nodeRefLinkInfo.h"
+
 class Node;
 class Application;
 class NodeDirector;
@@ -22,7 +25,7 @@ protected:
 public:
 	DrawNodeWidget( QWidget *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~DrawNodeWidget( ) override;
-	virtual bool addNode( Node *add_node );
+	virtual bool addNode( Node *add_node, NodeRefLinkInfo *node_ref_link_info );
 	virtual const QPoint & getMenuPopPoint( ) const { return menuPopPoint; }
 };
 

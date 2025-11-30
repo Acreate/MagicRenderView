@@ -5,6 +5,8 @@
 
 #include <enums/nodeEnum.h>
 
+class NodeRefLinkInfo;
+class DrawNodeWidget;
 namespace path {
 	class pathTree;
 }
@@ -30,6 +32,8 @@ protected:
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
+	std::vector< std::pair< QString, std::function< Node*( ) > > > createNodeVector;
+	std::vector< std::pair< Node *, NodeRefLinkInfo * > > refNodeVector;
 protected:
 	/// @brief 节点端口发生释放时，产生该信号
 	/// @param signal_port 释放的源端口对象指针
@@ -45,7 +49,7 @@ public:
 	~NodeDirector( ) override;
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
-	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
+	virtual Node * createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget );
 	virtual NodeClickInfo * getNodeAtPos( const QPoint &point );
 protected:
 	QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );

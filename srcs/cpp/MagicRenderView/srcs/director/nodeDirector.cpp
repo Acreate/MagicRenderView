@@ -30,9 +30,18 @@ bool NodeDirector::init( ) {
 	nodeVarDirector = new VarDirector;
 	if( nodeVarDirector->init( ) == false )
 		return false;
+	createNodeVector.clear( );
+
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
+	count = refNodeVector.size( );
+	if( count != 0 ) {
+		auto pair = refNodeVector.data( );
+		for( index = 0; index < count; ++index )
+			delete pair[ index ].second;
+		refNodeVector.clear( );
+	}
 
 	// 这里加入节点窗口创建函数
 	nodeStacks.emplace_back( new BaseNodeStack( nodeVarDirector ) );
@@ -63,10 +72,7 @@ bool NodeDirector::init( ) {
 		if( connectNodeAction( nodeStackArrayPtr[ index ], actionMap ) == false )
 			delete generateCreateMenu;
 		this->nodeCreateMenu->addMenu( generateCreateMenu );
-		actionMap.clear( );
 	}
-	connect( this, &NodeDirector::release_link_signal, this, &NodeDirector::releaseLink );
-	connect( this, &NodeDirector::create_link_signal, this, &NodeDirector::createLink );
 	return true;
 }
 void NodeDirector::releaseLink( InputPort *signal_port, OutputPort *target_prot ) {
@@ -94,22 +100,33 @@ NodeDirector::~NodeDirector( ) {
 	releaseMenu( );
 	if( nodeVarDirector )
 		delete nodeVarDirector;
+
+	size_t count;
+	size_t index;
+	count = refNodeVector.size( );
+	if( count != 0 ) {
+		auto pair = refNodeVector.data( );
+		for( index = 0; index < count; ++index )
+			delete pair[ index ].second;
+	}
 }
-Node * NodeDirector::createNode( const QString &stack_name, const QString &node_type_name ) {
-	auto count = nodeStacks.size( );
-	if( count == 0 )
+Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget ) {
+	if( draw_node_widget == nullptr || node_type_name.isEmpty( ) )
 		return nullptr;
-	auto nodeStackArrayPtr = nodeStacks.data( );
-	for( decltype(count) index = 0; index < count; ++index )
-		if( nodeStackArrayPtr[ index ]->objectName( ) == stack_name ) {
-			Node *node = nodeStackArrayPtr[ index ]->createNode( node_type_name );
-			if( node == nullptr )
-				return nullptr;
-			connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
-			connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
-			connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
-		}
-	return nullptr;
+	Node *node = nullptr;
+	if( node == nullptr )
+		return node;
+	auto refNdoeInfo = new NodeRefLinkInfo;
+	if( draw_node_widget->addNode( node, refNdoeInfo ) == false ) {
+		delete node;
+		delete refNdoeInfo;
+		return node;
+	}
+	refNodeVector.emplace_back( node, refNdoeInfo );
+	connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
+	connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
+	connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
+	return node;
 }
 NodeClickInfo * NodeDirector::getNodeAtPos( const QPoint &point ) {
 	return nullptr;
@@ -124,6 +141,7 @@ QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std
 		pathTree.appSubPath( data[ index ].first );
 	if( pathTree.getSubPath( ).size( ) == 0 )
 		return nullptr;
+	result_action_map.clear( );
 	nodeStackName = pathTree.getName( );
 	QMenu *resultMenu = new QMenu( nodeStackName );
 	fromPathTreeGenerateCreateaAction( &pathTree, resultMenu, result_action_map );
@@ -179,6 +197,7 @@ bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list
 bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function ) {
 	if( connect_qaction_ptr == nullptr || connect_qaction_fun_ptr == nullptr )
 		return false;
+	createNodeVector.emplace_back( node_type_name, action_click_function );
 	connect( connect_qaction_ptr, connect_qaction_fun_ptr, [this,action_click_function, node_type_name]( ) {
 		auto node = action_click_function( );
 		MainWindow *mainWindow = instancePtr->getMainWindow( );
@@ -204,11 +223,13 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete node;
 			return;
 		}
-		if( drawNodeWidget->addNode( node ) == false ) {
+		auto refNdoeInfo = new NodeRefLinkInfo;
+		if( drawNodeWidget->addNode( node, refNdoeInfo ) == false ) {
 			auto errorMsg = tr( "节点添加失败[DrawNodeWidget::addNode( Node *add_node )]" );
 			printerDirector->error( errorMsg );
 			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg );
 			delete node;
+			delete refNdoeInfo;
 			return;
 		}
 		if( node->parent( ) != drawNodeWidget ) {
@@ -216,8 +237,13 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			printerDirector->error( errorMsg );
 			emit error_create_signal( node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg );
 			delete node;
+			delete refNdoeInfo;
 			return;
 		}
+		refNodeVector.emplace_back( node, refNdoeInfo );
+		connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
+		connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
+		connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
 		node->show( );
 	} );
 	return true;

@@ -3,7 +3,7 @@
 #pragma once
 
 class NodeRefLinkInfo {
-	
+
 };
 
 #endif // NODEREFLINKINFO_H_H_HEAD__FILE__

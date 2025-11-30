@@ -7,7 +7,6 @@
 
 #include <enums/nodeEnum.h>
 
-#include "../../director/varDirector.h"
 
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
 class NodeRunFunctionTypeInfo;
@@ -30,7 +29,6 @@ protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
 	NodeDirector *nodeDirector;
-	NodeClickInfo *nodeClickInfo;
 	std::vector< InputPort * > inputPortVector;
 	std::vector< OutputPort * > outputPortVector;
 	NodeRefLinkInfo *nodeRefLinkInfoPtr;
@@ -39,8 +37,7 @@ protected:
 public:
 	~Node( ) override;
 	Node( QWidget *parent, const Qt::WindowFlags &f );
-	virtual const NodeClickInfo & getNodeClickInfo( ) const { return *nodeClickInfo; }
-	virtual bool init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info, NodeClickInfo *node_click_info );
+	virtual bool init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info );
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual const NodeRefLinkInfo & getNodeRefLinkInfoPtr( ) const { return *nodeRefLinkInfoPtr; }
@@ -55,11 +52,6 @@ protected:
 	/// @param output_port 输出端口
 	/// @return 失败返回 false
 	virtual bool appendOutputPort( OutputPort *output_port );
-	virtual void setNodeClickInfo( OutputPort *const output_port );
-	virtual void setNodeClickInfo( InputPort *const input_port );
-	virtual void clearNodeClickInfo( );
-	virtual void setNodeTitleClickInfo( );
-	virtual void setNodeOtherClickInfo( );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
