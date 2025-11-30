@@ -8,6 +8,7 @@ class ResultNode : public EndNode {
 public:
 	ResultNode( const QString &node_name )
 		: EndNode( node_name ) { }
+	bool init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) override;
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "结束/返回" ) );

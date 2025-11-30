@@ -12,6 +12,7 @@
 #include "../../../win/mainWindow.h"
 
 #include "../../node/imp/beginNodes/startNode.h"
+#include "../../node/imp/cacheNodes/intArrayAddNode.h"
 #include "../../node/imp/endNodes/resultNode.h"
 #include "../../node/imp/generateNodes/intGenerateNode.h"
 #include "../../node/imp/jumpNodes/gotoNode.h"
@@ -27,6 +28,7 @@ bool BaseNodeStack::init( ) {
 	setObjectName( name );
 	emaplace_back_node( StartNode );
 	emaplace_back_node( ResultNode );
+	emaplace_back_node( IntArrayAddNode );
 	emaplace_back_node( IntGenerateNode );
 	emaplace_back_node( GotoNode );
 	emaplace_back_node( IfNode );

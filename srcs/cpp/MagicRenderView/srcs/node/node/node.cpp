@@ -157,7 +157,7 @@ bool Node::updateLayout( ) {
 	connectWidgetLayout->setSpacing( nodeBorderWidth * 2 );
 
 	inputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( inputPortWidget );
+	connectWidgetLayout->addWidget( inputPortWidget, 0, Qt::AlignLeft | Qt::AlignTop );
 	inputPortWidgetLayout = new QVBoxLayout( inputPortWidget );
 	inputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
 	inputPortWidgetLayout->setSpacing( 0 );
@@ -170,7 +170,7 @@ bool Node::updateLayout( ) {
 	}
 
 	outputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( outputPortWidget );
+	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
 	outputPortWidgetLayout = new QVBoxLayout( outputPortWidget );
 	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
 	outputPortWidgetLayout->setSpacing( 0 );

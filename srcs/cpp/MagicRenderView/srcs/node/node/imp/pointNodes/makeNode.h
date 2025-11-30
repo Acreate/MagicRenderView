@@ -9,6 +9,7 @@ public:
 	MakeNode( const QString &node_name )
 		: PointNode( node_name ) { }
 	bool updateLayout( ) override;
+	bool init(DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "记录/记录位置" ) );
 };

@@ -268,18 +268,19 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ]->first == remove_node ) {
+		if( data[ index ] == nullptr )
+			break;
+		else if( data[ index ]->first == remove_node ) {
 			delete data[ index ]->second;
 			if( remove_node->nodeRefLinkInfoPtr == data[ index ]->second )
 				remove_node->nodeRefLinkInfoPtr = nullptr;
-			data[ index ] = nullptr;
-			count -= 1;
+			index += 1;
 			for( ; index < count; ++index )
 				if( data[ index ] == nullptr )
 					break;
 				else
-					data[ index ] = data[ index + 1 ];
-			data[ index ] = nullptr;
+					data[ index - 1 ] = data[ index ];
+			data[ index - 1 ] = nullptr;
 			break;
 		}
 }
@@ -289,10 +290,11 @@ void NodeDirector::appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ]->first == append_node )
-			return;
-		else if( data[ index ] == nullptr )
+		if( data[ index ] == nullptr )
 			break;
+		else if( data[ index ]->first == append_node )
+			return;
+
 	if( index == count )
 		refNodeVector.emplace_back( pair );
 	else

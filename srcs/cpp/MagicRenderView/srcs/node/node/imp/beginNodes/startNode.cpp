@@ -6,7 +6,7 @@ bool StartNode::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_inf
 	bool init = BeginNode::init( parent, node_ref_link_info );
 	if( init == false )
 		return init;
-	if( appendOutputPortType< AnyOutputPort >( tr( "开始" ) ) == nullptr )
+	if( appendOutputPortType< AnyOutputPort >( tr( "过程开始" ) ) == nullptr )
 		return false;
 	return init;
 }

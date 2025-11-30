@@ -9,6 +9,7 @@ public:
 	IntAddNode( const QString &node_name )
 		: ProcessNode( node_name ) { }
 	bool updateLayout( ) override;
+	bool init(DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "数值运算/整数加法" ) );
 };

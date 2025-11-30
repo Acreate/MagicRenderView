@@ -9,6 +9,7 @@ public:
 	GotoNode( const QString &node_name )
 		: JumpNode( node_name ) { }
 	bool updateLayout( ) override;
+	bool init(DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
 };
