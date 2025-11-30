@@ -13,6 +13,8 @@
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
 
+#include "../srack/srackInfo.h"
+
 #include "../tools/path.h"
 
 #include "../widget/drawNodeWidget.h"
@@ -44,7 +46,7 @@ bool NodeDirector::init( ) {
 	}
 
 	// 这里加入节点窗口创建函数
-	nodeStacks.emplace_back( new BaseNodeStack( nodeVarDirector ) );
+	nodeStacks.emplace_back( new BaseNodeStack( ) );
 
 	// 初始化列表
 	count = nodeStacks.size( );
@@ -63,9 +65,6 @@ bool NodeDirector::init( ) {
 	nodeCreateMenu = new QMenu;
 	std::list< std::pair< QString, QAction * > > actionMap;
 	for( index = 0; index < count; ++index ) {
-		connect( nodeStackArrayPtr[ index ], &NodeStack::finish_create_signal, this, &NodeDirector::finish_create_signal );
-		connect( nodeStackArrayPtr[ index ], &NodeStack::error_create_signal, this, &NodeDirector::error_create_signal );
-
 		QMenu *generateCreateMenu = fromNodeGenerateCreateMenu( nodeStackArrayPtr[ index ], actionMap );
 		if( generateCreateMenu == nullptr )
 			continue;
@@ -123,9 +122,7 @@ Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *
 		return node;
 	}
 	refNodeVector.emplace_back( node, refNdoeInfo );
-	connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
-	connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
-	connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
+	connectNodeSignals( node );
 	return node;
 }
 NodeClickInfo * NodeDirector::getNodeAtPos( const QPoint &point ) {
@@ -204,7 +201,7 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		if( mainWindow == nullptr ) {
 			auto errorMsg = tr( "无法匹配主窗口[Application::]getMainWindow( )" );
 			printerDirector->error( errorMsg );
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 			delete node;
 			return;
 		}
@@ -212,14 +209,14 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		if( mainWidget == nullptr ) {
 			auto errorMsg = tr( "无法匹配主渲染组件[MainWindow::getMainWidget()]" );
 			printerDirector->error( errorMsg );
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, errorMsg );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
 			delete node;
 			return;
 		}
 		DrawNodeWidget *drawNodeWidget = mainWidget->getDrawNodeWidget( );
 		if( drawNodeWidget == nullptr ) {
 			auto errorMsg = tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" );
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
 			delete node;
 			return;
 		}
@@ -227,7 +224,7 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		if( drawNodeWidget->addNode( node, refNdoeInfo ) == false ) {
 			auto errorMsg = tr( "节点添加失败[DrawNodeWidget::addNode( Node *add_node )]" );
 			printerDirector->error( errorMsg );
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg, Create_SrackInfo( ) );
 			delete node;
 			delete refNdoeInfo;
 			return;
@@ -235,16 +232,27 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		if( node->parent( ) != drawNodeWidget ) {
 			auto errorMsg = tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" );
 			printerDirector->error( errorMsg );
-			emit error_create_signal( node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
+			delete node;
+			delete refNdoeInfo;
+			return;
+		}
+		if( node->updateLayout( ) == false ) {
+			auto errorMsg = tr( "节点布局更新失败[%1::updateLayout()]" );
+			printerDirector->error( errorMsg.arg( node->metaObject( )->className( ) ) );
+			emit error_create_node_signal( node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
 			delete node;
 			delete refNdoeInfo;
 			return;
 		}
 		refNodeVector.emplace_back( node, refNdoeInfo );
-		connect( node, &Node::error_node_signal, this, &NodeDirector::error_node_signal );
-		connect( node, &Node::advise_node_signal, this, &NodeDirector::advise_node_signal );
-		connect( node, &Node::finish_node_signal, this, &NodeDirector::finish_node_signal );
+		connectNodeSignals( node );
 		node->show( );
 	} );
 	return true;
+}
+void NodeDirector::connectNodeSignals( Node *connect_obj_ptr ) {
+	connect( connect_obj_ptr, &Node::error_run_node_signal, this, &NodeDirector::error_run_node_signal );
+	connect( connect_obj_ptr, &Node::advise_run_node_signal, this, &NodeDirector::advise_run_node_signal );
+	connect( connect_obj_ptr, &Node::finish_run_node_signal, this, &NodeDirector::finish_run_node_signal );
 }
