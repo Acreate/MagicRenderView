@@ -24,10 +24,13 @@ void DrawNodeWidget::removeVector( Node *remove_node ) {
 		auto nodeArrayPtr = nodeVector.data( );
 		for( ; index < count; ++index )
 			if( nodeArrayPtr[ index ] == remove_node ) {
-				--count;
+				++index;
 				for( ; index < count; ++index )
-					nodeArrayPtr[ index ] = nodeArrayPtr[ index + 1 ];
-				nodeArrayPtr[ index ] = nullptr;
+					if( nodeArrayPtr[ index ] == nullptr )
+						break;
+					else
+						nodeArrayPtr[ index - 1 ] = nodeArrayPtr[ index ];
+				nodeArrayPtr[ index - 1 ] = nullptr;
 				return;
 			}
 	}
@@ -66,20 +69,43 @@ DrawNodeWidget::~DrawNodeWidget( ) {
 	size_t count = nodeVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;
-		auto nodeArrayPtr = nodeVector.data( );
-		for( ; index < count; ++index ) {
-			Node *node = nodeArrayPtr[ index ];
-			nodeArrayPtr[ index ] = nullptr;
-			delete node;
-		}
+		auto buff = nodeVector;
+		nodeVector.clear( );
+		auto nodeArrayPtr = buff.data( );
+		for( ; index < count; ++index )
+			if( nodeArrayPtr[ index ] == nullptr )
+				break;
+			else
+				delete nodeArrayPtr[ index ];
 	}
 }
 bool DrawNodeWidget::addNode( Node *add_node, NodeRefLinkInfo *node_ref_link_info ) {
 	if( add_node->init( this, node_ref_link_info ) == false )
 		return false;
 	QPoint fromGlobal = mapFromGlobal( menuPopPoint );
+	if( fromGlobal.x( ) < 0 )
+		fromGlobal.setX( 0 );
+	if( fromGlobal.y( ) < 0 )
+		fromGlobal.setY( 0 );
 	add_node->move( fromGlobal );
 	appendVector( add_node );
 	connect( add_node, &Node::release_node_signal, this, &DrawNodeWidget::removeVector );
 	return true;
+}
+bool DrawNodeWidget::getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info ) {
+	size_t count = nodeVector.size( );
+	if( count == 0 )
+		return false;
+	size_t index = 0;
+	auto nodeArrayPtr = nodeVector.data( );
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ] == nullptr )
+			return false;
+		else if( nodeArrayPtr[ index ]->geometry( ).contains( click_point ) == true ) {
+			auto mapFromParent = nodeArrayPtr[ index ]->mapFromParent( click_point );
+			if( nodeArrayPtr[ index ]->getPointInfo( mapFromParent, result_node_click_info ) == false )
+				return false;
+			return true;
+		}
+	return false;
 }

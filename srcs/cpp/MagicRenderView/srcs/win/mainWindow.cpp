@@ -25,21 +25,17 @@ bool MainWindow::init( ) {
 	hide( );
 	instancePtr = Application::getInstancePtr( );
 	nodeDirector = instancePtr->getNodeDirector( );
-	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
 	drawLinkWidget = mainWidget->getDrawLinkWidget( );
 	return true;
 }
 MainWindow::~MainWindow( ) {
-	delete drawNodeWidget;
-	delete drawLinkWidget;
-	delete mainWidget;
 	delete mainWidgetScrollArea;
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
-	drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
-	nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
+
+
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );

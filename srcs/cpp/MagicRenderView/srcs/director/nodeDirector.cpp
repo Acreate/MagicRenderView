@@ -126,9 +126,7 @@ Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *
 	connectNodeSignals( node );
 	return node;
 }
-NodeClickInfo * NodeDirector::getNodeAtPos( const QPoint &point ) {
-	return nullptr;
-}
+
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
 	auto nodeStackName = node_stack_ptr->objectName( );
 	size_t count = node_stack_ptr->nodeGenerate.size( );

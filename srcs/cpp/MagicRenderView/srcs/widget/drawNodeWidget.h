@@ -9,6 +9,7 @@
 class Node;
 class Application;
 class NodeDirector;
+class NodeClickInfo;
 class DrawNodeWidget : public QWidget {
 	Q_OBJECT;
 	friend class MainWidget;
@@ -27,6 +28,7 @@ public:
 	~DrawNodeWidget( ) override;
 	virtual bool addNode( Node *add_node, NodeRefLinkInfo *node_ref_link_info );
 	virtual const QPoint & getMenuPopPoint( ) const { return menuPopPoint; }
+	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
 };
 
 #endif // DRAWNODEWIDGET_H_H_HEAD__FILE__

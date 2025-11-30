@@ -18,7 +18,6 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
-	QMenu *nodeCreateMenu;
 protected:
 	MainWindow( );
 	virtual bool init( );

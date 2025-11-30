@@ -58,6 +58,56 @@ bool Node::appendOutputPort( OutputPort *output_port ) {
 	outputPortVector.emplace_back( output_port );
 	return true;
 }
+bool Node::getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info ) {
+	auto geometry = titileWidget->geometry( );
+	if( geometry.contains( point ) ) {
+		result_node_click_info.clickType = NodeEnum::NodeClickType::Titile;
+		result_node_click_info.inputPort = nullptr;
+		result_node_click_info.outputPort = nullptr;
+		result_node_click_info.clickNode = this;
+		return true;
+	}
+	geometry = connectWidget->geometry( );
+	if( geometry.contains( point ) ) {
+		result_node_click_info.clickNode = this;
+		auto mapFromParent = connectWidget->mapFromParent( point );
+		geometry = inputPortWidget->geometry( );
+		if( geometry.contains( mapFromParent ) ) {
+			result_node_click_info.outputPort = nullptr;
+			mapFromParent = inputPortWidget->mapFromParent( mapFromParent );
+			size_t count = inputPortVector.size( );
+			auto inputPortArrayPtr = inputPortVector.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( inputPortArrayPtr[ index ]->geometry( ).contains( mapFromParent ) ) {
+					result_node_click_info.inputPort = inputPortArrayPtr[ index ];
+					result_node_click_info.clickType = NodeEnum::NodeClickType::InputPort;
+					return true;
+				}
+			result_node_click_info.clickType = NodeEnum::NodeClickType::None;
+			return true;
+		}
+		geometry = outputPortWidget->geometry( );
+		if( geometry.contains( mapFromParent ) ) {
+			mapFromParent = outputPortWidget->mapFromParent( mapFromParent );
+			result_node_click_info.inputPort = nullptr;
+			size_t count = outputPortVector.size( );
+			auto outputPortArrayPtr = outputPortVector.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( outputPortArrayPtr[ index ]->geometry( ).contains( mapFromParent ) ) {
+					result_node_click_info.outputPort = outputPortArrayPtr[ index ];
+					result_node_click_info.clickType = NodeEnum::NodeClickType::OutputPort;
+					return true;
+				}
+			result_node_click_info.clickType = NodeEnum::NodeClickType::None;
+			return true;
+		}
+		result_node_click_info.clickType = NodeEnum::NodeClickType::None;
+		result_node_click_info.clickNode = this;
+		return true;
+	}
+
+	return false;
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )

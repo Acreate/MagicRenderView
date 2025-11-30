@@ -67,7 +67,7 @@ protected:
 	/// @brief 节点输出布局
 	QVBoxLayout *outputPortWidgetLayout;
 	/// @brief 节点边缘
-	int nodeBorderWidth ;
+	int nodeBorderWidth;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -77,6 +77,8 @@ public:
 	virtual const NodeRefLinkInfo & getNodeRefLinkInfoPtr( ) const { return *nodeRefLinkInfoPtr; }
 	virtual bool updateLayout( );
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
+	virtual const QString & getNodeName( ) const { return nodeName; }
+	virtual bool getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info );
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

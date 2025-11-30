@@ -1,4 +1,6 @@
 ﻿#include "mainWidget.h"
+
+#include <QMenu>
 #include <QResizeEvent>
 
 #include "drawLinkWidget.h"
@@ -7,29 +9,50 @@
 
 #include "../app/application.h"
 
+#include "../director/nodeDirector.h"
+
 #include "../node/node/node.h"
 
-MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ) {
+#include "../win/mainWindow.h"
 
+MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ), clickInfoPtr( nullptr ) {
+
+}
+MainWidget::~MainWidget( ) {
+	if( drawLinkWidget )
+		delete drawLinkWidget;
+	if( drawNodeWidget )
+		delete drawNodeWidget;
+	if( clickInfoPtr )
+		delete clickInfoPtr;
 }
 bool MainWidget::ensureVisible( Node *target ) {
 	if( target->parent( ) != drawNodeWidget )
 		return false;
 	auto point = target->pos( );
+	auto toGlobal = drawNodeWidget->mapToGlobal( point );
+	auto fromGlobal = mainWindow->mapFromGlobal( toGlobal );
+	int fromGlobalX = fromGlobal.x( );
+	int fromGlobalY = fromGlobal.y( );
 	QSize renderSize = target->size( );
-	int w = renderSize.width( ) + point.x( );
-	int h = renderSize.height( ) + point.y( );
+	if( fromGlobalX < 0 || fromGlobalY < 0 ) {
+		fromGlobal = drawNodeWidget->mapFromGlobal( toGlobal );
+		mainWidgetScrollArea->ensureVisible( fromGlobal.x( ), fromGlobal.y( ) );
+		return true;
+	}
+	fromGlobalX = renderSize.width( ) + point.x( );
+	fromGlobalY = renderSize.height( ) + point.y( );
 	renderSize = size( );
 	int oldW = renderSize.width( );
 	int oldH = renderSize.height( );
-	if( oldW > w )
-		w = oldW;
-	if( oldH > h )
-		h = oldH;
-	if( oldW == w && oldH == h )
+	if( oldW > fromGlobalX )
+		fromGlobalX = oldW;
+	if( oldH > fromGlobalY )
+		fromGlobalY = oldH;
+	if( oldW == fromGlobalX && oldH == fromGlobalY )
 		return true;
-	setMinimumSize( w, h );
-	mainWidgetScrollArea->ensureVisible( w, h );
+	setMinimumSize( fromGlobalX, fromGlobalY );
+	mainWidgetScrollArea->ensureVisible( fromGlobalX, fromGlobalY );
 	return true;
 }
 bool MainWidget::init( ) {
@@ -37,10 +60,15 @@ bool MainWidget::init( ) {
 		delete drawLinkWidget;
 	if( drawNodeWidget )
 		delete drawNodeWidget;
+	if( clickInfoPtr )
+		delete clickInfoPtr;
+	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
 	drawLinkWidget = new DrawLinkWidget( this );
 	drawNodeWidget = new DrawNodeWidget( this );
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
+	mainWindow = appInstancePtr->getMainWindow( );
+	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
 	return true;
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
@@ -50,4 +78,26 @@ void MainWidget::resizeEvent( QResizeEvent *event ) {
 	drawLinkWidget->resize( newSize );
 	drawNodeWidget->raise( );
 	drawLinkWidget->raise( );
+}
+void MainWidget::mousePressEvent( QMouseEvent *event ) {
+	QWidget::mousePressEvent( event );
+
+}
+void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
+	QWidget::mouseMoveEvent( event );
+}
+void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
+	QWidget::mouseReleaseEvent( event );
+
+	Qt::MouseButton mouseButton = event->button( );
+	switch( mouseButton ) {
+		case Qt::LeftButton :
+			break;
+		case Qt::RightButton :
+			drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
+			nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
+			break;
+		case Qt::MiddleButton :
+			break;
+	}
 }

@@ -11,7 +11,6 @@ class DrawNodeWidget;
 namespace path {
 	class pathTree;
 }
-class NodeClickInfo;
 class OutputPort;
 class QAction;
 class InputPort;
@@ -51,7 +50,6 @@ public:
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget );
-	virtual NodeClickInfo * getNodeAtPos( const QPoint &point );
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
