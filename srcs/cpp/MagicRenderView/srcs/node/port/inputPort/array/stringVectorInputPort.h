@@ -1,19 +1,15 @@
 ﻿#ifndef STRINGVECTORINPUTPORT_H_H_HEAD__FILE__
 #define STRINGVECTORINPUTPORT_H_H_HEAD__FILE__
 #pragma once
-#include "../inputPort.h"
+#include "../arrayTypeInputPort.h"
 
-class StringVectorInputPort : public InputPort {
+class StringVectorInputPort : public ArrayTypeInputPort {
 	Q_OBJECT;
 public:
-	StringVectorInputPort( Application *const instance_ptr, VarDirector *const var_director, const QString &name, Node *const node, QWidget *const parent )
-		: InputPort( instance_ptr, var_director, name, node, parent ) { }
-	bool init( ) override {
-		return true;
-	}
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Array;
-	}
+	StringVectorInputPort( const QString &name )
+		: ArrayTypeInputPort( name ) { }
+
+	bool init( Node *parent ) override;
 };
 
 #endif // STRINGVECTORINPUTPORT_H_H_HEAD__FILE__

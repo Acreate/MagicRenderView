@@ -18,12 +18,12 @@ protected:
 protected:
 	virtual bool init( );
 private:
-	std::vector< std::pair< QString, std::function< Node *( ) > > > nodeGenerate;
+	std::vector< std::pair< QString, std::function< Node *( const QString & ) > > > nodeGenerate;
 protected:
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
 protected:
-	virtual bool appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function );
+	virtual bool appendNodeGenerateUnity( const QString &name, const std::function< Node *( const QString & ) > &generate_function );
 public:
 	NodeStack( QObject *parent = nullptr );
 	~NodeStack( ) override;

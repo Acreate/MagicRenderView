@@ -1,6 +1,9 @@
 ﻿#include "node.h"
 
 #include <QPainter>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include <app/application.h>
 
@@ -13,46 +16,62 @@
 
 #include "../../srack/srackInfo.h"
 
+#include "../../widget/drawNodeWidget.h"
+
 Node::~Node( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );
+	if( mainLayout )
+		delete mainLayout;
+	if( titileWidget )
+		delete titileWidget;
+	if( connectWidget )
+		delete connectWidget;
+}
+Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) { }
+bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
-	InputPort **inputPortArrayPtr;
-	OutputPort **outputPortArrayPtr;
+	InputPort **outputPortArrayPtr;
 	count = inputPortVector.size( );
 	if( count != 0 ) {
-		inputPortArrayPtr = inputPortVector.data( );
+		outputPortArrayPtr = inputPortVector.data( );
 		for( index = 0; index < count; ++index )
-			delete inputPortArrayPtr[ index ];
+			if( outputPortArrayPtr[ index ] == input_port )
+				return true;
 	}
-	count = outputPortVector.size( );
-	if( count != 0 ) {
-		outputPortArrayPtr = outputPortVector.data( );
-		for( index = 0; index < count; ++index )
-			delete outputPortArrayPtr[ index ];
-	}
-
-}
-Node::Node( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) { }
-bool Node::appendInputPort( InputPort *input_port ) {
-
+	if( input_port->init( this ) == false )
+		return false;
+	inputPortVector.emplace_back( input_port );
 	return true;
 }
 bool Node::appendOutputPort( OutputPort *output_port ) {
 	size_t count, index;
 	OutputPort **outputPortArrayPtr;
-	count = inputPortVector.size( );
+	count = outputPortVector.size( );
 	if( count != 0 ) {
 		outputPortArrayPtr = outputPortVector.data( );
 		for( index = 0; index < count; ++index )
 			if( outputPortArrayPtr[ index ] == output_port )
 				return true;
 	}
-	output_port->setParent( this );
+	if( output_port->init( this ) == false )
+		return false;
 	outputPortVector.emplace_back( output_port );
 	return true;
 }
+void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
+	change_var_output_port->varTypeName = var_type_name;
+	if( change_var_output_port->varPtr )
+		varDirector->release( change_var_output_port->varPtr );
+	change_var_output_port->varPtr = var_type_varlue_ptr;
+}
+void Node::setPortVarInfo( InputPort *change_var_input_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
+	change_var_input_port->varTypeName = var_type_name;
+	if( change_var_input_port->varPtr )
+		varDirector->release( change_var_input_port->varPtr );
+	change_var_input_port->varPtr = var_type_varlue_ptr;
+}
 
-bool Node::init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
+bool Node::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
 	nodeRefLinkInfoPtr = node_ref_link_info;
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
@@ -73,7 +92,18 @@ bool Node::init( QWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
 			delete outputPortArrayPtr[ index ];
 		outputPortVector.clear( );
 	}
+
+	if( mainLayout )
+		delete mainLayout;
+	if( titileWidget )
+		delete titileWidget;
+	if( connectWidget )
+		delete connectWidget;
+	mainLayout = nullptr;
+	titileWidget = nullptr;
+	connectWidget = nullptr;
 	nodeFunction = [] ( VarDirector *var_director ) { };
+	setParent( parent );
 	return true;
 }
 
@@ -84,7 +114,7 @@ InputPort * Node::getInputPort( const QString &port_name ) const {
 	auto inputPortArrayPtr = inputPortVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( inputPortArrayPtr[ index ]->name == port_name )
+		if( inputPortArrayPtr[ index ]->portName == port_name )
 			return inputPortArrayPtr[ index ];
 	return nullptr;
 }
@@ -95,11 +125,76 @@ OutputPort * Node::getOutputPort( const QString &port_name ) const {
 	auto outputPortArrayPtr = outputPortVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( outputPortArrayPtr[ index ]->name == port_name )
+		if( outputPortArrayPtr[ index ]->portName == port_name )
 			return outputPortArrayPtr[ index ];
 	return nullptr;
+}
+bool Node::updateLayout( ) {
+	nodeBorderWidth = 5;
+	if( mainLayout )
+		delete mainLayout;
+	mainLayout = new QVBoxLayout( this );
+
+	mainLayout->setContentsMargins( nodeBorderWidth, nodeBorderWidth, nodeBorderWidth, nodeBorderWidth );
+	mainLayout->setSpacing( 0 );
+	if( titileWidget )
+		delete titileWidget;
+	titileWidget = new QWidget( this );
+	mainLayout->addWidget( titileWidget );
+	titileWidgetLayout = new QVBoxLayout( titileWidget );
+	titileWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	titileWidgetLayout->setSpacing( 0 );
+	titileWidget->setLayout( titileWidgetLayout );
+	titileLabel = new QLabel( nodeName, titileWidget );
+	titileWidgetLayout->addWidget( titileLabel );
+
+	if( connectWidget )
+		delete connectWidget;
+	connectWidget = new QWidget( this );
+	mainLayout->addWidget( connectWidget );
+	connectWidgetLayout = new QHBoxLayout( connectWidget );
+	connectWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	connectWidgetLayout->setSpacing( nodeBorderWidth * 2 );
+
+	inputPortWidget = new QWidget( connectWidget );
+	connectWidgetLayout->addWidget( inputPortWidget );
+	inputPortWidgetLayout = new QVBoxLayout( inputPortWidget );
+	inputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	inputPortWidgetLayout->setSpacing( 0 );
+	size_t count = inputPortVector.size( );
+	size_t index;
+	auto inputPortArrayPtr = inputPortVector.data( );
+	for( index = 0; index < count; ++index ) {
+		inputPortArrayPtr[ index ]->setParent( inputPortWidget );
+		inputPortWidgetLayout->addWidget( inputPortArrayPtr[ index ], 0, Qt::AlignLeft | Qt::AlignHCenter );
+	}
+
+	outputPortWidget = new QWidget( connectWidget );
+	connectWidgetLayout->addWidget( outputPortWidget );
+	outputPortWidgetLayout = new QVBoxLayout( outputPortWidget );
+	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	outputPortWidgetLayout->setSpacing( 0 );
+	count = outputPortVector.size( );
+	auto outputPortArrayPtr = outputPortVector.data( );
+	for( index = 0; index < count; ++index ) {
+		outputPortArrayPtr[ index ]->setParent( outputPortWidget );
+		outputPortWidgetLayout->addWidget( outputPortArrayPtr[ index ], 0, Qt::AlignRight | Qt::AlignHCenter );
+	}
+
+	return true;
 }
 
 void Node::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
+	QPainter painter( this );
+	QRect rect = contentsRect( );
+	int height = rect.height( );
+	int width = rect.width( );
+	//painter.fillRect( rect, QColor( 0xFFA900 ) );
+	auto pen = painter.pen( );
+	pen.setWidth( nodeBorderWidth );
+	painter.setPen( pen );
+	auto doublePenWidth = nodeBorderWidth / 2;
+	doublePenWidth = nodeBorderWidth - doublePenWidth;
+	painter.drawRect( doublePenWidth, doublePenWidth, width - nodeBorderWidth, height - nodeBorderWidth );
 }

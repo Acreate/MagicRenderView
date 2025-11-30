@@ -6,7 +6,8 @@
 class IfNode : public LogicNode {
 	Q_OBJECT;
 public:
-	IfNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	IfNode( const QString &node_name )
+		: LogicNode( node_name ) { }
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "逻辑/分支" ) );

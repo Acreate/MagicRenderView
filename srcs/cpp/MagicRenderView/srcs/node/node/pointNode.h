@@ -6,8 +6,8 @@
 class PointNode : public Node {
 	Q_OBJECT;
 public:
-	PointNode( QWidget *parent, const Qt::WindowFlags &f )
-		: Node( parent, f ) { }
+	PointNode( const QString &node_name )
+		: Node( node_name ) { }
 	NodeEnum::NodeType getNodeType( ) const override {
 		return NodeEnum::NodeType::Point;
 	}

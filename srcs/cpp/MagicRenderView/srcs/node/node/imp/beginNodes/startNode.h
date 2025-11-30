@@ -6,7 +6,9 @@
 class StartNode : public BeginNode {
 	Q_OBJECT;
 public:
-	StartNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	StartNode( const QString &node_name )
+		: BeginNode( node_name ) { }
+	bool init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) override;
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "起始/开始" ) );

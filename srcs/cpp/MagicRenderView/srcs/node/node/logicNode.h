@@ -6,8 +6,8 @@
 class LogicNode : public Node {
 	Q_OBJECT;
 public:
-	LogicNode( QWidget *parent, const Qt::WindowFlags &f )
-		: Node( parent, f ) { }
+	LogicNode( const QString &node_name )
+		: Node( node_name ) { }
 	NodeEnum::NodeType getNodeType( ) const override {
 		return NodeEnum::NodeType::Logic;
 	}

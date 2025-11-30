@@ -2,18 +2,13 @@
 #define INTINPUTPORT_H_H_HEAD__FILE__
 #pragma once
 
-#include "../inputPort.h"
+#include "../unityTypeInputPort.h"
 
-class IntInputPort : public InputPort {
+class IntInputPort : public UnityTypeInputPort {
 	Q_OBJECT;
 public:
-	IntInputPort( Application *const instance_ptr, VarDirector *const var_director, const QString &name, Node *const node, QWidget *const parent )
-		: InputPort( instance_ptr, var_director, name, node, parent ) { }
-	bool init( ) override {
-		return true;
-	}
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Unity;
-	}
+	IntInputPort( const QString &name )
+		: UnityTypeInputPort( name ) { }
+	bool init( Node *parent ) override;
 };
 #endif // INTINPUTPORT_H_H_HEAD__FILE__

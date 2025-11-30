@@ -6,7 +6,8 @@
 class MakeNode : public PointNode {
 	Q_OBJECT;
 public:
-	MakeNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	MakeNode( const QString &node_name )
+		: PointNode( node_name ) { }
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "记录/记录位置" ) );

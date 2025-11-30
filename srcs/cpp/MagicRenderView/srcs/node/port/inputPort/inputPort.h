@@ -5,6 +5,8 @@
 #include <QWidget>
 
 #include <enums/nodeEnum.h>
+class QHBoxLayout;
+class QLabel;
 class Application;
 class VarDirector;
 class OutputPort;
@@ -20,20 +22,22 @@ private:
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
-	QString name;
-	Node *node;
+protected:
+	QString portName;
 	QString varTypeName;
 	void *varPtr;
-	std::vector< OutputPort * > linkThisOutputPortVector;
+protected:
+	QLabel *ico;
+	QLabel *showTitle;
+	QHBoxLayout *mainLayout;
 public:
-	InputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QWidget *parent = nullptr );
-	virtual bool init( ) = 0;
+	InputPort( const QString &name );
+	virtual bool init( Node *parent );
 	~InputPort( ) override;
 	virtual NodeEnum::PortType getPortType( ) const =0;
-Q_SIGNALS:
-	/// @brief 节点被释放信号
-	/// @param release_node 释放指针
-	void release_node_signal( InputPort *release_node );
+	virtual const QString & getPortName( ) const { return portName; }
+	virtual const QString & getVarTypeName( ) const { return varTypeName; }
+	virtual void * getVarPtr( ) const { return varPtr; }
 };
 
 #endif // INPUTPORT_H_H_HEAD__FILE__

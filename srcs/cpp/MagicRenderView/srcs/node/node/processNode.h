@@ -6,8 +6,8 @@
 class ProcessNode : public Node {
 	Q_OBJECT;
 public:
-	ProcessNode( QWidget *const parent, const Qt::WindowFlags &f )
-		: Node( parent, f ) { }
+	ProcessNode( const QString &node_name )
+		: Node( node_name ) { }
 	NodeEnum::NodeType getNodeType( ) const override {
 		return NodeEnum::NodeType::Process;
 	}

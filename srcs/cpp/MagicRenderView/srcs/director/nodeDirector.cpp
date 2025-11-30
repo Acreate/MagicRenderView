@@ -191,12 +191,18 @@ bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list
 	}
 	return true;
 }
-bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function ) {
+bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function ) {
 	if( connect_qaction_ptr == nullptr || connect_qaction_fun_ptr == nullptr )
 		return false;
 	createNodeVector.emplace_back( node_type_name, action_click_function );
 	connect( connect_qaction_ptr, connect_qaction_fun_ptr, [this,action_click_function, node_type_name]( ) {
-		auto node = action_click_function( );
+		auto node = action_click_function( node_type_name );
+		if( node == nullptr ) {
+			auto errorMsg = tr( "无法匹配 [%1::%1(const QString& node_name)] 节点的创建函数" );
+			printerDirector->error( errorMsg.arg( node_type_name ) );
+			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
+			return;
+		}
 		MainWindow *mainWindow = instancePtr->getMainWindow( );
 		if( mainWindow == nullptr ) {
 			auto errorMsg = tr( "无法匹配主窗口[Application::]getMainWindow( )" );

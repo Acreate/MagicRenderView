@@ -6,8 +6,8 @@
 class GenerateNode : public Node {
 	Q_OBJECT;
 public:
-	GenerateNode( QWidget *const parent, const Qt::WindowFlags &f )
-		: Node( parent, f ) { }
+	GenerateNode( const QString &node_name )
+		: Node( node_name ) { }
 	NodeEnum::NodeType getNodeType( ) const override {
 		return NodeEnum::NodeType::Generate;
 	}

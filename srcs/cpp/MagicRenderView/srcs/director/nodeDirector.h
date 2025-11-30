@@ -33,7 +33,7 @@ protected:
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
-	std::vector< std::pair< QString, std::function< Node*( ) > > > createNodeVector;
+	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< std::pair< Node *, NodeRefLinkInfo * > * > refNodeVector;
 protected:
 	/// @brief 节点端口发生释放时，产生该信号
@@ -56,7 +56,7 @@ protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
-	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
+	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void connectNodeSignals( Node *connect_obj_ptr );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
 	virtual void appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo *append_node_ref_link_info );

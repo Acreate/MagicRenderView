@@ -13,7 +13,7 @@ bool NodeStack::init( ) {
 	nodeGenerate.clear( );
 	return true;
 }
-bool NodeStack::appendNodeGenerateUnity( const QString &name, const std::function< Node *( ) > &generate_function ) {
+bool NodeStack::appendNodeGenerateUnity( const QString &name, const std::function< Node *( const QString & ) > &generate_function ) {
 	nodeGenerate.emplace_back( std::pair( name, generate_function ) );
 	return true;
 }
@@ -27,6 +27,6 @@ Node * NodeStack::createNode( const QString &node_type_name ) {
 	auto nodeGenerateArrayPtr = nodeGenerate.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( nodeGenerateArrayPtr[ index ].first == node_type_name )
-			return nodeGenerateArrayPtr[ index ].second( );
+			return nodeGenerateArrayPtr[ index ].second( node_type_name );
 	return nullptr;
 }

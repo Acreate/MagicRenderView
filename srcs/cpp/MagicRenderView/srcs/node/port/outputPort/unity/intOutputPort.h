@@ -2,18 +2,14 @@
 #define INTOUTPUTPORT_H_H_HEAD__FILE__
 #pragma once
 #include "../outputPort.h"
+#include "../unityTypeOutputPort.h"
 
-class IntOutputPort : public OutputPort {
+class IntOutputPort : public UnityTypeOutputPort {
 	Q_OBJECT;
 public:
-	IntOutputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent )
-		: OutputPort( instance_ptr, var_director, name, node, parent ) { }
-	bool init( ) override {
-		return true;
-	}
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Unity;
-	}
+	IntOutputPort( const QString &name )
+		: UnityTypeOutputPort( name ) { }
+	bool init( Node *parent ) override;
 };
 
 #endif // INTOUTPUTPORT_H_H_HEAD__FILE__

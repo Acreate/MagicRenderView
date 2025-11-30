@@ -6,7 +6,8 @@
 class IntGenerateNode : public GenerateNode {
 	Q_OBJECT;
 public:
-	IntGenerateNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	IntGenerateNode( const QString &node_name )
+		: GenerateNode( node_name ) { }
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "生成/生成整数" ) );

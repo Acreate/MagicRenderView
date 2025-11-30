@@ -3,14 +3,18 @@
 #pragma once
 
 #include <QObject>
+#include <QWidget>
 
 #include <enums/nodeEnum.h>
 
+class QHBoxLayout;
+class QLabel;
+class SrackInfo;
 class InputPort;
 class Application;
 class VarDirector;
 class Node;
-class OutputPort : public QObject {
+class OutputPort : public QWidget {
 	Q_OBJECT;
 private:
 	friend class Node;
@@ -21,18 +25,20 @@ protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
 protected:
-	QString name;
-	Node *node;
+	QString portName;
 	QString varTypeName;
 	void *varPtr;
+protected:
+	QLabel *ico;
+	QLabel *showTitle;
+	QHBoxLayout *mainLayout;
 public:
-	OutputPort( Application *instance_ptr, VarDirector *var_director, const QString &name, Node *node, QObject *parent = nullptr );
+	OutputPort( const QString &name );
 	~OutputPort( ) override;
-	virtual bool init( ) =0;
+	virtual bool init( Node *parent );
 	virtual NodeEnum::PortType getPortType( ) const =0;
-Q_SIGNALS:
-	/// @brief 节点被释放信号
-	/// @param release_node 释放指针
-	void release_node_signal( OutputPort *release_node );
+	virtual const QString & getPortName( ) const { return portName; }
+	virtual const QString & getVarTypeName( ) const { return varTypeName; }
+	virtual void * getVarPtr( ) const { return varPtr; }
 };
 #endif // OUTPUTPORT_H_H_HEAD__FILE__

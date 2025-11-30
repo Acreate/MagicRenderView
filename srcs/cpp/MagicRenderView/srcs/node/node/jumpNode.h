@@ -6,8 +6,8 @@
 class JumpNode : public Node {
 	Q_OBJECT;
 public:
-	JumpNode( QWidget *parent, const Qt::WindowFlags &f )
-		: Node( parent, f ) { }
+	JumpNode( const QString &node_name )
+		: Node( node_name ) { }
 	NodeEnum::NodeType getNodeType( ) const override {
 		return NodeEnum::NodeType::Jump;
 	}
