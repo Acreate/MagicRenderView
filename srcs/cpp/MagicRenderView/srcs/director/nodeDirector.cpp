@@ -19,6 +19,7 @@
 
 #include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
+#include "../widget/mainWidgetScrollArea.h"
 
 #include "../win/mainWindow.h"
 
@@ -254,6 +255,21 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		appendRefNodeVectorAtNode( node, refNdoeInfo );
 		connectNodeSignals( node );
 		node->show( );
+		auto point = node->pos( );
+		QSize renderSize = node->size( );
+		int w = renderSize.width( ) + point.x( );
+		int h = renderSize.height( ) + point.y( );
+		renderSize = mainWindow->size( );
+		int oldW = renderSize.width( );
+		int oldH = renderSize.height( );
+
+		if( oldW > w )
+			w = oldW;
+		if( oldH > h )
+			h = oldH;
+		mainWidget->setMinimumSize( w, h );
+		MainWidgetScrollArea *mainWidgetScrollArea = mainWindow->getMainWidgetScrollArea( );
+		mainWidgetScrollArea->ensureVisible( w, h );
 	} );
 	return true;
 }
