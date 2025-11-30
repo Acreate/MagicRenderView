@@ -11,8 +11,10 @@
 
 #include <director/printerDirector.h>
 
+#include "../../srack/srackInfo.h"
+
 Node::~Node( ) {
-	emit release_node_signal( this );
+	emit release_node_signal( this, Create_SrackInfo( ) );
 	size_t count, index;
 	InputPort **inputPortArrayPtr;
 	OutputPort **outputPortArrayPtr;

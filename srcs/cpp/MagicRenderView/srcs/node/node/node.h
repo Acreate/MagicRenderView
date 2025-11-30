@@ -56,10 +56,12 @@ protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "未实现" ) );
+	// 信号
 Q_SIGNALS:
-	/// @brief 节点被释放信号
-	/// @param release_node 释放指针
-	void release_node_signal( Node *release_node );
+	/// @brief 释放对象产生信号
+	/// @param release_node 释放对象指针
+	/// @param srack_info 信号行
+	void release_node_signal( Node *release_node, const SrackInfo &srack_info );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param error_type 错误类型
@@ -67,10 +69,12 @@ Q_SIGNALS:
 	/// @param srack_info 堆栈信息
 	void error_run_node_signal( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info );
 	/// @brief 建议节点信号
+	/// @param signal_obj_ptr 信号对象指针
 	/// @param advise_node 建议节点
+	/// @param advise_type 建议类型
 	/// @param advise_msg 建议消息
 	/// @param srack_info 堆栈信息
-	void advise_run_node_signal( Node *advise_node, const QString &advise_msg, const SrackInfo &srack_info );
+	void advise_run_node_signal( NodeDirector *signal_obj_ptr, Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
 	/// @brief 节点完成运行信号
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息

@@ -2,6 +2,8 @@
 
 #include <QDir>
 
+#include "../../auto_generate_files/macro/cmake_to_c_cpp_header_env.h"
+
 #include "../app/application.h"
 
 path::pathTree::~pathTree( ) {
@@ -131,6 +133,9 @@ QStringList path::normalPathSeparatorSplitPath( const QString &normal_target_pat
 	}
 	buff.resize( buffIndex );
 	return buff;
+}
+QString path::relativeRootFilePath( const QString &file_path ) {
+	return QDir( Cmake_Source_Dir ).relativeFilePath( file_path );
 }
 
 bool path::createFile( const QString &create_file_path_name ) {
