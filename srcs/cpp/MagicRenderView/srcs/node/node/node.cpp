@@ -27,7 +27,9 @@ Node::~Node( ) {
 	if( connectWidget )
 		delete connectWidget;
 }
-Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) { }
+Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
+	hide( );
+}
 bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
 	InputPort **outputPortArrayPtr;

@@ -13,6 +13,7 @@
 #include "../widget/mainWidgetScrollArea.h"
 
 MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
+	hide( );
 }
 bool MainWindow::init( ) {
 	if( mainWidgetScrollArea )
@@ -22,7 +23,6 @@ bool MainWindow::init( ) {
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 	if( mainWidget->init( ) == false )
 		return false;
-	hide( );
 	instancePtr = Application::getInstancePtr( );
 	nodeDirector = instancePtr->getNodeDirector( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
@@ -34,7 +34,6 @@ MainWindow::~MainWindow( ) {
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
-
 
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {

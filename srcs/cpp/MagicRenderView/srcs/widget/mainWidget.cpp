@@ -36,8 +36,7 @@ bool MainWidget::ensureVisible( Node *target ) {
 	int fromGlobalY = fromGlobal.y( );
 	QSize renderSize = target->size( );
 	if( fromGlobalX < 0 || fromGlobalY < 0 ) {
-		fromGlobal = drawNodeWidget->mapFromGlobal( toGlobal );
-		mainWidgetScrollArea->ensureVisible( fromGlobal.x( ), fromGlobal.y( ) );
+		mainWidgetScrollArea->ensureVisible( point.x( ), point.y( ) );
 		return true;
 	}
 	fromGlobalX = renderSize.width( ) + point.x( );
@@ -92,6 +91,9 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
+			if( drawNodeWidget->getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
+				ensureVisible( clickInfoPtr->getClickNode( ) );
+			}
 			break;
 		case Qt::RightButton :
 			drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
