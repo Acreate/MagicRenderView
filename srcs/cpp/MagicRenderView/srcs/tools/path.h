@@ -9,12 +9,14 @@ namespace path {
 	class pathTree {
 		friend class friendPathTree;
 		QString name;
+		pathTree *parentPathTree;
 		std::vector< pathTree * > subPath;
 	public:
 		virtual ~pathTree( );
 		pathTree( const QString &root_file_name );
 		virtual const QString & getName( ) const { return name; }
 		virtual const std::vector< pathTree * > & getSubPath( ) const { return subPath; }
+		virtual void getAbsolutePath( QString &result_absolute_path );
 		virtual bool appSubPath( const QString &sub_file_path );
 		virtual QString toQString( const size_t index = 0, const QChar fill_char = '\t' ) const;
 	};

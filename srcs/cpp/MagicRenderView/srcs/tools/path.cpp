@@ -13,7 +13,7 @@ path::pathTree::~pathTree( ) {
 	for( ; index < count; ++index )
 		delete arrayPtr[ index ];
 }
-path::pathTree::pathTree( const QString &root_file_name ) {
+path::pathTree::pathTree( const QString &root_file_name ) : parentPathTree( nullptr ) {
 	auto pathSeparator = path::normalPathSeparatorSplitPath( root_file_name );
 	qsizetype count = pathSeparator.size( );
 	if( count == 0 )
@@ -30,6 +30,17 @@ path::pathTree::pathTree( const QString &root_file_name ) {
 		auto subTree = new pathTree( pointer[ index ] );
 		controlPathTreePtr->subPath.emplace_back( subTree );
 		controlPathTreePtr = subTree;
+	}
+}
+void path::pathTree::getAbsolutePath( QString &result_absolute_path ) {
+	result_absolute_path.clear( );
+
+	auto contrlPtr = this;
+	result_absolute_path = contrlPtr->name;
+	contrlPtr = contrlPtr->parentPathTree;
+	while( contrlPtr ) {
+		result_absolute_path = contrlPtr->name + '/' + result_absolute_path;
+		contrlPtr = contrlPtr->parentPathTree;
 	}
 }
 bool path::pathTree::appSubPath( const QString &sub_file_path ) {
@@ -56,6 +67,7 @@ bool path::pathTree::appSubPath( const QString &sub_file_path ) {
 		if( subIndex != subCount )
 			continue; // 目录已经存在
 		newPathTreePtr = new pathTree( appendName );
+		newPathTreePtr->parentPathTree = currentPathTreePtr;
 		currentPathTreePtr->subPath.emplace_back( newPathTreePtr );
 		currentPathTreePtr = newPathTreePtr;
 	}

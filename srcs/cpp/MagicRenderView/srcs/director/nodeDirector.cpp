@@ -13,6 +13,8 @@
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
 
+#include "../tools/path.h"
+
 #include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
 
@@ -50,14 +52,18 @@ bool NodeDirector::init( ) {
 		}
 	// 初始化菜单
 	nodeCreateMenu = new QMenu;
+	std::list< std::pair< QString, QAction * > > actionMap;
 	for( index = 0; index < count; ++index ) {
 		connect( nodeStackArrayPtr[ index ], &NodeStack::finish_create_signal, this, &NodeDirector::finish_create_signal );
 		connect( nodeStackArrayPtr[ index ], &NodeStack::error_create_signal, this, &NodeDirector::error_create_signal );
 
-		QMenu *generateCreateMenu = fromNodeGenerateCreateMenu( nodeStackArrayPtr[ index ] );
+		QMenu *generateCreateMenu = fromNodeGenerateCreateMenu( nodeStackArrayPtr[ index ], actionMap );
 		if( generateCreateMenu == nullptr )
 			continue;
+		if( connectNodeAction( nodeStackArrayPtr[ index ], actionMap ) == false )
+			delete generateCreateMenu;
 		this->nodeCreateMenu->addMenu( generateCreateMenu );
+		actionMap.clear( );
 	}
 	connect( this, &NodeDirector::release_link_signal, this, &NodeDirector::releaseLink );
 	connect( this, &NodeDirector::create_link_signal, this, &NodeDirector::createLink );
@@ -108,12 +114,66 @@ Node * NodeDirector::createNode( const QString &stack_name, const QString &node_
 NodeClickInfo * NodeDirector::getNodeAtPos( const QPoint &point ) {
 	return nullptr;
 }
-QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) {
-	return nullptr;
+QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
+	auto nodeStackName = node_stack_ptr->objectName( );
+	size_t count = node_stack_ptr->nodeGenerate.size( );
+	auto data = node_stack_ptr->nodeGenerate.data( );
+	size_t index = 0;
+	path::pathTree pathTree( nodeStackName );
+	for( ; index < count; ++index )
+		pathTree.appSubPath( data[ index ].first );
+	if( pathTree.getSubPath( ).size( ) == 0 )
+		return nullptr;
+	nodeStackName = pathTree.getName( );
+	QMenu *resultMenu = new QMenu( nodeStackName );
+	fromPathTreeGenerateCreateaAction( &pathTree, resultMenu, result_action_map );
+	return resultMenu;
+}
+bool NodeDirector::fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map ) {
+	auto pathTreeSubPath = path_tree->getSubPath( );
+	size_t subPathCount = pathTreeSubPath.size( );
+	if( subPathCount == 0 )
+		return false;
+
+	auto pathTreeSubPathTree = pathTreeSubPath.data( );
+	size_t subPathIndex = 0;
+	QString name;
+	QAction *addAction;
+	std::list< path::pathTree * > subPathTree;
+	for( ; subPathIndex < subPathCount; ++subPathIndex )
+		if( pathTreeSubPathTree[ subPathIndex ]->getSubPath( ).size( ) == 0 ) {
+			name = pathTreeSubPathTree[ subPathIndex ]->getName( );
+			addAction = parent_menu->addAction( name );
+			pathTreeSubPathTree[ subPathIndex ]->getAbsolutePath( name );
+			result_action_map.emplace_back( name, addAction );
+		} else
+			subPathTree.emplace_back( pathTreeSubPathTree[ subPathIndex ] );
+	for( auto &forreachPathTree : subPathTree ) {
+		name = forreachPathTree->getName( );
+		auto topMenu = parent_menu->addMenu( name );
+		NodeDirector::fromPathTreeGenerateCreateaAction( forreachPathTree, topMenu, result_action_map );
+	}
+	return true;
 }
 
-bool NodeDirector::createMenuAtNodeType( NodeStack *node_stack_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function ) {
+bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map ) {
+	auto rootName = node_stack_ptr->objectName( );
+	auto nodeGenerate = node_stack_ptr->nodeGenerate;
+	size_t count = nodeGenerate.size( );
+	auto data = nodeGenerate.data( );
+	size_t index;
+	for( index = 0; index < count; ++index )
+		data[ index ].first = rootName + '/' + data[ index ].first;
 
+	for( auto &[ findName, actionPtr ] : action_map ) {
+		for( index = 0; index < count; ++index )
+			if( data[ index ].first == findName )
+				break;
+		if( index == count )
+			return false;
+		if( connectCreateNodeAction( node_stack_ptr, actionPtr, &QAction::triggered, findName, data[ index ].second ) == false )
+			return false;
+	}
 	return true;
 }
 bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function ) {

@@ -6,11 +6,8 @@
 class ResultNode : public EndNode {
 	Q_OBJECT;
 public:
-	ResultNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) )
-		: EndNode( parent, f ) { }
-	bool updateLayout( ) override {
-		return true;
-	}
+	ResultNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "结束/返回" ) );
 

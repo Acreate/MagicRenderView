@@ -5,6 +5,9 @@
 
 #include <enums/nodeEnum.h>
 
+namespace path {
+	class pathTree;
+}
 class NodeClickInfo;
 class OutputPort;
 class QAction;
@@ -45,8 +48,9 @@ public:
 	virtual Node * createNode( const QString &stack_name, const QString &node_type_name );
 	virtual NodeClickInfo * getNodeAtPos( const QPoint &point );
 protected:
-	QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
-	bool createMenuAtNodeType( NodeStack *node_stack_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
+	QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
+	bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
+	bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 Q_SIGNALS:
 	/// @brief 节点被释放信号

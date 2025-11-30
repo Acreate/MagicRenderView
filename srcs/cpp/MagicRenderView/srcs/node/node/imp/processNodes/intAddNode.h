@@ -6,11 +6,8 @@
 class IntAddNode : public ProcessNode {
 	Q_OBJECT;
 public:
-	IntAddNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) )
-		: ProcessNode( parent, f ) { }
-	bool updateLayout( ) override {
-		return true;
-	}
+	IntAddNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "数值运算/整数加法" ) );
 };

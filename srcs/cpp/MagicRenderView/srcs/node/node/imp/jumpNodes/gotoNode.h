@@ -6,11 +6,8 @@
 class GotoNode : public JumpNode{
 	Q_OBJECT;
 public:
-	GotoNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) )
-		: JumpNode( parent, f ) { }
-	bool updateLayout( ) override {
-		return true;
-	}
+	GotoNode( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
 };
