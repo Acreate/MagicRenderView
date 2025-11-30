@@ -69,12 +69,11 @@ Q_SIGNALS:
 	/// @param srack_info 堆栈信息
 	void error_run_node_signal( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info );
 	/// @brief 建议节点信号
-	/// @param signal_obj_ptr 信号对象指针
 	/// @param advise_node 建议节点
 	/// @param advise_type 建议类型
 	/// @param advise_msg 建议消息
 	/// @param srack_info 堆栈信息
-	void advise_run_node_signal( NodeDirector *signal_obj_ptr, Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
+	void advise_run_node_signal( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
 	/// @brief 节点完成运行信号
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息

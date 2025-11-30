@@ -26,7 +26,7 @@ bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
-	releaseMenu( );
+	releaseResources( );
 	if( nodeVarDirector )
 		delete nodeVarDirector;
 	nodeVarDirector = new VarDirector;
@@ -37,13 +37,6 @@ bool NodeDirector::init( ) {
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
-	count = refNodeVector.size( );
-	if( count != 0 ) {
-		auto pair = refNodeVector.data( );
-		for( index = 0; index < count; ++index )
-			delete pair[ index ].second;
-		refNodeVector.clear( );
-	}
 
 	// 这里加入节点窗口创建函数
 	nodeStacks.emplace_back( new BaseNodeStack( ) );
@@ -83,31 +76,38 @@ void NodeDirector::createLink( InputPort *signal_port, OutputPort *target_prot )
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ), nodeVarDirector( nullptr ) {
 
 }
-void NodeDirector::releaseMenu( ) {
-	auto count = nodeStacks.size( );
+void NodeDirector::releaseResources( ) {
+	size_t count = nodeStacks.size( );
+	size_t index;
 	if( count ) {
 		auto nodeStackArrayPtr = nodeStacks.data( );
-		for( decltype(count) index = 0; index < count; ++index )
+		for( index = 0; index < count; ++index )
 			delete nodeStackArrayPtr[ index ];
 		nodeStacks.clear( );
 	}
 	if( nodeCreateMenu )
 		delete nodeCreateMenu;
 	nodeCreateMenu = nullptr;
+
+	count = refNodeVector.size( );
+	if( count != 0 ) {
+		auto buff = refNodeVector;
+		refNodeVector.clear( );
+		auto pair = buff.data( );
+		for( index = 0; index < count; ++index )
+			if( pair[ index ] == nullptr )
+				break;
+			else {
+				delete pair[ index ]->second;
+				delete pair[ index ];
+			}
+	}
 }
 NodeDirector::~NodeDirector( ) {
-	releaseMenu( );
+	releaseResources( );
 	if( nodeVarDirector )
 		delete nodeVarDirector;
 
-	size_t count;
-	size_t index;
-	count = refNodeVector.size( );
-	if( count != 0 ) {
-		auto pair = refNodeVector.data( );
-		for( index = 0; index < count; ++index )
-			delete pair[ index ].second;
-	}
 }
 Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget ) {
 	if( draw_node_widget == nullptr || node_type_name.isEmpty( ) )
@@ -121,7 +121,7 @@ Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *
 		delete refNdoeInfo;
 		return node;
 	}
-	refNodeVector.emplace_back( node, refNdoeInfo );
+	appendRefNodeVectorAtNode( node, refNdoeInfo );
 	connectNodeSignals( node );
 	return node;
 }
@@ -245,30 +245,55 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete refNdoeInfo;
 			return;
 		}
-		refNodeVector.emplace_back( node, refNdoeInfo );
+		appendRefNodeVectorAtNode( node, refNdoeInfo );
 		connectNodeSignals( node );
 		node->show( );
 	} );
 	return true;
 }
 void NodeDirector::connectNodeSignals( Node *connect_obj_ptr ) {
-	connect( connect_obj_ptr, &Node::error_run_node_signal, this, &NodeDirector::releaseNode );
+	connect( connect_obj_ptr, &Node::release_node_signal, this, &NodeDirector::releaseNode );
 	connect( connect_obj_ptr, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
 	connect( connect_obj_ptr, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
 	connect( connect_obj_ptr, &Node::finish_run_node_signal, this, &NodeDirector::finishRunNode );
 }
-void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
+void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t count = refNodeVector.size( );
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ].first == release_node ) {
-			delete data[ index ].second;
-			if( release_node->nodeRefLinkInfoPtr == data[ index ].second )
-				release_node->nodeRefLinkInfoPtr = nullptr;
-			refNodeVector.erase( refNodeVector.begin( ) + index );
+		if( data[ index ]->first == remove_node ) {
+			delete data[ index ]->second;
+			if( remove_node->nodeRefLinkInfoPtr == data[ index ]->second )
+				remove_node->nodeRefLinkInfoPtr = nullptr;
+			data[ index ] = nullptr;
+			count -= 1;
+			for( ; index < count; ++index )
+				if( data[ index ] == nullptr )
+					break;
+				else
+					data[ index ] = data[ index + 1 ];
+			data[ index ] = nullptr;
 			break;
 		}
+}
+void NodeDirector::appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo *append_node_ref_link_info ) {
+	auto pair = new std::pair< Node *, NodeRefLinkInfo * >( append_node, append_node_ref_link_info );
+	size_t count = refNodeVector.size( );
+	auto data = refNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->first == append_node )
+			return;
+		else if( data[ index ] == nullptr )
+			break;
+	if( index == count )
+		refNodeVector.emplace_back( pair );
+	else
+		data[ index ] = pair;
+}
+void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
+	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }
 void NodeDirector::errorRunNode( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info ) {

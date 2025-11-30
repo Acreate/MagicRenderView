@@ -34,7 +34,7 @@ protected:
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
 	std::vector< std::pair< QString, std::function< Node*( ) > > > createNodeVector;
-	std::vector< std::pair< Node *, NodeRefLinkInfo * > > refNodeVector;
+	std::vector< std::pair< Node *, NodeRefLinkInfo * > * > refNodeVector;
 protected:
 	/// @brief 节点端口发生释放时，产生该信号
 	/// @param signal_port 释放的源端口对象指针
@@ -46,7 +46,7 @@ protected:
 	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
 public:
 	NodeDirector( QObject *parent = nullptr );
-	void releaseMenu( );
+	void releaseResources( );
 	~NodeDirector( ) override;
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
@@ -58,6 +58,8 @@ protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( ) > &action_click_function );
 	virtual void connectNodeSignals( Node *connect_obj_ptr );
+	virtual void removeRefNodeVectorAtNode( Node *remove_node );
+	virtual void appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo *append_node_ref_link_info );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
