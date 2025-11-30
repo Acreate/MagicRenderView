@@ -41,7 +41,7 @@ bool MainWidget::ensureVisible( Node *target ) {
 	}
 	fromGlobalX = renderSize.width( ) + point.x( );
 	fromGlobalY = renderSize.height( ) + point.y( );
-	renderSize = size( );
+	renderSize = minimumSize( );
 	int oldW = renderSize.width( );
 	int oldH = renderSize.height( );
 	if( oldW > fromGlobalX )
