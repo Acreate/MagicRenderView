@@ -12,6 +12,8 @@
 #include "../director/nodeDirector.h"
 
 #include "../node/node/node.h"
+#include "../node/port/inputPort/inputPort.h"
+#include "../node/port/outputPort/outputPort.h"
 
 #include "../win/mainWindow.h"
 
@@ -93,16 +95,18 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						offsetPoint = dragNode->mapFromParent( clickPoint );
 						break;
 					case NodeEnum::NodeClickType::InputPort :
+						dragNode = nullptr;
+						selectInputPort = clickInfoPtr->getInputPort( );
+						drawLinkWidget->drawBegin( drawLinkWidget->mapFromGlobal( selectInputPort->getLinkPoint( ) ) );
+						dragNode = nullptr;
+						break;
 					case NodeEnum::NodeClickType::OutputPort :
-						drawLinkWidget->drawBegin( clickPoint );
+						selectOutputPort = clickInfoPtr->getOutputPort( );
+						drawLinkWidget->drawBegin( drawLinkWidget->mapFromGlobal( selectOutputPort->getLinkPoint( ) ) );
 						dragNode = nullptr;
 						break;
 				}
 			}
-			break;
-		case Qt::RightButton :
-			drawNodeWidget->menuPopPoint = mapToGlobal( clickPoint );
-			nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
 			break;
 		case Qt::MiddleButton :
 			break;
@@ -111,10 +115,9 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	auto mousePoint = event->pos( );
-	if( drawLinkWidget->isDrawLine ) {
+	if( drawLinkWidget->isDrawLine )
 		drawLinkWidget->endPoint = mousePoint;
-		drawLinkWidget->update( );
-	} else if( dragNode ) {
+	else if( dragNode ) {
 		auto point = mousePoint - offsetPoint;
 		if( point.x( ) < 0 )
 			point.setX( 0 );
@@ -122,6 +125,7 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 			point.setY( 0 );
 		dragNode->move( point );
 	}
+	drawLinkWidget->update( );
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );

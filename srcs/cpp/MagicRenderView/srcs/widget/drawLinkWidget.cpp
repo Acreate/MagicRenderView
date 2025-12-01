@@ -5,6 +5,8 @@
 
 #include "../app/application.h"
 
+#include "../director/nodeDirector.h"
+
 DrawLinkWidget::DrawLinkWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
@@ -28,4 +30,5 @@ void DrawLinkWidget::paintEvent( QPaintEvent *event ) {
 	QPainter painter( this );
 	if( isDrawLine == true )
 		painter.drawLine( startPoint, endPoint );
+	nodeDirector->drawLinkLines( painter );
 }

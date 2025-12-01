@@ -2,9 +2,11 @@
 #define NODEDIRECTOR_H_H_HEAD__FILE__
 #pragma once
 #include <QObject>
+#include <qpainter.h>
 
 #include <enums/nodeEnum.h>
 
+class DrawLinkWidget;
 class SrackInfo;
 class NodeRefLinkInfo;
 class DrawNodeWidget;
@@ -51,6 +53,7 @@ public:
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget );
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
+	virtual void drawLinkLines( QPainter &draw_link_widget );
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );

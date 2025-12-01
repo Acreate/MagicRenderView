@@ -129,6 +129,9 @@ Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	return false;
 }
+void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
+	
+}
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
 	auto nodeStackName = node_stack_ptr->objectName( );

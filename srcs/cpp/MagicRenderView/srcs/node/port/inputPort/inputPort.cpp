@@ -27,8 +27,12 @@ bool InputPort::init( Node *parent ) {
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
+	parentNode = parent;
 	return true;
 }
 InputPort::~InputPort( ) {
 
+}
+QPoint InputPort::getLinkPoint( ) const {
+	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }

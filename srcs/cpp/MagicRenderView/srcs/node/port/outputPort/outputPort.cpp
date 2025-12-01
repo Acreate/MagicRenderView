@@ -33,5 +33,9 @@ bool OutputPort::init( Node *parent ) {
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
+	parentNode = parent;
 	return true;
+}
+QPoint OutputPort::getLinkPoint( ) const {
+	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }

@@ -30,6 +30,7 @@ protected:
 	QLabel *ico;
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
+	Node *parentNode;
 public:
 	InputPort( const QString &name );
 	virtual bool init( Node *parent );
@@ -38,6 +39,7 @@ public:
 	virtual const QString & getPortName( ) const { return portName; }
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
+	virtual  QPoint  getLinkPoint( ) const;
 };
 
 #endif // INPUTPORT_H_H_HEAD__FILE__
