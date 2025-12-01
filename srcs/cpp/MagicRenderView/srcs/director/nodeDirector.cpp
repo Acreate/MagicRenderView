@@ -126,6 +126,9 @@ Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *
 	connectNodeSignals( node );
 	return node;
 }
+bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
+	return false;
+}
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
 	auto nodeStackName = node_stack_ptr->objectName( );

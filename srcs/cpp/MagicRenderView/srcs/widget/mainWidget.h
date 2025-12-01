@@ -3,6 +3,8 @@
 #pragma once
 #include <QWidget>
 
+class OutputPort;
+class InputPort;
 class NodeClickInfo;
 class MainWindow;
 class MainWidgetScrollArea;
@@ -23,8 +25,12 @@ protected:
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
 	MainWidgetScrollArea *mainWidgetScrollArea;
-	NodeClickInfo* clickInfoPtr;
+	NodeClickInfo *clickInfoPtr;
 	QMenu *nodeCreateMenu;
+	Node *dragNode;
+	InputPort *selectInputPort;
+	OutputPort *selectOutputPort;
+	QPoint offsetPoint;
 	/// @brief 构造/析构 
 public:
 	MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );

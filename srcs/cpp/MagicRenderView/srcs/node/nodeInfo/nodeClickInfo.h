@@ -24,6 +24,12 @@ public:
 	virtual Node * getClickNode( ) const { return clickNode; }
 	virtual InputPort * getInputPort( ) const { return inputPort; }
 	virtual OutputPort * getOutputPort( ) const { return outputPort; }
+	virtual void clear( ) {
+		clickType = NodeEnum::NodeClickType::None;
+		clickNode = nullptr;
+		inputPort = nullptr;
+		outputPort = nullptr;
+	}
 };
 
 #endif // NODECLICKINFO_H_H_HEAD__FILE__
