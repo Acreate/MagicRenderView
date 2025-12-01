@@ -17,7 +17,7 @@
 
 #include "../win/mainWindow.h"
 
-MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ), clickInfoPtr( nullptr ), selectInputPort( nullptr ), selectOutputPort( nullptr ) {
+MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ), clickInfoPtr( nullptr ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ) {
 
 }
 MainWidget::~MainWidget( ) {
@@ -158,8 +158,15 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::RightButton :
-			drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
-			nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
+			if( drawNodeWidget->getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
+				dragNode = clickInfoPtr->getClickNode( );
+				if( dragNode )
+					ensureVisible( dragNode );
+				dragNode->getNodeRefLinkInfoPtr( ).getManagementLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
+			} else {
+				drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
+				nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
+			}
 			break;
 		case Qt::MiddleButton :
 			break;

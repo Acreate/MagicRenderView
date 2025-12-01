@@ -9,6 +9,7 @@
 #include "../app/application.h"
 
 #include "../node/node/node.h"
+#include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
@@ -96,10 +97,7 @@ void NodeDirector::releaseResources( ) {
 		refNodeVector.clear( );
 		auto pair = buff.data( );
 		for( index = 0; index < count; ++index )
-			if( pair[ index ] == nullptr )
-				break;
-			else
-				delete pair[ index ];
+			delete pair[ index ];
 	}
 }
 NodeDirector::~NodeDirector( ) {
@@ -124,37 +122,50 @@ Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main
 	return node;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
-	size_t count = refNodeVector.size( );
-	auto refNodeArrayPtr = refNodeVector.data( );
-	size_t index = 0;
-	NodeRefLinkInfo *outputNodeRef = nullptr, *inputNodeRef = nullptr;
-	Node *currentNode;
-	for( currentNode = refNodeArrayPtr[ index ]->getCurrentNode( ); index < count; ++index, currentNode = refNodeArrayPtr[ index ]->getCurrentNode( ) )
-		if( currentNode == nullptr )
-			break;
-		else if( currentNode == output_port->parentNode )
-			outputNodeRef = refNodeArrayPtr[ index ];
-		else if( currentNode == input_port->parentNode )
-			inputNodeRef = refNodeArrayPtr[ index ];
-		else if( outputNodeRef != nullptr && inputNodeRef != nullptr )
-			break;
-	if( outputNodeRef == nullptr || inputNodeRef == nullptr )
-		return false;
+
+	NodeRefLinkInfo *outputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
+	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
+
+	if( outputNodeRef->hasLinkInfo( output_port, input_port ) == true )
+		return true;
 	NodeEnum::PortType inType = input_port->getPortType( );
-	if( inType == NodeEnum::PortType::Any ) {
-		return outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
-	}
-	NodeEnum::PortType outType = output_port->getPortType( );
-	if( outType == inType ) {
+	if( inType != NodeEnum::PortType::Any ) {
+		NodeEnum::PortType outType = output_port->getPortType( );
+		if( outType != inType )
+			return false;
 		QString outVarTypeName = output_port->getVarTypeName( );
 		QString inVarTypeName = input_port->getVarTypeName( );
-		if( outVarTypeName == inVarTypeName )
-			return outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
+		if( outVarTypeName != inVarTypeName )
+			return false;
 	}
-	return false;
+
+	bool appendInputRef = outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
+	return appendInputRef;
 }
 void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
+	size_t count = refNodeVector.size( );
+	auto arrayPtr = refNodeVector.data( );
+	size_t index;
+	for( index = 0; index < count; ++index ) {
+		size_t linkPortCount = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.size( );
+		auto linkPortArray = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.data( );
+		size_t linkPortIndex;
+		for( linkPortIndex = 0; linkPortIndex < linkPortCount; ++linkPortIndex ) {
+			auto point = linkPortArray[ linkPortIndex ].first->pos( );
+			point = linkPortArray[ linkPortIndex ].first->mapToGlobal( point );
+			auto startPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
 
+			size_t linkTargetPortCount = linkPortArray[ linkPortIndex ].second.size( );
+			auto linkTargetPortArray = linkPortArray[ linkPortIndex ].second.data( );
+			size_t linkTargetPortIndex;
+			for( linkTargetPortIndex = 0; linkTargetPortIndex < linkTargetPortCount; ++linkTargetPortIndex ) {
+				point = linkTargetPortArray[ linkTargetPortIndex ]->pos( );
+				point = linkTargetPortArray[ linkTargetPortIndex ]->mapToGlobal( point );
+				auto endPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
+				draw_link_widget.drawLine( startPoint, endPoint );
+			}
+		}
+	}
 }
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
@@ -298,17 +309,10 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == nullptr )
-			break;
-		else if( data[ index ]->getCurrentNode( ) == remove_node ) {
-			delete data[ index ];
-			index += 1;
-			for( ; index < count; ++index )
-				if( data[ index ] == nullptr )
-					break;
-				else
-					data[ index - 1 ] = data[ index ];
-			data[ index - 1 ] = nullptr;
+		if( data[ index ]->getCurrentNode( ) == remove_node ) {
+			NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
+			refNodeVector.erase( refNodeVector.begin( ) + index );
+			delete nodeRefLinkInfo;
 			break;
 		}
 }
@@ -317,17 +321,14 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] == nullptr )
-			break;
-		else if( data[ index ] == append_node_ref_link_info )
+		if( data[ index ] == append_node_ref_link_info )
 			return;
 
 	if( index == count )
 		refNodeVector.emplace_back( append_node_ref_link_info );
-	else
-		data[ index ] = append_node_ref_link_info;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
+
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }

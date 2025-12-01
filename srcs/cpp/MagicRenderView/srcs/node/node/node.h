@@ -80,8 +80,10 @@ public:
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 	virtual const QString & getNodeName( ) const { return nodeName; }
 	virtual bool getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info );
-	virtual bool hasInputPort(const InputPort* check_input_port) const;
-	virtual bool hasOutputPort(const OutputPort* check_output_port) const;
+	virtual bool hasInputPort( const InputPort *check_input_port ) const;
+	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;
+	virtual const std::vector< InputPort * > & getInputPortVector( ) const { return inputPortVector; }
+	virtual const std::vector< OutputPort * > & getOutputPortVector( ) const { return outputPortVector; }
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

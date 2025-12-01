@@ -3,6 +3,7 @@
 #pragma once
 #include <vector>
 
+class QMenu;
 class NodeRefLinkInfo;
 class OutputPort;
 class InputPort;
@@ -12,12 +13,16 @@ class NodePortLinkInfo {
 	friend class NodeRefLinkInfoTools;
 protected:
 	NodeRefLinkInfo *nodeRefLinkInfo;
+	QMenu *managementLinkMenu;
 	std::vector< std::pair< InputPort *, std::vector< OutputPort * > > > inputPortVector;
 public:
-	NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info );
+	NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info, QMenu *management_link_menu );
 	virtual bool appEndLinkTarget( OutputPort *out_put_port, InputPort *in_put_port );
 	virtual bool removeLinkTarget( OutputPort *out_put_port, InputPort *in_put_port );
-	virtual bool hasNodeRef( const NodeRefLinkInfo * check_node_ref ) const;
+	virtual void removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remove_all_port_node_ref_link_info );
+	virtual bool hasNodeRef( const NodeRefLinkInfo *check_node_ref ) const;
+	virtual bool hasPortRef( const OutputPort *out_put_port, const InputPort *in_put_port ) const;
+	virtual const std::vector< std::pair< InputPort *, std::vector< OutputPort * > > > & getInputPortVector( ) const { return inputPortVector; }
 	virtual ~NodePortLinkInfo( ) { }
 };
 
