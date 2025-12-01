@@ -79,8 +79,8 @@ DrawNodeWidget::~DrawNodeWidget( ) {
 				delete nodeArrayPtr[ index ];
 	}
 }
-bool DrawNodeWidget::addNode( Node *add_node, NodeRefLinkInfo *node_ref_link_info ) {
-	if( add_node->init( this, node_ref_link_info ) == false )
+bool DrawNodeWidget::addNode( Node *add_node ) {
+	if( add_node->init( this ) == false )
 		return false;
 	QPoint fromGlobal = mapFromGlobal( menuPopPoint );
 	if( fromGlobal.x( ) < 0 )

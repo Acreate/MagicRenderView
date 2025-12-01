@@ -28,6 +28,13 @@ MainWidget::~MainWidget( ) {
 	if( clickInfoPtr )
 		delete clickInfoPtr;
 }
+bool MainWidget::addNode( NodeRefLinkInfo *node_ref_link_info ) {
+	if( drawNodeWidget->addNode( node_ref_link_info->getCurrentNode( ) ) == false )
+		return false;
+	NodeRefLinkInfoTools::setDrawLinkWidget( node_ref_link_info, drawLinkWidget );
+	NodeRefLinkInfoTools::setDrawNodeWidget( node_ref_link_info, drawNodeWidget );
+	return true;
+}
 bool MainWidget::ensureVisible( Node *target ) {
 	if( target->parent( ) != drawNodeWidget )
 		return false;

@@ -26,6 +26,7 @@ class Node : public QWidget {
 	Q_OBJECT;
 	friend class NodeDirector;
 	friend class NodeStack;
+	friend class NodeRefLinkInfo;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
@@ -71,7 +72,7 @@ protected:
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
-	virtual bool init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info );
+	virtual bool init( DrawNodeWidget *parent );
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual const NodeRefLinkInfo & getNodeRefLinkInfoPtr( ) const { return *nodeRefLinkInfoPtr; }
@@ -79,6 +80,8 @@ public:
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 	virtual const QString & getNodeName( ) const { return nodeName; }
 	virtual bool getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info );
+	virtual bool hasInputPort(const InputPort* check_input_port) const;
+	virtual bool hasOutputPort(const OutputPort* check_output_port) const;
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

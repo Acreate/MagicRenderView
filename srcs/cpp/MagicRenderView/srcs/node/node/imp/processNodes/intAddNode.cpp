@@ -7,8 +7,8 @@ bool IntAddNode::updateLayout( ) {
 		return false;
 	return true;
 }
-bool IntAddNode::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
-	if( ProcessNode::init( parent, node_ref_link_info ) == false )
+bool IntAddNode::init( DrawNodeWidget *parent ) {
+	if( ProcessNode::init( parent ) == false )
 		return false;
 	if( appendInputPortType< IntInputPort >( tr( "被加数" ) ) == nullptr )
 		return false;

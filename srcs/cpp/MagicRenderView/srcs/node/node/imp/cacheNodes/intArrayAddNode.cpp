@@ -4,8 +4,8 @@
 #include "../../../port/inputPort/unity/intInputPort.h"
 #include "../../../port/outputPort/unity/intOutputPort.h"
 
-bool IntArrayAddNode::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
-	if( CacheNode::init( parent, node_ref_link_info ) == false )
+bool IntArrayAddNode::init( DrawNodeWidget *parent ) {
+	if( CacheNode::init( parent ) == false )
 		return false;
 	if( appendInputPortType< IntVectorInputPort >( tr( "整数" ) ) == nullptr )
 		return false;

@@ -7,8 +7,8 @@ bool IfNode::updateLayout( ) {
 		return false;
 	return true;
 }
-bool IfNode::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
-	if( LogicNode::init( parent, node_ref_link_info ) == false )
+bool IfNode::init( DrawNodeWidget *parent ) {
+	if( LogicNode::init( parent ) == false )
 		return false;
 	if( appendInputPortType< IntInputPort >( tr( "判断依据" ) ) == nullptr )
 		return false;

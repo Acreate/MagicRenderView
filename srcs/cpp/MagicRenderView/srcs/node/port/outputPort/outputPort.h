@@ -21,6 +21,7 @@ private:
 	friend class InputPort;
 	friend class NodeDirector;
 	friend class NodeStack;
+	friend class NodeRefLinkInfoTools;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
@@ -42,5 +43,6 @@ public:
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual QPoint getLinkPoint( ) const;
+	virtual Node * getParentNode( ) const { return parentNode; }
 };
 #endif // OUTPUTPORT_H_H_HEAD__FILE__

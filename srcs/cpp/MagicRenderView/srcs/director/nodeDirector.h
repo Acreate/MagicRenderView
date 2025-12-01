@@ -6,6 +6,8 @@
 
 #include <enums/nodeEnum.h>
 
+#include "../widget/mainWidget.h"
+
 class DrawLinkWidget;
 class SrackInfo;
 class NodeRefLinkInfo;
@@ -35,7 +37,7 @@ protected:
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
-	std::vector< std::pair< Node *, NodeRefLinkInfo * > * > refNodeVector;
+	std::vector< NodeRefLinkInfo * > refNodeVector;
 protected:
 	/// @brief 节点端口发生释放时，产生该信号
 	/// @param signal_port 释放的源端口对象指针
@@ -51,7 +53,7 @@ public:
 	~NodeDirector( ) override;
 	virtual bool init( );
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
-	virtual Node * createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget );
+	virtual Node * createNode( const QString &node_type_name, MainWidget *main_widget );
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
 	virtual void drawLinkLines( QPainter &draw_link_widget );
 protected:
@@ -61,7 +63,7 @@ protected:
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void connectNodeSignals( Node *connect_obj_ptr );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
-	virtual void appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo *append_node_ref_link_info );
+	virtual void appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_link_info );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针

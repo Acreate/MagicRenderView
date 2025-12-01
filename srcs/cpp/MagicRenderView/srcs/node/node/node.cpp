@@ -110,6 +110,30 @@ bool Node::getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_i
 
 	return false;
 }
+bool Node::hasInputPort( const InputPort *check_input_port ) const {
+	auto count = inputPortVector.size( );
+	if( count == 0 )
+		return false;
+	size_t index;
+	auto inputPortArrayPtr = inputPortVector.data( );
+	for( index = 0; index < count; ++index )
+		if( inputPortArrayPtr[ index ] == check_input_port )
+			return true;
+
+	return false;
+}
+bool Node::hasOutputPort( const OutputPort *check_output_port ) const {
+	auto count = outputPortVector.size( );
+	if( count == 0 )
+		return false;
+	size_t index;
+	auto outputPortArrayPtr = outputPortVector.data( );
+	for( index = 0; index < count; ++index )
+		if( outputPortArrayPtr[ index ] == check_output_port )
+			return true;
+
+	return false;
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )
@@ -123,8 +147,7 @@ void Node::setPortVarInfo( InputPort *change_var_input_port, const QString &var_
 	change_var_input_port->varPtr = var_type_varlue_ptr;
 }
 
-bool Node::init( DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info ) {
-	nodeRefLinkInfoPtr = node_ref_link_info;
+bool Node::init( DrawNodeWidget *parent ) {
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	size_t count, index;

@@ -9,7 +9,7 @@ public:
 	IfNode( const QString &node_name )
 		: LogicNode( node_name ) { }
 	bool updateLayout( ) override;
-	bool init(DrawNodeWidget *parent, NodeRefLinkInfo *node_ref_link_info) override;
+	bool init( DrawNodeWidget *parent ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "逻辑/分支" ) );
 };

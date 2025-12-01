@@ -98,39 +98,63 @@ void NodeDirector::releaseResources( ) {
 		for( index = 0; index < count; ++index )
 			if( pair[ index ] == nullptr )
 				break;
-			else {
-				delete pair[ index ]->second;
+			else
 				delete pair[ index ];
-			}
 	}
 }
 NodeDirector::~NodeDirector( ) {
 	releaseResources( );
 	if( nodeVarDirector )
 		delete nodeVarDirector;
-
 }
-Node * NodeDirector::createNode( const QString &node_type_name, DrawNodeWidget *draw_node_widget ) {
-	if( draw_node_widget == nullptr || node_type_name.isEmpty( ) )
+Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main_widget ) {
+	if( main_widget == nullptr || node_type_name.isEmpty( ) )
 		return nullptr;
 	Node *node = nullptr;
 	if( node == nullptr )
 		return node;
-	auto refNdoeInfo = new NodeRefLinkInfo;
-	if( draw_node_widget->addNode( node, refNdoeInfo ) == false ) {
+	auto refNdoeInfo = new NodeRefLinkInfo( node );
+	if( main_widget->addNode( refNdoeInfo ) == false ) {
 		delete node;
 		delete refNdoeInfo;
 		return node;
 	}
-	appendRefNodeVectorAtNode( node, refNdoeInfo );
+	appendRefNodeVectorAtNode( refNdoeInfo );
 	connectNodeSignals( node );
 	return node;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
+	size_t count = refNodeVector.size( );
+	auto refNodeArrayPtr = refNodeVector.data( );
+	size_t index = 0;
+	NodeRefLinkInfo *outputNodeRef = nullptr, *inputNodeRef = nullptr;
+	Node *currentNode;
+	for( currentNode = refNodeArrayPtr[ index ]->getCurrentNode( ); index < count; ++index, currentNode = refNodeArrayPtr[ index ]->getCurrentNode( ) )
+		if( currentNode == nullptr )
+			break;
+		else if( currentNode == output_port->parentNode )
+			outputNodeRef = refNodeArrayPtr[ index ];
+		else if( currentNode == input_port->parentNode )
+			inputNodeRef = refNodeArrayPtr[ index ];
+		else if( outputNodeRef != nullptr && inputNodeRef != nullptr )
+			break;
+	if( outputNodeRef == nullptr || inputNodeRef == nullptr )
+		return false;
+	NodeEnum::PortType inType = input_port->getPortType( );
+	if( inType == NodeEnum::PortType::Any ) {
+		return outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
+	}
+	NodeEnum::PortType outType = output_port->getPortType( );
+	if( outType == inType ) {
+		QString outVarTypeName = output_port->getVarTypeName( );
+		QString inVarTypeName = input_port->getVarTypeName( );
+		if( outVarTypeName == inVarTypeName )
+			return outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
+	}
 	return false;
 }
 void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
-	
+
 }
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
@@ -224,6 +248,15 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete node;
 			return;
 		}
+		auto refNdoeInfo = new NodeRefLinkInfo( node );
+		if( mainWidget->addNode( refNdoeInfo ) == false ) {
+			auto errorMsg = tr( "节点添加失败[DrawNodeWidget::addNode( Node *add_node )]" );
+			printerDirector->error( errorMsg );
+			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg, Create_SrackInfo( ) );
+			delete refNdoeInfo;
+			delete node;
+			return;
+		}
 		DrawNodeWidget *drawNodeWidget = mainWidget->getDrawNodeWidget( );
 		if( drawNodeWidget == nullptr ) {
 			auto errorMsg = tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" );
@@ -231,21 +264,12 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete node;
 			return;
 		}
-		auto refNdoeInfo = new NodeRefLinkInfo;
-		if( drawNodeWidget->addNode( node, refNdoeInfo ) == false ) {
-			auto errorMsg = tr( "节点添加失败[DrawNodeWidget::addNode( Node *add_node )]" );
-			printerDirector->error( errorMsg );
-			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::DrawNodeWidget_Add, errorMsg, Create_SrackInfo( ) );
-			delete node;
-			delete refNdoeInfo;
-			return;
-		}
 		if( node->parent( ) != drawNodeWidget ) {
 			auto errorMsg = tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" );
 			printerDirector->error( errorMsg );
 			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
-			delete node;
 			delete refNdoeInfo;
+			delete node;
 			return;
 		}
 		if( node->updateLayout( ) == false ) {
@@ -256,7 +280,7 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete refNdoeInfo;
 			return;
 		}
-		appendRefNodeVectorAtNode( node, refNdoeInfo );
+		appendRefNodeVectorAtNode( refNdoeInfo );
 		connectNodeSignals( node );
 		node->show( );
 		mainWidget->ensureVisible( node );
@@ -276,10 +300,8 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr )
 			break;
-		else if( data[ index ]->first == remove_node ) {
-			delete data[ index ]->second;
-			if( remove_node->nodeRefLinkInfoPtr == data[ index ]->second )
-				remove_node->nodeRefLinkInfoPtr = nullptr;
+		else if( data[ index ]->getCurrentNode( ) == remove_node ) {
+			delete data[ index ];
 			index += 1;
 			for( ; index < count; ++index )
 				if( data[ index ] == nullptr )
@@ -290,21 +312,20 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			break;
 		}
 }
-void NodeDirector::appendRefNodeVectorAtNode( Node *append_node, NodeRefLinkInfo *append_node_ref_link_info ) {
-	auto pair = new std::pair< Node *, NodeRefLinkInfo * >( append_node, append_node_ref_link_info );
+void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_link_info ) {
 	size_t count = refNodeVector.size( );
 	auto data = refNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == nullptr )
 			break;
-		else if( data[ index ]->first == append_node )
+		else if( data[ index ] == append_node_ref_link_info )
 			return;
 
 	if( index == count )
-		refNodeVector.emplace_back( pair );
+		refNodeVector.emplace_back( append_node_ref_link_info );
 	else
-		data[ index ] = pair;
+		data[ index ] = append_node_ref_link_info;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	removeRefNodeVectorAtNode( release_node );

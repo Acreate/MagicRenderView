@@ -6,8 +6,7 @@
 class AnyTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	AnyTypeOutputPort( const QString &name )
-		: OutputPort( name ) { }
+	AnyTypeOutputPort( const QString &name );
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Any;
 	}
