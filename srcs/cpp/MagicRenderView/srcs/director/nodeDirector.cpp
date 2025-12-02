@@ -18,6 +18,7 @@
 
 #include "../tools/path.h"
 
+#include "../widget/drawLinkWidget.h"
 #include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
@@ -67,6 +68,30 @@ bool NodeDirector::init( ) {
 			delete generateCreateMenu;
 		this->nodeCreateMenu->addMenu( generateCreateMenu );
 	}
+	mainWindow = instancePtr->getMainWindow( );
+	if( mainWindow )
+		connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
+			if( mainWindow == release_ptr )
+				mainWindow = nullptr;
+		} );
+	mainWidget = mainWindow->getMainWidget( );
+	if( mainWidget )
+		connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
+			if( mainWidget == release_ptr )
+				mainWidget = nullptr;
+		} );
+	drawNodeWidget = mainWidget->getDrawNodeWidget( );
+	if( drawNodeWidget )
+		connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
+			if( drawNodeWidget == release_ptr )
+				drawNodeWidget = nullptr;
+		} );
+	drawLinkWidget = mainWidget->getDrawLinkWidget( );
+	if( drawLinkWidget )
+		connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
+			if( drawLinkWidget == release_ptr )
+				drawLinkWidget = nullptr;
+		} );
 	return true;
 }
 void NodeDirector::releaseLink( InputPort *signal_port, OutputPort *target_prot ) {
@@ -138,8 +163,7 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 		if( outVarTypeName != inVarTypeName )
 			return false;
 	}
-
-	bool appendInputRef = outputNodeRef->appendInputRef( output_port, inputNodeRef, input_port );
+	bool appendInputRef = inputNodeRef->appendInputRef( output_port, outputNodeRef, input_port );
 	return appendInputRef;
 }
 void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
@@ -151,16 +175,14 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 		auto linkPortArray = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.data( );
 		size_t linkPortIndex;
 		for( linkPortIndex = 0; linkPortIndex < linkPortCount; ++linkPortIndex ) {
-			auto point = linkPortArray[ linkPortIndex ].first->pos( );
-			point = linkPortArray[ linkPortIndex ].first->mapToGlobal( point );
+			auto point = linkPortArray[ linkPortIndex ].first->getLinkPoint( );
 			auto startPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
 
 			size_t linkTargetPortCount = linkPortArray[ linkPortIndex ].second.size( );
 			auto linkTargetPortArray = linkPortArray[ linkPortIndex ].second.data( );
 			size_t linkTargetPortIndex;
 			for( linkTargetPortIndex = 0; linkTargetPortIndex < linkTargetPortCount; ++linkTargetPortIndex ) {
-				point = linkTargetPortArray[ linkTargetPortIndex ]->pos( );
-				point = linkTargetPortArray[ linkTargetPortIndex ]->mapToGlobal( point );
+				point = linkTargetPortArray[ linkTargetPortIndex ]->getLinkPoint( );
 				auto endPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
 				draw_link_widget.drawLine( startPoint, endPoint );
 			}
@@ -243,21 +265,36 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 			return;
 		}
-		MainWindow *mainWindow = instancePtr->getMainWindow( );
+
 		if( mainWindow == nullptr ) {
-			auto errorMsg = tr( "无法匹配主窗口[Application::]getMainWindow( )" );
-			printerDirector->error( errorMsg );
-			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
-			delete node;
-			return;
+			mainWindow = instancePtr->getMainWindow( );
+			if( mainWindow == nullptr ) {
+				auto errorMsg = tr( "无法匹配主窗口[Application::]getMainWindow( )" );
+				printerDirector->error( errorMsg );
+				emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
+				delete node;
+				return;
+			}
+			connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
+				if( mainWindow == release_ptr )
+					mainWindow = nullptr;
+			} );
 		}
-		MainWidget *mainWidget = mainWindow->getMainWidget( );
 		if( mainWidget == nullptr ) {
-			auto errorMsg = tr( "无法匹配主渲染组件[MainWindow::getMainWidget()]" );
-			printerDirector->error( errorMsg );
-			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
-			delete node;
-			return;
+			mainWidget = mainWindow->getMainWidget( );
+			if( mainWidget == nullptr ) {
+				auto errorMsg = tr( "无法匹配主渲染组件[MainWindow::getMainWidget()]" );
+				printerDirector->error( errorMsg );
+				emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::MainWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
+				delete node;
+				return;
+			}
+
+			connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
+				if( mainWidget == release_ptr )
+					mainWidget = nullptr;
+			} );
+
 		}
 		auto refNdoeInfo = new NodeRefLinkInfo( node );
 		if( mainWidget->addNode( refNdoeInfo ) == false ) {
@@ -268,12 +305,31 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete node;
 			return;
 		}
-		DrawNodeWidget *drawNodeWidget = mainWidget->getDrawNodeWidget( );
 		if( drawNodeWidget == nullptr ) {
-			auto errorMsg = tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" );
-			emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
-			delete node;
-			return;
+			drawNodeWidget = mainWidget->getDrawNodeWidget( );
+			if( drawNodeWidget == nullptr ) {
+				auto errorMsg = tr( "无法匹配节点渲染组件 [MainWidget::getDrawNodeWidget()]" );
+				emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
+				delete node;
+				return;
+			}
+			connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
+				if( drawNodeWidget == release_ptr )
+					drawNodeWidget = nullptr;
+			} );
+		}
+		if( drawLinkWidget == nullptr ) {
+			drawLinkWidget = mainWidget->getDrawLinkWidget( );
+			if( drawNodeWidget == nullptr ) {
+				auto errorMsg = tr( "无法匹配节点连接组件 [MainWidget::getDrawLinkWidget()]" );
+				emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::DrawNodeWidget_Nullptr, errorMsg, Create_SrackInfo( ) );
+				delete node;
+				return;
+			}
+			connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
+				if( drawLinkWidget == release_ptr )
+					drawLinkWidget = nullptr;
+			} );
 		}
 		if( node->parent( ) != drawNodeWidget ) {
 			auto errorMsg = tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" );
@@ -313,6 +369,10 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
 			refNodeVector.erase( refNodeVector.begin( ) + index );
 			delete nodeRefLinkInfo;
+			if( drawNodeWidget )
+				drawNodeWidget->update( );
+			if( drawLinkWidget )
+				drawLinkWidget->update( );
 			break;
 		}
 }
@@ -328,7 +388,6 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 		refNodeVector.emplace_back( append_node_ref_link_info );
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
-
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }

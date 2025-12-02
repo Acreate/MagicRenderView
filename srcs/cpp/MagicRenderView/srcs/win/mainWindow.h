@@ -29,6 +29,8 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 	bool event( QEvent *event ) override;
+Q_SIGNALS:
+	void release_signal( MainWindow *release_ptr );
 };
 
 #endif // MAINWINDOW_H_H_HEAD__FILE__

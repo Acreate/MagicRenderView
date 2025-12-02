@@ -32,6 +32,7 @@ protected:
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
 	Node *parentNode;
+	QMenu* disLinkMenu;
 public:
 	InputPort( const QString &name );
 	virtual bool init( Node *parent );
@@ -42,6 +43,7 @@ public:
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
+	virtual QMenu * getDisLinkMenu( ) const { return disLinkMenu; }
 };
 
 #endif // INPUTPORT_H_H_HEAD__FILE__

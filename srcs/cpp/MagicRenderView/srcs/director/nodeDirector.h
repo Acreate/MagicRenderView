@@ -36,6 +36,10 @@ protected:
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
+	MainWindow *mainWindow;
+	MainWidget *mainWidget;
+	DrawNodeWidget *drawNodeWidget;
+	DrawLinkWidget *drawLinkWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 protected:

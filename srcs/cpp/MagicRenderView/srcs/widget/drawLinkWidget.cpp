@@ -12,6 +12,9 @@ DrawLinkWidget::DrawLinkWidget( QWidget *parent, const Qt::WindowFlags &f ) : QW
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	isDrawLine = false;
 }
+DrawLinkWidget::~DrawLinkWidget( ) {
+	emit release_signal( this );
+}
 void DrawLinkWidget::drawBegin( const QPoint &start_point ) {
 	isDrawLine = true;
 	startPoint = start_point;

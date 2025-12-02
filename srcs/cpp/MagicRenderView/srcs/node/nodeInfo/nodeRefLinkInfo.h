@@ -11,8 +11,7 @@ class NodePortLinkInfo;
 class OutputPort;
 class InputPort;
 class Node;
-class NodeRefLinkInfo : public QObject {
-	Q_OBJECT;
+class NodeRefLinkInfo {
 	friend class NodePortLinkInfo;
 	friend class NodeDirector;
 	friend class NodeRefLinkInfoTools;
@@ -29,27 +28,15 @@ protected:
 	std::vector< NodeRefLinkInfo * > refInputVector;
 	/// @brief 保存输出到该节点的依赖节点
 	std::vector< NodeRefLinkInfo * > refOutputVector;
-	/// @brief 节点操作菜单
-	QMenu *managementLinkMenu;
-protected:
-	virtual void linkRelease( NodeRefLinkInfo *release_target_node_ref_link_info );
-	virtual void removeInputNodeRef( NodeRefLinkInfo *remove );
-	virtual void removeOutputNodeRef( NodeRefLinkInfo *remove );
 public:
 	NodeRefLinkInfo( Node *current_node );
-	~NodeRefLinkInfo( ) override;
+	virtual ~NodeRefLinkInfo( );
 	virtual bool appendInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port );
 	virtual bool removeInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port );
 	virtual bool hasLinkInfo( OutputPort *output_port, InputPort *input_port );
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
-	virtual QMenu * getManagementLinkMenu( ) const { return managementLinkMenu; }
-Q_SIGNALS:
-	/// @brief 释放对象产生信号
-	/// @param release_node 释放对象指针
-	/// @param srack_info 信号行
-	void release_NodeRefLinkInfo_signal( NodeRefLinkInfo *release_node, const SrackInfo &srack_info );
 };
 class NodeRefLinkInfoTools {
 	friend class NodeDirector;

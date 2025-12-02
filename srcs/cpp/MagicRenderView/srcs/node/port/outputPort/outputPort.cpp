@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMenu>
 
 #include "../../../app/application.h"
 
@@ -24,8 +25,10 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( showTitle );
 	mainLayout->addWidget( ico );
+	disLinkMenu = new QMenu;
 }
 OutputPort::~OutputPort( ) {
+	delete disLinkMenu;
 }
 bool OutputPort::init( Node *parent ) {
 	if( parent == nullptr )
@@ -34,6 +37,7 @@ bool OutputPort::init( Node *parent ) {
 	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
 	parentNode = parent;
+	disLinkMenu->clear( );
 	return true;
 }
 QPoint OutputPort::getLinkPoint( ) const {

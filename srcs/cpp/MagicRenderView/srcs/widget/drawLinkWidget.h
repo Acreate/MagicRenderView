@@ -17,12 +17,15 @@ protected:
 	bool isDrawLine;
 public:
 	DrawLinkWidget( QWidget *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	~DrawLinkWidget( ) override;
 	virtual void drawBegin( const QPoint &start_point );
 	virtual void drawLinePoint( const QPoint &end_point );
 	virtual void drawEnd( );
 protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;
+Q_SIGNALS:
+	void release_signal( DrawLinkWidget *release_ptr );
 };
 
 #endif // DRAWLINKWIDGET_H_H_HEAD__FILE__

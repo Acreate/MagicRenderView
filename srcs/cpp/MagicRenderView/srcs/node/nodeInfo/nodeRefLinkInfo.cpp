@@ -4,6 +4,10 @@
 
 #include "nodePortLinkInfo.h"
 
+#include "../../app/application.h"
+
+#include "../../director/printerDirector.h"
+
 #include "../../srack/srackInfo.h"
 
 #include "../../widget/drawNodeWidget.h"
@@ -12,45 +16,54 @@
 
 #include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"
-void NodeRefLinkInfo::linkRelease( NodeRefLinkInfo *release_target_node_ref_link_info ) {
 
-	removeInputNodeRef( release_target_node_ref_link_info );
-	removeOutputNodeRef( release_target_node_ref_link_info );
-
-}
-void NodeRefLinkInfo::removeInputNodeRef( NodeRefLinkInfo *remove ) {
-	size_t count = refInputVector.size( );
-	auto nodeRefLinkInfo = refInputVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( nodeRefLinkInfo[ index ] == remove ) {
-			refInputVector.erase( refInputVector.begin( ) + index );
-			break;
-		}
-}
-void NodeRefLinkInfo::removeOutputNodeRef( NodeRefLinkInfo *remove ) {
-	size_t count = refOutputVector.size( );
-	auto nodeRefLinkInfo = refOutputVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( nodeRefLinkInfo[ index ] == remove ) {
-			nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( remove );
-			refOutputVector.erase( refOutputVector.begin( ) + index );
-			break;
-		}
-}
 NodeRefLinkInfo::NodeRefLinkInfo( Node *current_node ) : currentNode( current_node ) {
 	currentNode->nodeRefLinkInfoPtr = this;
-	managementLinkMenu = new QMenu( );
-	nodePortLinkInfo = new NodePortLinkInfo( this, managementLinkMenu );
-	auto addAction = managementLinkMenu->addAction( QString( tr( "删除 [%1] 节点" ) ).arg( current_node->nodeName ) );
-	connect( addAction, &QAction::triggered, [this]( ) {
-		delete currentNode;
-	} );
+	nodePortLinkInfo = new NodePortLinkInfo( this );
 }
 NodeRefLinkInfo::~NodeRefLinkInfo( ) {
-	emit release_NodeRefLinkInfo_signal( this, Create_SrackInfo( ) );
-	delete managementLinkMenu;
+	size_t count;
+	NodeRefLinkInfo **refInputArrayPtr;
+	size_t index;
+	size_t refOutputCount;
+	size_t refIndex;
+	count = refInputVector.size( );
+	refInputArrayPtr = refInputVector.data( );
+	NodeRefLinkInfo **refOutputArrayPtr;
+	NodeRefLinkInfo *checkNodeRefPtr;
+	for( index = 0; index < count; ++index ) {
+		checkNodeRefPtr = refInputArrayPtr[ index ];
+		auto &refOutputVector = checkNodeRefPtr->refOutputVector;
+		refOutputCount = refOutputVector.size( );
+		refOutputArrayPtr = refOutputVector.data( );
+		for( refIndex = 0; refIndex < refOutputCount; ++refIndex ) {
+			if( refOutputArrayPtr[ refIndex ] == this ) {
+				auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
+				Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );
+				refOutputVector.erase( refOutputVector.begin( ) + refIndex );
+				break;
+			}
+
+		}
+	}
+	refOutputCount = refOutputVector.size( );
+	refOutputArrayPtr = refOutputVector.data( );
+	for( refIndex = 0; refIndex < refOutputCount; ++refIndex ) {
+		checkNodeRefPtr = refOutputArrayPtr[ refIndex ];
+		auto &refInputVector = checkNodeRefPtr->refInputVector;
+		count = refInputVector.size( );
+		refOutputArrayPtr = refInputVector.data( );
+		for( index = 0; index < count; ++index ) {
+			if( refOutputArrayPtr[ index ] == this ) {
+				/*auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
+				Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );*/
+				refInputVector.erase( refInputVector.begin( ) + index );
+				break;
+			}
+
+		}
+	}
+	// 删除包含对象
 	delete nodePortLinkInfo;
 }
 bool NodeRefLinkInfo::appendInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port ) {
@@ -58,14 +71,7 @@ bool NodeRefLinkInfo::appendInputRef( OutputPort *output_port, NodeRefLinkInfo *
 		return true;
 	if( nodePortLinkInfo->appEndLinkTarget( output_port, input_port ) == false )
 		return false;
-	QString removeLinkText( tr( "删除 [%1.%2] -> [%3.%4] 链接" ) );
-	removeLinkText = removeLinkText.arg( output_port->getParentNode( )->nodeName ).arg( output_port->getPortName( ) ).arg( input_port->getParentNode( )->nodeName ).arg( input_port->getPortName( ) );
-	auto addAction = in_put_ref->managementLinkMenu->addAction( removeLinkText );
-	connect( addAction, &QAction::triggered, [addAction, this, output_port, in_put_ref, input_port]( ) {
-		removeInputRef( output_port, in_put_ref, input_port );
-		addAction->deleteLater( );
-		drawNodeWidget->update( );
-	} );
+
 	size_t count = refInputVector.size( );
 	auto refInputVectorPtr = refInputVector.data( );
 	size_t index;
@@ -73,18 +79,8 @@ bool NodeRefLinkInfo::appendInputRef( OutputPort *output_port, NodeRefLinkInfo *
 		if( refInputVectorPtr[ index ] == in_put_ref )
 			return true;
 	if( index == count ) {
-		refInputVector.emplace_back( in_put_ref );
-
-		count = in_put_ref->refOutputVector.size( );
-		refInputVectorPtr = in_put_ref->refOutputVector.data( );
-		for( index = 0; index < count; ++index )
-			if( refInputVectorPtr[ index ] == this )
-				break;
-		if( index == count )
-			in_put_ref->refOutputVector.emplace_back( this );
-
-		connect( this, &NodeRefLinkInfo::release_NodeRefLinkInfo_signal, in_put_ref, &NodeRefLinkInfo::linkRelease );
-		connect( in_put_ref, &NodeRefLinkInfo::release_NodeRefLinkInfo_signal, this, &NodeRefLinkInfo::linkRelease );
+		refOutputVector.emplace_back( in_put_ref );
+		in_put_ref->refInputVector.emplace_back( this );
 	}
 
 	return true;
@@ -112,8 +108,6 @@ bool NodeRefLinkInfo::removeInputRef( OutputPort *output_port, NodeRefLinkInfo *
 			in_put_ref->refOutputVector.erase( in_put_ref->refOutputVector.begin( ) + index );
 			break;
 		}
-	disconnect( this, &NodeRefLinkInfo::release_NodeRefLinkInfo_signal, in_put_ref, &NodeRefLinkInfo::linkRelease );
-	disconnect( in_put_ref, &NodeRefLinkInfo::release_NodeRefLinkInfo_signal, this, &NodeRefLinkInfo::linkRelease );
 	return true;
 }
 bool NodeRefLinkInfo::hasLinkInfo( OutputPort *output_port, InputPort *input_port ) {

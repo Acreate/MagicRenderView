@@ -66,6 +66,7 @@ DrawNodeWidget::DrawNodeWidget( QWidget *parent, const Qt::WindowFlags &f ) : QW
 	nodeDirector = appInstancePtr->getNodeDirector( );
 }
 DrawNodeWidget::~DrawNodeWidget( ) {
+	emit release_signal( this );
 	size_t count = nodeVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;

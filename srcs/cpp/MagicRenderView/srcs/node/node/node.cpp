@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMenu>
 #include <QVBoxLayout>
 
 #include <app/application.h>
@@ -26,9 +27,11 @@ Node::~Node( ) {
 		delete titileWidget;
 	if( connectWidget )
 		delete connectWidget;
+	delete removeMenu;
 }
 Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
 	hide( );
+	removeMenu = new QMenu;
 }
 bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
@@ -177,6 +180,12 @@ bool Node::init( DrawNodeWidget *parent ) {
 	mainLayout = nullptr;
 	titileWidget = nullptr;
 	connectWidget = nullptr;
+	removeMenu->clear( );
+	auto addAction = removeMenu->addAction( QString( tr( "删除节点 [%1]" ) ).arg( nodeName ) );
+	connect( addAction, &QAction::triggered, [this, addAction]( ) {
+		addAction->deleteLater( );
+		this->deleteLater( );
+	} );
 	nodeFunction = [] ( VarDirector *var_director ) { };
 	setParent( parent );
 	return true;

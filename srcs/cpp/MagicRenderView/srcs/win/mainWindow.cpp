@@ -13,14 +13,12 @@
 #include "../widget/mainWidgetScrollArea.h"
 
 MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
-	hide( );
-}
-bool MainWindow::init( ) {
-	if( mainWidgetScrollArea )
-		delete mainWidgetScrollArea;
 	mainWidgetScrollArea = new MainWidgetScrollArea( this );
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
+	hide( );
+}
+bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
 		return false;
 	instancePtr = Application::getInstancePtr( );
@@ -30,6 +28,7 @@ bool MainWindow::init( ) {
 	return true;
 }
 MainWindow::~MainWindow( ) {
+	emit release_signal( this );
 	delete mainWidgetScrollArea;
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {

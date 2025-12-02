@@ -34,6 +34,7 @@ protected:
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
 	Node *parentNode;
+	QMenu *disLinkMenu;
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
@@ -44,5 +45,6 @@ public:
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
+	virtual QMenu * getDisLinkMenu( ) const { return disLinkMenu; }
 };
 #endif // OUTPUTPORT_H_H_HEAD__FILE__

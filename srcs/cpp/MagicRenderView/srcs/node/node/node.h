@@ -69,6 +69,8 @@ protected:
 	QVBoxLayout *outputPortWidgetLayout;
 	/// @brief 节点边缘
 	int nodeBorderWidth;
+	/// @brief 删除菜单
+	QMenu *removeMenu;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -84,6 +86,7 @@ public:
 	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;
 	virtual const std::vector< InputPort * > & getInputPortVector( ) const { return inputPortVector; }
 	virtual const std::vector< OutputPort * > & getOutputPortVector( ) const { return outputPortVector; }
+	virtual QMenu * getRemoveMenu( ) const { return removeMenu; }
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

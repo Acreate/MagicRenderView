@@ -29,6 +29,8 @@ public:
 	virtual bool addNode( Node *add_node );
 	virtual const QPoint & getMenuPopPoint( ) const { return menuPopPoint; }
 	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
+Q_SIGNALS:
+	void release_signal( DrawNodeWidget *release_ptr );
 };
 
 #endif // DRAWNODEWIDGET_H_H_HEAD__FILE__

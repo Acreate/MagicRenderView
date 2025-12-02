@@ -7,6 +7,8 @@
 
 #include <app/application.h>
 
+#include "../srack/srackInfo.h"
+
 bool PrinterDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	applicationName = instancePtr->applicationName( );
@@ -17,9 +19,73 @@ bool PrinterDirector::init( ) {
 	logSaveFilePathName = instancePtr->getLogSaveFilePathName( );
 	return true;
 }
+void PrinterDirector::info( const QString &msg, const SrackInfo &srack_info ) const {
+	QStringList qstringBuff;
+	QDateTime dateTime = QDateTime::currentDateTime( );
+	qstringBuff.append( QString( "\n\n============== %1 ============== 提示消息(%2)" ).arg( applicationName ).arg( dateTime.toString( "yyyy-MM-dd hh:mm:ss.z" ) ) );
+	QString sourceFrom( "\n%1\n\n-------------------" );
+	qstringBuff.append( sourceFrom.arg( msg ) );
+	sourceFrom = "\t=>%1 [ %2 : %3 ]";
+	auto appendElement = sourceFrom.arg( srack_info.getFileSourceName( ) ).arg( srack_info.getCallFunctionName( ) ).arg( srack_info.getFileLine( ) );
+	qstringBuff << appendElement;
+
+	qstringBuff.append( QString( "==============   ==============\n" ) );
+	QString logOutString = qstringBuff.join( "\n" );
+	qDebug( ) << logOutString.toStdString( ).c_str( );
+	writeLogFileText( logOutString );
+}
+
+void PrinterDirector::info( const QString &msg, const QStringList args, const SrackInfo &srack_info ) const {
+	QStringList qstringBuff;
+	QDateTime dateTime = QDateTime::currentDateTime( );
+	qstringBuff.append( QString( "\n\n============== %1 ============== 提示消息(%2)" ).arg( applicationName ).arg( dateTime.toString( "yyyy-MM-dd hh:mm:ss.z" ) ) );
+	QString sourceFrom( "\n%1\n\n-------------------" );
+	QString argMsg = msg;
+	for( auto &item : args )
+		argMsg = argMsg.arg( item );
+	qstringBuff.append( sourceFrom.arg( argMsg ) );
+	sourceFrom = "\t=>%1 [ %2 : %3 ]";
+	auto appendElement = sourceFrom.arg( srack_info.getFileSourceName( ) ).arg( srack_info.getCallFunctionName( ) ).arg( srack_info.getFileLine( ) );
+	qstringBuff << appendElement;
+
+	qstringBuff.append( QString( "==============   ==============\n" ) );
+	QString logOutString = qstringBuff.join( "\n" );
+	qDebug( ) << logOutString.toStdString( ).c_str( );
+	writeLogFileText( logOutString );
+}
 PrinterDirector::PrinterDirector( ) : absPath( nullptr ) { }
 PrinterDirector::~PrinterDirector( ) {
 	delete absPath;
+}
+bool PrinterDirector::writeLogFileText( const QString &msg ) const {
+	QFile file( logSaveFilePathName );
+	if( file.open( QIODeviceBase::ReadWrite ) == false )
+		return false;
+	QByteArray byteArray;
+	byteArray = file.read( 10 );
+	qsizetype count = byteArray.size( );
+	if( count < 3 )
+		count = 0;
+	else if( count > 0 ) {
+		auto data = ( uint8_t * ) byteArray.data( );
+		if( data[ 0 ] != 0xef )
+			count = 0;
+		else if( data[ 1 ] != 0xbb )
+			count = 0;
+		else if( data[ 2 ] != 0xbf )
+			count = 0;
+	}
+	file.close( );
+	if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Append ) == false )
+		return false;
+	byteArray = msg.toUtf8( );
+	if( count == 0 ) {
+		byteArray.insert( 0, 0xbf );
+		byteArray.insert( 0, 0xbb );
+		byteArray.insert( 0, 0xef );
+	}
+	file.write( byteArray );
+	return true;
 }
 void PrinterDirector::error( const QString &msg ) const {
 	auto stacktraceEntries = getStacktrace( );
@@ -64,10 +130,7 @@ void PrinterDirector::error( const QString &msg ) const {
 		qstringBuff.append( QString( "==============   ==============\n" ) );
 		QString logOutString = qstringBuff.join( "\n" );
 		qDebug( ) << logOutString.toStdString( ).c_str( );
-		QFile file( logSaveFilePathName );
-		if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Append ) == false )
-			return;
-		file.write( logOutString.toUtf8( ) );
+		writeLogFileText( logOutString );
 	}
 }
 void PrinterDirector::info( const QString &msg ) const {
@@ -100,10 +163,7 @@ void PrinterDirector::info( const QString &msg ) const {
 		qstringBuff.append( QString( "==============   ==============\n" ) );
 		QString logOutString = qstringBuff.join( "\n" );
 		qDebug( ) << logOutString.toStdString( ).c_str( );
-		QFile file( logSaveFilePathName );
-		if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Append ) == false )
-			return;
-		file.write( logOutString.toUtf8( ) );
+		writeLogFileText( logOutString );
 	}
 }
 std::vector< std::stacktrace_entry > PrinterDirector::getStacktrace( ) const {

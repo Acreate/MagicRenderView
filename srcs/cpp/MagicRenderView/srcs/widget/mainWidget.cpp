@@ -17,16 +17,16 @@
 
 #include "../win/mainWindow.h"
 
-MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), drawLinkWidget( nullptr ), drawNodeWidget( nullptr ), clickInfoPtr( nullptr ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ) {
-
+MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ) {
+	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
+	drawLinkWidget = new DrawLinkWidget( this );
+	drawNodeWidget = new DrawNodeWidget( this );
 }
 MainWidget::~MainWidget( ) {
-	if( drawLinkWidget )
-		delete drawLinkWidget;
-	if( drawNodeWidget )
-		delete drawNodeWidget;
-	if( clickInfoPtr )
-		delete clickInfoPtr;
+	emit release_signal( this );
+	delete drawLinkWidget;
+	delete drawNodeWidget;
+	delete clickInfoPtr;
 }
 bool MainWidget::addNode( NodeRefLinkInfo *node_ref_link_info ) {
 	if( drawNodeWidget->addNode( node_ref_link_info->getCurrentNode( ) ) == false )
@@ -64,15 +64,6 @@ bool MainWidget::ensureVisible( Node *target ) {
 	return true;
 }
 bool MainWidget::init( ) {
-	if( drawLinkWidget )
-		delete drawLinkWidget;
-	if( drawNodeWidget )
-		delete drawNodeWidget;
-	if( clickInfoPtr )
-		delete clickInfoPtr;
-	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
-	drawLinkWidget = new DrawLinkWidget( this );
-	drawNodeWidget = new DrawNodeWidget( this );
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	mainWindow = appInstancePtr->getMainWindow( );
@@ -162,7 +153,18 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				if( dragNode )
 					ensureVisible( dragNode );
-				dragNode->getNodeRefLinkInfoPtr( ).getManagementLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
+				switch( clickInfoPtr->getClickType( ) ) {
+					case NodeEnum::NodeClickType::None :
+					case NodeEnum::NodeClickType::Titile :
+						dragNode->getRemoveMenu( )->popup( mapToGlobal( event->pos( ) ) );
+						break;
+					case NodeEnum::NodeClickType::InputPort :
+						clickInfoPtr->getInputPort( )->getDisLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
+						break;
+					case NodeEnum::NodeClickType::OutputPort :
+						clickInfoPtr->getOutputPort( )->getDisLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
+						break;
+				}
 			} else {
 				drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
 				nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );

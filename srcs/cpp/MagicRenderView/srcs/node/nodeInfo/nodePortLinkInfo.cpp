@@ -3,7 +3,7 @@
 #include "nodeRefLinkInfo.h"
 
 #include "../port/outputPort/outputPort.h"
-NodePortLinkInfo::NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info, QMenu *management_link_menu ) : nodeRefLinkInfo( node_ref_link_info ), managementLinkMenu( management_link_menu ) { }
+NodePortLinkInfo::NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info ) : nodeRefLinkInfo( node_ref_link_info ) { }
 bool NodePortLinkInfo::appEndLinkTarget( OutputPort *out_put_port, InputPort *in_put_port ) {
 	size_t count = inputPortVector.size( );
 	auto data = inputPortVector.data( );
@@ -46,8 +46,8 @@ bool NodePortLinkInfo::removeLinkTarget( OutputPort *out_put_port, InputPort *in
 		}
 	return false;
 }
-void NodePortLinkInfo::removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remove_all_port_node_ref_link_info ) {
-
+size_t NodePortLinkInfo::removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remove_all_port_node_ref_link_info ) {
+	size_t result = 0;
 	auto findNode = remove_all_port_node_ref_link_info->currentNode;
 
 	std::pair< InputPort *, std::vector< OutputPort * > > *inputPortArrayPtr;
@@ -70,14 +70,17 @@ void NodePortLinkInfo::removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remove_
 					inputPortArrayPtr = inputPortVector.data( );
 					inputPortCount = inputPortVector.size( );
 					inputPortindex -= 1;
+					++result;
 					break;
 				}
 				outputPorts.erase( outputPorts.begin( ) + foreachOutputIndex );
 				foreachOutputCount = outputPorts.size( );
 				foreachOutputArrayPtr = outputPorts.data( );
 				foreachOutputIndex -= 1;
+				++result;
 			}
 	}
+	return result;
 }
 bool NodePortLinkInfo::hasNodeRef( const NodeRefLinkInfo *check_node_ref ) const {
 	auto currentNode = check_node_ref->currentNode;
