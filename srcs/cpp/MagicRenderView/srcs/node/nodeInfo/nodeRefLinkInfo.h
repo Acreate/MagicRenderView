@@ -11,7 +11,8 @@ class NodePortLinkInfo;
 class OutputPort;
 class InputPort;
 class Node;
-class NodeRefLinkInfo {
+class NodeRefLinkInfo : public QObject {
+	Q_OBJECT;
 	friend class NodePortLinkInfo;
 	friend class NodeDirector;
 	friend class NodeRefLinkInfoTools;
@@ -30,13 +31,27 @@ protected:
 	std::vector< NodeRefLinkInfo * > refOutputVector;
 public:
 	NodeRefLinkInfo( Node *current_node );
-	virtual ~NodeRefLinkInfo( );
-	virtual bool appendInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port );
-	virtual bool removeInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port );
-	virtual bool hasLinkInfo( OutputPort *output_port, InputPort *input_port );
+	~NodeRefLinkInfo( ) override;
+	/// @brief 输入接口连接到输出接口
+	/// @param input_port 当前对象节点的输入接口
+	/// @param output_port 目标节点的输出接口
+	/// @return 成功返回 true
+	virtual bool appendInputRef( InputPort *input_port, OutputPort *output_port );
+	/// @brief 输入接口断开输出接口
+	/// @param input_port 当前对象节点的输入接口
+	/// @param output_port 目标节点的输出接口
+	/// @return 成功返回 true
+	virtual bool removeInputRef( InputPort *input_port, OutputPort *output_port );
+	virtual bool hasInputNodeRef( NodeRefLinkInfo *in_put_ref );
+	virtual bool hasPortRef( InputPort *input_port, OutputPort *output_port );
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
+Q_SIGNALS:
+	void release_node_link_signal( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	void create_node_link_signal( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	void release_port_link_signal( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
+	void create_port_link_signal( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info );
 };
 class NodeRefLinkInfoTools {
 	friend class NodeDirector;

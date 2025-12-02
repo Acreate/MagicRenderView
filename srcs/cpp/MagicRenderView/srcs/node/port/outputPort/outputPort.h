@@ -18,6 +18,9 @@ class OutputPort : public QWidget {
 	Q_OBJECT;
 private:
 	friend class Node;
+	friend class NodeRefLinkInfo;
+	friend class NodePortLinkInfo;
+	friend class NodePortLinkActionPair;
 	friend class InputPort;
 	friend class NodeDirector;
 	friend class NodeStack;

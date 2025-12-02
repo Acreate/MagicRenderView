@@ -2,9 +2,12 @@
 
 #include "nodeRefLinkInfo.h"
 
+#include "../../srack/srackInfo.h"
+
+#include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"
 NodePortLinkInfo::NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info ) : nodeRefLinkInfo( node_ref_link_info ) { }
-bool NodePortLinkInfo::appEndLinkTarget( OutputPort *out_put_port, InputPort *in_put_port ) {
+bool NodePortLinkInfo::appEndLinkInputTarget( InputPort *in_put_port, OutputPort *out_put_port ) {
 	size_t count = inputPortVector.size( );
 	auto data = inputPortVector.data( );
 	size_t index;
@@ -17,14 +20,16 @@ bool NodePortLinkInfo::appEndLinkTarget( OutputPort *out_put_port, InputPort *in
 				if( outputPortArrayPtr[ index ] == out_put_port )
 					return true;
 			outputPorts.emplace_back( out_put_port );
+			emit create_link_signal( in_put_port, out_put_port, Create_SrackInfo( ) );
 			return true;
 		}
 	std::vector< OutputPort * > ports;
 	ports.emplace_back( out_put_port );
 	inputPortVector.emplace_back( std::pair( in_put_port, ports ) );
+	emit create_link_signal( in_put_port, out_put_port, Create_SrackInfo( ) );
 	return true;
 }
-bool NodePortLinkInfo::removeLinkTarget( OutputPort *out_put_port, InputPort *in_put_port ) {
+bool NodePortLinkInfo::removeLinkInputTarget( InputPort *in_put_port, OutputPort *out_put_port ) {
 
 	size_t count = inputPortVector.size( );
 	auto data = inputPortVector.data( );
@@ -40,6 +45,7 @@ bool NodePortLinkInfo::removeLinkTarget( OutputPort *out_put_port, InputPort *in
 						inputPortVector.erase( inputPortVector.begin( ) + index );
 					else
 						outputPorts.erase( outputPorts.begin( ) + index );
+					emit release_link_signal( in_put_port, out_put_port, Create_SrackInfo( ) );
 					return true;
 				}
 			return false;
@@ -71,6 +77,7 @@ size_t NodePortLinkInfo::removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remov
 					inputPortCount = inputPortVector.size( );
 					inputPortindex -= 1;
 					++result;
+					emit release_link_signal( inputPortArrayPtr[ inputPortindex ].first, foreachOutputArrayPtr[ foreachOutputIndex ], Create_SrackInfo( ) );
 					break;
 				}
 				outputPorts.erase( outputPorts.begin( ) + foreachOutputIndex );
@@ -78,12 +85,16 @@ size_t NodePortLinkInfo::removeNodeRefLinkInfoLinkTarget( NodeRefLinkInfo *remov
 				foreachOutputArrayPtr = outputPorts.data( );
 				foreachOutputIndex -= 1;
 				++result;
+				emit release_link_signal( inputPortArrayPtr[ inputPortindex ].first, foreachOutputArrayPtr[ foreachOutputIndex ], Create_SrackInfo( ) );
 			}
 	}
 	return result;
 }
 bool NodePortLinkInfo::hasNodeRef( const NodeRefLinkInfo *check_node_ref ) const {
 	auto currentNode = check_node_ref->currentNode;
+	return hasNodeRef( currentNode );
+}
+bool NodePortLinkInfo::hasNodeRef( const Node *check_node ) const {
 	size_t count = inputPortVector.size( );
 	auto data = inputPortVector.data( );
 	size_t index;
@@ -92,13 +103,13 @@ bool NodePortLinkInfo::hasNodeRef( const NodeRefLinkInfo *check_node_ref ) const
 		auto outputPortArrayPtr = outputPorts.data( );
 		count = outputPorts.size( );
 		for( index = 0; index < count; ++index )
-			if( outputPortArrayPtr[ index ]->getParentNode( ) == currentNode )
+			if( outputPortArrayPtr[ index ]->parentNode == check_node )
 				return true;
 		return false;
 	}
 	return false;
 }
-bool NodePortLinkInfo::hasPortRef( const OutputPort *out_put_port, const InputPort *in_put_port ) const {
+bool NodePortLinkInfo::hasPortRef( const InputPort *in_put_port, const OutputPort *out_put_port ) const {
 	size_t count = inputPortVector.size( );
 	auto data = inputPortVector.data( );
 	size_t index;

@@ -27,6 +27,8 @@ class Node : public QWidget {
 	friend class NodeDirector;
 	friend class NodeStack;
 	friend class NodeRefLinkInfo;
+	friend class NodePortLinkInfo;
+	friend class NodePortLinkActionPair;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;

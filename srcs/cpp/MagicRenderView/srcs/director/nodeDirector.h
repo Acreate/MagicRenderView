@@ -8,6 +8,7 @@
 
 #include "../widget/mainWidget.h"
 
+class NodePortLinkActionPair;
 class DrawLinkWidget;
 class SrackInfo;
 class NodeRefLinkInfo;
@@ -42,6 +43,7 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
+	std::vector< NodePortLinkActionPair * > linkActionMap;
 protected:
 public:
 	NodeDirector( QObject *parent = nullptr );
@@ -58,9 +60,12 @@ protected:
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
-	virtual void connectNodeSignals( Node *connect_obj_ptr );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
 	virtual void appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_link_info );
+	virtual size_t removePortLinkAction( InputPort *input_port );
+	virtual size_t removePortLinkAction( OutputPort *output_port );
+	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
+	virtual size_t addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
@@ -82,6 +87,11 @@ protected:
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息
 	virtual void finishRunNode( Node *finish_node, const SrackInfo &srack_info );
+	virtual void finishCreateNode( NodeRefLinkInfo *finish_node );
+	virtual void releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	virtual void createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	virtual void releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
+	virtual void createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
 	/// @param signal_obj_ptr 信号对象指针
@@ -93,13 +103,13 @@ Q_SIGNALS:
 	/// @param signal_port 释放的源端口对象指针
 	/// @param target_prot 释放的目标端口对象指针
 	/// @param srack_info 堆栈信息
-	void finish_release_node_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
+	void finish_release_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
 	/// @brief 节点端口发生链接时，产生该信号
 	/// @param signal_obj_ptr 信号对象指针
 	/// @param signal_port 链接的源端口对象指针
 	/// @param target_prot 链接的目标端口对象指针
 	/// @param srack_info 堆栈信息
-	void finish_create_node_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
+	void finish_create_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
 	/// @brief 节点依赖发生释放时候，产生该信号
 	/// @param signal_obj_ptr 信号对象指针
 	/// @param signal_node 依赖节点

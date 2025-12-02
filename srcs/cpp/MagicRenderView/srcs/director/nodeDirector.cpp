@@ -9,6 +9,7 @@
 #include "../app/application.h"
 
 #include "../node/node/node.h"
+#include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
@@ -133,15 +134,14 @@ Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main
 		return node;
 	}
 	appendRefNodeVectorAtNode( refNdoeInfo );
-	connectNodeSignals( node );
 	return node;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 
-	NodeRefLinkInfo *outputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
-	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
+	NodeRefLinkInfo *inputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
+	NodeRefLinkInfo *outputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
 
-	if( inputNodeRef->hasLinkInfo( output_port, input_port ) == true )
+	if( inputNodeRef->hasPortRef( input_port, output_port ) == true )
 		return true;
 	NodeEnum::PortType inType = input_port->getPortType( );
 	if( inType != NodeEnum::PortType::Any ) {
@@ -153,29 +153,19 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 		if( outVarTypeName != inVarTypeName )
 			return false;
 	}
-	bool appendInputRef = inputNodeRef->appendInputRef( output_port, outputNodeRef, input_port );
-	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
-	actionText = actionText.arg( inputNodeRef->currentNode->nodeName ).arg( output_port->portName ).arg( outputNodeRef->currentNode->nodeName ).arg( input_port->portName );
-	auto outAction = output_port->disLinkMenu->addAction( actionText );
-	auto inAction = input_port->disLinkMenu->addAction( actionText );
-	auto disLink = [this, output_port, input_port, outAction, inAction]( ) {
-		if( disLinkPort( output_port, input_port ) == false )
-			return;
-		outAction->deleteLater( );
-		inAction->deleteLater( );
-		output_port->disLinkMenu->removeAction( outAction );
-		input_port->disLinkMenu->removeAction( inAction );
-	};
-	connect( outAction, &QAction::triggered, disLink );
-	connect( inAction, &QAction::triggered, disLink );
+	bool appendInputRef = outputNodeRef->appendInputRef( input_port, output_port );
+	if( appendInputRef == false )
+		return false;
+
 	return appendInputRef;
 }
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
-	NodeRefLinkInfo *outputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
 	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
-	if( inputNodeRef->hasLinkInfo( output_port, input_port ) == false )
+	if( inputNodeRef->hasPortRef( input_port, output_port ) == false )
 		return true;
-	bool removeInputRef = inputNodeRef->removeInputRef( output_port, outputNodeRef, input_port );
+	bool removeInputRef = inputNodeRef->removeInputRef( input_port, output_port );
+	if( removeInputRef == false )
+		return removeInputRef;
 	return removeInputRef;
 }
 
@@ -361,18 +351,12 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			return;
 		}
 		appendRefNodeVectorAtNode( refNdoeInfo );
-		connectNodeSignals( node );
 		node->show( );
 		mainWidget->ensureVisible( node );
 	} );
 	return true;
 }
-void NodeDirector::connectNodeSignals( Node *connect_obj_ptr ) {
-	connect( connect_obj_ptr, &Node::release_node_signal, this, &NodeDirector::releaseNode );
-	connect( connect_obj_ptr, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
-	connect( connect_obj_ptr, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
-	connect( connect_obj_ptr, &Node::finish_run_node_signal, this, &NodeDirector::finishRunNode );
-}
+
 void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t count = refNodeVector.size( );
 	auto data = refNodeVector.data( );
@@ -381,6 +365,19 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 		if( data[ index ]->getCurrentNode( ) == remove_node ) {
 			NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
 			refNodeVector.erase( refNodeVector.begin( ) + index );
+
+			auto inputPorts = nodeRefLinkInfo->currentNode->getInputPortVector( );
+			auto inputPortArray = inputPorts.data( );
+			count = inputPorts.size( );
+			for( index = 0; index < count; ++index )
+				removePortLinkAction( inputPortArray[ index ] );
+
+			auto outputPorts = nodeRefLinkInfo->currentNode->getOutputPortVector( );
+			auto outputPortArray = outputPorts.data( );
+			count = outputPorts.size( );
+			for( index = 0; index < count; ++index )
+				removePortLinkAction( outputPortArray[ index ] );
+
 			delete nodeRefLinkInfo;
 			if( drawNodeWidget )
 				drawNodeWidget->update( );
@@ -396,20 +393,139 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 	for( ; index < count; ++index )
 		if( data[ index ] == append_node_ref_link_info )
 			return;
-
-	if( index == count )
-		refNodeVector.emplace_back( append_node_ref_link_info );
+	refNodeVector.emplace_back( append_node_ref_link_info );
+	finishCreateNode( append_node_ref_link_info );
+}
+size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
+	size_t result = 0;
+	size_t count = linkActionMap.size( );
+	if( count == 0 )
+		return result;
+	size_t endSize = count;
+	auto data = linkActionMap.data( );
+	size_t index = 0;
+	for( ; index < endSize; ++index )
+		if( data[ index ]->inputPort == input_port ) {
+			auto nodePortLinkActionPair = data[ index ];
+			endSize -= 1;
+			data[ index ] = data[ endSize ];
+			data[ endSize ] = nullptr;
+			delete nodePortLinkActionPair;
+			result += 1;
+		}
+	if( endSize != count )
+		linkActionMap.resize( endSize );
+	drawLinkWidget->update( );
+	drawNodeWidget->update( );
+	return result;
+}
+size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
+	size_t result = 0;
+	size_t count = linkActionMap.size( );
+	if( count == 0 )
+		return result;
+	size_t endSize = count;
+	auto data = linkActionMap.data( );
+	size_t index = 0;
+	for( ; index < endSize; ++index )
+		if( data[ index ]->outputPort == output_port ) {
+			auto nodePortLinkActionPair = data[ index ];
+			endSize -= 1;
+			data[ index ] = data[ endSize ];
+			data[ endSize ] = nullptr;
+			delete nodePortLinkActionPair;
+			result += 1;
+		}
+	if( endSize != count )
+		linkActionMap.resize( endSize );
+	drawLinkWidget->update( );
+	drawNodeWidget->update( );
+	return result;
+}
+size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *output_port ) {
+	size_t result = 0;
+	size_t count = linkActionMap.size( );
+	auto data = linkActionMap.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->inputPort == input_port && data[ index ]->outputPort == output_port ) {
+			auto nodePortLinkActionPair = data[ index ];
+			linkActionMap.erase( linkActionMap.begin( ) + index );
+			delete nodePortLinkActionPair;
+			drawLinkWidget->update( );
+			drawNodeWidget->update( );
+			return 1;
+		}
+	return result;
+}
+size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action ) {
+	size_t result = 0;
+	size_t count = linkActionMap.size( );
+	auto data = linkActionMap.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->inputPort == input_port && data[ index ]->outputPort == output_port )
+			return result;
+	result += 1;
+	linkActionMap.emplace_back( new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action ) );
+	return result;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点释放", Create_SrackInfo( ) );
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }
 void NodeDirector::errorRunNode( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点错误", Create_SrackInfo( ) );
 	emit error_run_node_signal( this, error_node, error_type, error_msg, srack_info );
 }
 void NodeDirector::adviseRunNode( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点建议", Create_SrackInfo( ) );
 	emit advise_run_node_signal( this, advise_node, advise_type, advise_msg, srack_info );
 }
 void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
 	emit finish_run_node_signal( this, finish_node, srack_info );
+}
+
+void NodeDirector::releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点释放引用", Create_SrackInfo( ) );
+	emit finish_release_ref_node_signal( this, signal_obj_ptr->currentNode, release_output_node_ref_obj_ptr->currentNode, srack_info );
+}
+void NodeDirector::createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
+	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	emit finish_create_ref_node_signal( this, signal_obj_ptr->currentNode, create_output_node_ref_obj_ptr->currentNode, srack_info );
+}
+void NodeDirector::releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info ) {
+	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	emit finish_release_port_link_signal( this, input_port, release_output_port, srack_info );
+}
+void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info ) {
+	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+
+	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
+	actionText = actionText.arg( bind_output_port->parentNode->nodeName ).arg( bind_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
+	auto outAction = bind_output_port->disLinkMenu->addAction( actionText );
+	auto inAction = input_port->disLinkMenu->addAction( actionText );
+	auto disLink = [this, bind_output_port, input_port]( ) {
+		if( disLinkPort( bind_output_port, input_port ) == false )
+			return;
+		removePortLinkAction( input_port, bind_output_port );
+	};
+
+	connect( outAction, &QAction::triggered, disLink );
+	connect( inAction, &QAction::triggered, disLink );
+	addEndPortLinkAction( input_port, bind_output_port, inAction, outAction );
+	emit finish_create_port_link_signal( this, input_port, bind_output_port, srack_info );
+}
+void NodeDirector::finishCreateNode( NodeRefLinkInfo *finish_node ) {
+	connect( finish_node, &NodeRefLinkInfo::create_node_link_signal, this, &NodeDirector::createNodeLink );
+	connect( finish_node, &NodeRefLinkInfo::release_node_link_signal, this, &NodeDirector::releaseNodeLink );
+	connect( finish_node, &NodeRefLinkInfo::release_port_link_signal, this, &NodeDirector::releasePortLink );
+	connect( finish_node, &NodeRefLinkInfo::create_port_link_signal, this, &NodeDirector::createPortLink );
+	connect( finish_node->currentNode, &Node::release_node_signal, this, &NodeDirector::releaseNode );
+	connect( finish_node->currentNode, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
+	connect( finish_node->currentNode, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
+	connect( finish_node->currentNode, &Node::finish_run_node_signal, this, &NodeDirector::finishRunNode );
+	emit finish_create_node_signal( this, finish_node->currentNode, Create_SrackInfo( ) );
 }
