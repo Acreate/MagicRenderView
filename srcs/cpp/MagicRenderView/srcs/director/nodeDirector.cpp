@@ -30,9 +30,6 @@ bool NodeDirector::init( ) {
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
 	releaseResources( );
-	if( nodeVarDirector )
-		delete nodeVarDirector;
-	nodeVarDirector = new VarDirector;
 	if( nodeVarDirector->init( ) == false )
 		return false;
 	createNodeVector.clear( );
@@ -58,7 +55,6 @@ bool NodeDirector::init( ) {
 			return false;
 		}
 	// 初始化菜单
-	nodeCreateMenu = new QMenu;
 	std::list< std::pair< QString, QAction * > > actionMap;
 	for( index = 0; index < count; ++index ) {
 		QMenu *generateCreateMenu = fromNodeGenerateCreateMenu( nodeStackArrayPtr[ index ], actionMap );
@@ -94,14 +90,10 @@ bool NodeDirector::init( ) {
 		} );
 	return true;
 }
-void NodeDirector::releaseLink( InputPort *signal_port, OutputPort *target_prot ) {
 
-}
-void NodeDirector::createLink( InputPort *signal_port, OutputPort *target_prot ) {
-
-}
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), nodeCreateMenu( nullptr ), nodeVarDirector( nullptr ) {
-
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
+	nodeVarDirector = new VarDirector;
+	nodeCreateMenu = new QMenu;
 }
 void NodeDirector::releaseResources( ) {
 	size_t count = nodeStacks.size( );
@@ -112,9 +104,7 @@ void NodeDirector::releaseResources( ) {
 			delete nodeStackArrayPtr[ index ];
 		nodeStacks.clear( );
 	}
-	if( nodeCreateMenu )
-		delete nodeCreateMenu;
-	nodeCreateMenu = nullptr;
+	nodeCreateMenu->clear( );
 
 	count = refNodeVector.size( );
 	if( count != 0 ) {
@@ -151,7 +141,7 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	NodeRefLinkInfo *outputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
 	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
 
-	if( outputNodeRef->hasLinkInfo( output_port, input_port ) == true )
+	if( inputNodeRef->hasLinkInfo( output_port, input_port ) == true )
 		return true;
 	NodeEnum::PortType inType = input_port->getPortType( );
 	if( inType != NodeEnum::PortType::Any ) {
@@ -164,8 +154,31 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 			return false;
 	}
 	bool appendInputRef = inputNodeRef->appendInputRef( output_port, outputNodeRef, input_port );
+	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
+	actionText = actionText.arg( inputNodeRef->currentNode->nodeName ).arg( output_port->portName ).arg( outputNodeRef->currentNode->nodeName ).arg( input_port->portName );
+	auto outAction = output_port->disLinkMenu->addAction( actionText );
+	auto inAction = input_port->disLinkMenu->addAction( actionText );
+	auto disLink = [this, output_port, input_port, outAction, inAction]( ) {
+		if( disLinkPort( output_port, input_port ) == false )
+			return;
+		outAction->deleteLater( );
+		inAction->deleteLater( );
+		output_port->disLinkMenu->removeAction( outAction );
+		input_port->disLinkMenu->removeAction( inAction );
+	};
+	connect( outAction, &QAction::triggered, disLink );
+	connect( inAction, &QAction::triggered, disLink );
 	return appendInputRef;
 }
+bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
+	NodeRefLinkInfo *outputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
+	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
+	if( inputNodeRef->hasLinkInfo( output_port, input_port ) == false )
+		return true;
+	bool removeInputRef = inputNodeRef->removeInputRef( output_port, outputNodeRef, input_port );
+	return removeInputRef;
+}
+
 void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 	size_t count = refNodeVector.size( );
 	auto arrayPtr = refNodeVector.data( );

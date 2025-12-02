@@ -67,8 +67,7 @@ NodeRefLinkInfo::~NodeRefLinkInfo( ) {
 	delete nodePortLinkInfo;
 }
 bool NodeRefLinkInfo::appendInputRef( OutputPort *output_port, NodeRefLinkInfo *in_put_ref, InputPort *input_port ) {
-	if( nodePortLinkInfo->hasPortRef( output_port, input_port ) )
-		return true;
+
 	if( nodePortLinkInfo->appEndLinkTarget( output_port, input_port ) == false )
 		return false;
 

@@ -43,14 +43,6 @@ protected:
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 protected:
-	/// @brief 节点端口发生释放时，产生该信号
-	/// @param signal_port 释放的源端口对象指针
-	/// @param target_prot 释放的目标端口对象指针
-	virtual void releaseLink( InputPort *signal_port, OutputPort *target_prot );
-	/// @brief 节点端口发生链接时，产生该信号
-	/// @param signal_port 链接的源端口对象指针
-	/// @param target_prot 链接的目标端口对象指针
-	virtual void createLink( InputPort *signal_port, OutputPort *target_prot );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	void releaseResources( );
@@ -59,6 +51,7 @@ public:
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	virtual Node * createNode( const QString &node_type_name, MainWidget *main_widget );
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
+	virtual bool disLinkPort( OutputPort *output_port, InputPort *input_port );
 	virtual void drawLinkLines( QPainter &draw_link_widget );
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );

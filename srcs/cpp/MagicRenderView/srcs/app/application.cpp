@@ -21,25 +21,26 @@ Application * Application::getInstancePtr( ) {
 	return instance;
 }
 
-Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ), mainWindow( nullptr ), iniDirector( nullptr ), varDirector( nullptr ), printerDirector( nullptr ), nodeDirector( nullptr ), appInitRunDataTime( nullptr ) {
+Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
+	Application::instance = this;
+	printerDirector = new PrinterDirector;
+	varDirector = new VarDirector;
+	iniDirector = new IniDirector;
+	nodeDirector = new NodeDirector;
+	mainWindow = new MainWindow( );
+	appInitRunDataTime = new QDateTime;
 }
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
 		printerDirector->error( "窗口状态保存异常" );
 	if( synchronousVarToFile( ) == false )
 		printerDirector->error( "程序信息保存异常" );
-	if( mainWindow )
-		delete mainWindow;
-	if( nodeDirector )
-		delete nodeDirector;
-	if( iniDirector )
-		delete iniDirector;
-	if( varDirector )
-		delete varDirector;
-	if( printerDirector )
-		delete printerDirector;
-	if( appInitRunDataTime )
-		delete appInitRunDataTime;
+	delete mainWindow;
+	delete nodeDirector;
+	delete iniDirector;
+	delete varDirector;
+	delete printerDirector;
+	delete appInitRunDataTime;
 }
 bool Application::notify( QObject *object, QEvent *event ) {
 	if( object == mainWindow ) {
@@ -87,9 +88,6 @@ bool Application::event( QEvent *event ) {
 	return QApplication::event( event );
 }
 bool Application::init( ) {
-	Application::instance = this;
-	if( appInitRunDataTime == nullptr )
-		appInitRunDataTime = new QDateTime;
 	*appInitRunDataTime = QDateTime::currentDateTime( );
 	auto currentApplcationDirPath = applicationDirPath( );
 	auto appName = applicationName( );
@@ -103,7 +101,7 @@ bool Application::init( ) {
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
 	logSaveFilePathName = currentApplcationDirPath + "/logs/" +
-		appName + appInitRunDataTime->toString( "! yyyy_MM_dd hh_mm_s.z" ) + ".log";
+		appName + appInitRunDataTime->toString( "!yyyy_MM_dd.hh_mm" ) + ".log";
 	filePermission.setFile( logSaveFilePathName );
 	logSaveFilePathName = filePermission.absoluteFilePath( );
 	path::removeFile( logSaveFilePathName );
@@ -114,22 +112,6 @@ bool Application::init( ) {
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
 
-	if( mainWindow )
-		delete mainWindow;
-	if( nodeDirector )
-		delete nodeDirector;
-	if( iniDirector )
-		delete iniDirector;
-	if( varDirector )
-		delete varDirector;
-	if( printerDirector )
-		delete printerDirector;
-
-	printerDirector = new PrinterDirector;
-	varDirector = new VarDirector;
-	iniDirector = new IniDirector;
-	nodeDirector = new NodeDirector;
-	mainWindow = new MainWindow( );
 	if( printerDirector->init( ) == false )
 		return false;
 	if( varDirector->init( ) == false )
