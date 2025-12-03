@@ -192,6 +192,13 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 		}
 	}
 }
+bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector<uint8_t> &result_vector_data ) {
+	
+	return false;
+}
+bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	return false;
+}
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
 	auto nodeStackName = node_stack_ptr->objectName( );

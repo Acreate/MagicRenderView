@@ -18,6 +18,8 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
+	QToolBar *toolBar;
+	QString saveFileDirPath;
 protected:
 	MainWindow( );
 	virtual bool init( );
@@ -25,6 +27,8 @@ public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+	virtual void savePorjectToFile( );
+	virtual void loadPorjectAtFile( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

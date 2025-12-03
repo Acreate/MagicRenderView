@@ -137,6 +137,24 @@ bool Node::hasOutputPort( const OutputPort *check_output_port ) const {
 
 	return false;
 }
+bool Node::toUint8VectorData( std::vector< uint8_t > &result_vector_data, size_t &result_use_count ) {
+	size_t *varCount;
+	if( varDirector->create( varCount ) == false )
+		return false;
+	if( varDirector->toVector( varCount, result_vector_data ) == false )
+		return false;
+	return true;
+}
+bool Node::formUint8ArrayData( const uint8_t *source_array_ptr, const size_t &source_array_count, size_t &result_use_count ) {
+	size_t *varCount;
+	if( varDirector->create( varCount ) == false )
+		return false;
+	size_t resultCount = 0;
+	void *converPtr = varCount;
+	if( varDirector->toVar( resultCount, source_array_ptr, source_array_count, converPtr ) == false )
+		return false;
+	return true;
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )

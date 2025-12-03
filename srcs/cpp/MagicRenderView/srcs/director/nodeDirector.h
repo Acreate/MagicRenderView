@@ -55,6 +55,9 @@ public:
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
 	virtual bool disLinkPort( OutputPort *output_port, InputPort *input_port );
 	virtual void drawLinkLines( QPainter &draw_link_widget );
+	virtual bool toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data );
+	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
+
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
