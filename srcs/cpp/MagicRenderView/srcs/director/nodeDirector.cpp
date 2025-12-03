@@ -31,7 +31,8 @@ bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
-	releaseResources( );
+	releaseMenuResources( );
+	releaseNodeResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
 	createNodeVector.clear( );
@@ -97,9 +98,11 @@ NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
 	nodeVarDirector = new VarDirector;
 	nodeCreateMenu = new QMenu;
 }
-void NodeDirector::releaseResources( ) {
-	size_t count = nodeStacks.size( );
+void NodeDirector::releaseMenuResources( ) {
+	size_t count;
 	size_t index;
+
+	count = nodeStacks.size( );
 	if( count ) {
 		auto nodeStackArrayPtr = nodeStacks.data( );
 		for( index = 0; index < count; ++index )
@@ -107,7 +110,18 @@ void NodeDirector::releaseResources( ) {
 		nodeStacks.clear( );
 	}
 	nodeCreateMenu->clear( );
-
+}
+void NodeDirector::releaseNodeResources( ) {
+	size_t count;
+	size_t index;
+	count = linkActionMap.size( );
+	if( count != 0 ) {
+		auto buff = linkActionMap;
+		linkActionMap.clear( );
+		auto pair = buff.data( );
+		for( index = 0; index < count; ++index )
+			delete pair[ index ];
+	}
 	count = refNodeVector.size( );
 	if( count != 0 ) {
 		auto buff = refNodeVector;
@@ -118,14 +132,17 @@ void NodeDirector::releaseResources( ) {
 	}
 }
 NodeDirector::~NodeDirector( ) {
-	releaseResources( );
+	releaseMenuResources( );
+	releaseNodeResources( );
+	if( nodeCreateMenu )
+		delete nodeCreateMenu;
 	if( nodeVarDirector )
 		delete nodeVarDirector;
 }
 Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main_widget ) {
 	if( main_widget == nullptr || node_type_name.isEmpty( ) )
 		return nullptr;
-	Node *node = nullptr; // ????
+	Node *node = nullptr;
 	size_t count = createNodeVector.size( );
 	auto createArrayPtr = createNodeVector.data( );
 	size_t index = 0;
@@ -373,6 +390,7 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 	auto nodeIdPairArrayPtr = nodeIdPair.data( );
 	NodePortLinkInfo temp( nullptr );
 	QPoint pos;
+	releaseNodeResources( );
 	for( ; index < count; ++index ) {
 		// 节点名称
 		anyPtr = stringPtr;
@@ -411,7 +429,7 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 	}
-
+	result_use_count = offset - source_array_ptr;
 	return true;
 }
 
@@ -639,8 +657,10 @@ size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
-	drawLinkWidget->update( );
-	drawNodeWidget->update( );
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
+	if( drawNodeWidget )
+		drawNodeWidget->update( );
 	return result;
 }
 size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
@@ -662,8 +682,10 @@ size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
-	drawLinkWidget->update( );
-	drawNodeWidget->update( );
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
+	if( drawNodeWidget )
+		drawNodeWidget->update( );
 	return result;
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *output_port ) {
@@ -676,8 +698,10 @@ size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *ou
 			auto nodePortLinkActionPair = data[ index ];
 			linkActionMap.erase( linkActionMap.begin( ) + index );
 			delete nodePortLinkActionPair;
-			drawLinkWidget->update( );
-			drawNodeWidget->update( );
+			if( drawLinkWidget )
+				drawLinkWidget->update( );
+			if( drawNodeWidget )
+				drawNodeWidget->update( );
 			return 1;
 		}
 	return result;

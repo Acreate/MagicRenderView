@@ -169,16 +169,16 @@ bool NodePortLinkInfo::toLinkMap( std::vector< InputportLinkOutputPortInfoMap > 
 	uint64_t *uint64Ptr = nullptr;
 	if( varDirector.create( uint64Ptr ) == false )
 		return false;
-
+	// 数量匹配
 	void *converPtr = uint64Ptr;
 	if( varDirector.toVar( user_data_count, source_data_ptr, source_data_count, converPtr ) == false )
 		return false;
 	auto mod = source_data_count - user_data_count;
 	if( mod < *uint64Ptr )
-		return false; // 与描述最小所需数量不匹配
+		return false;
 	auto offset = source_data_ptr + user_data_count;
 	// 输入匹配端口数量
-	if( varDirector.toVar( user_data_count, source_data_ptr, source_data_count, converPtr ) == false )
+	if( varDirector.toVar( user_data_count, offset, mod, converPtr ) == false )
 		return false;
 	offset = offset + user_data_count;
 	mod = mod - user_data_count;
@@ -192,6 +192,6 @@ bool NodePortLinkInfo::toLinkMap( std::vector< InputportLinkOutputPortInfoMap > 
 		offset = offset + user_data_count;
 		mod = mod - user_data_count;
 	}
-	user_data_count = offset - source_data_ptr;
+	user_data_count = offset - source_data_ptr; // 两次: 1次(48) ， 2次(214)
 	return true;
 }
