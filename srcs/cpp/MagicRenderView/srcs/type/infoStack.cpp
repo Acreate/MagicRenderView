@@ -17,10 +17,10 @@ InfoStack::~InfoStack( ) {
 		size_t count = allVarPtrVector.size( );
 		auto arrayPtr = allVarPtrVector.data( );
 		for( size_t index = 0; index < count; ++index )
-			if( nullptr != arrayPtr[ index ] )
-				deleteObjTypeFunction( arrayPtr[ index ] );
-			else
+			if( nullptr == arrayPtr[ index ] )
 				break;
+			else if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+				Application::getInstancePtr( )->getPrinterDirector( )->error( QString( tr( "释放[ %1 ]对象失败" ) ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ) );
 		allVarPtrVector.clear( );
 	}
 

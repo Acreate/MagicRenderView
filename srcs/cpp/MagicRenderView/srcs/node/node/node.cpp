@@ -137,21 +137,27 @@ bool Node::hasOutputPort( const OutputPort *check_output_port ) const {
 
 	return false;
 }
-bool Node::toUint8VectorData( std::vector< uint8_t > &result_vector_data, size_t &result_use_count ) {
-	size_t *varCount;
-	if( varDirector->create( varCount ) == false )
+bool Node::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
 		return false;
-	if( varDirector->toVector( varCount, result_vector_data ) == false )
+	uint64_t *uint64Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
 		return false;
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+		return false;
+
 	return true;
 }
-bool Node::formUint8ArrayData( const uint8_t *source_array_ptr, const size_t &source_array_count, size_t &result_use_count ) {
-	size_t *varCount;
-	if( varDirector->create( varCount ) == false )
+bool Node::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
 		return false;
-	size_t resultCount = 0;
-	void *converPtr = varCount;
-	if( varDirector->toVar( resultCount, source_array_ptr, source_array_count, converPtr ) == false )
+	uint64_t *uint64Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	void *converPtr = uint64Ptr;
+	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, converPtr ) == false )
 		return false;
 	return true;
 }

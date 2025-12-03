@@ -192,11 +192,80 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 		}
 	}
 }
-bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector<uint8_t> &result_vector_data ) {
-	
-	return false;
+bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	int64_t *int64Ptr = nullptr;
+	int32_t *int32Ptr = nullptr;
+	QString *stringPtr = nullptr;
+	std::vector< uint8_t > vectorInfo;
+	std::vector< uint8_t > nodeArrayInfo;
+	std::vector< uint8_t > portLinkInfo;
+	std::vector< uint8_t > converResult;
+	if( varDirector.create( int64Ptr ) == false )
+		return false;
+	if( varDirector.create( int32Ptr ) == false )
+		return false;
+	if( varDirector.create( stringPtr ) == false )
+		return false;
+	size_t refNodeArrayCount = refNodeVector.size( );
+	auto refNodeArrayPtr = refNodeVector.data( );
+	size_t refNodeArrayIndex = 0;
+	*int64Ptr = refNodeArrayCount;
+	if( varDirector.toVector( int64Ptr, converResult ) == false )
+		return false;
+	vectorInfo.append_range( converResult );
+	for( ; refNodeArrayIndex < refNodeArrayCount; ++refNodeArrayIndex ) {
+		// 节点
+		Node *currentNode = refNodeArrayPtr[ refNodeArrayIndex ]->currentNode;
+		*stringPtr = currentNode->nodeName;
+		if( varDirector.toVector( stringPtr, converResult ) == false )
+			return false;
+		nodeArrayInfo.append_range( converResult );
+		*int32Ptr = currentNode->x( );
+		if( varDirector.toVector( int32Ptr, converResult ) == false )
+			return false;
+		nodeArrayInfo.append_range( converResult );
+		*int32Ptr = currentNode->y( );
+		if( varDirector.toVector( int32Ptr, converResult ) == false )
+			return false;
+		nodeArrayInfo.append_range( converResult );
+		*int64Ptr = ( uint64_t ) currentNode;
+		if( varDirector.toVector( int64Ptr, converResult ) == false )
+			return false;
+		nodeArrayInfo.append_range( converResult );
+		if( currentNode->toUint8VectorData( result_use_count, converResult ) == false )
+			return false;
+		*int64Ptr = result_use_count;
+		if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
+			return false;
+		nodeArrayInfo.append_range( result_vector_data );
+		nodeArrayInfo.append_range( converResult );
+		// 链接
+		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( result_use_count, converResult ) == false )
+			return false;
+		*int64Ptr = result_use_count;
+		if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
+			return false;
+		portLinkInfo.append_range( result_vector_data );
+		portLinkInfo.append_range( converResult );
+	}
+	vectorInfo.append_range( nodeArrayInfo );
+	nodeArrayInfo.clear( );
+	vectorInfo.append_range( portLinkInfo );
+	portLinkInfo.clear( );
+	*int64Ptr = vectorInfo.size( );
+	if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
+		return false;
+	result_vector_data.append_range( vectorInfo );
+	result_use_count = result_vector_data.size( );
+	return true;
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
 	return false;
 }
 

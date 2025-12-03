@@ -2,6 +2,10 @@
 
 #include "nodeRefLinkInfo.h"
 
+#include "../../app/application.h"
+
+#include "../../director/varDirector.h"
+
 #include "../../srack/srackInfo.h"
 
 #include "../port/inputPort/inputPort.h"
@@ -124,4 +128,16 @@ bool NodePortLinkInfo::hasPortRef( const InputPort *in_put_port, const OutputPor
 		}
 
 	return false;
+}
+bool NodePortLinkInfo::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	*uint64Ptr = 0;
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+		return false;
+	return true;
 }

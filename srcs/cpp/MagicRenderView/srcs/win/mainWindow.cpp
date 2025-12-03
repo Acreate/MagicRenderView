@@ -50,7 +50,7 @@ MainWindow::~MainWindow( ) {
 	delete mainWidgetScrollArea;
 }
 void MainWindow::savePorjectToFile( ) {
-	auto openFileName = QFileDialog::getOpenFileName( this, tr( "保存文件" ), saveFileDirPath, tr( "魔术窗口 (*.mrv)" ) );
+	auto openFileName = QFileDialog::getSaveFileName( this, tr( "保存文件" ), saveFileDirPath, tr( "魔术窗口 (*.mrv)" ) );
 	if( openFileName.isEmpty( ) )
 		return;
 	size_t dataCount = 0;
