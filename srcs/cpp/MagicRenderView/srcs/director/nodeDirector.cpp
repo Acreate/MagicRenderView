@@ -127,8 +127,10 @@ void NodeDirector::releaseNodeResources( ) {
 		auto buff = refNodeVector;
 		refNodeVector.clear( );
 		auto pair = buff.data( );
-		for( index = 0; index < count; ++index )
+		for( index = 0; index < count; ++index ) {
+			delete pair[ index ]->currentNode;
 			delete pair[ index ];
+		}
 	}
 }
 NodeDirector::~NodeDirector( ) {
@@ -237,71 +239,128 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 		}
 	}
 }
+bool NodeDirector::initDrawLinkWidget( ) {
+	if( mainWindow == nullptr ) {
+		mainWindow = instancePtr->getMainWindow( );
+		if( mainWindow == nullptr ) {
+			printerDirector->error( tr( "获取主要窗口失败 [Application::getMainWindow( )]" ) );
+			return false;
+		}
+		connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
+			if( mainWindow == release_ptr )
+				mainWindow = nullptr;
+		} );
+	}
+	if( mainWidget == nullptr ) {
+		mainWidget = mainWindow->getMainWidget( );
+		if( mainWidget == nullptr ) {
+			printerDirector->error( tr( "获取节点窗口失败 [MainWindow::getMainWidget( )]" ) );
+			return false;
+		}
+		connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
+			if( mainWidget == release_ptr )
+				mainWidget = nullptr;
+		} );
+	}
+	if( drawNodeWidget == nullptr ) {
+		drawNodeWidget = mainWidget->getDrawNodeWidget( );
+		if( drawNodeWidget == nullptr ) {
+			printerDirector->error( tr( "获取节点渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
+			return false;
+		}
+		connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
+			if( drawNodeWidget == release_ptr )
+				drawNodeWidget = nullptr;
+		} );
+	}
+	if( drawLinkWidget == nullptr ) {
+		drawLinkWidget = mainWidget->getDrawLinkWidget( );
+		if( drawNodeWidget == nullptr ) {
+			printerDirector->error( tr( "获取连接渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
+			return false;
+		}
+		connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
+			if( drawLinkWidget == release_ptr )
+				drawLinkWidget = nullptr;
+		} );
+	}
+	return true;
+}
+bool NodeDirector::findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count ) {
+	size_t index = 0;
+	for( ; index < source_count; ++index )
+		if( source_data[ index ].first == node_id_key ) {
+			result_input_port_ptr = source_data[ index ].second->getInputPort( input_port_name );
+			if( result_input_port_ptr != nullptr )
+				return true;
+			return false;
+		}
+	return false;
+}
+bool NodeDirector::findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count ) {
+	size_t index = 0;
+	for( ; index < source_count; ++index )
+		if( source_data[ index ].first == node_id_key ) {
+			result_output_port_ptr = source_data[ index ].second->getOutputPort( output_port_name );
+			if( result_output_port_ptr != nullptr )
+				return true;
+			return false;
+		}
+	return false;
+}
 bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
-	int64_t *int64Ptr = nullptr;
+	uint64_t *uint64Ptr = nullptr;
 	int32_t *int32Ptr = nullptr;
 	QString *stringPtr = nullptr;
-	if( varDirector.create( int64Ptr ) == false )
+	if( varDirector.create( uint64Ptr ) == false )
 		return false;
 	if( varDirector.create( int32Ptr ) == false )
 		return false;
 	if( varDirector.create( stringPtr ) == false )
 		return false;
 	std::vector< uint8_t > vectorInfo;
-	std::vector< uint8_t > nodeArrayInfo;
-	std::vector< uint8_t > portLinkInfo;
 	std::vector< uint8_t > converResult;
 	size_t refNodeArrayCount = refNodeVector.size( );
 	auto refNodeArrayPtr = refNodeVector.data( );
 	size_t refNodeArrayIndex = 0;
-	*int64Ptr = refNodeArrayCount;
-	if( varDirector.toVector( int64Ptr, converResult ) == false )
+	// 序列化节点个数
+	*uint64Ptr = refNodeArrayCount;
+	if( varDirector.toVector( uint64Ptr, converResult ) == false )
 		return false;
 	vectorInfo.append_range( converResult );
 	for( ; refNodeArrayIndex < refNodeArrayCount; ++refNodeArrayIndex ) {
 		// 节点
 		Node *currentNode = refNodeArrayPtr[ refNodeArrayIndex ]->currentNode;
+		// 名称
 		*stringPtr = currentNode->nodeName;
 		if( varDirector.toVector( stringPtr, converResult ) == false )
 			return false;
-		nodeArrayInfo.append_range( converResult );
+		vectorInfo.append_range( converResult );
+		// x 坐标
 		*int32Ptr = currentNode->x( );
 		if( varDirector.toVector( int32Ptr, converResult ) == false )
 			return false;
-		nodeArrayInfo.append_range( converResult );
+		vectorInfo.append_range( converResult );
+		// y 坐标
 		*int32Ptr = currentNode->y( );
 		if( varDirector.toVector( int32Ptr, converResult ) == false )
 			return false;
-		nodeArrayInfo.append_range( converResult );
-		*int64Ptr = ( uint64_t ) currentNode;
-		if( varDirector.toVector( int64Ptr, converResult ) == false )
+		vectorInfo.append_range( converResult );
+		// id
+		*uint64Ptr = ( uint64_t ) currentNode;
+		if( varDirector.toVector( uint64Ptr, converResult ) == false )
 			return false;
-		nodeArrayInfo.append_range( converResult );
-		if( currentNode->toUint8VectorData( result_use_count, converResult ) == false )
-			return false;
-		*int64Ptr = result_use_count;
-		if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
-			return false;
-		nodeArrayInfo.append_range( result_vector_data );
-		nodeArrayInfo.append_range( converResult );
-		// 链接
+		vectorInfo.append_range( converResult );
+		// 连接信息
 		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
 			return false;
-		*int64Ptr = result_use_count;
-		if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
-			return false;
-		portLinkInfo.append_range( result_vector_data );
-		portLinkInfo.append_range( converResult );
+		vectorInfo.append_range( converResult );
 	}
-	vectorInfo.append_range( nodeArrayInfo );
-	nodeArrayInfo.clear( );
-	vectorInfo.append_range( portLinkInfo );
-	portLinkInfo.clear( );
-	*int64Ptr = vectorInfo.size( );
-	if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
+	*uint64Ptr = vectorInfo.size( );
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
 		return false;
 	result_vector_data.append_range( vectorInfo );
 	result_use_count = result_vector_data.size( );
@@ -309,70 +368,28 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
 
-	if( drawLinkWidget == nullptr ) {
-		if( mainWindow == nullptr ) {
-			mainWindow = instancePtr->getMainWindow( );
-			if( mainWindow == nullptr ) {
-				printerDirector->error( tr( "获取主要窗口失败 [Application::getMainWindow( )]" ) );
-				return false;
-			}
-			connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
-				if( mainWindow == release_ptr )
-					mainWindow = nullptr;
-			} );
-		}
-		if( mainWidget == nullptr ) {
-			mainWidget = mainWindow->getMainWidget( );
-			if( mainWidget == nullptr ) {
-				printerDirector->error( tr( "获取节点窗口失败 [MainWindow::getMainWidget( )]" ) );
-				return false;
-			}
-			connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
-				if( mainWidget == release_ptr )
-					mainWidget = nullptr;
-			} );
-		}
-		if( drawNodeWidget == nullptr ) {
-			drawNodeWidget = mainWidget->getDrawNodeWidget( );
-			if( drawNodeWidget == nullptr ) {
-				printerDirector->error( tr( "获取节点渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
-				return false;
-			}
-			connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
-				if( drawNodeWidget == release_ptr )
-					drawNodeWidget = nullptr;
-			} );
-		}
-		if( drawLinkWidget == nullptr ) {
-			drawLinkWidget = mainWidget->getDrawLinkWidget( );
-			if( drawNodeWidget == nullptr ) {
-				printerDirector->error( tr( "获取连接渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
-				return false;
-			}
-			connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
-				if( drawLinkWidget == release_ptr )
-					drawLinkWidget = nullptr;
-			} );
-		}
-	}
+	if( drawLinkWidget == nullptr )
+		if( initDrawLinkWidget( ) == false )
+			return false;
+
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
-	int64_t *int64Ptr = nullptr;
+	uint64_t *uint64Ptr = nullptr;
 	int32_t *int32Ptr = nullptr;
 	QString *stringPtr = nullptr;
-	if( varDirector.create( int64Ptr ) == false )
+	if( varDirector.create( uint64Ptr ) == false )
 		return false;
 	if( varDirector.create( int32Ptr ) == false )
 		return false;
 	if( varDirector.create( stringPtr ) == false )
 		return false;
 	// 总数判定
-	void *anyPtr = int64Ptr;
+	void *anyPtr = uint64Ptr;
 	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
 		return false;
 	auto mod = source_array_count - result_use_count;
-	if( mod < *int64Ptr )
+	if( mod < *uint64Ptr )
 		return false;
 	auto offset = source_array_ptr + result_use_count;
 	// 总数
@@ -380,7 +397,7 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		return false;
 	mod = mod - result_use_count;
 	offset = offset + result_use_count;
-	size_t count = *int64Ptr;
+	size_t count = *uint64Ptr;
 	size_t index = 0;
 	std::vector< std::vector< InputportLinkOutputPortInfoMap > > resultMapVector;
 	std::vector< std::pair< size_t, Node * > > nodeIdPair;
@@ -413,22 +430,50 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 		// id
-		anyPtr = int64Ptr;
+		anyPtr = uint64Ptr;
 		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
 		// 节点创建
 		auto node = createNode( *stringPtr, mainWidget );
 		node->move( pos );
 		// 保存节点地址映射
-		nodeIdPairArrayPtr[ index ] = std::pair< uint64_t, Node * >( *int32Ptr, node );
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
+		nodeIdPairArrayPtr[ index ] = std::pair< uint64_t, Node * >( *uint64Ptr, node );
 		// 连接信息
 		if( temp.toLinkMap( pairArrayPtr[ index ], result_use_count, offset, mod ) == false )
 			return false;
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 	}
+
+	std::pair< std::pair< unsigned long long, QString >, std::vector< std::pair< unsigned long long, QString > > > *linkArrayPtr;
+	size_t linkArrayCount;
+	size_t linkArrayIndex;
+	for( index = 0; index < count; ++index ) {
+		linkArrayPtr = pairArrayPtr[ index ].data( );
+		linkArrayCount = pairArrayPtr[ index ].size( );
+		for( linkArrayIndex = 0; linkArrayIndex < linkArrayCount; ++linkArrayIndex ) {
+			auto id = linkArrayPtr[ linkArrayIndex ].first.first;
+			InputPort *inputPort = nullptr;
+			OutputPort *outputPort = nullptr;
+			if( findNodeInputPort( inputPort, id, linkArrayPtr[ linkArrayIndex ].first.second, nodeIdPairArrayPtr, count ) == false )
+				return false;
+			size_t outCount = linkArrayPtr[ linkArrayIndex ].second.size( );
+			auto outArrayPtr = linkArrayPtr[ linkArrayIndex ].second.data( );
+			size_t outIndex;
+			for( outIndex = 0; outIndex < outCount; ++outIndex ) {
+				id = outArrayPtr[ outIndex ].first;
+
+				if( findNodeOutputPort( outputPort, id, outArrayPtr[ outIndex ].second, nodeIdPairArrayPtr, count ) == false )
+					return false;
+				if( linkPort( outputPort, inputPort ) == false )
+					return false;
+			}
+
+		}
+	}
+
 	result_use_count = offset - source_array_ptr;
 	return true;
 }

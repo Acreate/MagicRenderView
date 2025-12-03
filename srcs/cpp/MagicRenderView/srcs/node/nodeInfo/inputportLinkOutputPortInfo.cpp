@@ -43,32 +43,35 @@ bool InputportLinkOutputPortInfo::toUint8VectorData( std::vector< uint8_t > &res
 		return false;
 	if( varDirector.create( stringPtr ) == false )
 		return false;
+
+	// 节点 id
 	Node *parentNode = inputPort->parentNode;
 	*uint64Ptr = ( uint64_t ) parentNode;
-
 	if( varDirector.toVector( uint64Ptr, unityData ) == false )
 		return false;
-
+	// 输入名称
 	*stringPtr = inputPort->portName;
-
 	if( varDirector.toVector( stringPtr, converData ) == false )
 		return false;
 	unityData.append_range( converData );
+	// 输出个数
 	size_t count = outputPortVector.size( );
 	*uint64Ptr = count;
 	if( varDirector.toVector( uint64Ptr, converData ) == false )
 		return false;
 	unityData.append_range( converData );
+	// 遍历输出端口
 	size_t index = 0;
 	auto outputPortArrayPtr = outputPortVector.data( );
 	for( ; index < count; ++index ) {
+		// 输出端口节点
 		parentNode = outputPortArrayPtr[ index ]->parentNode;
 		*uint64Ptr = ( uint64_t ) parentNode;
 		if( varDirector.toVector( uint64Ptr, converData ) == false )
 			return false;
 		unityData.append_range( converData );
-
-		*stringPtr = inputPort->portName;
+		// 输出端口名称
+		*stringPtr = outputPortArrayPtr[ index ]->portName;
 		if( varDirector.toVector( stringPtr, converData ) == false )
 			return false;
 		unityData.append_range( converData );
@@ -111,7 +114,7 @@ bool InputportLinkOutputPortInfo::toLinkMap( InputportLinkOutputPortInfoMap &res
 	mod = mod - user_data_count;
 
 	portInfo inputPortInfo( *uint64Ptr, *stringPtr );
-
+	result_map.first = inputPortInfo;
 	// 获取数组的输出节点的个数
 	converPtr = uint64Ptr;
 	if( varDirector.toVar( user_data_count, offset, mod, converPtr ) == false )
@@ -140,7 +143,9 @@ bool InputportLinkOutputPortInfo::toLinkMap( InputportLinkOutputPortInfoMap &res
 			mod = mod - user_data_count;
 			pairArrayPtr[ index ] = portInfo( *uint64Ptr, *stringPtr );
 		}
+		result_map.second = outVector;
 	}
+
 	user_data_count = offset - source_data_ptr;
 	return true;
 }
