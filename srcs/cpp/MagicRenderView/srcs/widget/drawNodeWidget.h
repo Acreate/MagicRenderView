@@ -14,6 +14,7 @@ class DrawNodeWidget : public QWidget {
 	Q_OBJECT;
 	friend class MainWidget;
 	friend class MainWindow;
+	friend class NodeDirector;
 protected:
 	Application *appInstancePtr;
 	NodeDirector *nodeDirector;

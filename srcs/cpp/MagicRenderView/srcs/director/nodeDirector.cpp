@@ -125,16 +125,41 @@ NodeDirector::~NodeDirector( ) {
 Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main_widget ) {
 	if( main_widget == nullptr || node_type_name.isEmpty( ) )
 		return nullptr;
-	Node *node = nullptr;
+	Node *node = nullptr; // ????
+	size_t count = createNodeVector.size( );
+	auto createArrayPtr = createNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( createArrayPtr[ index ].first == node_type_name ) {
+			node = createArrayPtr[ index ].second( node_type_name );
+			break;
+		}
 	if( node == nullptr )
 		return node;
 	auto refNdoeInfo = new NodeRefLinkInfo( node );
 	if( main_widget->addNode( refNdoeInfo ) == false ) {
 		delete node;
 		delete refNdoeInfo;
-		return node;
+		return nullptr;
+	}
+	if( node->parent( ) != drawNodeWidget ) {
+		auto errorMsg = tr( "节点父节点需要匹配到节点渲染组件[MainWidget::getDrawNodeWidget()]" );
+		printerDirector->error( errorMsg );
+		emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
+		delete refNdoeInfo;
+		delete node;
+		return nullptr;
+	}
+	if( node->updateLayout( ) == false ) {
+		auto errorMsg = tr( "节点布局更新失败[%1::updateLayout()]" );
+		printerDirector->error( errorMsg.arg( node->metaObject( )->className( ) ) );
+		emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
+		delete node;
+		delete refNdoeInfo;
+		return nullptr;
 	}
 	appendRefNodeVectorAtNode( refNdoeInfo );
+	node->show( );
 	return node;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -267,6 +292,52 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
 
+	if( drawLinkWidget == nullptr ) {
+		if( mainWindow == nullptr ) {
+			mainWindow = instancePtr->getMainWindow( );
+			if( mainWindow == nullptr ) {
+				printerDirector->error( tr( "获取主要窗口失败 [Application::getMainWindow( )]" ) );
+				return false;
+			}
+			connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
+				if( mainWindow == release_ptr )
+					mainWindow = nullptr;
+			} );
+		}
+		if( mainWidget == nullptr ) {
+			mainWidget = mainWindow->getMainWidget( );
+			if( mainWidget == nullptr ) {
+				printerDirector->error( tr( "获取节点窗口失败 [MainWindow::getMainWidget( )]" ) );
+				return false;
+			}
+			connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
+				if( mainWidget == release_ptr )
+					mainWidget = nullptr;
+			} );
+		}
+		if( drawNodeWidget == nullptr ) {
+			drawNodeWidget = mainWidget->getDrawNodeWidget( );
+			if( drawNodeWidget == nullptr ) {
+				printerDirector->error( tr( "获取节点渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
+				return false;
+			}
+			connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
+				if( drawNodeWidget == release_ptr )
+					drawNodeWidget = nullptr;
+			} );
+		}
+		if( drawLinkWidget == nullptr ) {
+			drawLinkWidget = mainWidget->getDrawLinkWidget( );
+			if( drawNodeWidget == nullptr ) {
+				printerDirector->error( tr( "获取连接渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" ) );
+				return false;
+			}
+			connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
+				if( drawLinkWidget == release_ptr )
+					drawLinkWidget = nullptr;
+			} );
+		}
+	}
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
@@ -288,43 +359,54 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		return false;
 	auto offset = source_array_ptr + result_use_count;
 	// 总数
-	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+	if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 		return false;
 	mod = mod - result_use_count;
 	offset = offset + result_use_count;
 	size_t count = *int64Ptr;
 	size_t index = 0;
 	std::vector< std::vector< InputportLinkOutputPortInfoMap > > resultMapVector;
+	std::vector< std::pair< size_t, Node * > > nodeIdPair;
 	resultMapVector.resize( count );
+	nodeIdPair.resize( count );
 	auto pairArrayPtr = resultMapVector.data( );
+	auto nodeIdPairArrayPtr = nodeIdPair.data( );
 	NodePortLinkInfo temp( nullptr );
+	QPoint pos;
 	for( ; index < count; ++index ) {
 		// 节点名称
 		anyPtr = stringPtr;
-		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 			return false;
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 		// x
 		anyPtr = int32Ptr;
-		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 			return false;
+		pos.setX( *int32Ptr );
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 		// y
 		anyPtr = int32Ptr;
-		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 			return false;
+		pos.setY( *int32Ptr );
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 		// id
 		anyPtr = int64Ptr;
-		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
 			return false;
+		// 节点创建
+		auto node = createNode( *stringPtr, mainWidget );
+		node->move( pos );
+		// 保存节点地址映射
+		nodeIdPairArrayPtr[ index ] = std::pair< uint64_t, Node * >( *int32Ptr, node );
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
 		// 连接信息
-		if( temp.toLinkMap( pairArrayPtr[ index ], result_use_count, source_array_ptr, source_array_count ) == false )
+		if( temp.toLinkMap( pairArrayPtr[ index ], result_use_count, offset, mod ) == false )
 			return false;
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;
@@ -490,6 +572,8 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			delete refNdoeInfo;
 			return;
 		}
+		refNdoeInfo->drawNodeWidget = drawNodeWidget;
+		refNdoeInfo->drawLinkWidget = drawLinkWidget;
 		appendRefNodeVectorAtNode( refNdoeInfo );
 		node->show( );
 		mainWidget->ensureVisible( node );
