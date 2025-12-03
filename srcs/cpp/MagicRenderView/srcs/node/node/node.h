@@ -24,6 +24,7 @@ class NodeClickInfo;
 class NodeDirector;
 class Node : public QWidget {
 	Q_OBJECT;
+	friend class InputportLinkOutputPortInfo;
 	friend class NodeDirector;
 	friend class NodeStack;
 	friend class NodeRefLinkInfo;

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <vector>
 
+#include <tools/aliasType.h>
+
 class InputportLinkOutputPortInfo;
 class SrackInfo;
 class Node;
@@ -29,7 +31,8 @@ public:
 	virtual bool hasPortRef( const InputPort *in_put_port, const OutputPort *out_put_port ) const;
 	virtual const std::vector< InputportLinkOutputPortInfo * > & getInputPortVector( ) const { return inputPortVector; }
 	~NodePortLinkInfo( ) override;
-	virtual bool toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data );
+	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
+	virtual bool toLinkMap( std::vector< InputportLinkOutputPortInfoMap > &result_map_vector, size_t &user_data_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const;
 Q_SIGNALS:
 	void release_link_signal( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
 	void create_link_signal( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );

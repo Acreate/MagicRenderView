@@ -20,6 +20,7 @@ private:
 	friend class Node;
 	friend class NodeRefLinkInfo;
 	friend class NodePortLinkInfo;
+	friend class InputportLinkOutputPortInfo;
 	friend class NodePortLinkActionPair;
 	friend class InputPort;
 	friend class NodeDirector;

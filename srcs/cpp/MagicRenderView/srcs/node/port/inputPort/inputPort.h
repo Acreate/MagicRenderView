@@ -19,6 +19,7 @@ private:
 	friend class NodeRefLinkInfo;
 	friend class NodePortLinkInfo;
 	friend class NodePortLinkActionPair;
+	friend class InputportLinkOutputPortInfo;
 	friend class OutputPort;
 	friend class NodeDirector;
 	friend class NodeStack;

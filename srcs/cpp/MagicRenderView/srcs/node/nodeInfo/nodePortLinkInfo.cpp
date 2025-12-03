@@ -129,15 +129,69 @@ NodePortLinkInfo::~NodePortLinkInfo( ) {
 	for( ; index < count; ++index )
 		delete data[ index ];
 }
-bool NodePortLinkInfo::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+bool NodePortLinkInfo::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	std::vector< uint8_t > arrayCount;
+	std::vector< uint8_t > arrayDataInfo;
+	std::vector< uint8_t > converData;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	// 序列化数量
+	*uint64Ptr = inputPortVector.size( );
+	if( varDirector.toVector( uint64Ptr, arrayCount ) == false )
+		return false;
+	size_t count = *uint64Ptr;
+	auto data = inputPortVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		// 单个连接进行序列
+		if( data[ index ]->toUint8VectorData( converData ) == false )
+			return false;
+		// 序列数据
+		arrayDataInfo.append_range( converData );
+	}
+	arrayCount.append_range( arrayDataInfo );
+	arrayDataInfo.clear( );
+	*uint64Ptr = arrayCount.size( );
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+		return false;
+	result_vector_data.append_range( arrayCount );
+	return true;
+}
+bool NodePortLinkInfo::toLinkMap( std::vector< InputportLinkOutputPortInfoMap > &result_map_vector, size_t &user_data_count, const uint8_t *source_data_ptr, const size_t &source_data_count ) const {
+	InputportLinkOutputPortInfo temp;
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
 	uint64_t *uint64Ptr = nullptr;
 	if( varDirector.create( uint64Ptr ) == false )
 		return false;
-	*uint64Ptr = 0;
-	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+
+	void *converPtr = uint64Ptr;
+	if( varDirector.toVar( user_data_count, source_data_ptr, source_data_count, converPtr ) == false )
 		return false;
+	auto mod = source_data_count - user_data_count;
+	if( mod < *uint64Ptr )
+		return false; // 与描述最小所需数量不匹配
+	auto offset = source_data_ptr + user_data_count;
+	// 输入匹配端口数量
+	if( varDirector.toVar( user_data_count, source_data_ptr, source_data_count, converPtr ) == false )
+		return false;
+	offset = offset + user_data_count;
+	mod = mod - user_data_count;
+	size_t count = *uint64Ptr;
+	size_t index = 0;
+	result_map_vector.resize( count );
+	auto pairArrayPtr = result_map_vector.data( );
+	for( ; index < count; ++index ) {
+		if( temp.toLinkMap( pairArrayPtr[ index ], user_data_count, offset, mod ) == false )
+			return false;
+		offset = offset + user_data_count;
+		mod = mod - user_data_count;
+	}
+	user_data_count = offset - source_data_ptr;
 	return true;
 }

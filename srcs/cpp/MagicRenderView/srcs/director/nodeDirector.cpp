@@ -202,16 +202,16 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 	int64_t *int64Ptr = nullptr;
 	int32_t *int32Ptr = nullptr;
 	QString *stringPtr = nullptr;
-	std::vector< uint8_t > vectorInfo;
-	std::vector< uint8_t > nodeArrayInfo;
-	std::vector< uint8_t > portLinkInfo;
-	std::vector< uint8_t > converResult;
 	if( varDirector.create( int64Ptr ) == false )
 		return false;
 	if( varDirector.create( int32Ptr ) == false )
 		return false;
 	if( varDirector.create( stringPtr ) == false )
 		return false;
+	std::vector< uint8_t > vectorInfo;
+	std::vector< uint8_t > nodeArrayInfo;
+	std::vector< uint8_t > portLinkInfo;
+	std::vector< uint8_t > converResult;
 	size_t refNodeArrayCount = refNodeVector.size( );
 	auto refNodeArrayPtr = refNodeVector.data( );
 	size_t refNodeArrayIndex = 0;
@@ -246,7 +246,7 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 		nodeArrayInfo.append_range( result_vector_data );
 		nodeArrayInfo.append_range( converResult );
 		// 链接
-		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( result_use_count, converResult ) == false )
+		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
 			return false;
 		*int64Ptr = result_use_count;
 		if( varDirector.toVector( int64Ptr, result_vector_data ) == false )
@@ -266,10 +266,71 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 	return true;
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
-	return false;
+	int64_t *int64Ptr = nullptr;
+	int32_t *int32Ptr = nullptr;
+	QString *stringPtr = nullptr;
+	if( varDirector.create( int64Ptr ) == false )
+		return false;
+	if( varDirector.create( int32Ptr ) == false )
+		return false;
+	if( varDirector.create( stringPtr ) == false )
+		return false;
+	// 总数判定
+	void *anyPtr = int64Ptr;
+	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		return false;
+	auto mod = source_array_count - result_use_count;
+	if( mod < *int64Ptr )
+		return false;
+	auto offset = source_array_ptr + result_use_count;
+	// 总数
+	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+		return false;
+	mod = mod - result_use_count;
+	offset = offset + result_use_count;
+	size_t count = *int64Ptr;
+	size_t index = 0;
+	std::vector< std::vector< InputportLinkOutputPortInfoMap > > resultMapVector;
+	resultMapVector.resize( count );
+	auto pairArrayPtr = resultMapVector.data( );
+	NodePortLinkInfo temp( nullptr );
+	for( ; index < count; ++index ) {
+		// 节点名称
+		anyPtr = stringPtr;
+		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
+		// x
+		anyPtr = int32Ptr;
+		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
+		// y
+		anyPtr = int32Ptr;
+		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
+		// id
+		anyPtr = int64Ptr;
+		if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
+		// 连接信息
+		if( temp.toLinkMap( pairArrayPtr[ index ], result_use_count, source_array_ptr, source_array_count ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
+	}
+
+	return true;
 }
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
