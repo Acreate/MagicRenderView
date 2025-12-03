@@ -9,6 +9,7 @@
 #include "../app/application.h"
 
 #include "../node/node/node.h"
+#include "../node/nodeInfo/inputportLinkOutputPortInfo.h"
 #include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/port/inputPort/inputPort.h"
@@ -178,15 +179,17 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 		auto linkPortArray = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.data( );
 		size_t linkPortIndex;
 		for( linkPortIndex = 0; linkPortIndex < linkPortCount; ++linkPortIndex ) {
-			auto point = linkPortArray[ linkPortIndex ].first->getLinkPoint( );
-			auto startPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
+			InputPort *inputPort = linkPortArray[ linkPortIndex ]->getInputPort( );
+			auto point = inputPort->getLinkPoint( );
+			auto startPoint = inputPort->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
 
-			size_t linkTargetPortCount = linkPortArray[ linkPortIndex ].second.size( );
-			auto linkTargetPortArray = linkPortArray[ linkPortIndex ].second.data( );
+			auto &outputPortVector = linkPortArray[ linkPortIndex ]->getOutputPortVector( );
+			size_t linkTargetPortCount = outputPortVector.size( );
+			auto linkTargetPortArray = outputPortVector.data( );
 			size_t linkTargetPortIndex;
 			for( linkTargetPortIndex = 0; linkTargetPortIndex < linkTargetPortCount; ++linkTargetPortIndex ) {
 				point = linkTargetPortArray[ linkTargetPortIndex ]->getLinkPoint( );
-				auto endPoint = linkPortArray[ linkPortIndex ].first->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
+				auto endPoint = inputPort->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
 				draw_link_widget.drawLine( startPoint, endPoint );
 			}
 		}

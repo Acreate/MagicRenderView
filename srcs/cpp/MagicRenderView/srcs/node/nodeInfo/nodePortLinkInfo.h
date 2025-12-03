@@ -4,6 +4,7 @@
 #include <QObject>
 #include <vector>
 
+class InputportLinkOutputPortInfo;
 class SrackInfo;
 class Node;
 class QMenu;
@@ -17,7 +18,7 @@ class NodePortLinkInfo : public QObject {
 	friend class NodeRefLinkInfoTools;
 protected:
 	NodeRefLinkInfo *nodeRefLinkInfo;
-	std::vector< std::pair< InputPort *, std::vector< OutputPort * > > > inputPortVector;
+	std::vector< InputportLinkOutputPortInfo * > inputPortVector;
 public:
 	NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info );
 	virtual bool appEndLinkInputTarget( InputPort *in_put_port, OutputPort *out_put_port );
@@ -26,8 +27,8 @@ public:
 	virtual bool hasNodeRef( const NodeRefLinkInfo *check_node_ref ) const;
 	virtual bool hasNodeRef( const Node *check_node ) const;
 	virtual bool hasPortRef( const InputPort *in_put_port, const OutputPort *out_put_port ) const;
-	virtual const std::vector< std::pair< InputPort *, std::vector< OutputPort * > > > & getInputPortVector( ) const { return inputPortVector; }
-	~NodePortLinkInfo( ) override { }
+	virtual const std::vector< InputportLinkOutputPortInfo * > & getInputPortVector( ) const { return inputPortVector; }
+	~NodePortLinkInfo( ) override;
 	virtual bool toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data );
 Q_SIGNALS:
 	void release_link_signal( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );

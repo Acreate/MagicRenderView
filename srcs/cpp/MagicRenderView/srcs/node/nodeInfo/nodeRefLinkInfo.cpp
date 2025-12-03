@@ -59,8 +59,8 @@ NodeRefLinkInfo::~NodeRefLinkInfo( ) {
 		foreachNodeRefArrayPtr = refInputVector.data( );
 		for( index = 0; index < count; ++index ) {
 			if( foreachNodeRefArrayPtr[ index ] == this ) {
-				auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
-				Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );
+				//auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
+				//Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );
 				refInputVector.erase( refInputVector.begin( ) + index );
 				//emit release_node_link_signal( this, input_port, out_put_ref, output_port );
 				break;
