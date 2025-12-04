@@ -10,6 +10,8 @@ public:
 		: GenerateNode( node_name ) { }
 	bool init( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
+	
+	
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "生成/生成整数" ) );
 

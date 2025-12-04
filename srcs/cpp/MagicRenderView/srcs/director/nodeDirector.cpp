@@ -445,8 +445,8 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		// 节点创建
 		auto node = createNode( *stringPtr, mainWidget );
 		node->move( pos );
-		// 节点接在数据
-		if( node->formUint8ArrayData( result_use_count, source_array_ptr, source_array_count ) == false )
+		// 节点数据
+		if( node->formUint8ArrayData( result_use_count, offset, mod ) == false )
 			return false;
 		mod = mod - result_use_count;
 		offset = offset + result_use_count;

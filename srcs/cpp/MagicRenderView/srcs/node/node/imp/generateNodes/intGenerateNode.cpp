@@ -1,5 +1,7 @@
 ﻿#include "intGenerateNode.h"
 
+#include "../../../../director/varDirector.h"
+
 #include "../../../port/inputPort/any/anyInputPort.h"
 #include "../../../port/outputPort/array/intVectorOutputPort.h"
 
