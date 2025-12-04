@@ -137,7 +137,7 @@ bool Node::hasOutputPort( const OutputPort *check_output_port ) const {
 
 	return false;
 }
-bool Node::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+bool Node::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;

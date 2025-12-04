@@ -354,6 +354,10 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 		if( varDirector.toVector( uint64Ptr, converResult ) == false )
 			return false;
 		vectorInfo.append_range( converResult );
+		// 节点数据
+		if( currentNode->toUint8VectorData( converResult ) == false )
+			return false;
+		vectorInfo.append_range( converResult );
 		// 连接信息
 		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
 			return false;
@@ -441,6 +445,11 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		// 节点创建
 		auto node = createNode( *stringPtr, mainWidget );
 		node->move( pos );
+		// 节点接在数据
+		if( node->formUint8ArrayData( result_use_count, source_array_ptr, source_array_count ) == false )
+			return false;
+		mod = mod - result_use_count;
+		offset = offset + result_use_count;
 		// 保存节点地址映射
 		nodeIdPairArrayPtr[ index ] = std::pair< uint64_t, Node * >( *uint64Ptr, node );
 		// 连接信息

@@ -90,7 +90,7 @@ public:
 	virtual const std::vector< InputPort * > & getInputPortVector( ) const { return inputPortVector; }
 	virtual const std::vector< OutputPort * > & getOutputPortVector( ) const { return outputPortVector; }
 	virtual QMenu * getRemoveMenu( ) const { return removeMenu; }
-	virtual bool toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data );
+	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 protected:
 	/// @brief 配置端口变量信息
