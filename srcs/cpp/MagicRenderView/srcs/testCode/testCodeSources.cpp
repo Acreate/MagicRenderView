@@ -10,6 +10,8 @@
 
 #include "../enums/nodeEnum.h"
 
+#include "../srack/srackInfo.h"
+
 #include "../tools/path.h"
 
 template< typename TTestType >
@@ -32,11 +34,11 @@ void testVarGener( const TTestType &default_var ) {
 				varDirector->cast_ptr< TTestType >( converPtr, castPtr );
 				qDebug( ) << "反序列化:" << *castPtr;
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -69,11 +71,11 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 				varDirector->cast_ptr< QString >( castPtr->second, scond );
 				qDebug( ) << "反序列化:" << *first << ", " << *scond;
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -107,13 +109,13 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 						data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
 					qDebug( ) << "反序列化:" << data.join( ", " );
 				} else
-					instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败[数量不匹配] " ) + name );
+					instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败[数量不匹配] " ) + name, Create_SrackInfo( ) );
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -161,11 +163,11 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 				}
 				qDebug( ) << "反序列化:" << data.join( ", " );
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name );
+				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name );
+			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name );
+		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -220,29 +222,29 @@ void TestCodeSources::testEnumConver( ) {
 	NodeEnum::AdviseType result_AdviseType_var;
 	enum_string = "Other";
 	if( NodeEnum::converEnum( enum_string, result_ErrorType_var ) ) {
-		printerDirector->info( enum_string );
+		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "字符串转枚举失败 [NodeEnum::ErrorType]" );
+		printerDirector->error( "字符串转枚举失败 [NodeEnum::ErrorType]", Create_SrackInfo( ) );
 
 	enum_string = "Result";
 	if( NodeEnum::converEnum( enum_string, result_AdviseType_var ) ) {
-		printerDirector->info( enum_string );
+		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "字符串转枚举失败 [NodeEnum::AdviseType]" );
+		printerDirector->error( "字符串转枚举失败 [NodeEnum::AdviseType]", Create_SrackInfo( ) );
 
 	result_ErrorType_var = NodeEnum::ErrorType::Other;
 	enum_string.clear( );
 	if( NodeEnum::converQString( result_ErrorType_var, enum_string ) ) {
-		printerDirector->info( enum_string );
+		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "枚举转字符串失败 [NodeEnum::ErrorType]" );
+		printerDirector->error( "枚举转字符串失败 [NodeEnum::ErrorType]", Create_SrackInfo( ) );
 
 	result_AdviseType_var = NodeEnum::AdviseType::Result;
 	enum_string.clear( );
 	if( NodeEnum::converQString( result_AdviseType_var, enum_string ) ) {
-		printerDirector->info( enum_string );
+		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "枚举转字符串失败 [NodeEnum::AdviseType]" );
+		printerDirector->error( "枚举转字符串失败 [NodeEnum::AdviseType]", Create_SrackInfo( ) );
 
 }
 void TestCodeSources::testAppFile( ) {
@@ -251,58 +253,58 @@ void TestCodeSources::testAppFile( ) {
 	auto printerDirector = instancePtr->getPrinterDirector( );
 
 	if( path::hasDir( "." ) )
-		printerDirector->info( "存在路径[.]" );
+		printerDirector->info( "存在路径[.]", Create_SrackInfo( ) );
 	else
-		printerDirector->info( "非法路径[.]" );
+		printerDirector->info( "非法路径[.]", Create_SrackInfo( ) );
 
 	if( path::hasFile( "." ) )
-		printerDirector->info( "存在文件[.]" );
+		printerDirector->info( "存在文件[.]", Create_SrackInfo( ) );
 	else
-		printerDirector->info( "非法文件[.]" );
+		printerDirector->info( "非法文件[.]", Create_SrackInfo( ) );
 	if( path::createFile( "./45/file" ) )
-		printerDirector->info( "创建文件[./45/file]成功" );
+		printerDirector->info( "创建文件[./45/file]成功", Create_SrackInfo( ) );
 	else
-		printerDirector->info( "创建文件[./45/file]失败" );
+		printerDirector->info( "创建文件[./45/file]失败", Create_SrackInfo( ) );
 	QFileInfo getPathInfo;
 	if( path::getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
-		printerDirector->info( "获取路径[./4541/88]成功" );
+		printerDirector->info( "获取路径[./4541/88]成功", Create_SrackInfo( ) );
 		QString outMsg( "获取路径[%1]是%2" );
 		if( getPathInfo.isFile( ) )
-			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "文件" ) );
+			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "文件" ), Create_SrackInfo( ) );
 		else
-			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "目录" ) );
+			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "目录" ), Create_SrackInfo( ) );
 	} else
-		printerDirector->info( "获取路径[./4541/88]失败" );
-	printerDirector->info( path::normalPathSeparatorToPath( "/1/2//3/////4" ) );
-	printerDirector->info( path::normalPathSeparatorToPath( "1/2//3/////4" ) );
+		printerDirector->info( "获取路径[./4541/88]失败", Create_SrackInfo( ) );
+	printerDirector->info( path::normalPathSeparatorToPath( "/1/2//3/////4" ), Create_SrackInfo( ) );
+	printerDirector->info( path::normalPathSeparatorToPath( "1/2//3/////4" ), Create_SrackInfo( ) );
 	path::pathTree pathTree( "..../123/456" );
 	if( pathTree.appSubPath( "123/123/45" ) == false ) {
-		printerDirector->error( "123/123/45 配置异常" );
+		printerDirector->error( "123/123/45 配置异常", Create_SrackInfo( ) );
 	} else
-		printerDirector->info( pathTree.toQString( ) );
-	
+		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
+
 	if( pathTree.appSubPath( "123/784/45" ) == false ) {
-		printerDirector->error( "123/123/45 配置异常" );
+		printerDirector->error( "123/123/45 配置异常", Create_SrackInfo( ) );
 	} else
-		printerDirector->info( pathTree.toQString( ) );
-	
+		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
+
 	if( pathTree.appSubPath( "123/784/1" ) == false ) {
-		printerDirector->error( "123/123/1 配置异常" );
+		printerDirector->error( "123/123/1 配置异常", Create_SrackInfo( ) );
 	} else
-		printerDirector->info( pathTree.toQString( ) );
+		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
 }
 void TestCodeSources::testAppMoveWidget( ) {
 
 	auto instancePtr = Application::getInstancePtr( );
 	auto printerDirector = instancePtr->getPrinterDirector( );
 	if( instancePtr->widgetMoveTargetDispyer( 1 ) )
-		printerDirector->info( "移动成功到 0 号屏幕" );
+		printerDirector->info( "移动成功到 0 号屏幕", Create_SrackInfo( ) );
 	else
-		printerDirector->info( "移动失败，0 号屏幕不存在" );
+		printerDirector->info( "移动失败，0 号屏幕不存在", Create_SrackInfo( ) );
 	if( instancePtr->widgetAllMoveTargetDispyer( 0 ) )
-		printerDirector->info( "全部移动成功到 0 号屏幕" );
+		printerDirector->info( "全部移动成功到 0 号屏幕", Create_SrackInfo( ) );
 	else
-		printerDirector->info( "全部移动失败，0 号屏幕不存在" );
+		printerDirector->info( "全部移动失败，0 号屏幕不存在", Create_SrackInfo( ) );
 }
 /// @brief 运行测试函数
 /// @return 返回 true，表示继续程序，否则退出 

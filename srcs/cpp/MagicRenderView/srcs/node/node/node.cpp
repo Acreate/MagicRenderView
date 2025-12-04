@@ -144,6 +144,7 @@ bool Node::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &
 	uint64_t *uint64Ptr = nullptr;
 	if( varDirector.create( uint64Ptr ) == false )
 		return false;
+	*uint64Ptr = 0;
 	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
 		return false;
 

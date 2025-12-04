@@ -47,7 +47,7 @@ protected:
 protected:
 	virtual void releaseMenuResources( );
 	virtual void releaseNodeResources( );
-	virtual bool initDrawLinkWidget( );
+	virtual bool initDrawLinkWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 	virtual bool findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 public:

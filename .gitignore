@@ -18,3 +18,4 @@ auto_generate_files
 /sync.ffs_db
 /*.Caches
 /*.user
+/build

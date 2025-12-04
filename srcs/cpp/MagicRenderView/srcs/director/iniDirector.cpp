@@ -7,6 +7,8 @@
 
 #include "../app/application.h"
 
+#include "../srack/srackInfo.h"
+
 bool IniDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
@@ -50,7 +52,7 @@ bool IniDirector::removeVar( const QString &result_var_key ) {
 bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 	VarDirector newVarDirector;
 	if( newVarDirector.init( ) == false ) {
-		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ) );
+		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ), Create_SrackInfo( ) );
 		return false;
 	} else {
 		QFile file( file_path_name );
@@ -104,7 +106,7 @@ bool IniDirector::synchronousFileToVar( const QString &file_path_name ) {
 bool IniDirector::synchronousVarToFile( const QString &file_path_name ) const {
 	VarDirector newVarDirector;
 	if( newVarDirector.init( ) == false ) {
-		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ) );
+		printerDirector->error( tr( "无法初始化一个新的堆栈管理对象" ), Create_SrackInfo( ) );
 		return false;
 	} else {
 		QFile file( file_path_name );

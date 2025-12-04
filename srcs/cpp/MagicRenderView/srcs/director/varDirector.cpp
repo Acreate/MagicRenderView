@@ -31,6 +31,8 @@
 
 #include <app/application.h>
 
+#include "../srack/srackInfo.h"
+
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
 bool VarDirector::init( ) {
@@ -79,7 +81,7 @@ bool VarDirector::init( ) {
 		if( arrayPtr[ index ]->init( ) == false ) {
 			auto className = arrayPtr[ index ]->metaObject( )->className( );
 			QString msg( "[ %1 ]变量堆栈类初始化失败" );
-			printerDirector->error( msg.arg( className ) );
+			printerDirector->error( msg.arg( className ), Create_SrackInfo( ) );
 			for( index = 0; index < count; ++index )
 				delete arrayPtr[ index ];
 			stacks.clear( );

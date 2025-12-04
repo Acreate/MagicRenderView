@@ -3,7 +3,7 @@
 #pragma once
 
 #include <QObject>
-#include <stacktrace>
+//#include <stacktrace>
 class SrackInfo;
 class QDir;
 class QString;
@@ -30,9 +30,9 @@ public:
 	virtual void error( const QString &msg, const QStringList args, const SrackInfo &srack_info ) const {
 		info( msg, args, srack_info );
 	}
-	virtual void error( const QString &msg ) const;
-	virtual void info( const QString &msg ) const;
-	virtual std::vector< std::stacktrace_entry > getStacktrace( ) const;
+	//virtual void error( const QString &msg ) const;
+	//virtual void info( const QString &msg ) const;
+	//virtual std::vector< std::stacktrace_entry > getStacktrace( ) const;
 };
 
 #endif // PRINTERDIRECTOR_H_H_HEAD__FILE__

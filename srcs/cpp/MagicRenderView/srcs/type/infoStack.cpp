@@ -5,6 +5,8 @@
 #include <director/printerDirector.h>
 
 #include <tools/infoTool.h>
+
+#include "../srack/srackInfo.h"
 InfoStack::InfoStack( ) {
 	newObjTypeFunction = nullptr;
 	deleteObjTypeFunction = nullptr;
@@ -12,7 +14,7 @@ InfoStack::InfoStack( ) {
 InfoStack::~InfoStack( ) {
 
 	if( deleteObjTypeFunction == nullptr ) {
-		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" );
+		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
 	} else {
 		size_t count = allVarPtrVector.size( );
 		auto arrayPtr = allVarPtrVector.data( );
@@ -20,14 +22,14 @@ InfoStack::~InfoStack( ) {
 			if( nullptr == arrayPtr[ index ] )
 				break;
 			else if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
-				Application::getInstancePtr( )->getPrinterDirector( )->error( QString( tr( "释放[ %1 ]对象失败" ) ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ) );
+				Application::getInstancePtr( )->getPrinterDirector( )->error( QString( tr( "释放[ %1 ]对象失败" ) ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ), Create_SrackInfo( ) );
 		allVarPtrVector.clear( );
 	}
 
 }
 bool InfoStack::createTypePtr( void *&result_create_obj_ptr ) {
 	if( newObjTypeFunction == nullptr ) {
-		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 newObjTypeFunction 函数指向调用" );
+		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 newObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
 		return false;
 	}
 	result_create_obj_ptr = newObjTypeFunction( );
@@ -45,7 +47,7 @@ bool InfoStack::createTypePtr( void *&result_create_obj_ptr ) {
 }
 bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
 	if( deleteObjTypeFunction == nullptr ) {
-		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" );
+		Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
 		return false;
 	}
 	size_t count = allVarPtrVector.size( );

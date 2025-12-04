@@ -14,6 +14,8 @@
 
 #include <win/mainWindow.h>
 
+#include "../srack/srackInfo.h"
+
 #include "../tools/path.h"
 
 Application *Application::instance = nullptr;
@@ -32,9 +34,9 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 }
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
-		printerDirector->error( "窗口状态保存异常" );
+		printerDirector->error( "窗口状态保存异常", Create_SrackInfo( ) );
 	if( synchronousVarToFile( ) == false )
-		printerDirector->error( "程序信息保存异常" );
+		printerDirector->error( "程序信息保存异常", Create_SrackInfo( ) );
 	delete mainWindow;
 	delete nodeDirector;
 	delete iniDirector;
@@ -100,8 +102,8 @@ bool Application::init( ) {
 		return false;
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
-	logSaveFilePathName = currentApplcationDirPath + "/logs/" +
-		appName + appInitRunDataTime->toString( "!yyyy_MM_dd.hh_mm" ) + ".log";
+	// logSaveFilePathName = currentApplcationDirPath + "/logs/" + appName + appInitRunDataTime->toString( "!yyyy_MM_dd.hh_mm" ) + ".log";
+	logSaveFilePathName = currentApplcationDirPath + "/logs/" + appName + appInitRunDataTime->toString( tr( "!yyyy_MM_dd.log" ) );
 	filePermission.setFile( logSaveFilePathName );
 	logSaveFilePathName = filePermission.absoluteFilePath( );
 	path::removeFile( logSaveFilePathName );
