@@ -224,11 +224,17 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	bool appendInputRef = outputNodeRef->appendInputRef( input_port, output_port );
 	if( appendInputRef == false )
 		return false;
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
 	auto currentHistort = [input_port, output_port, this]( ) {
 		linkPort( output_port, input_port );
+		if( drawLinkWidget )
+			drawLinkWidget->update( );
 	};
 	auto cancelHistort = [this, output_port, input_port]( ) {
 		disLinkPort( output_port, input_port );
+		if( drawLinkWidget )
+			drawLinkWidget->update( );
 	};
 	NodeHistory *nodeHistory = new NodeHistory( currentHistort, cancelHistort );
 	nodeHistorys.emplace_back( nodeHistory );
@@ -702,9 +708,13 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 		auto node = createNode( append_node_ref_link_info->currentNode->nodeName, mainWidget );
 		auto mapFromGlobal = drawNodeWidget->mapFromGlobal( QCursor::pos( ) );
 		node->move( mapFromGlobal );
+		if( drawNodeWidget )
+			drawNodeWidget->update( );
 	};
-	auto cancelHistory = [append_node_ref_link_info] {
+	auto cancelHistory = [append_node_ref_link_info, this] {
 		delete append_node_ref_link_info->currentNode;
+		if( drawNodeWidget )
+			drawNodeWidget->update( );
 	};
 	auto newHistrort = new NodeHistory( currentHistory, cancelHistory );
 	nodeHistorys.emplace_back( newHistrort );
