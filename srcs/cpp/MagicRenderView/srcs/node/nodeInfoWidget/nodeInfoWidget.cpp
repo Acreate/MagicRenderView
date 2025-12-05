@@ -8,6 +8,9 @@ NodeInfoWidget::NodeInfoWidget( MainWindow *parent )
 	: QScrollArea( parent ) {
 	hide( );
 }
+NodeInfoWidget::~NodeInfoWidget( ) {
+	emit release_signal( this );
+}
 bool NodeInfoWidget::fitterType( Node *check_node_ptr ) const {
 	return false;
 }

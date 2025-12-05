@@ -335,11 +335,11 @@ bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
 		result_error_msg = tr( "缺少主配置窗口，使用 [Application::getMainWindow( )] 获取" );
 		return false;
 	}
-	nodeInfoWidgets.emplace_back( new PointNodeWidget( mainWindow ) );
-	nodeInfoWidgets.emplace_back( new JumpNodeWidget( mainWindow ) );
-	nodeInfoWidgets.emplace_back( new GenerateNodeWidget( mainWindow ) );
-	nodeInfoWidgets.emplace_back( new EndNodeWidget( mainWindow ) );
-	nodeInfoWidgets.emplace_back( new BeginNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new PointNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new JumpNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new GenerateNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new EndNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new BeginNodeWidget( mainWindow ) );
 	return true;
 }
 bool NodeDirector::findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count ) {
@@ -788,6 +788,20 @@ size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *ou
 	result += 1;
 	linkActionMap.emplace_back( new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action ) );
 	return result;
+}
+bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
+
+	nodeInfoWidgets.emplace_back( append_node_info_widget_ptr );
+	connect( append_node_info_widget_ptr, &NodeInfoWidget::release_signal, [this] ( NodeInfoWidget *release_ptr ) {
+		size_t count = nodeInfoWidgets.size( );
+		auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( nodeInfoWidgetArrayPtr[ index ] == release_ptr ) {
+				nodeInfoWidgets.erase( nodeInfoWidgets.begin( ) + index );
+				return;
+			}
+	} );
+	return true;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );

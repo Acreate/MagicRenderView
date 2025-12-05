@@ -111,6 +111,7 @@ protected:
 	virtual size_t removePortLinkAction( OutputPort *output_port );
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
 	virtual size_t addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action );
+	virtual bool appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
