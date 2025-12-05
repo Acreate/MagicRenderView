@@ -154,6 +154,7 @@ void NodeDirector::releaseNodeHistoryResources( ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		delete nodenodeHistorysArrayPtr[ index ];
+	nodeHistoryIndex = 0;
 	nodeHistorys.clear( );
 }
 NodeDirector::~NodeDirector( ) {
@@ -230,14 +231,16 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 		linkPort( output_port, input_port );
 		if( drawLinkWidget )
 			drawLinkWidget->update( );
+		return nullptr;
 	};
 	auto cancelHistort = [this, output_port, input_port]( ) {
 		disLinkPort( output_port, input_port );
 		if( drawLinkWidget )
 			drawLinkWidget->update( );
+		return nullptr;
 	};
-	NodeHistory *nodeHistory = new NodeHistory( currentHistort, cancelHistort );
-	nodeHistorys.emplace_back( nodeHistory );
+	appendHistorIndexEnd( currentHistort, cancelHistort );
+
 	return appendInputRef;
 }
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -276,17 +279,14 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 	}
 }
 bool NodeDirector::cancelNodeHistory( ) {
-	size_t count = nodeHistorys.size( );
-	if( count == 0 )
+	if( nodeHistoryIndex == 0 )
 		return false;
-	count -= 1;
-	NodeHistory *nodeHistory = nodeHistorys.data( )[ count ];
+	nodeHistoryIndex -= 1;
+	NodeHistory *nodeHistory = nodeHistorys.data( )[ nodeHistoryIndex ];
 	auto callCancelOperate = nodeHistory->callCancelOperate( );
 	if( callCancelOperate == nullptr )
 		return false;
 	delete callCancelOperate;
-	nodeHistorys.erase( nodeHistorys.begin( ) + count );
-	delete nodeHistory;
 	return true;
 }
 bool NodeDirector::initDrawLinkWidget( QString &result_error_msg ) {
@@ -704,20 +704,23 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 			return;
 	refNodeVector.emplace_back( append_node_ref_link_info );
 	finishCreateNode( append_node_ref_link_info );
+
 	auto currentHistory = [append_node_ref_link_info, this] {
 		auto node = createNode( append_node_ref_link_info->currentNode->nodeName, mainWidget );
 		auto mapFromGlobal = drawNodeWidget->mapFromGlobal( QCursor::pos( ) );
 		node->move( mapFromGlobal );
 		if( drawNodeWidget )
 			drawNodeWidget->update( );
+		return nullptr;
 	};
 	auto cancelHistory = [append_node_ref_link_info, this] {
 		delete append_node_ref_link_info->currentNode;
 		if( drawNodeWidget )
 			drawNodeWidget->update( );
+		return nullptr;
 	};
-	auto newHistrort = new NodeHistory( currentHistory, cancelHistory );
-	nodeHistorys.emplace_back( newHistrort );
+	appendHistorIndexEnd( currentHistory, cancelHistory );
+
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;
@@ -800,7 +803,6 @@ size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *ou
 	return result;
 }
 bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
-
 	nodeInfoWidgets.emplace_back( append_node_info_widget_ptr );
 	connect( append_node_info_widget_ptr, &NodeInfoWidget::release_signal, [this] ( NodeInfoWidget *release_ptr ) {
 		size_t count = nodeInfoWidgets.size( );
@@ -813,8 +815,32 @@ bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget
 	} );
 	return true;
 }
+void NodeDirector::removeHistorIndexEnd( ) {
+	size_t count = nodeHistorys.size( );
+	if( nodeHistoryIndex == count )
+		return;
+	auto nodeHistoryArrayPtr = nodeHistorys.data( );
+	size_t index = nodeHistoryIndex;
+	for( ; index < count; ++index )
+		delete nodeHistoryArrayPtr[ index ];
+	nodeHistorys.resize( nodeHistoryIndex );
+}
+void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > &current_history, const std::function< NodeHistory*( ) > &cancel_history ) {
+	removeHistorIndexEnd( );
+	auto newHistrort = new NodeHistory( current_history, cancel_history );
+	nodeHistorys.emplace_back( newHistrort );
+	nodeHistoryIndex = nodeHistorys.size( );
+}
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );
+
+	appendHistorIndexEnd(
+		[] {
+			return nullptr;
+		}, [] { // todo :撤销删除（创建对象）
+			return nullptr;
+		} );
+
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }

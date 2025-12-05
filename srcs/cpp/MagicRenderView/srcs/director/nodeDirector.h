@@ -45,6 +45,7 @@ protected:
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
+	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
 protected:
 	virtual void releaseObjResources( );
@@ -112,6 +113,9 @@ protected:
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
 	virtual size_t addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action );
 	virtual bool appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr );
+	/// @brief 删除历史坐标后续的所有对象
+	virtual void removeHistorIndexEnd( );
+	virtual void appendHistorIndexEnd( const std::function<NodeHistory *()> &current_history, const std::function<NodeHistory *()> &cancel_history );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
