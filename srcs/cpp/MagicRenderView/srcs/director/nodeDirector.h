@@ -1,13 +1,12 @@
 ﻿#ifndef NODEDIRECTOR_H_H_HEAD__FILE__
 #define NODEDIRECTOR_H_H_HEAD__FILE__
 #pragma once
-#include <QObject>
-#include <qpainter.h>
 
 #include <enums/nodeEnum.h>
 
 #include "../widget/mainWidget.h"
 
+class NodeInfoWidget;
 class NodePortLinkActionPair;
 class DrawLinkWidget;
 class SrackInfo;
@@ -44,22 +43,55 @@ protected:
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
+	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 protected:
 	virtual void releaseMenuResources( );
 	virtual void releaseNodeResources( );
+	virtual void releaseNodeInfoWidgetResources( );
 	virtual bool initDrawLinkWidget( QString &result_error_msg );
+	virtual bool initNodeInfoWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 	virtual bool findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
+	/// @brief 初始化管理对象
+	/// @return 失败返回 false
 	virtual bool init( );
+	/// @brief 显示匹配的信息窗口
+	/// @param association_node 关联节点
+	/// @return 成功显示返回 true
+	virtual bool showNodeWidgeInfo( Node *association_node );
+	/// @brief 获取节点创建菜单
+	/// @return 失败返回 nullptr
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
+	/// @brief 使用节点名称创建节点
+	/// @param node_type_name 节点名称
+	/// @param main_widget 显示窗口
+	/// @return 失败返回 nullptr
 	virtual Node * createNode( const QString &node_type_name, MainWidget *main_widget );
+	/// @brief 链接端口
+	/// @param output_port 输出端口
+	/// @param input_port 输入端口
+	/// @return 失败返回 false
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
+	/// @brief 取消链接
+	/// @param output_port 输出端口
+	/// @param input_port 输入端口
+	/// @return 失败返回 false
 	virtual bool disLinkPort( OutputPort *output_port, InputPort *input_port );
+	/// @brief 绘制连接
+	/// @param draw_link_widget 绘制对象
 	virtual void drawLinkLines( QPainter &draw_link_widget );
-	virtual bool toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data );
+	/// @brief 节点转换到数据序列
+	/// @param result_vector_data 转换存储的数据序列对象
+	/// @return 失败返回 false
+	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
+	/// @brief 从数据回复节点
+	/// @param result_use_count 使用数据量
+	/// @param source_array_ptr 数据起始地址
+	/// @param source_array_count 数据最大数量
+	/// @return 失败返回 false
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );

@@ -1,5 +1,6 @@
 ﻿#include "nodeDirector.h"
 #include <QMenu>
+#include <QPainter>
 
 #include <node/stack/nodeStack.h>
 
@@ -12,6 +13,12 @@
 #include "../node/nodeInfo/inputportLinkOutputPortInfo.h"
 #include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
+#include "../node/nodeInfoWidget/nodeInfoWidget.h"
+#include "../node/nodeInfoWidget/begin/beginNodeWidget.h"
+#include "../node/nodeInfoWidget/end/endNodeWidget.h"
+#include "../node/nodeInfoWidget/generate/generateNodeWidget.h"
+#include "../node/nodeInfoWidget/jump/jumpNodeWidget.h"
+#include "../node/nodeInfoWidget/point/pointNodeWidget.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
@@ -33,6 +40,7 @@ bool NodeDirector::init( ) {
 	varDirector = instancePtr->getVarDirector( );
 	releaseMenuResources( );
 	releaseNodeResources( );
+	releaseNodeInfoWidgetResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
 	createNodeVector.clear( );
@@ -67,34 +75,26 @@ bool NodeDirector::init( ) {
 			delete generateCreateMenu;
 		this->nodeCreateMenu->addMenu( generateCreateMenu );
 	}
-	mainWindow = instancePtr->getMainWindow( );
-	if( mainWindow )
-		connect( mainWindow, &MainWindow::release_signal, [this] ( MainWindow *release_ptr ) {
-			if( mainWindow == release_ptr )
-				mainWindow = nullptr;
-		} );
-	mainWidget = mainWindow->getMainWidget( );
-	if( mainWidget )
-		connect( mainWidget, &MainWidget::release_signal, [this] ( MainWidget *release_ptr ) {
-			if( mainWidget == release_ptr )
-				mainWidget = nullptr;
-		} );
-	drawNodeWidget = mainWidget->getDrawNodeWidget( );
-	if( drawNodeWidget )
-		connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
-			if( drawNodeWidget == release_ptr )
-				drawNodeWidget = nullptr;
-		} );
-	drawLinkWidget = mainWidget->getDrawLinkWidget( );
-	if( drawLinkWidget )
-		connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
-			if( drawLinkWidget == release_ptr )
-				drawLinkWidget = nullptr;
-		} );
+	QString errorMsg;
+	if( initDrawLinkWidget( errorMsg ) == false )
+		printerDirector->info( errorMsg,Create_SrackInfo( ) );
+
 	return true;
 }
+bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
 
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ) {
+	size_t count = nodeInfoWidgets.size( );
+	auto arrayPtr = nodeInfoWidgets.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( arrayPtr[ index ]->fitterType( association_node ) == true ) {
+			arrayPtr[ index ]->show( );
+			return true;
+		}
+	return false;
+}
+
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ) {
 	nodeVarDirector = new VarDirector;
 	nodeCreateMenu = new QMenu;
 }
@@ -132,6 +132,14 @@ void NodeDirector::releaseNodeResources( ) {
 			delete pair[ index ];
 		}
 	}
+}
+void NodeDirector::releaseNodeInfoWidgetResources( ) {
+	size_t count = nodeInfoWidgets.size( );
+	auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		delete nodeInfoWidgetArrayPtr[ index ];
+	nodeInfoWidgets.clear( );
 }
 NodeDirector::~NodeDirector( ) {
 	releaseMenuResources( );
@@ -284,6 +292,18 @@ bool NodeDirector::initDrawLinkWidget( QString &result_error_msg ) {
 				drawLinkWidget = nullptr;
 		} );
 	}
+	return initNodeInfoWidget( result_error_msg );
+}
+bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
+	if( mainWindow == nullptr ) {
+		result_error_msg = tr( "缺少主配置窗口，使用 [Application::getMainWindow( )] 获取" );
+		return false;
+	}
+	nodeInfoWidgets.emplace_back( new PointNodeWidget( mainWindow ) );
+	nodeInfoWidgets.emplace_back( new JumpNodeWidget( mainWindow ) );
+	nodeInfoWidgets.emplace_back( new GenerateNodeWidget( mainWindow ) );
+	nodeInfoWidgets.emplace_back( new EndNodeWidget( mainWindow ) );
+	nodeInfoWidgets.emplace_back( new BeginNodeWidget( mainWindow ) );
 	return true;
 }
 bool NodeDirector::findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count ) {
@@ -308,7 +328,7 @@ bool NodeDirector::findNodeOutputPort( OutputPort *&result_output_port_ptr, cons
 		}
 	return false;
 }
-bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uint8_t > &result_vector_data ) {
+bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;
@@ -367,7 +387,6 @@ bool NodeDirector::toUint8VectorData( size_t &result_use_count, std::vector< uin
 	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
 		return false;
 	result_vector_data.append_range( vectorInfo );
-	result_use_count = result_vector_data.size( );
 	return true;
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {

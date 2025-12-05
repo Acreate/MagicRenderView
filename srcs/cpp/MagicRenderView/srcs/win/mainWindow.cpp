@@ -55,7 +55,7 @@ void MainWindow::savePorjectToFile( ) {
 		return;
 	size_t dataCount = 0;
 	std::vector< uint8_t > dataVector;
-	if( nodeDirector->toUint8VectorData( dataCount, dataVector ) == false || dataCount == 0 )
+	if( nodeDirector->toUint8VectorData( dataVector ) == false || dataCount == 0 )
 		return;
 	QFileInfo fileInfo( openFileName );
 	QString absoluteFilePath = fileInfo.absoluteFilePath( );

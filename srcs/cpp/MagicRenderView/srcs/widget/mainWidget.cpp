@@ -2,6 +2,7 @@
 
 #include <QMenu>
 #include <QResizeEvent>
+#include <qdatetime.h>
 
 #include "drawLinkWidget.h"
 #include "drawNodeWidget.h"
@@ -17,10 +18,11 @@
 
 #include "../win/mainWindow.h"
 
-MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ) {
+MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ), oldSelectNode( nullptr ) {
 	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
 	drawLinkWidget = new DrawLinkWidget( this );
 	drawNodeWidget = new DrawNodeWidget( this );
+	oldClickTime = new QDateTime;
 }
 MainWidget::~MainWidget( ) {
 	emit release_signal( this );
@@ -68,6 +70,8 @@ bool MainWidget::init( ) {
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	mainWindow = appInstancePtr->getMainWindow( );
 	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
+	*oldClickTime = QDateTime::currentDateTime( );
+
 	return true;
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
@@ -89,9 +93,21 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::None :
-					case NodeEnum::NodeClickType::Titile :
+					case NodeEnum::NodeClickType::Titile : {
+						QDateTime currentDateTime = QDateTime::currentDateTime( );
+						auto sep = currentDateTime - *oldClickTime;
+						*oldClickTime = currentDateTime;
+						auto second = sep.count( );
+						if( second < 150 )
+							if( oldSelectNode == dragNode && nodeDirector->showNodeWidgeInfo( oldSelectNode ) ) {
+								dragNode = nullptr;
+								break;
+							}
+						selectSatausPoint = clickPoint;
 						offsetPoint = dragNode->mapFromParent( clickPoint );
+						oldSelectNode = dragNode;
 						break;
+					}
 					case NodeEnum::NodeClickType::InputPort :
 						dragNode = nullptr;
 						selectInputPort = clickInfoPtr->getInputPort( );
@@ -104,8 +120,11 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						dragNode = nullptr;
 						break;
 				}
+				break;
+			} else {
+				oldSelectNode = dragNode = nullptr;
+				break;
 			}
-			break;
 		case Qt::MiddleButton :
 			break;
 	}

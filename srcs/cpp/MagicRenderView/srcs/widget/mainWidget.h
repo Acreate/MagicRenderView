@@ -28,9 +28,12 @@ protected:
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	NodeClickInfo *clickInfoPtr;
 	QMenu *nodeCreateMenu;
+	Node *oldSelectNode;
 	Node *dragNode;
 	InputPort *selectInputPort;
 	OutputPort *selectOutputPort;
+	QDateTime *oldClickTime;
+	QPoint selectSatausPoint;
 	QPoint offsetPoint;
 	/// @brief 构造/析构 
 public:

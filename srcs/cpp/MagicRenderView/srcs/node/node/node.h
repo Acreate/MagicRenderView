@@ -8,6 +8,7 @@
 #include <enums/nodeEnum.h>
 
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
+class NodeInfoWidget;
 class DrawNodeWidget;
 class QHBoxLayout;
 class QLabel;
@@ -74,6 +75,8 @@ protected:
 	int nodeBorderWidth;
 	/// @brief 删除菜单
 	QMenu *removeMenu;
+	/// @brief 节点信息显示菜单
+	NodeInfoWidget* nodeInfoWidget;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
