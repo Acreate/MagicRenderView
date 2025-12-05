@@ -8,6 +8,11 @@ class EndNodeWidget : public NodeInfoWidget {
 public:
 	EndNodeWidget( MainWindow *parent )
 		: NodeInfoWidget( parent ) { }
+	bool isNodeInfo( Node *check_node_ptr ) override;
+	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
+protected:
+	void okButtonEvent( ) override{}
+	void cancelButtonEvent( ) override{}
 };
 
 #endif // ENDNODEWIDGET_H_H_HEAD__FILE__

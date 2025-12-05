@@ -41,6 +41,7 @@ protected:
 	MainWidget *mainWidget;
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
+	NodeInfoWidget * currentShowWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
@@ -91,6 +92,9 @@ public:
 	/// @brief 取消历史操作
 	/// @return 失败返回 nullptr
 	virtual bool cancelNodeHistory( );
+	/// @brief 获取当前节点显示详情信息窗口
+	/// @return 不存在显示窗口返回 nullptr
+	virtual NodeInfoWidget * getCurrentShowWidget( ) const { return currentShowWidget; }
 	/// @brief 节点转换到数据序列
 	/// @param result_vector_data 转换存储的数据序列对象
 	/// @return 失败返回 false

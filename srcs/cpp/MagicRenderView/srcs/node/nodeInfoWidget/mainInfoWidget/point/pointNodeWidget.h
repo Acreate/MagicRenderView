@@ -8,6 +8,11 @@ class PointNodeWidget : public NodeInfoWidget {
 public:
 	PointNodeWidget( MainWindow *parent )
 		: NodeInfoWidget( parent ) { }
+	bool isNodeInfo( Node *check_node_ptr ) override;
+	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
+protected:
+	void okButtonEvent( ) override { }
+	void cancelButtonEvent( ) override { }
 };
 
 #endif // POINTNODEWIDGET_H_H_HEAD__FILE__

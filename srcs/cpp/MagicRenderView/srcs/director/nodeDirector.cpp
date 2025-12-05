@@ -14,12 +14,12 @@
 #include "../node/nodeInfo/nodeHistory.h"
 #include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
-#include "../node/nodeInfoWidget/nodeInfoWidget.h"
-#include "../node/nodeInfoWidget/begin/beginNodeWidget.h"
-#include "../node/nodeInfoWidget/end/endNodeWidget.h"
-#include "../node/nodeInfoWidget/generate/generateNodeWidget.h"
-#include "../node/nodeInfoWidget/jump/jumpNodeWidget.h"
-#include "../node/nodeInfoWidget/point/pointNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/end/endNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/generate/generateNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/point/pointNodeWidget.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
@@ -83,19 +83,33 @@ bool NodeDirector::init( ) {
 	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
-
+	if( association_node == nullptr ) {
+		if( currentShowWidget )
+			currentShowWidget->hide( );
+		return false;
+	}
+	if( currentShowWidget && currentShowWidget->isNodeTypeInfoWidget( association_node ) == true ) {
+		if( currentShowWidget->isNodeInfo( association_node ) )
+			return true;
+		currentShowWidget->hide( );
+		return false;
+	}
 	size_t count = nodeInfoWidgets.size( );
 	auto arrayPtr = nodeInfoWidgets.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( arrayPtr[ index ]->fitterType( association_node ) == true ) {
+		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true ) {
+			if( currentShowWidget )
+				currentShowWidget->hide( );
+			if( currentShowWidget->isNodeInfo( association_node ) == false )
+				return false;
 			arrayPtr[ index ]->show( );
 			return true;
 		}
 	return false;
 }
 
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
 	nodeVarDirector = new VarDirector;
 	nodeCreateMenu = new QMenu;
 }
@@ -146,6 +160,7 @@ void NodeDirector::releaseNodeInfoWidgetResources( ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		delete nodeInfoWidgetArrayPtr[ index ];
+	currentShowWidget = nullptr;
 	nodeInfoWidgets.clear( );
 }
 void NodeDirector::releaseNodeHistoryResources( ) {
@@ -809,9 +824,18 @@ bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget
 		auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
 		for( size_t index = 0; index < count; ++index )
 			if( nodeInfoWidgetArrayPtr[ index ] == release_ptr ) {
+				if( release_ptr == currentShowWidget )
+					currentShowWidget = nullptr; // 释放的窗口需要配置为 nullptr
 				nodeInfoWidgets.erase( nodeInfoWidgets.begin( ) + index );
 				return;
 			}
+	} );
+	connect( append_node_info_widget_ptr, &NodeInfoWidget::show_signal, [ this] ( NodeInfoWidget *show_ptr ) {
+		currentShowWidget = show_ptr;
+	} );
+	connect( append_node_info_widget_ptr, &NodeInfoWidget::hide_signal, [ this] ( NodeInfoWidget *hid_ptr ) {
+		if( hid_ptr == currentShowWidget )
+			currentShowWidget = nullptr;
 	} );
 	return true;
 }
