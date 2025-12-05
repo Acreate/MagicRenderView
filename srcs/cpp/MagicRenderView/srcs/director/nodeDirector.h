@@ -6,6 +6,7 @@
 
 #include "../widget/mainWidget.h"
 
+class NodeHistory;
 class NodeInfoWidget;
 class NodePortLinkActionPair;
 class DrawLinkWidget;
@@ -44,10 +45,13 @@ protected:
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
+	std::vector< NodeHistory * > nodeHistorys;
 protected:
+	virtual void releaseObjResources( );
 	virtual void releaseMenuResources( );
 	virtual void releaseNodeResources( );
 	virtual void releaseNodeInfoWidgetResources( );
+	virtual void releaseNodeHistoryResources( );
 	virtual bool initDrawLinkWidget( QString &result_error_msg );
 	virtual bool initNodeInfoWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
@@ -83,6 +87,9 @@ public:
 	/// @brief 绘制连接
 	/// @param draw_link_widget 绘制对象
 	virtual void drawLinkLines( QPainter &draw_link_widget );
+	/// @brief 取消历史操作
+	/// @return 失败返回 nullptr
+	virtual bool cancelNodeHistory( );
 	/// @brief 节点转换到数据序列
 	/// @param result_vector_data 转换存储的数据序列对象
 	/// @return 失败返回 false

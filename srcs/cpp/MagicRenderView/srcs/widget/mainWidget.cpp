@@ -109,6 +109,7 @@ void MainWidget::cutSelectNodeInfo( ) {
 	deleteSelectNodeInfo( );
 }
 void MainWidget::cancelNodeInfo( ) {
+	nodeDirector->cancelNodeHistory( );
 }
 void MainWidget::deleteSelectNodeInfo( ) {
 	if( oldSelectNode == nullptr )

@@ -11,6 +11,7 @@
 
 #include "../node/node/node.h"
 #include "../node/nodeInfo/inputportLinkOutputPortInfo.h"
+#include "../node/nodeInfo/nodeHistory.h"
 #include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/nodeInfoWidget/nodeInfoWidget.h"
@@ -38,9 +39,7 @@ bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
-	releaseMenuResources( );
-	releaseNodeResources( );
-	releaseNodeInfoWidgetResources( );
+	releaseObjResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
 	createNodeVector.clear( );
@@ -75,11 +74,13 @@ bool NodeDirector::init( ) {
 			delete generateCreateMenu;
 		this->nodeCreateMenu->addMenu( generateCreateMenu );
 	}
+
 	QString errorMsg;
-	if( initDrawLinkWidget( errorMsg ) == false )
+	bool drawLinkWidgetIniRsult = initDrawLinkWidget( errorMsg );
+	if( drawLinkWidgetIniRsult == false )
 		printerDirector->info( errorMsg,Create_SrackInfo( ) );
 
-	return true;
+	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
 
@@ -97,6 +98,12 @@ bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ) {
 	nodeVarDirector = new VarDirector;
 	nodeCreateMenu = new QMenu;
+}
+void NodeDirector::releaseObjResources( ) {
+	releaseMenuResources( );
+	releaseNodeResources( );
+	releaseNodeInfoWidgetResources( );
+	releaseNodeHistoryResources( );
 }
 void NodeDirector::releaseMenuResources( ) {
 	size_t count;
@@ -141,9 +148,16 @@ void NodeDirector::releaseNodeInfoWidgetResources( ) {
 		delete nodeInfoWidgetArrayPtr[ index ];
 	nodeInfoWidgets.clear( );
 }
+void NodeDirector::releaseNodeHistoryResources( ) {
+	size_t count = nodeHistorys.size( );
+	auto nodenodeHistorysArrayPtr = nodeHistorys.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		delete nodenodeHistorysArrayPtr[ index ];
+	nodeHistorys.clear( );
+}
 NodeDirector::~NodeDirector( ) {
-	releaseMenuResources( );
-	releaseNodeResources( );
+	releaseObjResources( );
 	if( nodeCreateMenu )
 		delete nodeCreateMenu;
 	if( nodeVarDirector )
@@ -210,7 +224,14 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	bool appendInputRef = outputNodeRef->appendInputRef( input_port, output_port );
 	if( appendInputRef == false )
 		return false;
-
+	auto currentHistort = [input_port, output_port, this]( ) {
+		linkPort( output_port, input_port );
+	};
+	auto cancelHistort = [this, output_port, input_port]( ) {
+		disLinkPort( output_port, input_port );
+	};
+	NodeHistory *nodeHistory = new NodeHistory( currentHistort, cancelHistort );
+	nodeHistorys.emplace_back( nodeHistory );
 	return appendInputRef;
 }
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -247,6 +268,20 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 			}
 		}
 	}
+}
+bool NodeDirector::cancelNodeHistory( ) {
+	size_t count = nodeHistorys.size( );
+	if( count == 0 )
+		return false;
+	count -= 1;
+	NodeHistory *nodeHistory = nodeHistorys.data( )[ count ];
+	auto callCancelOperate = nodeHistory->callCancelOperate( );
+	if( callCancelOperate == nullptr )
+		return false;
+	delete callCancelOperate;
+	nodeHistorys.erase( nodeHistorys.begin( ) + count );
+	delete nodeHistory;
+	return true;
 }
 bool NodeDirector::initDrawLinkWidget( QString &result_error_msg ) {
 	if( mainWindow == nullptr ) {
@@ -663,6 +698,16 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 			return;
 	refNodeVector.emplace_back( append_node_ref_link_info );
 	finishCreateNode( append_node_ref_link_info );
+	auto currentHistory = [append_node_ref_link_info, this] {
+		auto node = createNode( append_node_ref_link_info->currentNode->nodeName, mainWidget );
+		auto mapFromGlobal = drawNodeWidget->mapFromGlobal( QCursor::pos( ) );
+		node->move( mapFromGlobal );
+	};
+	auto cancelHistory = [append_node_ref_link_info] {
+		delete append_node_ref_link_info->currentNode;
+	};
+	auto newHistrort = new NodeHistory( currentHistory, cancelHistory );
+	nodeHistorys.emplace_back( newHistrort );
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;
