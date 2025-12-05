@@ -1,5 +1,6 @@
 ﻿#include "mainWindow.h"
 
+#include <QShortcut>
 #include <QMenu>
 #include <QFileDialog>
 #include <QMouseEvent>
@@ -28,6 +29,12 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
 		return false;
+	size_t count = shortcutVector.size( );
+	auto shortcutArrayPtr = shortcutVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		delete shortcutArrayPtr[ index ];
+	shortcutVector.clear( );
 
 	addToolBar( Qt::TopToolBarArea, toolBar );
 	toolBar->setFloatable( false );
@@ -43,6 +50,40 @@ bool MainWindow::init( ) {
 	connect( addAction, &QAction::triggered, this, &MainWindow::savePorjectToFile );
 	addAction = toolBar->addAction( tr( "加载..." ) );
 	connect( addAction, &QAction::triggered, this, &MainWindow::loadPorjectAtFile );
+
+	QShortcut *shortcut;
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::savePorjectToFile );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_O ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::savePorjectToFile );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::copyNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::pasteNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_X ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::cutNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_Z ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::cancelNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::Key_Delete ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::deleteNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
+	shortcut = new QShortcut( QKeySequence( Qt::Key_Backspace ), this );
+	connect( shortcut, &QShortcut::activated, this, &MainWindow::deleteNodeInfo );
+	shortcutVector.emplace_back( shortcut );
+
 	return true;
 }
 MainWindow::~MainWindow( ) {
@@ -93,13 +134,26 @@ void MainWindow::loadPorjectAtFile( ) {
 	if( nodeDirector->formUint8ArrayData( dataCount, ( uchar * ) data, count ) == false )
 		return;
 }
+void MainWindow::copyNodeInfo( ) {
+	mainWidget->copySelectNodeInfo( );
+}
+void MainWindow::pasteNodeInfo( ) {
+	mainWidget->pastePointNodeInfo( );
+}
+void MainWindow::cutNodeInfo( ) {
+	mainWidget->cutSelectNodeInfo( );
+}
+void MainWindow::cancelNodeInfo( ) {
+	mainWidget->cancelNodeInfo( );
+}
+void MainWindow::deleteNodeInfo( ) {
+	mainWidget->deleteSelectNodeInfo( );
+}
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
-
 }
 void MainWindow::resizeEvent( QResizeEvent *event ) {
 	QMainWindow::resizeEvent( event );
-
 }
 bool MainWindow::event( QEvent *event ) {
 	return QMainWindow::event( event );

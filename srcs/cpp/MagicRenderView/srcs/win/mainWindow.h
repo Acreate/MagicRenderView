@@ -20,6 +20,7 @@ protected:
 	NodeDirector *nodeDirector;
 	QToolBar *toolBar;
 	QString saveFileDirPath;
+	std::vector< QShortcut * > shortcutVector;
 protected:
 	MainWindow( );
 	virtual bool init( );
@@ -29,6 +30,11 @@ public:
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 	virtual void savePorjectToFile( );
 	virtual void loadPorjectAtFile( );
+	virtual void copyNodeInfo( );
+	virtual void pasteNodeInfo( );
+	virtual void cutNodeInfo( );
+	virtual void cancelNodeInfo( );
+	virtual void deleteNodeInfo( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

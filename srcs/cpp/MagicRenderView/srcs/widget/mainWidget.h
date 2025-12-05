@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class PrinterDirector;
 class NodeRefLinkInfo;
 class OutputPort;
 class InputPort;
@@ -20,6 +21,7 @@ class MainWidget : public QWidget {
 protected:
 	Application *appInstancePtr;
 	NodeDirector *nodeDirector;
+	PrinterDirector *printerDirector;
 	/// @brief 可获取成员变量
 protected:
 	MainWindow *mainWindow;
@@ -33,7 +35,6 @@ protected:
 	InputPort *selectInputPort;
 	OutputPort *selectOutputPort;
 	QDateTime *oldClickTime;
-	QPoint selectSatausPoint;
 	QPoint offsetPoint;
 	/// @brief 构造/析构 
 public:
@@ -42,6 +43,13 @@ public:
 	virtual bool addNode( NodeRefLinkInfo *node_ref_link_info );
 	virtual bool ensureVisible( Node *target );
 	virtual bool init( );
+	/// @brief 快捷功能
+public:
+	virtual void copySelectNodeInfo( );
+	virtual void pastePointNodeInfo( );
+	virtual void cutSelectNodeInfo( );
+	virtual void cancelNodeInfo( );
+	virtual void deleteSelectNodeInfo( );
 	/// @brief 获取成员变量函数调用
 public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }

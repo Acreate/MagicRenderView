@@ -1,6 +1,7 @@
 ﻿#include "mainWidget.h"
 
 #include <QMenu>
+#include <QClipboard>
 #include <QResizeEvent>
 #include <qdatetime.h>
 
@@ -11,10 +12,13 @@
 #include "../app/application.h"
 
 #include "../director/nodeDirector.h"
+#include "../director/printerDirector.h"
 
 #include "../node/node/node.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
+
+#include "../srack/srackInfo.h"
 
 #include "../win/mainWindow.h"
 
@@ -69,10 +73,48 @@ bool MainWidget::init( ) {
 	appInstancePtr = Application::getInstancePtr( );
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	mainWindow = appInstancePtr->getMainWindow( );
+	printerDirector = appInstancePtr->getPrinterDirector( );
 	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
 	*oldClickTime = QDateTime::currentDateTime( );
 
 	return true;
+}
+void MainWidget::copySelectNodeInfo( ) {
+	if( oldSelectNode == nullptr )
+		return;
+	QClipboard *clipboard = QApplication::clipboard( );
+	clipboard->setText( oldSelectNode->getNodeName( ) );
+}
+void MainWidget::pastePointNodeInfo( ) {
+
+	QClipboard *clipboard = QApplication::clipboard( );
+	auto text = clipboard->text( );
+	auto list = text.split( "," );
+	if( list.size( ) == 0 )
+		return;
+	text = list.data( )[ 0 ];
+	auto node = nodeDirector->createNode( text, this );
+	if( node == nullptr ) {
+		printerDirector->info( tr( "无法匹配 [%1]" ).arg( text ), Create_SrackInfo( ) );
+		return;
+	}
+	auto point = QCursor::pos( );
+	point = drawNodeWidget->mapFromGlobal( point );
+	node->move( point );
+}
+void MainWidget::cutSelectNodeInfo( ) {
+	if( oldSelectNode == nullptr )
+		return;
+	copySelectNodeInfo( );
+	deleteSelectNodeInfo( );
+}
+void MainWidget::cancelNodeInfo( ) {
+}
+void MainWidget::deleteSelectNodeInfo( ) {
+	if( oldSelectNode == nullptr )
+		return;
+	delete oldSelectNode;
+	oldSelectNode = nullptr;
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
@@ -103,7 +145,6 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 								dragNode = nullptr;
 								break;
 							}
-						selectSatausPoint = clickPoint;
 						offsetPoint = dragNode->mapFromParent( clickPoint );
 						oldSelectNode = dragNode;
 						break;
