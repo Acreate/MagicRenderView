@@ -32,6 +32,10 @@ protected:
 public:
 	NodeRefLinkInfo( Node *current_node );
 	~NodeRefLinkInfo( ) override;
+	/// @brief 在输入依赖当中，是否已经存在该依赖。
+	/// @param node_ref_link_info 检查依赖
+	/// @return 存在依赖，则返回 true
+	virtual bool hasInputRefNode( NodeRefLinkInfo* node_ref_link_info );
 	/// @brief 输入接口连接到输出接口
 	/// @param input_port 当前对象节点的输入接口
 	/// @param output_port 目标节点的输出接口

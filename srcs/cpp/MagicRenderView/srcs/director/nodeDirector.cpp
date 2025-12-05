@@ -193,7 +193,8 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 
 	NodeRefLinkInfo *inputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
 	NodeRefLinkInfo *outputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
-
+	if( inputNodeRef->hasInputRefNode( outputNodeRef ) )
+		return false;
 	if( inputNodeRef->hasPortRef( input_port, output_port ) == true )
 		return true;
 	NodeEnum::PortType inType = input_port->getPortType( );

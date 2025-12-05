@@ -71,6 +71,15 @@ NodeRefLinkInfo::~NodeRefLinkInfo( ) {
 	// 删除包含对象
 	delete nodePortLinkInfo;
 }
+bool NodeRefLinkInfo::hasInputRefNode( NodeRefLinkInfo *node_ref_link_info ) {
+	size_t count = refInputVector.size( );
+	auto refInputVectorPtr = refInputVector.data( );
+	size_t index;
+	for( index = 0; index < count; ++index )
+		if( refInputVectorPtr[ index ] == node_ref_link_info || refInputVectorPtr[ index ]->hasInputRefNode( node_ref_link_info ) )
+			return true;
+	return false;
+}
 bool NodeRefLinkInfo::appendInputRef( InputPort *input_port, OutputPort *output_port ) {
 
 	if( nodePortLinkInfo->appEndLinkInputTarget( input_port, output_port ) == false )
