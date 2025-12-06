@@ -3,12 +3,12 @@ NodeHistory::NodeHistory( const std::function< NodeHistory*( ) > &current_operat
 NodeHistory * NodeHistory::callCurrentOperate( ) {
 	if( currentOperate == nullptr )
 		return nullptr;
-	
+
 	return currentOperate( );
 }
 NodeHistory * NodeHistory::callCancelOperate( ) {
 	if( cancelOperate == nullptr )
 		return nullptr;
-	
+
 	return cancelOperate( );
 }

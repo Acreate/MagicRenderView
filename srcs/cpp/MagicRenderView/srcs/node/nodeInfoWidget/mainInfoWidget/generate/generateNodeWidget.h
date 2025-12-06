@@ -13,8 +13,6 @@ public:
 		: NodeInfoWidget( parent ) { }
 	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
-	size_t releaseVar( ) override;
-	size_t clearVarPtr( ) override;
 protected:
 	void okButtonEvent( ) override { }
 	void cancelButtonEvent( ) override { }

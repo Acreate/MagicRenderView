@@ -2,7 +2,8 @@
 
 #include <node/node/node.h>
 
-#include "../../editNodeInfoScrollArea/begin/beginNodeEditor.h"
+#include <node/nodeInfo/nodeRefLinkInfo.h>
+#include <node/nodeInfoWidget/editNodeInfoScrollArea/begin/beginNodeEditor.h>
 
 BeginNodeWidget::BeginNodeWidget( MainWindow *parent ) : NodeInfoWidget( parent ) {
 	editorNodeInfoScrollArea = beginNodeEditor = new BeginNodeEditor( this );

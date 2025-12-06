@@ -27,6 +27,8 @@ protected:
 public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
+	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
+	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 	virtual void savePorjectToFile( );
 	virtual void loadPorjectAtFile( );

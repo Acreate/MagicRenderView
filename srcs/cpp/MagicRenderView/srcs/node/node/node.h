@@ -31,6 +31,8 @@ class Node : public QWidget {
 	friend class NodeRefLinkInfo;
 	friend class NodePortLinkInfo;
 	friend class NodePortLinkActionPair;
+	friend class NodeBuilderStream;
+	friend class NodeBuilderTools;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
@@ -76,14 +78,14 @@ protected:
 	/// @brief 删除菜单
 	QMenu *removeMenu;
 	/// @brief 节点信息显示菜单
-	NodeInfoWidget* nodeInfoWidget;
+	NodeInfoWidget *nodeInfoWidget;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
 	virtual bool init( DrawNodeWidget *parent );
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
-	virtual const NodeRefLinkInfo & getNodeRefLinkInfoPtr( ) const { return *nodeRefLinkInfoPtr; }
+	virtual NodeRefLinkInfo * getNodeRefLinkInfoPtr( ) const { return nodeRefLinkInfoPtr; }
 	virtual bool updateLayout( );
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 	virtual const QString & getNodeName( ) const { return nodeName; }
@@ -95,6 +97,7 @@ public:
 	virtual QMenu * getRemoveMenu( ) const { return removeMenu; }
 	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
+	virtual QString toQString( ) const;
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

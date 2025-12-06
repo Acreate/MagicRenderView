@@ -162,6 +162,9 @@ bool Node::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_a
 		return false;
 	return true;
 }
+QString Node::toQString( ) const {
+	return nodeName + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ")";
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )

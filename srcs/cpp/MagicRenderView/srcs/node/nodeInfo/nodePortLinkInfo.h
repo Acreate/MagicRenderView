@@ -18,6 +18,8 @@ class NodePortLinkInfo : public QObject {
 	friend class NodeDirector;
 	friend class NodeRefLinkInfo;
 	friend class NodeRefLinkInfoTools;
+	friend class NodeBuilderStream;
+	friend class NodeBuilderTools;
 protected:
 	NodeRefLinkInfo *nodeRefLinkInfo;
 	std::vector< InputportLinkOutputPortInfo * > inputPortVector;

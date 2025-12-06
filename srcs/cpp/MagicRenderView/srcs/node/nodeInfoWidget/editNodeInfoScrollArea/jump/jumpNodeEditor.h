@@ -10,5 +10,4 @@ public:
 		: EditorNodeInfoScrollArea( parent ) { }
 };
 
-
 #endif // JUMPNODEEDITOR_H_H_HEAD__FILE__

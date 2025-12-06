@@ -31,7 +31,7 @@ namespace path {
 	/// @brief 获取相对于项目路径的文件路径
 	/// @param file_path 文件路径
 	/// @return 相对于项目根路径的文件路径
-	QString relativeRootFilePath(const QString& file_path);
+	QString relativeRootFilePath( const QString &file_path );
 	/// @brief 创建文件
 	/// @param create_file_path_name 创建的文件路径名称 
 	/// @return 成功返回 true

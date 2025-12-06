@@ -5,6 +5,7 @@
 
 #include "../../../enums/widgetEnum.h"
 
+class MainWidgetScrollArea;
 class VarDirector;
 class BottomNodeInfoTool;
 class NodeInfoTitle;
@@ -17,12 +18,18 @@ class NodeInfoWidget : public QWidget {
 protected:
 	WidgetEnum::ShowType showPosType;
 	MainWindow *parentMainWindow;
+	MainWidgetScrollArea *mainWidgetScrollArea;
 	Node *node;
 	NodeInfoTitle *titile;
 	BottomNodeInfoTool *buttonWidget;
-	QScrollArea *infoScrollArea;
 	EditorNodeInfoScrollArea *editorNodeInfoScrollArea;
 	VarDirector *varDirector;
+	QScrollBar *vScrollBar;
+	QScrollBar *hScrollBar;
+	int offsetY;
+	int offsetX;
+	int topOffsetY;
+	int leftOffsetX;
 public:
 	NodeInfoWidget( MainWindow *parent );
 	~NodeInfoWidget( ) override;
@@ -31,7 +38,7 @@ public:
 	/// @brief 释放资源
 	/// @return 资源释放数量
 	virtual size_t releaseVar( ) { return 0; }
-	/// @brief 清理资源指向内容（值配置为 nullptr，不会进行释放，释放请使用 @code NodeInfoWidget::releaseVar() @cond )
+	/// @brief 清理资源指向内容（值配置为 nullptr，不会进行释放，释放请使用 @code NodeInfoWidget::releaseVar() @endcode )
 	/// @return 清理数量
 	virtual size_t clearVarPtr( ) { return 0; }
 	/// @brief 拷贝窗口数据到节点
@@ -44,13 +51,14 @@ public:
 	/// @brief 获取标题
 	/// @return 标题
 	virtual QString getTitleText( ) const;
-	virtual void showNodeInfoWidget( const WidgetEnum::ShowType show_pos_type );
+	virtual void showNodeInfoWidget( WidgetEnum::ShowType show_pos_type );
 protected:
-	virtual void okButtonEvent( ) = 0;
-	virtual void cancelButtonEvent( ) = 0;
+	virtual void okButtonEvent( ) { }
+	virtual void cancelButtonEvent( ) { }
 protected:
 	bool eventFilter( QObject *event_obj_ptr, QEvent *event_type ) override;
 	bool event( QEvent * ) override;
+	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
 	void release_signal( NodeInfoWidget *release_ptr );
 	void hide_signal( NodeInfoWidget *hide_ptr );

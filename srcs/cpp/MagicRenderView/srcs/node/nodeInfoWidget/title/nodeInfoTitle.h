@@ -10,8 +10,8 @@ protected:
 	QLabel *title;
 public:
 	NodeInfoTitle( QWidget *parent = nullptr );
-	virtual void setTitleText(const QString& new_title_text);
-	virtual QString getTitleText() const;
+	virtual void setTitleText( const QString &new_title_text );
+	virtual QString getTitleText( ) const;
 };
 
 #endif // NODEINFOTITLE_H_H_HEAD__FILE__

@@ -211,6 +211,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::RightButton :
+			nodeDirector->showNodeWidgeInfo( nullptr );
 			if( drawNodeWidget->getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				if( dragNode )

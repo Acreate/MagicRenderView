@@ -3,11 +3,12 @@
 #pragma once
 #include "../nodeInfoWidget.h"
 
+class NodeRefLinkInfo;
 class BeginNodeEditor;
 class BeginNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
 protected:
-	BeginNodeEditor* beginNodeEditor;
+	BeginNodeEditor *beginNodeEditor;
 public:
 	BeginNodeWidget( MainWindow *parent );
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;

@@ -24,6 +24,8 @@ private:
 	friend class NodeDirector;
 	friend class NodeStack;
 	friend class NodeRefLinkInfoTools;
+	friend class NodeBuilderStream;
+	friend class NodeBuilderTools;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
@@ -36,7 +38,7 @@ protected:
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
 	Node *parentNode;
-	QMenu* disLinkMenu;
+	QMenu *disLinkMenu;
 public:
 	InputPort( const QString &name );
 	virtual bool init( Node *parent );

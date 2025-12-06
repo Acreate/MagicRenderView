@@ -1,10 +1,16 @@
 ﻿#include "nodeInfoWidget.h"
 
+#include <QPainter>
 #include <qcoreevent.h>
+#include <QScrollBar>
 
 #include <win/mainWindow.h>
 
 #include "../../../director/varDirector.h"
+
+#include "../../../widget/mainWidgetScrollArea.h"
+
+#include "../../node/node.h"
 
 #include "../bottomTool/bottomNodeInfoTool.h"
 
@@ -26,6 +32,9 @@ NodeInfoWidget::NodeInfoWidget( MainWindow *parent ) : QWidget( parent ), parent
 		emit cancel_signal( this, editorNodeInfoScrollArea );
 	} );
 	parentMainWindow->installEventFilter( this );
+	mainWidgetScrollArea = parentMainWindow->getMainWidgetScrollArea( );
+	vScrollBar = mainWidgetScrollArea->verticalScrollBar( );
+	hScrollBar = mainWidgetScrollArea->horizontalScrollBar( );
 }
 NodeInfoWidget::~NodeInfoWidget( ) {
 	emit release_signal( this );
@@ -37,33 +46,53 @@ bool NodeInfoWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
 	return false;
 }
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
-	if( editorNodeInfoScrollArea && editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
+	if( editorNodeInfoScrollArea && varDirector->init( ) && editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
 		return false;
-	return varDirector->init( );
+	titile->setTitleText( check_node_ptr->toQString( ) );
+	return true;
 }
 QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
 }
-void NodeInfoWidget::showNodeInfoWidget( const WidgetEnum::ShowType show_pos_type ) {
+void NodeInfoWidget::showNodeInfoWidget( WidgetEnum::ShowType show_pos_type ) {
+
 	showPosType = show_pos_type;
+	QRect geometry;
 	int parentMainWindowWidth;
 	int parentMainWindowHeight;
 	int currentWidth;
-	parentMainWindowWidth = parentMainWindow->width( );
-	parentMainWindowHeight = parentMainWindow->height( );
+	geometry = mainWidgetScrollArea->geometry( );
+	topOffsetY = geometry.y( );
+	leftOffsetX = geometry.x( );
+	offsetY = topOffsetY + hScrollBar->height( );
+	offsetX = leftOffsetX + vScrollBar->width( );
+	parentMainWindowWidth = parentMainWindow->width( ) - offsetX;
+	parentMainWindowHeight = parentMainWindow->height( ) - offsetY;
 	currentWidth = parentMainWindowWidth / 3;
 	switch( showPosType ) {
 		case WidgetEnum::ShowType::Center :
-			move( currentWidth, 0 );
+			move( currentWidth, offsetY );
 			break;
 		case WidgetEnum::ShowType::Left :
-			move( 0, 0 );
+			move( 0, offsetY );
 			break;
 		case WidgetEnum::ShowType::Right :
-			move( currentWidth + currentWidth, 0 );
+			move( currentWidth + currentWidth, offsetY );
 			break;
 	}
 	resize( currentWidth, parentMainWindowHeight );
+	int titileWidth = titile->width( );
+	titileWidth = ( currentWidth - titileWidth ) / 2;
+	titile->move( titileWidth, 0 );
+	int titileHeight = titile->height( );
+	editorNodeInfoScrollArea->move( 0, titileHeight );
+	int bottonToolHeight = buttonWidget->height( );
+	bottonToolHeight = parentMainWindowHeight - bottonToolHeight;
+	titileWidth = buttonWidget->width( );
+	titileWidth = ( currentWidth - titileWidth ) / 2;
+	buttonWidget->move( titileWidth, bottonToolHeight );
+	titileHeight = bottonToolHeight - titileHeight;
+	editorNodeInfoScrollArea->resize( currentWidth, titileHeight );
 	raise( );
 }
 bool NodeInfoWidget::eventFilter( QObject *event_obj_ptr, QEvent *event_type ) {
@@ -75,7 +104,6 @@ bool NodeInfoWidget::eventFilter( QObject *event_obj_ptr, QEvent *event_type ) {
 	switch( type ) {
 		case QEvent::Resize :
 			showNodeInfoWidget( showPosType );
-			show( );
 			break;
 	}
 
@@ -95,4 +123,9 @@ bool NodeInfoWidget::event( QEvent *event ) {
 			emit hide_signal( this );
 	}
 	return eventResult;
+}
+void NodeInfoWidget::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+	QPainter painter( this );
+	painter.fillRect( contentsRect( ), Qt::GlobalColor::white );
 }
