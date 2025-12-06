@@ -5,14 +5,19 @@
 
 class GenerateNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
+protected:
+	std::function< void*( ) > createFunction;
+	std::vector< void * > generateVarVector;
 public:
 	GenerateNodeWidget( MainWindow *parent )
 		: NodeInfoWidget( parent ) { }
-	bool isNodeInfo( Node *check_node_ptr ) override;
+	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
+	size_t releaseVar( ) override;
+	size_t clearVarPtr( ) override;
 protected:
-	void okButtonEvent( ) override{}
-	void cancelButtonEvent( ) override{}
+	void okButtonEvent( ) override { }
+	void cancelButtonEvent( ) override { }
 };
 
 #endif // GENERATENODEWIDGET_H_H_HEAD__FILE__

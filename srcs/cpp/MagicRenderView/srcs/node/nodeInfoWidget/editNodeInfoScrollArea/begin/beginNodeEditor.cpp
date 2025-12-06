@@ -1,6 +1,15 @@
 ﻿#include "beginNodeEditor.h"
 BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 }
+void BeginNodeEditor::setBeginNodeVector( const std::vector<Node *> &begin_vector_node ) {
+	beginVectorNode = begin_vector_node;
+}
+void BeginNodeEditor::setEndNodeVector( const std::vector<Node *> &end_vector_node ) {
+	endVectorNode = end_vector_node;
+}
+void BeginNodeEditor::setProcessNodeVector( const std::vector<Node *> &process_vector_node ) {
+	processVectorNode = process_vector_node;
+}
 void * BeginNodeEditor::getVarPtr( ) const {
 	return nullptr;
 }

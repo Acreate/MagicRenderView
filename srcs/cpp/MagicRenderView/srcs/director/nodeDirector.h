@@ -4,6 +4,8 @@
 
 #include <enums/nodeEnum.h>
 
+#include "../enums/widgetEnum.h"
+
 #include "../widget/mainWidget.h"
 
 class NodeHistory;
@@ -41,7 +43,7 @@ protected:
 	MainWidget *mainWidget;
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
-	NodeInfoWidget * currentShowWidget;
+	NodeInfoWidget *currentShowWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
@@ -68,6 +70,10 @@ public:
 	/// @param association_node 关联节点
 	/// @return 成功显示返回 true
 	virtual bool showNodeWidgeInfo( Node *association_node );
+	/// @brief 显示匹配的信息窗口
+	/// @param association_node 关联节点
+	/// @return 成功显示返回 true
+	virtual NodeInfoWidget * getNodeWidgeInfo( Node *association_node );
 	/// @brief 获取节点创建菜单
 	/// @return 失败返回 nullptr
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
@@ -119,7 +125,7 @@ protected:
 	virtual bool appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr );
 	/// @brief 删除历史坐标后续的所有对象
 	virtual void removeHistorIndexEnd( );
-	virtual void appendHistorIndexEnd( const std::function<NodeHistory *()> &current_history, const std::function<NodeHistory *()> &cancel_history );
+	virtual void appendHistorIndexEnd( const std::function< NodeHistory *( ) > &current_history, const std::function< NodeHistory *( ) > &cancel_history );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针

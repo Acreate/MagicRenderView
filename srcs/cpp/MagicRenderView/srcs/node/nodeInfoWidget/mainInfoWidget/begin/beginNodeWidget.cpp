@@ -5,7 +5,7 @@
 #include "../../editNodeInfoScrollArea/begin/beginNodeEditor.h"
 
 BeginNodeWidget::BeginNodeWidget( MainWindow *parent ) : NodeInfoWidget( parent ) {
-	editorNodeInfoScrollArea = new BeginNodeEditor( this );
+	editorNodeInfoScrollArea = beginNodeEditor = new BeginNodeEditor( this );
 }
 bool BeginNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
 
@@ -16,9 +16,9 @@ bool BeginNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
 	}
 	return false;
 }
-bool BeginNodeWidget::isNodeInfo( Node *check_node_ptr ) {
-	bool initNode = editorNodeInfoScrollArea->initNode( check_node_ptr );
-	if( initNode == false )
+bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
+
+	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
 		return false;
 	return true;
 }

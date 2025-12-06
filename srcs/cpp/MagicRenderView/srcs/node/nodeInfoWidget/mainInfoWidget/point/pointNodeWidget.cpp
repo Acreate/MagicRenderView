@@ -1,7 +1,9 @@
 ﻿#include "pointNodeWidget.h"
 
 #include <node/node/node.h>
-bool PointNodeWidget::isNodeInfo( Node *check_node_ptr ) {
+bool PointNodeWidget::initNodeInfo( Node *check_node_ptr ) {
+	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
+		return false;
 	return true;
 }
 bool PointNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {

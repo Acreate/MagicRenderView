@@ -89,24 +89,35 @@ bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
 		return false;
 	}
 	if( currentShowWidget && currentShowWidget->isNodeTypeInfoWidget( association_node ) == true ) {
-		if( currentShowWidget->isNodeInfo( association_node ) )
+		currentShowWidget->releaseVar( );
+		currentShowWidget->clearVarPtr( );
+		if( currentShowWidget->initNodeInfo( association_node ) )
 			return true;
 		currentShowWidget->hide( );
 		return false;
 	}
+	auto nodeInfoWidget = getNodeWidgeInfo( association_node );
+
+	if( nodeInfoWidget != nullptr && nodeInfoWidget->isNodeTypeInfoWidget( association_node ) == true ) {
+		if( currentShowWidget )
+			currentShowWidget->hide( );
+		if( nodeInfoWidget->initNodeInfo( association_node ) == false )
+			return false;
+		nodeInfoWidget->show( );
+		return true;
+	}
+	return false;
+}
+NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
+	if( association_node == nullptr )
+		return nullptr;
 	size_t count = nodeInfoWidgets.size( );
 	auto arrayPtr = nodeInfoWidgets.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true ) {
-			if( currentShowWidget )
-				currentShowWidget->hide( );
-			if( currentShowWidget->isNodeInfo( association_node ) == false )
-				return false;
-			arrayPtr[ index ]->show( );
-			return true;
-		}
-	return false;
+		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true )
+			return arrayPtr[ index ];
+	return nullptr;
 }
 
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {

@@ -8,11 +8,11 @@ class JumpNodeWidget : public NodeInfoWidget {
 public:
 	JumpNodeWidget( MainWindow *parent )
 		: NodeInfoWidget( parent ) { }
-	bool isNodeInfo( Node *check_node_ptr ) override;
+	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 protected:
-	void okButtonEvent( ) override{}
-	void cancelButtonEvent( ) override{}
+	void okButtonEvent( ) override { }
+	void cancelButtonEvent( ) override { }
 };
 
 #endif // JUMPNODEWIDGET_H_H_HEAD__FILE__
