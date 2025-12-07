@@ -707,17 +707,17 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
 			refNodeVector.erase( refNodeVector.begin( ) + index );
 
-			auto inputPorts = nodeRefLinkInfo->currentNode->getInputPortVector( );
-			auto inputPortArray = inputPorts.data( );
-			count = inputPorts.size( );
-			for( index = 0; index < count; ++index )
-				removePortLinkAction( inputPortArray[ index ] );
+			//auto inputPorts = nodeRefLinkInfo->currentNode->getInputPortVector( );
+			//auto inputPortArray = inputPorts.data( );
+			//count = inputPorts.size( );
+			//for( index = 0; index < count; ++index )
+			//	removePortLinkAction( inputPortArray[ index ] );
 
-			auto outputPorts = nodeRefLinkInfo->currentNode->getOutputPortVector( );
-			auto outputPortArray = outputPorts.data( );
-			count = outputPorts.size( );
-			for( index = 0; index < count; ++index )
-				removePortLinkAction( outputPortArray[ index ] );
+			//auto outputPorts = nodeRefLinkInfo->currentNode->getOutputPortVector( );
+			//auto outputPortArray = outputPorts.data( );
+			//count = outputPorts.size( );
+			//for( index = 0; index < count; ++index )
+			//	removePortLinkAction( outputPortArray[ index ] );
 
 			//count = refNodeVector.size( );
 			//data = refNodeVector.data( );
