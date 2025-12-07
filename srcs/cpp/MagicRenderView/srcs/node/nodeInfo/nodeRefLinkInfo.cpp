@@ -17,6 +17,11 @@
 #include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"
 
+void NodeRefLinkInfo::clearInfo( ) {
+	refInputVector.clear( );
+	refOutputVector.clear( );
+	nodePortLinkInfo->clearLink( );
+}
 NodeRefLinkInfo::NodeRefLinkInfo( Node *current_node ) : currentNode( current_node ) {
 	currentNode->nodeRefLinkInfoPtr = this;
 	nodePortLinkInfo = new NodePortLinkInfo( this );
@@ -34,40 +39,14 @@ NodeRefLinkInfo::~NodeRefLinkInfo( ) {
 
 	count = refInputVector.size( );
 	refInputArrayPtr = refInputVector.data( );
-	for( index = 0; index < count; ++index ) {
-		checkNodeRefPtr = refInputArrayPtr[ index ];
-		auto &refOutputVector = checkNodeRefPtr->refOutputVector;
-		refOutputCount = refOutputVector.size( );
-		foreachNodeRefArrayPtr = refOutputVector.data( );
-		for( refIndex = 0; refIndex < refOutputCount; ++refIndex ) {
-			if( foreachNodeRefArrayPtr[ refIndex ] == this ) {
-				//auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
-				//Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );
-				refOutputVector.erase( refOutputVector.begin( ) + refIndex );
-				//emit release_node_link_signal( this, input_port, out_put_ref, output_port );
-				break;
-			}
+	for( index = 0; index < count; ++index )
+		refInputArrayPtr[ index ]->removeOutputNodeRef( this );
 
-		}
-	}
 	refOutputCount = refOutputVector.size( );
 	foreachNodeRefArrayPtr = refOutputVector.data( );
-	for( refIndex = 0; refIndex < refOutputCount; ++refIndex ) {
-		checkNodeRefPtr = foreachNodeRefArrayPtr[ refIndex ];
-		auto &refInputVector = checkNodeRefPtr->refInputVector;
-		count = refInputVector.size( );
-		foreachNodeRefArrayPtr = refInputVector.data( );
-		for( index = 0; index < count; ++index ) {
-			if( foreachNodeRefArrayPtr[ index ] == this ) {
-				//auto runResult = checkNodeRefPtr->nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( this );
-				//Application::getInstancePtr( )->getPrinterDirector( )->info( "%1", { QString( runResult ? "true" : "false" ) }, Create_SrackInfo( ) );
-				refInputVector.erase( refInputVector.begin( ) + index );
-				//emit release_node_link_signal( this, input_port, out_put_ref, output_port );
-				break;
-			}
-
-		}
-	}
+	for( refIndex = 0; refIndex < refOutputCount; ++refIndex )
+		foreachNodeRefArrayPtr[ refIndex ]->removeInputNodeRef( this );
+	currentNode->nodeRefLinkInfoPtr = nullptr;
 	// 删除包含对象
 	delete nodePortLinkInfo;
 }
@@ -124,6 +103,33 @@ bool NodeRefLinkInfo::removeInputRef( InputPort *input_port, OutputPort *output_
 			return false;
 		}
 
+	return false;
+}
+bool NodeRefLinkInfo::removeInputNodeRef( NodeRefLinkInfo *remove_target ) {
+	size_t count = refInputVector.size( );
+	if( count == 0 )
+		return false;
+	auto nodeRefLinkInfoArrayPtr = refInputVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( nodeRefLinkInfoArrayPtr[ index ] == remove_target ) {
+			nodePortLinkInfo->removeNodeRefLinkInfoLinkTarget( remove_target );
+			refInputVector.erase( refInputVector.begin( ) + index );
+			return true;
+		}
+	return false;
+}
+bool NodeRefLinkInfo::removeOutputNodeRef( NodeRefLinkInfo *remove_target ) {
+	size_t count = refOutputVector.size( );
+	if( count == 0 )
+		return false;
+	auto nodeRefLinkInfoArrayPtr = refOutputVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( nodeRefLinkInfoArrayPtr[ index ] == remove_target ) {
+			refOutputVector.erase( refOutputVector.begin( ) + index );
+			return true;
+		}
 	return false;
 }
 bool NodeRefLinkInfo::hasInputNodeRef( NodeRefLinkInfo *in_put_ref ) {

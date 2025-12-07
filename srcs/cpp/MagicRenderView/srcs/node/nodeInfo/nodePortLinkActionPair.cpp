@@ -11,8 +11,8 @@ NodePortLinkActionPair::NodePortLinkActionPair( InputPort *input_port, QAction *
 
 }
 NodePortLinkActionPair::~NodePortLinkActionPair( ) {
-	inputPort->disLinkMenu->removeAction( inputLinkAction );
-	outputPort->disLinkMenu->removeAction( outputLinkAction );
-	inputLinkAction->deleteLater( );
-	outputLinkAction->deleteLater( );
+	/*inputPort->disLinkMenu->removeAction( inputLinkAction );
+	outputPort->disLinkMenu->removeAction( outputLinkAction );*/
+	delete inputLinkAction;
+	delete outputLinkAction;
 }

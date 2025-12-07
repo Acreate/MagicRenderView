@@ -9,6 +9,8 @@
 #include "../../node/node.h"
 #include <QLabel>
 #include <QMenu>
+
+#include "../../../srack/srackInfo.h"
 InputPort::InputPort( const QString &name ) : portName( name ), varPtr( nullptr ) {
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
@@ -34,6 +36,7 @@ bool InputPort::init( Node *parent ) {
 	return true;
 }
 InputPort::~InputPort( ) {
+	emit release_node_signal( this, Create_SrackInfo( ) );
 	delete disLinkMenu;
 }
 QPoint InputPort::getLinkPoint( ) const {

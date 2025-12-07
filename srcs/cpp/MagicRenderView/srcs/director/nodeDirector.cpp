@@ -16,7 +16,6 @@
 #include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/end/endNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/generateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/point/pointNodeWidget.h"
@@ -159,9 +158,12 @@ void NodeDirector::releaseNodeResources( ) {
 		auto buff = refNodeVector;
 		refNodeVector.clear( );
 		auto pair = buff.data( );
+		for( index = 0; index < count; ++index )
+			pair[ index ]->clearInfo( );
 		for( index = 0; index < count; ++index ) {
-			delete pair[ index ]->currentNode;
+			Node *currentNode = pair[ index ]->currentNode;
 			delete pair[ index ];
+			delete currentNode;
 		}
 	}
 }
@@ -270,7 +272,12 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	return appendInputRef;
 }
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
-	NodeRefLinkInfo *inputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
+	auto inputParentNode = input_port->parentNode;
+	if( inputParentNode == nullptr )
+		return true;
+	NodeRefLinkInfo *inputNodeRef = inputParentNode->nodeRefLinkInfoPtr;
+	if( inputNodeRef == nullptr )
+		return true;
 	if( inputNodeRef->hasPortRef( input_port, output_port ) == false )
 		return true;
 	bool removeInputRef = inputNodeRef->removeInputRef( input_port, output_port );
@@ -370,7 +377,6 @@ bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
 	appendNodeInfoWidget( new PointNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new JumpNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new GenerateNodeWidget( mainWindow ) );
-	appendNodeInfoWidget( new EndNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new BeginNodeWidget( mainWindow ) );
 	return true;
 }
@@ -713,6 +719,9 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			for( index = 0; index < count; ++index )
 				removePortLinkAction( outputPortArray[ index ] );
 
+			//count = refNodeVector.size( );
+			//data = refNodeVector.data( );
+			//for( ; index < count; ++index );
 			delete nodeRefLinkInfo;
 			if( drawNodeWidget )
 				drawNodeWidget->update( );
@@ -767,10 +776,6 @@ size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
-	if( drawLinkWidget )
-		drawLinkWidget->update( );
-	if( drawNodeWidget )
-		drawNodeWidget->update( );
 	return result;
 }
 size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
@@ -808,10 +813,6 @@ size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *ou
 			auto nodePortLinkActionPair = data[ index ];
 			linkActionMap.erase( linkActionMap.begin( ) + index );
 			delete nodePortLinkActionPair;
-			if( drawLinkWidget )
-				drawLinkWidget->update( );
-			if( drawNodeWidget )
-				drawNodeWidget->update( );
 			return 1;
 		}
 	return result;
@@ -825,7 +826,21 @@ size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *ou
 		if( data[ index ]->inputPort == input_port && data[ index ]->outputPort == output_port )
 			return result;
 	result += 1;
-	linkActionMap.emplace_back( new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action ) );
+	NodePortLinkActionPair *linkActionPair = new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action );
+	linkActionMap.emplace_back( linkActionPair );
+	auto releasePair = [this, linkActionPair]( ) {
+		size_t count = linkActionMap.size( );
+		auto data = linkActionMap.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( data[ index ] == linkActionPair ) {
+				delete linkActionPair;
+				linkActionMap.erase( linkActionMap.begin( ) + index );
+				return;
+			}
+	};
+	connect( input_port->parentNode, &Node::release_node_signal, releasePair );
+	connect( output_port->parentNode, &Node::release_node_signal, releasePair );
 	return result;
 }
 bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
@@ -875,7 +890,6 @@ void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info 
 		}, [] { // todo :撤销删除（创建对象）
 			return nullptr;
 		} );
-
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }
@@ -915,6 +929,10 @@ void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_outpu
 		if( disLinkPort( bind_output_port, input_port ) == false )
 			return;
 		removePortLinkAction( input_port, bind_output_port );
+		if( drawLinkWidget )
+			drawLinkWidget->update( );
+		if( drawNodeWidget )
+			drawNodeWidget->update( );
 	};
 
 	connect( outAction, &QAction::triggered, disLink );

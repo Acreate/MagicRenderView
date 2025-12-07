@@ -23,6 +23,10 @@ class NodePortLinkInfo : public QObject {
 protected:
 	NodeRefLinkInfo *nodeRefLinkInfo;
 	std::vector< InputportLinkOutputPortInfo * > inputPortVector;
+protected:
+	virtual void clearLink( ) {
+		inputPortVector.clear( );
+	}
 public:
 	NodePortLinkInfo( NodeRefLinkInfo *node_ref_link_info );
 	virtual bool appEndLinkInputTarget( InputPort *in_put_port, OutputPort *out_put_port );

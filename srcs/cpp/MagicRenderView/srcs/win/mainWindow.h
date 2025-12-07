@@ -2,6 +2,8 @@
 #define MAINWINDOW_H_H_HEAD__FILE__
 #pragma once
 #include <QMainWindow>
+
+class PrinterDirector;
 class DrawNodeWidget;
 class DrawLinkWidget;
 class NodeDirector;
@@ -18,6 +20,7 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
+	PrinterDirector *printerDirector;
 	QToolBar *toolBar;
 	QString saveFileDirPath;
 	std::vector< QShortcut * > shortcutVector;

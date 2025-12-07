@@ -20,7 +20,20 @@
 #include "../../widget/drawNodeWidget.h"
 
 Node::~Node( ) {
+
 	emit release_node_signal( this, Create_SrackInfo( ) );
+	size_t count = inputPortVector.size( );
+	auto inputArrayPtr = inputPortVector.data( );
+	size_t index;
+	for( index = 0; index < count; ++index )
+		delete inputArrayPtr[ index ];
+	inputPortVector.clear( );
+
+	count = outputPortVector.size( );
+	auto outputArrayPtr = outputPortVector.data( );
+	for( index = 0; index < count; ++index )
+		delete outputArrayPtr[ index ];
+	outputPortVector.clear( );
 	if( mainLayout )
 		delete mainLayout;
 	if( titileWidget )

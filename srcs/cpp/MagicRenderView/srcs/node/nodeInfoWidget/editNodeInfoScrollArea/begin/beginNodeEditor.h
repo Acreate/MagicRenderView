@@ -3,8 +3,14 @@
 #pragma once
 #include "../editorNodeInfoScrollArea.h"
 
+class NodeRefLinkInfo;
 class BeginNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
+protected:
+	NodeRefLinkInfo *beginNodeRefLinkInfo;
+	std::vector< NodeRefLinkInfo * > beginNodeRefLinkVector;
+	std::vector< NodeRefLinkInfo * > processNodeRefLinkVector;
+	std::vector< NodeRefLinkInfo * > endNodeRefLinkVector;
 public:
 	BeginNodeEditor( NodeInfoWidget *parent );
 	void * getVarPtr( ) const override;

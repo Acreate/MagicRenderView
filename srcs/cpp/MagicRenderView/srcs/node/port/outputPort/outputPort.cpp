@@ -28,6 +28,7 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 	disLinkMenu = new QMenu;
 }
 OutputPort::~OutputPort( ) {
+	emit release_node_signal( this, Create_SrackInfo(  ) );
 	delete disLinkMenu;
 }
 bool OutputPort::init( Node *parent ) {

@@ -70,14 +70,15 @@ DrawNodeWidget::~DrawNodeWidget( ) {
 	size_t count = nodeVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;
-		auto buff = nodeVector;
-		nodeVector.clear( );
-		auto nodeArrayPtr = buff.data( );
+		auto nodeArrayPtr = nodeVector.data( );
 		for( ; index < count; ++index )
 			if( nodeArrayPtr[ index ] == nullptr )
 				break;
-			else
-				delete nodeArrayPtr[ index ];
+			else {
+				nodeArrayPtr[ index ]->hide( );
+				nodeArrayPtr[ index ]->setParent( nullptr );
+			}
+		nodeVector.clear( );
 	}
 }
 bool DrawNodeWidget::addNode( Node *add_node ) {

@@ -52,5 +52,11 @@ public:
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
 	virtual QMenu * getDisLinkMenu( ) const { return disLinkMenu; }
+	// 信号
+Q_SIGNALS:
+	/// @brief 释放对象产生信号
+	/// @param release_node_port 释放对象指针
+	/// @param srack_info 信号行
+	void release_node_signal( OutputPort *release_node_port, const SrackInfo &srack_info );
 };
 #endif // OUTPUTPORT_H_H_HEAD__FILE__

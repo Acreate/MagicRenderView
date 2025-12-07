@@ -13,6 +13,7 @@ bool BeginNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
 	auto nodeType = check_node_ptr->getNodeType( );
 	switch( nodeType ) {
 		case NodeEnum::NodeType::Begin :
+		case NodeEnum::NodeType::End :
 			return true;
 	}
 	return false;

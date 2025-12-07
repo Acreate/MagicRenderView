@@ -9,6 +9,9 @@
 #include "../app/application.h"
 
 #include "../director/nodeDirector.h"
+#include "../director/printerDirector.h"
+
+#include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
 
@@ -42,6 +45,7 @@ bool MainWindow::init( ) {
 	toolBar->setMovable( false );
 	instancePtr = Application::getInstancePtr( );
 	nodeDirector = instancePtr->getNodeDirector( );
+	printerDirector = instancePtr->getPrinterDirector( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
 	drawLinkWidget = mainWidget->getDrawLinkWidget( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
@@ -94,10 +98,12 @@ void MainWindow::savePorjectToFile( ) {
 	auto openFileName = QFileDialog::getSaveFileName( this, tr( "保存文件" ), saveFileDirPath, tr( "魔术窗口 (*.mrv)" ) );
 	if( openFileName.isEmpty( ) )
 		return;
-	size_t dataCount = 0;
+	size_t dataCount;
 	std::vector< uint8_t > dataVector;
-	if( nodeDirector->toUint8VectorData( dataVector ) == false || dataCount == 0 )
+	if( nodeDirector->toUint8VectorData( dataVector ) == false ) {
+		printerDirector->info( tr( "路径[%1]保存异常,数据量异常(%2)" ).arg( openFileName ).arg( dataVector.size( ) ), Create_SrackInfo( ) );
 		return;
+	}
 	QFileInfo fileInfo( openFileName );
 	QString absoluteFilePath = fileInfo.absoluteFilePath( );
 	if( fileInfo.exists( ) == false )
@@ -105,9 +111,12 @@ void MainWindow::savePorjectToFile( ) {
 			return;
 	saveFileDirPath = fileInfo.dir( ).absolutePath( );
 	QFile file( absoluteFilePath );
-	if( file.open( QIODeviceBase::WriteOnly | QIODeviceBase::Truncate ) == false )
+	if( file.open( QIODeviceBase::WriteOnly | QIODeviceBase::Truncate ) == false ) {
+		printerDirector->info( tr( "路径[%1]保存异常,文件打开异常" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
+	}
 	auto data = dataVector.data( );
+	dataCount = dataVector.size( );
 	file.write( ( char * ) data, dataCount );
 }
 void MainWindow::loadPorjectAtFile( ) {
@@ -120,19 +129,25 @@ void MainWindow::loadPorjectAtFile( ) {
 		return;
 	saveFileDirPath = fileInfo.dir( ).absolutePath( );
 	QFile file( fileInfo.absoluteFilePath( ) );
-	if( file.open( QIODeviceBase::ReadOnly ) == false )
+	if( file.open( QIODeviceBase::ReadOnly ) == false ) {
+		printerDirector->info( tr( "路径[%1]文件打开异常" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
+	}
 	auto byteArray = file.readAll( );
 	size_t count = byteArray.size( );
-	if( count == 0 )
+	if( count == 0 ) {
+		printerDirector->info( tr( "路径[%1]文件读取异常，数据量为 0" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
+	}
 
 	auto data = byteArray.data( );
 	count = count * ( sizeof( data[ 0 ] ) / sizeof( uint8_t ) );
 	size_t dataCount = 0;
 
-	if( nodeDirector->formUint8ArrayData( dataCount, ( uchar * ) data, count ) == false )
+	if( nodeDirector->formUint8ArrayData( dataCount, ( uchar * ) data, count ) == false ) {
+		printerDirector->info( tr( "路径[%1]文件读取异常，数据无法进行还原节点" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
+	}
 }
 void MainWindow::copyNodeInfo( ) {
 	mainWidget->copySelectNodeInfo( );

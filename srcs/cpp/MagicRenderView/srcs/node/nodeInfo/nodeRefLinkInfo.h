@@ -31,6 +31,8 @@ protected:
 	std::vector< NodeRefLinkInfo * > refInputVector;
 	/// @brief 保存输出到该节点的依赖节点
 	std::vector< NodeRefLinkInfo * > refOutputVector;
+protected:
+	virtual void clearInfo( );
 public:
 	NodeRefLinkInfo( Node *current_node );
 	~NodeRefLinkInfo( ) override;
@@ -48,6 +50,17 @@ public:
 	/// @param output_port 目标节点的输出接口
 	/// @return 成功返回 true
 	virtual bool removeInputRef( InputPort *input_port, OutputPort *output_port );
+	/// @brief 移除输出依赖
+	/// @param remove_target 移除目标
+	/// @return 成功返回 true
+	virtual bool removeInputNodeRef( NodeRefLinkInfo *remove_target );
+	/// @brief 移除输入依赖
+	/// @param remove_target 移除目标
+	/// @return 成功返回 true
+	virtual bool removeOutputNodeRef( NodeRefLinkInfo *remove_target );
+	/// @brief 检查是否存在输入依赖
+	/// @param in_put_ref 检测输入依赖
+	/// @return 存在输入依赖，返回 true
 	virtual bool hasInputNodeRef( NodeRefLinkInfo *in_put_ref );
 	virtual bool hasPortRef( InputPort *input_port, OutputPort *output_port );
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
