@@ -1,10 +1,23 @@
 ﻿#include "beginNodeEditor.h"
 
+#include <QVBoxLayout>
+
 #include "../../../node/node.h"
 
 #include "../../../nodeInfo/nodeBuilderTools.h"
 #include "../../../nodeInfo/nodeRefLinkInfo.h"
+
+#include "subWidget/beginNodeItem.h"
 BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
+	mainWidget = new QWidget( this );
+	setWidget( mainWidget );
+	mainLayout = new QVBoxLayout( mainWidget );
+	beginItem = new BeginNodeItem( mainWidget );
+	mainLayout->addWidget( beginItem );
+	processItem = new BeginNodeItem( mainWidget );
+	mainLayout->addWidget( processItem );
+	endItem = new BeginNodeItem( mainWidget );
+	mainLayout->addWidget( endItem );
 }
 
 void * BeginNodeEditor::getVarPtr( ) const {
@@ -45,6 +58,8 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 		}
 	if( NodeBuilderTools::sortProcessNodeRefArray( processNodeRefLinkVector.data( ), processNodeRefLinkVector.size( ) ) == false )
 		return false; // 缺少依赖
-	
+	beginItem->setNodeRefVector( beginNodeRefLinkVector );
+	processItem->setNodeRefVector( processNodeRefLinkVector );
+	endItem->setNodeRefVector( endNodeRefLinkVector );
 	return true;
 }

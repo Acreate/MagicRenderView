@@ -3,6 +3,8 @@
 #pragma once
 #include "../editorNodeInfoScrollArea.h"
 
+class QVBoxLayout;
+class BeginNodeItem;
 class NodeRefLinkInfo;
 class BeginNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
@@ -11,6 +13,11 @@ protected:
 	std::vector< NodeRefLinkInfo * > beginNodeRefLinkVector;
 	std::vector< NodeRefLinkInfo * > processNodeRefLinkVector;
 	std::vector< NodeRefLinkInfo * > endNodeRefLinkVector;
+	QWidget* mainWidget;
+	QVBoxLayout* mainLayout;
+	BeginNodeItem *beginItem;
+	BeginNodeItem *processItem;
+	BeginNodeItem *endItem;
 public:
 	BeginNodeEditor( NodeInfoWidget *parent );
 	void * getVarPtr( ) const override;
