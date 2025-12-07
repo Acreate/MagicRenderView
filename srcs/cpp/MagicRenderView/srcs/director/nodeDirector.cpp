@@ -773,6 +773,7 @@ size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 			data[ endSize ] = nullptr;
 			delete nodePortLinkActionPair;
 			result += 1;
+			index -= 1;
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
@@ -794,6 +795,7 @@ size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
 			data[ endSize ] = nullptr;
 			delete nodePortLinkActionPair;
 			result += 1;
+			index -= 1;
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
@@ -829,13 +831,13 @@ size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *ou
 	NodePortLinkActionPair *linkActionPair = new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action );
 	linkActionMap.emplace_back( linkActionPair );
 	auto releasePair = [this, linkActionPair]( ) {
-		size_t count = linkActionMap.size( );
-		auto data = linkActionMap.data( );
-		size_t index = 0;
-		for( ; index < count; ++index )
-			if( data[ index ] == linkActionPair ) {
+		size_t linkActionMapCount = linkActionMap.size( );
+		auto linkActionMapArrayPtr = linkActionMap.data( );
+		size_t linkActionMapIndex = 0;
+		for( ; linkActionMapIndex < linkActionMapCount; ++linkActionMapIndex )
+			if( linkActionMapArrayPtr[ linkActionMapIndex ] == linkActionPair ) {
 				delete linkActionPair;
-				linkActionMap.erase( linkActionMap.begin( ) + index );
+				linkActionMap.erase( linkActionMap.begin( ) + linkActionMapIndex );
 				return;
 			}
 	};
