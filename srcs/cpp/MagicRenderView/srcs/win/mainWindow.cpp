@@ -54,6 +54,8 @@ bool MainWindow::init( ) {
 	connect( addAction, &QAction::triggered, this, &MainWindow::savePorjectToFile );
 	addAction = toolBar->addAction( tr( "加载..." ) );
 	connect( addAction, &QAction::triggered, this, &MainWindow::loadPorjectAtFile );
+	addAction = toolBar->addAction( tr( "放弃..." ) );
+	connect( addAction, &QAction::triggered, this, &MainWindow::unDownloadPorjectAtFile );
 
 	QShortcut *shortcut;
 	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
@@ -148,6 +150,9 @@ void MainWindow::loadPorjectAtFile( ) {
 		printerDirector->info( tr( "路径[%1]文件读取异常，数据无法进行还原节点" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
 	}
+}
+void MainWindow::unDownloadPorjectAtFile( ) {
+	nodeDirector->init( );
 }
 void MainWindow::copyNodeInfo( ) {
 	mainWidget->copySelectNodeInfo( );

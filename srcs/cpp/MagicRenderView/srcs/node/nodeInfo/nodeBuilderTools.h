@@ -42,6 +42,20 @@ public:
 		NodeRefLinkInfo *const *converStdVectorNodeRefLinkInfosodeRefLinkInfo = conver_std_vector_node_ref_link_infosodeRefLinkInfo.data( );
 		return toQString( converStdVectorNodeRefLinkInfosodeRefLinkInfo, conver_std_vector_node_ref_link_infosodeRefLinkInfo.size( ) );
 	}
+	class JumpNodeBuilderTools {
+	protected:
+		/// @brief 匹配输入的节点路径
+		/// @param analysis_node_ref_link_info 查找的路径
+		/// @param result_input_node_ref_map 输入依赖列表
+		/// @param result_node_ref_link_vector 返回路径列表
+		/// @return 失败返回 false
+		static bool findPoint( NodeRefLinkInfo *analysis_node_ref_link_info, std::unordered_map<NodeRefLinkInfo*, NodeRefLinkInfo*>& result_input_node_ref_map, std::vector<NodeRefLinkInfo *> &result_node_ref_link_vector );
+	public:
+		/// @brief 填充依赖到指定序列当中，
+		/// @param analysis_node_ref_link_info 依据的依赖对象
+		/// @param result_node_ref_link_vector 填充依赖返回(输入/输出)
+		static bool analysisJumpNodeRef( NodeRefLinkInfo *analysis_node_ref_link_info, std::vector< std::vector< NodeRefLinkInfo * > > &result_node_ref_link_vector );
+	};
 };
 
 #endif // NODEBUILDERTOOLS_H_H_HEAD__FILE__

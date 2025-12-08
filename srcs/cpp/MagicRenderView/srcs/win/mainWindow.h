@@ -35,6 +35,7 @@ public:
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 	virtual void savePorjectToFile( );
 	virtual void loadPorjectAtFile( );
+	virtual void unDownloadPorjectAtFile( );
 	virtual void copyNodeInfo( );
 	virtual void pasteNodeInfo( );
 	virtual void cutNodeInfo( );

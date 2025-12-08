@@ -8,6 +8,9 @@ class PointNodeEditor : public EditorNodeInfoScrollArea {
 public:
 	PointNodeEditor( NodeInfoWidget *parent )
 		: EditorNodeInfoScrollArea( parent ) { }
+	void * getVarPtr( ) const override;
+	const std::type_info & getVarType( ) const override;
+	void clearVar( ) override;
 };
 
 #endif // POINTNODEEDITOR_H_H_HEAD__FILE__

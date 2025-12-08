@@ -15,8 +15,8 @@ public:
 	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 protected:
-	void okButtonEvent( ) override { }
-	void cancelButtonEvent( ) override { }
+	void cancelButtonEvent( ) override;
+	void okButtonEvent( ) override;
 };
 
 #endif // GENERATENODEWIDGET_H_H_HEAD__FILE__

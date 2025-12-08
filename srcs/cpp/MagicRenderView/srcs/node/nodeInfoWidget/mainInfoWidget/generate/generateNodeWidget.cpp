@@ -17,3 +17,9 @@ bool GenerateNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
 		return false;
 	return true;
 }
+void GenerateNodeWidget::cancelButtonEvent( ) {
+	NodeInfoWidget::cancelButtonEvent( );
+}
+void GenerateNodeWidget::okButtonEvent( ) {
+	NodeInfoWidget::okButtonEvent( );
+}

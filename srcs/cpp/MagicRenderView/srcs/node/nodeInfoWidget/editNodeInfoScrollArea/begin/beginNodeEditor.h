@@ -25,9 +25,6 @@ protected:
 	virtual void showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info );
 public:
 	BeginNodeEditor( NodeInfoWidget *parent );
-	void * getVarPtr( ) const override;
-	const std::type_info & getVarType( ) const override;
-	void clearVar( ) override;
 	~BeginNodeEditor( ) override;
 	bool initNode( Node *init_node ) override;
 protected:

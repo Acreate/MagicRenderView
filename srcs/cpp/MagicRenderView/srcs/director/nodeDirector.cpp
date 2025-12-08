@@ -78,7 +78,10 @@ bool NodeDirector::init( ) {
 	bool drawLinkWidgetIniRsult = initDrawLinkWidget( errorMsg );
 	if( drawLinkWidgetIniRsult == false )
 		printerDirector->info( errorMsg,Create_SrackInfo( ) );
-
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
+	if( drawNodeWidget )
+		drawNodeWidget->update( );
 	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
@@ -168,13 +171,14 @@ void NodeDirector::releaseNodeResources( ) {
 	}
 }
 void NodeDirector::releaseNodeInfoWidgetResources( ) {
-	size_t count = nodeInfoWidgets.size( );
-	auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
+	auto buff = nodeInfoWidgets;
+	nodeInfoWidgets.clear( );
+	size_t count = buff.size( );
+	auto nodeInfoWidgetArrayPtr = buff.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		delete nodeInfoWidgetArrayPtr[ index ];
 	currentShowWidget = nullptr;
-	nodeInfoWidgets.clear( );
 }
 void NodeDirector::releaseNodeHistoryResources( ) {
 	size_t count = nodeHistorys.size( );
@@ -865,6 +869,12 @@ bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget
 		if( hid_ptr == currentShowWidget )
 			currentShowWidget = nullptr;
 	} );
+	connect( append_node_info_widget_ptr, &NodeInfoWidget::ok_signal, [ this] ( NodeInfoWidget *send_signal_ptr, EditorNodeInfoScrollArea *data_change_widget ) {
+
+	} );
+	connect( append_node_info_widget_ptr, &NodeInfoWidget::cancel_signal, [ this] ( NodeInfoWidget *send_signal_ptr, EditorNodeInfoScrollArea *data_change_widget ) {
+
+	} );
 	return true;
 }
 void NodeDirector::removeHistorIndexEnd( ) {
@@ -886,6 +896,8 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );
 
+	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
+		currentShowWidget->removeCurrentRefNodeInfo( release_node->nodeRefLinkInfoPtr );
 	appendHistorIndexEnd(
 		[] {
 			return nullptr;
@@ -910,10 +922,15 @@ void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &srack_info
 
 void NodeDirector::releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放引用", Create_SrackInfo( ) );
+	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
+		currentShowWidget->removeRefNodeRefLinkInfo( signal_obj_ptr, release_output_node_ref_obj_ptr );
+
 	emit finish_release_ref_node_signal( this, signal_obj_ptr->currentNode, release_output_node_ref_obj_ptr->currentNode, srack_info );
 }
 void NodeDirector::createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
+		currentShowWidget->newNodeRefLinkInfo( signal_obj_ptr, create_output_node_ref_obj_ptr );
 	emit finish_create_ref_node_signal( this, signal_obj_ptr->currentNode, create_output_node_ref_obj_ptr->currentNode, srack_info );
 }
 void NodeDirector::releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info ) {

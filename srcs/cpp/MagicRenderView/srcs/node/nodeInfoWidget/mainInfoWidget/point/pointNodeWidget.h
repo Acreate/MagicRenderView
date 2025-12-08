@@ -3,16 +3,16 @@
 #pragma once
 #include "../nodeInfoWidget.h"
 
+class PointNodeEditor;
 class PointNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
+protected:
+	PointNodeEditor* pointNodeEditor;
 public:
-	PointNodeWidget( MainWindow *parent )
-		: NodeInfoWidget( parent ) { }
+	PointNodeWidget( MainWindow *parent );
 	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
-protected:
-	void okButtonEvent( ) override { }
-	void cancelButtonEvent( ) override { }
+
 };
 
 #endif // POINTNODEWIDGET_H_H_HEAD__FILE__

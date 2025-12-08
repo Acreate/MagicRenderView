@@ -6,8 +6,8 @@
 class JumpNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 public:
-	JumpNodeEditor( NodeInfoWidget *parent )
-		: EditorNodeInfoScrollArea( parent ) { }
+	JumpNodeEditor( NodeInfoWidget *parent );
+	bool initNode( Node *init_node ) override;
 };
 
 #endif // JUMPNODEEDITOR_H_H_HEAD__FILE__

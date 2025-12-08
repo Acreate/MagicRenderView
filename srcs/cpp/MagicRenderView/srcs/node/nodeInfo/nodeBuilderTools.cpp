@@ -239,3 +239,34 @@ QString NodeBuilderTools::toQString( const NodeRefLinkInfo *const*check_array_pt
 	result.append( "};" );
 	return result.join( "\n" );
 }
+bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( NodeRefLinkInfo *analysis_node_ref_link_info, std::unordered_map< NodeRefLinkInfo *, NodeRefLinkInfo * > &result_input_node_ref_map, std::vector< NodeRefLinkInfo * > &result_node_ref_link_vector ) {
+
+	if( analysis_node_ref_link_info->getCurrentNode( )->getNodeType( ) == NodeEnum::NodeType::Point ) {
+		result_node_ref_link_vector.emplace_back( analysis_node_ref_link_info );
+		return true;
+	}
+	size_t oldCount = result_input_node_ref_map.size( );
+	size_t count = analysis_node_ref_link_info->refInputVector.size( );
+	auto nodeRefLinkInfoArrayPtr = analysis_node_ref_link_info->refInputVector.data( );
+
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], result_input_node_ref_map, result_node_ref_link_vector ) )
+			result_input_node_ref_map.try_emplace( analysis_node_ref_link_info, nodeRefLinkInfoArrayPtr[ index ] );
+	return oldCount != result_input_node_ref_map.size( );
+}
+bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInfo *analysis_node_ref_link_info, std::vector< std::vector< NodeRefLinkInfo * > > &result_node_ref_link_vector ) {
+
+	// 如果不是 jump 节点，即退出
+	if( analysis_node_ref_link_info->getCurrentNode( )->getNodeType( ) != NodeEnum::NodeType::Jump )
+		return false;
+	std::vector< NodeRefLinkInfo * > nodePath;
+	size_t count = analysis_node_ref_link_info->refInputVector.size( );
+	auto nodeRefLinkInfoArrayPtr = analysis_node_ref_link_info->refInputVector.data( );
+	size_t index = 0;
+	std::unordered_map< NodeRefLinkInfo *, NodeRefLinkInfo * > inputNodeRefMap;
+	for( ; index < count; ++index )
+		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], inputNodeRefMap, nodePath ) )
+			Application::getInstancePtr( )->getPrinterDirector( )->info( NodeBuilderTools::toQString( nodePath ), Create_SrackInfo( ) );
+	return false;
+}

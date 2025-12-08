@@ -11,6 +11,7 @@
 #include "../../../widget/mainWidgetScrollArea.h"
 
 #include "../../node/node.h"
+#include "../../nodeInfo/nodeRefLinkInfo.h"
 
 #include "../bottomTool/bottomNodeInfoTool.h"
 
@@ -94,6 +95,16 @@ void NodeInfoWidget::showNodeInfoWidget( WidgetEnum::ShowType show_pos_type ) {
 	titileHeight = bottonToolHeight - titileHeight;
 	editorNodeInfoScrollArea->resize( currentWidth, titileHeight );
 	raise( );
+}
+void NodeInfoWidget::removeCurrentRefNodeInfo( NodeRefLinkInfo *node_ref_link_info ) {
+	if( node_ref_link_info->getCurrentNode( ) == node )
+		hide( );
+}
+void NodeInfoWidget::okButtonEvent( ) {
+	hide( );
+}
+void NodeInfoWidget::cancelButtonEvent( ) {
+	hide( );
 }
 bool NodeInfoWidget::eventFilter( QObject *event_obj_ptr, QEvent *event_type ) {
 

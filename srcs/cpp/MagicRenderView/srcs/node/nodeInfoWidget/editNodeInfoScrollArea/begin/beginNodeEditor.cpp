@@ -94,14 +94,6 @@ BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrol
 	endItem->setIsPopMenu( false );
 }
 
-void * BeginNodeEditor::getVarPtr( ) const {
-	return nullptr;
-}
-const std::type_info & BeginNodeEditor::getVarType( ) const {
-	return typeid( void );
-}
-void BeginNodeEditor::clearVar( ) {
-}
 BeginNodeEditor::~BeginNodeEditor( ) {
 }
 bool BeginNodeEditor::initNode( Node *init_node ) {

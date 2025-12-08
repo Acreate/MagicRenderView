@@ -24,9 +24,3 @@ bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 		return false;
 	return true;
 }
-void BeginNodeWidget::okButtonEvent( ) {
-	hide( );
-}
-void BeginNodeWidget::cancelButtonEvent( ) {
-	hide( );
-}

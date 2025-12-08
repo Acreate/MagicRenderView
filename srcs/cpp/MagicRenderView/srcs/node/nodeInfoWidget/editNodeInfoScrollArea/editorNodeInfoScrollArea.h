@@ -15,9 +15,9 @@ protected:
 public:
 	EditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	virtual bool initNode( Node *init_node );
-	virtual void * getVarPtr( ) const = 0;
-	virtual const std::type_info & getVarType( ) const = 0;
-	virtual void clearVar( ) = 0;
+	virtual void * getVarPtr( ) const { return nullptr; }
+	virtual const std::type_info & getVarType( ) const { return typeid( nullptr ); }
+	virtual void clearVar( ) { }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
 	virtual const QString & getTypeName( ) const { return typeName; }
 	virtual void * getVarPtr1( ) const { return varPtr; }
