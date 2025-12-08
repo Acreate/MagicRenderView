@@ -175,9 +175,10 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	auto mousePoint = event->pos( );
-	if( drawLinkWidget->isDrawLine )
+	if( drawLinkWidget->isDrawLine ) {
 		drawLinkWidget->endPoint = mousePoint;
-	else if( dragNode ) {
+		drawLinkWidget->update( );
+	} else if( dragNode ) {
 		auto point = mousePoint - offsetPoint;
 		if( point.x( ) < 0 )
 			point.setX( 0 );
