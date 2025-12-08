@@ -131,8 +131,10 @@ void MainWidget::calculateNodeRenderSize( ) {
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-
-	calculateNodeRenderSize( );
+	drawNodeWidget->resize( renderMaxSize );
+	drawLinkWidget->resize( renderMaxSize );
+	drawNodeWidget->raise( );
+	drawLinkWidget->raise( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
