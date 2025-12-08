@@ -239,7 +239,7 @@ QString NodeBuilderTools::toQString( const NodeRefLinkInfo *const*check_array_pt
 	result.append( "};" );
 	return result.join( "\n" );
 }
-bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( NodeRefLinkInfo *analysis_node_ref_link_info, std::unordered_map< NodeRefLinkInfo *, NodeRefLinkInfo * > &result_input_node_ref_map, std::vector< NodeRefLinkInfo * > &result_node_ref_link_vector ) {
+bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( NodeRefLinkInfo *analysis_node_ref_link_info, std::vector< std::pair< NodeRefLinkInfo *, NodeRefLinkInfo * > > &result_input_node_ref_map, std::vector< NodeRefLinkInfo * > &result_node_ref_link_vector ) {
 
 	if( analysis_node_ref_link_info->getCurrentNode( )->getNodeType( ) == NodeEnum::NodeType::Point ) {
 		result_node_ref_link_vector.emplace_back( analysis_node_ref_link_info );
@@ -251,8 +251,17 @@ bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( NodeRefLinkInfo *analysi
 
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], result_input_node_ref_map, result_node_ref_link_vector ) )
-			result_input_node_ref_map.try_emplace( analysis_node_ref_link_info, nodeRefLinkInfoArrayPtr[ index ] );
+		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], result_input_node_ref_map, result_node_ref_link_vector ) ) {
+
+			size_t mapCount = result_input_node_ref_map.size( );
+			auto mapArrayPtr = result_input_node_ref_map.data( );
+			size_t mapIndex = 0;
+			for( ; mapIndex < mapCount; ++mapIndex )
+				if( mapArrayPtr[ mapIndex ].first == analysis_node_ref_link_info && mapArrayPtr[ mapIndex ].first == nodeRefLinkInfoArrayPtr[ index ] )
+					break;
+			if( mapIndex == mapCount )
+				result_input_node_ref_map.emplace_back( analysis_node_ref_link_info, nodeRefLinkInfoArrayPtr[ index ] );
+		}
 	return oldCount != result_input_node_ref_map.size( );
 }
 bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInfo *analysis_node_ref_link_info, std::vector< std::vector< NodeRefLinkInfo * > > &result_node_ref_link_vector ) {
@@ -264,9 +273,35 @@ bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInf
 	size_t count = analysis_node_ref_link_info->refInputVector.size( );
 	auto nodeRefLinkInfoArrayPtr = analysis_node_ref_link_info->refInputVector.data( );
 	size_t index = 0;
-	std::unordered_map< NodeRefLinkInfo *, NodeRefLinkInfo * > inputNodeRefMap;
-	for( ; index < count; ++index )
-		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], inputNodeRefMap, nodePath ) )
-			Application::getInstancePtr( )->getPrinterDirector( )->info( NodeBuilderTools::toQString( nodePath ), Create_SrackInfo( ) );
-	return false;
+	std::vector< std::pair< NodeRefLinkInfo *, NodeRefLinkInfo * > > inputNodeRefMap;
+	for( ; index < count; ++index ) {
+		inputNodeRefMap.emplace_back( analysis_node_ref_link_info, nodeRefLinkInfoArrayPtr[ index ] );
+		if( findPoint( nodeRefLinkInfoArrayPtr[ index ], inputNodeRefMap, nodePath ) ) {
+			size_t mapCount;
+			size_t mapIndex;
+			std::pair< NodeRefLinkInfo *, NodeRefLinkInfo * > *mapArrayPtr;
+			mapCount = inputNodeRefMap.size( );
+			mapArrayPtr = inputNodeRefMap.data( );
+			for( auto item : nodePath ) {
+				std::vector< NodeRefLinkInfo * > jumpVector;
+				jumpVector.emplace_back( item );
+				while( true ) {
+					for( mapIndex = 0; mapIndex < mapCount; ++mapIndex )
+						if( mapArrayPtr[ mapIndex ].second == item ) {
+							jumpVector.emplace_back( mapArrayPtr[ mapIndex ].first );
+							item = mapArrayPtr[ mapIndex ].first;
+							break;
+						}
+					if( mapIndex == mapCount )
+						return false; // 匹配异常
+					if( mapArrayPtr[ mapIndex ].first == analysis_node_ref_link_info )
+						break;
+				}
+				Application::getInstancePtr( )->getPrinterDirector( )->info( NodeBuilderTools::toQString( jumpVector ), Create_SrackInfo( ) );
+			}
+			nodePath.clear( );
+			inputNodeRefMap.clear( );
+		}
+	}
+	return true;
 }
