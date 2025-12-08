@@ -30,7 +30,6 @@ public:
 protected:
 	void hideEvent( QHideEvent *event ) override;
 	bool eventFilter( QObject * event_obj_ptr, QEvent * event_type) override;
-public:
 Q_SIGNALS:
 	void clickNodeItem( Node *click_node );
 };

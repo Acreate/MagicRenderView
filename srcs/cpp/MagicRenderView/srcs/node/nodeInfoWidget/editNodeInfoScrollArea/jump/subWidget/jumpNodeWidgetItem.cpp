@@ -1,14 +1,13 @@
-﻿#include "beginNodeItem.h"
+﻿#include "jumpNodeWidgetItem.h"
 
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QVBoxLayout>
-#include <qcoreevent.h>
 
 #include "../../../../nodeInfo/nodeRefLinkInfo.h"
-void BeginNodeItem::appendNodeRefItem( NodeRefLinkInfo *item ) {
+void JumpNodeWidgetItem::appendNodeRefItem( NodeRefLinkInfo *item ) {
 	size_t count = nodeVector.size( ) + 1;
 	QWidget *itemWidget = new QWidget( this );
 	QHBoxLayout *itemLayout = new QHBoxLayout( itemWidget );
@@ -31,28 +30,18 @@ void BeginNodeItem::appendNodeRefItem( NodeRefLinkInfo *item ) {
 		emit showNodeInfoWidgetRight( item );
 	} );
 }
-void BeginNodeItem::clearCurrentAction( ) {
+void JumpNodeWidgetItem::clearCurrentAction( ) {
 	if( currentAction == nullptr )
 		return;
 	popMenu->removeAction( currentAction->first );
 	popMenu->removeAction( currentAction->second );
 	currentAction = nullptr;
 }
-void BeginNodeItem::selectionCurrentAction( ) {
+void JumpNodeWidgetItem::selectionCurrentAction( ) {
 	popMenu->addAction( currentAction->first );
 	popMenu->addAction( currentAction->second );
 }
-BeginNodeItem::BeginNodeItem( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
-	mainLayout = new QVBoxLayout( this );
-	popMenu = new QMenu( this );
-	currentAction = nullptr;
-	nodeArrayCount = 0;
-	popMenu->installEventFilter( this );
-	isPopMenu = true;
-}
-BeginNodeItem::~BeginNodeItem( ) {
-}
-void BeginNodeItem::releaseNodeArrayInfo( ) {
+void JumpNodeWidgetItem::releaseNodeArrayInfo( ) {
 	if( nodeArrayCount != 0 ) {
 		clearCurrentAction( );
 		for( nodeArrayIndex = 0; nodeArrayIndex < nodeArrayCount; ++nodeArrayIndex ) {
@@ -65,8 +54,18 @@ void BeginNodeItem::releaseNodeArrayInfo( ) {
 		nodeArrayCount = 0;
 	}
 }
-void BeginNodeItem::setNodeRefVector( const std::vector< NodeRefLinkInfo * > &node_ref_link_infos ) {
-
+JumpNodeWidgetItem::JumpNodeWidgetItem( QWidget *parent ) {
+	mainLayout = new QVBoxLayout( this );
+	popMenu = new QMenu( this );
+	currentAction = nullptr;
+	nodeArrayCount = 0;
+	popMenu->installEventFilter( this );
+	isPopMenu = true;
+}
+JumpNodeWidgetItem::~JumpNodeWidgetItem( ) {
+	releaseNodeArrayInfo( );
+}
+void JumpNodeWidgetItem::setNodeRefVector( const std::vector< NodeRefLinkInfo * > &node_ref_link_infos ) {
 	releaseNodeArrayInfo( );
 	auto count = node_ref_link_infos.size( );
 	if( count == 0 )
@@ -77,7 +76,7 @@ void BeginNodeItem::setNodeRefVector( const std::vector< NodeRefLinkInfo * > &no
 	nodeArrayCount = nodeVector.size( );
 	nodeArratPtr = nodeVector.data( );
 }
-void BeginNodeItem::paintEvent( QPaintEvent *event ) {
+void JumpNodeWidgetItem::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	painter.setPen( itemPen );
@@ -85,9 +84,8 @@ void BeginNodeItem::paintEvent( QPaintEvent *event ) {
 	auto subWidth = autoWidth / 2;
 	painter.drawRect( subWidth, subWidth, width( ) - autoWidth, height( ) - autoWidth );
 }
-void BeginNodeItem::mouseReleaseEvent( QMouseEvent *event ) {
+void JumpNodeWidgetItem::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
-
 	if( isPopMenu && event->button( ) == Qt::RightButton ) {
 		auto pos = event->pos( );
 		for( nodeArrayIndex = 0; nodeArrayIndex < nodeArrayCount; ++nodeArrayIndex )
@@ -100,7 +98,7 @@ void BeginNodeItem::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 	}
 }
-bool BeginNodeItem::eventFilter( QObject *watched, QEvent *event ) {
+bool JumpNodeWidgetItem::eventFilter( QObject *watched, QEvent *event ) {
 	bool eventFilter = QWidget::eventFilter( watched, event );
 	QEvent::Type type = event->type( );
 
@@ -124,7 +122,7 @@ bool BeginNodeItem::eventFilter( QObject *watched, QEvent *event ) {
 	}
 	return eventFilter;
 }
-void BeginNodeItem::hideEvent( QHideEvent *event ) {
+void JumpNodeWidgetItem::hideEvent( QHideEvent *event ) {
 	QWidget::hideEvent( event );
 	releaseNodeArrayInfo( );
 }

@@ -20,7 +20,6 @@ public:
 	virtual void clearVar( ) { }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
 	virtual const QString & getTypeName( ) const { return typeName; }
-	virtual void * getVarPtr1( ) const { return varPtr; }
 	virtual NodeInfoWidget * getParent( ) const { return parent; }
 };
 

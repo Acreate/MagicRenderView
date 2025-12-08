@@ -282,8 +282,9 @@ bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInf
 			std::pair< NodeRefLinkInfo *, NodeRefLinkInfo * > *mapArrayPtr;
 			mapCount = inputNodeRefMap.size( );
 			mapArrayPtr = inputNodeRefMap.data( );
+			std::vector< NodeRefLinkInfo * > jumpVector;
 			for( auto item : nodePath ) {
-				std::vector< NodeRefLinkInfo * > jumpVector;
+				jumpVector.clear( );
 				jumpVector.emplace_back( item );
 				while( true ) {
 					for( mapIndex = 0; mapIndex < mapCount; ++mapIndex )
@@ -297,7 +298,7 @@ bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInf
 					if( mapArrayPtr[ mapIndex ].first == analysis_node_ref_link_info )
 						break;
 				}
-				Application::getInstancePtr( )->getPrinterDirector( )->info( NodeBuilderTools::toQString( jumpVector ), Create_SrackInfo( ) );
+				result_node_ref_link_vector.emplace_back( jumpVector );
 			}
 			nodePath.clear( );
 			inputNodeRefMap.clear( );
