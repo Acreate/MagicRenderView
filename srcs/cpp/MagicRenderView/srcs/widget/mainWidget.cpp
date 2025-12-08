@@ -184,8 +184,8 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 		if( point.y( ) < 0 )
 			point.setY( 0 );
 		dragNode->move( point );
+		drawLinkWidget->update( );
 	}
-	drawLinkWidget->update( );
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );

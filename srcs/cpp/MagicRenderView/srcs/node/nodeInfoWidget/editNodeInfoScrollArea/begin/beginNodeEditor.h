@@ -13,11 +13,16 @@ protected:
 	std::vector< NodeRefLinkInfo * > beginNodeRefLinkVector;
 	std::vector< NodeRefLinkInfo * > processNodeRefLinkVector;
 	std::vector< NodeRefLinkInfo * > endNodeRefLinkVector;
-	QWidget* mainWidget;
-	QVBoxLayout* mainLayout;
+	QWidget *mainWidget;
+	QVBoxLayout *mainLayout;
 	BeginNodeItem *beginItem;
 	BeginNodeItem *processItem;
 	BeginNodeItem *endItem;
+	NodeInfoWidget *leftWidget;
+	NodeInfoWidget *rightWidget;
+protected:
+	virtual void showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info );
+	virtual void showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info );
 public:
 	BeginNodeEditor( NodeInfoWidget *parent );
 	void * getVarPtr( ) const override;
@@ -25,6 +30,10 @@ public:
 	void clearVar( ) override;
 	~BeginNodeEditor( ) override;
 	bool initNode( Node *init_node ) override;
+protected:
+	void hideEvent( QHideEvent *event ) override;
+	bool eventFilter( QObject * event_obj_ptr, QEvent * event_type) override;
+public:
 Q_SIGNALS:
 	void clickNodeItem( Node *click_node );
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include <QWidget>
+#include <qpen.h>
 #include <typeinfo>
 
 #include <enums/nodeEnum.h>
@@ -73,12 +74,16 @@ protected:
 	QWidget *outputPortWidget;
 	/// @brief 节点输出布局
 	QVBoxLayout *outputPortWidgetLayout;
-	/// @brief 节点边缘
-	int nodeBorderWidth;
 	/// @brief 删除菜单
 	QMenu *removeMenu;
 	/// @brief 节点信息显示菜单
 	NodeInfoWidget *nodeInfoWidget;
+	/// @brief 绘制笔刷
+	QPen pen;
+	/// @brief 节点边缘
+	int nodeBorderWidth;
+	/// @brief 单倍笔刷
+	int doublePenWidth;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );

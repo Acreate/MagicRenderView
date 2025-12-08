@@ -3,14 +3,15 @@
 #pragma once
 #include "../nodeInfoWidget.h"
 
+class GenerateNodeEditor;
 class GenerateNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
 protected:
 	std::function< void*( ) > createFunction;
 	std::vector< void * > generateVarVector;
+	GenerateNodeEditor *generateNodeEditor;
 public:
-	GenerateNodeWidget( MainWindow *parent )
-		: NodeInfoWidget( parent ) { }
+	GenerateNodeWidget( MainWindow *parent );
 	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 protected:

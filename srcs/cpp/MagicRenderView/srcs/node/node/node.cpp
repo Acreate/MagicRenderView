@@ -256,6 +256,11 @@ OutputPort * Node::getOutputPort( const QString &port_name ) const {
 }
 bool Node::updateLayout( ) {
 	nodeBorderWidth = 5;
+	pen.setWidth( nodeBorderWidth );
+
+	doublePenWidth = nodeBorderWidth / 2;
+	doublePenWidth = nodeBorderWidth - doublePenWidth;
+
 	if( mainLayout )
 		delete mainLayout;
 	mainLayout = new QVBoxLayout( this );
@@ -312,14 +317,6 @@ bool Node::updateLayout( ) {
 void Node::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-	QRect rect = contentsRect( );
-	int height = rect.height( );
-	int width = rect.width( );
-	//painter.fillRect( rect, QColor( 0xFFA900 ) );
-	auto pen = painter.pen( );
-	pen.setWidth( nodeBorderWidth );
 	painter.setPen( pen );
-	auto doublePenWidth = nodeBorderWidth / 2;
-	doublePenWidth = nodeBorderWidth - doublePenWidth;
-	painter.drawRect( doublePenWidth, doublePenWidth, width - nodeBorderWidth, height - nodeBorderWidth );
+	painter.drawRect( doublePenWidth, doublePenWidth, width( ) - nodeBorderWidth, height( ) - nodeBorderWidth );
 }
