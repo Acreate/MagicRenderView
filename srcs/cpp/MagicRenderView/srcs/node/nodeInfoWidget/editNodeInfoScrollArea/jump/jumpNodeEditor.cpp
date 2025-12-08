@@ -4,7 +4,9 @@
 
 #include "../../../../app/application.h"
 #include "../../../../director/nodeDirector.h"
+#include "../../../../director/printerDirector.h"
 #include "../../../../enums/widgetEnum.h"
+#include "../../../../srack/srackInfo.h"
 #include "../../../node/node.h"
 #include "../../../nodeInfo/nodeBuilderTools.h"
 #include "../../../nodeInfo/nodeRefLinkInfo.h"
@@ -49,6 +51,38 @@ void JumpNodeEditor::releaseResource( ) {
 		delete jumpNodeWidgetItemArrayPtr[ index ];
 	unionJumpNodeVector.clear( );
 }
+bool JumpNodeEditor::createJumpItem( NodeRefLinkInfo *node_ref_link_info ) {
+
+	std::vector< std::vector< NodeRefLinkInfo * > > nodeRefLinkVector;
+	if( NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( node_ref_link_info, nodeRefLinkVector ) == false )
+		return false;
+	size_t count = nodeRefLinkVector.size( );
+	if( count == 0 )
+		return false;
+	auto nodeRefLinkInfosArrayPtr = nodeRefLinkVector.data( );
+	size_t index = 0;
+	unionJumpNodeVector.resize( count );
+	auto jumpNodeWidgetItemArrayPtr = unionJumpNodeVector.data( );
+	for( ; index < count; ++index ) {
+		auto createItem = new JumpNodeWidgetItem( mainWidget );
+		auto itemPen = createItem->getItemPen( );
+		itemPen.setColor( QColor( 0, 128, 0 ) );
+		itemPen.setWidth( 4 );
+		createItem->setItemPen( itemPen );
+		itemPen = createItem->getSubItemPen( );
+		itemPen.setColor( QColor( 255, 69, 0 ) );
+		itemPen.setWidth( 4 );
+		createItem->setSubItemPen( itemPen );
+
+		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetLeft, this, &JumpNodeEditor::showNodeInfoWidgetLeft );
+		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetRight, this, &JumpNodeEditor::showNodeInfoWidgetRight );
+		createItem->setIsPopMenu( true );
+		createItem->setNodeRefVector( nodeRefLinkInfosArrayPtr[ index ] );
+		mainLayout->addWidget( createItem );
+		jumpNodeWidgetItemArrayPtr[ index ] = createItem;
+	}
+	return true;
+}
 void JumpNodeEditor::hideEvent( QHideEvent *event ) {
 	EditorNodeInfoScrollArea::hideEvent( event );
 	releaseResource( );
@@ -88,33 +122,19 @@ JumpNodeEditor::JumpNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollA
 bool JumpNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
-	std::vector< std::vector< NodeRefLinkInfo * > > nodeRefLinkVector;
-	if( NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( init_node->getNodeRefLinkInfoPtr( ), nodeRefLinkVector ) == false )
-		return false;
-	size_t count = nodeRefLinkVector.size( );
-	if( count == 0 )
-		return false;
-	auto nodeRefLinkInfosArrayPtr = nodeRefLinkVector.data( );
-	size_t index = 0;
-	unionJumpNodeVector.resize( count );
-	auto jumpNodeWidgetItemArrayPtr = unionJumpNodeVector.data( );
-	for( ; index < count; ++index ) {
-		auto createItem = new JumpNodeWidgetItem( mainWidget );
-		auto itemPen = createItem->getItemPen( );
-		itemPen.setColor( QColor( 0, 128, 0 ) );
-		itemPen.setWidth( 4 );
-		createItem->setItemPen( itemPen );
-		itemPen = createItem->getSubItemPen( );
-		itemPen.setColor( QColor( 255, 69, 0 ) );
-		itemPen.setWidth( 4 );
-		createItem->setSubItemPen( itemPen );
-
-		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetLeft, this, &JumpNodeEditor::showNodeInfoWidgetLeft );
-		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetRight, this, &JumpNodeEditor::showNodeInfoWidgetRight );
-		createItem->setIsPopMenu( false );
-		createItem->setNodeRefVector( nodeRefLinkInfosArrayPtr[ index ] );
-		mainLayout->addWidget( createItem );
-		jumpNodeWidgetItemArrayPtr[ index ] = createItem;
+	if( init_node->getNodeType( ) == NodeEnum::NodeType::Point ) {
+		std::vector< NodeRefLinkInfo * > jumpNodeVector;
+		if( NodeBuilderTools::Point::findJumNodeRef( init_node->getNodeRefLinkInfoPtr( ), jumpNodeVector ) == false )
+			return false;
+		size_t count = jumpNodeVector.size( );
+		auto arrayPtr = jumpNodeVector.data( );
+		size_t index = 0;
+		for( ; index < count; ++index )
+			if( createJumpItem( arrayPtr[ index ] ) == false ) {
+				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "[%1]节点窗口模块创建异常" ).arg( arrayPtr[ index ]->getCurrentNode( )->getNodeName( ) ), Create_SrackInfo( ) );
+				return false;
+			}
+		return true;
 	}
-	return true;
+	return createJumpItem( init_node->getNodeRefLinkInfoPtr( ) );
 }

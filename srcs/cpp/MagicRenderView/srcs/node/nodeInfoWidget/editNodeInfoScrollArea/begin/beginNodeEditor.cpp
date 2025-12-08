@@ -102,7 +102,7 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 
 	beginNodeRefLinkInfo = init_node->getNodeRefLinkInfoPtr( );
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
-		if( NodeBuilderTools::findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
+		if( NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
 			return false;
 	std::vector< NodeRefLinkInfo * > resultNodeRefLinkVector;
 	if( NodeBuilderTools::analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )

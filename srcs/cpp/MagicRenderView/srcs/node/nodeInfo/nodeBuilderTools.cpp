@@ -108,7 +108,7 @@ bool NodeBuilderTools::analysisNodeRef( NodeRefLinkInfo *analysis_node_ref_link_
 	result_node_ref_link_vector.resize( count );
 	return true;
 }
-bool NodeBuilderTools::findRefBeginNode( NodeRefLinkInfo *analysis_node_ref_link_info, NodeRefLinkInfo *&result_begin_node_ref_link ) {
+bool NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( NodeRefLinkInfo *analysis_node_ref_link_info, NodeRefLinkInfo *&result_begin_node_ref_link ) {
 	size_t count = analysis_node_ref_link_info->refInputVector.size( );
 	auto nodeRefLinkInfoArrayPtr = analysis_node_ref_link_info->refInputVector.data( );
 	size_t index;
@@ -305,4 +305,29 @@ bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( NodeRefLinkInf
 		}
 	}
 	return true;
+}
+bool NodeBuilderTools::Point::findJumNodeRef( NodeRefLinkInfo *analysis_node_ref_link_info, std::vector< NodeRefLinkInfo * > &result_node_ref_link_vector ) {
+
+	std::vector< NodeRefLinkInfo * > foreachOutNodeRef = analysis_node_ref_link_info->refOutputVector;
+	std::vector< NodeRefLinkInfo * > buffOutNodeRef;
+	size_t overCount = result_node_ref_link_vector.size( );
+	size_t foreachCount = foreachOutNodeRef.size( );
+	auto foreachArrayPtr = foreachOutNodeRef.data( );
+	size_t foreachIndex;
+	do {
+		for( foreachIndex = 0; foreachIndex < foreachCount; ++foreachIndex ) {
+			if( foreachArrayPtr[ foreachIndex ]->getCurrentNode( )->getNodeType( ) == NodeEnum::NodeType::Jump )
+				result_node_ref_link_vector.emplace_back( foreachArrayPtr[ foreachIndex ] );
+			else
+				buffOutNodeRef.append_range( foreachArrayPtr[ foreachIndex ]->refOutputVector );
+		}
+		foreachCount = buffOutNodeRef.size( );
+		if( foreachCount == 0 )
+			break;
+		foreachOutNodeRef = buffOutNodeRef;
+		foreachArrayPtr = foreachOutNodeRef.data( );
+		buffOutNodeRef.clear( );
+	} while( true );
+
+	return overCount != result_node_ref_link_vector.size( );
 }

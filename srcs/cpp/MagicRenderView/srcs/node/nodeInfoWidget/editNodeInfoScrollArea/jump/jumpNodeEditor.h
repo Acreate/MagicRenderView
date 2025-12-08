@@ -20,6 +20,7 @@ protected:
 	NodeInfoWidget *rightWidget;
 protected:
 	virtual void releaseResource( );
+	virtual bool createJumpItem(NodeRefLinkInfo* node_ref_link_info);
 protected:
 	virtual void showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info );
 	virtual void showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info );

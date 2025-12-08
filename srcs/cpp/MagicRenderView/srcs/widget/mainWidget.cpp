@@ -63,9 +63,10 @@ bool MainWidget::ensureVisible( Node *target ) {
 		fromGlobalX = oldW;
 	if( oldH > fromGlobalY )
 		fromGlobalY = oldH;
-	if( oldW == fromGlobalX && oldH == fromGlobalY )
+	if( oldW > fromGlobalX && oldH > fromGlobalY )
 		return true;
-	setMinimumSize( fromGlobalX, fromGlobalY );
+	renderMaxSize = QSize( fromGlobalX, fromGlobalY );
+	setMinimumSize( renderMaxSize );
 	mainWidgetScrollArea->ensureVisible( fromGlobalX, fromGlobalY );
 	return true;
 }
@@ -117,13 +118,21 @@ void MainWidget::deleteSelectNodeInfo( ) {
 	delete oldSelectNode;
 	oldSelectNode = nullptr;
 }
-void MainWidget::resizeEvent( QResizeEvent *event ) {
-	QWidget::resizeEvent( event );
-	auto newSize = event->size( );
-	drawNodeWidget->resize( newSize );
-	drawLinkWidget->resize( newSize );
+void MainWidget::calculateNodeRenderSize( ) {
+	auto buffMaxSize = nodeDirector->getMaxNodeRenderSize( );
+	if( buffMaxSize.width( ) > renderMaxSize.width( ) || buffMaxSize.height( ) > renderMaxSize.height( ) ) {
+		renderMaxSize = buffMaxSize;
+		setMinimumSize( renderMaxSize );
+	}
+	drawNodeWidget->resize( renderMaxSize );
+	drawLinkWidget->resize( renderMaxSize );
 	drawNodeWidget->raise( );
 	drawLinkWidget->raise( );
+}
+void MainWidget::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
+
+	calculateNodeRenderSize( );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );

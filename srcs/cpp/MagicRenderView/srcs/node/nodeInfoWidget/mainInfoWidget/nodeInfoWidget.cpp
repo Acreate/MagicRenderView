@@ -1,6 +1,7 @@
 ﻿#include "nodeInfoWidget.h"
 
 #include <QPainter>
+#include <QMenuBar>
 #include <qcoreevent.h>
 #include <QScrollBar>
 
@@ -36,6 +37,8 @@ NodeInfoWidget::NodeInfoWidget( MainWindow *parent ) : QWidget( parent ), parent
 	mainWidgetScrollArea = parentMainWindow->getMainWidgetScrollArea( );
 	vScrollBar = mainWidgetScrollArea->verticalScrollBar( );
 	hScrollBar = mainWidgetScrollArea->horizontalScrollBar( );
+
+	mainWindowMenuBar = parentMainWindow->menuBar( );
 }
 NodeInfoWidget::~NodeInfoWidget( ) {
 	emit release_signal( this );
@@ -65,20 +68,20 @@ void NodeInfoWidget::showNodeInfoWidget( WidgetEnum::ShowType show_pos_type ) {
 	geometry = mainWidgetScrollArea->geometry( );
 	topOffsetY = geometry.y( );
 	leftOffsetX = geometry.x( );
-	offsetY = topOffsetY + hScrollBar->height( );
 	offsetX = leftOffsetX + vScrollBar->width( );
 	parentMainWindowWidth = parentMainWindow->width( ) - offsetX;
+	offsetY = topOffsetY + hScrollBar->height( );
 	parentMainWindowHeight = parentMainWindow->height( ) - offsetY;
 	currentWidth = parentMainWindowWidth / 3;
 	switch( showPosType ) {
 		case WidgetEnum::ShowType::Center :
-			move( currentWidth, offsetY );
+			move( currentWidth, topOffsetY );
 			break;
 		case WidgetEnum::ShowType::Left :
-			move( 0, offsetY );
+			move( 0, topOffsetY );
 			break;
 		case WidgetEnum::ShowType::Right :
-			move( currentWidth + currentWidth, offsetY );
+			move( currentWidth + currentWidth, topOffsetY );
 			break;
 	}
 	resize( currentWidth, parentMainWindowHeight );

@@ -150,6 +150,7 @@ void MainWindow::loadPorjectAtFile( ) {
 		printerDirector->info( tr( "路径[%1]文件读取异常，数据无法进行还原节点" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
 	}
+	
 }
 void MainWindow::unDownloadPorjectAtFile( ) {
 	nodeDirector->init( );

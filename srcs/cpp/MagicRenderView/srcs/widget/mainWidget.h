@@ -36,6 +36,7 @@ protected:
 	OutputPort *selectOutputPort;
 	QDateTime *oldClickTime;
 	QPoint offsetPoint;
+	QSize renderMaxSize;
 	/// @brief 构造/析构 
 public:
 	MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
@@ -50,6 +51,7 @@ public:
 	virtual void cutSelectNodeInfo( );
 	virtual void cancelNodeInfo( );
 	virtual void deleteSelectNodeInfo( );
+	virtual void calculateNodeRenderSize( );
 	/// @brief 获取成员变量函数调用
 public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }

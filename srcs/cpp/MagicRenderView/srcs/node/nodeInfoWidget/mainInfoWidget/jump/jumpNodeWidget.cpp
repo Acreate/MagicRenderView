@@ -4,6 +4,7 @@
 
 #include "../../editNodeInfoScrollArea/jump/jumpNodeEditor.h"
 
+
 JumpNodeWidget::JumpNodeWidget( MainWindow *parent ) : NodeInfoWidget( parent ) {
 	editorNodeInfoScrollArea = jumpNodeEditor = new JumpNodeEditor( this );
 }
@@ -13,7 +14,12 @@ bool JumpNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	return true;
 }
 bool JumpNodeWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
-	if( check_node_ptr->getNodeType( ) != NodeEnum::NodeType::Jump )
-		return false;
-	return true;
+	NodeEnum::NodeType nodeType = check_node_ptr->getNodeType( );
+	switch( nodeType ) {
+		case NodeEnum::NodeType::Point :
+		case NodeEnum::NodeType::Jump :
+			return true;
+			break;
+	}
+	return false;
 }

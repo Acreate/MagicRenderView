@@ -5,6 +5,7 @@
 
 #include "../../../enums/widgetEnum.h"
 
+class QMenuBar;
 class NodeRefLinkInfo;
 class MainWidgetScrollArea;
 class VarDirector;
@@ -29,6 +30,7 @@ protected:
 	VarDirector *varDirector;
 	QScrollBar *vScrollBar;
 	QScrollBar *hScrollBar;
+	QMenuBar *mainWindowMenuBar;
 	int offsetY;
 	int offsetX;
 	int topOffsetY;

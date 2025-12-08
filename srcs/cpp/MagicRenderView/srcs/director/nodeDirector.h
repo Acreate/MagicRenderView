@@ -111,6 +111,9 @@ public:
 	/// @param source_array_count 数据最大数量
 	/// @return 失败返回 false
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
+	/// @brief 获取最大的渲染大小
+	/// @return 最大的渲染大小
+	virtual QSize getMaxNodeRenderSize( ) const;
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );

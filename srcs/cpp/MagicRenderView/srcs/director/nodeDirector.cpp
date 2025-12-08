@@ -18,7 +18,6 @@
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/generateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/point/pointNodeWidget.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
@@ -378,7 +377,6 @@ bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
 		result_error_msg = tr( "缺少主配置窗口，使用 [Application::getMainWindow( )] 获取" );
 		return false;
 	}
-	appendNodeInfoWidget( new PointNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new JumpNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new GenerateNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new BeginNodeWidget( mainWindow ) );
@@ -582,9 +580,26 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 
 		}
 	}
-
+	mainWidget->calculateNodeRenderSize( );
 	result_use_count = offset - source_array_ptr;
 	return true;
+}
+QSize NodeDirector::getMaxNodeRenderSize( ) const {
+	int x = 0;
+	int y = 0;
+	size_t count = refNodeVector.size( );
+	auto arrayPtr = refNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index ) {
+		Node *currentNode = arrayPtr[ index ]->currentNode;
+		int maxPosX = currentNode->width( ) + currentNode->pos( ).x( );
+		int maxPosY = currentNode->height( ) + currentNode->pos( ).y( );
+		if( maxPosX > x )
+			x = maxPosX;
+		if( maxPosY > y )
+			y = maxPosY;
+	}
+	return QSize { x, y };
 }
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
