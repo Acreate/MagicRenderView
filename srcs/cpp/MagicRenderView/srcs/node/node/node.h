@@ -84,6 +84,8 @@ protected:
 	int nodeBorderWidth;
 	/// @brief 单倍笔刷
 	int doublePenWidth;
+	/// @brief 生成变量类型（仅在生成节点有效）
+	QString generateTypeName;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -103,6 +105,7 @@ public:
 	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 	virtual QString toQString( ) const;
+	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

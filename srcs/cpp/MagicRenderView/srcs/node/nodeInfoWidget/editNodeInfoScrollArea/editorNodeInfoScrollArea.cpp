@@ -43,6 +43,10 @@ EditorNodeInfoScrollArea::EditorNodeInfoScrollArea( NodeInfoWidget *parent ) : Q
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	setWidgetResizable( true );
+	hScrollAreaBar = this->horizontalScrollBar( );
+	vScrollAreaBar = this->verticalScrollBar( );
+	leftWidget = nullptr;
+	rightWidget = nullptr;
 }
 bool EditorNodeInfoScrollArea::initNode( Node *init_node ) {
 	currentNode = init_node;

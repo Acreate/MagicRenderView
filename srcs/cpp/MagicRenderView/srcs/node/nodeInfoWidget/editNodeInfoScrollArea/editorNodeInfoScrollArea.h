@@ -13,6 +13,8 @@ protected:
 	Node *currentNode;
 	NodeInfoWidget *leftWidget;
 	NodeInfoWidget *rightWidget;
+	QScrollBar *hScrollAreaBar;
+	QScrollBar *vScrollAreaBar;
 protected:
 	virtual void releaseResource( );
 	virtual void showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info );

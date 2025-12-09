@@ -1,0 +1,9 @@
+﻿#ifndef GENERATEPANELITEMWIDGET_H_H_HEAD__FILE__
+#define GENERATEPANELITEMWIDGET_H_H_HEAD__FILE__
+#pragma once
+
+class GeneratePanelItemWidget {
+	
+};
+
+#endif // GENERATEPANELITEMWIDGET_H_H_HEAD__FILE__

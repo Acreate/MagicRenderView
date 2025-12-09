@@ -12,6 +12,8 @@ bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 		return false;
 	if( appendOutputPortType< IntVectorOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
 		return false;
+	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
+		return false;
 	return true;
 
 }

@@ -36,7 +36,6 @@ protected:
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
-
 	bool notify( QObject *, QEvent * ) override;
 protected:
 	bool event( QEvent * ) override;
