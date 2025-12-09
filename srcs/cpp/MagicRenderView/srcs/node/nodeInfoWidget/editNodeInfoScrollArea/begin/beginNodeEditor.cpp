@@ -15,38 +15,7 @@
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 
 #include "subWidget/beginNodeItem.h"
-void BeginNodeEditor::showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info ) {
-	auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
-	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info->getCurrentNode( ) );
-	if( nodeInfoWidget == nullptr )
-		return;
-	if( leftWidget == nodeInfoWidget )
-		return;
-	if( leftWidget )
-		leftWidget->hide( );
-	leftWidget = nodeInfoWidget;
-	if( leftWidget == rightWidget )
-		rightWidget->hide( );
-	leftWidget->show( );
-	leftWidget->installEventFilter( this );
-	leftWidget->showNodeInfoWidget( WidgetEnum::ShowType::Left );
-}
-void BeginNodeEditor::showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info ) {
-	auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
-	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info->getCurrentNode( ) );
-	if( nodeInfoWidget == nullptr )
-		return;
-	if( rightWidget == nodeInfoWidget )
-		return;
-	if( rightWidget )
-		rightWidget->hide( );
-	rightWidget = nodeInfoWidget;
-	if( leftWidget == rightWidget )
-		leftWidget->hide( );
-	rightWidget->show( );
-	rightWidget->installEventFilter( this );
-	rightWidget->showNodeInfoWidget( WidgetEnum::ShowType::Right );
-}
+
 BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 	leftWidget = nullptr;
 	rightWidget = nullptr;
@@ -95,6 +64,7 @@ BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrol
 }
 
 BeginNodeEditor::~BeginNodeEditor( ) {
+
 }
 bool BeginNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
@@ -130,34 +100,9 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 	endItem->setNodeRefVector( endNodeRefLinkVector );
 	return true;
 }
-void BeginNodeEditor::hideEvent( QHideEvent *event ) {
-	EditorNodeInfoScrollArea::hideEvent( event );
-	if( leftWidget )
-		leftWidget->hide( );
-	if( rightWidget )
-		rightWidget->height( );
-}
-bool BeginNodeEditor::eventFilter( QObject *event_obj_ptr, QEvent *event_type ) {
-	bool eventFilter = EditorNodeInfoScrollArea::eventFilter( event_obj_ptr, event_type );
-	if( event_obj_ptr == leftWidget ) {
-		switch( event_type->type( ) ) {
-			case QEvent::Hide :
-				leftWidget->removeEventFilter( this );
-				leftWidget = nullptr;
-				break;
-
-		}
-		return eventFilter;
-	}
-	if( event_obj_ptr == rightWidget ) {
-		switch( event_type->type( ) ) {
-			case QEvent::Hide :
-				rightWidget->removeEventFilter( this );
-				rightWidget = nullptr;
-				break;
-
-		}
-		return eventFilter;
-	}
-	return eventFilter;
+void BeginNodeEditor::releaseResource( ) {
+	EditorNodeInfoScrollArea::releaseResource( );
+	beginNodeRefLinkVector.clear( );
+	processNodeRefLinkVector.clear( );
+	endNodeRefLinkVector.clear( );
 }
