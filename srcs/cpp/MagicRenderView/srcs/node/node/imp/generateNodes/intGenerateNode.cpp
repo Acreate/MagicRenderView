@@ -1,6 +1,9 @@
 ﻿#include "intGenerateNode.h"
 
+#include "../../../../app/application.h"
+#include "../../../../director/printerDirector.h"
 #include "../../../../director/varDirector.h"
+#include "../../../../srack/srackInfo.h"
 
 #include "../../../port/inputPort/any/anyInputPort.h"
 #include "../../../port/outputPort/array/intVectorOutputPort.h"
@@ -27,6 +30,13 @@ std::vector< int64_t > * IntGenerateNode::getGenerateVarPtr( ) const {
 bool IntGenerateNode::initVarPtr( ) {
 	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
 		return false;
+	if( varPtr != nullptr )
+		if( varDirector->release( varPtr ) == false ) {
+			auto printerDirector = instancePtr->getPrinterDirector( );
+			printerDirector->info( tr( "释放失败 [0x%1]" ).arg( QString::number( ( size_t ) overVarPtr, 16 ).toUpper( ) ), Create_SrackInfo( ) );
+			return false;
+		}
+	overVarPtr = nullptr;
 	if( varDirector->create( overVarPtr ) == false )
 		return false;
 	varPtr = overVarPtr;
