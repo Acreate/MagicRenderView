@@ -1,13 +1,13 @@
-﻿#include "intGenerateItemWidget.h"
-
+﻿#include "generateItemWidget.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <qpushbutton.h>
-void IntGenerateItemWidget::updateInfoString( ) {
+
+void GenerateItemWidget::updateInfoString( ) {
 	auto title = infoFormmattion.arg( index ).arg( varValue );
 	showInfo->setText( title );
 }
-IntGenerateItemWidget::IntGenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) {
 	auto mainLayout = new QHBoxLayout( this );
 	showInfo = new QLabel( this );
 	removeButton = new QPushButton( tr( "删除" ), this );
@@ -18,16 +18,7 @@ IntGenerateItemWidget::IntGenerateItemWidget( QWidget *parent, const Qt::WindowF
 		emit clickRemoveItemBtn( this, index, varValue );
 	} );
 }
-void IntGenerateItemWidget::setindex( const size_t &index ) {
-	this->index = QString::number( index );
-	updateInfoString( );
-}
-
-void IntGenerateItemWidget::setVarValue( const QString &var_value ) {
-	this->varValue = var_value;
-	updateInfoString( );
-}
-void IntGenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
+void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
 	this->index = QString::number( index );
 	this->varValue = var_value;
 	updateInfoString( );

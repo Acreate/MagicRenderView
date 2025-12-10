@@ -8,7 +8,6 @@ class IntGenerateNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
 protected:
 	std::function< void*( ) > createFunction;
-	std::vector< void * > generateVarVector;
 	IntGenerateNodeEditor *intGenerateNodeEditor;
 public:
 	IntGenerateNodeWidget( MainWindow *parent );

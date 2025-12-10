@@ -1,7 +1,8 @@
 ﻿#include "intGenerateNodeEditor.h"
 
 #include "../../../node/imp/generateNodes/intGenerateNode.h"
-#include "intGenerateItem/intGenerateItemWidget.h"
+#include "generateItemWidget/generateItemWidget.h"
+
 void IntGenerateNodeEditor::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
 	size_t generateItemWidgetCount = intGenerateItemWidgetVector.size( );
@@ -36,7 +37,7 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 		} else {
 			intGenerateItemWidgetVector.resize( count );
 			for( ; generateItemWidgetCount < count; ++generateItemWidgetCount )
-				widgetItemData[ generateItemWidgetCount ] = new IntGenerateItemWidget( this );
+				widgetItemData[ generateItemWidgetCount ] = new GenerateItemWidget( this );
 			widgetItemData = intGenerateItemWidgetVector.data( );
 		}
 	}

@@ -3,14 +3,14 @@
 #pragma once
 #include "../editorNodeInfoScrollArea.h"
 
-class IntGenerateItemWidget;
+class GenerateItemWidget;
 class QVBoxLayout;
 class IntGenerateNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 protected:
 	QWidget *mainWidget;
 	QVBoxLayout *mainLayout;
-	std::vector< IntGenerateItemWidget * > intGenerateItemWidgetVector;
+	std::vector< GenerateItemWidget * > intGenerateItemWidgetVector;
 	std::vector< int64_t > *bindGenerateVector;
 protected:
 	void releaseResource( ) override;
