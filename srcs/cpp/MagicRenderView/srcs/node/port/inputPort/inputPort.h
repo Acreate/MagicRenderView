@@ -51,7 +51,7 @@ public:
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
 	virtual QMenu * getDisLinkMenu( ) const { return disLinkMenu; }
-
+	virtual bool setValue( VarDirector *var_director, void *var_ptr ) { return false; }
 	// 信号
 Q_SIGNALS:
 	/// @brief 释放对象产生信号

@@ -1,17 +1,17 @@
-﻿#ifndef GENERATENODEWIDGET_H_H_HEAD__FILE__
-#define GENERATENODEWIDGET_H_H_HEAD__FILE__
+﻿#ifndef INTGENERATENODEWIDGET_H_H_HEAD__FILE__
+#define INTGENERATENODEWIDGET_H_H_HEAD__FILE__
 #pragma once
 #include "../nodeInfoWidget.h"
 
-class GenerateNodeEditor;
-class GenerateNodeWidget : public NodeInfoWidget {
+class IntGenerateNodeEditor;
+class IntGenerateNodeWidget : public NodeInfoWidget {
 	Q_OBJECT;
 protected:
 	std::function< void*( ) > createFunction;
 	std::vector< void * > generateVarVector;
-	GenerateNodeEditor *generateNodeEditor;
+	IntGenerateNodeEditor *intGenerateNodeEditor;
 public:
-	GenerateNodeWidget( MainWindow *parent );
+	IntGenerateNodeWidget( MainWindow *parent );
 	bool initNodeInfo( Node *check_node_ptr ) override;
 	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 protected:
@@ -19,4 +19,4 @@ protected:
 	void okButtonEvent( ) override;
 };
 
-#endif // GENERATENODEWIDGET_H_H_HEAD__FILE__
+#endif // INTGENERATENODEWIDGET_H_H_HEAD__FILE__

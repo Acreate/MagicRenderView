@@ -86,6 +86,8 @@ protected:
 	int doublePenWidth;
 	/// @brief 生成变量类型（仅在生成节点有效）
 	QString generateTypeName;
+	/// @brief 变量指向
+	void *varPtr;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -106,6 +108,7 @@ public:
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 	virtual QString toQString( ) const;
 	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
+	virtual void * getVarPtr( ) const { return varPtr; }
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口

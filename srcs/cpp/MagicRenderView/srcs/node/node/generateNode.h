@@ -6,7 +6,6 @@
 class GenerateNode : public Node {
 	Q_OBJECT;
 protected:
-	std::vector< void * > *generateVarVector;
 	VarDirector *nodeVarDirector;
 public:
 	GenerateNode( const QString &node_name );

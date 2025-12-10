@@ -16,7 +16,7 @@
 #include "../node/nodeInfo/nodePortLinkInfo.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/generateNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
@@ -378,7 +378,7 @@ bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
 		return false;
 	}
 	appendNodeInfoWidget( new JumpNodeWidget( mainWindow ) );
-	appendNodeInfoWidget( new GenerateNodeWidget( mainWindow ) );
+	appendNodeInfoWidget( new IntGenerateNodeWidget( mainWindow ) );
 	appendNodeInfoWidget( new BeginNodeWidget( mainWindow ) );
 	return true;
 }

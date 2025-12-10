@@ -14,6 +14,9 @@ bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 		return false;
 	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
 		return false;
+	if( varDirector->create( overVarPtr ) == false )
+		return false;
+	varPtr = overVarPtr;
 	return true;
 
 }
@@ -21,4 +24,7 @@ bool IntGenerateNode::updateLayout( ) {
 	if( GenerateNode::updateLayout( ) == false )
 		return false;
 	return true;
+}
+std::vector< int64_t > * IntGenerateNode::getGenerateVarPtr( ) const {
+	return overVarPtr;
 }

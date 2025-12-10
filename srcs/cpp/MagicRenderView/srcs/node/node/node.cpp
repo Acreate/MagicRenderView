@@ -45,6 +45,7 @@ Node::~Node( ) {
 Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
 	hide( );
 	removeMenu = new QMenu;
+	varPtr = nullptr;
 }
 bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
