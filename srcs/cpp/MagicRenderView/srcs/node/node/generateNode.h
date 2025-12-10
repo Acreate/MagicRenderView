@@ -7,6 +7,8 @@ class GenerateNode : public Node {
 	Q_OBJECT;
 protected:
 	VarDirector *nodeVarDirector;
+protected:
+	virtual bool initVarPtr( ) { return false; }
 public:
 	GenerateNode( const QString &node_name );
 	~GenerateNode( ) override;

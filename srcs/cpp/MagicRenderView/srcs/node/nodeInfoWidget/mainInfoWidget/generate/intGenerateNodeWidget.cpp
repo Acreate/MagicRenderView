@@ -3,7 +3,7 @@
 #include "../../../node/imp/generateNodes/intGenerateNode.h"
 #include "../../editNodeInfoScrollArea/generate/intGenerateNodeEditor.h"
 IntGenerateNodeWidget::IntGenerateNodeWidget( MainWindow *parent ) : NodeInfoWidget( parent ) {
-	intGenerateNodeEditor = new IntGenerateNodeEditor( this );
+	editorNodeInfoScrollArea = intGenerateNodeEditor = new IntGenerateNodeEditor( this );
 }
 bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
@@ -23,5 +23,11 @@ void IntGenerateNodeWidget::cancelButtonEvent( ) {
 	NodeInfoWidget::cancelButtonEvent( );
 }
 void IntGenerateNodeWidget::okButtonEvent( ) {
+	auto newCreactePtr = intGenerateNodeEditor->getNewCreactePtr( );
+	if( newCreactePtr != nullptr ) {
+		auto bindGenerateVector = intGenerateNodeEditor->getBindGenerateVector( );
+		*bindGenerateVector = *newCreactePtr;
+		intGenerateNodeEditor->resetGenerateVarVector( );
+	}
 	NodeInfoWidget::okButtonEvent( );
 }

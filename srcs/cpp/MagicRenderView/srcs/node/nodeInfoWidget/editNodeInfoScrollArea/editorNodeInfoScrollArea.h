@@ -3,13 +3,15 @@
 #pragma once
 #include <QScrollArea>
 
+class VarDirector;
 class NodeRefLinkInfo;
 class Node;
 class NodeInfoWidget;
 class EditorNodeInfoScrollArea : public QScrollArea {
 	Q_OBJECT;
 protected:
-	NodeInfoWidget *parent;
+	NodeInfoWidget *parentNodeInfoWidget;
+	VarDirector *parentVarDirector;
 	Node *currentNode;
 	NodeInfoWidget *leftWidget;
 	NodeInfoWidget *rightWidget;
@@ -23,7 +25,7 @@ public:
 	EditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	virtual bool initNode( Node *init_node );
 	virtual Node * getCurrentNode( ) const { return currentNode; }
-	virtual NodeInfoWidget * getParent( ) const { return parent; }
+	virtual NodeInfoWidget * getParentNodeInfoWidget( ) const { return parentNodeInfoWidget; }
 protected:
 	void hideEvent( QHideEvent *event ) override;
 	bool eventFilter( QObject *event_obj_ptr, QEvent *event_type ) override;

@@ -39,7 +39,8 @@ void EditorNodeInfoScrollArea::showNodeInfoWidgetRight( NodeRefLinkInfo *node_re
 	rightWidget->installEventFilter( this );
 	rightWidget->showNodeInfoWidget( WidgetEnum::ShowType::Right );
 }
-EditorNodeInfoScrollArea::EditorNodeInfoScrollArea( NodeInfoWidget *parent ) : QScrollArea( parent ), parent( parent ) {
+EditorNodeInfoScrollArea::EditorNodeInfoScrollArea( NodeInfoWidget *parent ) : QScrollArea( parent ), parentNodeInfoWidget( parent ) {
+	parentVarDirector = parentNodeInfoWidget->getVarDirector( );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 	setWidgetResizable( true );

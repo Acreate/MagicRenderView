@@ -41,6 +41,8 @@ Node::~Node( ) {
 	if( connectWidget )
 		delete connectWidget;
 	delete removeMenu;
+	if( varPtr )
+		varDirector->release( varPtr );
 }
 Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
 	hide( );

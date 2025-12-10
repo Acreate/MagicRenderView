@@ -13,6 +13,8 @@ public:
 	bool init( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
 	virtual std::vector< int64_t > * getGenerateVarPtr( ) const;
+protected:
+	bool initVarPtr( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "生成/生成整数" ) );
 };

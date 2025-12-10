@@ -207,10 +207,17 @@ Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main
 			node = createArrayPtr[ index ].second( node_type_name );
 			break;
 		}
-	if( node == nullptr )
+	if( node == nullptr ) {
+		auto errorMsg = tr( "无法匹配对应的节点名称[%1]" );
+		printerDirector->error( errorMsg.arg( node_type_name ), Create_SrackInfo( ) );
+		emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
 		return node;
+	}
 	auto refNdoeInfo = new NodeRefLinkInfo( node );
 	if( main_widget->addNode( refNdoeInfo ) == false ) {
+		auto errorMsg = tr( "节点的初始化失败[%1]" );
+		printerDirector->error( errorMsg.arg( node_type_name ), Create_SrackInfo( ) );
+		emit error_create_node_signal( this, node_type_name, NodeEnum::CreateType::Node_Parent, errorMsg, Create_SrackInfo( ) );
 		delete node;
 		delete refNdoeInfo;
 		return nullptr;
@@ -539,6 +546,8 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		offset = offset + result_use_count;
 		// 节点创建
 		auto node = createNode( *stringPtr, mainWidget );
+		if( node == nullptr )
+			return false;
 		node->move( pos );
 		// 节点数据
 		if( node->formUint8ArrayData( result_use_count, offset, mod ) == false )

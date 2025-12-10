@@ -38,6 +38,8 @@ protected:
 public:
 	NodeInfoWidget( MainWindow *parent );
 	~NodeInfoWidget( ) override;
+	virtual MainWindow * getParentMainWindow( ) const { return parentMainWindow; }
+	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 	virtual bool isNodeTypeInfoWidget( Node *check_node_ptr ) const;
 	virtual bool initNodeInfo( Node *check_node_ptr );
 	/// @brief 释放资源

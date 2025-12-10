@@ -12,11 +12,7 @@ bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 		return false;
 	if( appendOutputPortType< IntVectorOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
 		return false;
-	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
-		return false;
-	if( varDirector->create( overVarPtr ) == false )
-		return false;
-	varPtr = overVarPtr;
+	initVarPtr( );
 	return true;
 
 }
@@ -27,4 +23,12 @@ bool IntGenerateNode::updateLayout( ) {
 }
 std::vector< int64_t > * IntGenerateNode::getGenerateVarPtr( ) const {
 	return overVarPtr;
+}
+bool IntGenerateNode::initVarPtr( ) {
+	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
+		return false;
+	if( varDirector->create( overVarPtr ) == false )
+		return false;
+	varPtr = overVarPtr;
+	return true;
 }

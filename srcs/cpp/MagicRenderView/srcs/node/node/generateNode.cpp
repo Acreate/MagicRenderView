@@ -12,8 +12,6 @@ bool GenerateNode::init( DrawNodeWidget *parent ) {
 		return false;
 	if( nodeVarDirector->init( ) == false )
 		return false;
-	if( nodeVarDirector->create( generateVarVector ) == false )
-		return false;
 	return true;
 }
 bool GenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
@@ -23,7 +21,7 @@ bool GenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		return false;
 	if( nodeVarDirector->create( uint64Ptr ) == false )
 		return false;
-	if( nodeVarDirector->create( generateVarVector ) == false )
+	if( initVarPtr( ) == false )
 		return false;
 	void *anyPtr = uint64Ptr;
 	if( nodeVarDirector->toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false ) {
@@ -37,7 +35,7 @@ bool GenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 	}
 	auto offset = source_array_ptr + result_use_count;
 
-	anyPtr = generateVarVector;
+	anyPtr = varPtr;
 	if( nodeVarDirector->toVar( result_use_count, offset, mode, anyPtr ) == false ) {
 		nodeVarDirector->release( uint64Ptr );
 		return false;
@@ -50,7 +48,7 @@ bool GenerateNode::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 	std::vector< uint8_t > converData;
 	if( nodeVarDirector->create( uint64Ptr ) == false )
 		return false;
-	if( nodeVarDirector->toVector( generateVarVector, converData ) == false ) {
+	if( nodeVarDirector->toVector( varPtr, converData ) == false ) {
 		nodeVarDirector->release( uint64Ptr );
 		return false;
 	}
