@@ -4,7 +4,7 @@
 #include <QLineEdit>
 #include <qpushbutton.h>
 AddGenerateTool::AddGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
-	auto mainLayout = new QVBoxLayout( this );
+	auto mainLayout = new QHBoxLayout( this );
 	insertIndexComboBox = new QComboBox( this );
 	varEditor = new QLineEdit( this );
 	insertBtn = new QPushButton( tr( "插入" ), this );

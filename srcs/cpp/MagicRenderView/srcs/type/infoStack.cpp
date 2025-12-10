@@ -35,13 +35,13 @@ bool InfoStack::createTypePtr( void *&result_create_obj_ptr ) {
 	result_create_obj_ptr = newObjTypeFunction( );
 	if( result_create_obj_ptr == nullptr )
 		return false;
-	size_t count = allVarPtrVector.size( );
-	auto arrayPtr = allVarPtrVector.data( );
-	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] ) {
-			arrayPtr[ index ] = result_create_obj_ptr;
-			return arrayPtr[ index ];
-		}
+	//size_t count = allVarPtrVector.size( );
+	//auto arrayPtr = allVarPtrVector.data( );
+	//for( size_t index = 0; index < count; ++index )
+	//	if( nullptr == arrayPtr[ index ] ) {
+	//		arrayPtr[ index ] = result_create_obj_ptr;
+	//		return arrayPtr[ index ];
+	//	}
 	allVarPtrVector.emplace_back( result_create_obj_ptr );
 	return true;
 }
@@ -58,12 +58,7 @@ bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
 		if( delete_obj_ptr == arrayPtr[ index ] ) {
 			if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
 				return false;
-			count -= 1;
-			for( ; index < count; --count )
-				if( nullptr == arrayPtr[ count ] ) {
-					arrayPtr[ index ] = arrayPtr[ count ];
-					return true;
-				}
+			allVarPtrVector.erase( allVarPtrVector.begin( ) + index );
 			return true;
 		}
 	return false;

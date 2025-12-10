@@ -31,10 +31,12 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 	auto widgetItemData = intGenerateItemWidgetVector.data( );
 	size_t index;
 	if( count == 0 ) {
-		if( generateItemWidgetCount != count )
+		if( generateItemWidgetCount != count ) {
 			for( index = 0; index < generateItemWidgetCount; ++index )
 				delete widgetItemData[ index ];
-		intGenerateItemWidgetVector.clear( );
+			intGenerateItemWidgetVector.clear( );
+		}
+		return true;
 	}
 	auto data = newCreactePtr->data( );
 	if( generateItemWidgetCount != count ) {
@@ -73,7 +75,6 @@ bool IntGenerateNodeEditor::initNode( Node *init_node ) {
 	return true;
 }
 void IntGenerateNodeEditor::resetGenerateVarVector( ) {
-
 	*newCreactePtr = *bindGenerateVector;
 	updateGenerateItemInfo( );
 }
