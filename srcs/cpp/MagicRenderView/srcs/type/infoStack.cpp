@@ -61,7 +61,7 @@ bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
 			count -= 1;
 			for( ; index < count; ++index )
 				if( arrayPtr[ index ] == nullptr )
-					break;
+					return true;
 				else
 					arrayPtr[ index ] = arrayPtr[ index + 1 ];
 			arrayPtr[ index ] = nullptr;
