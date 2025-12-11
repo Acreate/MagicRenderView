@@ -13,12 +13,24 @@ AddGenerateTool::AddGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : 
 	mainLayout->addWidget( insertBtn, 0, Qt::AlignRight );
 	insertIndexComboBox->setEditable( false );
 	connect( insertBtn, &QPushButton::clicked, [this]( ) {
-		int currentIndex = insertIndexComboBox->currentIndex( );
-		emit addItem( this, currentIndex, varEditor->text( ) );
+		emit addItem_signal( this, insertIndexComboBox->currentIndex( ), insertIndexComboBox->currentText( ), insertIndexComboBox->currentData( ), varEditor->text( ) );
 	} );
 }
 void AddGenerateTool::setMaxIndex( const size_t &index ) {
-	insertIndexComboBox->setMaxCount( index );
-	for( size_t foreachIndex = 0; foreachIndex < index; ++foreachIndex )
-		insertIndexComboBox->setItemText( foreachIndex, QString::number( index ) );
+
+	int currentCount = insertIndexComboBox->count( );
+	size_t foreachIndex;
+	if( currentCount != index )
+		if( currentCount > index ) {
+			currentCount = currentCount - index;
+			for( foreachIndex = 0; foreachIndex < currentCount; ++foreachIndex )
+				insertIndexComboBox->removeItem( 0 );
+		} else {
+			currentCount = index - currentCount;
+			for( foreachIndex = 0; foreachIndex < currentCount; ++foreachIndex )
+				insertIndexComboBox->addItem( tr( "" ) );
+		}
+
+	for( foreachIndex = 0; foreachIndex < index; ++foreachIndex )
+		insertIndexComboBox->setItemText( foreachIndex, QString::number( foreachIndex ) );
 }

@@ -3,6 +3,7 @@
 #pragma once
 #include "../editorNodeInfoScrollArea.h"
 
+class GenerateRenderWidget;
 class GenerateRenderScrollArea;
 class AddGenerateTool;
 class GenerateItemWidget;
@@ -13,15 +14,16 @@ protected:
 	QWidget *mainWidget;
 	GenerateRenderScrollArea *generateRenderScrollArea;
 	AddGenerateTool *addGenerateTool;
-	QVBoxLayout *mainLayout;
-	std::vector< GenerateItemWidget * > intGenerateItemWidgetVector;
+	std::vector< GenerateItemWidget * > *intGenerateItemWidgetVector;
 	std::vector< int64_t > *bindGenerateVector;
 	std::vector< int64_t > *newCreactePtr;
+	GenerateRenderWidget *generateRenderWidget;
 protected:
 	void releaseResource( ) override;
-	virtual bool createJumpItem( NodeRefLinkInfo *node_ref_link_info );
 	virtual bool updateGenerateItemInfo( );
 	virtual void updateLayout( );
+protected:
+	virtual void addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value );
 public:
 	IntGenerateNodeEditor( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;

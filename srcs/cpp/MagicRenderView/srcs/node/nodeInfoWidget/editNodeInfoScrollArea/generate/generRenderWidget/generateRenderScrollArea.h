@@ -3,14 +3,15 @@
 #pragma once
 #include <QScrollArea>
 
+class GenerateRenderWidget;
 class GenerateItemWidget;
 class GenerateRenderScrollArea : public QScrollArea {
 	Q_OBJECT;
 protected:
-	GenerateItemWidget *viewWidget;
+	GenerateRenderWidget *viewWidget;
 public:
 	GenerateRenderScrollArea( QWidget *parent = nullptr );
-	virtual GenerateItemWidget * getViewWIidget( ) const { return viewWidget; }
+	virtual GenerateRenderWidget * getViewWidget( ) const { return viewWidget; }
 };
 
 #endif // GENERATERENDERSCROLLAREA_H_H_HEAD__FILE__
