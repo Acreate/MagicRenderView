@@ -6,6 +6,7 @@
 #include "../../../node/imp/generateNodes/intGenerateNode.h"
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 #include "generateItemWidget/generateItemWidget.h"
+#include "generRenderWidget/generateRenderScrollArea.h"
 #include "titleTool/addGenerateTool.h"
 
 void IntGenerateNodeEditor::releaseResource( ) {
@@ -55,14 +56,25 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 	return true;
 }
 void IntGenerateNodeEditor::updateLayout( ) {
-
+	auto viewportSize = maximumViewportSize( );
+	int currentWidth = viewportSize.width( );
+	if( currentWidth < 1 )
+		return;
+	int currentHeight = viewportSize.height( );
+	if( currentHeight < 1 )
+		return;
+	addGenerateTool->move( 0, 0 );
+	addGenerateTool->setFixedWidth( currentWidth );
+	int addGenerateToolHeight = addGenerateTool->height( );
+	generateRenderScrollArea->move( 0, addGenerateToolHeight );
+	viewportSize = QSize( currentWidth, currentHeight - addGenerateToolHeight );
+	generateRenderScrollArea->setFixedSize( viewportSize );
 }
 IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	addGenerateTool = new AddGenerateTool( mainWidget );
-	mainLayout = new QVBoxLayout( mainWidget );
-	mainLayout->addWidget( addGenerateTool );
+	generateRenderScrollArea = new GenerateRenderScrollArea( this );
 }
 bool IntGenerateNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
