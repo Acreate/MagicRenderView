@@ -311,7 +311,7 @@ void TestCodeSources::testAppMoveWidget( ) {
 bool TestCodeSources::testAll( ) {
 	//TestCodeSources::testEnumConver( );
 	//TestCodeSources::testVarGener( );
-	TestCodeSources::testAppFile( );
+	//TestCodeSources::testAppFile( );
 	//TestCodeSources::testAppSaveBin( );
 	//TestCodeSources::testAppMoveWidget( );
 	//return false;

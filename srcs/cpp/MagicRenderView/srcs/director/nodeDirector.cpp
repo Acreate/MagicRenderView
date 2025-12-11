@@ -875,6 +875,7 @@ size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *ou
 }
 bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
 	nodeInfoWidgets.emplace_back( append_node_info_widget_ptr );
+	append_node_info_widget_ptr->showNodeInfoWidget( WidgetEnum::ShowType::Center );
 	connect( append_node_info_widget_ptr, &NodeInfoWidget::release_signal, [this] ( NodeInfoWidget *release_ptr ) {
 		size_t count = nodeInfoWidgets.size( );
 		auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
