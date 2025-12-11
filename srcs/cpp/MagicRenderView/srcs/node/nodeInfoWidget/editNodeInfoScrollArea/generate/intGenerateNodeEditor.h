@@ -15,7 +15,6 @@ protected:
 	GenerateRenderScrollArea *generateRenderScrollArea;
 	AddGenerateTool *addGenerateTool;
 	std::vector< int64_t > *bindGenerateVector;
-	std::vector< int64_t > *newCreactePtr;
 	GenerateRenderWidget *generateRenderWidget;
 protected:
 	void releaseResource( ) override;
@@ -29,8 +28,7 @@ public:
 	bool initNode( Node *init_node ) override;
 	virtual std::vector< int64_t > * getBindGenerateVector( ) const { return bindGenerateVector; }
 	virtual void setBindGenerateVector( std::vector< int64_t > *bind_generate_vector ) { bindGenerateVector = bind_generate_vector; }
-	virtual std::vector< int64_t > * getNewCreactePtr( ) const { return newCreactePtr; }
-	virtual void resetGenerateVarVector( );
+	virtual void syncVarVector();
 protected:
 	void resizeEvent( QResizeEvent * ) override;
 	void showEvent( QShowEvent *event ) override;

@@ -51,6 +51,7 @@ public:
 	virtual void cutSelectNodeInfo( );
 	virtual void cancelNodeInfo( );
 	virtual void deleteSelectNodeInfo( );
+	void subWidgetReSize( );
 	virtual void calculateNodeRenderSize( );
 	/// @brief 获取成员变量函数调用
 public:

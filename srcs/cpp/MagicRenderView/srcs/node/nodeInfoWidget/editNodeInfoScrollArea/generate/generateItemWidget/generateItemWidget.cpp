@@ -34,10 +34,15 @@ GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &
 void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
 	auto title = infoFormmattion.arg( QString::number( index ) );
 	showIndexInfo->setText( title );
-	editorVarInfo->setText( varValue );
+	editorVarInfo->setText( var_value );
+}
+void GenerateItemWidget::setIndex( const size_t &index ) {
+	auto title = infoFormmattion.arg( QString::number( index ) );
+	showIndexInfo->setText( title );
 }
 bool GenerateItemWidget::isDragWidgetPos( const QPoint &pos ) {
 	if( geometry( ).contains( pos ) )
 		return true;
 	return false;
 }
+QString GenerateItemWidget::getVarValue( ) const { return editorVarInfo->text( ); }

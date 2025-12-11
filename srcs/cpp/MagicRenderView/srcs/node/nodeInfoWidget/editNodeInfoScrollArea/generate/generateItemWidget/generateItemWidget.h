@@ -14,15 +14,15 @@ public:
 	QLineEdit *editorVarInfo;
 	QMenu *managementMenu;
 	QString infoFormmattion;
-	size_t index;
-	QString varValue;
 	QHBoxLayout *mainLayout;
 	QMenu *popMenu;
 public:
 	GenerateItemWidget( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	virtual void setInfo( const size_t &index, const QString &var_value );
+	virtual void setIndex( const size_t &index );
 	virtual bool isDragWidgetPos( const QPoint &pos );
 	virtual QMenu * getPopMenu( ) const { return popMenu; }
+	virtual QString getVarValue( ) const;
 Q_SIGNALS:
 	/// @brief 点击删除时发生该信号
 	/// @param signal_ptr 信号对象指针

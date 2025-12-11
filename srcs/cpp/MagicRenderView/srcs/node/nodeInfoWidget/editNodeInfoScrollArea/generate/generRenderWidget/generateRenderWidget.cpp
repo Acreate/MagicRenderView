@@ -30,6 +30,8 @@ void GenerateRenderWidget::createItem( const size_t &index ) {
 	auto createWidgetItem = new GenerateItemWidget( this );
 	createWidgetItem->show( );
 	intGenerateItemWidgetVector.insert( intGenerateItemWidgetVector.begin( ) + index, createWidgetItem );
+	intGenerateItemWidgetArratPtr = intGenerateItemWidgetVector.data( );
+	intGenerateItemWidgetArratCount = intGenerateItemWidgetVector.size( );
 	updateLayoutSort( );
 }
 void GenerateRenderWidget::setInfo( const size_t &index, const QString &var_value ) {
@@ -47,9 +49,13 @@ void GenerateRenderWidget::clear( ) {
 	intGenerateItemWidgetArratCount = 0;
 	intGenerateItemWidgetArratPtr = nullptr;
 }
+void GenerateRenderWidget::updateVectorIndex( ) {
+	for( intGenerateItemWidgetArratIndex = 0; intGenerateItemWidgetArratIndex < intGenerateItemWidgetArratCount; ++intGenerateItemWidgetArratIndex )
+		intGenerateItemWidgetArratPtr[ intGenerateItemWidgetArratIndex ]->setIndex( intGenerateItemWidgetArratIndex );
+}
 void GenerateRenderWidget::resize( const size_t &new_size ) {
 	if( new_size == 0 ) {
-		clear(  );
+		clear( );
 		return;
 	}
 	if( intGenerateItemWidgetArratCount == new_size )
@@ -63,14 +69,22 @@ void GenerateRenderWidget::resize( const size_t &new_size ) {
 			intGenerateItemWidgetArratPtr[ intGenerateItemWidgetArratCount ]->setParent( this );
 		}
 	} else {
-		size_t index = new_size - 1;
-		for( ; index < intGenerateItemWidgetArratCount; ++index )
-			delete intGenerateItemWidgetArratPtr[ index ];
+		intGenerateItemWidgetArratIndex = new_size - 1;
+		for( ; intGenerateItemWidgetArratIndex < intGenerateItemWidgetArratCount; ++intGenerateItemWidgetArratIndex )
+			delete intGenerateItemWidgetArratPtr[ intGenerateItemWidgetArratIndex ];
 		intGenerateItemWidgetVector.resize( new_size );
 		intGenerateItemWidgetArratPtr = intGenerateItemWidgetVector.data( );
 	}
 	intGenerateItemWidgetArratCount = new_size;
 	updateLayoutSort( );
+}
+std::vector< QString > GenerateRenderWidget::converTextVector( ) const {
+	std::vector< QString > result( intGenerateItemWidgetArratCount );
+	auto resultStringArrayPtr = result.data( );
+	auto index = 0;
+	for( ; index < intGenerateItemWidgetArratCount; ++index )
+		resultStringArrayPtr[ index ] = intGenerateItemWidgetArratPtr[ index ]->getVarValue( );
+	return result;
 }
 void GenerateRenderWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );

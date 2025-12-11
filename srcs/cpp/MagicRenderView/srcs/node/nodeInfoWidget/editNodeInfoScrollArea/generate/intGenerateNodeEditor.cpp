@@ -14,25 +14,21 @@
 void IntGenerateNodeEditor::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
 	bindGenerateVector = nullptr;
-	newCreactePtr->clear( );
-	updateGenerateItemInfo( );
-	parentVarDirector->release( newCreactePtr );
-	newCreactePtr = nullptr;
+	generateRenderWidget->resize( 0 );
 }
 
 bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
-	if( newCreactePtr == nullptr )
+	if( bindGenerateVector == nullptr )
 		return false;
-	size_t count = newCreactePtr->size( );
+	size_t count = bindGenerateVector->size( );
 	size_t index;
 	generateRenderWidget->resize( count );
 	if( count != 0 ) {
-		auto data = newCreactePtr->data( );
+		auto data = bindGenerateVector->data( );
 		for( index = 0; index < count; ++index )
 			generateRenderWidget->setInfo( index, QString::number( data[ index ] ) );
 	}
 	addGenerateTool->setMaxIndex( count + 1 );
-	generateRenderWidget->updateLayoutSort( );
 	return true;
 }
 void IntGenerateNodeEditor::updateLayout( ) {
@@ -51,12 +47,9 @@ void IntGenerateNodeEditor::updateLayout( ) {
 	generateRenderScrollArea->setFixedSize( viewportSize );
 }
 void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
-	size_t count = newCreactePtr->size( );
-	if( index < count )
-		newCreactePtr->insert( newCreactePtr->begin( ) + index, 0 );
-	else
-		newCreactePtr->emplace_back( 0 );
-	updateGenerateItemInfo( );
+	generateRenderWidget->createItem( index );
+	addGenerateTool->setMaxIndex( generateRenderWidget->getIntGenerateItemWidgetArratCount( ) + 1 );
+	generateRenderWidget->updateVectorIndex( );
 }
 void IntGenerateNodeEditor::requesPopItemMenu( QMenu *pop_menu ) {
 	pop_menu->show( );
@@ -80,14 +73,19 @@ bool IntGenerateNodeEditor::initNode( Node *init_node ) {
 		return false;
 	if( bindGenerateVector == nullptr )
 		return false;
-	if( parentVarDirector->create( newCreactePtr ) == false )
-		return false;
-	resetGenerateVarVector( );
+	updateGenerateItemInfo( );
 	return true;
 }
-void IntGenerateNodeEditor::resetGenerateVarVector( ) {
-	*newCreactePtr = *bindGenerateVector;
-	updateGenerateItemInfo( );
+
+void IntGenerateNodeEditor::syncVarVector( ) {
+	auto converTextVector = generateRenderWidget->converTextVector( );
+	size_t count = converTextVector.size( );
+	bindGenerateVector->resize( count );
+	auto arrayPtr = converTextVector.data( );
+	auto intArratPtr = bindGenerateVector->data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		intArratPtr[ index ] = arrayPtr[ index ].toLongLong( );
 }
 void IntGenerateNodeEditor::resizeEvent( QResizeEvent *resize_event ) {
 	EditorNodeInfoScrollArea::resizeEvent( resize_event );

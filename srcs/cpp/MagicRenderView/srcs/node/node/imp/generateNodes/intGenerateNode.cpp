@@ -27,6 +27,12 @@ bool IntGenerateNode::updateLayout( ) {
 std::vector< int64_t > * IntGenerateNode::getGenerateVarPtr( ) const {
 	return overVarPtr;
 }
+bool IntGenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	return GenerateNode::formUint8ArrayData( result_use_count, source_array_ptr, source_array_count );
+}
+bool IntGenerateNode::toUint8VectorData( std::vector<uint8_t> &result_vector_data ) {
+	return GenerateNode::toUint8VectorData( result_vector_data );
+}
 bool IntGenerateNode::initVarPtr( ) {
 	if( varDirector->getTypeName( typeid( int64_t ), generateTypeName ) == false )
 		return false;

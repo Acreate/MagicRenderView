@@ -20,7 +20,10 @@ public:
 	virtual void createItem( const size_t &index );
 	virtual void setInfo( const size_t &index, const QString &var_value );
 	virtual void clear( );
+	virtual void updateVectorIndex( );
 	virtual void resize( const size_t &new_size );
+	virtual std::vector< QString > converTextVector( ) const;
+	virtual size_t getIntGenerateItemWidgetArratCount( ) const { return intGenerateItemWidgetArratCount; }
 protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mousePressEvent( QMouseEvent *event ) override;

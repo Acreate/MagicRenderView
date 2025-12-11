@@ -23,11 +23,6 @@ void IntGenerateNodeWidget::cancelButtonEvent( ) {
 	NodeInfoWidget::cancelButtonEvent( );
 }
 void IntGenerateNodeWidget::okButtonEvent( ) {
-	auto newCreactePtr = intGenerateNodeEditor->getNewCreactePtr( );
-	if( newCreactePtr != nullptr ) {
-		auto bindGenerateVector = intGenerateNodeEditor->getBindGenerateVector( );
-		*bindGenerateVector = *newCreactePtr;
-		intGenerateNodeEditor->resetGenerateVarVector( );
-	}
+	intGenerateNodeEditor->syncVarVector( );
 	NodeInfoWidget::okButtonEvent( );
 }

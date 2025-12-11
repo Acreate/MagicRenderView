@@ -13,6 +13,8 @@ public:
 	bool init( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
 	virtual std::vector< int64_t > * getGenerateVarPtr( ) const;
+	bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) override;
+	bool toUint8VectorData( std::vector<uint8_t> &result_vector_data ) override;
 protected:
 	bool initVarPtr( ) override;
 public:

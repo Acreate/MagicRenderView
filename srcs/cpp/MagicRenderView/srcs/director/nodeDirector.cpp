@@ -722,6 +722,7 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		appendRefNodeVectorAtNode( refNdoeInfo );
 		node->show( );
 		mainWidget->ensureVisible( node );
+		mainWidget->update( );
 	} );
 	return true;
 }
@@ -783,7 +784,6 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 		return nullptr;
 	};
 	appendHistorIndexEnd( currentHistory, cancelHistory );
-
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;
