@@ -5,22 +5,23 @@
 #include <qpushbutton.h>
 
 void GenerateItemWidget::updateInfoString( ) {
-	auto title = infoFormmattion.arg( QString::number( index ) ).arg( varValue );
+	auto title = infoFormmattion.arg( QString::number( index ) );
 	showIndexInfo->setText( title );
+	editorVarInfo->setText( varValue );
 }
-GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) {
-	auto mainLayout = new QHBoxLayout( this );
+GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+
+	mainLayout = new QHBoxLayout( this );
 	showIndexInfo = new QLabel( this );
 	editorVarInfo = new QLineEdit( this );
-	editorVarInfo->setAlignment( Qt::AlignCenter );
 	removeButton = new QPushButton( tr( "删除" ), this );
 	changeButton = new QPushButton( tr( "应用" ), this );
 	restoryButton = new QPushButton( tr( "还原" ), this );
-	mainLayout->addWidget( showIndexInfo, 0, Qt::AlignmentFlag::AlignLeading );
-	mainLayout->addWidget( editorVarInfo, 0, Qt::AlignmentFlag::AlignLeading );
-	mainLayout->addWidget( removeButton, 0, Qt::AlignmentFlag::AlignRight );
-	mainLayout->addWidget( changeButton, 0, Qt::AlignmentFlag::AlignRight );
-	mainLayout->addWidget( restoryButton, 0, Qt::AlignmentFlag::AlignRight );
+	mainLayout->addWidget( showIndexInfo, 2 );
+	mainLayout->addWidget( editorVarInfo, 92 );
+	mainLayout->addWidget( removeButton, 2 );
+	mainLayout->addWidget( changeButton, 2 );
+	mainLayout->addWidget( restoryButton, 2 );
 	infoFormmattion = QString( tr( "int [ %1 ]" ) );
 	connect( removeButton, &QPushButton::clicked, [this]( ) {
 		emit clickRemoveItemBtn( this, index, varValue );
@@ -36,4 +37,7 @@ void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value 
 	this->index = index;
 	this->varValue = var_value;
 	updateInfoString( );
+}
+void GenerateItemWidget::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
 }

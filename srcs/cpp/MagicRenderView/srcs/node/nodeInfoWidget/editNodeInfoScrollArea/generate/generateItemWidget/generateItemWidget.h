@@ -2,6 +2,7 @@
 #define GENERATEITEMWIDGET_H_H_HEAD__FILE__
 #pragma once
 #include <QWidget>
+class QHBoxLayout;
 class QLineEdit;
 class QPushButton;
 class QLabel;
@@ -16,11 +17,15 @@ public:
 	QString infoFormmattion;
 	size_t index;
 	QString varValue;
+	QHBoxLayout *mainLayout;
 protected:
 	virtual void updateInfoString( );
 public:
 	GenerateItemWidget( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	virtual void setInfo( const size_t &index, const QString &var_value );
+protected:
+	void resizeEvent( QResizeEvent *event ) override;
+
 Q_SIGNALS:
 	/// @brief 点击删除时发生该信号
 	/// @param signal_ptr 信号对象指针

@@ -37,7 +37,6 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 			for( index = 0; index < generateItemWidgetCount; ++index )
 				delete widgetItemData[ index ];
 			intGenerateItemWidgetVector->clear( );
-			generateRenderWidget->updateLayoutSort( );
 		}
 	} else {
 		auto data = newCreactePtr->data( );
@@ -47,16 +46,16 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 					delete widgetItemData[ index ];
 			} else {
 				intGenerateItemWidgetVector->resize( count );
-				for( ; generateItemWidgetCount < count; ++generateItemWidgetCount )
-					widgetItemData[ generateItemWidgetCount ] = new GenerateItemWidget( this );
 				widgetItemData = intGenerateItemWidgetVector->data( );
+				for( ; generateItemWidgetCount < count; ++generateItemWidgetCount )
+					widgetItemData[ generateItemWidgetCount ] = new GenerateItemWidget( generateRenderWidget );
 			}
-			generateRenderWidget->updateLayoutSort( );
 		}
 		for( index = 0; index < count; ++index )
 			widgetItemData[ index ]->setInfo( index, QString::number( data[ index ] ) );
 	}
 	addGenerateTool->setMaxIndex( count + 1 );
+	generateRenderWidget->updateLayoutSort( );
 	return true;
 }
 void IntGenerateNodeEditor::updateLayout( ) {
@@ -76,12 +75,19 @@ void IntGenerateNodeEditor::updateLayout( ) {
 }
 void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value ) {
 	bool result = false;
-	qulonglong uLongLong = var_value.toULongLong( &result );
+	qulonglong newVarValue = var_value.toULongLong( &result );
 	if( result == false )
 		return;
-	
+	size_t count = newCreactePtr->size( );
+	if( index < count )
+		newCreactePtr->insert( newCreactePtr->begin( ) + index, newVarValue );
+	else
+		newCreactePtr->emplace_back( newVarValue );
+	updateGenerateItemInfo( );
 }
 IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
+	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	addGenerateTool = new AddGenerateTool( mainWidget );
