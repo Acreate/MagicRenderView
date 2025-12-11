@@ -10,13 +10,12 @@ class AddGenerateTool : public QWidget {
 	Q_OBJECT;
 protected:
 	QComboBox *insertIndexComboBox;
-	QLineEdit *varEditor;
 	QPushButton *insertBtn;
 public:
 	AddGenerateTool( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	virtual void setMaxIndex( const size_t &index );
 Q_SIGNALS:
-	void addItem_signal( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value );
+	void addItem_signal( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant );
 };
 
 #endif // ADDGENERATETOOL_H_H_HEAD__FILE__

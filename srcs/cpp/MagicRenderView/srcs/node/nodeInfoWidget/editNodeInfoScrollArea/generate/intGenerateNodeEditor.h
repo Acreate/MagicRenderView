@@ -14,7 +14,6 @@ protected:
 	QWidget *mainWidget;
 	GenerateRenderScrollArea *generateRenderScrollArea;
 	AddGenerateTool *addGenerateTool;
-	std::vector< GenerateItemWidget * > *intGenerateItemWidgetVector;
 	std::vector< int64_t > *bindGenerateVector;
 	std::vector< int64_t > *newCreactePtr;
 	GenerateRenderWidget *generateRenderWidget;
@@ -23,7 +22,8 @@ protected:
 	virtual bool updateGenerateItemInfo( );
 	virtual void updateLayout( );
 protected:
-	virtual void addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value );
+	virtual void addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant );
+	virtual void requesPopItemMenu( QMenu *pop_menu );
 public:
 	IntGenerateNodeEditor( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;

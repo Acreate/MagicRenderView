@@ -1,5 +1,6 @@
 ﻿#include "intGenerateNodeEditor.h"
 
+#include <QMenu>
 #include <QVBoxLayout>
 
 #include "../../../../director/varDirector.h"
@@ -12,12 +13,6 @@
 
 void IntGenerateNodeEditor::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
-	size_t count = intGenerateItemWidgetVector->size( );
-	auto widgetItemData = intGenerateItemWidgetVector->data( );
-	size_t index;
-	for( index = 0; index < count; ++index )
-		delete widgetItemData[ index ];
-	intGenerateItemWidgetVector->clear( );
 	bindGenerateVector = nullptr;
 	newCreactePtr->clear( );
 	updateGenerateItemInfo( );
@@ -29,30 +24,12 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 	if( newCreactePtr == nullptr )
 		return false;
 	size_t count = newCreactePtr->size( );
-	size_t generateItemWidgetCount = intGenerateItemWidgetVector->size( );
-	auto widgetItemData = intGenerateItemWidgetVector->data( );
 	size_t index;
-	if( count == 0 ) {
-		if( generateItemWidgetCount != count ) {
-			for( index = 0; index < generateItemWidgetCount; ++index )
-				delete widgetItemData[ index ];
-			intGenerateItemWidgetVector->clear( );
-		}
-	} else {
+	generateRenderWidget->resize( count );
+	if( count != 0 ) {
 		auto data = newCreactePtr->data( );
-		if( generateItemWidgetCount != count ) {
-			if( generateItemWidgetCount > count ) {
-				for( index = count - 1; index < generateItemWidgetCount; ++index )
-					delete widgetItemData[ index ];
-			} else {
-				intGenerateItemWidgetVector->resize( count );
-				widgetItemData = intGenerateItemWidgetVector->data( );
-				for( ; generateItemWidgetCount < count; ++generateItemWidgetCount )
-					widgetItemData[ generateItemWidgetCount ] = new GenerateItemWidget( generateRenderWidget );
-			}
-		}
 		for( index = 0; index < count; ++index )
-			widgetItemData[ index ]->setInfo( index, QString::number( data[ index ] ) );
+			generateRenderWidget->setInfo( index, QString::number( data[ index ] ) );
 	}
 	addGenerateTool->setMaxIndex( count + 1 );
 	generateRenderWidget->updateLayoutSort( );
@@ -73,17 +50,16 @@ void IntGenerateNodeEditor::updateLayout( ) {
 	viewportSize = QSize( currentWidth, currentHeight - addGenerateToolHeight );
 	generateRenderScrollArea->setFixedSize( viewportSize );
 }
-void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value ) {
-	bool result = false;
-	qulonglong newVarValue = var_value.toULongLong( &result );
-	if( result == false )
-		return;
+void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
 	size_t count = newCreactePtr->size( );
 	if( index < count )
-		newCreactePtr->insert( newCreactePtr->begin( ) + index, newVarValue );
+		newCreactePtr->insert( newCreactePtr->begin( ) + index, 0 );
 	else
-		newCreactePtr->emplace_back( newVarValue );
+		newCreactePtr->emplace_back( 0 );
 	updateGenerateItemInfo( );
+}
+void IntGenerateNodeEditor::requesPopItemMenu( QMenu *pop_menu ) {
+	pop_menu->show( );
 }
 IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -94,10 +70,9 @@ IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorN
 	generateRenderScrollArea = new GenerateRenderScrollArea( this );
 
 	generateRenderWidget = generateRenderScrollArea->getViewWidget( );
-	intGenerateItemWidgetVector = generateRenderWidget->getIntGenerateItemWidgetVector( );
 
-	connect( addGenerateTool, &AddGenerateTool::addItem_signal, [this] ( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant, const QString &var_value ) {
-		this->addItem( signal_ptr, index, index_text, index_variant, var_value );
+	connect( addGenerateTool, &AddGenerateTool::addItem_signal, [this] ( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
+		this->addItem( signal_ptr, index, index_text, index_variant );
 	} );
 }
 bool IntGenerateNodeEditor::initNode( Node *init_node ) {

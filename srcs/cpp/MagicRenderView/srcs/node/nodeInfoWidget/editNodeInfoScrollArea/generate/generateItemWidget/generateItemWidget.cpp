@@ -2,42 +2,42 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
 #include <qpushbutton.h>
 
-void GenerateItemWidget::updateInfoString( ) {
+GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+	mainLayout = new QHBoxLayout( this );
+	showIndexInfo = new QLabel( this );
+	dragLabel = new QLabel( this );
+	editorVarInfo = new QLineEdit( this );
+	mainLayout->addWidget( dragLabel, 2 );
+	mainLayout->addWidget( showIndexInfo, 2 );
+	mainLayout->addWidget( editorVarInfo, 92 );
+	infoFormmattion = QString( tr( "int [ %1 ]" ) );
+	QImage image( ":/nodeitemIco/option.png" );
+	dragLabel->setPixmap( QPixmap::fromImage( image ) );
+	popMenu = new QMenu( this );
+	auto changeAction = popMenu->addAction( tr( "更改" ) );
+	auto removeAction = popMenu->addAction( tr( "删除" ) );
+	auto restoryAction = popMenu->addAction( tr( "还原" ) );
+	connect( changeAction, &QAction::triggered, [this]( ) {
+		emit changeVar( this );
+	} );
+	connect( removeAction, &QAction::triggered, [this]( ) {
+		emit removeVar( this );
+	} );
+	connect( restoryAction, &QAction::triggered, [this]( ) {
+		emit restoryVar( this );
+	} );
+	setInfo( 0, 0 );
+}
+void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
 	auto title = infoFormmattion.arg( QString::number( index ) );
 	showIndexInfo->setText( title );
 	editorVarInfo->setText( varValue );
 }
-GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
-
-	mainLayout = new QHBoxLayout( this );
-	showIndexInfo = new QLabel( this );
-	editorVarInfo = new QLineEdit( this );
-	removeButton = new QPushButton( tr( "删除" ), this );
-	changeButton = new QPushButton( tr( "应用" ), this );
-	restoryButton = new QPushButton( tr( "还原" ), this );
-	mainLayout->addWidget( showIndexInfo, 2 );
-	mainLayout->addWidget( editorVarInfo, 92 );
-	mainLayout->addWidget( removeButton, 2 );
-	mainLayout->addWidget( changeButton, 2 );
-	mainLayout->addWidget( restoryButton, 2 );
-	infoFormmattion = QString( tr( "int [ %1 ]" ) );
-	connect( removeButton, &QPushButton::clicked, [this]( ) {
-		emit clickRemoveItemBtn( this, index, varValue );
-	} );
-	connect( changeButton, &QPushButton::clicked, [this]( ) {
-		emit changeVar( this, index, varValue, editorVarInfo->text( ) );
-	} );
-	connect( restoryButton, &QPushButton::clicked, [this]( ) {
-		emit restoryVar( this, index, varValue, editorVarInfo->text( ) );
-	} );
-}
-void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
-	this->index = index;
-	this->varValue = var_value;
-	updateInfoString( );
-}
-void GenerateItemWidget::resizeEvent( QResizeEvent *event ) {
-	QWidget::resizeEvent( event );
+bool GenerateItemWidget::isDragWidgetPos( const QPoint &pos ) {
+	if( geometry( ).contains( pos ) )
+		return true;
+	return false;
 }

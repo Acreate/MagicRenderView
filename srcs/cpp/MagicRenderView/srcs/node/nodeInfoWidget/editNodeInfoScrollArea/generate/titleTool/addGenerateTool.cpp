@@ -6,14 +6,12 @@
 AddGenerateTool::AddGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
 	auto mainLayout = new QHBoxLayout( this );
 	insertIndexComboBox = new QComboBox( this );
-	varEditor = new QLineEdit( this );
 	insertBtn = new QPushButton( tr( "插入" ), this );
 	mainLayout->addWidget( insertIndexComboBox, 0, Qt::AlignLeft );
-	mainLayout->addWidget( varEditor, 0, Qt::AlignRight );
 	mainLayout->addWidget( insertBtn, 0, Qt::AlignRight );
 	insertIndexComboBox->setEditable( false );
 	connect( insertBtn, &QPushButton::clicked, [this]( ) {
-		emit addItem_signal( this, insertIndexComboBox->currentIndex( ), insertIndexComboBox->currentText( ), insertIndexComboBox->currentData( ), varEditor->text( ) );
+		emit addItem_signal( this, insertIndexComboBox->currentIndex( ), insertIndexComboBox->currentText( ), insertIndexComboBox->currentData( ) );
 	} );
 }
 void AddGenerateTool::setMaxIndex( const size_t &index ) {

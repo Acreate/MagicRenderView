@@ -918,7 +918,7 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistoryIndex = nodeHistorys.size( );
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点释放", Create_SrackInfo( ) );
+	//printerDirector->info( "节点释放", Create_SrackInfo( ) );
 
 	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
 		currentShowWidget->removeCurrentRefNodeInfo( release_node->nodeRefLinkInfoPtr );
@@ -932,37 +932,37 @@ void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info 
 	emit release_node_signal( this, release_node, srack_info );
 }
 void NodeDirector::errorRunNode( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点错误", Create_SrackInfo( ) );
+	//printerDirector->info( "节点错误", Create_SrackInfo( ) );
 	emit error_run_node_signal( this, error_node, error_type, error_msg, srack_info );
 }
 void NodeDirector::adviseRunNode( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点建议", Create_SrackInfo( ) );
+	//printerDirector->info( "节点建议", Create_SrackInfo( ) );
 	emit advise_run_node_signal( this, advise_node, advise_type, advise_msg, srack_info );
 }
 void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
+	//printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
 	emit finish_run_node_signal( this, finish_node, srack_info );
 }
 
 void NodeDirector::releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点释放引用", Create_SrackInfo( ) );
+	//printerDirector->info( "节点释放引用", Create_SrackInfo( ) );
 	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
 		currentShowWidget->removeRefNodeRefLinkInfo( signal_obj_ptr, release_output_node_ref_obj_ptr );
 
 	emit finish_release_ref_node_signal( this, signal_obj_ptr->currentNode, release_output_node_ref_obj_ptr->currentNode, srack_info );
 }
 void NodeDirector::createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	//printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
 	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
 		currentShowWidget->newNodeRefLinkInfo( signal_obj_ptr, create_output_node_ref_obj_ptr );
 	emit finish_create_ref_node_signal( this, signal_obj_ptr->currentNode, create_output_node_ref_obj_ptr->currentNode, srack_info );
 }
 void NodeDirector::releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info ) {
-	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
 	emit finish_release_port_link_signal( this, input_port, release_output_port, srack_info );
 }
 void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info ) {
-	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
 
 	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
 	actionText = actionText.arg( bind_output_port->parentNode->nodeName ).arg( bind_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
