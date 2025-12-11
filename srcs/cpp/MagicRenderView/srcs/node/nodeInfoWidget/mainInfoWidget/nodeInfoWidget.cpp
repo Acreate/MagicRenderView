@@ -39,6 +39,7 @@ NodeInfoWidget::NodeInfoWidget( MainWindow *parent ) : QWidget( parent ), parent
 	hScrollBar = mainWidgetScrollArea->horizontalScrollBar( );
 
 	mainWindowMenuBar = parentMainWindow->menuBar( );
+	showPosType = WidgetEnum::ShowType::Center;
 }
 NodeInfoWidget::~NodeInfoWidget( ) {
 	emit release_signal( this );
