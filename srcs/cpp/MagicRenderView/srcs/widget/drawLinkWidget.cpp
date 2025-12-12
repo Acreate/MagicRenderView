@@ -25,6 +25,10 @@ void DrawLinkWidget::drawLinePoint( const QPoint &end_point ) {
 void DrawLinkWidget::drawEnd( ) {
 	isDrawLine = false;
 }
+bool DrawLinkWidget::init( MainWidget *parent ) {
+	setParent( parent );
+	return true;
+}
 void DrawLinkWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 }

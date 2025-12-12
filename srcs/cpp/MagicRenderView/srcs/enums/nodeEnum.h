@@ -55,6 +55,8 @@ namespace NodeEnum {
 	/// @brief 节点样式
 	enum class NodeStyleType {
 		None,
+		Call_Function,
+		Create,
 		Select_Active,
 		Select_Old,
 		Warning,

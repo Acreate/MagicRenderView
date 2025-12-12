@@ -21,6 +21,7 @@ public:
 	virtual void drawBegin( const QPoint &start_point );
 	virtual void drawLinePoint( const QPoint &end_point );
 	virtual void drawEnd( );
+	virtual bool init( MainWidget *parent );
 protected:
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void paintEvent( QPaintEvent *event ) override;

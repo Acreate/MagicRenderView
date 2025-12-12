@@ -110,6 +110,8 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeStyleType &result_enu
 	result_enum_type_var = ( NodeStyleType ) *varPtr;
 	switch( result_enum_type_var ) {
 		case NodeStyleType::None :
+		case NodeStyleType::Create :
+		case NodeStyleType::Call_Function :
 		case NodeStyleType::Advise :
 		case NodeStyleType::Error :
 		case NodeStyleType::Select_Active :
@@ -140,6 +142,12 @@ bool NodeEnum::converQString( const NodeStyleType &enum_type_var, QString &resul
 			break;
 		case NodeStyleType::Advise :
 			result_enum_string = "Advise";
+			break;
+		case NodeStyleType::Call_Function :
+			result_enum_string = "Call_Function";
+			break;
+		case NodeStyleType::Create :
+			result_enum_string = "Create";
 			break;
 		default :
 			return false;

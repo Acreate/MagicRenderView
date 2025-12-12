@@ -21,9 +21,11 @@
 #include "../srack/srackInfo.h"
 
 #include "../win/mainWindow.h"
+#include "drawHighlightWidget.h"
 
 MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ), oldSelectNode( nullptr ) {
 	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
+	drawHighlightWidget = new DrawHighlightWidget( this );
 	drawLinkWidget = new DrawLinkWidget( this );
 	drawNodeWidget = new DrawNodeWidget( this );
 	oldClickTime = new QDateTime;
@@ -31,12 +33,14 @@ MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f )
 MainWidget::~MainWidget( ) {
 	emit release_signal( this );
 	delete drawLinkWidget;
+	delete drawHighlightWidget;
 	delete drawNodeWidget;
 	delete clickInfoPtr;
 }
 bool MainWidget::addNode( NodeRefLinkInfo *node_ref_link_info ) {
 	if( drawNodeWidget->addNode( node_ref_link_info->getCurrentNode( ) ) == false )
 		return false;
+	NodeRefLinkInfoTools::setDrawHighlightWidget( node_ref_link_info, drawHighlightWidget );
 	NodeRefLinkInfoTools::setDrawLinkWidget( node_ref_link_info, drawLinkWidget );
 	NodeRefLinkInfoTools::setDrawNodeWidget( node_ref_link_info, drawNodeWidget );
 	return true;
@@ -76,7 +80,15 @@ bool MainWidget::init( ) {
 	printerDirector = appInstancePtr->getPrinterDirector( );
 	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
 	*oldClickTime = QDateTime::currentDateTime( );
+
+	if( drawNodeWidget->init( this ) == false )
+		return false;
+	if( drawHighlightWidget->init( this ) == false )
+		return false;
+	if( drawLinkWidget->init( this ) == false )
+		return false;
 	drawNodeWidget->raise( );
+	drawHighlightWidget->raise( );
 	drawLinkWidget->raise( );
 	return true;
 }
@@ -132,6 +144,7 @@ void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QSize newCurrentSize = this->size( );
 	drawNodeWidget->resize( newCurrentSize );
 	drawLinkWidget->resize( newCurrentSize );
+	drawHighlightWidget->resize( newCurrentSize );
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
@@ -194,6 +207,7 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 			point.setY( 0 );
 		dragNode->move( point );
 		drawLinkWidget->update( );
+		drawHighlightWidget->update( );
 	}
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {

@@ -3,6 +3,7 @@
 #include "../app/application.h"
 
 #include "../node/node/node.h"
+#include "mainWidget.h"
 
 void DrawNodeWidget::appendVector( Node *append_node ) {
 	size_t count = nodeVector.size( );
@@ -80,6 +81,10 @@ DrawNodeWidget::~DrawNodeWidget( ) {
 			}
 		nodeVector.clear( );
 	}
+}
+bool DrawNodeWidget::init( MainWidget *parent ) {
+	setParent( parent );
+	return true;
 }
 bool DrawNodeWidget::addNode( Node *add_node ) {
 	if( add_node->init( this ) == false )

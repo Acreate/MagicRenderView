@@ -5,6 +5,7 @@
 
 #include "../node/pointNode.h"
 
+class DrawHighlightWidget;
 class DrawNodeWidget;
 class DrawLinkWidget;
 class NodePortLinkInfo;
@@ -21,6 +22,8 @@ class NodeRefLinkInfo : public QObject {
 protected:
 	/// @brief 匹配节点
 	Node *currentNode;
+	/// @brief 节点绘制后期特效
+	DrawHighlightWidget *drawHighlightWidget;
 	/// @brief 节点绘制连接窗口
 	DrawLinkWidget *drawLinkWidget;
 	/// @brief 节点绘制节点窗口
@@ -65,6 +68,7 @@ public:
 	virtual bool hasPortRef( InputPort *input_port, OutputPort *output_port );
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
+	virtual DrawHighlightWidget * getDrawHighlightWidget( ) const { return drawHighlightWidget; }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
 Q_SIGNALS:
 	void release_node_link_signal( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
@@ -77,6 +81,9 @@ class NodeRefLinkInfoTools {
 	friend class NodePortLinkInfo;
 	friend class MainWidget;
 	friend class NodeDirector;
+	static void setDrawHighlightWidget( NodeRefLinkInfo *set_obj, DrawHighlightWidget *draw_highlight_widget ) {
+		set_obj->drawHighlightWidget = draw_highlight_widget;
+	}
 	static void setDrawLinkWidget( NodeRefLinkInfo *set_obj, DrawLinkWidget *draw_link_widget ) {
 		set_obj->drawLinkWidget = draw_link_widget;
 	}

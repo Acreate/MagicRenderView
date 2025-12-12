@@ -25,6 +25,7 @@
 #include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
+#include "../widget/drawHighlightWidget.h"
 
 #include "../widget/drawLinkWidget.h"
 #include "../widget/drawNodeWidget.h"
@@ -81,6 +82,8 @@ bool NodeDirector::init( ) {
 		drawLinkWidget->update( );
 	if( drawNodeWidget )
 		drawNodeWidget->update( );
+	if( drawHighlightWidget )
+		drawHighlightWidget->update( );
 	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
@@ -121,7 +124,7 @@ NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
 	return nullptr;
 }
 
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawHighlightWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
 	nodeVarDirector = new VarDirector;
 	nodeCreateMenu = new QMenu;
 }
@@ -377,6 +380,17 @@ bool NodeDirector::initDrawLinkWidget( QString &result_error_msg ) {
 				drawLinkWidget = nullptr;
 		} );
 	}
+	if( drawHighlightWidget == nullptr ) {
+		drawHighlightWidget = mainWidget->getDrawHighlightWidget( );
+		if( drawNodeWidget == nullptr ) {
+			result_error_msg = tr( "获取连接渲染窗口失败 [MainWidget::getDrawHighlightWidget( )]" );
+			return false;
+		}
+		connect( drawHighlightWidget, &DrawHighlightWidget::release_signal, [this] ( DrawHighlightWidget *release_ptr ) {
+			if( drawHighlightWidget == release_ptr )
+				drawHighlightWidget = nullptr;
+		} );
+	}
 	return initNodeInfoWidget( result_error_msg );
 }
 bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
@@ -475,11 +489,10 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
 
 	QString error_msg;
-	if( drawLinkWidget == nullptr )
-		if( initDrawLinkWidget( error_msg ) == false ) {
-			printerDirector->info( error_msg, Create_SrackInfo( ) );
-			return false;
-		}
+	if( initDrawLinkWidget( error_msg ) == false ) {
+		printerDirector->info( error_msg, Create_SrackInfo( ) );
+		return false;
+	}
 
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
@@ -720,6 +733,7 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			return;
 		}
 		appendRefNodeVectorAtNode( refNdoeInfo );
+		node->setStyleType( NodeEnum::NodeStyleType::Create );
 		node->show( );
 		mainWidget->ensureVisible( node );
 		mainWidget->update( );
@@ -756,6 +770,8 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 				drawNodeWidget->update( );
 			if( drawLinkWidget )
 				drawLinkWidget->update( );
+			if( drawHighlightWidget )
+				drawHighlightWidget->update( );
 			break;
 		}
 }
@@ -827,10 +843,12 @@ size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
 		}
 	if( endSize != count )
 		linkActionMap.resize( endSize );
-	if( drawLinkWidget )
-		drawLinkWidget->update( );
 	if( drawNodeWidget )
 		drawNodeWidget->update( );
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
+	if( drawHighlightWidget )
+		drawHighlightWidget->update( );
 	return result;
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *output_port ) {
@@ -976,6 +994,8 @@ void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_outpu
 			drawLinkWidget->update( );
 		if( drawNodeWidget )
 			drawNodeWidget->update( );
+		if( drawHighlightWidget )
+			drawHighlightWidget->update( );
 	};
 
 	connect( outAction, &QAction::triggered, disLink );

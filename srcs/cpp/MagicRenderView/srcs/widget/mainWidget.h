@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class DrawHighlightWidget;
 class PrinterDirector;
 class NodeRefLinkInfo;
 class OutputPort;
@@ -25,6 +26,7 @@ protected:
 	/// @brief 可获取成员变量
 protected:
 	MainWindow *mainWindow;
+	DrawHighlightWidget *drawHighlightWidget;
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
 	MainWidgetScrollArea *mainWidgetScrollArea;
@@ -55,6 +57,7 @@ public:
 public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
+	virtual DrawHighlightWidget * getDrawHighlightWidget( ) const { return drawHighlightWidget; }
 	/// @brief 重载
 protected:
 	void showEvent( QShowEvent *event ) override;

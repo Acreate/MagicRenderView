@@ -27,6 +27,7 @@ protected:
 public:
 	DrawNodeWidget( QWidget *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~DrawNodeWidget( ) override;
+	virtual bool init( MainWidget *parent );
 	virtual bool addNode( Node *add_node );
 	virtual const QPoint & getMenuPopPoint( ) const { return menuPopPoint; }
 	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );

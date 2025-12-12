@@ -12,6 +12,7 @@ class NodeHistory;
 class NodeInfoWidget;
 class NodePortLinkActionPair;
 class DrawLinkWidget;
+class DrawHighlightWidget;
 class SrackInfo;
 class NodeRefLinkInfo;
 class DrawNodeWidget;
@@ -43,6 +44,7 @@ protected:
 	MainWidget *mainWidget;
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
+	DrawHighlightWidget *drawHighlightWidget;
 	NodeInfoWidget *currentShowWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< NodeRefLinkInfo * > refNodeVector;

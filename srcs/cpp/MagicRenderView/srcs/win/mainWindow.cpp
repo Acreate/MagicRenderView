@@ -94,6 +94,7 @@ bool MainWindow::init( ) {
 }
 MainWindow::~MainWindow( ) {
 	emit release_signal( this );
+	delete mainWidget;
 	delete mainWidgetScrollArea;
 }
 void MainWindow::savePorjectToFile( ) {
