@@ -181,6 +181,10 @@ bool Node::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_a
 QString Node::toQString( ) const {
 	return nodeName + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ")";
 }
+void Node::setStyleType( NodeEnum::NodeStyleType style_type ) {
+	styleType = style_type;
+	update( );
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )
@@ -232,6 +236,7 @@ bool Node::init( DrawNodeWidget *parent ) {
 	} );
 	nodeFunction = [] ( VarDirector *var_director ) { };
 	setParent( parent );
+	styleType = NodeEnum::NodeStyleType::None;
 	return true;
 }
 
@@ -317,9 +322,26 @@ bool Node::updateLayout( ) {
 	return true;
 }
 
+void Node::drawStyleTypeAtNodePanel( QPainter &painter, NodeEnum::NodeStyleType node_style_style ) {
+	switch( node_style_style ) {
+		case NodeEnum::NodeStyleType::None :
+			painter.drawRect( doublePenWidth, doublePenWidth, width( ) - nodeBorderWidth, height( ) - nodeBorderWidth );
+			break;
+		case NodeEnum::NodeStyleType::Select_Active :
+			break;
+		case NodeEnum::NodeStyleType::Select_Old :
+			break;
+		case NodeEnum::NodeStyleType::Warning :
+			break;
+		case NodeEnum::NodeStyleType::Error :
+			break;
+		case NodeEnum::NodeStyleType::Advise :
+			break;
+	}
+}
 void Node::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	painter.setPen( pen );
-	painter.drawRect( doublePenWidth, doublePenWidth, width( ) - nodeBorderWidth, height( ) - nodeBorderWidth );
+	drawStyleTypeAtNodePanel( painter, styleType );
 }

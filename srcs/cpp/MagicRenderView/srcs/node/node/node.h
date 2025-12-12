@@ -88,6 +88,8 @@ protected:
 	QString generateTypeName;
 	/// @brief 变量指向
 	void *varPtr;
+	/// @brief 节点风格
+	NodeEnum::NodeStyleType styleType;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -109,6 +111,8 @@ public:
 	virtual QString toQString( ) const;
 	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
+	virtual NodeEnum::NodeStyleType getStyleType( ) const { return styleType; }
+	virtual void setStyleType( NodeEnum::NodeStyleType style_type );
 protected:
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口
@@ -152,6 +156,8 @@ protected:
 		delete resultPortPtr;
 		return nullptr;
 	}
+protected:
+	virtual void drawStyleTypeAtNodePanel( QPainter &painter, NodeEnum::NodeStyleType node_style_style );
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:

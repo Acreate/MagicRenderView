@@ -100,6 +100,52 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeClickType &result_enu
 	}
 	return true;
 }
+bool NodeEnum::converEnum( const QString &enum_string, NodeStyleType &result_enum_type_var ) {
+	QMetaEnum metaEnum = QMetaEnum::fromType< NodeType >( );
+	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
+
+	if( optional.has_value( ) == false )
+		return false;
+	auto *varPtr = optional.operator->( );
+	result_enum_type_var = ( NodeStyleType ) *varPtr;
+	switch( result_enum_type_var ) {
+		case NodeStyleType::None :
+		case NodeStyleType::Advise :
+		case NodeStyleType::Error :
+		case NodeStyleType::Select_Active :
+		case NodeStyleType::Select_Old :
+		case NodeStyleType::Warning :
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
+bool NodeEnum::converQString( const NodeStyleType &enum_type_var, QString &result_enum_string ) {
+	switch( enum_type_var ) {
+		case NodeStyleType::None :
+			result_enum_string = "None";
+			break;
+		case NodeStyleType::Select_Active :
+			result_enum_string = "Select_Active";
+			break;
+		case NodeStyleType::Select_Old :
+			result_enum_string = "Select_Old";
+			break;
+		case NodeStyleType::Warning :
+			result_enum_string = "Warning";
+			break;
+		case NodeStyleType::Error :
+			result_enum_string = "Error";
+			break;
+		case NodeStyleType::Advise :
+			result_enum_string = "Advise";
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
 bool NodeEnum::converQString( const ErrorType &enum_type_var, QString &result_enum_string ) {
 
 	switch( enum_type_var ) {
