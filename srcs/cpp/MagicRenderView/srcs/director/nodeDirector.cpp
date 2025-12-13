@@ -14,6 +14,7 @@
 #include "../node/nodeInfo/nodeHistory.h"
 #include "../node/nodeInfo/nodePortLinkActionPair.h"
 #include "../node/nodeInfo/nodePortLinkInfo.h"
+#include "../node/nodeInfo/nodeRunInfo.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
@@ -624,6 +625,24 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	}
 	return QSize { x, y };
 }
+NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
+	NodeRunInfo *result = new NodeRunInfo( parent );
+	size_t count = refNodeVector.size( );
+	if( count != 0 ) {
+		size_t index = 0;
+		auto nodeRefLinkInfoArrayPtr = refNodeVector.data( );
+		for( ; index < count; ++index )
+			if( nodeRefLinkInfoArrayPtr[ index ]->currentNode->getNodeType( ) == NodeEnum::NodeType::Begin )
+				result->appendBegin( nodeRefLinkInfoArrayPtr[ index ] );
+		if( result->builderRunInstance( ) ) {
+			connect( result, &NodeRunInfo::clear_signal, this, &NodeDirector::nodeRunInfoClear );
+			return result;
+		}
+	}
+
+	delete result;
+	return nullptr;
+}
 
 QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
 	auto nodeStackName = node_stack_ptr->objectName( );
@@ -1003,6 +1022,10 @@ void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_outpu
 	connect( inAction, &QAction::triggered, disLink );
 	addEndPortLinkAction( input_port, bind_output_port, inAction, outAction );
 	emit finish_create_port_link_signal( this, input_port, bind_output_port, srack_info );
+}
+void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info ) {
+	emit node_run_info_clear_signal( this, Create_SrackInfo( ), clear_obj, srack_info );
+	delete clear_obj;
 }
 void NodeDirector::finishCreateNode( NodeRefLinkInfo *finish_node ) {
 	connect( finish_node, &NodeRefLinkInfo::create_node_link_signal, this, &NodeDirector::createNodeLink );

@@ -15,11 +15,19 @@ bool NodeRunInfo::hasNodeRefInRunVector( NodeRefLinkInfo *check_node_ref ) {
 	return false;
 }
 bool NodeRunInfo::builderRunInstance( ) {
-	return false;
+	return true;
 }
 bool NodeRunInfo::runNextNode( ) {
 	return false;
 }
 bool NodeRunInfo::runResidueNode( ) {
 	return false;
+}
+void NodeRunInfo::clear( ) {
+	beginNodeRefVector.clear( );
+	runVector.clear( );
+	runArrayPtr = nullptr;
+	runArrayCount = 0;
+	runArrayIndex = 0;
+	emit clear_signal( this, Create_SrackInfo( ) );
 }

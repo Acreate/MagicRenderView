@@ -11,6 +11,7 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../node/nodeInfo/nodeRunInfo.h"
 
 #include "../srack/srackInfo.h"
 
@@ -41,8 +42,17 @@ void MainWindow::finish_create_node_slot( NodeDirector *signal_obj_ptr, Node *cr
 }
 void MainWindow::error_create_node_slot( NodeDirector *signal_obj_ptr, const QString &create_name, NodeEnum::CreateType error_type_info, const QString &error_msg, const SrackInfo &srack_info ) {
 }
+void MainWindow::node_run_info_clear_slot( NodeDirector *signal_obj_ptr, const SrackInfo &srack_info, NodeRunInfo *clear_obj, const SrackInfo &org_srack_info ) {
+	if( clear_obj != nodeRunBuilderObj )
+		return;
+	nodeRunBuilderObj = nullptr;
+	runBuilderAllNodeVectorBtn->setEnabled( false );
+	runBuilderNextNodeVectorBtn->setEnabled( false );
+	runBuilderStopNodeVectorBtn->setEnabled( false );
+}
 MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 
+	nodeRunBuilderObj = nullptr;
 	instancePtr = nullptr;
 	nodeDirector = nullptr;
 	printerDirector = nullptr;
@@ -98,6 +108,10 @@ bool MainWindow::init( ) {
 		delete actionArrayPtr[ index ];
 	actionVector.clear( );
 
+	if( nodeRunBuilderObj ) {
+		nodeRunBuilderObj->clear( );
+		nodeRunBuilderObj = nullptr;
+	}
 	instancePtr = Application::getInstancePtr( );
 	// 释放节点
 	if( nodeDirector ) {
@@ -111,6 +125,7 @@ bool MainWindow::init( ) {
 		disconnect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
 		disconnect( nodeDirector, &NodeDirector::finish_create_node_signal, this, &MainWindow::finish_create_node_slot );
 		disconnect( nodeDirector, &NodeDirector::error_create_node_signal, this, &MainWindow::error_create_node_slot );
+		disconnect( nodeDirector, &NodeDirector::node_run_info_clear_signal, this, &MainWindow::node_run_info_clear_slot );
 	}
 	nodeDirector = instancePtr->getNodeDirector( );
 	connect( nodeDirector, &NodeDirector::release_node_signal, this, &MainWindow::release_node_slot );
@@ -123,6 +138,7 @@ bool MainWindow::init( ) {
 	connect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
 	connect( nodeDirector, &NodeDirector::finish_create_node_signal, this, &MainWindow::finish_create_node_slot );
 	connect( nodeDirector, &NodeDirector::error_create_node_signal, this, &MainWindow::error_create_node_slot );
+	connect( nodeDirector, &NodeDirector::node_run_info_clear_signal, this, &MainWindow::node_run_info_clear_slot );
 
 	printerDirector = instancePtr->getPrinterDirector( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
@@ -300,14 +316,28 @@ void MainWindow::deleteNodeInfo( ) {
 	mainWidget->deleteSelectNodeInfo( );
 }
 void MainWindow::builderProject( ) {
+	if( nodeRunBuilderObj )
+		nodeRunBuilderObj->clear( );
+	nodeRunBuilderObj = nullptr;
+	nodeRunBuilderObj = nodeDirector->builderCurrentAllNode( this->mainWidget );
+	if( nodeRunBuilderObj == nullptr )
+		return;
+	runBuilderAllNodeVectorBtn->setEnabled( true );
+	runBuilderNextNodeVectorBtn->setEnabled( true );
+	runBuilderStopNodeVectorBtn->setEnabled( true );
 }
 void MainWindow::runAllProject( ) {
 }
 void MainWindow::runNextProject( ) {
 }
 void MainWindow::stopProject( ) {
+
 }
 void MainWindow::clearProject( ) {
+	if( nodeRunBuilderObj == nullptr )
+		return;
+	nodeRunBuilderObj->clear( );
+	nodeRunBuilderObj = nullptr;
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );

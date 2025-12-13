@@ -117,6 +117,7 @@ public:
 	/// @brief 获取最大的渲染大小
 	/// @return 最大的渲染大小
 	virtual QSize getMaxNodeRenderSize( ) const;
+	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
 protected:
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
@@ -159,6 +160,7 @@ protected:
 	virtual void createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
 	virtual void releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
 	virtual void createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info );
+	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
 	/// @param signal_obj_ptr 信号对象指针
@@ -223,6 +225,12 @@ Q_SIGNALS:
 	/// @param error_msg 失败信息
 	/// @param srack_info 堆栈信息
 	void error_create_node_signal( NodeDirector *signal_obj_ptr, const QString &create_name, NodeEnum::CreateType error_type_info, const QString &error_msg, const SrackInfo &srack_info );
+	/// @brief 编译对象清理信号
+	/// @param signal_obj_ptr 信号对象指针
+	/// @param srack_info 信号堆栈
+	/// @param clear_obj 原始信号
+	/// @param org_srack_info 原始信号堆栈
+	void node_run_info_clear_signal( NodeDirector *signal_obj_ptr, const SrackInfo &srack_info, NodeRunInfo *clear_obj, const SrackInfo &org_srack_info );
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__
