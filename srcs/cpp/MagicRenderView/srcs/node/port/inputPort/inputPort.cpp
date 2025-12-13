@@ -42,3 +42,14 @@ InputPort::~InputPort( ) {
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }
+void InputPort::paintEvent( QPaintEvent *event ) {
+	//QWidget::paintEvent( event );
+}
+bool InputPort::event( QEvent *event ) {
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::Paint :
+			return true;
+	}
+	return QWidget::event( event );
+}

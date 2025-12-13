@@ -28,7 +28,7 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 	disLinkMenu = new QMenu;
 }
 OutputPort::~OutputPort( ) {
-	emit release_node_signal( this, Create_SrackInfo(  ) );
+	emit release_node_signal( this, Create_SrackInfo( ) );
 	delete disLinkMenu;
 }
 bool OutputPort::init( Node *parent ) {
@@ -43,4 +43,15 @@ bool OutputPort::init( Node *parent ) {
 }
 QPoint OutputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
+}
+void OutputPort::paintEvent( QPaintEvent *event ) {
+	//QWidget::paintEvent( event );
+}
+bool OutputPort::event( QEvent *event ) {
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::Paint :
+			return true;
+	}
+	return QWidget::event( event );
 }

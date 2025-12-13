@@ -116,3 +116,14 @@ bool DrawNodeWidget::getPointNodeClickInfo( const QPoint &click_point, NodeClick
 		}
 	return false;
 }
+void DrawNodeWidget::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+}
+bool DrawNodeWidget::event( QEvent *event ) {
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::Paint :
+			break;
+	}
+	return QWidget::event( event );
+}

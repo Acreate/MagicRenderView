@@ -324,5 +324,13 @@ bool Node::updateLayout( ) {
 }
 
 void Node::paintEvent( QPaintEvent *event ) {
-	QWidget::paintEvent( event );
+	//QWidget::paintEvent( event );
+}
+bool Node::event( QEvent *event ) {
+	auto type = event->type( );
+	switch( type ) {
+		case QEvent::Paint :
+			return true;
+	}
+	return QWidget::event( event );
 }

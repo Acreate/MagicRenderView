@@ -153,6 +153,7 @@ protected:
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	bool event( QEvent *event ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "未实现" ) );
 	// 信号

@@ -52,6 +52,10 @@ public:
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
 	virtual QMenu * getDisLinkMenu( ) const { return disLinkMenu; }
+protected:
+	void paintEvent( QPaintEvent *event ) override;
+	bool event( QEvent *event ) override;
+public:
 	// 信号
 Q_SIGNALS:
 	/// @brief 释放对象产生信号

@@ -31,6 +31,9 @@ public:
 	virtual bool addNode( Node *add_node );
 	virtual const QPoint & getMenuPopPoint( ) const { return menuPopPoint; }
 	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
+protected:
+	void paintEvent( QPaintEvent *event ) override;
+	bool event( QEvent *event ) override;
 Q_SIGNALS:
 	void release_signal( DrawNodeWidget *release_ptr );
 };

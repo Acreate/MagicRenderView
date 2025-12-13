@@ -18,11 +18,14 @@ protected:
 	TArrayPairType *drawNodeTypeArratPtr;
 	size_t drawNodeTypeArratCount;
 	size_t drawNodeTypeArratIndex;
+	TArrayPairType * createNodePairPtr;
+	TArrayPairType * selectNodePairPtr;
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
 	/// @param srack_info 信号行
 	void releaseNode( Node *release_node, const SrackInfo &srack_info );
+	virtual void setNodeDrawNodeType( Node *set_node_ptr, NodeEnum::NodeStyleType new_node_type, const TPaintCallFunction &paint_event, const bool set_function );
 public:
 	DrawHighlightWidget( MainWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	virtual bool init( MainWidget *parent );
