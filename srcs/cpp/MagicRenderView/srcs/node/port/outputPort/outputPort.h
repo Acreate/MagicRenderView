@@ -14,6 +14,7 @@ class InputPort;
 class Application;
 class VarDirector;
 class Node;
+class NodeRunInfo;
 class OutputPort : public QWidget {
 	Q_OBJECT;
 private:
@@ -26,8 +27,8 @@ private:
 	friend class NodeDirector;
 	friend class NodeStack;
 	friend class NodeRefLinkInfoTools;
-	friend class NodeBuilderStream;
 	friend class NodeBuilderTools;
+	friend class NodeRunInfo;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;

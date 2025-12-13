@@ -21,8 +21,37 @@
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 
+void MainWindow::release_node_slot( NodeDirector *signal_obj_ptr, Node *release_node, const SrackInfo &srack_info ) {
+}
+void MainWindow::finish_release_port_link_slot( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info ) {
+}
+void MainWindow::finish_create_port_link_slot( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info ) {
+}
+void MainWindow::finish_release_ref_node_slot( NodeDirector *signal_obj_ptr, Node *signal_node, Node *ref_node, const SrackInfo &srack_info ) {
+}
+void MainWindow::finish_create_ref_node_slot( NodeDirector *signal_obj_ptr, Node *signal_node, Node *ref_node, const SrackInfo &srack_info ) {
+}
+void MainWindow::error_run_node_slot( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *error_node, const SrackInfo &org_srack_info, NodeEnum::ErrorType error_type, const QString &error_msg ) {
+}
+void MainWindow::advise_run_node_slot( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *advise_node, const SrackInfo &org_srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg ) {
+}
+void MainWindow::finish_run_node_slot( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *finish_node, const SrackInfo &org_srack_info ) {
+}
+void MainWindow::finish_create_node_slot( NodeDirector *signal_obj_ptr, Node *create_node, const SrackInfo &srack_info ) {
+}
+void MainWindow::error_create_node_slot( NodeDirector *signal_obj_ptr, const QString &create_name, NodeEnum::CreateType error_type_info, const QString &error_msg, const SrackInfo &srack_info ) {
+}
 MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
+
+	instancePtr = nullptr;
+	nodeDirector = nullptr;
+	printerDirector = nullptr;
+	drawNodeWidget = nullptr;
+	drawLinkWidget = nullptr;
+	saveFileDirPath = nullptr;
+
 	hide( );
+
 	mainWidgetScrollArea = new MainWidgetScrollArea( this );
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
@@ -51,6 +80,7 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	projectToolBar->setFloatable( false );
 	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
 	projectToolBar->setMovable( true );
+
 }
 bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
@@ -69,7 +99,31 @@ bool MainWindow::init( ) {
 	actionVector.clear( );
 
 	instancePtr = Application::getInstancePtr( );
+	// 释放节点
+	if( nodeDirector ) {
+		disconnect( nodeDirector, &NodeDirector::release_node_signal, this, &MainWindow::release_node_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_release_port_link_signal, this, &MainWindow::finish_release_port_link_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_create_port_link_signal, this, &MainWindow::finish_create_port_link_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_release_ref_node_signal, this, &MainWindow::finish_release_ref_node_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_create_ref_node_signal, this, &MainWindow::finish_create_ref_node_slot );
+		disconnect( nodeDirector, &NodeDirector::error_run_node_signal, this, &MainWindow::error_run_node_slot );
+		disconnect( nodeDirector, &NodeDirector::advise_run_node_signal, this, &MainWindow::advise_run_node_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
+		disconnect( nodeDirector, &NodeDirector::finish_create_node_signal, this, &MainWindow::finish_create_node_slot );
+		disconnect( nodeDirector, &NodeDirector::error_create_node_signal, this, &MainWindow::error_create_node_slot );
+	}
 	nodeDirector = instancePtr->getNodeDirector( );
+	connect( nodeDirector, &NodeDirector::release_node_signal, this, &MainWindow::release_node_slot );
+	connect( nodeDirector, &NodeDirector::finish_release_port_link_signal, this, &MainWindow::finish_release_port_link_slot );
+	connect( nodeDirector, &NodeDirector::finish_create_port_link_signal, this, &MainWindow::finish_create_port_link_slot );
+	connect( nodeDirector, &NodeDirector::finish_release_ref_node_signal, this, &MainWindow::finish_release_ref_node_slot );
+	connect( nodeDirector, &NodeDirector::finish_create_ref_node_signal, this, &MainWindow::finish_create_ref_node_slot );
+	connect( nodeDirector, &NodeDirector::error_run_node_signal, this, &MainWindow::error_run_node_slot );
+	connect( nodeDirector, &NodeDirector::advise_run_node_signal, this, &MainWindow::advise_run_node_slot );
+	connect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
+	connect( nodeDirector, &NodeDirector::finish_create_node_signal, this, &MainWindow::finish_create_node_slot );
+	connect( nodeDirector, &NodeDirector::error_create_node_signal, this, &MainWindow::error_create_node_slot );
+
 	printerDirector = instancePtr->getPrinterDirector( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
 	drawLinkWidget = mainWidget->getDrawLinkWidget( );
@@ -95,30 +149,38 @@ bool MainWindow::init( ) {
 
 	addAction = new QAction( tr( "编译->项目" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::builderProject );
+	builderNodeVectorBtn = addAction;
 	projectToolBar->addAction( addAction );
 	projectMenu->addAction( addAction );
 	actionVector.emplace_back( addAction );
 
 	addAction = new QAction( tr( "下一步->项目" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::runNextProject );
+	runBuilderNextNodeVectorBtn = addAction;
+	runBuilderNextNodeVectorBtn->setEnabled( false );
 	projectToolBar->addAction( addAction );
 	projectMenu->addAction( addAction );
 	actionVector.emplace_back( addAction );
 
 	addAction = new QAction( tr( "停止->项目" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::stopProject );
+	runBuilderStopNodeVectorBtn = addAction;
+	runBuilderStopNodeVectorBtn->setEnabled( false );
 	projectToolBar->addAction( addAction );
 	projectMenu->addAction( addAction );
 	actionVector.emplace_back( addAction );
 
 	addAction = new QAction( tr( "运行->项目" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::runAllProject );
+	runBuilderAllNodeVectorBtn = addAction;
+	runBuilderAllNodeVectorBtn->setEnabled( false );
 	projectToolBar->addAction( addAction );
 	projectMenu->addAction( addAction );
 	actionVector.emplace_back( addAction );
 
 	addAction = new QAction( tr( "清理->项目" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::clearProject );
+	clearBuilderNodeVectorBtn = addAction;
 	projectToolBar->addAction( addAction );
 	projectMenu->addAction( addAction );
 	actionVector.emplace_back( addAction );

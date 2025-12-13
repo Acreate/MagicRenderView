@@ -8,6 +8,7 @@
 
 #include "../widget/mainWidget.h"
 
+class NodeRunInfo;
 class NodeHistory;
 class NodeInfoWidget;
 class NodePortLinkActionPair;
@@ -137,21 +138,22 @@ protected:
 	/// @param srack_info 信号行
 	virtual void releaseNode( Node *release_node, const SrackInfo &srack_info );
 	/// @brief 节点错误信号
-	/// @param error_node 错误节点
+	/// @param error_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
 	/// @param error_type 错误类型
 	/// @param error_msg 错误消息
-	/// @param srack_info 堆栈信息
-	virtual void errorRunNode( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info );
+	virtual void errorRunNode( Node *error_node, const SrackInfo &org_srack_info, NodeEnum::ErrorType error_type, const QString &error_msg );
 	/// @brief 建议节点信号
+	/// @param advise_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
 	/// @param advise_node 建议节点
 	/// @param advise_type 建议类型
 	/// @param advise_msg 建议消息
-	/// @param srack_info 堆栈信息
-	virtual void adviseRunNode( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
+	virtual void adviseRunNode( Node *advise_node, const SrackInfo &org_srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg );
 	/// @brief 节点完成运行信号
-	/// @param finish_node 完成节点
-	/// @param srack_info 堆栈信息
-	virtual void finishRunNode( Node *finish_node, const SrackInfo &srack_info );
+	/// @param finish_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
+	virtual void finishRunNode( Node *finish_node, const SrackInfo &org_srack_info );
 	virtual void finishCreateNode( NodeRefLinkInfo *finish_node );
 	virtual void releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
 	virtual void createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
@@ -189,23 +191,26 @@ Q_SIGNALS:
 	void finish_create_ref_node_signal( NodeDirector *signal_obj_ptr, Node *signal_node, Node *ref_node, const SrackInfo &srack_info );
 	/// @brief 节点错误信号
 	/// @param signal_obj_ptr 信号对象指针
-	/// @param error_node 错误节点
+	/// @param signal_srack_info 当前信号产生堆栈信息
+	/// @param error_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
 	/// @param error_type 错误类型
 	/// @param error_msg 错误消息
-	/// @param srack_info 堆栈信息
-	void error_run_node_signal( NodeDirector *signal_obj_ptr, Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info );
+	void error_run_node_signal( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *error_node, const SrackInfo &org_srack_info, NodeEnum::ErrorType error_type, const QString &error_msg );
 	/// @brief 建议节点信号
 	/// @param signal_obj_ptr 信号对象指针
-	/// @param advise_node 建议节点
+	/// @param signal_srack_info 当前信号产生堆栈信息
+	/// @param advise_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
 	/// @param advise_type 建议类型
 	/// @param advise_msg 建议消息
-	/// @param srack_info 堆栈信息
-	void advise_run_node_signal( NodeDirector *signal_obj_ptr, Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
+	void advise_run_node_signal( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *advise_node, const SrackInfo &org_srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg );
 	/// @brief 节点完成运行信号
 	/// @param signal_obj_ptr 信号对象指针
-	/// @param finish_node 完成节点
-	/// @param srack_info 堆栈信息
-	void finish_run_node_signal( NodeDirector *signal_obj_ptr, Node *finish_node, const SrackInfo &srack_info );
+	/// @param signal_srack_info 当前信号产生堆栈信息
+	/// @param finish_node 原始信号对象
+	/// @param org_srack_info 原始对象堆栈信号信息
+	void finish_run_node_signal( NodeDirector *signal_obj_ptr, const SrackInfo &signal_srack_info, Node *finish_node, const SrackInfo &org_srack_info );
 	/// @brief 成功创建节点信号
 	/// @param signal_obj_ptr 信号对象指针
 	/// @param create_node 创建对象

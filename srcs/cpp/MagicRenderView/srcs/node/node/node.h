@@ -24,6 +24,7 @@ class InputPort;
 class OutputPort;
 class NodeClickInfo;
 class NodeDirector;
+class NodeRunInfo;
 class Node : public QWidget {
 	Q_OBJECT;
 	friend class InputportLinkOutputPortInfo;
@@ -32,8 +33,8 @@ class Node : public QWidget {
 	friend class NodeRefLinkInfo;
 	friend class NodePortLinkInfo;
 	friend class NodePortLinkActionPair;
-	friend class NodeBuilderStream;
 	friend class NodeBuilderTools;
+	friend class NodeRunInfo;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
@@ -164,16 +165,16 @@ Q_SIGNALS:
 	void release_node_signal( Node *release_node, const SrackInfo &srack_info );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
+	/// @param srack_info 堆栈信息
 	/// @param error_type 错误类型
 	/// @param error_msg 错误消息
-	/// @param srack_info 堆栈信息
-	void error_run_node_signal( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info );
+	void error_run_node_signal( Node *error_node, const SrackInfo &srack_info, NodeEnum::ErrorType error_type, const QString &error_msg );
 	/// @brief 建议节点信号
 	/// @param advise_node 建议节点
-	/// @param advise_type 建议类型
 	/// @param advise_msg 建议消息
+	/// @param advise_type 建议类型
 	/// @param srack_info 堆栈信息
-	void advise_run_node_signal( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info );
+	void advise_run_node_signal( Node *advise_node, const SrackInfo &srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg );
 	/// @brief 节点完成运行信号
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息

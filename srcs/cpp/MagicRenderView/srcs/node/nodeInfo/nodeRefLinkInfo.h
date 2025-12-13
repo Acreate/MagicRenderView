@@ -12,13 +12,14 @@ class NodePortLinkInfo;
 class OutputPort;
 class InputPort;
 class Node;
+class NodeRunInfo;
 class NodeRefLinkInfo : public QObject {
 	Q_OBJECT;
 	friend class NodePortLinkInfo;
 	friend class NodeDirector;
 	friend class NodeRefLinkInfoTools;
-	friend class NodeBuilderStream;
 	friend class NodeBuilderTools;
+	friend class NodeRunInfo;
 protected:
 	/// @brief 匹配节点
 	Node *currentNode;

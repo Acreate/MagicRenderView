@@ -425,6 +425,7 @@ bool NodeDirector::findNodeOutputPort( OutputPort *&result_output_port_ptr, cons
 		}
 	return false;
 }
+
 bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
@@ -949,17 +950,17 @@ void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info 
 	removeRefNodeVectorAtNode( release_node );
 	emit release_node_signal( this, release_node, srack_info );
 }
-void NodeDirector::errorRunNode( Node *error_node, NodeEnum::ErrorType error_type, const QString &error_msg, const SrackInfo &srack_info ) {
+void NodeDirector::errorRunNode( Node *error_node, const SrackInfo &org_srack_info, NodeEnum::ErrorType error_type, const QString &error_msg ) {
 	//printerDirector->info( "节点错误", Create_SrackInfo( ) );
-	emit error_run_node_signal( this, error_node, error_type, error_msg, srack_info );
+	emit error_run_node_signal( this, Create_SrackInfo( ), error_node, org_srack_info, error_type, error_msg );
 }
-void NodeDirector::adviseRunNode( Node *advise_node, NodeEnum::AdviseType advise_type, const QString &advise_msg, const SrackInfo &srack_info ) {
+void NodeDirector::adviseRunNode( Node *advise_node, const SrackInfo &org_srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg ) {
 	//printerDirector->info( "节点建议", Create_SrackInfo( ) );
-	emit advise_run_node_signal( this, advise_node, advise_type, advise_msg, srack_info );
+	emit advise_run_node_signal( this, Create_SrackInfo( ), advise_node, org_srack_info, advise_type, advise_msg );
 }
-void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &srack_info ) {
+void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &org_srack_info ) {
 	//printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
-	emit finish_run_node_signal( this, finish_node, srack_info );
+	emit finish_run_node_signal( this,Create_SrackInfo( ), finish_node, org_srack_info );
 }
 
 void NodeDirector::releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
