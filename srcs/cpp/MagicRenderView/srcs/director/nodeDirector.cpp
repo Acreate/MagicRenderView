@@ -733,7 +733,6 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			return;
 		}
 		appendRefNodeVectorAtNode( refNdoeInfo );
-		node->setStyleType( NodeEnum::NodeStyleType::Create );
 		node->show( );
 		mainWidget->ensureVisible( node );
 		mainWidget->update( );
@@ -784,6 +783,7 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 			return;
 	refNodeVector.emplace_back( append_node_ref_link_info );
 	finishCreateNode( append_node_ref_link_info );
+	append_node_ref_link_info->currentNode->setStyleType( NodeEnum::NodeStyleType::Create );
 
 	auto currentHistory = [append_node_ref_link_info, this] {
 		auto node = createNode( append_node_ref_link_info->currentNode->nodeName, mainWidget );

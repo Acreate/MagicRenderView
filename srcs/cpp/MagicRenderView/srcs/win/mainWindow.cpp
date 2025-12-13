@@ -3,6 +3,7 @@
 #include <QShortcut>
 #include <QMenu>
 #include <QFileDialog>
+#include <QMenuBar>
 #include <QMouseEvent>
 #include <QToolBar>
 
@@ -26,8 +27,30 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 
-	toolBar = new QToolBar( this );
-	toolBar->setObjectName( tr( "主要工具栏" ) );
+	fileToolBar = new QToolBar( this );
+	projectToolBar = new QToolBar( this );
+	fileToolBar->setObjectName( tr( "主要工具栏" ) );
+	projectToolBar->setObjectName( tr( "主要项目工具" ) );
+	fileMenu = new QMenu( tr( "文件" ), this );
+	projectMenu = new QMenu( tr( "项目" ), this );
+
+	appMenuBar = menuBar( );
+	if( appMenuBar == nullptr ) {
+		appMenuBar = new QMenuBar( this );
+		setMenuBar( appMenuBar );
+	}
+	appMenuBar->addMenu( fileMenu );
+	appMenuBar->addMenu( projectMenu );
+
+	addToolBar( Qt::TopToolBarArea, fileToolBar );
+	fileToolBar->setFloatable( false );
+	fileToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	fileToolBar->setMovable( true );
+
+	addToolBar( Qt::TopToolBarArea, projectToolBar );
+	projectToolBar->setFloatable( false );
+	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	projectToolBar->setMovable( true );
 }
 bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
@@ -38,24 +61,67 @@ bool MainWindow::init( ) {
 	for( ; index < count; ++index )
 		delete shortcutArrayPtr[ index ];
 	shortcutVector.clear( );
+	count = actionVector.size( );
+	index = 0;
+	auto actionArrayPtr = actionVector.data( );
+	for( ; index < count; ++index )
+		delete actionArrayPtr[ index ];
+	actionVector.clear( );
 
-	addToolBar( Qt::TopToolBarArea, toolBar );
-	toolBar->setFloatable( false );
-	toolBar->setAllowedAreas( Qt::TopToolBarArea );
-	toolBar->setMovable( false );
 	instancePtr = Application::getInstancePtr( );
 	nodeDirector = instancePtr->getNodeDirector( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	drawNodeWidget = mainWidget->getDrawNodeWidget( );
 	drawLinkWidget = mainWidget->getDrawLinkWidget( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
-	toolBar->clear( );
-	auto addAction = toolBar->addAction( tr( "保存..." ) );
+	fileToolBar->clear( );
+	projectToolBar->clear( );
+
+	auto addAction = new QAction( tr( "保存文件..." ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::savePorjectToFile );
-	addAction = toolBar->addAction( tr( "加载..." ) );
+	fileToolBar->addAction( addAction );
+	fileMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+	addAction = new QAction( tr( "加载文件..." ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::loadPorjectAtFile );
-	addAction = toolBar->addAction( tr( "放弃..." ) );
+	fileToolBar->addAction( addAction );
+	fileMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+	addAction = new QAction( tr( "放弃文件" ), this );
 	connect( addAction, &QAction::triggered, this, &MainWindow::unDownloadPorjectAtFile );
+	fileToolBar->addAction( addAction );
+	fileMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+
+	addAction = new QAction( tr( "编译->项目" ), this );
+	connect( addAction, &QAction::triggered, this, &MainWindow::builderProject );
+	projectToolBar->addAction( addAction );
+	projectMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+
+	addAction = new QAction( tr( "下一步->项目" ), this );
+	connect( addAction, &QAction::triggered, this, &MainWindow::runNextProject );
+	projectToolBar->addAction( addAction );
+	projectMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+
+	addAction = new QAction( tr( "停止->项目" ), this );
+	connect( addAction, &QAction::triggered, this, &MainWindow::stopProject );
+	projectToolBar->addAction( addAction );
+	projectMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+
+	addAction = new QAction( tr( "运行->项目" ), this );
+	connect( addAction, &QAction::triggered, this, &MainWindow::runAllProject );
+	projectToolBar->addAction( addAction );
+	projectMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
+
+	addAction = new QAction( tr( "清理->项目" ), this );
+	connect( addAction, &QAction::triggered, this, &MainWindow::clearProject );
+	projectToolBar->addAction( addAction );
+	projectMenu->addAction( addAction );
+	actionVector.emplace_back( addAction );
 
 	QShortcut *shortcut;
 	shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
@@ -170,6 +236,16 @@ void MainWindow::cancelNodeInfo( ) {
 }
 void MainWindow::deleteNodeInfo( ) {
 	mainWidget->deleteSelectNodeInfo( );
+}
+void MainWindow::builderProject( ) {
+}
+void MainWindow::runAllProject( ) {
+}
+void MainWindow::runNextProject( ) {
+}
+void MainWindow::stopProject( ) {
+}
+void MainWindow::clearProject( ) {
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );

@@ -21,9 +21,14 @@ protected:
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
-	QToolBar *toolBar;
+	QToolBar *fileToolBar;
+	QToolBar *projectToolBar;
 	QString saveFileDirPath;
 	std::vector< QShortcut * > shortcutVector;
+	std::vector< QAction * > actionVector;
+	QMenuBar *appMenuBar;
+	QMenu *fileMenu;
+	QMenu *projectMenu;
 protected:
 	MainWindow( );
 	virtual bool init( );
@@ -41,6 +46,11 @@ public:
 	virtual void cutNodeInfo( );
 	virtual void cancelNodeInfo( );
 	virtual void deleteNodeInfo( );
+	virtual void builderProject( );
+	virtual void runAllProject( );
+	virtual void runNextProject( );
+	virtual void stopProject( );
+	virtual void clearProject( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
