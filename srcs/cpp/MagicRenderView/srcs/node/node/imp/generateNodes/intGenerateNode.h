@@ -11,6 +11,7 @@ public:
 	IntGenerateNode( const QString &node_name )
 		: GenerateNode( node_name ) { }
 	bool init( DrawNodeWidget *parent ) override;
+	bool initArrayUintyTypeName( QString &change_array_unty_type_name ) override;
 	bool updateLayout( ) override;
 	virtual std::vector< int64_t > * getGenerateVarPtr( ) const;
 	bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) override;

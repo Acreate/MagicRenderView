@@ -41,6 +41,13 @@ namespace NodeEnum {
 	/// @brief 输入类型
 	enum class PortType {
 		InterFace,
+		Beg,
+		End,
+		Point,
+		Jump,
+		Logic,
+		Cache,
+		Generate,
 		Any,
 		Unity,
 		Array

@@ -257,12 +257,13 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	NodeEnum::PortType inType = input_port->getPortType( );
 	if( inType != NodeEnum::PortType::Any ) {
 		NodeEnum::PortType outType = output_port->getPortType( );
-		if( outType != inType )
-			return false;
-		QString outVarTypeName = output_port->getVarTypeName( );
-		QString inVarTypeName = input_port->getVarTypeName( );
-		if( outVarTypeName != inVarTypeName )
-			return false;
+		if( outType == inType ) {
+			QString outVarTypeName = output_port->getVarTypeName( );
+			QString inVarTypeName = input_port->getVarTypeName( );
+			if( outVarTypeName != inVarTypeName )
+				return false;
+		}
+		
 	}
 	bool appendInputRef = outputNodeRef->appendInputRef( input_port, output_port );
 	if( appendInputRef == false )

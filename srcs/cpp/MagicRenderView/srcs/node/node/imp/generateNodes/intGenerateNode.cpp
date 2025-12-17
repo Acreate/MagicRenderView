@@ -19,6 +19,9 @@ bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 	return true;
 
 }
+bool IntGenerateNode::initArrayUintyTypeName( QString &change_array_unty_type_name ) {
+	return varDirector->getTypeName( typeid( int64_t ), change_array_unty_type_name );
+}
 bool IntGenerateNode::updateLayout( ) {
 	if( GenerateNode::updateLayout( ) == false )
 		return false;
@@ -31,7 +34,7 @@ bool IntGenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_
 	bool formUint8ArrayData = GenerateNode::formUint8ArrayData( result_use_count, source_array_ptr, source_array_count );
 	return formUint8ArrayData;
 }
-bool IntGenerateNode::toUint8VectorData( std::vector<uint8_t> &result_vector_data ) {
+bool IntGenerateNode::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	bool uint8VectorData = GenerateNode::toUint8VectorData( result_vector_data );
 	return uint8VectorData;
 }

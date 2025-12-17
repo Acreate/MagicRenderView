@@ -8,9 +8,8 @@ GenerateNode::~GenerateNode( ) {
 
 }
 bool GenerateNode::init( DrawNodeWidget *parent ) {
-	if( Node::init( parent ) == false )
+	if( Node::init( parent ) == false || initArrayUintyTypeName( generateTypeName ) == false )
 		return false;
-
 	return true;
 }
 bool GenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {

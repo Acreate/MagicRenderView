@@ -17,6 +17,7 @@ class Node;
 class NodeRunInfo;
 class OutputPort : public QWidget {
 	Q_OBJECT;
+	
 private:
 	friend class Node;
 	friend class NodeRefLinkInfo;
