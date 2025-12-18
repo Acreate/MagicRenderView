@@ -255,17 +255,31 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( inputNodeRef->hasPortRef( input_port, output_port ) == true )
 		return true;
 	NodeEnum::PortType inType = input_port->getPortType( );
-	if( inType != NodeEnum::PortType::Any ) {
-		NodeEnum::PortType outType = output_port->getPortType( );
-		if( outType == inType ) {
-			QString outVarTypeName = output_port->getVarTypeName( );
-			QString inVarTypeName = input_port->getVarTypeName( );
-			if( outVarTypeName != inVarTypeName )
-				return false;
-		}
-		
+	switch( inType ) {
+		case NodeEnum::PortType::InterFace :
+		case NodeEnum::PortType::Any :
+		case NodeEnum::PortType::Beg :
+		case NodeEnum::PortType::End :
+			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
 	}
-	bool appendInputRef = outputNodeRef->appendInputRef( input_port, output_port );
+	NodeEnum::PortType outType = output_port->getPortType( );
+	switch( outType ) {
+		case NodeEnum::PortType::InterFace :
+		case NodeEnum::PortType::Any :
+		case NodeEnum::PortType::Beg :
+		case NodeEnum::PortType::End :
+			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
+	}
+	if( outType == inType ) {
+		QString outVarTypeName = output_port->getVarTypeName( );
+		QString inVarTypeName = input_port->getVarTypeName( );
+		if( outVarTypeName == inVarTypeName )
+			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
+	}
+	return false;
+}
+bool NodeDirector::portConnectLink( NodeRefLinkInfo *output_node_ref, OutputPort *output_port, InputPort *input_port ) {
+	bool appendInputRef = output_node_ref->appendInputRef( input_port, output_port );
 	if( appendInputRef == false )
 		return false;
 	if( drawLinkWidget )
@@ -286,6 +300,7 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 
 	return appendInputRef;
 }
+
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
 	auto inputParentNode = input_port->parentNode;
 	if( inputParentNode == nullptr )
