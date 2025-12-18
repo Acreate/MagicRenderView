@@ -8,7 +8,8 @@
 class GenerateTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	GenerateTypeOutputPort( const QString &name );
+	GenerateTypeOutputPort( const QString &name )
+		: OutputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Generate;
 	}

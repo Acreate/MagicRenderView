@@ -8,7 +8,8 @@
 class PointTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	PointTypeOutputPort( const QString &name );
+	PointTypeOutputPort( const QString &name )
+		: OutputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Point;
 	}

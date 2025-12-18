@@ -8,7 +8,8 @@
 class BeginTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	BeginTypeOutputPort( const QString &name );
+	BeginTypeOutputPort( const QString &name )
+		: OutputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Beg;
 	}

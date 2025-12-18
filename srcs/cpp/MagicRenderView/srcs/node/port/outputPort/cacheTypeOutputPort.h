@@ -7,7 +7,8 @@
 class CacheTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	CacheTypeOutputPort( const QString &name );
+	CacheTypeOutputPort( const QString &name )
+		: OutputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Cache;
 	}

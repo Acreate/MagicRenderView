@@ -1,6 +1,7 @@
 ﻿#include "gotoNode.h"
 
 #include "../../../port/inputPort/any/anyInputPort.h"
+#include "../../../port/inputPort/jump/jumpInputPort.h"
 #include "../../../port/outputPort/any/anyOutputPort.h"
 
 bool GotoNode::updateLayout( ) {
@@ -11,7 +12,7 @@ bool GotoNode::updateLayout( ) {
 bool GotoNode::init( DrawNodeWidget *parent ) {
 	if( JumpNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< AnyInputPort >( tr( "过程接入" ) ) == nullptr )
+	if( appendInputPortType< JumpInputPort >( tr( "过程接入" ) ) == nullptr )
 		return false;
 
 	return true;

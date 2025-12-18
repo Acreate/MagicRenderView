@@ -5,13 +5,13 @@
 #include "../../../../director/varDirector.h"
 #include "../../../../srack/srackInfo.h"
 
-#include "../../../port/inputPort/any/anyInputPort.h"
+#include "../../../port/inputPort/begin/beginInputPort.h"
 #include "../../../port/outputPort/array/intVectorOutputPort.h"
 
 bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 	if( GenerateNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< AnyInputPort >( tr( "过程接入" ) ) == nullptr )
+	if( appendInputPortType< BeginInputPort >( tr( "过程接入" ) ) == nullptr )
 		return false;
 	if( appendOutputPortType< IntVectorOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
 		return false;

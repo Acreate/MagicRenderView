@@ -1,7 +1,9 @@
 ﻿#include "makeNode.h"
 
 #include "../../../port/inputPort/any/anyInputPort.h"
+#include "../../../port/inputPort/point/pointInputPort.h"
 #include "../../../port/outputPort/any/anyOutputPort.h"
+#include "../../../port/outputPort/point/pointOutputPort.h"
 
 bool MakeNode::updateLayout( ) {
 	if( PointNode::updateLayout( ) == false )
@@ -11,9 +13,7 @@ bool MakeNode::updateLayout( ) {
 bool MakeNode::init( DrawNodeWidget *parent ) {
 	if( PointNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< AnyInputPort >( tr( "过程接入" ) ) == nullptr )
-		return false;
-	if( appendOutputPortType< AnyOutputPort >( tr( "过程转移" ) ) == nullptr )
+	if( appendOutputPortType< PointOutputPort >( tr( "过程转移" ) ) == nullptr )
 		return false;
 	return true;
 }

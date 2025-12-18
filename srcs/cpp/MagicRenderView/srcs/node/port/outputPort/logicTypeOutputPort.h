@@ -8,7 +8,8 @@
 class LogicTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	LogicTypeOutputPort( const QString &name );
+	LogicTypeOutputPort( const QString &name )
+		: OutputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Logic;
 	}

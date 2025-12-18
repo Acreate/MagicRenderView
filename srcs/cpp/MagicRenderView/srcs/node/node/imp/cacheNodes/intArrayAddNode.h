@@ -1,13 +1,14 @@
 ﻿#ifndef INTARRAYADDNODE_H_H_HEAD__FILE__
 #define INTARRAYADDNODE_H_H_HEAD__FILE__
 #pragma once
+#include "../../arrayNode.h"
 #include "../../cacheNode.h"
 
-class IntArrayAddNode : public CacheNode {
+class IntArrayAddNode : public ArrayNode {
 	Q_OBJECT;
 public:
 	IntArrayAddNode( const QString &node_name )
-		: CacheNode( node_name ) { }
+		: ArrayNode( node_name ) { }
 	bool init( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

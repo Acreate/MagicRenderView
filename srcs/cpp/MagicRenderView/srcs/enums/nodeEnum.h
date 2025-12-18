@@ -37,6 +37,8 @@ namespace NodeEnum {
 		Logic,
 		Process,
 		Cache,
+		Array,
+		Unity,
 	};
 	/// @brief 输入类型
 	enum class PortType {

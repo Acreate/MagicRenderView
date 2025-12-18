@@ -7,7 +7,8 @@
 class BeginTypeInputPort : public InputPort {
 	Q_OBJECT;
 public:
-	BeginTypeInputPort( const QString &name );
+	BeginTypeInputPort( const QString &name )
+		: InputPort( name ) { }
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::Beg;
 	}
