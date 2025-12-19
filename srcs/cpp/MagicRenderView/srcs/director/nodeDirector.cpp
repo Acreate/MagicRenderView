@@ -269,8 +269,17 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	QString inVarTypeName = input_port->getVarTypeName( );
 	switch( inType ) {
 		case NodeEnum::PortType::Unity :
-			if( outVarTypeName == inVarTypeName )
+			if( outVarTypeName == inVarTypeName ) {
+
+				NodePortLinkInfo *inputPortLinkInfo = inputNodeRef->nodePortLinkInfo;
+				size_t count = inputPortLinkInfo->inputPortVector.size( );
+				if( count != 0 ) {
+					auto buff = inputPortLinkInfo->inputPortVector;
+					auto arrayPtr = buff.data( );
+				}
+
 				return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
+			}
 	}
 	if( outVarTypeName == inVarTypeName )
 		if( outType == inType )

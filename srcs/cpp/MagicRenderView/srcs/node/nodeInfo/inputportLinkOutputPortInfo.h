@@ -11,6 +11,7 @@ class InputPort;
 class InputportLinkOutputPortInfo {
 	friend class NodeBuilderStream;
 	friend class NodeBuilderTools;
+	friend class NodeDirector;
 private:
 	InputPort *inputPort;
 	std::vector< OutputPort * > outputPortVector;
