@@ -6,7 +6,7 @@
 class GenerateNode : public Node {
 	Q_OBJECT;
 protected:
-	virtual bool initVarPtr( ) { return false; }
+	virtual bool initVarPtr( ) = 0;
 public:
 	GenerateNode( const QString &node_name );
 	~GenerateNode( ) override;

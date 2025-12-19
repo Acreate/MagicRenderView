@@ -1,12 +1,11 @@
 ﻿#include "resultNode.h"
 
-#include "../../../port/inputPort/any/anyInputPort.h"
-#include "../../../port/inputPort/end/endInputPort.h"
+#include "../../../port/inputPort/interface/interFaceInputPort.h"
 
 bool ResultNode::init( DrawNodeWidget *parent ) {
 	if( EndNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< EndInputPort >( tr( "过程结束" ) ) == nullptr )
+	if( appendInputPortType< InterFaceInputPort >( tr( "过程结束" ) ) == nullptr )
 		return false;
 	return true;
 }

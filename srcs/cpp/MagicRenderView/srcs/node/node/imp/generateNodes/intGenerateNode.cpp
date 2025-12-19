@@ -4,18 +4,17 @@
 #include "../../../../director/printerDirector.h"
 #include "../../../../director/varDirector.h"
 #include "../../../../srack/srackInfo.h"
+#include "../../../port/inputPort/interface/interFaceInputPort.h"
 
-#include "../../../port/inputPort/begin/beginInputPort.h"
-#include "../../../port/outputPort/array/intVectorOutputPort.h"
+#include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
 bool IntGenerateNode::init( DrawNodeWidget *parent ) {
 	if( GenerateNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< BeginInputPort >( tr( "过程接入" ) ) == nullptr )
+	if( appendInputPortType< InterFaceInputPort >( tr( "过程接入" ) ) == nullptr )
 		return false;
-	if( appendOutputPortType< IntVectorOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
+	if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
 		return false;
-	initVarPtr( );
 	return true;
 
 }

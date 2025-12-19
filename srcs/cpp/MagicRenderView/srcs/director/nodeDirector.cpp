@@ -257,25 +257,24 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	NodeEnum::PortType inType = input_port->getPortType( );
 	switch( inType ) {
 		case NodeEnum::PortType::InterFace :
-		case NodeEnum::PortType::Any :
-		case NodeEnum::PortType::Beg :
-		case NodeEnum::PortType::End :
 			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
 	}
 	NodeEnum::PortType outType = output_port->getPortType( );
 	switch( outType ) {
 		case NodeEnum::PortType::InterFace :
-		case NodeEnum::PortType::Any :
-		case NodeEnum::PortType::Beg :
-		case NodeEnum::PortType::End :
 			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
+
 	}
-	if( outType == inType ) {
-		QString outVarTypeName = output_port->getVarTypeName( );
-		QString inVarTypeName = input_port->getVarTypeName( );
-		if( outVarTypeName == inVarTypeName )
+	QString outVarTypeName = output_port->getVarTypeName( );
+	QString inVarTypeName = input_port->getVarTypeName( );
+	switch( inType ) {
+		case NodeEnum::PortType::Unity :
+			if( outVarTypeName == inVarTypeName )
+				return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
+	}
+	if( outVarTypeName == inVarTypeName )
+		if( outType == inType )
 			return NodeDirector::portConnectLink( outputNodeRef, output_port, input_port );
-	}
 	return false;
 }
 bool NodeDirector::portConnectLink( NodeRefLinkInfo *output_node_ref, OutputPort *output_port, InputPort *input_port ) {

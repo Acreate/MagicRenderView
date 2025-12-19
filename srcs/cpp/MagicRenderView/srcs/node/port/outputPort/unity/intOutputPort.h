@@ -7,8 +7,7 @@
 class IntOutputPort : public UnityTypeOutputPort {
 	Q_OBJECT;
 public:
-	IntOutputPort( const QString &name )
-		: UnityTypeOutputPort( name ) { }
+	IntOutputPort( const QString &name );
 	bool init( Node *parent ) override;
 };
 

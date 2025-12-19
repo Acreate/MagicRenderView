@@ -1,8 +1,6 @@
 ﻿#include "ifNode.h"
 
-#include "../../../port/inputPort/logic/logicInputPort.h"
 #include "../../../port/inputPort/unity/intInputPort.h"
-#include "../../../port/outputPort/any/anyOutputPort.h"
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 bool IfNode::updateLayout( ) {
 	if( LogicNode::updateLayout( ) == false )
@@ -12,7 +10,7 @@ bool IfNode::updateLayout( ) {
 bool IfNode::init( DrawNodeWidget *parent ) {
 	if( LogicNode::init( parent ) == false )
 		return false;
-	if( appendInputPortType< LogicInputPort >( tr( "判断依据" ) ) == nullptr )
+	if( appendInputPortType< IntInputPort >( tr( "判断依据" ) ) == nullptr )
 		return false;
 	if( appendOutputPortType< InterFaceOutputPort >( tr( "依据成立-过程转移" ) ) == nullptr )
 		return false;

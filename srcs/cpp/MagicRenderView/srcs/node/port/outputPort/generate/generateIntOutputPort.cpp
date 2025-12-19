@@ -1,10 +1,9 @@
-﻿#include "intVectorOutputPort.h"
-
-#include <node/node/node.h>
+﻿#include "generateIntOutputPort.h"
 
 #include "../../../../director/varDirector.h"
-bool IntVectorOutputPort::init( Node *parent ) {
-	if( ArrayTypeOutputPort::init( parent ) == false )
+bool GenerateIntOutputPort::init( Node *parent ) {
+
+	if( GenerateTypeOutputPort::init( parent ) == false )
 		return false;
 	if( varDirector->getTypeName( typeid( int64_t ), varTypeName ) == false )
 		return false;

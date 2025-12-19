@@ -1,14 +1,13 @@
 ﻿#include "startNode.h"
 
-#include "../../../port/outputPort/bein/beginOutputPort.h"
+#include "../../../port/outputPort/interface/interFaceOutputPort.h"
 
 bool StartNode::init( DrawNodeWidget *parent ) {
-	bool init = BeginNode::init( parent );
-	if( init == false )
-		return init;
-	if( appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) ) == nullptr )
+	if( BeginNode::init( parent ) == false )
 		return false;
-	return init;
+	if( appendOutputPortType< InterFaceOutputPort >( tr( "过程开始" ) ) == nullptr )
+		return false;
+	return true;
 }
 bool StartNode::updateLayout( ) {
 	if( BeginNode::updateLayout( ) == false )

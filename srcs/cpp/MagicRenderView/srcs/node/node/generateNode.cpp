@@ -8,7 +8,7 @@ GenerateNode::~GenerateNode( ) {
 
 }
 bool GenerateNode::init( DrawNodeWidget *parent ) {
-	if( Node::init( parent ) == false || initArrayUintyTypeName( generateTypeName ) == false )
+	if( Node::init( parent ) == false || initArrayUintyTypeName( generateTypeName ) == false || initVarPtr( ) == false )
 		return false;
 	return true;
 }

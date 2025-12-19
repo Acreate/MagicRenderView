@@ -2,7 +2,6 @@
 #define STRINGVECTOROUTPUTPORT_H_H_HEAD__FILE__
 #pragma once
 #include "../arrayTypeOutputPort.h"
-#include "../outputPort.h"
 
 class StringVectorOutputPort : public ArrayTypeOutputPort {
 	Q_OBJECT;
