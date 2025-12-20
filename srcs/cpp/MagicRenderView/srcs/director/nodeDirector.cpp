@@ -159,18 +159,12 @@ void NodeDirector::releaseNodeResources( ) {
 		for( index = 0; index < count; ++index )
 			delete pair[ index ];
 	}
-	count = refNodeVector.size( );
-	if( count != 0 ) {
-		auto buff = refNodeVector;
-		refNodeVector.clear( );
-		auto pair = buff.data( );
-		for( index = 0; index < count; ++index )
-			pair[ index ]->clearInfo( );
-		for( index = 0; index < count; ++index ) {
-			Node *currentNode = pair[ index ]->currentNode;
-			delete pair[ index ];
-			delete currentNode;
-		}
+	count = nodeVector.size( );
+	for( index = 0; index < count; ++index ) {
+		auto iterator = nodeVector.begin( );
+		auto node = *iterator;
+		nodeVector.erase( iterator );
+		delete node;
 	}
 }
 void NodeDirector::releaseNodeInfoWidgetResources( ) {
@@ -243,10 +237,13 @@ Node * NodeDirector::createNode( const QString &node_type_name, MainWidget *main
 		return nullptr;
 	}
 	appendRefNodeVectorAtNode( refNdoeInfo );
-	node->show( );
 	return node;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
+	input_port->emplaceBackOutputPortRef( output_port );
+	if( drawLinkWidget )
+		drawLinkWidget->update( );
+	return true;
 
 	NodeRefLinkInfo *inputNodeRef = output_port->parentNode->nodeRefLinkInfoPtr;
 	NodeRefLinkInfo *outputNodeRef = input_port->parentNode->nodeRefLinkInfoPtr;
@@ -271,8 +268,10 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 		case NodeEnum::PortType::Unity :
 			if( outVarTypeName == inVarTypeName ) {
 
+				NodePortLinkInfo *outputPortLinkInfo = outputNodeRef->nodePortLinkInfo;
 				NodePortLinkInfo *inputPortLinkInfo = inputNodeRef->nodePortLinkInfo;
-				size_t count = inputPortLinkInfo->inputPortVector.size( );
+
+				size_t count = outputPortLinkInfo->inputPortVector.size( );
 				if( count != 0 ) {
 					auto buff = inputPortLinkInfo->inputPortVector;
 					auto arrayPtr = buff.data( );
@@ -287,9 +286,9 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	return false;
 }
 bool NodeDirector::portConnectLink( NodeRefLinkInfo *output_node_ref, OutputPort *output_port, InputPort *input_port ) {
-	bool appendInputRef = output_node_ref->appendInputRef( input_port, output_port );
-	if( appendInputRef == false )
+	if( output_node_ref->appendInputRef( input_port, output_port ) == false )
 		return false;
+
 	if( drawLinkWidget )
 		drawLinkWidget->update( );
 	auto currentHistort = [input_port, output_port, this]( ) {
@@ -305,8 +304,7 @@ bool NodeDirector::portConnectLink( NodeRefLinkInfo *output_node_ref, OutputPort
 		return nullptr;
 	};
 	appendHistorIndexEnd( currentHistort, cancelHistort );
-
-	return appendInputRef;
+	return true;
 }
 
 bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -325,26 +323,45 @@ bool NodeDirector::disLinkPort( OutputPort *output_port, InputPort *input_port )
 }
 
 void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
-	size_t count = refNodeVector.size( );
-	auto arrayPtr = refNodeVector.data( );
+	Node *node;
+	size_t count;
+	Node **arrayPtr;
 	size_t index;
+	size_t outputPortCount;
+	OutputPort **outputPortArray;
+	size_t outputPortIndex;
+	size_t connectInputPortCount;
+	InputPort **connectInputPortArray;
+	size_t connectInputPortIndex;
+	OutputPort *outputPort;
+	InputPort *inputPort;
+	QPoint outputPortPos;
+	QPoint inputPortPos;
+	count = nodeVector.size( );
+	if( count == 0 )
+		return;
+	arrayPtr = nodeVector.data( );
 	for( index = 0; index < count; ++index ) {
-		size_t linkPortCount = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.size( );
-		auto linkPortArray = arrayPtr[ index ]->nodePortLinkInfo->inputPortVector.data( );
-		size_t linkPortIndex;
-		for( linkPortIndex = 0; linkPortIndex < linkPortCount; ++linkPortIndex ) {
-			InputPort *inputPort = linkPortArray[ linkPortIndex ]->getInputPort( );
-			auto point = inputPort->getLinkPoint( );
-			auto startPoint = inputPort->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
+		node = arrayPtr[ index ];
 
-			auto &outputPortVector = linkPortArray[ linkPortIndex ]->getOutputPortVector( );
-			size_t linkTargetPortCount = outputPortVector.size( );
-			auto linkTargetPortArray = outputPortVector.data( );
-			size_t linkTargetPortIndex;
-			for( linkTargetPortIndex = 0; linkTargetPortIndex < linkTargetPortCount; ++linkTargetPortIndex ) {
-				point = linkTargetPortArray[ linkTargetPortIndex ]->getLinkPoint( );
-				auto endPoint = inputPort->parentNode->nodeRefLinkInfoPtr->drawNodeWidget->mapFromGlobal( point );
-				draw_link_widget.drawLine( startPoint, endPoint );
+		outputPortCount = node->outputPortVector.size( );
+		outputPortArray = node->outputPortVector.data( );
+		outputPortIndex = 0;
+		for( ; outputPortIndex < outputPortCount; ++outputPortIndex ) {
+			outputPort = outputPortArray[ outputPortIndex ];
+			connectInputPortCount = outputPort->refInputPortVector.size( );
+			if( connectInputPortCount == 0 )
+				continue;
+			outputPortPos = outputPort->getLinkPoint( );
+			outputPortPos = drawLinkWidget->mapFromGlobal( outputPortPos );
+
+			connectInputPortArray = outputPort->refInputPortVector.data( );
+			connectInputPortIndex = 0;
+			for( ; connectInputPortIndex < connectInputPortCount; ++connectInputPortIndex ) {
+				inputPort = connectInputPortArray[ connectInputPortIndex ];
+				inputPortPos = inputPort->getLinkPoint( );
+				inputPortPos = drawLinkWidget->mapFromGlobal( inputPortPos );
+				draw_link_widget.drawLine( outputPortPos, inputPortPos );
 			}
 		}
 	}
@@ -466,8 +483,8 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 		return false;
 	std::vector< uint8_t > vectorInfo;
 	std::vector< uint8_t > converResult;
-	size_t refNodeArrayCount = refNodeVector.size( );
-	auto refNodeArrayPtr = refNodeVector.data( );
+	size_t refNodeArrayCount = nodeVector.size( );
+	auto refNodeArrayPtr = nodeVector.data( );
 	size_t refNodeArrayIndex = 0;
 	// 序列化节点个数
 	*uint64Ptr = refNodeArrayCount;
@@ -476,7 +493,7 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 	vectorInfo.append_range( converResult );
 	for( ; refNodeArrayIndex < refNodeArrayCount; ++refNodeArrayIndex ) {
 		// 节点
-		Node *currentNode = refNodeArrayPtr[ refNodeArrayIndex ]->currentNode;
+		Node *currentNode = refNodeArrayPtr[ refNodeArrayIndex ];
 		// 名称
 		*stringPtr = currentNode->nodeName;
 		if( varDirector.toVector( stringPtr, converResult ) == false )
@@ -502,8 +519,10 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 			return false;
 		vectorInfo.append_range( converResult );
 		// 连接信息
-		if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
-			return false;
+
+		// todo : 重构链接
+		//if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
+		//	return false;
 		vectorInfo.append_range( converResult );
 	}
 	*uint64Ptr = vectorInfo.size( );
@@ -635,11 +654,11 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	int x = 0;
 	int y = 0;
-	size_t count = refNodeVector.size( );
-	auto arrayPtr = refNodeVector.data( );
+	size_t count = nodeVector.size( );
+	auto arrayPtr = nodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index ) {
-		Node *currentNode = arrayPtr[ index ]->currentNode;
+		Node *currentNode = arrayPtr[ index ];
 		int maxPosX = currentNode->width( ) + currentNode->pos( ).x( );
 		int maxPosY = currentNode->height( ) + currentNode->pos( ).y( );
 		if( maxPosX > x )
@@ -650,21 +669,21 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	return QSize { x, y };
 }
 NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
-	NodeRunInfo *result = new NodeRunInfo( parent );
-	size_t count = refNodeVector.size( );
-	if( count != 0 ) {
-		size_t index = 0;
-		auto nodeRefLinkInfoArrayPtr = refNodeVector.data( );
-		for( ; index < count; ++index )
-			if( nodeRefLinkInfoArrayPtr[ index ]->currentNode->getNodeType( ) == NodeEnum::NodeType::Begin )
-				result->appendBegin( nodeRefLinkInfoArrayPtr[ index ] );
-		if( result->builderRunInstance( ) ) {
-			connect( result, &NodeRunInfo::clear_signal, this, &NodeDirector::nodeRunInfoClear );
-			return result;
-		}
-	}
+	//NodeRunInfo *result = new NodeRunInfo( parent );
+	//size_t count = nodeVector.size( );
+	//if( count != 0 ) {
+	//	size_t index = 0;
+	//	auto nodeRefLinkInfoArrayPtr = nodeVector.data( );
+	//	for( ; index < count; ++index )
+	//		if( nodeRefLinkInfoArrayPtr[ index ]->getNodeType( ) == NodeEnum::NodeType::Begin )
+	//			result->appendBegin( nodeRefLinkInfoArrayPtr[ index ] );
+	//	if( result->builderRunInstance( ) ) {
+	//		connect( result, &NodeRunInfo::clear_signal, this, &NodeDirector::nodeRunInfoClear );
+	//		return result;
+	//	}
+	//}
 
-	delete result;
+	//delete result;
 	return nullptr;
 }
 
@@ -777,7 +796,6 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 			return;
 		}
 		appendRefNodeVectorAtNode( refNdoeInfo );
-		node->show( );
 		mainWidget->ensureVisible( node );
 		mainWidget->update( );
 	} );
@@ -785,13 +803,14 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 }
 
 void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
-	size_t count = refNodeVector.size( );
-	auto data = refNodeVector.data( );
+	size_t count = nodeVector.size( );
+	auto data = nodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ]->getCurrentNode( ) == remove_node ) {
-			NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
-			refNodeVector.erase( refNodeVector.begin( ) + index );
+		if( data[ index ] == remove_node ) {
+			//NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
+			auto removeNdoe = *nodeVector.begin( );
+			nodeVector.erase( nodeVector.begin( ) + index );
 
 			//auto inputPorts = nodeRefLinkInfo->currentNode->getInputPortVector( );
 			//auto inputPortArray = inputPorts.data( );
@@ -808,7 +827,7 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			//count = refNodeVector.size( );
 			//data = refNodeVector.data( );
 			//for( ; index < count; ++index );
-			delete nodeRefLinkInfo;
+			delete removeNdoe;
 			if( drawNodeWidget )
 				drawNodeWidget->update( );
 			if( drawLinkWidget )
@@ -819,13 +838,16 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 		}
 }
 void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_link_info ) {
-	size_t count = refNodeVector.size( );
-	auto data = refNodeVector.data( );
+	auto node = append_node_ref_link_info->currentNode;
+	nodeVector.emplace_back( node );
+	node->show( );
+	/*size_t count = nodeVector.size( );
+	auto data = nodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == append_node_ref_link_info )
 			return;
-	refNodeVector.emplace_back( append_node_ref_link_info );
+	nodeVector.emplace_back( append_node_ref_link_info );
 	finishCreateNode( append_node_ref_link_info );
 	append_node_ref_link_info->currentNode->setStyleType( NodeEnum::NodeStyleType::Create );
 
@@ -843,7 +865,7 @@ void NodeDirector::appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_l
 			drawNodeWidget->update( );
 		return nullptr;
 	};
-	appendHistorIndexEnd( currentHistory, cancelHistory );
+	appendHistorIndexEnd( currentHistory, cancelHistory );*/
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;

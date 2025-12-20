@@ -85,10 +85,60 @@ protected:
 	QString generateTypeName;
 	/// @brief 变量指向
 	void *varPtr;
+private:
+	std::vector< Node * > refInputPortNode;
+	std::vector< Node * > refOutputPortNode;
+	/// @brief 链接信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	virtual void inputAddRef_Slot( InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 断开信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	virtual void inputDelRef_Slot( InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 链接信号
+	/// @param output_port 输出端口
+	/// @param ref_input_port 输入端口
+	virtual void outputAddRef_Slot( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 断开信号
+	/// @param output_port 输出端口
+	/// @param ref_input_port 输入端口
+	virtual void outputDelRef_Slot( OutputPort *output_port, InputPort *ref_input_port );
+protected:
+	/// @brief 增加输入引用
+	/// @param output_port
+	/// @param output_port
+	/// @param ref_input_port 输入端口
+	/// @return 失败返回 false
+	virtual bool emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 删除输入引用
+	/// @param output_port
+	/// @param ref_input_port 输入端
+	/// @return 失败返回 false
+	virtual bool eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 增加输出引用
+	/// @param input_port
+	/// @param ref_output_port 输出端
+	/// @return 失败返回 false
+	virtual bool emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 删除输出引用
+	/// @param input_port
+	/// @param ref_output_port 输出端
+	/// @return 失败返回 false
+	virtual bool eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output_port );
+	virtual void releaseInputPortRefNode( Node *node );
+	virtual void releaseOutputPortRefNode( Node *node );
+	virtual void releaseAllInputPortRefNode( );
+	virtual void releaseAllOutputPortRefNode( );
+	virtual void releaseAllRefNode( );
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
 	virtual bool init( DrawNodeWidget *parent );
+	virtual const std::vector< Node * > & getRefInputPortNode( ) const { return refInputPortNode; }
+	virtual const std::vector< Node * > & getRefOutputPortNode( ) const { return refOutputPortNode; }
+	virtual bool hasRefInputNodeRef( InputPort *input_port ) const;
+	virtual bool hasRefOutputNodeRef( OutputPort *output_port ) const;
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual NodeRefLinkInfo * getNodeRefLinkInfoPtr( ) const { return nodeRefLinkInfoPtr; }
@@ -100,7 +150,7 @@ public:
 	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;
 	virtual const std::vector< InputPort * > & getInputPortVector( ) const { return inputPortVector; }
 	virtual const std::vector< OutputPort * > & getOutputPortVector( ) const { return outputPortVector; }
-	virtual QMenu * getRemoveMenu( ) const { return removeMenu; }
+	virtual QMenu * getRemoveMenu( ) const;
 	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 	virtual QString toQString( ) const;
@@ -163,6 +213,22 @@ Q_SIGNALS:
 	/// @param release_node 释放对象指针
 	/// @param srack_info 信号行
 	void release_node_signal( Node *release_node, const SrackInfo &srack_info );
+	/// @brief 产生链接节点引用
+	/// @param output_port_node 输出节点
+	/// @param ref_input_port_node 输入节点
+	void connect_ref_input_port_node_signal( Node *output_port_node, Node *ref_input_port_node );
+	/// @brief 断开链接节点引用
+	/// @param output_port 输出节点
+	/// @param ref_input_port 输入节点
+	void dis_connect_ref_input_port_node_signal( Node *output_port, Node *ref_input_port );
+	/// @brief 产生链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void connect_ref_output_port_node_signal( Node *input_port_node, Node *ref_output_port );
+	/// @brief 断开链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void dis_connect_ref_output_port_node_signal( Node *input_port_node, Node *ref_output_port );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param srack_info 堆栈信息

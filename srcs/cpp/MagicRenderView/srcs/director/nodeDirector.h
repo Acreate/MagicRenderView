@@ -15,7 +15,6 @@ class NodePortLinkActionPair;
 class DrawLinkWidget;
 class DrawHighlightWidget;
 class SrackInfo;
-class NodeRefLinkInfo;
 class DrawNodeWidget;
 namespace path {
 	class pathTree;
@@ -48,7 +47,7 @@ protected:
 	DrawHighlightWidget *drawHighlightWidget;
 	NodeInfoWidget *currentShowWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
-	std::vector< NodeRefLinkInfo * > refNodeVector;
+	std::vector< Node * > nodeVector;
 	std::vector< NodePortLinkActionPair * > linkActionMap;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;

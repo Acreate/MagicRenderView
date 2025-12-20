@@ -14,6 +14,39 @@
 
 #include "../inputPort/inputPort.h"
 
+bool OutputPort::emplaceBackInputPortRef( InputPort *input_port_ptr ) {
+	size_t count = refInputPortVector.size( );
+	auto arrayPtr = refInputPortVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ] == input_port_ptr )
+			return true;
+	refInputPortVector.emplace_back( input_port_ptr );
+	emit connect_output_port_signal( this, input_port_ptr );
+	input_port_ptr->emplaceBackOutputPortRef( this );
+	return true;
+}
+bool OutputPort::eraseInputPortRef( InputPort *input_port_ptr ) {
+	size_t count = refInputPortVector.size( );
+	auto arrayPtr = refInputPortVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ] == input_port_ptr ) {
+			refInputPortVector.erase( refInputPortVector.begin( ) + index );
+			emit dis_connect_output_port_signal( this, input_port_ptr );
+			input_port_ptr->eraseOutputPortRef( this );
+			return true;
+		}
+	return false;
+}
+void OutputPort::clearInputPortRef( ) {
+	size_t count = refInputPortVector.size( );
+	for( size_t index = 0; index < count; ++index ) {
+		auto vectorIterator = refInputPortVector.begin( );
+		auto inputPort = *vectorIterator;
+		refInputPortVector.erase( vectorIterator );
+		emit dis_connect_output_port_signal( this, inputPort );
+		inputPort->eraseOutputPortRef( this );
+	}
+}
 OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullptr ) {
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
@@ -29,6 +62,14 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 }
 OutputPort::~OutputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );
+	size_t count = refInputPortVector.size( );
+	for( size_t index = 0; index < count; ++index ) {
+		auto inputPort = refInputPortVector.begin( );
+		auto removeInputPort = *inputPort;
+		refInputPortVector.erase( inputPort + index );
+		emit dis_connect_output_port_signal( this, removeInputPort );
+		removeInputPort->eraseOutputPortRef( this );
+	}
 	delete disLinkMenu;
 }
 bool OutputPort::init( Node *parent ) {
@@ -43,6 +84,10 @@ bool OutputPort::init( Node *parent ) {
 }
 QPoint OutputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
+}
+QMenu * OutputPort::getDisLinkMenu( ) const {
+	// todo : 重构删除链接菜单
+	return disLinkMenu;
 }
 void OutputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );
