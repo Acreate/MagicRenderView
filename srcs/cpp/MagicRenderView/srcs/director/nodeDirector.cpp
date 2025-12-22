@@ -965,47 +965,6 @@ void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &org_srack_
 	emit finish_run_node_signal( this,Create_SrackInfo( ), finish_node, org_srack_info );
 }
 
-void NodeDirector::releaseNodeLink( Node *signal_obj_ptr, Node *release_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点释放引用", Create_SrackInfo( ) );
-	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
-		currentShowWidget->removeRefNodeRefLinkInfo( signal_obj_ptr, release_output_node_ref_obj_ptr );
-
-	//emit finish_release_ref_node_signal( this, signal_obj_ptr->currentNode, release_output_node_ref_obj_ptr->currentNode, srack_info );
-}
-void NodeDirector::createNodeLink( Node *signal_obj_ptr, Node *create_output_node_ref_obj_ptr, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
-	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
-		currentShowWidget->newNodeRefLinkInfo( signal_obj_ptr, create_output_node_ref_obj_ptr );
-	//emit finish_create_ref_node_signal( this, signal_obj_ptr->currentNode, create_output_node_ref_obj_ptr->currentNode, srack_info );
-}
-void NodeDirector::releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info ) {
-	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
-	emit finish_release_port_link_signal( this, input_port, release_output_port, srack_info );
-}
-void NodeDirector::createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info ) {
-	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
-
-	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
-	actionText = actionText.arg( bind_output_port->parentNode->nodeName ).arg( bind_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
-	auto outAction = bind_output_port->disLinkMenu->addAction( actionText );
-	auto inAction = input_port->disLinkMenu->addAction( actionText );
-	auto disLink = [this, bind_output_port, input_port]( ) {
-		if( disLinkPort( bind_output_port, input_port ) == false )
-			return;
-		removePortLinkAction( input_port, bind_output_port );
-		if( drawLinkWidget )
-			drawLinkWidget->update( );
-		if( drawNodeWidget )
-			drawNodeWidget->update( );
-		if( drawHighlightWidget )
-			drawHighlightWidget->update( );
-	};
-
-	connect( outAction, &QAction::triggered, disLink );
-	connect( inAction, &QAction::triggered, disLink );
-	addEndPortLinkAction( input_port, bind_output_port, inAction, outAction );
-	emit finish_create_port_link_signal( this, input_port, bind_output_port, srack_info );
-}
 void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info ) {
 	emit node_run_info_clear_signal( this, Create_SrackInfo( ), clear_obj, srack_info );
 	delete clear_obj;
@@ -1016,6 +975,12 @@ void NodeDirector::finishCreateNode( Node *finish_node ) {
 	connect( finish_node, &Node::dis_connect_ref_input_port_node_signal, this, &NodeDirector::disConnectRefInputPortNodeSlot );
 	connect( finish_node, &Node::connect_ref_output_port_node_signal, this, &NodeDirector::connectRefOutputPortNodeSlot );
 	connect( finish_node, &Node::dis_connect_ref_output_port_node_signal, this, &NodeDirector::disConnectRefOutputPortNodeSlot );
+
+	connect( finish_node, &Node::connect_input_port_signal, this, &NodeDirector::connectInputPortSlot );
+	connect( finish_node, &Node::dis_connect_input_port_signal, this, &NodeDirector::disConnectInputPortSlot );
+	connect( finish_node, &Node::connect_output_port_signal, this, &NodeDirector::connectOutputPortSlot );
+	connect( finish_node, &Node::dis_connect_output_port_signal, this, &NodeDirector::disConnectOutputPortSlot );
+
 	connect( finish_node, &Node::release_node_signal, this, &NodeDirector::releaseNode );
 	connect( finish_node, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
 	connect( finish_node, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
@@ -1023,16 +988,34 @@ void NodeDirector::finishCreateNode( Node *finish_node ) {
 	emit finish_create_node_signal( this, finish_node, Create_SrackInfo( ) );
 }
 void NodeDirector::connectRefInputPortNodeSlot( Node *output_port_node, Node *ref_input_port_node ) {
+	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
+		currentShowWidget->newNodeRefLinkInfo( ref_input_port_node, output_port_node );
+	emit connect_ref_input_port_node_signal( this, output_port_node, ref_input_port_node );
+}
+void NodeDirector::disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port ) {
+	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	emit dis_connect_ref_input_port_node_signal( this, output_port, output_port );
+}
+void NodeDirector::connectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
+	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	emit connect_ref_output_port_node_signal( this, input_port_node, ref_output_port );
+}
+void NodeDirector::disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
+	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	emit dis_connect_ref_output_port_node_signal( this, input_port_node, ref_output_port );
+}
+void NodeDirector::connectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {
 	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
 
 	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
-	actionText = actionText.arg( output_port_node->parentNode->nodeName ).arg( bind_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
-	auto outAction = bind_output_port->disLinkMenu->addAction( actionText );
-	auto inAction = input_port->disLinkMenu->addAction( actionText );
-	auto disLink = [this, bind_output_port, input_port]( ) {
-		if( disLinkPort( bind_output_port, input_port ) == false )
+	actionText = actionText.arg( output_port->parentNode->nodeName ).arg( output_port->portName ).arg( ref_input_port->parentNode->nodeName ).arg( ref_input_port->portName );
+	auto outAction = output_port->disLinkMenu->addAction( actionText );
+	auto inAction = ref_input_port->disLinkMenu->addAction( actionText );
+	auto disLink = [this, output_port, ref_input_port]( ) {
+		if( disLinkPort( output_port, ref_input_port ) == false )
 			return;
-		removePortLinkAction( input_port, bind_output_port );
+		removePortLinkAction( ref_input_port, output_port );
 		if( drawLinkWidget )
 			drawLinkWidget->update( );
 		if( drawNodeWidget )
@@ -1043,12 +1026,33 @@ void NodeDirector::connectRefInputPortNodeSlot( Node *output_port_node, Node *re
 
 	connect( outAction, &QAction::triggered, disLink );
 	connect( inAction, &QAction::triggered, disLink );
-	addEndPortLinkAction( input_port, bind_output_port, inAction, outAction );
-	emit finish_create_port_link_signal( this, input_port, bind_output_port, srack_info );
+	addEndPortLinkAction( ref_input_port, output_port, inAction, outAction );
+	emit connect_output_port_signal( this, output_port, ref_input_port );
 }
-void NodeDirector::disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port ) {
+void NodeDirector::disConnectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {
 }
-void NodeDirector::connectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
+void NodeDirector::connectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {
+	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+
+	//QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
+	//actionText = actionText.arg( ref_output_port->parentNode->nodeName ).arg( ref_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
+	//auto outAction = ref_output_port->disLinkMenu->addAction( actionText );
+	//auto inAction = input_port->disLinkMenu->addAction( actionText );
+	//auto disLink = [this, ref_output_port, input_port]( ) {
+	//	if( disLinkPort( ref_output_port, input_port ) == false )
+	//		return;
+	//	removePortLinkAction( input_port, ref_output_port );
+	//	if( drawLinkWidget )
+	//		drawLinkWidget->update( );
+	//	if( drawNodeWidget )
+	//		drawNodeWidget->update( );
+	//	if( drawHighlightWidget )
+	//		drawHighlightWidget->update( );
+	//};
+
+	//connect( outAction, &QAction::triggered, disLink );
+	//connect( inAction, &QAction::triggered, disLink );
+	emit connect_input_port_signal( this, input_port, ref_output_port );
 }
-void NodeDirector::disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
+void NodeDirector::disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {
 }

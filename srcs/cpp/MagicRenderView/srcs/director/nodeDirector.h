@@ -170,6 +170,22 @@ protected:
 	/// @param input_port_node 输入节点
 	/// @param ref_output_port 输出节点
 	void disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port );
+	/// @brief 链接信号
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void connectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 断开信号
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void disConnectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 链接信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void connectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 断开信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port );
 	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
@@ -178,21 +194,45 @@ Q_SIGNALS:
 	/// @param srack_info 堆栈信息
 	void release_node_signal( NodeDirector *signal_obj_ptr, Node *release_node, const SrackInfo &srack_info );
 	/// @brief 产生链接节点引用
+	/// @param signal_obj_ptr 信号对象指针
 	/// @param output_port_node 输出节点
 	/// @param ref_input_port_node 输入节点
 	void connect_ref_input_port_node_signal( NodeDirector *signal_obj_ptr, Node *output_port_node, Node *ref_input_port_node );
 	/// @brief 断开链接节点引用
+	/// @param signal_obj_ptr 信号对象指针
 	/// @param output_port 输出节点
 	/// @param ref_input_port 输入节点
 	void dis_connect_ref_input_port_node_signal( NodeDirector *signal_obj_ptr, Node *output_port, Node *ref_input_port );
 	/// @brief 产生链接节点引用
+	/// @param signal_obj_ptr 信号对象指针
 	/// @param input_port_node 输入节点
 	/// @param ref_output_port 输出节点
-	void connect_ref_output_port_node_signal( Node *input_port_node, Node *ref_output_port );
+	void connect_ref_output_port_node_signal( NodeDirector *signal_obj_ptr, Node *input_port_node, Node *ref_output_port );
 	/// @brief 断开链接节点引用
+	/// @param signal_obj_ptr 信号对象指针
 	/// @param input_port_node 输入节点
 	/// @param ref_output_port 输出节点
 	void dis_connect_ref_output_port_node_signal( NodeDirector *signal_obj_ptr, Node *input_port_node, Node *ref_output_port );
+	/// @brief 链接信号
+	/// @param signal_obj_ptr 信号对象指针
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void connect_output_port_signal( NodeDirector *signal_obj_ptr, OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 断开信号
+	/// @param signal_obj_ptr 信号对象指针
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void dis_connect_output_port_signal( NodeDirector *signal_obj_ptr, OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 链接信号
+	/// @param signal_obj_ptr 信号对象指针
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void connect_input_port_signal( NodeDirector *signal_obj_ptr, InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 断开信号
+	/// @param signal_obj_ptr 信号对象指针
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void dis_connect_input_port_signal( NodeDirector *signal_obj_ptr, InputPort *input_port, OutputPort *ref_output_port );
 	/// @brief 节点错误信号
 	/// @param signal_obj_ptr 信号对象指针
 	/// @param signal_srack_info 当前信号产生堆栈信息

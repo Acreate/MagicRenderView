@@ -116,10 +116,6 @@ bool MainWindow::init( ) {
 	// 释放节点
 	if( nodeDirector ) {
 		disconnect( nodeDirector, &NodeDirector::release_node_signal, this, &MainWindow::release_node_slot );
-		disconnect( nodeDirector, &NodeDirector::finish_release_port_link_signal, this, &MainWindow::finish_release_port_link_slot );
-		disconnect( nodeDirector, &NodeDirector::finish_create_port_link_signal, this, &MainWindow::finish_create_port_link_slot );
-		disconnect( nodeDirector, &NodeDirector::finish_release_ref_node_signal, this, &MainWindow::finish_release_ref_node_slot );
-		disconnect( nodeDirector, &NodeDirector::finish_create_ref_node_signal, this, &MainWindow::finish_create_ref_node_slot );
 		disconnect( nodeDirector, &NodeDirector::error_run_node_signal, this, &MainWindow::error_run_node_slot );
 		disconnect( nodeDirector, &NodeDirector::advise_run_node_signal, this, &MainWindow::advise_run_node_slot );
 		disconnect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
@@ -129,10 +125,7 @@ bool MainWindow::init( ) {
 	}
 	nodeDirector = instancePtr->getNodeDirector( );
 	connect( nodeDirector, &NodeDirector::release_node_signal, this, &MainWindow::release_node_slot );
-	connect( nodeDirector, &NodeDirector::finish_release_port_link_signal, this, &MainWindow::finish_release_port_link_slot );
-	connect( nodeDirector, &NodeDirector::finish_create_port_link_signal, this, &MainWindow::finish_create_port_link_slot );
-	connect( nodeDirector, &NodeDirector::finish_release_ref_node_signal, this, &MainWindow::finish_release_ref_node_slot );
-	connect( nodeDirector, &NodeDirector::finish_create_ref_node_signal, this, &MainWindow::finish_create_ref_node_slot );
+
 	connect( nodeDirector, &NodeDirector::error_run_node_signal, this, &MainWindow::error_run_node_slot );
 	connect( nodeDirector, &NodeDirector::advise_run_node_signal, this, &MainWindow::advise_run_node_slot );
 	connect( nodeDirector, &NodeDirector::finish_run_node_signal, this, &MainWindow::finish_run_node_slot );
