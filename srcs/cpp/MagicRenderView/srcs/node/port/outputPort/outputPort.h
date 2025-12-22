@@ -51,6 +51,7 @@ protected:
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
+	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
 	virtual bool init( Node *parent );
 	virtual NodeEnum::PortType getPortType( ) const =0;
 	virtual const QString & getPortName( ) const { return portName; }

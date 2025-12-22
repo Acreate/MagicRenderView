@@ -7,7 +7,6 @@
 #include "../../../../srack/srackInfo.h"
 #include "../../../node/node.h"
 #include "../../../nodeInfo/nodeBuilderTools.h"
-#include "../../../nodeInfo/nodeRefLinkInfo.h"
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 #include "subWidget/jumpNodeWidgetItem.h"
 void JumpNodeEditor::releaseResource( ) {
@@ -17,15 +16,15 @@ void JumpNodeEditor::releaseResource( ) {
 		delete jumpNodeWidgetItemArrayPtr[ index ];
 	unionJumpNodeVector.clear( );
 }
-bool JumpNodeEditor::createJumpItem( NodeRefLinkInfo *node_ref_link_info ) {
+bool JumpNodeEditor::createJumpItem( Node *node_ref_link_info ) {
 
-	std::vector< std::vector< NodeRefLinkInfo * > > nodeRefLinkVector;
+	std::vector< std::vector< Node * > > nodeRefLinkVector;
 	if( NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( node_ref_link_info, nodeRefLinkVector ) == false )
 		return false;
 	size_t count = nodeRefLinkVector.size( );
 	if( count == 0 )
 		return false;
-	auto nodeRefLinkInfosArrayPtr = nodeRefLinkVector.data( );
+	auto NodesArrayPtr = nodeRefLinkVector.data( );
 	size_t index = 0;
 	unionJumpNodeVector.resize( count );
 	auto jumpNodeWidgetItemArrayPtr = unionJumpNodeVector.data( );
@@ -43,7 +42,7 @@ bool JumpNodeEditor::createJumpItem( NodeRefLinkInfo *node_ref_link_info ) {
 		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetLeft, this, &JumpNodeEditor::showNodeInfoWidgetLeft );
 		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetRight, this, &JumpNodeEditor::showNodeInfoWidgetRight );
 		createItem->setIsPopMenu( true );
-		createItem->setNodeRefVector( nodeRefLinkInfosArrayPtr[ index ] );
+		createItem->setNodeRefVector( NodesArrayPtr[ index ] );
 		mainLayout->addWidget( createItem );
 		jumpNodeWidgetItemArrayPtr[ index ] = createItem;
 	}
@@ -61,18 +60,18 @@ bool JumpNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::Point ) {
-		std::vector< NodeRefLinkInfo * > jumpNodeVector;
-		if( NodeBuilderTools::Point::findJumNodeRef( init_node->getNodeRefLinkInfoPtr( ), jumpNodeVector ) == false )
+		std::vector< Node * > jumpNodeVector;
+		if( NodeBuilderTools::Point::findJumNodeRef( init_node, jumpNodeVector ) == false )
 			return false;
 		size_t count = jumpNodeVector.size( );
 		auto arrayPtr = jumpNodeVector.data( );
 		size_t index = 0;
 		for( ; index < count; ++index )
 			if( createJumpItem( arrayPtr[ index ] ) == false ) {
-				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "[%1]节点窗口模块创建异常" ).arg( arrayPtr[ index ]->getCurrentNode( )->getNodeName( ) ), Create_SrackInfo( ) );
+				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "[%1]节点窗口模块创建异常" ).arg( arrayPtr[ index ]->getNodeName( ) ), Create_SrackInfo( ) );
 				return false;
 			}
 		return true;
 	}
-	return createJumpItem( init_node->getNodeRefLinkInfoPtr( ) );
+	return createJumpItem( init_node );
 }

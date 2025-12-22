@@ -5,14 +5,13 @@
 
 class QVBoxLayout;
 class BeginNodeItem;
-class NodeRefLinkInfo;
 class BeginNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 protected:
-	NodeRefLinkInfo *beginNodeRefLinkInfo;
-	std::vector< NodeRefLinkInfo * > beginNodeRefLinkVector;
-	std::vector< NodeRefLinkInfo * > processNodeRefLinkVector;
-	std::vector< NodeRefLinkInfo * > endNodeRefLinkVector;
+	Node *beginNodeRefLinkInfo;
+	std::vector< Node * > beginNodeRefLinkVector;
+	std::vector< Node * > processNodeRefLinkVector;
+	std::vector< Node * > endNodeRefLinkVector;
 	QWidget *mainWidget;
 	QVBoxLayout *mainLayout;
 	BeginNodeItem *beginItem;

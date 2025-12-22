@@ -62,15 +62,18 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 }
 OutputPort::~OutputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );
-	size_t count = refInputPortVector.size( );
-	for( size_t index = 0; index < count; ++index ) {
-		auto inputPort = refInputPortVector.begin( );
-		auto removeInputPort = *inputPort;
-		refInputPortVector.erase( inputPort + index );
-		emit dis_connect_output_port_signal( this, removeInputPort );
-		removeInputPort->eraseOutputPortRef( this );
-	}
+	clearInputPortRef( );
 	delete disLinkMenu;
+}
+bool OutputPort::hasInputPortRef( InputPort *input_port_ptr ) const {
+	size_t count = refInputPortVector.size( );
+	if( count == 0 )
+		return false;
+	auto inputPortArray = refInputPortVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( inputPortArray[ index ] == input_port_ptr )
+			return true;
+	return false;
 }
 bool OutputPort::init( Node *parent ) {
 	if( parent == nullptr )

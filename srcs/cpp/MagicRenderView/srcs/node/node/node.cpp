@@ -20,6 +20,7 @@
 #include "../../widget/drawHighlightWidget.h"
 
 #include "../../widget/drawNodeWidget.h"
+#include "../nodeInfo/nodeClickInfo.h"
 
 Node::~Node( ) {
 
@@ -194,12 +195,7 @@ bool Node::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_a
 QString Node::toQString( ) const {
 	return nodeName + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ")";
 }
-NodeEnum::NodeStyleType Node::getStyleType( ) const {
-	return nodeRefLinkInfoPtr->getDrawHighlightWidget( )->getNodeDrawNodeType( this );
-}
-void Node::setStyleType( NodeEnum::NodeStyleType style_type ) {
-	nodeRefLinkInfoPtr->getDrawHighlightWidget( )->setNodeDrawNodeType( this, style_type );
-}
+
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )

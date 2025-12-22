@@ -42,7 +42,7 @@ protected:
 public:
 	MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~MainWidget( ) override;
-	virtual bool addNode( NodeRefLinkInfo *node_ref_link_info );
+	virtual bool addNode( Node *node_ref_link_info );
 	virtual bool ensureVisible( Node *target );
 	virtual bool init( );
 	/// @brief 快捷功能

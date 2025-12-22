@@ -4,13 +4,14 @@
 #include <QWidget>
 #include <qpen.h>
 
+class Node;
 class QVBoxLayout;
-class NodeRefLinkInfo;
+class Node;
 class BeginNodeItem : public QWidget {
 	Q_OBJECT;
 private:
 	using TCurrentAction = std::pair< QAction *, QAction * >;
-	using ItemPair = std::pair< QWidget *, std::pair< TCurrentAction *, NodeRefLinkInfo * > >;
+	using ItemPair = std::pair< QWidget *, std::pair< TCurrentAction *, Node * > >;
 protected:
 	std::vector< ItemPair > nodeVector;
 	QVBoxLayout *mainLayout;
@@ -23,14 +24,14 @@ protected:
 	size_t nodeArrayIndex;
 	bool isPopMenu;
 protected:
-	virtual void appendNodeRefItem( NodeRefLinkInfo *item );
+	virtual void appendNodeRefItem( Node * item );
 	virtual void clearCurrentAction( );
 	virtual void selectionCurrentAction( );
 	virtual void releaseNodeArrayInfo( );
 public:
 	BeginNodeItem( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
 	~BeginNodeItem( ) override;
-	virtual void setNodeRefVector( const std::vector< NodeRefLinkInfo * > &node_ref_link_infos );
+	virtual void setNodeRefVector( const std::vector< Node * > &node_ref_link_infos );
 	virtual const QPen & getItemPen( ) const { return itemPen; }
 	virtual void setItemPen( const QPen &item_pen ) { itemPen = item_pen; }
 	virtual const QPen & getSubItemPen( ) const { return subItemPen; }
@@ -43,8 +44,8 @@ protected:
 	bool eventFilter( QObject *watched, QEvent *event ) override;
 	void hideEvent( QHideEvent *event ) override;
 Q_SIGNALS:
-	void showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info );
-	void showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info );
+	void showNodeInfoWidgetLeft( Node *node_ref_link_info );
+	void showNodeInfoWidgetRight( Node *node_ref_link_info );
 };
 
 #endif // BEGINNODEITEM_H_H_HEAD__FILE__

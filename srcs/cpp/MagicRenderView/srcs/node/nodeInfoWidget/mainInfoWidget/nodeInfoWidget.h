@@ -6,7 +6,6 @@
 #include "../../../enums/widgetEnum.h"
 
 class QMenuBar;
-class NodeRefLinkInfo;
 class MainWidgetScrollArea;
 class VarDirector;
 class BottomNodeInfoTool;
@@ -63,14 +62,11 @@ protected:
 	/// @brief 创建节点时候发生
 	/// @param node_ref_link_info 创建的节点的引用
 	/// @param target_node_ref 引用目标
-	virtual void newNodeRefLinkInfo( NodeRefLinkInfo *node_ref_link_info, NodeRefLinkInfo *target_node_ref ) { }
+	virtual void newNodeRefLinkInfo( Node *node_ref_link_info, Node *target_node_ref ) { }
 	/// @brief 移除依赖时候发生该消息
 	/// @param node_ref_link_info 移除的节点引用
 	/// @param target_node_ref 移除的目标
-	virtual void removeRefNodeRefLinkInfo( NodeRefLinkInfo *node_ref_link_info, NodeRefLinkInfo *target_node_ref ) { }
-	/// @brief 删除节点时候，发生该消息
-	/// @param node_ref_link_info 被删除的节点
-	virtual void removeCurrentRefNodeInfo( NodeRefLinkInfo *node_ref_link_info );
+	virtual void removeRefNodeRefLinkInfo( Node *node_ref_link_info, Node *target_node_ref ) { }
 protected:
 	virtual void okButtonEvent( );
 	virtual void cancelButtonEvent( );

@@ -6,14 +6,14 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-#include "../../../../nodeInfo/nodeRefLinkInfo.h"
-void JumpNodeWidgetItem::appendNodeRefItem( NodeRefLinkInfo *item ) {
+#include "../../../../node/node.h"
+void JumpNodeWidgetItem::appendNodeRefItem( Node *item ) {
 	size_t count = nodeVector.size( ) + 1;
 	QWidget *itemWidget = new QWidget( this );
 	QHBoxLayout *itemLayout = new QHBoxLayout( itemWidget );
 	QLabel *itemIndex = new QLabel( QString( "[%1]" ).arg( QString::number( count ) ), itemWidget );
 	itemLayout->addWidget( itemIndex );
-	QString nodeTitile = item->getCurrentNode( )->toQString( );
+	QString nodeTitile = item->toQString( );
 	QLabel *itemName = new QLabel( nodeTitile, itemWidget );
 	itemLayout->addWidget( itemName );
 	auto addActionLeft = new QAction( QString( "左侧显示 [%1]" ).arg( nodeTitile ), this );
@@ -65,7 +65,7 @@ JumpNodeWidgetItem::JumpNodeWidgetItem( QWidget *parent ) {
 JumpNodeWidgetItem::~JumpNodeWidgetItem( ) {
 	releaseNodeArrayInfo( );
 }
-void JumpNodeWidgetItem::setNodeRefVector( const std::vector< NodeRefLinkInfo * > &node_ref_link_infos ) {
+void JumpNodeWidgetItem::setNodeRefVector( const std::vector<Node *> &node_ref_link_infos ) {
 	releaseNodeArrayInfo( );
 	auto count = node_ref_link_infos.size( );
 	if( count == 0 )

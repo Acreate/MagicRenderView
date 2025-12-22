@@ -19,8 +19,8 @@ protected:
 	QScrollBar *vScrollAreaBar;
 protected:
 	virtual void releaseResource( );
-	virtual void showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info );
-	virtual void showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info );
+	virtual void showNodeInfoWidgetLeft( Node *node_ref_link_info );
+	virtual void showNodeInfoWidgetRight( Node *node_ref_link_info );
 public:
 	EditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	virtual bool initNode( Node *init_node );

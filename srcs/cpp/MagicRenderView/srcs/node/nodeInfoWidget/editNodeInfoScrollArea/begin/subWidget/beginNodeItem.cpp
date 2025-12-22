@@ -7,14 +7,15 @@
 #include <QVBoxLayout>
 #include <qcoreevent.h>
 
-#include "../../../../nodeInfo/nodeRefLinkInfo.h"
-void BeginNodeItem::appendNodeRefItem( NodeRefLinkInfo *item ) {
+#include <node/node/node.h>
+
+void BeginNodeItem::appendNodeRefItem( Node * item ) {
 	size_t count = nodeVector.size( ) + 1;
 	QWidget *itemWidget = new QWidget( this );
 	QHBoxLayout *itemLayout = new QHBoxLayout( itemWidget );
 	QLabel *itemIndex = new QLabel( QString( "[%1]" ).arg( QString::number( count ) ), itemWidget );
 	itemLayout->addWidget( itemIndex );
-	QString nodeTitile = item->getCurrentNode( )->toQString( );
+	QString nodeTitile = item->toQString( );
 	QLabel *itemName = new QLabel( nodeTitile, itemWidget );
 	itemLayout->addWidget( itemName );
 	auto addActionLeft = new QAction( QString( "左侧显示 [%1]" ).arg( nodeTitile ), this );
@@ -65,15 +66,15 @@ void BeginNodeItem::releaseNodeArrayInfo( ) {
 		nodeArrayCount = 0;
 	}
 }
-void BeginNodeItem::setNodeRefVector( const std::vector< NodeRefLinkInfo * > &node_ref_link_infos ) {
+void BeginNodeItem::setNodeRefVector( const std::vector< Node * > &node_ref_link_infos ) {
 
 	releaseNodeArrayInfo( );
 	auto count = node_ref_link_infos.size( );
 	if( count == 0 )
 		return;
-	auto nodeRefLinkInfoArrayPtr = node_ref_link_infos.data( );
+	auto NodeArrayPtr = node_ref_link_infos.data( );
 	for( size_t index = 0; index < count; ++index )
-		appendNodeRefItem( nodeRefLinkInfoArrayPtr[ index ] );
+		appendNodeRefItem( NodeArrayPtr[ index ] );
 	nodeArrayCount = nodeVector.size( );
 	nodeArratPtr = nodeVector.data( );
 }

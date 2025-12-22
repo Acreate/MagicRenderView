@@ -2,14 +2,13 @@
 
 #include "../../../app/application.h"
 #include "../../../director/nodeDirector.h"
-#include "../../nodeInfo/nodeRefLinkInfo.h"
 #include "../mainInfoWidget/nodeInfoWidget.h"
 
 void EditorNodeInfoScrollArea::releaseResource( ) {
 }
-void EditorNodeInfoScrollArea::showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref_link_info ) {
+void EditorNodeInfoScrollArea::showNodeInfoWidgetLeft( Node *node_ref_link_info ) {
 	auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
-	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info->getCurrentNode( ) );
+	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info );
 	if( nodeInfoWidget == nullptr )
 		return;
 	if( leftWidget == nodeInfoWidget )
@@ -23,9 +22,9 @@ void EditorNodeInfoScrollArea::showNodeInfoWidgetLeft( NodeRefLinkInfo *node_ref
 	leftWidget->installEventFilter( this );
 	leftWidget->showNodeInfoWidget( WidgetEnum::ShowType::Left );
 }
-void EditorNodeInfoScrollArea::showNodeInfoWidgetRight( NodeRefLinkInfo *node_ref_link_info ) {
+void EditorNodeInfoScrollArea::showNodeInfoWidgetRight( Node *node_ref_link_info ) {
 	auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
-	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info->getCurrentNode( ) );
+	auto nodeInfoWidget = nodeDirector->getNodeWidgeInfo( node_ref_link_info );
 	if( nodeInfoWidget == nullptr )
 		return;
 	if( rightWidget == nodeInfoWidget )

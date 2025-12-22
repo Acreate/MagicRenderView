@@ -3,8 +3,6 @@
 #pragma once
 #include <QWidget>
 
-#include "../node/nodeInfo/nodeClickInfo.h"
-#include "../node/nodeInfo/nodeRefLinkInfo.h"
 
 class Node;
 class Application;

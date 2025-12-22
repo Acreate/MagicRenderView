@@ -74,6 +74,18 @@ InputPort::~InputPort( ) {
 	clearOutputPortRef( );
 	delete disLinkMenu;
 }
+bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
+	size_t count = refOutputPortVector.size( );
+	if( count == 0 )
+
+		return false;
+	auto outputPortArray = refOutputPortVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( outputPortArray[ index ] == output_port_ptr )
+			return true;
+	return false;
+
+}
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }

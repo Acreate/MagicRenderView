@@ -10,7 +10,6 @@
 #include "../../../node/node.h"
 
 #include "../../../nodeInfo/nodeBuilderTools.h"
-#include "../../../nodeInfo/nodeRefLinkInfo.h"
 
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 
@@ -70,18 +69,18 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
 
-	beginNodeRefLinkInfo = init_node->getNodeRefLinkInfoPtr( );
+	beginNodeRefLinkInfo = init_node;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
 		if( NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
 			return false;
-	std::vector< NodeRefLinkInfo * > resultNodeRefLinkVector;
+	std::vector< Node * > resultNodeRefLinkVector;
 	if( NodeBuilderTools::analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )
 		return false;
 	size_t count = resultNodeRefLinkVector.size( );
 	auto nodeRefLinkInfoArrayPtr = resultNodeRefLinkVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		switch( nodeRefLinkInfoArrayPtr[ index ]->getCurrentNode( )->getNodeType( ) ) {
+		switch( nodeRefLinkInfoArrayPtr[ index ]->getNodeType( ) ) {
 			case NodeEnum::NodeType::Begin :
 				beginNodeRefLinkVector.emplace_back( nodeRefLinkInfoArrayPtr[ index ] );
 				break;

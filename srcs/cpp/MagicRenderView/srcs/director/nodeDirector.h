@@ -11,7 +11,6 @@
 class NodeRunInfo;
 class NodeHistory;
 class NodeInfoWidget;
-class NodePortLinkActionPair;
 class DrawLinkWidget;
 class DrawHighlightWidget;
 class SrackInfo;
@@ -48,7 +47,6 @@ protected:
 	NodeInfoWidget *currentShowWidget;
 	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< Node * > nodeVector;
-	std::vector< NodePortLinkActionPair * > linkActionMap;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
@@ -62,7 +60,7 @@ protected:
 	virtual bool initNodeInfoWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 	virtual bool findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
-	virtual bool portConnectLink( NodeRefLinkInfo *output_node_ref, OutputPort *output_port, InputPort *input_port );
+	virtual bool portConnectLink( Node *output_node_ref, OutputPort *output_port, InputPort *input_port );
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
@@ -124,7 +122,7 @@ protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
-	virtual void appendRefNodeVectorAtNode( NodeRefLinkInfo *append_node_ref_link_info );
+	virtual void appendRefNodeVectorAtNode( Node *append_node_ref_link_info );
 	virtual size_t removePortLinkAction( InputPort *input_port );
 	virtual size_t removePortLinkAction( OutputPort *output_port );
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
@@ -155,9 +153,9 @@ protected:
 	/// @param finish_node 原始信号对象
 	/// @param org_srack_info 原始对象堆栈信号信息
 	virtual void finishRunNode( Node *finish_node, const SrackInfo &org_srack_info );
-	virtual void finishCreateNode( NodeRefLinkInfo *finish_node );
-	virtual void releaseNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
-	virtual void createNodeLink( NodeRefLinkInfo *signal_obj_ptr, NodeRefLinkInfo *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	virtual void finishCreateNode( Node *finish_node );
+	virtual void releaseNodeLink( Node *signal_obj_ptr, Node *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
+	virtual void createNodeLink( Node *signal_obj_ptr, Node *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
 	virtual void releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
 	virtual void createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info );
 	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );

@@ -18,8 +18,6 @@ class SrackInfo;
 class NodeRunFunctionTypeInfo;
 class VarDirector;
 class Application;
-class NodePortLinkInfo;
-class NodeRefLinkInfo;
 class InputPort;
 class OutputPort;
 class NodeClickInfo;
@@ -49,8 +47,6 @@ protected:
 	std::vector< InputPort * > inputPortVector;
 	/// @brief 当前节点的输出列表
 	std::vector< OutputPort * > outputPortVector;
-	/// @brief 节点管理角色中派遣的节点引用信息对象指针
-	NodeRefLinkInfo *nodeRefLinkInfoPtr;
 	/// @brief 节点调用函数
 	NodeFunctionType nodeFunction;
 	/// @brief 节点名称
@@ -85,6 +81,7 @@ protected:
 	QString generateTypeName;
 	/// @brief 变量指向
 	void *varPtr;
+	NodeEnum::NodeStyleType nodeStyle;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -141,7 +138,6 @@ public:
 	virtual bool hasRefOutputNodeRef( OutputPort *output_port ) const;
 	virtual InputPort * getInputPort( const QString &port_name ) const;
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
-	virtual NodeRefLinkInfo * getNodeRefLinkInfoPtr( ) const { return nodeRefLinkInfoPtr; }
 	virtual bool updateLayout( );
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 	virtual const QString & getNodeName( ) const { return nodeName; }
@@ -156,8 +152,8 @@ public:
 	virtual QString toQString( ) const;
 	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
-	virtual NodeEnum::NodeStyleType getStyleType( ) const;
-	virtual void setStyleType( NodeEnum::NodeStyleType style_type );
+	virtual NodeEnum::NodeStyleType getNodeStyle( ) const { return nodeStyle; }
+	virtual void setNodeStyle( NodeEnum::NodeStyleType node_style ) { nodeStyle = node_style; }
 	virtual int getNodeBorderWidth( ) const { return nodeBorderWidth; }
 protected:
 	/// @brief 配置端口变量信息

@@ -17,7 +17,7 @@ protected:
 	std::vector< JumpNodeWidgetItem * > unionJumpNodeVector;
 protected:
 	void releaseResource( ) override;
-	virtual bool createJumpItem( NodeRefLinkInfo *node_ref_link_info );
+	virtual bool createJumpItem( Node *node_ref_link_info );
 public:
 	JumpNodeEditor( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;
