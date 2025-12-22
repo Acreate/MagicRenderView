@@ -231,6 +231,7 @@ bool Node::emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_
 		refInputPortNode.emplace_back( refNode );
 		emit connect_ref_input_port_node_signal( this, refNode );
 		refNode->emplaceBackRefOutputPortNode( ref_input_port, output_port );
+		emit connect_output_port_signal( output_port, ref_input_port );
 		return true;
 	}
 	auto arrayPtr = refInputPortNode.data( );
@@ -240,6 +241,7 @@ bool Node::emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_
 	refInputPortNode.emplace_back( refNode );
 	emit connect_ref_input_port_node_signal( this, refNode );
 	refNode->emplaceBackRefOutputPortNode( ref_input_port, output_port );
+	emit connect_output_port_signal( output_port, ref_input_port );
 	return true;
 }
 bool Node::eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port ) {
@@ -253,6 +255,7 @@ bool Node::eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_
 			refInputPortNode.emplace( refInputPortNode.begin( ) + index );
 			emit dis_connect_ref_input_port_node_signal( this, refNode );
 			refNode->eraseRefOutputPortNode( ref_input_port, output_port );
+			emit dis_connect_output_port_signal( output_port, ref_input_port );
 			return true;
 		}
 	return false;
@@ -264,6 +267,7 @@ bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_
 		refOutputPortNode.emplace_back( refNode );
 		emit connect_ref_output_port_node_signal( this, refNode );
 		refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
+		emit connect_input_port_signal( input_port, ref_output_port );
 		return true;
 	}
 	auto arrayPtr = refOutputPortNode.data( );
@@ -273,6 +277,7 @@ bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_
 	refOutputPortNode.emplace_back( refNode );
 	emit connect_ref_output_port_node_signal( this, refNode );
 	refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
+	emit connect_input_port_signal( input_port, ref_output_port );
 	return true;
 }
 bool Node::eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output_port ) {
@@ -286,6 +291,7 @@ bool Node::eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output
 			refOutputPortNode.emplace( refOutputPortNode.begin( ) + index );
 			emit dis_connect_ref_output_port_node_signal( this, refNode );
 			refNode->eraseRefInputPortNode( ref_output_port, input_port );
+			emit dis_connect_input_port_signal( input_port, ref_output_port );
 			return true;
 		}
 	return false;

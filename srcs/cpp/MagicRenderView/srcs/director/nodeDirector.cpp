@@ -772,25 +772,8 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
-			//NodeRefLinkInfo *nodeRefLinkInfo = data[ index ];
 			auto removeNdoe = *nodeVector.begin( );
 			nodeVector.erase( nodeVector.begin( ) + index );
-
-			//auto inputPorts = nodeRefLinkInfo->currentNode->getInputPortVector( );
-			//auto inputPortArray = inputPorts.data( );
-			//count = inputPorts.size( );
-			//for( index = 0; index < count; ++index )
-			//	removePortLinkAction( inputPortArray[ index ] );
-
-			//auto outputPorts = nodeRefLinkInfo->currentNode->getOutputPortVector( );
-			//auto outputPortArray = outputPorts.data( );
-			//count = outputPorts.size( );
-			//for( index = 0; index < count; ++index )
-			//	removePortLinkAction( outputPortArray[ index ] );
-
-			//count = refNodeVector.size( );
-			//data = refNodeVector.data( );
-			//for( ; index < count; ++index );
 			delete removeNdoe;
 			if( drawNodeWidget )
 				drawNodeWidget->update( );
@@ -801,36 +784,27 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			break;
 		}
 }
-void NodeDirector::appendRefNodeVectorAtNode( Node *append_node_ref_link_info ) {
-	//auto node = append_node_ref_link_info->currentNode;
-	nodeVector.emplace_back( append_node_ref_link_info );
-	append_node_ref_link_info->show( );
-	finishCreateNode( append_node_ref_link_info );
-	/*size_t count = nodeVector.size( );
-	auto data = nodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ] == append_node_ref_link_info )
-			return;
-	nodeVector.emplace_back( append_node_ref_link_info );
-	finishCreateNode( append_node_ref_link_info );
-	append_node_ref_link_info->currentNode->setStyleType( NodeEnum::NodeStyleType::Create );
+void NodeDirector::appendRefNodeVectorAtNode( Node *append_node ) {
 
-	auto currentHistory = [append_node_ref_link_info, this] {
-		auto node = createNode( append_node_ref_link_info->currentNode->nodeName, mainWidget );
+	nodeVector.emplace_back( append_node );
+	append_node->show( );
+	finishCreateNode( append_node );
+
+	auto currentHistory = [append_node, this] {
+		auto node = createNode( append_node->nodeName, mainWidget );
 		auto mapFromGlobal = drawNodeWidget->mapFromGlobal( QCursor::pos( ) );
 		node->move( mapFromGlobal );
 		if( drawNodeWidget )
 			drawNodeWidget->update( );
 		return nullptr;
 	};
-	auto cancelHistory = [append_node_ref_link_info, this] {
-		delete append_node_ref_link_info->currentNode;
+	auto cancelHistory = [append_node, this] {
+		delete append_node;
 		if( drawNodeWidget )
 			drawNodeWidget->update( );
 		return nullptr;
 	};
-	appendHistorIndexEnd( currentHistory, cancelHistory );*/
+	appendHistorIndexEnd( currentHistory, cancelHistory );
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;
@@ -1037,13 +1011,44 @@ void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &sr
 	delete clear_obj;
 }
 void NodeDirector::finishCreateNode( Node *finish_node ) {
-	/*connect( finish_node, &NodeRefLinkInfo::create_node_link_signal, this, &NodeDirector::createNodeLink );
-	connect( finish_node, &NodeRefLinkInfo::release_node_link_signal, this, &NodeDirector::releaseNodeLink );
-	connect( finish_node, &NodeRefLinkInfo::release_port_link_signal, this, &NodeDirector::releasePortLink );
-	connect( finish_node, &NodeRefLinkInfo::create_port_link_signal, this, &NodeDirector::createPortLink );
-	connect( finish_node->currentNode, &Node::release_node_signal, this, &NodeDirector::releaseNode );
-	connect( finish_node->currentNode, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
-	connect( finish_node->currentNode, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
-	connect( finish_node->currentNode, &Node::finish_run_node_signal, this, &NodeDirector::finishRunNode );
-	emit finish_create_node_signal( this, finish_node->currentNode, Create_SrackInfo( ) );*/
+
+	connect( finish_node, &Node::connect_ref_input_port_node_signal, this, &NodeDirector::connectRefInputPortNodeSlot );
+	connect( finish_node, &Node::dis_connect_ref_input_port_node_signal, this, &NodeDirector::disConnectRefInputPortNodeSlot );
+	connect( finish_node, &Node::connect_ref_output_port_node_signal, this, &NodeDirector::connectRefOutputPortNodeSlot );
+	connect( finish_node, &Node::dis_connect_ref_output_port_node_signal, this, &NodeDirector::disConnectRefOutputPortNodeSlot );
+	connect( finish_node, &Node::release_node_signal, this, &NodeDirector::releaseNode );
+	connect( finish_node, &Node::advise_run_node_signal, this, &NodeDirector::adviseRunNode );
+	connect( finish_node, &Node::error_run_node_signal, this, &NodeDirector::errorRunNode );
+	connect( finish_node, &Node::finish_run_node_signal, this, &NodeDirector::finishRunNode );
+	emit finish_create_node_signal( this, finish_node, Create_SrackInfo( ) );
+}
+void NodeDirector::connectRefInputPortNodeSlot( Node *output_port_node, Node *ref_input_port_node ) {
+	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+
+	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
+	actionText = actionText.arg( output_port_node->parentNode->nodeName ).arg( bind_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
+	auto outAction = bind_output_port->disLinkMenu->addAction( actionText );
+	auto inAction = input_port->disLinkMenu->addAction( actionText );
+	auto disLink = [this, bind_output_port, input_port]( ) {
+		if( disLinkPort( bind_output_port, input_port ) == false )
+			return;
+		removePortLinkAction( input_port, bind_output_port );
+		if( drawLinkWidget )
+			drawLinkWidget->update( );
+		if( drawNodeWidget )
+			drawNodeWidget->update( );
+		if( drawHighlightWidget )
+			drawHighlightWidget->update( );
+	};
+
+	connect( outAction, &QAction::triggered, disLink );
+	connect( inAction, &QAction::triggered, disLink );
+	addEndPortLinkAction( input_port, bind_output_port, inAction, outAction );
+	emit finish_create_port_link_signal( this, input_port, bind_output_port, srack_info );
+}
+void NodeDirector::disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port ) {
+}
+void NodeDirector::connectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
+}
+void NodeDirector::disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
 }

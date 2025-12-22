@@ -122,7 +122,7 @@ protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
-	virtual void appendRefNodeVectorAtNode( Node *append_node_ref_link_info );
+	virtual void appendRefNodeVectorAtNode( Node *append_node );
 	virtual size_t removePortLinkAction( InputPort *input_port );
 	virtual size_t removePortLinkAction( OutputPort *output_port );
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
@@ -154,10 +154,22 @@ protected:
 	/// @param org_srack_info 原始对象堆栈信号信息
 	virtual void finishRunNode( Node *finish_node, const SrackInfo &org_srack_info );
 	virtual void finishCreateNode( Node *finish_node );
-	virtual void releaseNodeLink( Node *signal_obj_ptr, Node *release_output_node_ref_obj_ptr, const SrackInfo &srack_info );
-	virtual void createNodeLink( Node *signal_obj_ptr, Node *create_output_node_ref_obj_ptr, const SrackInfo &srack_info );
-	virtual void releasePortLink( InputPort *input_port, OutputPort *release_output_port, const SrackInfo &srack_info );
-	virtual void createPortLink( InputPort *input_port, OutputPort *bind_output_port, const SrackInfo &srack_info );
+	/// @brief 产生链接节点引用
+	/// @param output_port_node 输出节点
+	/// @param ref_input_port_node 输入节点
+	void connectRefInputPortNodeSlot( Node *output_port_node, Node *ref_input_port_node );
+	/// @brief 断开链接节点引用
+	/// @param output_port 输出节点
+	/// @param ref_input_port 输入节点
+	void disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port );
+	/// @brief 产生链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void connectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port );
+	/// @brief 断开链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port );
 	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
@@ -165,30 +177,22 @@ Q_SIGNALS:
 	/// @param release_node 释放指针
 	/// @param srack_info 堆栈信息
 	void release_node_signal( NodeDirector *signal_obj_ptr, Node *release_node, const SrackInfo &srack_info );
-	/// @brief 节点端口发生释放时，产生该信号
-	/// @param signal_obj_ptr 信号对象指针
-	/// @param signal_port 释放的源端口对象指针
-	/// @param target_prot 释放的目标端口对象指针
-	/// @param srack_info 堆栈信息
-	void finish_release_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
-	/// @brief 节点端口发生链接时，产生该信号
-	/// @param signal_obj_ptr 信号对象指针
-	/// @param signal_port 链接的源端口对象指针
-	/// @param target_prot 链接的目标端口对象指针
-	/// @param srack_info 堆栈信息
-	void finish_create_port_link_signal( NodeDirector *signal_obj_ptr, InputPort *signal_port, OutputPort *target_prot, const SrackInfo &srack_info );
-	/// @brief 节点依赖发生释放时候，产生该信号
-	/// @param signal_obj_ptr 信号对象指针
-	/// @param signal_node 依赖节点
-	/// @param ref_node 被删除的依赖
-	/// @param srack_info 堆栈信息
-	void finish_release_ref_node_signal( NodeDirector *signal_obj_ptr, Node *signal_node, Node *ref_node, const SrackInfo &srack_info );
-	/// @brief 节点依赖发生增持时候，产生该信号
-	/// @param signal_obj_ptr 信号对象指针
-	/// @param signal_node 依赖节点
-	/// @param ref_node 被增持的依赖
-	/// @param srack_info 堆栈信息
-	void finish_create_ref_node_signal( NodeDirector *signal_obj_ptr, Node *signal_node, Node *ref_node, const SrackInfo &srack_info );
+	/// @brief 产生链接节点引用
+	/// @param output_port_node 输出节点
+	/// @param ref_input_port_node 输入节点
+	void connect_ref_input_port_node_signal( NodeDirector *signal_obj_ptr, Node *output_port_node, Node *ref_input_port_node );
+	/// @brief 断开链接节点引用
+	/// @param output_port 输出节点
+	/// @param ref_input_port 输入节点
+	void dis_connect_ref_input_port_node_signal( NodeDirector *signal_obj_ptr, Node *output_port, Node *ref_input_port );
+	/// @brief 产生链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void connect_ref_output_port_node_signal( Node *input_port_node, Node *ref_output_port );
+	/// @brief 断开链接节点引用
+	/// @param input_port_node 输入节点
+	/// @param ref_output_port 输出节点
+	void dis_connect_ref_output_port_node_signal( NodeDirector *signal_obj_ptr, Node *input_port_node, Node *ref_output_port );
 	/// @brief 节点错误信号
 	/// @param signal_obj_ptr 信号对象指针
 	/// @param signal_srack_info 当前信号产生堆栈信息

@@ -225,6 +225,22 @@ Q_SIGNALS:
 	/// @param input_port_node 输入节点
 	/// @param ref_output_port 输出节点
 	void dis_connect_ref_output_port_node_signal( Node *input_port_node, Node *ref_output_port );
+	/// @brief 链接信号
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void connect_output_port_signal( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 断开信号
+	/// @param output_port 输出端
+	/// @param ref_input_port 输入端
+	void dis_connect_output_port_signal( OutputPort *output_port, InputPort *ref_input_port );
+	/// @brief 链接信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void connect_input_port_signal( InputPort *input_port, OutputPort *ref_output_port );
+	/// @brief 断开信号
+	/// @param input_port 输入端口
+	/// @param ref_output_port 输出端口
+	void dis_connect_input_port_signal( InputPort *input_port, OutputPort *ref_output_port );
 	/// @brief 节点错误信号
 	/// @param error_node 错误节点
 	/// @param srack_info 堆栈信息
