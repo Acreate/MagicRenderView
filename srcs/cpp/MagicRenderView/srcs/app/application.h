@@ -3,6 +3,7 @@
 #pragma once
 #include <QApplication>
 
+class MenuDirector;
 class QFileInfo;
 class IniDirector;
 class MainWindow;
@@ -20,6 +21,7 @@ protected:
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	IniDirector *iniDirector;
+	MenuDirector *menuDirector;
 protected:
 	MainWindow *mainWindow;
 protected:
@@ -47,6 +49,7 @@ public:
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
 	virtual PrinterDirector * getPrinterDirector( ) const { return printerDirector; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
+	virtual MenuDirector * getMenuDirector( ) const { return menuDirector; }
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
 	virtual bool setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) const;
 	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value ) const;

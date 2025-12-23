@@ -44,14 +44,13 @@ Node::~Node( ) {
 		delete titileWidget;
 	if( connectWidget )
 		delete connectWidget;
-	delete removeMenu;
+	
 	if( varPtr )
 		varDirector->release( varPtr );
 }
 Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
 	hide( );
 
-	removeMenu = new QMenu;
 	varPtr = nullptr;
 
 }
@@ -163,10 +162,7 @@ bool Node::hasOutputPort( const OutputPort *check_output_port ) const {
 
 	return false;
 }
-QMenu * Node::getRemoveMenu( ) const {
-	// todo : 重构节点删除菜单
-	return removeMenu;
-}
+
 bool Node::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
@@ -196,6 +192,44 @@ QString Node::toQString( ) const {
 	return nodeName + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ")";
 }
 
+InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
+	size_t count = inputPortVector.size( );
+	if( count == 0 )
+		return nullptr;
+	auto inputPortArrayPtr = inputPortVector.data( );
+	if( input_port_generate_code <= count && inputPortArrayPtr[ input_port_generate_code - 1 ]->generateCode == input_port_generate_code )
+		return inputPortArrayPtr[ input_port_generate_code - 1 ];
+	for( size_t index = 0; index < count; ++index )
+		if( inputPortArrayPtr[ index ]->generateCode == input_port_generate_code )
+			return inputPortArrayPtr[ index ];
+	return nullptr;
+}
+OutputPort * Node::getOutputPort( const size_t &output_port_generate_code ) const {
+	size_t count = outputPortVector.size( );
+	if( count == 0 )
+		return nullptr;
+	auto outputPortArrayPtr = outputPortVector.data( );
+	if( output_port_generate_code <= count && outputPortArrayPtr[ output_port_generate_code - 1 ]->generateCode == output_port_generate_code )
+		return outputPortArrayPtr[ output_port_generate_code - 1 ];
+	for( size_t index = 0; index < count; ++index )
+		if( outputPortArrayPtr[ index ]->generateCode == output_port_generate_code )
+			return outputPortArrayPtr[ index ];
+	return nullptr;
+}
+bool Node::updatePortGenerateCodes( ) {
+	size_t count = inputPortVector.size( );
+	size_t index = 0;
+	if( count )
+		for( auto inputPortArrayPtr = inputPortVector.data( ); index < count; ++index )
+			inputPortArrayPtr[ index ]->generateCode = index + 1;
+	count = outputPortVector.size( );
+	if( count == 0 )
+		return true;
+	index = 0;
+	for( auto outputPortArrayPtr = outputPortVector.data( ); index < count; ++index )
+		outputPortArrayPtr[ index ]->generateCode = index + 1;
+	return false;
+}
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
 	if( change_var_output_port->varPtr )
@@ -350,6 +384,17 @@ void Node::releaseAllRefNode( ) {
 	releaseAllInputPortRefNode( );
 	releaseAllOutputPortRefNode( );
 }
+bool Node::initEx( DrawNodeWidget *parent ) {
+	if( init( parent ) == false )
+		return false;
+	if( initExCallFunction( parent ) == false )
+		return false;
+	if( updateLayout( ) == false )
+		return false;
+	if( updatePortGenerateCodes( ) == false )
+		return false;
+	return true;
+}
 bool Node::hasRefInputNodeRef( InputPort *input_port ) const {
 	Node *refNode = input_port->parentNode;
 	size_t count = refInputPortNode.size( );
@@ -402,13 +447,9 @@ bool Node::init( DrawNodeWidget *parent ) {
 	mainLayout = nullptr;
 	titileWidget = nullptr;
 	connectWidget = nullptr;
-	removeMenu->clear( );
-	auto addAction = removeMenu->addAction( QString( tr( "删除节点 [%1]" ) ).arg( nodeName ) );
-	connect( addAction, &QAction::triggered, [this, addAction]( ) {
-		addAction->deleteLater( );
-		this->deleteLater( );
-	} );
+
 	nodeFunction = [] ( VarDirector *var_director ) { };
+	parent->addNode( this );
 	setParent( parent );
 	return true;
 }

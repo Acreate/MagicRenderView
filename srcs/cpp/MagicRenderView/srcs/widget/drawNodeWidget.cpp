@@ -87,7 +87,7 @@ bool DrawNodeWidget::init( MainWidget *parent ) {
 	return true;
 }
 bool DrawNodeWidget::addNode( Node *add_node ) {
-	if( add_node->init( this ) == false )
+	if( add_node->initEx( this ) == false )
 		return false;
 	QPoint fromGlobal = mapFromGlobal( menuPopPoint );
 	if( fromGlobal.x( ) < 0 )

@@ -9,7 +9,7 @@ class IntArrayAddNode : public ArrayNode {
 public:
 	IntArrayAddNode( const QString &node_name )
 		: ArrayNode( node_name ) { }
-	bool init( DrawNodeWidget *parent ) override;
+	bool initEx( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "缓存/整数序列和" ) );

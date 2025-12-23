@@ -8,7 +8,7 @@ class StartNode : public BeginNode {
 public:
 	StartNode( const QString &node_name )
 		: BeginNode( node_name ) { }
-	bool init( DrawNodeWidget *parent ) override;
+	bool initEx( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "起始/开始" ) );

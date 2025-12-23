@@ -14,6 +14,7 @@
 
 #include <win/mainWindow.h>
 
+#include "../director/menuDirector.h"
 #include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
@@ -29,6 +30,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	varDirector = new VarDirector;
 	iniDirector = new IniDirector;
 	nodeDirector = new NodeDirector;
+	menuDirector = new MenuDirector;
 	mainWindow = new MainWindow( );
 	appInitRunDataTime = new QDateTime;
 }
@@ -121,6 +123,8 @@ bool Application::init( ) {
 	if( iniDirector->init( ) == false )
 		return false;
 	if( nodeDirector->init( ) == false )
+		return false;
+	if( menuDirector->init( ) == false )
 		return false;
 	if( mainWindow->init( ) == false )
 		return false;

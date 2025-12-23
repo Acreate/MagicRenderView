@@ -8,15 +8,15 @@
 
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
-bool IntGenerateNode::init( DrawNodeWidget *parent ) {
-	if( GenerateNode::init( parent ) == false )
-		return false;
-	if( appendInputPortType< InterFaceInputPort >( tr( "过程接入" ) ) == nullptr )
-		return false;
-	if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
-		return false;
-	return true;
-
+bool IntGenerateNode::initEx( DrawNodeWidget *parent ) {
+	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+		if( appendInputPortType< InterFaceInputPort >( tr( "过程接入" ) ) == nullptr )
+			return false;
+		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
+			return false;
+		return true;
+	};
+	return GenerateNode::initEx( parent );
 }
 bool IntGenerateNode::initArrayUintyTypeName( QString &change_array_unty_type_name ) {
 	return varDirector->getTypeName( typeid( int64_t ), change_array_unty_type_name );

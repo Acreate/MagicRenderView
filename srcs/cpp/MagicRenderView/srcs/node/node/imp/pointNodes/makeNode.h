@@ -8,8 +8,8 @@ class MakeNode : public PointNode {
 public:
 	MakeNode( const QString &node_name )
 		: PointNode( node_name ) { }
+	bool initEx( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
-	bool init( DrawNodeWidget *parent ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "记录/记录位置" ) );
 };

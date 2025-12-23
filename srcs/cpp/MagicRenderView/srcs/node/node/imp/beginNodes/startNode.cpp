@@ -2,13 +2,15 @@
 
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 
-bool StartNode::init( DrawNodeWidget *parent ) {
-	if( BeginNode::init( parent ) == false )
-		return false;
-	if( appendOutputPortType< InterFaceOutputPort >( tr( "过程开始" ) ) == nullptr )
-		return false;
-	return true;
+bool StartNode::initEx( DrawNodeWidget *parent ) {
+	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+		if( appendOutputPortType< InterFaceOutputPort >( tr( "过程开始" ) ) == nullptr )
+			return false;
+		return true;
+	};
+	return BeginNode::initEx( parent );
 }
+
 bool StartNode::updateLayout( ) {
 	if( BeginNode::updateLayout( ) == false )
 		return false;

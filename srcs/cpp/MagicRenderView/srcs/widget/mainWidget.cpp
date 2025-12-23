@@ -104,7 +104,7 @@ void MainWidget::pastePointNodeInfo( ) {
 	if( list.size( ) == 0 )
 		return;
 	text = list.data( )[ 0 ];
-	auto node = nodeDirector->createNode( text, this );
+	auto node = nodeDirector->createNode( text );
 	if( node == nullptr ) {
 		printerDirector->info( tr( "无法匹配 [%1]" ).arg( text ), Create_SrackInfo( ) );
 		return;
@@ -240,7 +240,8 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::None :
 					case NodeEnum::NodeClickType::Titile :
-						dragNode->getRemoveMenu( )->popup( mapToGlobal( event->pos( ) ) );
+						// todo 弹出菜单
+						//dragNode->getRemoveMenu( )->popup( mapToGlobal( event->pos( ) ) );
 						break;
 					case NodeEnum::NodeClickType::InputPort :
 						clickInfoPtr->getInputPort( )->getDisLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );

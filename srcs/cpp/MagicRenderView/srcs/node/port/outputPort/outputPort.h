@@ -36,6 +36,7 @@ protected:
 	QString portName;
 	QString varTypeName;
 	void *varPtr;
+	uint64_t generateCode;
 protected:
 	QLabel *ico;
 	QLabel *showTitle;
@@ -53,6 +54,7 @@ public:
 	~OutputPort( ) override;
 	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
 	virtual bool init( Node *parent );
+	virtual uint64_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeEnum::PortType getPortType( ) const =0;
 	virtual const QString & getPortName( ) const { return portName; }
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }

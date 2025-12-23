@@ -2,12 +2,13 @@
 
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 
-bool ResultNode::init( DrawNodeWidget *parent ) {
-	if( EndNode::init( parent ) == false )
-		return false;
-	if( appendInputPortType< InterFaceInputPort >( tr( "过程结束" ) ) == nullptr )
-		return false;
-	return true;
+bool ResultNode::initEx( DrawNodeWidget *parent ) {
+	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+		if( appendInputPortType< InterFaceInputPort >( tr( "过程结束" ) ) == nullptr )
+			return false;
+		return true;
+	};
+	return EndNode::initEx( parent );
 }
 bool ResultNode::updateLayout( ) {
 	if( EndNode::updateLayout( ) == false )

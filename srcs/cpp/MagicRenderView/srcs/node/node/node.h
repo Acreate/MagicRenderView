@@ -71,8 +71,6 @@ protected:
 	QWidget *outputPortWidget;
 	/// @brief 节点输出布局
 	QVBoxLayout *outputPortWidgetLayout;
-	/// @brief 删除菜单
-	QMenu *removeMenu;
 	/// @brief 节点信息显示菜单
 	NodeInfoWidget *nodeInfoWidget;
 	/// @brief 节点边缘
@@ -82,6 +80,8 @@ protected:
 	/// @brief 变量指向
 	void *varPtr;
 	NodeEnum::NodeStyleType nodeStyle;
+	/// @brief 初始化时候自动调用
+	std::function< bool( DrawNodeWidget * ) > initExCallFunction;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -128,10 +128,12 @@ protected:
 	virtual void releaseAllInputPortRefNode( );
 	virtual void releaseAllOutputPortRefNode( );
 	virtual void releaseAllRefNode( );
+protected:
+	virtual bool init( DrawNodeWidget *parent );
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
-	virtual bool init( DrawNodeWidget *parent );
+	virtual bool initEx( DrawNodeWidget *parent );
 	virtual const std::vector< Node * > & getRefInputPortNode( ) const { return refInputPortNode; }
 	virtual const std::vector< Node * > & getRefOutputPortNode( ) const { return refOutputPortNode; }
 	virtual bool hasRefInputNodeRef( InputPort *input_port ) const;
@@ -146,7 +148,6 @@ public:
 	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;
 	virtual const std::vector< InputPort * > & getInputPortVector( ) const { return inputPortVector; }
 	virtual const std::vector< OutputPort * > & getOutputPortVector( ) const { return outputPortVector; }
-	virtual QMenu * getRemoveMenu( ) const;
 	virtual bool toUint8VectorData( std::vector< uint8_t > &result_vector_data );
 	virtual bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
 	virtual QString toQString( ) const;
@@ -155,7 +156,12 @@ public:
 	virtual NodeEnum::NodeStyleType getNodeStyle( ) const { return nodeStyle; }
 	virtual void setNodeStyle( NodeEnum::NodeStyleType node_style ) { nodeStyle = node_style; }
 	virtual int getNodeBorderWidth( ) const { return nodeBorderWidth; }
+	virtual InputPort * getInputPort( const size_t &input_port_generate_code ) const;
+	virtual OutputPort * getOutputPort( const size_t &output_port_generate_code ) const;
 protected:
+	/// @brief 更新端口的生成代号
+	/// @return 失败返回 false
+	virtual bool updatePortGenerateCodes( );
 	/// @brief 配置端口变量信息
 	/// @param change_var_output_port 修改的输出端口
 	/// @param var_type_name 变量名称

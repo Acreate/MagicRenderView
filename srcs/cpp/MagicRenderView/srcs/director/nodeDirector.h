@@ -56,7 +56,10 @@ protected:
 	virtual void releaseNodeResources( );
 	virtual void releaseNodeInfoWidgetResources( );
 	virtual void releaseNodeHistoryResources( );
-	virtual bool initDrawLinkWidget( QString &result_error_msg );
+	/// @brief 初始化节点渲染节点窗口
+	/// @param result_error_msg 错误信息
+	/// @return 失败返回 false 并且返回错误信息到 result_error_msg 参数
+	virtual bool initNodeRenderGraphWidget( QString &result_error_msg );
 	virtual bool initNodeInfoWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 	virtual bool findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
@@ -80,9 +83,8 @@ public:
 	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
-	/// @param main_widget 显示窗口
 	/// @return 失败返回 nullptr
-	virtual Node * createNode( const QString &node_type_name, MainWidget *main_widget );
+	virtual Node * createNode( const QString &node_type_name );
 	/// @brief 链接端口
 	/// @param output_port 输出端口
 	/// @param input_port 输入端口
@@ -122,7 +124,7 @@ protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
-	virtual void appendRefNodeVectorAtNode( Node *append_node );
+	virtual void appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node );
 	virtual size_t removePortLinkAction( InputPort *input_port );
 	virtual size_t removePortLinkAction( OutputPort *output_port );
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );

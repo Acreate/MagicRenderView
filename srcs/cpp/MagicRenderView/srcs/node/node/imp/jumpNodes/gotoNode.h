@@ -8,8 +8,8 @@ class GotoNode : public JumpNode {
 public:
 	GotoNode( const QString &node_name )
 		: JumpNode( node_name ) { }
+	bool initEx( DrawNodeWidget *parent ) override;
 	bool updateLayout( ) override;
-	bool init( DrawNodeWidget *parent ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
 };
