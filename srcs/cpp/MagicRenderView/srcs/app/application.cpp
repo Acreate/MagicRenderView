@@ -118,13 +118,13 @@ bool Application::init( ) {
 
 	if( printerDirector->init( ) == false )
 		return false;
+	if( menuDirector->init( ) == false )
+		return false;
 	if( varDirector->init( ) == false )
 		return false;
 	if( iniDirector->init( ) == false )
 		return false;
 	if( nodeDirector->init( ) == false )
-		return false;
-	if( menuDirector->init( ) == false )
 		return false;
 	if( mainWindow->init( ) == false )
 		return false;
