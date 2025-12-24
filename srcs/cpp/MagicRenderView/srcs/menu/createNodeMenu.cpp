@@ -30,28 +30,35 @@ CreateNodeMenu::CreateNodeMenu( ) : QMenu( ) {
 bool CreateNodeMenu::initCreateNodeMenu( ) {
 	releaseObjResource( );
 	// 这里加入节点窗口创建函数
-	NodeStack *createNodeStack = new BaseNodeStack( );
-	if( createNodeStack->init( ) == false ) {
-		delete createNodeStack;
+	auto createSubMenuAtNodeStack = appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
+	if( createSubMenuAtNodeStack == nullptr )
 		return false;
-	}
-	// 初始化菜单
-	auto nodeGenerateCreateMenu = fromNodeGenerateCreateMenu( createNodeStack );
-	if( addMenu( nodeGenerateCreateMenu ) == nullptr ) {
-		delete createNodeStack;
-		return false;
-	}
-
+	addMenu( createSubMenuAtNodeStack );
+	
 	createCount = createVector.size( );
 	createArrayPtr = createVector.data( );
 	return createCount != 0;
 }
+void CreateNodeMenu::appendCareateItem( const QString &create_item_name, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
+	appendCareateItem( addAction( create_item_name ), create_node_name, create_node_function );
+}
+QMenu * CreateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {
+	QMenu *nodeGenerateCreateMenu = nullptr;
+	if( create_node_stack == nullptr )
+		return nodeGenerateCreateMenu;
+	do {
+		if( create_node_stack->init( ) == false )
+			break;
+		nodeGenerateCreateMenu = fromNodeGenerateCreateMenu( create_node_stack );
+		if( addMenu( nodeGenerateCreateMenu ) == nullptr )
+			break;
+	} while( false );
+	delete create_node_stack;
+	return nodeGenerateCreateMenu;
+}
 void CreateNodeMenu::appendCareateItem( QAction *create_node_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
 	TCreateUintyType unity = std::pair( create_node_item, TCreateNodeInfo( create_node_name, create_node_function ) );
 	createVector.emplace_back( unity );
-}
-void CreateNodeMenu::appendCareateItem( const QString &create_item_name, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
-	appendCareateItem( addAction( create_item_name ), create_node_name, create_node_function );
 }
 
 QMenu * CreateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) {
@@ -66,10 +73,12 @@ QMenu * CreateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) 
 		return nullptr;
 	nodeStackName = pathTree.getName( );
 	QMenu *resultMenu = new QMenu( nodeStackName );
-	fromPathTreeGenerateCreateaAction( &pathTree, resultMenu );
-	return resultMenu;
+	if( fromPathTreeGenerateCreateaAction( nodeStackName + "/", &pathTree, resultMenu, data, count ) == true )
+		return resultMenu;
+	delete resultMenu;
+	return nullptr;
 }
-bool CreateNodeMenu::fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu ) {
+bool CreateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &top_name, path::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count ) {
 	auto pathTreeSubPath = path_tree->getSubPath( );
 	size_t subPathCount = pathTreeSubPath.size( );
 	if( subPathCount == 0 )
@@ -78,19 +87,28 @@ bool CreateNodeMenu::fromPathTreeGenerateCreateaAction( path::pathTree *path_tre
 	auto pathTreeSubPathTree = pathTreeSubPath.data( );
 	size_t subPathIndex = 0;
 	QString name;
+	size_t index;
 	QString absolutePathName;
 	std::list< path::pathTree * > subPathTree;
 	for( ; subPathIndex < subPathCount; ++subPathIndex )
 		if( pathTreeSubPathTree[ subPathIndex ]->getSubPath( ).size( ) == 0 ) {
 			name = pathTreeSubPathTree[ subPathIndex ]->getName( );
 			pathTreeSubPathTree[ subPathIndex ]->getAbsolutePath( absolutePathName );
-			appendCareateItem( parent_menu->addAction( name ), absolutePathName, nullptr );
+			if( absolutePathName.startsWith( top_name ) == false )
+				return false;
+			absolutePathName = absolutePathName.mid( top_name.length( ) );
+			for( index = 0; index < node_create_stack_array_count; ++index )
+				if( node_create_stack_array_ptr[ index ].first == absolutePathName )
+					break;
+			if( index == node_create_stack_array_count )
+				return false;
+			appendCareateItem( parent_menu->addAction( name ), absolutePathName, node_create_stack_array_ptr[ index ].second );
 		} else
 			subPathTree.emplace_back( pathTreeSubPathTree[ subPathIndex ] );
 	for( auto &forreachPathTree : subPathTree ) {
 		name = forreachPathTree->getName( );
 		auto topMenu = parent_menu->addMenu( name );
-		if( fromPathTreeGenerateCreateaAction( forreachPathTree, topMenu ) == false )
+		if( fromPathTreeGenerateCreateaAction( top_name, forreachPathTree, topMenu, node_create_stack_array_ptr, node_create_stack_array_count ) == false )
 			return false;
 	}
 	return true;
