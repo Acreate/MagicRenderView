@@ -4,10 +4,9 @@
 #include <QObject>
 #include <vector>
 
-class WindowMenu;
-class FreeMenu;
-class EditorNodeMenu;
-class CreateNodeMenu;
+class EditorNodeMenuStack;
+class GenerateNodeMenuStack;
+class ApplicationMenuStack;
 class MainWindow;
 class MainWidget;
 class NodeRunInfo;
@@ -20,10 +19,9 @@ class SrackInfo;
 class MenuDirector : public QObject {
 	Q_OBJECT;
 protected:
-	CreateNodeMenu *createNodeMenu;
-	EditorNodeMenu *editorNodeMenu;
-	FreeMenu *freeMenu;
-	WindowMenu *windowMenu;
+	ApplicationMenuStack *applicationMenuStack;
+	GenerateNodeMenuStack *generateNodeMenuStack;
+	EditorNodeMenuStack *editorNodeMenuStack;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;

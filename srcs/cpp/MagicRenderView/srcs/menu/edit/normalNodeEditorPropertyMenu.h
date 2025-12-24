@@ -1,0 +1,9 @@
+﻿#ifndef NORMALNODEEDITORPROPERTYMENU_H_H_HEAD__FILE__
+#define NORMALNODEEDITORPROPERTYMENU_H_H_HEAD__FILE__
+#pragma once
+
+class NormalNodeEditorPropertyMenu {
+	
+};
+
+#endif // NORMALNODEEDITORPROPERTYMENU_H_H_HEAD__FILE__

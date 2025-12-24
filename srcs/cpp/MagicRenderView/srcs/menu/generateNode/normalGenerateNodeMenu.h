@@ -1,5 +1,5 @@
-﻿#ifndef CREATENODEMENU_H_H_HEAD__FILE__
-#define CREATENODEMENU_H_H_HEAD__FILE__
+﻿#ifndef NORMALGENERATENODEMENU_H_H_HEAD__FILE__
+#define NORMALGENERATENODEMENU_H_H_HEAD__FILE__
 #pragma once
 #include <QMenu>
 #include <vector>
@@ -9,7 +9,8 @@ namespace path {
 }
 class Node;
 class NodeStack;
-class CreateNodeMenu : public QMenu {
+
+class NormalGenerateNodeMenu : public QMenu {
 	Q_OBJECT;
 public:
 	using TCreateNodeFunction = std::function< Node *( const QString & ) >;
@@ -29,19 +30,21 @@ protected:
 private Q_SLOTS:
 	void actionSlots( QAction *action );
 public:
-	CreateNodeMenu( );
-	virtual bool initCreateNodeMenu( );
-	virtual void appendCareateItem( const QString &create_item_name, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
+	NormalGenerateNodeMenu( QWidget *parent );
+	virtual bool initNormalGenerateNodeMenu( );
+protected:
 	virtual QMenu * formNodeStack( NodeStack *create_node_stack );
 	template< typename TCNodeStackType >
 		requires requires ( TCNodeStackType *c_node_stack, NodeStack *ptr ) {
 			ptr = c_node_stack;
 		}
 	QMenu * appendCreateSubMenuAtNodeStack( ) {
-		return formNodeStack( new TCNodeStackType );
+		auto create = new TCNodeStackType;
+		auto result = formNodeStack( create );
+		delete create;
+		return create;
 	}
 Q_SIGNALS:
-	void createNode( CreateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
+	void createNode( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
 };
-
-#endif // CREATENODEMENU_H_H_HEAD__FILE__
+#endif // NORMALGENERATENODEMENU_H_H_HEAD__FILE__

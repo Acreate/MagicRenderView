@@ -1,8 +1,9 @@
-﻿#include "createNodeMenu.h"
+﻿#include "normalGenerateNodeMenu.h"
 
-#include "../node/stack/baseNodeStack/baseNodeStack.h"
-#include "../tools/path.h"
-void CreateNodeMenu::releaseObjResource( ) {
+#include "../../node/stack/baseNodeStack/baseNodeStack.h"
+#include "../../tools/path.h"
+
+void NormalGenerateNodeMenu::releaseObjResource( ) {
 
 	if( createCount != 0 ) {
 		createIndex = 0;
@@ -13,7 +14,7 @@ void CreateNodeMenu::releaseObjResource( ) {
 		createArrayPtr = nullptr;
 	}
 }
-void CreateNodeMenu::actionSlots( QAction *action ) {
+void NormalGenerateNodeMenu::actionSlots( QAction *action ) {
 	if( createCount == 0 )
 		return;
 	for( createIndex = 0; createIndex < createCount; ++createIndex )
@@ -22,46 +23,34 @@ void CreateNodeMenu::actionSlots( QAction *action ) {
 			break;
 		}
 }
-CreateNodeMenu::CreateNodeMenu( ) : QMenu( ) {
-	createCount = 0;
-	createArrayPtr = nullptr;
-	connect( this, &QMenu::triggered, this, &CreateNodeMenu::actionSlots );
+NormalGenerateNodeMenu::NormalGenerateNodeMenu( QWidget *parent ) : QMenu( parent ) {
+
+	connect( this, &QMenu::triggered, this, &NormalGenerateNodeMenu::actionSlots );
 }
-bool CreateNodeMenu::initCreateNodeMenu( ) {
+bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	releaseObjResource( );
 	// 这里加入节点窗口创建函数
-	auto createSubMenuAtNodeStack = appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
-	if( createSubMenuAtNodeStack == nullptr )
-		return false;
-	addMenu( createSubMenuAtNodeStack );
-	
+	appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
 	createCount = createVector.size( );
 	createArrayPtr = createVector.data( );
 	return createCount != 0;
 }
-void CreateNodeMenu::appendCareateItem( const QString &create_item_name, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
-	appendCareateItem( addAction( create_item_name ), create_node_name, create_node_function );
-}
-QMenu * CreateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {
+
+QMenu * NormalGenerateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {
 	QMenu *nodeGenerateCreateMenu = nullptr;
-	if( create_node_stack == nullptr )
+	if( create_node_stack == nullptr || create_node_stack->init( ) == false )
 		return nodeGenerateCreateMenu;
-	do {
-		if( create_node_stack->init( ) == false )
-			break;
-		nodeGenerateCreateMenu = fromNodeGenerateCreateMenu( create_node_stack );
-		if( addMenu( nodeGenerateCreateMenu ) == nullptr )
-			break;
-	} while( false );
-	delete create_node_stack;
+	nodeGenerateCreateMenu = fromNodeGenerateCreateMenu( create_node_stack );
+	if( nodeGenerateCreateMenu )
+		addMenu( nodeGenerateCreateMenu );
 	return nodeGenerateCreateMenu;
 }
-void CreateNodeMenu::appendCareateItem( QAction *create_node_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
+void NormalGenerateNodeMenu::appendCareateItem( QAction *create_node_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
 	TCreateUintyType unity = std::pair( create_node_item, TCreateNodeInfo( create_node_name, create_node_function ) );
 	createVector.emplace_back( unity );
 }
 
-QMenu * CreateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) {
+QMenu * NormalGenerateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) {
 	auto nodeStackName = node_stack_ptr->objectName( );
 	size_t count = node_stack_ptr->nodeGenerate.size( );
 	auto data = node_stack_ptr->nodeGenerate.data( );
@@ -78,7 +67,7 @@ QMenu * CreateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr ) 
 	delete resultMenu;
 	return nullptr;
 }
-bool CreateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &top_name, path::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count ) {
+bool NormalGenerateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &top_name, path::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count ) {
 	auto pathTreeSubPath = path_tree->getSubPath( );
 	size_t subPathCount = pathTreeSubPath.size( );
 	if( subPathCount == 0 )

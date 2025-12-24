@@ -5,10 +5,10 @@
 #include <QAction>
 
 #include "../app/application.h"
-#include "../menu/createNodeMenu.h"
-#include "../menu/editorNodeMenu.h"
-#include "../menu/freeMenu.h"
-#include "../menu/windowMenu.h"
+
+#include "../menuStack/applicationMenuStack.h"
+#include "../menuStack/editorNodeMenuStack.h"
+#include "../menuStack/generateNodeMenuStack.h"
 #include "../node/nodeInfo/nodeRunInfo.h"
 #include "../srack/srackInfo.h"
 #include "../tools/path.h"
@@ -28,21 +28,20 @@ MenuDirector::MenuDirector( QObject *parent ) : QObject( parent ) {
 	clearBuilderNodeVectorBtn = nullptr;
 	nodeRunBuilderObj = nullptr;
 
-	createNodeMenu = new CreateNodeMenu;
-	editorNodeMenu = new EditorNodeMenu;
-	freeMenu = new FreeMenu;
-	windowMenu = new WindowMenu;
+	generateNodeMenuStack = new GenerateNodeMenuStack;
+	applicationMenuStack = new ApplicationMenuStack;
+	editorNodeMenuStack = new EditorNodeMenuStack;
+	
 }
 
 MenuDirector::~MenuDirector( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
-	delete createNodeMenu;
-	delete editorNodeMenu;
-	delete freeMenu;
-	delete windowMenu;
+	delete generateNodeMenuStack;
+	delete applicationMenuStack;
+	delete editorNodeMenuStack;
 }
 bool MenuDirector::init( ) {
-	if( createNodeMenu->initCreateNodeMenu( ) == false )
+	if( generateNodeMenuStack->initStack( ) == false )
 		return false;
 	if( editorNodeMenu->initEditorNodeMenu( ) == false )
 		return false;
