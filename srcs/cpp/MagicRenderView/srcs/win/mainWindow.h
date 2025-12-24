@@ -34,24 +34,11 @@ protected:
 	QToolBar *fileToolBar;
 	QToolBar *projectToolBar;
 	QString saveFileDirPath;
-	std::vector< QShortcut * > shortcutVector;
-	std::vector< QAction * > actionVector;
+	//std::vector< QShortcut * > shortcutVector;
+	//std::vector< QAction * > actionVector;
 	QMenuBar *appMenuBar;
 	QMenu *fileMenu;
 	QMenu *projectMenu;
-	QAction *builderNodeVectorBtn;
-	QAction *runBuilderAllNodeVectorBtn;
-	QAction *runBuilderNextNodeVectorBtn;
-	QAction *runBuilderStopNodeVectorBtn;
-	QAction *clearBuilderNodeVectorBtn;
-	NodeRunInfo *nodeRunBuilderObj;
-protected Q_SLOTS:
-	/// @brief 编译对象清理信号
-	/// @param signal_obj_ptr 信号对象指针
-	/// @param srack_info 信号堆栈
-	/// @param clear_obj 原始信号
-	/// @param org_srack_info 原始信号堆栈
-	virtual void node_run_info_clear_slot( NodeDirector *signal_obj_ptr, const SrackInfo &srack_info, NodeRunInfo *clear_obj, const SrackInfo &org_srack_info );
 protected:
 	MainWindow( );
 	virtual bool init( );
@@ -61,19 +48,7 @@ public:
 	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
 	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
-	virtual void savePorjectToFile( );
-	virtual void loadPorjectAtFile( );
-	virtual void unDownloadPorjectAtFile( );
-	virtual void copyNodeInfo( );
-	virtual void pasteNodeInfo( );
-	virtual void cutNodeInfo( );
-	virtual void cancelNodeInfo( );
-	virtual void deleteNodeInfo( );
-	virtual void builderProject( );
-	virtual void runAllProject( );
-	virtual void runNextProject( );
-	virtual void stopProject( );
-	virtual void clearProject( );
+	
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

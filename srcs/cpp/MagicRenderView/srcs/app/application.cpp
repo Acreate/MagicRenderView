@@ -43,6 +43,7 @@ Application::~Application( ) {
 	delete nodeDirector;
 	delete iniDirector;
 	delete varDirector;
+	delete menuDirector;
 	delete printerDirector;
 	delete appInitRunDataTime;
 }

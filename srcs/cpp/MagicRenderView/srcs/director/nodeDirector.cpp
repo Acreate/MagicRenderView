@@ -45,33 +45,7 @@ bool NodeDirector::init( ) {
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
 
-	// 这里加入节点窗口创建函数
-	nodeStacks.emplace_back( new BaseNodeStack( ) );
-
-	// 初始化列表
-	count = nodeStacks.size( );
-	nodeStackArrayPtr = nodeStacks.data( );
-	for( index = 0; index < count; ++index )
-		if( nodeStackArrayPtr[ index ]->init( ) == false ) {
-			auto className = nodeStackArrayPtr[ index ]->metaObject( )->className( );
-			QString msg( "[ %1 ]节点堆栈类初始化失败" );
-			printerDirector->error( msg.arg( className ), Create_SrackInfo( ) );
-			for( index = 0; index < count; ++index )
-				delete nodeStackArrayPtr[ index ];
-			nodeStacks.clear( );
-			return false;
-		}
-	// 初始化菜单
-	std::list< std::pair< QString, QAction * > > actionMap;
-	for( index = 0; index < count; ++index ) {
-		QMenu *generateCreateMenu = fromNodeGenerateCreateMenu( nodeStackArrayPtr[ index ], actionMap );
-		if( generateCreateMenu == nullptr )
-			continue;
-		if( connectNodeAction( nodeStackArrayPtr[ index ], actionMap ) == false )
-			delete generateCreateMenu;
-		this->nodeCreateMenu->addMenu( generateCreateMenu );
-	}
-
+	
 	QString errorMsg;
 	bool drawLinkWidgetIniRsult = initNodeRenderGraphWidget( errorMsg );
 	if( drawLinkWidgetIniRsult == false )
@@ -133,16 +107,6 @@ void NodeDirector::releaseObjResources( ) {
 	releaseNodeHistoryResources( );
 }
 void NodeDirector::releaseMenuResources( ) {
-	size_t count;
-	size_t index;
-
-	count = nodeStacks.size( );
-	if( count ) {
-		auto nodeStackArrayPtr = nodeStacks.data( );
-		for( index = 0; index < count; ++index )
-			delete nodeStackArrayPtr[ index ];
-		nodeStacks.clear( );
-	}
 	nodeCreateMenu->clear( );
 }
 void NodeDirector::releaseNodeResources( ) {
@@ -649,49 +613,6 @@ NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
 
 	//delete result;
 	return nullptr;
-}
-
-QMenu * NodeDirector::fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map ) {
-	auto nodeStackName = node_stack_ptr->objectName( );
-	size_t count = node_stack_ptr->nodeGenerate.size( );
-	auto data = node_stack_ptr->nodeGenerate.data( );
-	size_t index = 0;
-	path::pathTree pathTree( nodeStackName );
-	for( ; index < count; ++index )
-		pathTree.appSubPath( data[ index ].first );
-	if( pathTree.getSubPath( ).size( ) == 0 )
-		return nullptr;
-	result_action_map.clear( );
-	nodeStackName = pathTree.getName( );
-	QMenu *resultMenu = new QMenu( nodeStackName );
-	fromPathTreeGenerateCreateaAction( &pathTree, resultMenu, result_action_map );
-	return resultMenu;
-}
-bool NodeDirector::fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map ) {
-	auto pathTreeSubPath = path_tree->getSubPath( );
-	size_t subPathCount = pathTreeSubPath.size( );
-	if( subPathCount == 0 )
-		return false;
-
-	auto pathTreeSubPathTree = pathTreeSubPath.data( );
-	size_t subPathIndex = 0;
-	QString name;
-	QAction *addAction;
-	std::list< path::pathTree * > subPathTree;
-	for( ; subPathIndex < subPathCount; ++subPathIndex )
-		if( pathTreeSubPathTree[ subPathIndex ]->getSubPath( ).size( ) == 0 ) {
-			name = pathTreeSubPathTree[ subPathIndex ]->getName( );
-			addAction = parent_menu->addAction( name );
-			pathTreeSubPathTree[ subPathIndex ]->getAbsolutePath( name );
-			result_action_map.emplace_back( name, addAction );
-		} else
-			subPathTree.emplace_back( pathTreeSubPathTree[ subPathIndex ] );
-	for( auto &forreachPathTree : subPathTree ) {
-		name = forreachPathTree->getName( );
-		auto topMenu = parent_menu->addMenu( name );
-		NodeDirector::fromPathTreeGenerateCreateaAction( forreachPathTree, topMenu, result_action_map );
-	}
-	return true;
 }
 
 bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map ) {

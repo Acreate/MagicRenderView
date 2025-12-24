@@ -14,6 +14,7 @@ class QMenu;
 class NodeStack : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
+	friend class CreateNodeMenu;
 protected:
 protected:
 	virtual bool init( );

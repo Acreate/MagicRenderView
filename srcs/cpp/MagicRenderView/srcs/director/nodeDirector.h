@@ -34,7 +34,6 @@ private:
 	using QActionTriggered = void(QAction::*)( bool );
 protected:
 	QMenu *nodeCreateMenu;
-	std::vector< NodeStack * > nodeStacks;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
@@ -119,8 +118,6 @@ public:
 	virtual QSize getMaxNodeRenderSize( ) const;
 	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
 protected:
-	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr, std::list< std::pair< QString, QAction * > > &result_action_map );
-	virtual bool fromPathTreeGenerateCreateaAction( path::pathTree *path_tree, QMenu *parent_menu, std::list< std::pair< QString, QAction * > > &result_action_map );
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
