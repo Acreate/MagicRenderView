@@ -2,8 +2,12 @@
 #define APPLICATIONMENUSTACK_H_H_HEAD__FILE__
 #pragma once
 
-class ApplicationMenuStack {
-	
-};
+#include <QObject>
 
+class ApplicationMenuStack : public QObject {
+	Q_OBJECT;
+public:
+	ApplicationMenuStack( QObject *parent = nullptr );
+	virtual bool initStack( );
+};
 #endif // APPLICATIONMENUSTACK_H_H_HEAD__FILE__

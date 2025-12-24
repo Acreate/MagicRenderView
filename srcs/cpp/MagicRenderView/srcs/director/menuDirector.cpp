@@ -5,10 +5,10 @@
 #include <QAction>
 
 #include "../app/application.h"
+#include "../menuStack/app/applicationMenuStack.h"
+#include "../menuStack/edit/editorNodeMenuStack.h"
+#include "../menuStack/generateNode/generateNodeMenuStack.h"
 
-#include "../menuStack/applicationMenuStack.h"
-#include "../menuStack/editorNodeMenuStack.h"
-#include "../menuStack/generateNodeMenuStack.h"
 #include "../node/nodeInfo/nodeRunInfo.h"
 #include "../srack/srackInfo.h"
 #include "../tools/path.h"
@@ -43,11 +43,9 @@ MenuDirector::~MenuDirector( ) {
 bool MenuDirector::init( ) {
 	if( generateNodeMenuStack->initStack( ) == false )
 		return false;
-	if( editorNodeMenu->initEditorNodeMenu( ) == false )
+	if( applicationMenuStack->initStack( ) == false )
 		return false;
-	if( freeMenu->initFreeMenu( ) == false )
-		return false;
-	if( windowMenu->initWindowMenu( ) == false )
+	if( editorNodeMenuStack->initStack( ) == false )
 		return false;
 	// 释放节点
 	if( nodeDirector ) {

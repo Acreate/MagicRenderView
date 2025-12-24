@@ -19,7 +19,7 @@ void NormalGenerateNodeMenu::actionSlots( QAction *action ) {
 		return;
 	for( createIndex = 0; createIndex < createCount; ++createIndex )
 		if( action == createArrayPtr[ createIndex ].first ) {
-			emit createNode( this, createArrayPtr[ createIndex ].first, createArrayPtr[ createIndex ].second.first, createArrayPtr[ createIndex ].second.second );
+			emit create_node_signal( this, createArrayPtr[ createIndex ].first, createArrayPtr[ createIndex ].second.first, createArrayPtr[ createIndex ].second.second );
 			break;
 		}
 }
@@ -34,6 +34,10 @@ bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	createCount = createVector.size( );
 	createArrayPtr = createVector.data( );
 	return createCount != 0;
+}
+NormalGenerateNodeMenu::~NormalGenerateNodeMenu( ) {
+	emit release_menu_signal( this );
+	releaseObjResource( );
 }
 
 QMenu * NormalGenerateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {

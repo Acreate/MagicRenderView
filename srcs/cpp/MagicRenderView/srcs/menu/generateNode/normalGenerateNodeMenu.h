@@ -12,6 +12,7 @@ class NodeStack;
 
 class NormalGenerateNodeMenu : public QMenu {
 	Q_OBJECT;
+	friend class GenerateNodeMenuStack;
 public:
 	using TCreateNodeFunction = std::function< Node *( const QString & ) >;
 	using TCreateNodeInfo = std::pair< QString, TCreateNodeFunction >;
@@ -29,9 +30,11 @@ protected:
 	virtual void appendCareateItem( QAction *create_node_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
 private Q_SLOTS:
 	void actionSlots( QAction *action );
-public:
+protected:
 	NormalGenerateNodeMenu( QWidget *parent );
 	virtual bool initNormalGenerateNodeMenu( );
+public:
+	~NormalGenerateNodeMenu( ) override;
 protected:
 	virtual QMenu * formNodeStack( NodeStack *create_node_stack );
 	template< typename TCNodeStackType >
@@ -42,9 +45,10 @@ protected:
 		auto create = new TCNodeStackType;
 		auto result = formNodeStack( create );
 		delete create;
-		return create;
+		return result;
 	}
 Q_SIGNALS:
-	void createNode( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
+	void create_node_signal( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function );
+	void release_menu_signal( NormalGenerateNodeMenu *release_ptr );
 };
 #endif // NORMALGENERATENODEMENU_H_H_HEAD__FILE__
