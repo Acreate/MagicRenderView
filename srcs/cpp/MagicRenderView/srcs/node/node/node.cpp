@@ -44,13 +44,13 @@ Node::~Node( ) {
 		delete titileWidget;
 	if( connectWidget )
 		delete connectWidget;
-	
+
 	if( varPtr )
 		varDirector->release( varPtr );
 }
 Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
 	hide( );
-
+	generateCode = 0;
 	varPtr = nullptr;
 
 }
@@ -228,7 +228,7 @@ bool Node::updatePortGenerateCodes( ) {
 	index = 0;
 	for( auto outputPortArrayPtr = outputPortVector.data( ); index < count; ++index )
 		outputPortArrayPtr[ index ]->generateCode = index + 1;
-	return false;
+	return true;
 }
 void Node::setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr ) {
 	change_var_output_port->varTypeName = var_type_name;
@@ -449,7 +449,6 @@ bool Node::init( DrawNodeWidget *parent ) {
 	connectWidget = nullptr;
 
 	nodeFunction = [] ( VarDirector *var_director ) { };
-	parent->addNode( this );
 	setParent( parent );
 	return true;
 }

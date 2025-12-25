@@ -609,6 +609,17 @@ NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
 	//delete result;
 	return nullptr;
 }
+Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
+	size_t count = nodeVector.size( );
+	if( count == 0 )
+		return nullptr;
+	auto nodeArrayPtr = nodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ]->generateCode == node_generator_code )
+			return nodeArrayPtr[ index ];
+	return nullptr;
+}
 
 bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map ) {
 	auto rootName = node_stack_ptr->objectName( );
@@ -637,7 +648,10 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 		QString errorMsg;
 		auto node = action_click_function( node_type_name );
 
-		appendRefNodeVectorAtNode( node_type_name, node );
+		if( appendRefNodeVectorAtNode( node_type_name, node ) == nullptr ) {
+			delete node;
+			return;
+		}
 		mainWidget->ensureVisible( node );
 		mainWidget->update( );
 	} );
@@ -662,20 +676,25 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 			break;
 		}
 }
-void NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node ) {
+Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node ) {
 	QString errorMsg;
 	if( append_node == nullptr ) {
 		errorMsg = tr( "节点 (%1) 为 nullptr" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
-		return;
+		return nullptr;
+	}
+	if( updateNodeGeneratorCode( append_node ) == false ) {
+		errorMsg = tr( "节点 (%1) [NodeDirector::updateNodeGeneratorCode( Node *update_generate_code )] 无法分配生成码" );
+		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
+		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
+		return nullptr;
 	}
 	if( drawNodeWidget->addNode( append_node ) == false ) {
 		errorMsg = tr( "节点 (%1) [Node::init( DrawNodeWidget *parent )] 的初始化函数运行失败" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
-		delete append_node;
-		return;
+		return nullptr;
 	}
 	nodeVector.emplace_back( append_node );
 	append_node->show( );
@@ -696,6 +715,7 @@ void NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name, N
 		return nullptr;
 	};
 	appendHistorIndexEnd( currentHistory, cancelHistory );
+	return append_node;
 }
 size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
 	size_t result = 0;
@@ -831,6 +851,32 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistorys.emplace_back( newHistrort );
 	nodeHistoryIndex = nodeHistorys.size( );
 }
+bool NodeDirector::updateNodeGeneratorCode( Node *update_generate_code ) {
+
+	size_t count = nodeVector.size( );
+	if( count == 0 ) {
+		update_generate_code->generateCode = 1;
+		return true;
+	}
+	auto nodeArrayPtr = nodeVector.data( );
+	size_t index;
+
+	uint64_t checkGenerator = 1;
+	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
+	for( ; checkGenerator < maxGenerator; ++checkGenerator ) {
+		for( index = 0; index < count; ++index )
+			if( nodeArrayPtr[ index ]->generateCode == checkGenerator )
+				break;
+		if( index == count ) {
+			update_generate_code->generateCode = checkGenerator;
+			return true;
+		}
+	}
+	if( checkGenerator == maxGenerator )
+		return false;
+	update_generate_code->generateCode = checkGenerator;
+	return true;
+}
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );
 
@@ -863,7 +909,10 @@ void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &sr
 void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function ) {
 	auto nodeName = create_item->text( );
 	Node *nodePtr = create_node_function( nodeName );
-	appendRefNodeVectorAtNode( nodeName, nodePtr );
+	if( appendRefNodeVectorAtNode( nodeName, nodePtr ) == nullptr ) {
+		delete nodePtr;
+		return;
+	}
 }
 void NodeDirector::finishCreateNode( Node *finish_node ) {
 

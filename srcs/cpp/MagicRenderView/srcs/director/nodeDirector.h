@@ -125,11 +125,12 @@ public:
 	/// @return 最大的渲染大小
 	virtual QSize getMaxNodeRenderSize( ) const;
 	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
+	virtual Node * getNode( const uint64_t &node_generator_code ) const;
 protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
-	virtual void appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node );
+	virtual Node * appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node );
 	virtual size_t removePortLinkAction( InputPort *input_port );
 	virtual size_t removePortLinkAction( OutputPort *output_port );
 	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
@@ -138,6 +139,7 @@ protected:
 	/// @brief 删除历史坐标后续的所有对象
 	virtual void removeHistorIndexEnd( );
 	virtual void appendHistorIndexEnd( const std::function< NodeHistory *( ) > &current_history, const std::function< NodeHistory *( ) > &cancel_history );
+	virtual bool updateNodeGeneratorCode( Node *update_generate_code );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针

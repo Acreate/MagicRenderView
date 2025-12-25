@@ -37,6 +37,7 @@ protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
 protected:
+	uint64_t generateCode;
 	/// @brief app 实例
 	Application *instancePtr;
 	/// @brief app 实例中的变量管理角色
