@@ -36,17 +36,29 @@ bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	createArrayPtr = createVector.data( );
 	return createCount != 0;
 }
+Node * NormalGenerateNodeMenu::getCreateResultNode( const QString &node_name ) {
+	if( createCount == 0 )
+		return nullptr;
+	for( createIndex = 0; createIndex < createCount; ++createIndex )
+		if( createArrayPtr[ createIndex ].second.first == node_name ) {
+
+			return createArrayPtr[ createIndex ].second.second( node_name );
+		}
+	return nullptr;
+}
 NormalGenerateNodeMenu::~NormalGenerateNodeMenu( ) {
 	emit release_menu_signal( this );
 	releaseObjResource( );
 }
-Node * NormalGenerateNodeMenu::createNode( const QString &node_name ) {
+void NormalGenerateNodeMenu::createNode( const QString &node_name ) {
 	if( createCount == 0 )
-		return nullptr;
+		return;
 	for( createIndex = 0; createIndex < createCount; ++createIndex )
-		if( createArrayPtr[ createIndex ].second.first == node_name )
-			return createArrayPtr[ createIndex ].second.second( node_name );
-	return nullptr;
+		if( createArrayPtr[ createIndex ].second.first == node_name ) {
+			emit create_node_signal( this, createArrayPtr[ createIndex ].first, createArrayPtr[ createIndex ].second.first, createArrayPtr[ createIndex ].second.second );
+			return;
+		}
+	return;
 }
 
 QMenu * NormalGenerateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {

@@ -46,9 +46,6 @@ bool NodeDirector::init( ) {
 	releaseObjResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
-	size_t count;
-	size_t index;
-	NodeStack **nodeStackArrayPtr;
 
 	QString errorMsg;
 	bool drawLinkWidgetIniRsult = initNodeRenderGraphWidget( errorMsg );
@@ -164,7 +161,7 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 		}
 	}
 
-	auto createNodePtr = normalGenerateNodeMenu->createNode( node_type_name );
+	auto createNodePtr = normalGenerateNodeMenu->getCreateResultNode( node_type_name );
 	appendRefNodeVectorAtNode( node_type_name, createNodePtr );
 	return createNodePtr;
 }

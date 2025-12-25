@@ -13,6 +13,7 @@ class NodeStack;
 class NormalGenerateNodeMenu : public QMenu {
 	Q_OBJECT;
 	friend class GenerateNodeMenuStack;
+	friend class NodeDirector;
 public:
 	using TCreateNodeFunction = std::function< Node *( const QString & ) >;
 	using TCreateNodeInfo = std::pair< QString, TCreateNodeFunction >;
@@ -31,14 +32,19 @@ protected:
 private Q_SLOTS:
 	void actionSlots( QAction *action );
 protected:
-	NormalGenerateNodeMenu(  );
+	NormalGenerateNodeMenu( );
 	virtual bool initNormalGenerateNodeMenu( );
-public:
-	~NormalGenerateNodeMenu( ) override;
 	/// @brief 根据节点名称创建节点
 	/// @param node_name 节点名称
 	/// @return 节点
-	virtual Node * createNode( const QString &node_name );
+	virtual Node* getCreateResultNode( const QString &node_name );
+public:
+	~NormalGenerateNodeMenu( ) override;
+public Q_SLOTS:
+	/// @brief 根据节点名称创建节点
+	/// @param node_name 节点名称
+	/// @return 节点
+	virtual void createNode( const QString &node_name );
 protected:
 	virtual QMenu * formNodeStack( NodeStack *create_node_stack );
 	template< typename TCNodeStackType >
