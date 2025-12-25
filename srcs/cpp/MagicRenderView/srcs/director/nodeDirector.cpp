@@ -664,9 +664,8 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
-			auto removeNdoe = *nodeVector.begin( );
-			nodeVector.erase( nodeVector.begin( ) + index );
-			delete removeNdoe;
+			data[ index ] = nullptr;
+			delete remove_node;
 			if( drawNodeWidget )
 				drawNodeWidget->update( );
 			if( drawLinkWidget )
@@ -684,19 +683,19 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
 	}
-	if( updateNodeGeneratorCode( append_node ) == false ) {
-		errorMsg = tr( "节点 (%1) [NodeDirector::updateNodeGeneratorCode( Node *update_generate_code )] 无法分配生成码" );
-		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
-		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
-		return nullptr;
-	}
 	if( drawNodeWidget->addNode( append_node ) == false ) {
 		errorMsg = tr( "节点 (%1) [Node::init( DrawNodeWidget *parent )] 的初始化函数运行失败" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
 	}
-	nodeVector.emplace_back( append_node );
+	if( updateNodeGeneratorCode( append_node ) == false ) {
+		errorMsg = tr( "节点 (%1) [NodeDirector::updateNodeGeneratorCode( Node *update_generate_code )] 无法分配生成码" );
+		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
+		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
+		return nullptr;
+	}
+
 	append_node->show( );
 	finishCreateNode( append_node );
 
@@ -852,30 +851,27 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistoryIndex = nodeHistorys.size( );
 }
 bool NodeDirector::updateNodeGeneratorCode( Node *update_generate_code ) {
-
+	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
 	size_t count = nodeVector.size( );
+
 	if( count == 0 ) {
 		update_generate_code->generateCode = 1;
+		nodeVector.emplace_back( update_generate_code );
 		return true;
 	}
 	auto nodeArrayPtr = nodeVector.data( );
 	size_t index;
-
-	uint64_t checkGenerator = 1;
-	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
-	for( ; checkGenerator < maxGenerator; ++checkGenerator ) {
-		for( index = 0; index < count; ++index )
-			if( nodeArrayPtr[ index ]->generateCode == checkGenerator )
-				break;
-		if( index == count ) {
-			update_generate_code->generateCode = checkGenerator;
+	update_generate_code->generateCode = 0;
+	for( index = 0; index < count; ++index )
+		if( nodeArrayPtr[ index ] == nullptr ) {
+			update_generate_code->generateCode = index + 1;
 			return true;
 		}
-	}
-	if( checkGenerator == maxGenerator )
+	if( maxGenerator == count ) // 最大生成号
 		return false;
-	update_generate_code->generateCode = checkGenerator;
-	return true;
+	update_generate_code->generateCode = count + 1;
+	nodeVector.emplace_back( update_generate_code );
+	return false;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );
