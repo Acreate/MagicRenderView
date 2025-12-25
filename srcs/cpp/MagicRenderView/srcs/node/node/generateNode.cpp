@@ -7,7 +7,7 @@ GenerateNode::GenerateNode( const QString &node_name ) : Node( node_name ) {
 GenerateNode::~GenerateNode( ) {
 
 }
-bool GenerateNode::init( DrawNodeWidget *parent ) {
+bool GenerateNode::init( MainWidget *parent ) {
 	if( Node::init( parent ) == false || initArrayUintyTypeName( generateTypeName ) == false || initVarPtr( ) == false )
 		return false;
 	return true;

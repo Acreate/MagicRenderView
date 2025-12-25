@@ -6,7 +6,6 @@
 
 #include "../../../director/printerDirector.h"
 
-#include "../../../widget/drawNodeWidget.h"
 #include "../../../widget/mainWidget.h"
 
 #include "../../../win/mainWindow.h"

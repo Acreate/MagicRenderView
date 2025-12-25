@@ -17,8 +17,6 @@
 
 #include "../tools/path.h"
 
-#include "../widget/drawLinkWidget.h"
-#include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 
@@ -28,8 +26,6 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	instancePtr = nullptr;
 	nodeDirector = nullptr;
 	printerDirector = nullptr;
-	drawNodeWidget = nullptr;
-	drawLinkWidget = nullptr;
 	saveFileDirPath = nullptr;
 
 	hide( );
@@ -94,8 +90,6 @@ bool MainWindow::init( ) {
 	//connect( nodeDirector, &NodeDirector::node_run_info_clear_signal, this, &MainWindow::node_run_info_clear_slot );
 
 	printerDirector = instancePtr->getPrinterDirector( );
-	drawNodeWidget = mainWidget->getDrawNodeWidget( );
-	drawLinkWidget = mainWidget->getDrawLinkWidget( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
 	fileToolBar->clear( );
 	projectToolBar->clear( );

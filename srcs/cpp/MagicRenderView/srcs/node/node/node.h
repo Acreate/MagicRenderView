@@ -8,9 +8,10 @@
 
 #include <enums/nodeEnum.h>
 
+#include "../../widget/mainWidget.h"
+
 #define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
 class NodeInfoWidget;
-class DrawNodeWidget;
 class QHBoxLayout;
 class QLabel;
 class QVBoxLayout;
@@ -82,7 +83,7 @@ protected:
 	void *varPtr;
 	NodeEnum::NodeStyleType nodeStyle;
 	/// @brief 初始化时候自动调用
-	std::function< bool( DrawNodeWidget * ) > initExCallFunction;
+	std::function< bool( MainWidget * ) > initExCallFunction;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -130,11 +131,11 @@ protected:
 	virtual void releaseAllOutputPortRefNode( );
 	virtual void releaseAllRefNode( );
 protected:
-	virtual bool init( DrawNodeWidget *parent );
+	virtual bool init( MainWidget *parent );
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
-	virtual bool initEx( DrawNodeWidget *parent );
+	virtual bool initEx( MainWidget *parent );
 	virtual const std::vector< Node * > & getRefInputPortNode( ) const { return refInputPortNode; }
 	virtual const std::vector< Node * > & getRefOutputPortNode( ) const { return refOutputPortNode; }
 	virtual bool hasRefInputNodeRef( InputPort *input_port ) const;

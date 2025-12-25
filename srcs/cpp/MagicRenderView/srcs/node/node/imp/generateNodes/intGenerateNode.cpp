@@ -8,8 +8,8 @@
 
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
-bool IntGenerateNode::initEx( DrawNodeWidget *parent ) {
-	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+bool IntGenerateNode::initEx( MainWidget *parent ) {
+	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< InterFaceInputPort >( tr( "过程接入" ) ) == nullptr )
 			return false;
 		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )

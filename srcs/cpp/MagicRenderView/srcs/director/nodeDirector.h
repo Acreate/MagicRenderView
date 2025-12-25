@@ -46,9 +46,6 @@ protected:
 	NormalNodeEditorPropertyMenu *normalNodeEditorPropertyMenu;
 	MainWindow *mainWindow;
 	MainWidget *mainWidget;
-	DrawNodeWidget *drawNodeWidget;
-	DrawLinkWidget *drawLinkWidget;
-	DrawHighlightWidget *drawHighlightWidget;
 	NodeInfoWidget *currentShowWidget;
 	std::vector< Node * > nodeArchiveVector;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;

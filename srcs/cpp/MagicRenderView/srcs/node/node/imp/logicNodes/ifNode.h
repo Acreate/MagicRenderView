@@ -8,7 +8,7 @@ class IfNode : public LogicNode {
 public:
 	IfNode( const QString &node_name )
 		: LogicNode( node_name ) { }
-	bool initEx( DrawNodeWidget *parent ) override;
+	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "逻辑/分支" ) );

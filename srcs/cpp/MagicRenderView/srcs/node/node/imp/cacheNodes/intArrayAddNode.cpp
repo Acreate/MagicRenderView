@@ -4,8 +4,8 @@
 #include "../../../port/inputPort/unity/intInputPort.h"
 #include "../../../port/outputPort/unity/intOutputPort.h"
 
-bool IntArrayAddNode::initEx( DrawNodeWidget *parent ) {
-	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+bool IntArrayAddNode::initEx( MainWidget *parent ) {
+	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< IntVectorInputPort >( tr( "整数" ) ) == nullptr )
 			return false;
 		if( appendOutputPortType< IntOutputPort >( tr( "整数和" ) ) == nullptr )

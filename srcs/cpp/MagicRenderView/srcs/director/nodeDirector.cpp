@@ -26,10 +26,6 @@
 #include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
-#include "../widget/drawHighlightWidget.h"
-
-#include "../widget/drawLinkWidget.h"
-#include "../widget/drawNodeWidget.h"
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 
@@ -95,7 +91,7 @@ NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
 	return nullptr;
 }
 
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawHighlightWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
 	nodeVarDirector = new VarDirector;
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
@@ -169,8 +165,8 @@ bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
 		return true;
 	input_port->emplaceBackOutputPortRef( output_port );
-	if( drawLinkWidget )
-		drawLinkWidget->update( );
+	if( mainWidget )
+		mainWidget->update( );
 	return true;
 
 	//NodeEnum::PortType inType = input_port->getPortType( );
@@ -276,14 +272,14 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 			if( connectInputPortCount == 0 )
 				continue;
 			outputPortPos = outputPort->getLinkPoint( );
-			outputPortPos = drawLinkWidget->mapFromGlobal( outputPortPos );
+			outputPortPos = mainWidget->mapFromGlobal( outputPortPos );
 
 			connectInputPortArray = outputPort->refInputPortVector.data( );
 			connectInputPortIndex = 0;
 			for( ; connectInputPortIndex < connectInputPortCount; ++connectInputPortIndex ) {
 				inputPort = connectInputPortArray[ connectInputPortIndex ];
 				inputPortPos = inputPort->getLinkPoint( );
-				inputPortPos = drawLinkWidget->mapFromGlobal( inputPortPos );
+				inputPortPos = mainWidget->mapFromGlobal( inputPortPos );
 				draw_link_widget.drawLine( outputPortPos, inputPortPos );
 			}
 		}
@@ -323,39 +319,7 @@ bool NodeDirector::initNodeRenderGraphWidget( QString &result_error_msg ) {
 				mainWidget = nullptr;
 		} );
 	}
-	if( drawNodeWidget == nullptr ) {
-		drawNodeWidget = mainWidget->getDrawNodeWidget( );
-		if( drawNodeWidget == nullptr ) {
-			result_error_msg = tr( "获取节点渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" );
-			return false;
-		}
-		connect( drawNodeWidget, &DrawNodeWidget::release_signal, [this] ( DrawNodeWidget *release_ptr ) {
-			if( drawNodeWidget == release_ptr )
-				drawNodeWidget = nullptr;
-		} );
-	}
-	if( drawLinkWidget == nullptr ) {
-		drawLinkWidget = mainWidget->getDrawLinkWidget( );
-		if( drawNodeWidget == nullptr ) {
-			result_error_msg = tr( "获取连接渲染窗口失败 [MainWidget::getDrawNodeWidget( )]" );
-			return false;
-		}
-		connect( drawLinkWidget, &DrawLinkWidget::release_signal, [this] ( DrawLinkWidget *release_ptr ) {
-			if( drawLinkWidget == release_ptr )
-				drawLinkWidget = nullptr;
-		} );
-	}
-	if( drawHighlightWidget == nullptr ) {
-		drawHighlightWidget = mainWidget->getDrawHighlightWidget( );
-		if( drawNodeWidget == nullptr ) {
-			result_error_msg = tr( "获取连接渲染窗口失败 [MainWidget::getDrawHighlightWidget( )]" );
-			return false;
-		}
-		connect( drawHighlightWidget, &DrawHighlightWidget::release_signal, [this] ( DrawHighlightWidget *release_ptr ) {
-			if( drawHighlightWidget == release_ptr )
-				drawHighlightWidget = nullptr;
-		} );
-	}
+
 	return initNodeInfoWidget( result_error_msg );
 }
 bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
@@ -666,12 +630,6 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 		if( data[ index ] == remove_node ) {
 			data[ index ] = nullptr;
 			delete remove_node;
-			if( drawNodeWidget )
-				drawNodeWidget->update( );
-			if( drawLinkWidget )
-				drawLinkWidget->update( );
-			if( drawHighlightWidget )
-				drawHighlightWidget->update( );
 			break;
 		}
 }
@@ -683,8 +641,8 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
 	}
-	if( drawNodeWidget->addNode( append_node ) == false ) {
-		errorMsg = tr( "节点 (%1) [Node::init( DrawNodeWidget *parent )] 的初始化函数运行失败" );
+	if( mainWidget->addNode( append_node ) == false ) {
+		errorMsg = tr( "节点 (%1) [Node::init( MainWidget *parent )] 的初始化函数运行失败" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
@@ -701,16 +659,14 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 
 	auto currentHistory = [append_node, this] {
 		auto node = createNode( append_node->nodeName );
-		auto mapFromGlobal = drawNodeWidget->mapFromGlobal( QCursor::pos( ) );
+		auto mapFromGlobal = mainWidget->mapFromGlobal( QCursor::pos( ) );
 		node->move( mapFromGlobal );
-		if( drawNodeWidget )
-			drawNodeWidget->update( );
+		if( mainWidget )
+			mainWidget->update( );
 		return nullptr;
 	};
 	auto cancelHistory = [append_node, this] {
 		delete append_node;
-		if( drawNodeWidget )
-			drawNodeWidget->update( );
 		return nullptr;
 	};
 	appendHistorIndexEnd( currentHistory, cancelHistory );
@@ -978,12 +934,6 @@ void NodeDirector::connectOutputPortSlot( OutputPort *output_port, InputPort *re
 		if( disLinkPort( output_port, ref_input_port ) == false )
 			return;
 		removePortLinkAction( ref_input_port, output_port );
-		if( drawLinkWidget )
-			drawLinkWidget->update( );
-		if( drawNodeWidget )
-			drawNodeWidget->update( );
-		if( drawHighlightWidget )
-			drawHighlightWidget->update( );
 	};
 
 	connect( outAction, &QAction::triggered, disLink );

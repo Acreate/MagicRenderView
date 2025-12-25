@@ -4,9 +4,8 @@
 #include <QClipboard>
 #include <QResizeEvent>
 #include <qdatetime.h>
+#include <QPainter>
 
-#include "drawLinkWidget.h"
-#include "drawNodeWidget.h"
 #include "mainWidgetScrollArea.h"
 
 #include "../app/application.h"
@@ -23,32 +22,122 @@
 #include "../srack/srackInfo.h"
 
 #include "../win/mainWindow.h"
-#include "drawHighlightWidget.h"
 
 MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ), oldSelectNode( nullptr ) {
 	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
-	drawHighlightWidget = new DrawHighlightWidget( this );
-	drawLinkWidget = new DrawLinkWidget( this );
-	drawNodeWidget = new DrawNodeWidget( this );
 	oldClickTime = new QDateTime;
+	isDrawLine = false;
 }
 MainWidget::~MainWidget( ) {
 	emit release_signal( this );
-	delete drawLinkWidget;
-	delete drawHighlightWidget;
-	delete drawNodeWidget;
+	size_t count = nodeVector.size( );
+	if( count != 0 ) {
+		size_t index = 0;
+		auto nodeArrayPtr = nodeVector.data( );
+		for( ; index < count; ++index )
+			if( nodeArrayPtr[ index ] == nullptr )
+				break;
+			else {
+				nodeArrayPtr[ index ]->hide( );
+				nodeArrayPtr[ index ]->setParent( nullptr );
+			}
+		nodeVector.clear( );
+	}
 	delete clickInfoPtr;
 }
-bool MainWidget::addNode( Node *node_ref_link_info ) {
-	if( drawNodeWidget->addNode( node_ref_link_info ) == false )
+
+bool MainWidget::getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info ) {
+	size_t count = nodeVector.size( );
+	if( count == 0 )
 		return false;
+	size_t index = 0;
+	auto nodeArrayPtr = nodeVector.data( );
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ] == nullptr )
+			return false;
+		else if( nodeArrayPtr[ index ]->geometry( ).contains( click_point ) == true ) {
+			auto mapFromParent = nodeArrayPtr[ index ]->mapFromParent( click_point );
+			if( nodeArrayPtr[ index ]->getPointInfo( mapFromParent, result_node_click_info ) == false )
+				return false;
+			return true;
+		}
+	return false;
+}
+void MainWidget::removeVector( Node *remove_node ) {
+	size_t count = nodeVector.size( );
+	if( count != 0 ) {
+		size_t index = 0;
+		auto nodeArrayPtr = nodeVector.data( );
+		for( ; index < count; ++index )
+			if( nodeArrayPtr[ index ] == remove_node ) {
+				++index;
+				for( ; index < count; ++index )
+					if( nodeArrayPtr[ index ] == nullptr )
+						break;
+					else
+						nodeArrayPtr[ index - 1 ] = nodeArrayPtr[ index ];
+				nodeArrayPtr[ index - 1 ] = nullptr;
+				return;
+			}
+	}
+}
+void MainWidget::appendVector( Node *append_node ) {
+	size_t count = nodeVector.size( );
+	if( count != 0 ) {
+		size_t index = 0;
+		auto nodeArrayPtr = nodeVector.data( );
+		for( ; index < count; ++index )
+			if( nodeArrayPtr[ index ] == nullptr ) {
+				nodeArrayPtr[ index ] = append_node;
+				return;
+			}
+	}
+	nodeVector.emplace_back( append_node );
+}
+bool MainWidget::addNode( Node *node_ref_link_info ) {
+	if( node_ref_link_info->initEx( this ) == false )
+		return false;
+	QPoint fromGlobal = mapFromGlobal( normalGenerateNodeMenu->pos( ) );
+	if( fromGlobal.x( ) < 0 )
+		fromGlobal.setX( 0 );
+	if( fromGlobal.y( ) < 0 )
+		fromGlobal.setY( 0 );
+	node_ref_link_info->move( fromGlobal );
+	appendVector( node_ref_link_info );
+	connect( node_ref_link_info, &Node::release_node_signal, this, &MainWidget::removeVector );
 	return true;
 }
+
+void MainWidget::raiseNode( Node *raise_node ) {
+	size_t count = nodeVector.size( );
+	if( count > 1 ) {
+		size_t index = 0;
+		auto nodeArrayPtr = nodeVector.data( );
+		if( nodeArrayPtr[ index ] == nullptr ) // 整个列表为空，则退出
+			return;
+		size_t lastNode = count - 1;
+		for( ; index < lastNode; --lastNode )
+			if( nodeArrayPtr[ lastNode ] != nullptr )
+				break; // 匹配最后一个有效节点
+		if( nodeArrayPtr[ lastNode ] == raise_node ) // 末尾就是该节点，则退出
+			return;
+		index += 1; // 从 1 开始测试
+		for( ; index < lastNode; ++index )
+			if( nodeArrayPtr[ index ] == raise_node ) {
+				// 元素往前推
+				count = index + 1;
+				for( ; count < lastNode; ++count )
+					nodeArrayPtr[ count - 1 ] = nodeArrayPtr[ count ];
+				nodeArrayPtr[ lastNode ] = raise_node; // 替换最后一个有效节点
+				return;
+			}
+	}
+}
 bool MainWidget::ensureVisible( Node *target ) {
-	if( target->parent( ) != drawNodeWidget )
+	if( target->parent( ) != this )
 		return false;
 	auto point = target->pos( );
-	auto toGlobal = drawNodeWidget->mapToGlobal( point );
+	auto toGlobal = mapToGlobal( point );
 	auto fromGlobal = mainWindow->mapFromGlobal( toGlobal );
 	int fromGlobalX = fromGlobal.x( );
 	int fromGlobalY = fromGlobal.y( );
@@ -79,16 +168,6 @@ bool MainWidget::init( ) {
 	printerDirector = appInstancePtr->getPrinterDirector( );
 	normalGenerateNodeMenu = nodeDirector->getNormalGenerateNodeMenu( );
 	*oldClickTime = QDateTime::currentDateTime( );
-
-	if( drawNodeWidget->init( this ) == false )
-		return false;
-	if( drawHighlightWidget->init( this ) == false )
-		return false;
-	if( drawLinkWidget->init( this ) == false )
-		return false;
-	drawNodeWidget->raise( );
-	drawHighlightWidget->raise( );
-	drawLinkWidget->raise( );
 	return true;
 }
 void MainWidget::copySelectNodeInfo( ) {
@@ -111,7 +190,7 @@ void MainWidget::pastePointNodeInfo( ) {
 		return;
 	}
 	auto point = QCursor::pos( );
-	point = drawNodeWidget->mapFromGlobal( point );
+	point = mapFromGlobal( point );
 	node->move( point );
 }
 void MainWidget::cutSelectNodeInfo( ) {
@@ -140,10 +219,16 @@ void MainWidget::showEvent( QShowEvent *event ) {
 }
 void MainWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	QSize newCurrentSize = this->size( );
-	drawNodeWidget->resize( newCurrentSize );
-	drawLinkWidget->resize( newCurrentSize );
-	drawHighlightWidget->resize( newCurrentSize );
+}
+void MainWidget::drawBegin( const QPoint &start_point ) {
+	isDrawLine = true;
+	startPoint = start_point;
+}
+void MainWidget::drawLinePoint( const QPoint &end_point ) {
+	endPoint = end_point;
+}
+void MainWidget::drawEnd( ) {
+	isDrawLine = false;
 }
 void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	QWidget::mousePressEvent( event );
@@ -151,7 +236,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	auto clickPoint = event->pos( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
-			if( drawNodeWidget->getPointNodeClickInfo( clickPoint, *clickInfoPtr ) ) {
+			if( getPointNodeClickInfo( clickPoint, *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
@@ -173,12 +258,12 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 					case NodeEnum::NodeClickType::InputPort :
 						dragNode = nullptr;
 						selectInputPort = clickInfoPtr->getInputPort( );
-						drawLinkWidget->drawBegin( drawLinkWidget->mapFromGlobal( selectInputPort->getLinkPoint( ) ) );
+						drawBegin( mapFromGlobal( selectInputPort->getLinkPoint( ) ) );
 						dragNode = nullptr;
 						break;
 					case NodeEnum::NodeClickType::OutputPort :
 						selectOutputPort = clickInfoPtr->getOutputPort( );
-						drawLinkWidget->drawBegin( drawLinkWidget->mapFromGlobal( selectOutputPort->getLinkPoint( ) ) );
+						drawBegin( mapFromGlobal( selectOutputPort->getLinkPoint( ) ) );
 						dragNode = nullptr;
 						break;
 				}
@@ -195,9 +280,9 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 	QWidget::mouseMoveEvent( event );
 	auto mousePoint = event->pos( );
-	if( drawLinkWidget->isDrawLine ) {
-		drawLinkWidget->endPoint = mousePoint;
-		drawLinkWidget->update( );
+	if( isDrawLine ) {
+		endPoint = mousePoint;
+		update( );
 	} else if( dragNode ) {
 		auto point = mousePoint - offsetPoint;
 		if( point.x( ) < 0 )
@@ -205,8 +290,7 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 		if( point.y( ) < 0 )
 			point.setY( 0 );
 		dragNode->move( point );
-		drawLinkWidget->update( );
-		drawHighlightWidget->update( );
+		update( );
 	}
 }
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
@@ -214,7 +298,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 	switch( mouseButton ) {
 		case Qt::LeftButton :
-			if( drawNodeWidget->getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
+			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				if( dragNode )
 					ensureVisible( dragNode );
@@ -234,7 +318,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			break;
 		case Qt::RightButton :
 			nodeDirector->showNodeWidgeInfo( nullptr );
-			if( drawNodeWidget->getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
+			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				if( dragNode )
 					ensureVisible( dragNode );
@@ -252,8 +336,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 						break;
 				}
 			} else {
-				drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
-				normalGenerateNodeMenu->popup( drawNodeWidget->menuPopPoint );
+				normalGenerateNodeMenu->popup( mapToGlobal( event->pos( ) ) );
 			}
 			break;
 		case Qt::MiddleButton :
@@ -261,13 +344,16 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	}
 	if( selectInputPort != nullptr && selectOutputPort != nullptr )
 		nodeDirector->linkPort( selectOutputPort, selectInputPort );
-	if( drawLinkWidget->isDrawLine ) {
-		drawLinkWidget->isDrawLine = false;
-		drawLinkWidget->update( );
-	}
 
 	clickInfoPtr->clear( );
 	dragNode = nullptr;
 	selectInputPort = nullptr;
 	selectOutputPort = nullptr;
+}
+void MainWidget::paintEvent( QPaintEvent *event ) {
+	QWidget::paintEvent( event );
+	QPainter painter( this );
+	if( isDrawLine == true )
+		painter.drawLine( startPoint, endPoint );
+	nodeDirector->drawLinkLines( painter );
 }

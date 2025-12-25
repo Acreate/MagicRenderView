@@ -10,7 +10,7 @@ protected:
 public:
 	GenerateNode( const QString &node_name );
 	~GenerateNode( ) override;
-	bool init( DrawNodeWidget *parent ) override;
+	bool init( MainWidget *parent ) override;
 
 	virtual bool initArrayUintyTypeName( QString &change_array_unty_type_name ) = 0;
 	NodeEnum::NodeType getNodeType( ) const override {

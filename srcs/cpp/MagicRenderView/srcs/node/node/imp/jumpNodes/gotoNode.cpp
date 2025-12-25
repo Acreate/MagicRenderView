@@ -2,8 +2,8 @@
 
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 
-bool GotoNode::initEx( DrawNodeWidget *parent ) {
-	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+bool GotoNode::initEx( MainWidget *parent ) {
+	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< InterFaceInputPort >( tr( "跳转" ) ) == nullptr )
 			return false;
 

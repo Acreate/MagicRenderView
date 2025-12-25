@@ -4,9 +4,7 @@
 #include <QWidget>
 
 class NormalGenerateNodeMenu;
-class DrawHighlightWidget;
 class PrinterDirector;
-class NodeRefLinkInfo;
 class OutputPort;
 class InputPort;
 class NodeClickInfo;
@@ -15,8 +13,6 @@ class MainWidgetScrollArea;
 class Node;
 class Application;
 class NodeDirector;
-class DrawLinkWidget;
-class DrawNodeWidget;
 class MainWidget : public QWidget {
 	Q_OBJECT;
 	/// @brief 不可获取成员变量
@@ -27,9 +23,6 @@ protected:
 	/// @brief 可获取成员变量
 protected:
 	MainWindow *mainWindow;
-	DrawHighlightWidget *drawHighlightWidget;
-	DrawNodeWidget *drawNodeWidget;
-	DrawLinkWidget *drawLinkWidget;
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	NodeClickInfo *clickInfoPtr;
 	NormalGenerateNodeMenu *normalGenerateNodeMenu;
@@ -39,6 +32,17 @@ protected:
 	OutputPort *selectOutputPort;
 	QDateTime *oldClickTime;
 	QPoint offsetPoint;
+	std::vector< Node * > nodeVector;
+	QPoint startPoint;
+	QPoint endPoint;
+	bool isDrawLine;
+protected:
+	virtual void removeVector( Node *remove_node );
+	virtual void appendVector( Node *append_node );
+	virtual void raiseNode( Node *raise_node );
+	virtual void drawBegin( const QPoint &start_point );
+	virtual void drawLinePoint( const QPoint &end_point );
+	virtual void drawEnd( );
 	/// @brief 构造/析构 
 public:
 	MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
@@ -46,6 +50,7 @@ public:
 	virtual bool addNode( Node *node_ref_link_info );
 	virtual bool ensureVisible( Node *target );
 	virtual bool init( );
+	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
 	/// @brief 快捷功能
 public:
 	virtual void copySelectNodeInfo( );
@@ -54,11 +59,6 @@ public:
 	virtual void cancelNodeInfo( );
 	virtual void deleteSelectNodeInfo( );
 	virtual void calculateNodeRenderSize( );
-	/// @brief 获取成员变量函数调用
-public:
-	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
-	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
-	virtual DrawHighlightWidget * getDrawHighlightWidget( ) const { return drawHighlightWidget; }
 	/// @brief 重载
 protected:
 	void showEvent( QShowEvent *event ) override;
@@ -66,6 +66,7 @@ protected:
 	void mousePressEvent( QMouseEvent *event ) override;
 	void mouseMoveEvent( QMouseEvent *event ) override;
 	void mouseReleaseEvent( QMouseEvent *event ) override;
+	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
 	void release_signal( MainWidget *release_ptr );
 };

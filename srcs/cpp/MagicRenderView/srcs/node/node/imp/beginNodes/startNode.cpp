@@ -2,8 +2,8 @@
 
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 
-bool StartNode::initEx( DrawNodeWidget *parent ) {
-	initExCallFunction = [this] ( DrawNodeWidget *draw_node_widget ) {
+bool StartNode::initEx( MainWidget *parent ) {
+	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendOutputPortType< InterFaceOutputPort >( tr( "过程开始" ) ) == nullptr )
 			return false;
 		return true;

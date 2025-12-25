@@ -14,8 +14,6 @@ class InputPort;
 class SrackInfo;
 class Node;
 class PrinterDirector;
-class DrawNodeWidget;
-class DrawLinkWidget;
 class NodeDirector;
 class MainWidgetScrollArea;
 class MainWidget;
@@ -26,8 +24,6 @@ class MainWindow : public QMainWindow {
 protected:
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	MainWidget *mainWidget;
-	DrawNodeWidget *drawNodeWidget;
-	DrawLinkWidget *drawLinkWidget;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
@@ -45,8 +41,6 @@ protected:
 public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
-	virtual DrawNodeWidget * getDrawNodeWidget( ) const { return drawNodeWidget; }
-	virtual DrawLinkWidget * getDrawLinkWidget( ) const { return drawLinkWidget; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 	
 protected:

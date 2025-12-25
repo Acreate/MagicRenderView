@@ -17,9 +17,7 @@
 #include <director/printerDirector.h>
 
 #include "../../srack/srackInfo.h"
-#include "../../widget/drawHighlightWidget.h"
 
-#include "../../widget/drawNodeWidget.h"
 #include "../nodeInfo/nodeClickInfo.h"
 
 Node::~Node( ) {
@@ -384,7 +382,7 @@ void Node::releaseAllRefNode( ) {
 	releaseAllInputPortRefNode( );
 	releaseAllOutputPortRefNode( );
 }
-bool Node::initEx( DrawNodeWidget *parent ) {
+bool Node::initEx( MainWidget *parent ) {
 	if( init( parent ) == false )
 		return false;
 	if( initExCallFunction( parent ) == false )
@@ -417,7 +415,7 @@ bool Node::hasRefOutputNodeRef( OutputPort *output_port ) const {
 			return true;
 	return false;
 }
-bool Node::init( DrawNodeWidget *parent ) {
+bool Node::init( MainWidget *parent ) {
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	size_t count, index;

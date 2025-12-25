@@ -10,7 +10,7 @@ protected:
 public:
 	IntGenerateNode( const QString &node_name )
 		: GenerateNode( node_name ) { }
-	bool initEx( DrawNodeWidget *parent ) override;
+	bool initEx( MainWidget *parent ) override;
 	bool initArrayUintyTypeName( QString &change_array_unty_type_name ) override;
 	bool updateLayout( ) override;
 	virtual std::vector< int64_t > * getGenerateVarPtr( ) const;
