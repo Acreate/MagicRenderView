@@ -115,11 +115,11 @@ void NodeDirector::releaseMenuResources( ) {
 void NodeDirector::releaseNodeResources( ) {
 	size_t count;
 	size_t index;
-	count = nodeVector.size( );
+	count = nodeArchiveVector.size( );
 	for( index = 0; index < count; ++index ) {
-		auto iterator = nodeVector.begin( );
+		auto iterator = nodeArchiveVector.begin( );
 		auto node = *iterator;
-		nodeVector.erase( iterator );
+		nodeArchiveVector.erase( iterator );
 		delete node;
 	}
 }
@@ -260,10 +260,10 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 	InputPort *inputPort;
 	QPoint outputPortPos;
 	QPoint inputPortPos;
-	count = nodeVector.size( );
+	count = nodeArchiveVector.size( );
 	if( count == 0 )
 		return;
-	arrayPtr = nodeVector.data( );
+	arrayPtr = nodeArchiveVector.data( );
 	for( index = 0; index < count; ++index ) {
 		node = arrayPtr[ index ];
 
@@ -406,8 +406,8 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 		return false;
 	std::vector< uint8_t > vectorInfo;
 	std::vector< uint8_t > converResult;
-	size_t refNodeArrayCount = nodeVector.size( );
-	auto refNodeArrayPtr = nodeVector.data( );
+	size_t refNodeArrayCount = nodeArchiveVector.size( );
+	auto refNodeArrayPtr = nodeArchiveVector.data( );
 	size_t refNodeArrayIndex = 0;
 	// 序列化节点个数
 	*uint64Ptr = refNodeArrayCount;
@@ -577,8 +577,8 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	int x = 0;
 	int y = 0;
-	size_t count = nodeVector.size( );
-	auto arrayPtr = nodeVector.data( );
+	size_t count = nodeArchiveVector.size( );
+	auto arrayPtr = nodeArchiveVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index ) {
 		Node *currentNode = arrayPtr[ index ];
@@ -593,10 +593,10 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 }
 NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
 	//NodeRunInfo *result = new NodeRunInfo( parent );
-	//size_t count = nodeVector.size( );
+	//size_t count = nodeArchiveVector.size( );
 	//if( count != 0 ) {
 	//	size_t index = 0;
-	//	auto nodeRefLinkInfoArrayPtr = nodeVector.data( );
+	//	auto nodeRefLinkInfoArrayPtr = nodeArchiveVector.data( );
 	//	for( ; index < count; ++index )
 	//		if( nodeRefLinkInfoArrayPtr[ index ]->getNodeType( ) == NodeEnum::NodeType::Begin )
 	//			result->appendBegin( nodeRefLinkInfoArrayPtr[ index ] );
@@ -610,10 +610,10 @@ NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
 	return nullptr;
 }
 Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
-	size_t count = nodeVector.size( );
+	size_t count = nodeArchiveVector.size( );
 	if( count == 0 )
 		return nullptr;
-	auto nodeArrayPtr = nodeVector.data( );
+	auto nodeArrayPtr = nodeArchiveVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( nodeArrayPtr[ index ]->generateCode == node_generator_code )
@@ -659,8 +659,8 @@ bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *
 }
 
 void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
-	size_t count = nodeVector.size( );
-	auto data = nodeVector.data( );
+	size_t count = nodeArchiveVector.size( );
+	auto data = nodeArchiveVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
@@ -689,7 +689,7 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
 	}
-	if( updateNodeGeneratorCode( append_node ) == false ) {
+	if( appendNodeToArchiveVector( append_node ) == false ) {
 		errorMsg = tr( "节点 (%1) [NodeDirector::updateNodeGeneratorCode( Node *update_generate_code )] 无法分配生成码" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
@@ -850,16 +850,16 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistorys.emplace_back( newHistrort );
 	nodeHistoryIndex = nodeHistorys.size( );
 }
-bool NodeDirector::updateNodeGeneratorCode( Node *update_generate_code ) {
+bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
 	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
-	size_t count = nodeVector.size( );
+	size_t count = nodeArchiveVector.size( );
 
 	if( count == 0 ) {
 		update_generate_code->generateCode = 1;
-		nodeVector.emplace_back( update_generate_code );
+		nodeArchiveVector.emplace_back( update_generate_code );
 		return true;
 	}
-	auto nodeArrayPtr = nodeVector.data( );
+	auto nodeArrayPtr = nodeArchiveVector.data( );
 	size_t index;
 	update_generate_code->generateCode = 0;
 	for( index = 0; index < count; ++index )
@@ -870,8 +870,29 @@ bool NodeDirector::updateNodeGeneratorCode( Node *update_generate_code ) {
 	if( maxGenerator == count ) // 最大生成号
 		return false;
 	update_generate_code->generateCode = count + 1;
-	nodeVector.emplace_back( update_generate_code );
+	nodeArchiveVector.emplace_back( update_generate_code );
 	return false;
+}
+bool NodeDirector::sortArchiveCode( QString &error_msg ) {
+	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
+	size_t count = nodeArchiveVector.size( );
+	auto nodeArrayPtr = nodeArchiveVector.data( );
+	uint64_t maxCode = 0;
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( maxCode < nodeArrayPtr[ index ]->generateCode )
+			maxCode = nodeArrayPtr[ index ]->generateCode;
+	if( maxGenerator == maxCode && count != maxCode ) {
+		// 最大生成号
+		error_msg = tr( "超出可控数量" );
+		return false;
+	}
+	decltype(nodeArchiveVector) buff( maxCode, nullptr );
+	auto destArrayPtr = buff.data( );
+	for( index = 0; index < maxCode; ++index )
+		destArrayPtr[ nodeArrayPtr[ index ]->generateCode - 1 ] = nodeArrayPtr[ index ];
+	nodeArchiveVector = buff;
+	return true;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	printerDirector->info( "节点释放", Create_SrackInfo( ) );

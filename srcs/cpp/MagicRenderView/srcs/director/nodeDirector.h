@@ -50,7 +50,7 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	DrawHighlightWidget *drawHighlightWidget;
 	NodeInfoWidget *currentShowWidget;
-	std::vector< Node * > nodeVector;
+	std::vector< Node * > nodeArchiveVector;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
@@ -139,7 +139,8 @@ protected:
 	/// @brief 删除历史坐标后续的所有对象
 	virtual void removeHistorIndexEnd( );
 	virtual void appendHistorIndexEnd( const std::function< NodeHistory *( ) > &current_history, const std::function< NodeHistory *( ) > &cancel_history );
-	virtual bool updateNodeGeneratorCode( Node *update_generate_code );
+	virtual bool appendNodeToArchiveVector( Node *update_generate_code );
+	virtual bool sortArchiveCode( QString & error_msg );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
