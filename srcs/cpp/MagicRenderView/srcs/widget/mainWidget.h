@@ -3,6 +3,7 @@
 #pragma once
 #include <QWidget>
 
+class NormalGenerateNodeMenu;
 class DrawHighlightWidget;
 class PrinterDirector;
 class NodeRefLinkInfo;
@@ -31,7 +32,7 @@ protected:
 	DrawLinkWidget *drawLinkWidget;
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	NodeClickInfo *clickInfoPtr;
-	QMenu *nodeCreateMenu;
+	NormalGenerateNodeMenu *normalGenerateNodeMenu;
 	Node *oldSelectNode;
 	Node *dragNode;
 	InputPort *selectInputPort;

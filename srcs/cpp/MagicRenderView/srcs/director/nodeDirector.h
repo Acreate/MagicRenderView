@@ -8,6 +8,9 @@
 
 #include "../widget/mainWidget.h"
 
+class MenuDirector;
+class NormalNodeEditorPropertyMenu;
+class NormalGenerateNodeMenu;
 class NodeRunInfo;
 class NodeHistory;
 class NodeInfoWidget;
@@ -33,18 +36,19 @@ private:
 	friend class Application;
 	using QActionTriggered = void(QAction::*)( bool );
 protected:
-	QMenu *nodeCreateMenu;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	VarDirector *nodeVarDirector;
+	MenuDirector *menuDirector;
+	NormalGenerateNodeMenu *normalGenerateNodeMenu;
+	NormalNodeEditorPropertyMenu *normalNodeEditorPropertyMenu;
 	MainWindow *mainWindow;
 	MainWidget *mainWidget;
 	DrawNodeWidget *drawNodeWidget;
 	DrawLinkWidget *drawLinkWidget;
 	DrawHighlightWidget *drawHighlightWidget;
 	NodeInfoWidget *currentShowWidget;
-	std::vector< std::pair< QString, std::function< Node*( const QString & ) > > > createNodeVector;
 	std::vector< Node * > nodeVector;
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;
@@ -78,8 +82,11 @@ public:
 	/// @return 成功显示返回 true
 	virtual NodeInfoWidget * getNodeWidgeInfo( Node *association_node );
 	/// @brief 获取节点创建菜单
-	/// @return 失败返回 nullptr
-	virtual QMenu * getNodeCreateMenu( ) const { return nodeCreateMenu; }
+	/// @return 节点创建菜单
+	virtual NormalGenerateNodeMenu * getNormalGenerateNodeMenu( ) const { return normalGenerateNodeMenu; }
+	/// @brief 获取节点编辑菜单
+	/// @return 节点编辑菜单
+	virtual NormalNodeEditorPropertyMenu * getNormalNodeEditorPropertyMenu( ) const { return normalNodeEditorPropertyMenu; }
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
 	/// @return 失败返回 nullptr

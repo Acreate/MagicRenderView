@@ -8,7 +8,7 @@ class QMenu;
 class GenerateNodeMenuStack : public QObject {
 	Q_OBJECT;
 protected:
-	using TUintyKey = std::function< NormalGenerateNodeMenu*( QWidget * ) >;
+	using TUintyKey = std::function< NormalGenerateNodeMenu*( ) >;
 	using TUintyValueTypeAliasName = std::vector< QString >;
 	using TUintyValueTypeName = QString;
 	using TUintyValuePair = std::pair< TUintyValueTypeName, TUintyValueTypeAliasName >;
@@ -20,7 +20,7 @@ protected:
 public:
 	GenerateNodeMenuStack( );
 	virtual bool initStack( );
-	virtual NormalGenerateNodeMenu * createGenerateNodeMenu( QWidget *parent, const QString &menu_name );
+	virtual NormalGenerateNodeMenu * createGenerateNodeMenu( const QString &menu_name );
 };
 
 #endif // GENERATENODEMENUSTACK_H_H_HEAD__FILE__

@@ -31,10 +31,14 @@ protected:
 private Q_SLOTS:
 	void actionSlots( QAction *action );
 protected:
-	NormalGenerateNodeMenu( QWidget *parent );
+	NormalGenerateNodeMenu(  );
 	virtual bool initNormalGenerateNodeMenu( );
 public:
 	~NormalGenerateNodeMenu( ) override;
+	/// @brief 根据节点名称创建节点
+	/// @param node_name 节点名称
+	/// @return 节点
+	virtual Node * createNode( const QString &node_name );
 protected:
 	virtual QMenu * formNodeStack( NodeStack *create_node_stack );
 	template< typename TCNodeStackType >

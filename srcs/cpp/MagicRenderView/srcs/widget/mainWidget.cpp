@@ -13,6 +13,7 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/generateNode/normalGenerateNodeMenu.h"
 
 #include "../node/node/node.h"
 #include "../node/nodeInfo/nodeClickInfo.h"
@@ -76,7 +77,7 @@ bool MainWidget::init( ) {
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	mainWindow = appInstancePtr->getMainWindow( );
 	printerDirector = appInstancePtr->getPrinterDirector( );
-	nodeCreateMenu = nodeDirector->getNodeCreateMenu( );
+	normalGenerateNodeMenu = nodeDirector->getNormalGenerateNodeMenu( );
 	*oldClickTime = QDateTime::currentDateTime( );
 
 	if( drawNodeWidget->init( this ) == false )
@@ -252,7 +253,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				}
 			} else {
 				drawNodeWidget->menuPopPoint = mapToGlobal( event->pos( ) );
-				nodeCreateMenu->popup( drawNodeWidget->menuPopPoint );
+				normalGenerateNodeMenu->popup( drawNodeWidget->menuPopPoint );
 			}
 			break;
 		case Qt::MiddleButton :

@@ -23,8 +23,9 @@ void NormalGenerateNodeMenu::actionSlots( QAction *action ) {
 			break;
 		}
 }
-NormalGenerateNodeMenu::NormalGenerateNodeMenu( QWidget *parent ) : QMenu( parent ) {
-
+NormalGenerateNodeMenu::NormalGenerateNodeMenu( ) : QMenu( ) {
+	createCount = 0;
+	createArrayPtr = nullptr;
 	connect( this, &QMenu::triggered, this, &NormalGenerateNodeMenu::actionSlots );
 }
 bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
@@ -38,6 +39,14 @@ bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 NormalGenerateNodeMenu::~NormalGenerateNodeMenu( ) {
 	emit release_menu_signal( this );
 	releaseObjResource( );
+}
+Node * NormalGenerateNodeMenu::createNode( const QString &node_name ) {
+	if( createCount == 0 )
+		return nullptr;
+	for( createIndex = 0; createIndex < createCount; ++createIndex )
+		if( createArrayPtr[ createIndex ].second.first == node_name )
+			return createArrayPtr[ createIndex ].second.second( node_name );
+	return nullptr;
 }
 
 QMenu * NormalGenerateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {

@@ -60,6 +60,9 @@ public:
 	MenuDirector( QObject *parent = nullptr );
 	~MenuDirector( ) override;
 	virtual bool init( );
+	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
+	virtual GenerateNodeMenuStack * getGenerateNodeMenuStack( ) const { return generateNodeMenuStack; }
+	virtual EditorNodeMenuStack * getEditorNodeMenuStack( ) const { return editorNodeMenuStack; }
 Q_SIGNALS:
 	/// @brief 释放对象产生信号
 	/// @param release_obj_ptr 释放对象指针

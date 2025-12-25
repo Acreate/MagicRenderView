@@ -8,6 +8,9 @@
 #include "varDirector.h"
 
 #include "../app/application.h"
+#include "../menu/edit/normalNodeEditorPropertyMenu.h"
+#include "../menu/generateNode/normalGenerateNodeMenu.h"
+#include "../menuStack/generateNode/generateNodeMenuStack.h"
 
 #include "../node/node/node.h"
 #include "../node/nodeInfo/nodeHistory.h"
@@ -31,31 +34,30 @@
 #include "../widget/mainWidgetScrollArea.h"
 
 #include "../win/mainWindow.h"
+#include "menuDirector.h"
 
 bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
+
+	menuDirector = instancePtr->getMenuDirector( );
+
 	releaseObjResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
-	createNodeVector.clear( );
-
 	size_t count;
 	size_t index;
 	NodeStack **nodeStackArrayPtr;
 
-	
 	QString errorMsg;
 	bool drawLinkWidgetIniRsult = initNodeRenderGraphWidget( errorMsg );
 	if( drawLinkWidgetIniRsult == false )
 		printerDirector->info( errorMsg,Create_SrackInfo( ) );
-	if( drawLinkWidget )
-		drawLinkWidget->update( );
-	if( drawNodeWidget )
-		drawNodeWidget->update( );
-	if( drawHighlightWidget )
-		drawHighlightWidget->update( );
+
+	auto generateNodeMenuStack = menuDirector->getGenerateNodeMenuStack( );
+	normalGenerateNodeMenu = generateNodeMenuStack->createGenerateNodeMenu( tr( "常规" ) );
+
 	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
@@ -98,7 +100,8 @@ NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
 
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), drawNodeWidget( nullptr ), drawHighlightWidget( nullptr ), drawLinkWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
 	nodeVarDirector = new VarDirector;
-	nodeCreateMenu = new QMenu;
+	normalGenerateNodeMenu = nullptr;
+	normalNodeEditorPropertyMenu = nullptr;
 }
 void NodeDirector::releaseObjResources( ) {
 	releaseMenuResources( );
@@ -107,7 +110,10 @@ void NodeDirector::releaseObjResources( ) {
 	releaseNodeHistoryResources( );
 }
 void NodeDirector::releaseMenuResources( ) {
-	nodeCreateMenu->clear( );
+	if( normalGenerateNodeMenu )
+		delete normalGenerateNodeMenu;
+	if( normalNodeEditorPropertyMenu )
+		delete normalNodeEditorPropertyMenu;
 }
 void NodeDirector::releaseNodeResources( ) {
 	size_t count;
@@ -141,12 +147,11 @@ void NodeDirector::releaseNodeHistoryResources( ) {
 }
 NodeDirector::~NodeDirector( ) {
 	releaseObjResources( );
-	if( nodeCreateMenu )
-		delete nodeCreateMenu;
 	if( nodeVarDirector )
 		delete nodeVarDirector;
 }
 Node * NodeDirector::createNode( const QString &node_type_name ) {
+
 	if( node_type_name.isEmpty( ) ) {
 		printerDirector->info( tr( "无法创建[]节点" ), Create_SrackInfo( ) );
 		return nullptr;
@@ -158,17 +163,10 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 			return nullptr;
 		}
 	}
-	Node *node = nullptr;
-	size_t count = createNodeVector.size( );
-	auto createArrayPtr = createNodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( createArrayPtr[ index ].first == node_type_name ) {
-			node = createArrayPtr[ index ].second( node_type_name );
-			break;
-		}
-	appendRefNodeVectorAtNode( node_type_name, node );
-	return node;
+
+	auto createNodePtr = normalGenerateNodeMenu->createNode( node_type_name );
+	appendRefNodeVectorAtNode( node_type_name, createNodePtr );
+	return createNodePtr;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
@@ -638,7 +636,6 @@ bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list
 bool NodeDirector::connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function ) {
 	if( connect_qaction_ptr == nullptr || connect_qaction_fun_ptr == nullptr )
 		return false;
-	createNodeVector.emplace_back( node_type_name, action_click_function );
 	connect( connect_qaction_ptr, connect_qaction_fun_ptr, [this,action_click_function, node_type_name]( ) {
 		QString errorMsg;
 		auto node = action_click_function( node_type_name );
