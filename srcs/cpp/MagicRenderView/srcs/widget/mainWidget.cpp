@@ -356,4 +356,5 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 	if( isDrawLine == true )
 		painter.drawLine( startPoint, endPoint );
 	nodeDirector->drawLinkLines( painter );
+	nodeDirector->drawLinkLines( painter );
 }

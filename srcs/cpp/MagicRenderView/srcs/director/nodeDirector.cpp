@@ -827,7 +827,7 @@ bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
 		return false;
 	update_generate_code->generateCode = count + 1;
 	nodeArchiveVector.emplace_back( update_generate_code );
-	return false;
+	return true;
 }
 bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
