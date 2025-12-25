@@ -5,6 +5,7 @@
 #include <enums/nodeEnum.h>
 
 #include "../enums/widgetEnum.h"
+#include "../tools/aliasType.h"
 
 #include "../widget/mainWidget.h"
 
@@ -193,6 +194,7 @@ protected:
 	/// @param ref_output_port 输出端口
 	void disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port );
 	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
+	void createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
 	/// @param signal_obj_ptr 信号对象指针

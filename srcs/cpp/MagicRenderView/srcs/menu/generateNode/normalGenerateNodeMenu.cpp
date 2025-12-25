@@ -70,8 +70,8 @@ QMenu * NormalGenerateNodeMenu::formNodeStack( NodeStack *create_node_stack ) {
 		addMenu( nodeGenerateCreateMenu );
 	return nodeGenerateCreateMenu;
 }
-void NormalGenerateNodeMenu::appendCareateItem( QAction *create_node_item, const QString &create_node_name, const TCreateNodeFunction &create_node_function ) {
-	TCreateUintyType unity = std::pair( create_node_item, TCreateNodeInfo( create_node_name, create_node_function ) );
+void NormalGenerateNodeMenu::appendCareateItem( QAction *create_node_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function ) {
+	NormalGenerateNodeMenuType::TCreateUintyType unity = std::pair( create_node_item, NormalGenerateNodeMenuType::TCreateNodeInfo( create_node_name, create_node_function ) );
 	createVector.emplace_back( unity );
 }
 

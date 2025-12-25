@@ -3,20 +3,16 @@
 #pragma once
 #include <QObject>
 
+#include "../../tools/aliasType.h"
+
 class NormalGenerateNodeMenu;
 class QMenu;
 class GenerateNodeMenuStack : public QObject {
 	Q_OBJECT;
 protected:
-	using TUintyKey = std::function< NormalGenerateNodeMenu*( ) >;
-	using TUintyValueTypeAliasName = std::vector< QString >;
-	using TUintyValueTypeName = QString;
-	using TUintyValuePair = std::pair< TUintyValueTypeName, TUintyValueTypeAliasName >;
-	using TUintyPairt = std::pair< TUintyKey, TUintyValuePair >;
-protected:
-	std::vector< TUintyPairt > generateMenuVector;
+	std::vector< GenerateNodeMenuStackType::TUintyPairt > generateMenuVector;
 	size_t generateCount;
-	std::pair< TUintyKey, TUintyValuePair > *generateArrayPtr;
+	std::pair< GenerateNodeMenuStackType::TUintyKey, GenerateNodeMenuStackType::TUintyValuePair > *generateArrayPtr;
 public:
 	GenerateNodeMenuStack( );
 	virtual bool initStack( );

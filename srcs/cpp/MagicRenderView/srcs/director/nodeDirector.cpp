@@ -54,7 +54,7 @@ bool NodeDirector::init( ) {
 
 	auto generateNodeMenuStack = menuDirector->getGenerateNodeMenuStack( );
 	normalGenerateNodeMenu = generateNodeMenuStack->createGenerateNodeMenu( tr( "常规" ) );
-
+	connect( normalGenerateNodeMenu, &NormalGenerateNodeMenu::create_node_signal, this, &NodeDirector::createNodeSlot );
 	return drawLinkWidgetIniRsult;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
@@ -674,6 +674,7 @@ void NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name, N
 		errorMsg = tr( "节点 (%1) [Node::init( DrawNodeWidget *parent )] 的初始化函数运行失败" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
+		delete append_node;
 		return;
 	}
 	nodeVector.emplace_back( append_node );
@@ -858,6 +859,11 @@ void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &org_srack_
 void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info ) {
 	emit node_run_info_clear_signal( this, Create_SrackInfo( ), clear_obj, srack_info );
 	delete clear_obj;
+}
+void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function ) {
+	auto nodeName = create_item->text( );
+	Node *nodePtr = create_node_function( nodeName );
+	appendRefNodeVectorAtNode( nodeName, nodePtr );
 }
 void NodeDirector::finishCreateNode( Node *finish_node ) {
 
