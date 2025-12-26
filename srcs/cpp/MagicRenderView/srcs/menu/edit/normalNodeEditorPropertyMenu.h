@@ -107,6 +107,8 @@ public:
 	~NormalNodeEditorPropertyMenu( ) override;
 	virtual bool initNormalNodeEditorPropertyMenu( );
 	virtual bool setNode( Node *node );
+protected:
+	void hideEvent( QHideEvent * ) override;
 Q_SIGNALS:
 	void release_signal( NormalNodeEditorPropertyMenu *release_ptr );
 	void unLink_signal( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port );

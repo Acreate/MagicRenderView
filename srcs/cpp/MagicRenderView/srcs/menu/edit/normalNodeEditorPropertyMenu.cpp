@@ -179,22 +179,6 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	if( node == nullptr )
 		return false;
 	currentNode = node;
-	nodeInfoWidget = nullptr;
-	unLinkPortActionInputMap.clear( );
-	unLinkPortActionOutputMap.clear( );
-	refOutputPortActionMap.clear( );
-	refInputPortActionMap.clear( );
-	refOutputPortActionMapCount = 0;
-	refOutputPortActionMapArrayPtr = nullptr;
-	refInputPortActionMapCount = 0;
-	refInputPortActionMapArrayPtr = nullptr;
-
-	dislayMenu->clear( );
-	displayInputRef->clear( );
-	deleteInputAtOutputRef->clear( );
-	displayOutputRef->clear( );
-	deleteOutputAtInputRef->clear( );
-
 	if( qactionArchiveCount == 0 )
 		extendQActionArchiveVectorCount( 1024 );
 	// 添加显示菜单
@@ -281,4 +265,23 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	unLinkPortActionOutputMapArrayPtr = unLinkPortActionOutputMap.data( );
 
 	return qactionArchiveCount != 0;
+}
+void NormalNodeEditorPropertyMenu::hideEvent( QHideEvent *hide_event ) {
+	QMenu::hideEvent( hide_event );
+	currentNode = nullptr;
+	nodeInfoWidget = nullptr;
+	unLinkPortActionInputMap.clear( );
+	unLinkPortActionOutputMap.clear( );
+	refOutputPortActionMap.clear( );
+	refInputPortActionMap.clear( );
+	refOutputPortActionMapCount = 0;
+	refOutputPortActionMapArrayPtr = nullptr;
+	refInputPortActionMapCount = 0;
+	refInputPortActionMapArrayPtr = nullptr;
+
+	dislayMenu->clear( );
+	displayInputRef->clear( );
+	deleteInputAtOutputRef->clear( );
+	displayOutputRef->clear( );
+	deleteOutputAtInputRef->clear( );
 }
