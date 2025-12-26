@@ -98,12 +98,12 @@ void MainWidget::appendVector( Node *append_node ) {
 bool MainWidget::addNode( Node *node_ref_link_info ) {
 	if( node_ref_link_info->initEx( this ) == false )
 		return false;
-	QPoint fromGlobal = mapFromGlobal( normalGenerateNodeMenu->pos( ) );
-	if( fromGlobal.x( ) < 0 )
-		fromGlobal.setX( 0 );
-	if( fromGlobal.y( ) < 0 )
-		fromGlobal.setY( 0 );
-	node_ref_link_info->move( fromGlobal );
+	//QPoint fromGlobal = mapFromGlobal( normalGenerateNodeMenu->pos( ) );
+	//if( fromGlobal.x( ) < 0 )
+	//	fromGlobal.setX( 0 );
+	//if( fromGlobal.y( ) < 0 )
+	//	fromGlobal.setY( 0 );
+	//node_ref_link_info->move( fromGlobal );
 	appendVector( node_ref_link_info );
 	connect( node_ref_link_info, &Node::release_node_signal, this, &MainWidget::removeVector );
 	return true;
@@ -167,7 +167,6 @@ bool MainWidget::init( ) {
 	nodeDirector = appInstancePtr->getNodeDirector( );
 	mainWindow = appInstancePtr->getMainWindow( );
 	printerDirector = appInstancePtr->getPrinterDirector( );
-	normalGenerateNodeMenu = nodeDirector->getNormalGenerateNodeMenu( );
 	*oldClickTime = QDateTime::currentDateTime( );
 	return true;
 }
@@ -324,19 +323,17 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				if( dragNode )
 					ensureVisible( dragNode );
-				switch( clickInfoPtr->getClickType( ) ) {
+				nodeDirector->popNormalNodeEditorPropertyMenu( mapToGlobal( event->pos( ) ), dragNode );
+				/*switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::None :
 					case NodeEnum::NodeClickType::Titile :
 					case NodeEnum::NodeClickType::InputPort :
 					case NodeEnum::NodeClickType::OutputPort :
-						auto normalNodeEditorPropertyMenu = nodeDirector->getNormalNodeEditorPropertyMenu( dragNode );
-						if( normalNodeEditorPropertyMenu == nullptr )
-							break;
-						normalNodeEditorPropertyMenu->popup( mapToGlobal( event->pos( ) ) );
+						
 						break;
-				}
+				}*/
 			} else {
-				normalGenerateNodeMenu->popup( mapToGlobal( event->pos( ) ) );
+				nodeDirector->popNormalGenerateNodeMenu( mapToGlobal( event->pos( ) ) );
 			}
 			break;
 		case Qt::MiddleButton :

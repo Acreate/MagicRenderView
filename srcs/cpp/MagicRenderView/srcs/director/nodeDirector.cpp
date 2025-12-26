@@ -589,10 +589,17 @@ Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
 			return nodeArrayPtr[ index ];
 	return nullptr;
 }
-NormalNodeEditorPropertyMenu * NodeDirector::getNormalNodeEditorPropertyMenu( Node *node_target ) const {
+bool NodeDirector::popNormalNodeEditorPropertyMenu( const QPoint &pop_pos, Node *node_target ) const {
 	if( normalNodeEditorPropertyMenu->setNode( node_target ) == false )
-		return nullptr;
-	return normalNodeEditorPropertyMenu;
+		return false;
+	normalNodeEditorPropertyMenu->popup( pop_pos );
+	return true;
+}
+bool NodeDirector::popNormalGenerateNodeMenu( const QPoint &pop_pos ) const {
+	if( normalGenerateNodeMenu == nullptr )
+		return false;
+	normalGenerateNodeMenu->popup( pop_pos );
+	return true;
 }
 
 bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map ) {
@@ -651,6 +658,7 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		emit error_create_node_signal( this, append_node_name, NodeEnum::CreateType::MainWindow_Nullptr, errorMsg, Create_SrackInfo( ) );
 		return nullptr;
 	}
+
 	if( mainWidget->addNode( append_node ) == false ) {
 		errorMsg = tr( "节点 (%1) [Node::init( MainWidget *parent )] 的初始化函数运行失败" );
 		printerDirector->error( errorMsg.arg( append_node_name ), Create_SrackInfo( ) );
@@ -664,7 +672,14 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		return nullptr;
 	}
 
+	QPoint fromGlobal = mainWidget->mapFromGlobal( normalGenerateNodeMenu->pos( ) );
+	if( fromGlobal.x( ) < 0 )
+		fromGlobal.setX( 0 );
+	if( fromGlobal.y( ) < 0 )
+		fromGlobal.setY( 0 );
+	append_node->move( fromGlobal );
 	append_node->show( );
+	mainWidget->ensureVisible( append_node );
 	finishCreateNode( append_node );
 
 	auto currentHistory = [append_node, this] {

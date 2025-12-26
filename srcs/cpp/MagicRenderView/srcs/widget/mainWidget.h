@@ -25,7 +25,6 @@ protected:
 	MainWindow *mainWindow;
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	NodeClickInfo *clickInfoPtr;
-	NormalGenerateNodeMenu *normalGenerateNodeMenu;
 	Node *oldSelectNode;
 	Node *dragNode;
 	InputPort *selectInputPort;

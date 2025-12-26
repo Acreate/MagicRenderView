@@ -79,9 +79,6 @@ public:
 	/// @param association_node 关联节点
 	/// @return 成功显示返回 true
 	virtual NodeInfoWidget * getNodeWidgeInfo( Node *association_node );
-	/// @brief 获取节点创建菜单
-	/// @return 节点创建菜单
-	virtual NormalGenerateNodeMenu * getNormalGenerateNodeMenu( ) const { return normalGenerateNodeMenu; }
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
 	/// @return 失败返回 nullptr
@@ -120,7 +117,15 @@ public:
 	virtual QSize getMaxNodeRenderSize( ) const;
 	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
 	virtual Node * getNode( const uint64_t &node_generator_code ) const;
-	virtual NormalNodeEditorPropertyMenu * getNormalNodeEditorPropertyMenu( Node *node_target ) const;
+	/// @brief 指定位置弹出节点编辑菜单
+	/// @param pop_pos 位置-全局坐标
+	/// @param node_target 编辑菜单目标
+	/// @return 失败返回 false
+	virtual bool popNormalNodeEditorPropertyMenu( const QPoint &pop_pos, Node *node_target ) const;
+	/// @brief 指定位置弹出创建菜单
+	/// @param pop_pos 位置
+	/// @return 弹出菜单失败返回 false
+	virtual bool popNormalGenerateNodeMenu( const QPoint &pop_pos ) const;
 protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
