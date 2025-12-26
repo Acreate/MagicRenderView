@@ -98,12 +98,6 @@ void MainWidget::appendVector( Node *append_node ) {
 bool MainWidget::addNode( Node *node_ref_link_info ) {
 	if( node_ref_link_info->initEx( this ) == false )
 		return false;
-	//QPoint fromGlobal = mapFromGlobal( normalGenerateNodeMenu->pos( ) );
-	//if( fromGlobal.x( ) < 0 )
-	//	fromGlobal.setX( 0 );
-	//if( fromGlobal.y( ) < 0 )
-	//	fromGlobal.setY( 0 );
-	//node_ref_link_info->move( fromGlobal );
 	appendVector( node_ref_link_info );
 	connect( node_ref_link_info, &Node::release_node_signal, this, &MainWidget::removeVector );
 	return true;

@@ -7,13 +7,15 @@
 #include "../../node/port/inputPort/inputPort.h"
 #include "../../node/port/outputPort/outputPort.h"
 #include "action/autoAction.h"
-NormalNodeEditorPropertyMenu::ActionPair::ActionPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ),
-	outputPort( output_port ),
-	inputPort( input_port ) {
-	QString titleArgString( tr( "断开 (%1[%2])-> (%3[%4]) 链接" ) );
+NormalNodeEditorPropertyMenu::ActionLinkInfoPair::ActionLinkInfoPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ), outputPort( output_port ), inputPort( input_port ) {
+	QString titleArgString( tr( "断开 (%1[%2])->(%3[%4]) 链接" ) );
 	titleArgString = titleArgString.arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( input_port->parentNode->getNodeName( ) ).arg( input_port->getPortName( ) );
 	trigAction->setText( titleArgString );
 }
+NormalNodeEditorPropertyMenu::ActionNodeInfoPair::ActionNodeInfoPair( AutoAction *trig_action, Node *node, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ),
+	node( node ),
+	outputPort( output_port ),
+	inputPort( input_port ) { }
 bool NormalNodeEditorPropertyMenu::extendQActionArchiveVectorCount( size_t extendCount ) {
 	size_t newCount = qactionArchiveCount + extendCount;
 	if( qactionArchiveCount > newCount ) // 数据被截断
@@ -25,13 +27,37 @@ bool NormalNodeEditorPropertyMenu::extendQActionArchiveVectorCount( size_t exten
 	return true;
 }
 bool NormalNodeEditorPropertyMenu::appendRmoveOutputRefActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port ) {
-	unLinkPortActionInputMap.emplace_back( ActionPair( auto_action, output_port, input_port ) );
+	unLinkPortActionInputMap.emplace_back( ActionLinkInfoPair( auto_action, output_port, input_port ) );
 	deleteInputAtOutputRef->addAction( auto_action );
 	return true;
 }
 bool NormalNodeEditorPropertyMenu::appendRmoveInputRefActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port ) {
-	unLinkPortActionOutputMap.emplace_back( ActionPair( auto_action, output_port, input_port ) );
+	unLinkPortActionOutputMap.emplace_back( ActionLinkInfoPair( auto_action, output_port, input_port ) );
 	deleteOutputAtInputRef->addAction( auto_action );
+	return true;
+}
+bool NormalNodeEditorPropertyMenu::appendRefOutputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port ) {
+	auto parentNode = output_port->parentNode;
+	size_t index = 0;
+	for( ; index < refOutputPortActionMapCount; ++index )
+		if( refOutputPortActionMapArrayPtr[ index ].getNode( ) == parentNode )
+			return false;
+	refOutputPortActionMap.emplace_back( ActionNodeInfoPair( auto_action, parentNode, output_port, input_port ) );
+	refOutputPortActionMapCount = refOutputPortActionMap.size( );
+	refOutputPortActionMapArrayPtr = refOutputPortActionMap.data( );
+	auto_action->setText( tr( "(%1[%2]) 跳到输入引用节点 (%3[%4])" ).arg( input_port->parentNode->getNodeName( ) ).arg( input_port->getPortName( ) ).arg( parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ) );
+	return true;
+}
+bool NormalNodeEditorPropertyMenu::appendRefInputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port ) {
+	auto parentNode = input_port->parentNode;
+	size_t index = 0;
+	for( ; index < refInputPortActionMapCount; ++index )
+		if( refInputPortActionMapArrayPtr[ index ].getNode( ) == parentNode )
+			return false;
+	refInputPortActionMap.emplace_back( ActionNodeInfoPair( auto_action, parentNode, output_port, input_port ) );
+	refInputPortActionMapCount = refInputPortActionMap.size( );
+	refInputPortActionMapArrayPtr = refInputPortActionMap.data( );
+	auto_action->setText( tr( "(%1[%2]) 跳到输出引用节点 (%3[%4])" ).arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( parentNode->getNodeName( ) ).arg( input_port->getPortName( ) ) );
 	return true;
 }
 void NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction( QAction *tr_obj_ptr ) {
@@ -61,12 +87,35 @@ void NormalNodeEditorPropertyMenu::displayInfoWidget( QAction *tr_obj_ptr ) {
 		return;
 	emit show_node_edit_info_widget_signal( this, currentNode, nodeInfoWidget );
 }
-void NormalNodeEditorPropertyMenu::displayAtNodEnsureToWidget( QAction *tr_obj_ptr ) {
+void NormalNodeEditorPropertyMenu::displayAtRefOutputNodeEnsureToWidget( QAction *tr_obj_ptr ) {
+	size_t index = 0;
+	for( ; index < refOutputPortActionMapCount; ++index )
+		if( refOutputPortActionMapArrayPtr[ index ].getTrigAction( ) == tr_obj_ptr ) {
+			emit show_node_at_widget_signal( this, refOutputPortActionMapArrayPtr[ index ].getNode( ) );
+			return;
+		}
+}
+void NormalNodeEditorPropertyMenu::displayAtRefInputNodeEnsureToWidget( QAction *tr_obj_ptr ) {
+	size_t index = 0;
+	for( ; index < refInputPortActionMapCount; ++index )
+		if( refInputPortActionMapArrayPtr[ index ].getTrigAction( ) == tr_obj_ptr ) {
+			emit show_node_at_widget_signal( this, refInputPortActionMapArrayPtr[ index ].getNode( ) );
+			return;
+		}
+
 }
 NormalNodeEditorPropertyMenu::NormalNodeEditorPropertyMenu( ) : QMenu( ) {
 	currentNode = nullptr;
 	qactionArchiveCount = 0;
 	actionArchiveArrayPtr = nullptr;
+	unLinkPortActionInputMapCount = 0;
+	unLinkPortActionInputMapArrayPtr = nullptr;
+	unLinkPortActionOutputMapCount = 0;
+	unLinkPortActionOutputMapArrayPtr = nullptr;
+	refInputPortActionMapArrayPtr = nullptr;
+	refInputPortActionMapCount = 0;
+	refOutputPortActionMapArrayPtr = nullptr;
+	refOutputPortActionMapCount = 0;
 	displayInfoWidgetAction = new AutoAction( tr( "显示编辑菜单" ) );
 	noteInfoWidgetAction = new AutoAction( tr( "不存在匹配窗口" ) );
 	noteInfoWidgetAction->setEnabled( false );
@@ -85,17 +134,45 @@ NormalNodeEditorPropertyMenu::~NormalNodeEditorPropertyMenu( ) {
 	delete noteRemoveInputputLinkAction;
 }
 bool NormalNodeEditorPropertyMenu::initNormalNodeEditorPropertyMenu( ) {
+	size_t index;
+	if( qactionArchiveCount )
+		for( index = 0; index < qactionArchiveCount; ++index )
+			delete actionArchiveArrayPtr[ index ];
+	qactionArchiveVector.clear( );
+
+	unLinkPortActionOutputMap.clear( );
+	unLinkPortActionInputMap.clear( );
+
+	refInputPortActionMap.clear( );
+	refOutputPortActionMap.clear( );
+
+	actionArchiveArrayPtr = nullptr;
+	qactionArchiveCount = 0;
+
+	unLinkPortActionInputMapCount = 0;
+	unLinkPortActionInputMapArrayPtr = nullptr;
+
+	unLinkPortActionOutputMapCount = 0;
+	unLinkPortActionOutputMapArrayPtr = nullptr;
+
+	refInputPortActionMapArrayPtr = nullptr;
+	refInputPortActionMapCount = 0;
+
+	refOutputPortActionMapArrayPtr = nullptr;
+	refOutputPortActionMapCount = 0;
+
 	clear( );
 	dislayMenu = addMenu( tr( "显示" ) );
 	inputMneu = addMenu( tr( "输入" ) );
-	dislayInputRef = inputMneu->addMenu( tr( "显示引用" ) );
+	displayInputRef = inputMneu->addMenu( tr( "显示引用" ) );
 	deleteInputAtOutputRef = inputMneu->addMenu( tr( "删除输出端口引用" ) );
 	outputMenu = addMenu( tr( "输出" ) );
-	dislayOutputRef = outputMenu->addMenu( tr( "显示引用" ) );
+	displayOutputRef = outputMenu->addMenu( tr( "显示引用" ) );
 	deleteOutputAtInputRef = outputMenu->addMenu( tr( "删除输入端口引用" ) );
 	connect( deleteOutputAtInputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction );
 	connect( deleteInputAtOutputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction );
-	connect( dislayMenu, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::displayInfoWidget );
+	connect( displayInputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::displayAtRefInputNodeEnsureToWidget );
+	connect( displayOutputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::displayAtRefOutputNodeEnsureToWidget );
 	return true;
 }
 bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
@@ -106,9 +183,9 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	unLinkPortActionInputMap.clear( );
 	unLinkPortActionOutputMap.clear( );
 	dislayMenu->clear( );
-	dislayInputRef->clear( );
+	displayInputRef->clear( );
 	deleteInputAtOutputRef->clear( );
-	dislayOutputRef->clear( );
+	displayOutputRef->clear( );
 	deleteOutputAtInputRef->clear( );
 
 	if( qactionArchiveCount == 0 )
@@ -122,7 +199,7 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 		dislayMenu->addAction( noteInfoWidgetAction );
 
 	size_t userCount = 0;
-	size_t modCount = 0;
+	size_t modCount;
 	size_t refOutputCount = 0;
 	size_t refCount;
 	size_t refIndex;
@@ -152,8 +229,13 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 		inputPort = inputPortArrayPtr[ index ];
 		outputPortArrayPtr = inputPort->refOutputPortVector.data( );
 		for( refIndex = 0; refIndex < refCount; ++refIndex )
-			if( appendRmoveOutputRefActionInfo( actionArchiveArrayPtr[ userCount ], outputPortArrayPtr[ refIndex ], inputPort ) )
+			if( appendRmoveOutputRefActionInfo( actionArchiveArrayPtr[ userCount ], outputPortArrayPtr[ refIndex ], inputPort ) ) {
 				userCount += 1;
+				if( appendRefOutputNodeActionInfo( actionArchiveArrayPtr[ userCount ], outputPortArrayPtr[ refIndex ], inputPort ) ) {
+					displayOutputRef->addAction( actionArchiveArrayPtr[ userCount ] );
+					userCount += 1;
+				}
+			}
 
 	}
 
@@ -176,8 +258,13 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 		outputPort = outputPortArrayPtr[ index ];
 		inputPortArrayPtr = outputPort->refInputPortVector.data( );
 		for( refIndex = 0; refIndex < refCount; ++refIndex )
-			if( appendRmoveInputRefActionInfo( actionArchiveArrayPtr[ userCount ], outputPort, inputPortArrayPtr[ refIndex ] ) )
+			if( appendRmoveInputRefActionInfo( actionArchiveArrayPtr[ userCount ], outputPort, inputPortArrayPtr[ refIndex ] ) ) {
 				userCount += 1;
+				if( appendRefInputNodeActionInfo( actionArchiveArrayPtr[ userCount ], outputPort, inputPortArrayPtr[ refIndex ] ) ) {
+					displayInputRef->addAction( actionArchiveArrayPtr[ userCount ] );
+					userCount += 1;
+				}
+			}
 	}
 
 	unLinkPortActionInputMapCount = unLinkPortActionInputMap.size( );
