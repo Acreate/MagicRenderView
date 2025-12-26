@@ -50,6 +50,7 @@ public:
 	virtual bool ensureVisible( Node *target );
 	virtual bool init( );
 	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
+	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
 	/// @brief 快捷功能
 public:
 	virtual void copySelectNodeInfo( );

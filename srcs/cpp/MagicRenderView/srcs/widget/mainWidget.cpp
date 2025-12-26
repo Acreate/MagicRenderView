@@ -131,29 +131,11 @@ void MainWidget::raiseNode( Node *raise_node ) {
 bool MainWidget::ensureVisible( Node *target ) {
 	if( target->parent( ) != this )
 		return false;
-	auto point = target->pos( );
-	auto toGlobal = mapToGlobal( point );
-	auto fromGlobal = mainWindow->mapFromGlobal( toGlobal );
-	int fromGlobalX = fromGlobal.x( );
-	int fromGlobalY = fromGlobal.y( );
-	QSize renderSize = target->size( );
-	if( fromGlobalX < 0 || fromGlobalY < 0 ) {
-		mainWidgetScrollArea->ensureVisible( point.x( ), point.y( ) );
-		return true;
-	}
-	fromGlobalX = renderSize.width( ) + point.x( );
-	fromGlobalY = renderSize.height( ) + point.y( );
-	renderSize = minimumSize( );
-	int oldW = renderSize.width( );
-	int oldH = renderSize.height( );
-	if( oldW > fromGlobalX )
-		fromGlobalX = oldW;
-	if( oldH > fromGlobalY )
-		fromGlobalY = oldH;
-	if( oldW > fromGlobalX && oldH > fromGlobalY )
-		return true;
-	setMinimumSize( fromGlobalX, fromGlobalY );
-	mainWidgetScrollArea->ensureVisible( fromGlobalX, fromGlobalY );
+	// 获取目标左上角坐标
+	auto nodeTargetPos = target->pos( );
+	// 获取目标大小
+	auto nodeTargetSize = target->size( );
+	mainWidgetScrollArea->scrollToTargetPos( mainWindow, nodeTargetPos, nodeTargetSize );
 	return true;
 }
 bool MainWidget::init( ) {
@@ -295,8 +277,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
-				if( dragNode )
-					ensureVisible( dragNode );
+				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::InputPort :
 						if( selectOutputPort == nullptr )
@@ -315,8 +296,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			nodeDirector->showNodeWidgeInfo( nullptr );
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
-				if( dragNode )
-					ensureVisible( dragNode );
+				ensureVisible( dragNode );
 				nodeDirector->popNormalNodeEditorPropertyMenu( mapToGlobal( event->pos( ) ), dragNode );
 				/*switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::None :
