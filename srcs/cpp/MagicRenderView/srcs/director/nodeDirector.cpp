@@ -92,8 +92,11 @@ NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
 	auto arrayPtr = nodeInfoWidgets.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true )
+		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true ) {
+			if( arrayPtr[ index ]->initNodeInfo( association_node ) == false )
+				continue;
 			return arrayPtr[ index ];
+		}
 	return nullptr;
 }
 
