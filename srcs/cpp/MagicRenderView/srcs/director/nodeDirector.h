@@ -82,9 +82,6 @@ public:
 	/// @brief 获取节点创建菜单
 	/// @return 节点创建菜单
 	virtual NormalGenerateNodeMenu * getNormalGenerateNodeMenu( ) const { return normalGenerateNodeMenu; }
-	/// @brief 获取节点编辑菜单
-	/// @return 节点编辑菜单
-	virtual NormalNodeEditorPropertyMenu * getNormalNodeEditorPropertyMenu( ) const { return normalNodeEditorPropertyMenu; }
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
 	/// @return 失败返回 nullptr
@@ -123,6 +120,7 @@ public:
 	virtual QSize getMaxNodeRenderSize( ) const;
 	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
 	virtual Node * getNode( const uint64_t &node_generator_code ) const;
+	virtual NormalNodeEditorPropertyMenu * getNormalNodeEditorPropertyMenu( Node *node_target ) const;
 protected:
 	virtual bool connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map );
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
@@ -137,7 +135,7 @@ protected:
 	virtual void removeHistorIndexEnd( );
 	virtual void appendHistorIndexEnd( const std::function< NodeHistory *( ) > &current_history, const std::function< NodeHistory *( ) > &cancel_history );
 	virtual bool appendNodeToArchiveVector( Node *update_generate_code );
-	virtual bool sortArchiveCode( QString & error_msg );
+	virtual bool sortArchiveCode( QString &error_msg );
 protected:
 	/// @brief 释放对象产生信号
 	/// @param release_node 释放对象指针
@@ -195,6 +193,19 @@ protected:
 	void disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port );
 	virtual void nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
 	void createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function );
+	/// @brief 菜单激活端口断开响应
+	/// @param signal_ptr 信号对象
+	/// @param output_port 断开输出端
+	/// @param input_port 断开输入端
+	void nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port );
+	/// @brief 菜单激活显示节点详细信息菜单
+	/// @param signal_ptr 信号对象
+	/// @param show_node 显示节点
+	void editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node );
+	/// @brief 菜单激活节点显示到主窗口
+	/// @param signal_ptr 信号对象
+	/// @param ensure_node 显示节点
+	void editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node );
 Q_SIGNALS:
 	/// @brief 节点被释放信号
 	/// @param signal_obj_ptr 信号对象指针

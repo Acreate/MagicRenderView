@@ -10,6 +10,7 @@
 #include "../app/application.h"
 #include "../menu/edit/normalNodeEditorPropertyMenu.h"
 #include "../menu/generateNode/normalGenerateNodeMenu.h"
+#include "../menuStack/edit/editorNodeMenuStack.h"
 #include "../menuStack/generateNode/generateNodeMenuStack.h"
 
 #include "../node/node/node.h"
@@ -36,22 +37,26 @@ bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
-
 	menuDirector = instancePtr->getMenuDirector( );
-
 	releaseObjResources( );
 	if( nodeVarDirector->init( ) == false )
 		return false;
-
 	QString errorMsg;
-	bool drawLinkWidgetIniRsult = initNodeRenderGraphWidget( errorMsg );
-	if( drawLinkWidgetIniRsult == false )
+	if( initNodeRenderGraphWidget( errorMsg ) == false ) {
 		printerDirector->info( errorMsg,Create_SrackInfo( ) );
+		return false;
+	}
 
 	auto generateNodeMenuStack = menuDirector->getGenerateNodeMenuStack( );
 	normalGenerateNodeMenu = generateNodeMenuStack->createGenerateNodeMenu( tr( "常规" ) );
 	connect( normalGenerateNodeMenu, &NormalGenerateNodeMenu::create_node_signal, this, &NodeDirector::createNodeSlot );
-	return drawLinkWidgetIniRsult;
+	EditorNodeMenuStack *editorNodeMenuStack = menuDirector->getEditorNodeMenuStack( );
+	normalNodeEditorPropertyMenu = editorNodeMenuStack->createNormalNodeEditorPropertyMenu( tr( "常规" ) );
+	if( normalNodeEditorPropertyMenu == nullptr )
+		return false;
+	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
+	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_edit_info_widget_signal, this, &NodeDirector::editorMenuShowEditInfoWidgetSlot );
+	return true;
 }
 bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
 	if( association_node == nullptr ) {
@@ -584,6 +589,11 @@ Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
 			return nodeArrayPtr[ index ];
 	return nullptr;
 }
+NormalNodeEditorPropertyMenu * NodeDirector::getNormalNodeEditorPropertyMenu( Node *node_target ) const {
+	if( normalNodeEditorPropertyMenu->setNode( node_target ) == false )
+		return nullptr;
+	return normalNodeEditorPropertyMenu;
+}
 
 bool NodeDirector::connectNodeAction( NodeStack *node_stack_ptr, const std::list< std::pair< QString, QAction * > > &action_map ) {
 	auto rootName = node_stack_ptr->objectName( );
@@ -887,6 +897,15 @@ void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QActi
 		return;
 	}
 }
+void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port ) {
+	printerDirector->info( tr( "编辑菜单发出断开信号" ), Create_SrackInfo( ) );
+}
+void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node ) {
+	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
+}
+void NodeDirector::editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node ) {
+	printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );
+}
 void NodeDirector::finishCreateNode( Node *finish_node ) {
 
 	connect( finish_node, &Node::connect_ref_input_port_node_signal, this, &NodeDirector::connectRefInputPortNodeSlot );
@@ -945,25 +964,6 @@ void NodeDirector::disConnectOutputPortSlot( OutputPort *output_port, InputPort 
 }
 void NodeDirector::connectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {
 	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
-
-	//QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
-	//actionText = actionText.arg( ref_output_port->parentNode->nodeName ).arg( ref_output_port->portName ).arg( input_port->parentNode->nodeName ).arg( input_port->portName );
-	//auto outAction = ref_output_port->disLinkMenu->addAction( actionText );
-	//auto inAction = input_port->disLinkMenu->addAction( actionText );
-	//auto disLink = [this, ref_output_port, input_port]( ) {
-	//	if( disLinkPort( ref_output_port, input_port ) == false )
-	//		return;
-	//	removePortLinkAction( input_port, ref_output_port );
-	//	if( drawLinkWidget )
-	//		drawLinkWidget->update( );
-	//	if( drawNodeWidget )
-	//		drawNodeWidget->update( );
-	//	if( drawHighlightWidget )
-	//		drawHighlightWidget->update( );
-	//};
-
-	//connect( outAction, &QAction::triggered, disLink );
-	//connect( inAction, &QAction::triggered, disLink );
 	emit connect_input_port_signal( this, input_port, ref_output_port );
 }
 void NodeDirector::disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {

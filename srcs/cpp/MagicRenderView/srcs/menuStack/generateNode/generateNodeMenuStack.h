@@ -12,7 +12,7 @@ class GenerateNodeMenuStack : public QObject {
 protected:
 	std::vector< GenerateNodeMenuStackType::TUintyPairt > generateMenuVector;
 	size_t generateCount;
-	std::pair< GenerateNodeMenuStackType::TUintyKey, GenerateNodeMenuStackType::TUintyValuePair > *generateArrayPtr;
+	GenerateNodeMenuStackType::TUintyPairt *generateArrayPtr;
 public:
 	GenerateNodeMenuStack( );
 	virtual bool initStack( );

@@ -4,6 +4,7 @@
 #include <QString>
 #include <utility>
 
+class NormalNodeEditorPropertyMenu;
 class QAction;
 class Node;
 class NormalGenerateNodeMenu;
@@ -16,6 +17,13 @@ namespace NormalGenerateNodeMenuType {
 }
 namespace GenerateNodeMenuStackType {
 	using TUintyKey = std::function< NormalGenerateNodeMenu*( ) >;
+	using TUintyValueTypeAliasName = std::vector< QString >;
+	using TUintyValueTypeName = QString;
+	using TUintyValuePair = std::pair< TUintyValueTypeName, TUintyValueTypeAliasName >;
+	using TUintyPairt = std::pair< TUintyKey, TUintyValuePair >;
+}
+namespace EditorNodeMenuStackType {
+	using TUintyKey = std::function< NormalNodeEditorPropertyMenu*( ) >;
 	using TUintyValueTypeAliasName = std::vector< QString >;
 	using TUintyValueTypeName = QString;
 	using TUintyValuePair = std::pair< TUintyValueTypeName, TUintyValueTypeAliasName >;

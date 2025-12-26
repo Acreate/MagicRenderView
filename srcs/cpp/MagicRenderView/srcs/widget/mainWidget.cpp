@@ -12,6 +12,7 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/edit/normalNodeEditorPropertyMenu.h"
 #include "../menu/generateNode/normalGenerateNodeMenu.h"
 
 #include "../node/node/node.h"
@@ -326,14 +327,12 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::None :
 					case NodeEnum::NodeClickType::Titile :
-						// todo 弹出菜单
-						//dragNode->getRemoveMenu( )->popup( mapToGlobal( event->pos( ) ) );
-						break;
 					case NodeEnum::NodeClickType::InputPort :
-						clickInfoPtr->getInputPort( )->getDisLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
-						break;
 					case NodeEnum::NodeClickType::OutputPort :
-						clickInfoPtr->getOutputPort( )->getDisLinkMenu( )->popup( mapToGlobal( event->pos( ) ) );
+						auto normalNodeEditorPropertyMenu = nodeDirector->getNormalNodeEditorPropertyMenu( dragNode );
+						if( normalNodeEditorPropertyMenu == nullptr )
+							break;
+						normalNodeEditorPropertyMenu->popup( mapToGlobal( event->pos( ) ) );
 						break;
 				}
 			} else {
