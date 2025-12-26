@@ -81,7 +81,30 @@ protected:
 	QString generateTypeName;
 	/// @brief 变量指向
 	void *varPtr;
+	/// @brief 当前风格
 	NodeEnum::NodeStyleType nodeStyle;
+	int penWidth;
+	int doubleWidth;
+	/// @brief 默认笔刷
+	QPen nonePen;
+	/// @brief 函数调用笔刷
+	QPen callFunctionPen;
+	/// @brief 创建笔刷
+	QPen createPen;
+	/// @brief 选中笔刷
+	QPen selectActivePen;
+	/// @brief 上一次选中笔刷
+	QPen selectOldPen;
+	/// @brief 输出引用笔刷
+	QPen selectOutputRefPen;
+	/// @brief 输入引用笔刷
+	QPen selectInputRefPen;
+	/// @brief 警告笔刷
+	QPen warningPen;
+	/// @brief 错误笔刷
+	QPen errorPen;
+	/// @brief 建议笔刷
+	QPen advisPen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
 private:
@@ -208,7 +231,6 @@ protected:
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
-	bool event( QEvent *event ) override;
 public:
 	Def_Satatic_NodeTypeName( Node::tr( "未实现" ) );
 	// 信号

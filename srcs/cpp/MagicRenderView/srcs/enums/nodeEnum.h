@@ -61,6 +61,8 @@ namespace NodeEnum {
 		Create,
 		Select_Active,
 		Select_Old,
+		Select_Output_Ref,
+		Select_Input_Ref,
 		Warning,
 		Error,
 		Advise

@@ -296,6 +296,7 @@ void MainWidget::mouseMoveEvent( QMouseEvent *event ) {
 void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	QWidget::mouseReleaseEvent( event );
 	Qt::MouseButton mouseButton = event->button( );
+	isDrawLine = false;
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
@@ -349,12 +350,12 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	dragNode = nullptr;
 	selectInputPort = nullptr;
 	selectOutputPort = nullptr;
+	update( );
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	if( isDrawLine == true )
 		painter.drawLine( startPoint, endPoint );
-	nodeDirector->drawLinkLines( painter );
 	nodeDirector->drawLinkLines( painter );
 }
