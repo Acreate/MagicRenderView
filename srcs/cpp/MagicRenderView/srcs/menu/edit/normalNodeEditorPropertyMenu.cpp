@@ -164,10 +164,10 @@ bool NormalNodeEditorPropertyMenu::initNormalNodeEditorPropertyMenu( ) {
 	clear( );
 	dislayMenu = addMenu( tr( "显示" ) );
 	inputMneu = addMenu( tr( "输入" ) );
-	displayInputRef = inputMneu->addMenu( tr( "显示引用" ) );
+	displayOutputRef = inputMneu->addMenu( tr( "显示引用" ) );
 	deleteInputAtOutputRef = inputMneu->addMenu( tr( "删除输出端口引用" ) );
 	outputMenu = addMenu( tr( "输出" ) );
-	displayOutputRef = outputMenu->addMenu( tr( "显示引用" ) );
+	displayInputRef = outputMenu->addMenu( tr( "显示引用" ) );
 	deleteOutputAtInputRef = outputMenu->addMenu( tr( "删除输入端口引用" ) );
 	connect( deleteOutputAtInputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction );
 	connect( deleteInputAtOutputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction );
@@ -182,6 +182,13 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	nodeInfoWidget = nullptr;
 	unLinkPortActionInputMap.clear( );
 	unLinkPortActionOutputMap.clear( );
+	refOutputPortActionMap.clear( );
+	refInputPortActionMap.clear( );
+	refOutputPortActionMapCount = 0;
+	refOutputPortActionMapArrayPtr = nullptr;
+	refInputPortActionMapCount = 0;
+	refInputPortActionMapArrayPtr = nullptr;
+
 	dislayMenu->clear( );
 	displayInputRef->clear( );
 	deleteInputAtOutputRef->clear( );
