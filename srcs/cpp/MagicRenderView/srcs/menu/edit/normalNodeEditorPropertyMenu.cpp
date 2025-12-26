@@ -7,6 +7,13 @@
 #include "../../node/port/inputPort/inputPort.h"
 #include "../../node/port/outputPort/outputPort.h"
 #include "action/autoAction.h"
+NormalNodeEditorPropertyMenu::ActionPair::ActionPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ),
+	outputPort( output_port ),
+	inputPort( input_port ) {
+	QString titleArgString( tr( "断开 (%1[%2])-> (%3[%4]) 链接" ) );
+	titleArgString = titleArgString.arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( input_port->parentNode->getNodeName( ) ).arg( input_port->getPortName( ) );
+	trigAction->setText( titleArgString );
+}
 bool NormalNodeEditorPropertyMenu::extendQActionArchiveVectorCount( size_t extendCount ) {
 	size_t newCount = qactionArchiveCount + extendCount;
 	if( qactionArchiveCount > newCount ) // 数据被截断
@@ -52,7 +59,6 @@ void NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction( QAction *tr_ob
 void NormalNodeEditorPropertyMenu::displayInfoWidget( QAction *tr_obj_ptr ) {
 	if( tr_obj_ptr != displayInfoWidgetAction )
 		return;
-	nodeInfoWidget->show( );
 	emit show_node_edit_info_widget_signal( this, currentNode, nodeInfoWidget );
 }
 void NormalNodeEditorPropertyMenu::displayAtNodEnsureToWidget( QAction *tr_obj_ptr ) {

@@ -202,7 +202,9 @@ protected:
 	/// @brief 菜单激活显示节点详细信息菜单
 	/// @param signal_ptr 信号对象
 	/// @param show_node 显示节点
-	void editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node );
+	/// @param show_info_widget
+	/// @param show_info_widget
+	void editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget );
 	/// @brief 菜单激活节点显示到主窗口
 	/// @param signal_ptr 信号对象
 	/// @param ensure_node 显示节点

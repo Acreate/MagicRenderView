@@ -831,11 +831,13 @@ void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signa
 	disLinkPort( output_port, input_port );
 	mainWidget->update( );
 }
-void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node ) {
+void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node , NodeInfoWidget *show_info_widget ) {
 	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
+	show_info_widget->show(  );
 }
 void NodeDirector::editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node ) {
 	printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );
+	mainWidget->ensureVisible( ensure_node );
 }
 void NodeDirector::finishCreateNode( Node *finish_node ) {
 

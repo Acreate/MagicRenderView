@@ -17,10 +17,7 @@ public:
 		InputPort *inputPort;
 	public:
 		virtual ~ActionPair( ) = default;
-		ActionPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port )
-			: trigAction( trig_action ),
-			outputPort( output_port ),
-			inputPort( input_port ) { }
+		ActionPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port );
 		virtual AutoAction * getTrigAction( ) const { return trigAction; }
 		virtual OutputPort * getOutputPort( ) const { return outputPort; }
 		virtual InputPort * getInputPort( ) const { return inputPort; }
