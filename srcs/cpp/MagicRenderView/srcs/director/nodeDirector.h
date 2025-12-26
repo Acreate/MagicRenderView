@@ -131,10 +131,6 @@ protected:
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
 	virtual Node * appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node );
-	virtual size_t removePortLinkAction( InputPort *input_port );
-	virtual size_t removePortLinkAction( OutputPort *output_port );
-	virtual size_t removePortLinkAction( InputPort *input_port, OutputPort *output_port );
-	virtual size_t addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action );
 	virtual bool appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr );
 	/// @brief 删除历史坐标后续的所有对象
 	virtual void removeHistorIndexEnd( );

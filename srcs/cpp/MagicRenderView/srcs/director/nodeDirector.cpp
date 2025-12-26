@@ -54,6 +54,7 @@ bool NodeDirector::init( ) {
 	normalNodeEditorPropertyMenu = editorNodeMenuStack->createNormalNodeEditorPropertyMenu( tr( "常规" ) );
 	if( normalNodeEditorPropertyMenu == nullptr )
 		return false;
+	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::unLink_signal, this, &NodeDirector::nodeEditorMenuUnLinkSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_edit_info_widget_signal, this, &NodeDirector::editorMenuShowEditInfoWidgetSlot );
 	return true;
@@ -697,96 +698,6 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 	appendHistorIndexEnd( currentHistory, cancelHistory );
 	return append_node;
 }
-size_t NodeDirector::removePortLinkAction( InputPort *input_port ) {
-	size_t result = 0;
-	//size_t count = linkActionMap.size( );
-	//if( count == 0 )
-	return result;
-	/*size_t endSize = count;
-	auto data = linkActionMap.data( );
-	size_t index = 0;
-	for( ; index < endSize; ++index )
-		if( data[ index ]->inputPort == input_port ) {
-			auto nodePortLinkActionPair = data[ index ];
-			endSize -= 1;
-			data[ index ] = data[ endSize ];
-			data[ endSize ] = nullptr;
-			delete nodePortLinkActionPair;
-			result += 1;
-			index -= 1;
-		}
-	if( endSize != count )
-		linkActionMap.resize( endSize );
-	return result;*/
-}
-size_t NodeDirector::removePortLinkAction( OutputPort *output_port ) {
-	size_t result = 0;
-	//size_t count = linkActionMap.size( );
-	//if( count == 0 )
-	return result;
-	//size_t endSize = count;
-	//auto data = linkActionMap.data( );
-	//size_t index = 0;
-	//for( ; index < endSize; ++index )
-	//	if( data[ index ]->outputPort == output_port ) {
-	//		auto nodePortLinkActionPair = data[ index ];
-	//		endSize -= 1;
-	//		data[ index ] = data[ endSize ];
-	//		data[ endSize ] = nullptr;
-	//		delete nodePortLinkActionPair;
-	//		result += 1;
-	//		index -= 1;
-	//	}
-	//if( endSize != count )
-	//	linkActionMap.resize( endSize );
-	//if( drawNodeWidget )
-	//	drawNodeWidget->update( );
-	//if( drawLinkWidget )
-	//	drawLinkWidget->update( );
-	//if( drawHighlightWidget )
-	//	drawHighlightWidget->update( );
-	//return result;
-}
-size_t NodeDirector::removePortLinkAction( InputPort *input_port, OutputPort *output_port ) {
-	size_t result = 0;
-	/*size_t count = linkActionMap.size( );
-	auto data = linkActionMap.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ]->inputPort == input_port && data[ index ]->outputPort == output_port ) {
-			auto nodePortLinkActionPair = data[ index ];
-			linkActionMap.erase( linkActionMap.begin( ) + index );
-			delete nodePortLinkActionPair;
-			return 1;
-		}*/
-	return result;
-}
-size_t NodeDirector::addEndPortLinkAction( InputPort *input_port, OutputPort *output_port, QAction *input_port_link_action, QAction *output_port_link_action ) {
-	size_t result = 0;
-	/*size_t count = linkActionMap.size( );
-	auto data = linkActionMap.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ]->inputPort == input_port && data[ index ]->outputPort == output_port )
-			return result;
-	result += 1;
-	NodePortLinkActionPair *linkActionPair = new NodePortLinkActionPair( input_port, input_port_link_action, output_port, output_port_link_action );
-	linkActionMap.emplace_back( linkActionPair );
-	auto releasePair = [this, linkActionPair]( ) {
-		size_t linkActionMapCount = linkActionMap.size( );
-		auto linkActionMapArrayPtr = linkActionMap.data( );
-		size_t linkActionMapIndex = 0;
-		for( ; linkActionMapIndex < linkActionMapCount; ++linkActionMapIndex )
-			if( linkActionMapArrayPtr[ linkActionMapIndex ] == linkActionPair ) {
-				delete linkActionPair;
-				linkActionMap.erase( linkActionMap.begin( ) + linkActionMapIndex );
-				return;
-			}
-	};
-	connect( input_port->parentNode, &Node::release_node_signal, releasePair );
-	connect( output_port->parentNode, &Node::release_node_signal, releasePair );*/
-	return result;
-}
 bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
 	nodeInfoWidgets.emplace_back( append_node_info_widget_ptr );
 	connect( append_node_info_widget_ptr, &NodeInfoWidget::release_signal, [this] ( NodeInfoWidget *release_ptr ) {
@@ -914,6 +825,8 @@ void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QActi
 }
 void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port ) {
 	printerDirector->info( tr( "编辑菜单发出断开信号" ), Create_SrackInfo( ) );
+	disLinkPort( output_port, input_port );
+	mainWidget->update( );
 }
 void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node ) {
 	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
@@ -967,12 +880,10 @@ void NodeDirector::connectOutputPortSlot( OutputPort *output_port, InputPort *re
 	auto disLink = [this, output_port, ref_input_port]( ) {
 		if( disLinkPort( output_port, ref_input_port ) == false )
 			return;
-		removePortLinkAction( ref_input_port, output_port );
 	};
 
 	connect( outAction, &QAction::triggered, disLink );
 	connect( inAction, &QAction::triggered, disLink );
-	addEndPortLinkAction( ref_input_port, output_port, inAction, outAction );
 	emit connect_output_port_signal( this, output_port, ref_input_port );
 }
 void NodeDirector::disConnectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {

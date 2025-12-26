@@ -28,6 +28,7 @@ private:
 	friend class NodeRefLinkInfoTools;
 	friend class NodeBuilderTools;
 	friend class NodeRunInfo;
+	friend class NormalNodeEditorPropertyMenu;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;

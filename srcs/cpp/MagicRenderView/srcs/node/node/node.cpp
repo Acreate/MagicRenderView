@@ -294,7 +294,7 @@ bool Node::eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_
 	auto arrayPtr = refInputPortNode.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode ) {
-			refInputPortNode.emplace( refInputPortNode.begin( ) + index );
+			refInputPortNode.erase( refInputPortNode.begin( ) + index );
 			emit dis_connect_ref_input_port_node_signal( this, refNode );
 			refNode->eraseRefOutputPortNode( ref_input_port, output_port );
 			emit dis_connect_output_port_signal( output_port, ref_input_port );
@@ -308,8 +308,8 @@ bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_
 	if( count == 0 ) {
 		refOutputPortNode.emplace_back( refNode );
 		emit connect_ref_output_port_node_signal( this, refNode );
-		refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
 		emit connect_input_port_signal( input_port, ref_output_port );
+		refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
 		return true;
 	}
 	auto arrayPtr = refOutputPortNode.data( );
@@ -330,7 +330,7 @@ bool Node::eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output
 	auto arrayPtr = refOutputPortNode.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode ) {
-			refOutputPortNode.emplace( refOutputPortNode.begin( ) + index );
+			refOutputPortNode.erase( refOutputPortNode.begin( ) + index );
 			emit dis_connect_ref_output_port_node_signal( this, refNode );
 			refNode->eraseRefInputPortNode( ref_output_port, input_port );
 			emit dis_connect_input_port_signal( input_port, ref_output_port );

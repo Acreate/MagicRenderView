@@ -34,6 +34,7 @@ class Node : public QWidget {
 	friend class NodePortLinkActionPair;
 	friend class NodeBuilderTools;
 	friend class NodeRunInfo;
+	friend class NormalNodeEditorPropertyMenu;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
