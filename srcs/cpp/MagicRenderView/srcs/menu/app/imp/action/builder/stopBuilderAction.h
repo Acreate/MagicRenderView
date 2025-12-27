@@ -1,7 +1,7 @@
 ﻿#ifndef file_mac_H_HEAD__FILE__
 #define file_mac_H_HEAD__FILE__
 #pragma once
-#include "../../action/normalApplicationAction.h"
+#include <menu/app/action/normalApplicationAction.h>
 
 class StopBuilderAction : public NormalApplicationAction {
 	Q_OBJECT;

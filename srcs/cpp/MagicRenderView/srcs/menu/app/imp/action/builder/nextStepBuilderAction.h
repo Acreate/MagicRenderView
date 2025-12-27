@@ -1,7 +1,7 @@
 ﻿#ifndef NEXTSTEPBUILDERACTION_H_H_HEAD__FILE__
 #define NEXTSTEPBUILDERACTION_H_H_HEAD__FILE__
 #pragma once
-#include "../../action/normalApplicationAction.h"
+#include <menu/app/action/normalApplicationAction.h>
 
 class NextStepBuilderAction  : public NormalApplicationAction {
 	Q_OBJECT;

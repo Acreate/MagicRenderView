@@ -1,7 +1,7 @@
 ﻿#ifndef OPENPROJECTACTION_H_H_HEAD__FILE__
 #define OPENPROJECTACTION_H_H_HEAD__FILE__
 #pragma once
-#include "../../action/normalApplicationAction.h"
+#include <menu/app/action/normalApplicationAction.h>
 
 class OpenProjectAction  : public NormalApplicationAction {
 	Q_OBJECT;

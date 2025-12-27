@@ -81,6 +81,10 @@ protected:
 	GeneratorArray< NormalApplicationToolBar > toolBarGeneratorArray;
 	GeneratorArray< NormalApplicationMenu > menuGeneratorArray;
 	GeneratorArray< NormalApplicationAction > actionGeneratorArray;
+protected:
+	virtual bool initActionGenerator();
+	virtual bool initMenuGenerator();
+	virtual bool initToolBarGenerator();
 public:
 	ApplicationMenuStack( QObject *parent = nullptr );
 	virtual bool initStack( );

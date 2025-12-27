@@ -1,7 +1,7 @@
 ﻿#ifndef COPYNODEACTION_H_H_HEAD__FILE__
 #define COPYNODEACTION_H_H_HEAD__FILE__
 #pragma once
-#include "../../action/normalApplicationAction.h"
+#include <menu/app/action/normalApplicationAction.h>
 
 class CopyNodeAction  : public NormalApplicationAction {
 	Q_OBJECT;
