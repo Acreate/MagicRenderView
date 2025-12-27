@@ -6,7 +6,7 @@
 class ProjectApplicationToolBar : public NormalApplicationToolBar {
 	Q_OBJECT;
 public:
-	ProjectApplicationToolBar( const QString &title, QWidget *parent );
+	ProjectApplicationToolBar( );
 	bool init( ApplicationMenuStack *application_menu_stack ) override;
 };
 
