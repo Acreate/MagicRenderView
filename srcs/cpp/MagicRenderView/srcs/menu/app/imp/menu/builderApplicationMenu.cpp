@@ -18,7 +18,7 @@ bool BuilderApplicationMenu::init( ApplicationMenuStack *application_menu_stack 
 		return false;
 	if( appendAction( application_menu_stack->getAction< StopBuilderAction >( ) ) == false )
 		return false;
-	QString title = tr( "编译菜单" );
+	QString title = tr( "编译" );
 	setObjectName( title );
 	setTitle( title );
 	return true;

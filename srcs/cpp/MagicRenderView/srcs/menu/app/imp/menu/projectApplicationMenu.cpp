@@ -9,9 +9,6 @@
 #include "../action/project/savePorjectAction.h"
 #include "../action/project/updateProjectAction.h"
 
-ProjectApplicationMenu::~ProjectApplicationMenu( ) {
-	
-}
 ProjectApplicationMenu::ProjectApplicationMenu( ) { }
 bool ProjectApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationMenu::init( application_menu_stack ) == false )
@@ -30,7 +27,7 @@ bool ProjectApplicationMenu::init( ApplicationMenuStack *application_menu_stack 
 		return false;
 	if( appendAction( application_menu_stack->getAction< CloseProjectAction >( ) ) == false )
 		return false;
-	QString title = tr( "项目菜单" );
+	QString title = tr( "项目" );
 	setObjectName( title );
 	setTitle( title );
 	return true;

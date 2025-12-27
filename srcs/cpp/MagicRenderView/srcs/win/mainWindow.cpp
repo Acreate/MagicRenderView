@@ -11,7 +11,9 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/app/imp/menu/appApplicationMenu.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
+#include "../menu/app/imp/menu/editorApplicationMenu.h"
 #include "../menu/app/imp/menu/projectApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 #include "../menu/app/imp/toolBar/projectApplicationToolBar.h"
@@ -45,7 +47,8 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	builderToolBar = nullptr;
 	projectMenu = nullptr;
 	builderMenu = nullptr;
-
+	appMenu = nullptr;
+	editorMenu = nullptr;
 	appMenuBar = menuBar( );
 	if( appMenuBar == nullptr ) {
 		appMenuBar = new QMenuBar( this );
@@ -82,16 +85,27 @@ bool MainWindow::init( ) {
 	builderToolBar->setFloatable( false );
 	builderToolBar->setAllowedAreas( Qt::TopToolBarArea );
 	builderToolBar->setMovable( true );
-	//auto newMenu = new QMenu( "dier" );
-	//newMenu->addAction( "32" );
-	//appMenuBar->addMenu( newMenu );
+
+	if( appMenu )
+		delete appMenu;
+	appMenu = applicationMenuStack->getMenu< AppApplicationMenu >( );
+	if( appMenu == nullptr )
+		return false;
+	appMenuBar->addMenu( appMenu );
+
 	if( projectMenu )
 		delete projectMenu;
 	projectMenu = applicationMenuStack->getMenu< ProjectApplicationMenu >( );
 	if( projectMenu == nullptr )
 		return false;
 	appMenuBar->addMenu( projectMenu );
-	//projectMenu->setParent( appMenuBar );
+
+	if( editorMenu )
+		delete editorMenu;
+	editorMenu = applicationMenuStack->getMenu< EditorApplicationMenu >( );
+	if( editorMenu == nullptr )
+		return false;
+	appMenuBar->addMenu( editorMenu );
 
 	if( builderMenu )
 		delete builderMenu;
@@ -99,7 +113,7 @@ bool MainWindow::init( ) {
 	if( builderMenu == nullptr )
 		return false;
 	appMenuBar->addMenu( builderMenu );
-	//builderMenu->setParent( appMenuBar );
+
 	return true;
 }
 MainWindow::~MainWindow( ) {
@@ -108,6 +122,10 @@ MainWindow::~MainWindow( ) {
 		delete projectMenu;
 	if( builderMenu )
 		delete builderMenu;
+	if( appMenu )
+		delete appMenu;
+	if( editorMenu )
+		delete editorMenu;
 	delete mainWidget;
 	delete mainWidgetScrollArea;
 }

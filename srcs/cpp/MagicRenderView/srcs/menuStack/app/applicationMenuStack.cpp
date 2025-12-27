@@ -22,9 +22,13 @@
 #include "../../menu/app/imp/action/project/saveAsProjectAction.h"
 #include "../../menu/app/imp/action/project/savePorjectAction.h"
 #include "../../menu/app/imp/action/project/updateProjectAction.h"
+#include "../../menu/app/imp/menu/appApplicationMenu.h"
 #include "../../menu/app/imp/menu/builderApplicationMenu.h"
+#include "../../menu/app/imp/menu/editorApplicationMenu.h"
 #include "../../menu/app/imp/menu/projectApplicationMenu.h"
+#include "../../menu/app/imp/toolBar/appApplicationToolBar.h"
 #include "../../menu/app/imp/toolBar/builderApplicationToolBar.h"
+#include "../../menu/app/imp/toolBar/editorApplicationToolBar.h"
 #include "../../menu/app/imp/toolBar/projectApplicationToolBar.h"
 
 #include "../../menu/app/normalApplicationMenu.h"
@@ -68,12 +72,16 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 bool ApplicationMenuStack::initMenuGenerator( ) {
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, ProjectApplicationMenu, tr( "文件" ) ) );
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, BuilderApplicationMenu, tr( "编译" ) ) );
+	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, AppApplicationMenu, tr( "软件" ) ) );
+	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, EditorApplicationMenu, tr( "编辑" ) ) );
 
 	return true;
 }
 bool ApplicationMenuStack::initToolBarGenerator( ) {
 	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, ProjectApplicationToolBar, tr( "文件" ) ) );
 	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, BuilderApplicationToolBar, tr( "编译" ) ) );
+	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, AppApplicationToolBar, tr( "软件" ) ) );
+	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, EditorApplicationToolBar, tr( "编辑" ) ) );
 	return true;
 }
 ApplicationMenuStack::ApplicationMenuStack( QObject *parent ) : QObject( parent ) {

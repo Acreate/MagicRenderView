@@ -3,6 +3,8 @@
 #pragma once
 #include <QMainWindow>
 
+class NormalApplicationMenu;
+class BuilderApplicationMenu;
 class NodeRunInfo;
 namespace NodeEnum {
 	enum class CreateType;
@@ -29,8 +31,10 @@ protected:
 	PrinterDirector *printerDirector;
 	QString saveFileDirPath;
 	QMenuBar *appMenuBar;
-	QMenu *projectMenu;
-	QMenu *builderMenu;
+	NormalApplicationMenu *projectMenu;
+	NormalApplicationMenu *builderMenu;
+	NormalApplicationMenu *appMenu;
+	NormalApplicationMenu *editorMenu;
 	QToolBar *projectToolBar;
 	QToolBar *builderToolBar;
 protected:
@@ -40,11 +44,12 @@ public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
-	
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 	bool event( QEvent *event ) override;
+protected:
+
 Q_SIGNALS:
 	void release_signal( MainWindow *release_ptr );
 };

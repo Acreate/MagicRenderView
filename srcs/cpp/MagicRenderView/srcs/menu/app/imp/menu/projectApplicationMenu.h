@@ -6,7 +6,6 @@
 class ProjectApplicationMenu : public NormalApplicationMenu {
 	Q_OBJECT;
 public:
-	~ProjectApplicationMenu( ) override;
 	ProjectApplicationMenu( );
 	bool init( ApplicationMenuStack *application_menu_stack ) override;
 };
