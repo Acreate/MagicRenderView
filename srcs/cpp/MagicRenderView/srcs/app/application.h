@@ -3,6 +3,8 @@
 #pragma once
 #include <QApplication>
 
+class ApplicationMenuStack;
+class NormalApplicationMenu;
 class MenuDirector;
 class QFileInfo;
 class IniDirector;
@@ -24,6 +26,7 @@ protected:
 	MenuDirector *menuDirector;
 protected:
 	MainWindow *mainWindow;
+	ApplicationMenuStack *applicationMenuStack;
 protected:
 	QSize mainWindowBuffSize;
 	QSize mainWindowSize;
@@ -43,6 +46,7 @@ protected:
 	bool event( QEvent * ) override;
 public:
 	virtual bool init( );
+	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
 	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }
 	virtual const QString & getIniSaveFilePathName( ) const { return iniSaveFilePathName; }
 	virtual const QString & getLogSaveFilePathName( ) const { return logSaveFilePathName; }

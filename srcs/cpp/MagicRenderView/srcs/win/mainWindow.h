@@ -27,14 +27,12 @@ protected:
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
-	QToolBar *fileToolBar;
-	QToolBar *projectToolBar;
 	QString saveFileDirPath;
-	//std::vector< QShortcut * > shortcutVector;
-	//std::vector< QAction * > actionVector;
 	QMenuBar *appMenuBar;
 	QMenu *fileMenu;
 	QMenu *projectMenu;
+	QToolBar *fileToolBar;
+	QToolBar *projectToolBar;
 protected:
 	MainWindow( );
 	virtual bool init( );

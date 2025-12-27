@@ -127,6 +127,9 @@ bool Application::init( ) {
 		return false;
 	if( nodeDirector->init( ) == false )
 		return false;
+	applicationMenuStack = menuDirector->getApplicationMenuStack( );
+	if( applicationMenuStack == nullptr )
+		return false;
 	if( mainWindow->init( ) == false )
 		return false;
 	if( synchronousFileToVar( ) == false )

@@ -11,6 +11,9 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/app/normalApplicationMenu.h"
+#include "../menu/app/normalApplicationToolBar.h"
+#include "../menuStack/app/applicationMenuStack.h"
 #include "../node/nodeInfo/nodeRunInfo.h"
 
 #include "../srack/srackInfo.h"
@@ -34,153 +37,63 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 
-	fileToolBar = new QToolBar( this );
-	projectToolBar = new QToolBar( this );
-	fileToolBar->setObjectName( tr( "主要工具栏" ) );
-	projectToolBar->setObjectName( tr( "主要项目工具" ) );
-	fileMenu = new QMenu( tr( "文件" ), this );
-	projectMenu = new QMenu( tr( "项目" ), this );
+	fileToolBar = nullptr;
+	projectToolBar = nullptr;
+	fileMenu = nullptr;
+	projectMenu = nullptr;
 
 	appMenuBar = menuBar( );
 	if( appMenuBar == nullptr ) {
 		appMenuBar = new QMenuBar( this );
 		setMenuBar( appMenuBar );
 	}
-	appMenuBar->addMenu( fileMenu );
-	appMenuBar->addMenu( projectMenu );
-
-	addToolBar( Qt::TopToolBarArea, fileToolBar );
-	fileToolBar->setFloatable( false );
-	fileToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	fileToolBar->setMovable( true );
-
-	addToolBar( Qt::TopToolBarArea, projectToolBar );
-	projectToolBar->setFloatable( false );
-	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	projectToolBar->setMovable( true );
 
 }
 bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
 		return false;
-	/*size_t count = shortcutVector.size( );
-	auto shortcutArrayPtr = shortcutVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		delete shortcutArrayPtr[ index ];
-	shortcutVector.clear( );
-	count = actionVector.size( );
-	index = 0;
-	auto actionArrayPtr = actionVector.data( );
-	for( ; index < count; ++index )
-		delete actionArrayPtr[ index ];
-	actionVector.clear( );*/
-
-	//if( nodeRunBuilderObj ) {
-	//	nodeRunBuilderObj->clear( );
-	//	nodeRunBuilderObj = nullptr;
-	//}
 	instancePtr = Application::getInstancePtr( );
-	// 释放节点
-	//if( nodeDirector ) {
-	//	disconnect( nodeDirector, &NodeDirector::node_run_info_clear_signal, this, &MainWindow::node_run_info_clear_slot );
-	//}
 	nodeDirector = instancePtr->getNodeDirector( );
-	//
-	//connect( nodeDirector, &NodeDirector::node_run_info_clear_signal, this, &MainWindow::node_run_info_clear_slot );
-
 	printerDirector = instancePtr->getPrinterDirector( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
-	fileToolBar->clear( );
-	projectToolBar->clear( );
+	auto applicationMenuStack = instancePtr->getApplicationMenuStack( );
+	if( fileToolBar )
+		delete fileToolBar;
+	fileToolBar = applicationMenuStack->getToolBar( tr( "文件" ) );
+	if( fileToolBar == nullptr )
+		return false;
+	fileToolBar->setParent( this );
+	addToolBar( Qt::TopToolBarArea, fileToolBar );
+	fileToolBar->setFloatable( false );
+	fileToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	fileToolBar->setMovable( true );
 
-	//auto addAction = new QAction( tr( "保存文件..." ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::savePorjectToFile );
-	//fileToolBar->addAction( addAction );
-	//fileMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-	//addAction = new QAction( tr( "加载文件..." ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::loadPorjectAtFile );
-	//fileToolBar->addAction( addAction );
-	//fileMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-	//addAction = new QAction( tr( "放弃文件" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::unDownloadPorjectAtFile );
-	//fileToolBar->addAction( addAction );
-	//fileMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
+	if( projectToolBar )
+		delete projectToolBar;
+	projectToolBar = applicationMenuStack->getToolBar( tr( "项目" ) );
+	if( projectToolBar == nullptr )
+		return false;
+	projectToolBar->setParent( this );
+	addToolBar( Qt::TopToolBarArea, projectToolBar );
+	projectToolBar->setFloatable( false );
+	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	projectToolBar->setMovable( true );
 
-	//addAction = new QAction( tr( "编译->项目" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::builderProject );
-	//builderNodeVectorBtn = addAction;
-	//projectToolBar->addAction( addAction );
-	//projectMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-
-	//addAction = new QAction( tr( "下一步->项目" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::runNextProject );
-	//runBuilderNextNodeVectorBtn = addAction;
-	//runBuilderNextNodeVectorBtn->setEnabled( false );
-	//projectToolBar->addAction( addAction );
-	//projectMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-
-	//addAction = new QAction( tr( "停止->项目" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::stopProject );
-	//runBuilderStopNodeVectorBtn = addAction;
-	//runBuilderStopNodeVectorBtn->setEnabled( false );
-	//projectToolBar->addAction( addAction );
-	//projectMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-
-	//addAction = new QAction( tr( "运行->项目" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::runAllProject );
-	//runBuilderAllNodeVectorBtn = addAction;
-	//runBuilderAllNodeVectorBtn->setEnabled( false );
-	//projectToolBar->addAction( addAction );
-	//projectMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-
-	//addAction = new QAction( tr( "清理->项目" ), this );
-	//connect( addAction, &QAction::triggered, this, &MainWindow::clearProject );
-	//clearBuilderNodeVectorBtn = addAction;
-	//projectToolBar->addAction( addAction );
-	//projectMenu->addAction( addAction );
-	//actionVector.emplace_back( addAction );
-
-	//QShortcut *shortcut;
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::savePorjectToFile );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_O ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::savePorjectToFile );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_C ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::copyNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_V ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::pasteNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_X ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::cutNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_Z ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::cancelNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::Key_Delete ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::deleteNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
-	//shortcut = new QShortcut( QKeySequence( Qt::Key_Backspace ), this );
-	//connect( shortcut, &QShortcut::activated, this, &MainWindow::deleteNodeInfo );
-	//shortcutVector.emplace_back( shortcut );
-
+	fileMenu = applicationMenuStack->getMenu( tr( "文件" ) );
+	if( fileMenu )
+		delete fileMenu;
+	if( fileMenu == nullptr )
+		return false;
+	fileMenu->setParent( this );
+	appMenuBar->addMenu( fileMenu );
+	
+	if( projectMenu )
+		delete projectMenu;
+	projectMenu = applicationMenuStack->getMenu( tr( "项目" ) );
+	if( projectMenu == nullptr )
+		return false;
+	projectMenu->setParent( this );
+	appMenuBar->addMenu( projectMenu );
 	return true;
 }
 MainWindow::~MainWindow( ) {
