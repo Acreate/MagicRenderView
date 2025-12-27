@@ -1,14 +1,14 @@
 ﻿#include "normalApplicationAction.h"
+void NormalApplicationAction::triggered( ) {
+	emit trigg_signal( this );
+}
 NormalApplicationAction::~NormalApplicationAction( ) {
 	emit release_signal( this );
-	emit destroyed( this );
-	disconnect( this );
+	disconnect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
 }
-bool NormalApplicationAction::init( ApplicationMenuStack* application_menu_stack_ptr ) {
+bool NormalApplicationAction::init( ApplicationMenuStack *application_menu_stack_ptr ) {
 	disconnect( this );
-	connect( this, &QAction::triggered, [this]( ) {
-		emit trigg_signal( this );
-	} );
+	connect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
 	return true;
 }
 bool NormalApplicationAction::run( QWidget *parent ) const {

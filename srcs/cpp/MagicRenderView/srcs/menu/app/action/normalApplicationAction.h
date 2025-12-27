@@ -9,6 +9,8 @@ class NormalApplicationAction : public QAction {
 	Q_OBJECT;
 protected:
 	std::function< bool ( QWidget * ) > actionFunction;
+private:
+	void triggered();
 public:
 	~NormalApplicationAction( ) override;
 	virtual bool init( ApplicationMenuStack *application_menu_stack_ptr );

@@ -97,8 +97,6 @@ NormalApplicationToolBar * ApplicationMenuStack::getToolBar( const QString &tool
 		if( fromTypeCreate == nullptr )
 			return nullptr;
 	}
-	if( fromTypeCreate->init( this ) == false )
-		return nullptr;
 	return fromTypeCreate;
 }
 NormalApplicationMenu * ApplicationMenuStack::getMenu( const QString &tool_menu_name ) {
@@ -117,7 +115,5 @@ NormalApplicationAction * ApplicationMenuStack::getAction( const QString &acton_
 		if( fromTypeCreate == nullptr )
 			return nullptr;
 	}
-	if( fromTypeCreate->init( this ) == false )
-		return nullptr;
 	return fromTypeCreate;
 }
