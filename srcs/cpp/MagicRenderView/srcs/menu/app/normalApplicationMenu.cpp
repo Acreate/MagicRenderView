@@ -13,5 +13,4 @@ bool NormalApplicationMenu::init( ApplicationMenuStack *application_menu_stack )
 }
 NormalApplicationMenu::~NormalApplicationMenu( ) {
 	emit release_signal( this );
-	emit destroyed( this );
 }

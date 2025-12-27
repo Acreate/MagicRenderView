@@ -29,10 +29,10 @@ protected:
 	PrinterDirector *printerDirector;
 	QString saveFileDirPath;
 	QMenuBar *appMenuBar;
-	QMenu *fileMenu;
 	QMenu *projectMenu;
-	QToolBar *fileToolBar;
+	QMenu *builderMenu;
 	QToolBar *projectToolBar;
+	QToolBar *builderToolBar;
 protected:
 	MainWindow( );
 	virtual bool init( );

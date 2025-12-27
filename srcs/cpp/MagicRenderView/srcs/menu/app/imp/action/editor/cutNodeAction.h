@@ -6,10 +6,6 @@
 class CutNodeAction  : public NormalApplicationAction {
 	Q_OBJECT;
 public:
-	bool init( ApplicationMenuStack* application_menu_stack ) override {
-		if( NormalApplicationAction::init( application_menu_stack ) == false )
-			return false;
-		return true;
-	}
+	bool init( ApplicationMenuStack* application_menu_stack ) override;
 };
 #endif // CUTNODEACTION_H_H_HEAD__FILE__

@@ -12,5 +12,4 @@ bool NormalApplicationToolBar::init( ApplicationMenuStack *application_menu_stac
 }
 NormalApplicationToolBar::~NormalApplicationToolBar( ) {
 	emit release_signal( this );
-	emit destroyed( this );
 }

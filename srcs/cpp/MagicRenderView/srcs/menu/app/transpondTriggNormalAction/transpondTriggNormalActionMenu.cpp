@@ -7,7 +7,7 @@ void TranspondTriggNormalActionMenu::clearResource( ) {
 	actionArrayPtr = nullptr;
 	actionArrayCount = 0;
 	allAction.clear( );
-	disconnect(  );
+	disconnect( this, &QMenu::triggered, this, &TranspondTriggNormalActionMenu::triggAction );
 }
 void TranspondTriggNormalActionMenu::triggAction( QAction *transpond_action_ptr ) {
 	if( isThisNodemalAction( transpond_action_ptr ) == false )
@@ -15,6 +15,8 @@ void TranspondTriggNormalActionMenu::triggAction( QAction *transpond_action_ptr 
 	transpondTriggAction( ( NormalApplicationAction * ) transpond_action_ptr );
 }
 bool TranspondTriggNormalActionMenu::appendAction( NormalApplicationAction *append_action ) {
+	if( append_action == nullptr )
+		return false;
 	size_t index = 0;
 	for( ; index < actionArrayCount; ++index )
 		if( actionArrayPtr[ index ] == append_action )
@@ -22,7 +24,8 @@ bool TranspondTriggNormalActionMenu::appendAction( NormalApplicationAction *appe
 	allAction.emplace_back( append_action );
 	actionArrayPtr = allAction.data( );
 	actionArrayCount = allAction.size( );
-	addAction( append_action );
+	append_action->setParent( this );
+	QMenu::addAction( append_action );
 	return true;
 }
 bool TranspondTriggNormalActionMenu::isThisNodemalAction( QAction *check_action ) {
@@ -38,8 +41,8 @@ bool TranspondTriggNormalActionMenu::init( ) {
 	return true;
 }
 TranspondTriggNormalActionMenu::TranspondTriggNormalActionMenu( ) {
-
+	actionArrayCount = 0;
+	actionArrayPtr = nullptr;
 }
 TranspondTriggNormalActionMenu::~TranspondTriggNormalActionMenu( ) {
-	clearResource( );
 }

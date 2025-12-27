@@ -11,6 +11,10 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/app/imp/menu/builderApplicationMenu.h"
+#include "../menu/app/imp/menu/projectApplicationMenu.h"
+#include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
+#include "../menu/app/imp/toolBar/projectApplicationToolBar.h"
 #include "../menu/app/normalApplicationMenu.h"
 #include "../menu/app/normalApplicationToolBar.h"
 #include "../menuStack/app/applicationMenuStack.h"
@@ -37,10 +41,10 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 
-	fileToolBar = nullptr;
 	projectToolBar = nullptr;
-	fileMenu = nullptr;
+	builderToolBar = nullptr;
 	projectMenu = nullptr;
+	builderMenu = nullptr;
 
 	appMenuBar = menuBar( );
 	if( appMenuBar == nullptr ) {
@@ -57,20 +61,9 @@ bool MainWindow::init( ) {
 	printerDirector = instancePtr->getPrinterDirector( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
 	auto applicationMenuStack = instancePtr->getApplicationMenuStack( );
-	if( fileToolBar )
-		delete fileToolBar;
-	fileToolBar = applicationMenuStack->getToolBar( tr( "文件" ) );
-	if( fileToolBar == nullptr )
-		return false;
-	fileToolBar->setParent( this );
-	addToolBar( Qt::TopToolBarArea, fileToolBar );
-	fileToolBar->setFloatable( false );
-	fileToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	fileToolBar->setMovable( true );
-
 	if( projectToolBar )
 		delete projectToolBar;
-	projectToolBar = applicationMenuStack->getToolBar( tr( "项目" ) );
+	projectToolBar = applicationMenuStack->getToolBar< ProjectApplicationToolBar >( );
 	if( projectToolBar == nullptr )
 		return false;
 	projectToolBar->setParent( this );
@@ -79,25 +72,42 @@ bool MainWindow::init( ) {
 	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
 	projectToolBar->setMovable( true );
 
-	fileMenu = applicationMenuStack->getMenu( tr( "文件" ) );
-	if( fileMenu )
-		delete fileMenu;
-	if( fileMenu == nullptr )
+	if( builderToolBar )
+		delete builderToolBar;
+	builderToolBar = applicationMenuStack->getToolBar< BuilderApplicationToolBar >( );
+	if( builderToolBar == nullptr )
 		return false;
-	fileMenu->setParent( this );
-	appMenuBar->addMenu( fileMenu );
-	
+	builderToolBar->setParent( this );
+	addToolBar( Qt::TopToolBarArea, builderToolBar );
+	builderToolBar->setFloatable( false );
+	builderToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	builderToolBar->setMovable( true );
+	//auto newMenu = new QMenu( "dier" );
+	//newMenu->addAction( "32" );
+	//appMenuBar->addMenu( newMenu );
 	if( projectMenu )
 		delete projectMenu;
-	projectMenu = applicationMenuStack->getMenu( tr( "项目" ) );
+	projectMenu = applicationMenuStack->getMenu< ProjectApplicationMenu >( );
 	if( projectMenu == nullptr )
 		return false;
-	projectMenu->setParent( this );
 	appMenuBar->addMenu( projectMenu );
+	//projectMenu->setParent( appMenuBar );
+
+	if( builderMenu )
+		delete builderMenu;
+	builderMenu = applicationMenuStack->getMenu< BuilderApplicationMenu >( );
+	if( builderMenu == nullptr )
+		return false;
+	appMenuBar->addMenu( builderMenu );
+	//builderMenu->setParent( appMenuBar );
 	return true;
 }
 MainWindow::~MainWindow( ) {
 	emit release_signal( this );
+	if( projectMenu )
+		delete projectMenu;
+	if( builderMenu )
+		delete builderMenu;
 	delete mainWidget;
 	delete mainWidgetScrollArea;
 }

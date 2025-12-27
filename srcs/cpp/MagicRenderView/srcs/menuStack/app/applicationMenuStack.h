@@ -32,6 +32,23 @@ protected:
 			aliasTypeNameArrayPtr = aliasTypeName.data( );
 			aliasTypeNameArrayCount = aliasTypeName.size( );
 		}
+		Generator( const Generator &other )
+			: generator { other.generator },
+			typeName { other.typeName },
+			aliasTypeName { other.aliasTypeName } {
+			aliasTypeNameArrayPtr = aliasTypeName.data( );
+			aliasTypeNameArrayCount = aliasTypeName.size( );
+		}
+		Generator & operator=( const Generator &other ) {
+			if( this == &other )
+				return *this;
+			generator = other.generator;
+			typeName = other.typeName;
+			aliasTypeName = other.aliasTypeName;
+			aliasTypeNameArrayPtr = aliasTypeName.data( );
+			aliasTypeNameArrayCount = aliasTypeName.size( );
+			return *this;
+		}
 		virtual TGeneratorType * create( ) {
 			return generator( );
 		}
@@ -64,13 +81,13 @@ protected:
 			normalGeneratorArrayCount = normalrGeneratorVector.size( );
 		}
 		virtual TGeneratorType * fromTypeCreate( const QString &type_name, size_t index = 0 ) {
-			for( ; index < normalGeneratorArrayCount; index )
+			for( ; index < normalGeneratorArrayCount; ++index )
 				if( normalGeneratorArrayPtr[ index ].isType( type_name ) )
 					return normalGeneratorArrayPtr[ index ].create( );
 			return nullptr;
 		}
 		virtual TGeneratorType * fromAliasTypeCreate( const QString &type_name, size_t index = 0 ) {
-			for( ; index < normalGeneratorArrayCount; index )
+			for( ; index < normalGeneratorArrayCount; ++index )
 				if( normalGeneratorArrayPtr[ index ].isAliasType( type_name ) )
 					return normalGeneratorArrayPtr[ index ].create( );
 			return nullptr;
@@ -82,14 +99,26 @@ protected:
 	GeneratorArray< NormalApplicationMenu > menuGeneratorArray;
 	GeneratorArray< NormalApplicationAction > actionGeneratorArray;
 protected:
-	virtual bool initActionGenerator();
-	virtual bool initMenuGenerator();
-	virtual bool initToolBarGenerator();
+	virtual bool initActionGenerator( );
+	virtual bool initMenuGenerator( );
+	virtual bool initToolBarGenerator( );
 public:
 	ApplicationMenuStack( QObject *parent = nullptr );
 	virtual bool initStack( );
 	virtual NormalApplicationToolBar * getToolBar( const QString &tool_menu_name );
 	virtual NormalApplicationMenu * getMenu( const QString &tool_menu_name );
 	virtual NormalApplicationAction * getAction( const QString &acton_name );
+	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationToolBar, TType > > >
+	NormalApplicationToolBar * getToolBar( ) {
+		return getToolBar( typeid( TType ).name( ) );
+	}
+	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationMenu, TType > > >
+	NormalApplicationMenu * getMenu( ) {
+		return getMenu( typeid( TType ).name( ) );
+	}
+	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationAction, TType > > >
+	NormalApplicationAction * getAction( ) {
+		return getAction( typeid( TType ).name( ) );
+	}
 };
 #endif // APPLICATIONMENUSTACK_H_H_HEAD__FILE__

@@ -1,18 +1,25 @@
 ﻿#include "builderApplicationMenu.h"
 
 #include "../../../../menuStack/app/applicationMenuStack.h"
+#include "../action/builder/builderPorjectAction.h"
+#include "../action/builder/nextStepBuilderAction.h"
+#include "../action/builder/runBuilderAction.h"
+#include "../action/builder/stopBuilderAction.h"
 BuilderApplicationMenu::BuilderApplicationMenu( ) {
 }
 bool BuilderApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationMenu::init( application_menu_stack ) == false )
 		return false;
-	if( appendAction( application_menu_stack->getAction( tr( "编译" ) ) ) == false )
+	if( appendAction( application_menu_stack->getAction< BuilderPorjectAction >( ) ) == false )
 		return false;
-	if( appendAction( application_menu_stack->getAction( tr( "运行" ) ) ) == false )
+	if( appendAction( application_menu_stack->getAction< RunBuilderAction >( ) ) == false )
 		return false;
-	if( appendAction( application_menu_stack->getAction( tr( "下一步" ) ) ) == false )
+	if( appendAction( application_menu_stack->getAction< NextStepBuilderAction >( ) ) == false )
 		return false;
-	if( appendAction( application_menu_stack->getAction( tr( "停止" ) ) ) == false )
+	if( appendAction( application_menu_stack->getAction< StopBuilderAction >( ) ) == false )
 		return false;
-	return false;
+	QString title = tr( "编译菜单" );
+	setObjectName( title );
+	setTitle( title );
+	return true;
 }

@@ -6,6 +6,7 @@
 #include "../../app/application.h"
 #include "../../menu/app/action/normalApplicationAction.h"
 #include "../../menu/app/imp/action/app/quitAppAction.h"
+#include "../../menu/app/imp/action/app/resetAppAction.h"
 #include "../../menu/app/imp/action/builder/builderPorjectAction.h"
 #include "../../menu/app/imp/action/builder/nextStepBuilderAction.h"
 #include "../../menu/app/imp/action/builder/runBuilderAction.h"
@@ -17,8 +18,10 @@
 #include "../../menu/app/imp/action/project/clearProjectAction.h"
 #include "../../menu/app/imp/action/project/closeProjectAction.h"
 #include "../../menu/app/imp/action/project/openProjectAction.h"
+#include "../../menu/app/imp/action/project/reLoadProjectAction.h"
 #include "../../menu/app/imp/action/project/saveAsProjectAction.h"
 #include "../../menu/app/imp/action/project/savePorjectAction.h"
+#include "../../menu/app/imp/action/project/updateProjectAction.h"
 #include "../../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../../menu/app/imp/menu/projectApplicationMenu.h"
 #include "../../menu/app/imp/toolBar/builderApplicationToolBar.h"
@@ -36,7 +39,7 @@
 		return nullptr;\
 	}
 #define generator_type_uinty( base_template_type_name_, type_name_, str_type_name_, ...  ) \
-	Generator< base_template_type_name_ > ( generator(base_template_type_name_, type_name_ ),#type_name_, {  str_type_name_,__VA_ARGS__} )
+	Generator< base_template_type_name_ > ( generator(base_template_type_name_, type_name_ ),#type_name_, {  str_type_name_,QString( typeid(type_name_).name(  )),__VA_ARGS__} )
 
 bool ApplicationMenuStack::initActionGenerator( ) {
 
@@ -46,6 +49,8 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, CloseProjectAction, tr( "关闭文件" ), tr( "关闭项目" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, SavePorjectAction, tr( "保存文件" ), tr( "保存项目" ), tr( "保存文件..." ), tr( "保存项目..." ), tr( "存为文件" ), tr( "存为项目" ), tr( "存为文件..." ), tr( "存为项目..." ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, SaveAsProjectAction, tr( "另存为文件" ), tr( "另存为项目" ), tr( "另存为文件..." ), tr( "另存为项目..." ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ReLoadProjectAction, tr( "重新加载项目" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, UpdateProjectAction, tr( "刷新当前项目" ) ) );
 	// 编译操作 action
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, BuilderPorjectAction, tr( "编译项目" ), tr( "编译文件" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, NextStepBuilderAction, tr( "运行下一步" ) ) );
@@ -57,12 +62,13 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, PasteNodeAction, tr( "粘贴" ) ) );
 	// 软件操作 action
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, QuitAppAction, tr( "退出软件" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ResetAppAction, tr( "重启软件" ) ) );
 	return true;
 }
 bool ApplicationMenuStack::initMenuGenerator( ) {
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, ProjectApplicationMenu, tr( "文件" ) ) );
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, BuilderApplicationMenu, tr( "编译" ) ) );
-	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, BuilderApplicationMenu, tr( "编译" ) ) );
+
 	return true;
 }
 bool ApplicationMenuStack::initToolBarGenerator( ) {
@@ -102,8 +108,6 @@ NormalApplicationMenu * ApplicationMenuStack::getMenu( const QString &tool_menu_
 		if( fromTypeCreate == nullptr )
 			return nullptr;
 	}
-	if( fromTypeCreate->init( this ) == false )
-		return nullptr;
 	return fromTypeCreate;
 }
 NormalApplicationAction * ApplicationMenuStack::getAction( const QString &acton_name ) {
