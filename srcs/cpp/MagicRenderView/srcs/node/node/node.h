@@ -35,6 +35,8 @@ class Node : public QWidget {
 	friend class NodeRunInfo;
 	friend class NormalNodeEditorPropertyMenu;
 	friend class NodeTypeInfoSerializeion;
+	friend class NodeTypeInfo;
+	friend class PortTypeInfo;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;

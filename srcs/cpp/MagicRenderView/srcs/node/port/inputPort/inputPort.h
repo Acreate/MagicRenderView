@@ -30,6 +30,8 @@ private:
 	friend class NodeRunInfo;
 	friend class NormalNodeEditorPropertyMenu;
 	friend class NodeTypeInfoSerializeion;
+	friend class NodeTypeInfo;
+	friend class PortTypeInfo;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
