@@ -5,7 +5,7 @@
 #include <vector>
 #include <qstring.h>
 
-#include "../enums/typeEnum.h"
+#include <enums/typeEnum.h>
 class InfoStack : public QObject {
 	Q_OBJECT;
 	friend class VarDirector;
@@ -13,11 +13,15 @@ private:
 	std::function< void*( ) > newObjTypeFunction;
 	std::function< bool( void * ) > deleteObjTypeFunction;
 protected:
-	virtual bool init( ) =0;
+	virtual bool init( VarDirector *var_director ) {
+		varDirector = var_director;
+		return true;
+	}
 protected:
 	virtual void setNewObjTypeFunction( const std::function< void *( ) > &new_obj_type_function ) { newObjTypeFunction = new_obj_type_function; }
 	virtual void setDeleteObjTypeFunction( const std::function< bool( void * ) > &delete_obj_type_function ) { deleteObjTypeFunction = delete_obj_type_function; }
 protected:
+	VarDirector *varDirector;
 	QString typeName;
 	std::vector< QString > aliasTypeNames;
 	std::vector< void * > allVarPtrVector;

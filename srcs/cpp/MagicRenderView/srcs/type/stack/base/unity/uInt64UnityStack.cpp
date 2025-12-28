@@ -3,12 +3,16 @@
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
+#include "../../../../director/varDirector.h"
+
 UInt64UnityStack::~UInt64UnityStack( ) {
 
 }
 UInt64UnityStack::UInt64UnityStack( ) {
 }
-bool UInt64UnityStack::init( ) {
+bool UInt64UnityStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( 0, uint64_t, "uint64", "unsigned long long" );
 	return true;
 }
@@ -19,12 +23,11 @@ bool UInt64UnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_p
 	if( infoTool::fillTypeVectorAtVar< t_current_unity_type >( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
 		return false;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr = nullptr;
-		if( createTypePtr( sourcePtr ) == false )
+		t_current_unity_type *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( t_current_unity_type * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 

@@ -3,10 +3,14 @@
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
+#include "../../../../director/varDirector.h"
+
 Float32ArrayStack::~Float32ArrayStack( ) {
 
 }
-bool Float32ArrayStack::init( ) {
+bool Float32ArrayStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( , std::vector<float>, "vector<float>", "float[]", "floatArray", "vector<double32>", "double32[]", "double32Array", "vector<float32>", "float32[]", "float32Array" );
 	return true;
 }
@@ -28,12 +32,11 @@ bool Float32ArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_
 			return false;
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr;
-		if( createTypePtr( sourcePtr ) == false )
+		std::vector< t_current_unity_type > *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( std::vector< t_current_unity_type > * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 	auto createPtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;

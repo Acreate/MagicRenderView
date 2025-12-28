@@ -8,7 +8,9 @@
 NodeTypeInfoStack::~NodeTypeInfoStack( ) {
 
 }
-bool NodeTypeInfoStack::init( ) {
+bool NodeTypeInfoStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( , NodeTypeInfo, "NodeTypeInfo" );
 	return true;
 }
@@ -17,7 +19,16 @@ NodeTypeInfoStack::NodeTypeInfoStack( ) {
 
 using t_current_unity_type = NodeTypeInfo;
 bool NodeTypeInfoStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
-	t_current_unity_type *converTarget = ( NodeTypeInfo * ) result_obj_ptr;
+
+	// 匹配指向有效对象
+	t_current_unity_type *converTarget = nullptr;
+	if( hasVarPtr( result_obj_ptr ) == false ) {
+		if( varDirector->create( converTarget ) == false || converTarget == nullptr )
+			return false;
+		result_obj_ptr = converTarget;
+	} else
+		converTarget = ( t_current_unity_type * ) result_obj_ptr;
+
 	VarDirector varDirector;
 	if( varDirector.init( ) == false )
 		return false;

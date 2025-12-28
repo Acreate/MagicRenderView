@@ -3,10 +3,14 @@
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
+#include "../../../../director/varDirector.h"
+
 Int8ArrayStack::~Int8ArrayStack( ) {
 
 }
-bool Int8ArrayStack::init( ) {
+bool Int8ArrayStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( , std::vector<int8_t>, "vector<int8_t>", "int8_t[]", "int8_tArray", "vector<int8>", "int8[]", "int8Array" );
 	return true;
 }
@@ -27,12 +31,11 @@ bool Int8ArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr
 			return false;
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr;
-		if( createTypePtr( sourcePtr ) == false )
+		std::vector< t_current_unity_type > *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( std::vector< t_current_unity_type > * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 	auto createPtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;

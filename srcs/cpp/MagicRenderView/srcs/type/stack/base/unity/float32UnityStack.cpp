@@ -3,10 +3,14 @@
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
+#include "../../../../director/varDirector.h"
+
 Float32UnityStack::~Float32UnityStack( ) {
 
 }
-bool Float32UnityStack::init( ) {
+bool Float32UnityStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( 0.0f, float, "float32", "double32", "float_t" );
 	return true;
 }
@@ -19,12 +23,11 @@ bool Float32UnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_
 	if( infoTool::fillTypeVectorAtVar< t_current_unity_type >( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
 		return false;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr = nullptr;
-		if( createTypePtr( sourcePtr ) == false )
+		t_current_unity_type *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( t_current_unity_type * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 

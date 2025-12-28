@@ -5,13 +5,29 @@
 #include <tools/infoTool.h>
 
 AnyPtrArrayStack::~AnyPtrArrayStack( ) {
+	size_t count = allVarPtrVector.size( );
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nullptr == arrayPtr[ index ] ) {
+			std::vector< void * > *vector = ( std::vector< void * > * ) arrayPtr[ index ];
+			size_t voidPtrArrayCount = vector->size( );
+			auto voidPtrArrayPtr = vector->data( );
+			size_t voidPtrArrayIndex = 0;
+			for( ; voidPtrArrayIndex < voidPtrArrayCount; ++voidPtrArrayIndex )
+				varDirector->release( voidPtrArrayPtr[ voidPtrArrayIndex ] );
+			vector->clear( );
+			delete vector;
+		}
+	allVarPtrVector.clear( );
 
 }
 AnyPtrArrayStack::AnyPtrArrayStack( ) {
 
 }
 
-bool AnyPtrArrayStack::init( ) {
+bool AnyPtrArrayStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
 	return true;
 }
@@ -25,22 +41,18 @@ bool AnyPtrArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_p
 	auto mod = obj_memory_size - result_count;
 	std::vector< t_current_unity_type > buffVar( arrayCount );
 
-	VarDirector varDirector;
-	if( varDirector.init( ) == false )
-		return false;
 	auto arrayPtr = buffVar.data( );
 	for( size_t index = 0; index < arrayCount; ++index, offset = offset + result_count,
 		mod = mod - result_count )
-		if( varDirector.toVar( result_count, offset, mod, *( arrayPtr + index ) ) == false )
+		if( varDirector->toVar( result_count, offset, mod, *( arrayPtr + index ) ) == false )
 			return false;
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr;
-		if( createTypePtr( sourcePtr ) == false )
+		std::vector< t_current_unity_type > *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( std::vector< t_current_unity_type > * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 	auto createPtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;
@@ -57,13 +69,10 @@ bool AnyPtrArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t >
 	if( infoTool::fillTypeVarAtVector< uint64_t >( &arraySize, buff ) == false )
 		return false;
 
-	VarDirector varDirector;
-	if( varDirector.init( ) == false )
-		return false;
 	result_data.append_range( buff );
 	auto arrayPtr = vector->data( );
 	for( size_t index = 0; index < arraySize; ++index )
-		if( varDirector.toVector( *( arrayPtr + index ), buff ) == false )
+		if( varDirector->toVector( *( arrayPtr + index ), buff ) == false )
 			return false;
 		else
 			result_data.append_range( buff );

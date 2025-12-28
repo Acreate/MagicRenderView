@@ -82,7 +82,7 @@ bool VarDirector::init( ) {
 	count = stacks.size( );
 	arrayPtr = stacks.data( );
 	for( index = 0; index < count; ++index )
-		if( arrayPtr[ index ]->init( ) == false ) {
+		if( arrayPtr[ index ]->init( this ) == false ) {
 			auto className = arrayPtr[ index ]->metaObject( )->className( );
 			QString msg( "[ %1 ]变量堆栈类初始化失败" );
 			printerDirector->error( msg.arg( className ), Create_SrackInfo( ) );

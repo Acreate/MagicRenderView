@@ -60,11 +60,11 @@ void AppDirector::saveThisDataToAppInstance( ) {
 		printerDirector->info( tr( "AppDirector::currentProjectWorkPath 序列化失败" ), Create_SrackInfo( ) );
 	else if( application->setVar( tr( "AppDirector::currentProjectWorkPath" ), result ) == false )
 		printerDirector->info( tr( "AppDirector::currentProjectWorkPath 保存失败" ), Create_SrackInfo( ) );
-	*strVar = currentProjectName;
-	if( varDirector.toVector( strVar, result ) == false )
-		printerDirector->info( tr( "AppDirector::currentProjectName 序列化失败" ), Create_SrackInfo( ) );
-	else if( application->setVar( tr( "AppDirector::currentProjectName" ), result ) == false )
-		printerDirector->info( tr( "AppDirector::currentProjectName 保存失败" ), Create_SrackInfo( ) );
+	//*strVar = currentProjectName;
+	//if( varDirector.toVector( strVar, result ) == false )
+	//	printerDirector->info( tr( "AppDirector::currentProjectName 序列化失败" ), Create_SrackInfo( ) );
+	//else if( application->setVar( tr( "AppDirector::currentProjectName" ), result ) == false )
+	//	printerDirector->info( tr( "AppDirector::currentProjectName 保存失败" ), Create_SrackInfo( ) );
 }
 void AppDirector::loadThisDataToAppInstance( ) {
 	VarDirector varDirector;
@@ -86,9 +86,9 @@ void AppDirector::loadThisDataToAppInstance( ) {
 	if( varDirector.toVar( count, result.data( ), result.size( ), converPtr ) == true )
 		currentProjectWorkPath = *strVar;
 	// 获取 currentProjectName
-	application->getVar( tr( "AppDirector::currentProjectName" ), result );
-	if( varDirector.toVar( count, result.data( ), result.size( ), converPtr ) == true )
-		currentProjectName = *strVar;
+	//application->getVar( tr( "AppDirector::currentProjectName" ), result );
+	//if( varDirector.toVar( count, result.data( ), result.size( ), converPtr ) == true )
+	//	currentProjectName = *strVar;
 }
 AppDirector::~AppDirector( ) {
 	saveThisDataToAppInstance( );

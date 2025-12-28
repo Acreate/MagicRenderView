@@ -9,7 +9,7 @@ public:
 	UInt64ArrayStack( );
 	~UInt64ArrayStack( ) override;
 protected:
-	bool init( ) override;
+	bool init( VarDirector *var_director ) override;
 public:
 	bool toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) override;
 	TypeEnum::Type getType( ) override;

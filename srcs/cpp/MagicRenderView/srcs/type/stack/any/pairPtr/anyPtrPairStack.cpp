@@ -7,14 +7,19 @@
 AnyPtrPairStack::~AnyPtrPairStack( ) {
 
 }
-bool AnyPtrPairStack::init( ) {
+bool AnyPtrPairStack::init( VarDirector *var_director ) {
+	if( InfoStack::init( var_director ) == false )
+		return false;
 	typeName = "std::pair< void *, void * >";
 	aliasTypeNames = std::vector< QString >( { typeid( std::pair< void *, void * > ).name( ), "pair< void *, void * >", "pair" } );
 	setNewObjTypeFunction( [] {
 		return new std::pair< void *, void * >( nullptr, nullptr );
 	} );
-	setDeleteObjTypeFunction( [] ( void *delete_obj_ptr ) {
-		delete ( std::pair< void *, void * > * ) delete_obj_ptr;
+	setDeleteObjTypeFunction( [this] ( void *delete_obj_ptr ) {
+		auto deleteObjPtr = ( std::pair< void *, void * > * ) delete_obj_ptr;
+		varDirector->release( deleteObjPtr->first );
+		varDirector->release( deleteObjPtr->second );
+		delete deleteObjPtr;
 		return true;
 	} );
 	return true;
@@ -36,12 +41,11 @@ bool AnyPtrPairStack::toObj( uint64_t &result_count, const uint8_t *obj_start_pt
 
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
-		void *sourcePtr = nullptr;
-		if( createTypePtr( sourcePtr ) == false )
+		t_current_unity_type *sourcePtr = nullptr;
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
 			return false;
-		auto createPtr = ( t_current_unity_type * ) sourcePtr;
-		*createPtr = buffVar;
-		result_obj_ptr = createPtr;
+		*sourcePtr = buffVar;
+		result_obj_ptr = sourcePtr;
 		return true;
 	}
 
