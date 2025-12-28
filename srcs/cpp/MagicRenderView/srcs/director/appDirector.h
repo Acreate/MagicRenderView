@@ -17,7 +17,10 @@ protected:
 protected:
 	virtual bool syncProjectToFile();
 	virtual bool syncFileToProject();
+	virtual void saveThisDataToAppInstance();
+	virtual void loadThisDataToAppInstance();
 public:
+	~AppDirector( ) override;
 	virtual bool init( );
 	/// @brief 清理 app 的项目信息
 	/// @param parent 父窗口

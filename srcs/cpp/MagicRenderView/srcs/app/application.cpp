@@ -39,14 +39,14 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
 		printerDirector->error( "窗口状态保存异常", Create_SrackInfo( ) );
-	if( synchronousVarToFile( ) == false )
-		printerDirector->error( "程序信息保存异常", Create_SrackInfo( ) );
+	delete menuDirector;
 	delete appDirector;
 	delete mainWindow;
 	delete nodeDirector;
+	if( synchronousVarToFile( ) == false )
+		printerDirector->error( "程序信息保存异常", Create_SrackInfo( ) );
 	delete iniDirector;
 	delete varDirector;
-	delete menuDirector;
 	delete printerDirector;
 	delete appInitRunDataTime;
 }
