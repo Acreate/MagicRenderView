@@ -16,7 +16,6 @@ class QHBoxLayout;
 class QLabel;
 class QVBoxLayout;
 class SrackInfo;
-class NodeRunFunctionTypeInfo;
 class VarDirector;
 class Application;
 class InputPort;
@@ -35,6 +34,7 @@ class Node : public QWidget {
 	friend class NodeBuilderTools;
 	friend class NodeRunInfo;
 	friend class NormalNodeEditorPropertyMenu;
+	friend class NodeTypeInfoSerializeion;
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;

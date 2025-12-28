@@ -32,6 +32,7 @@
 #include <app/application.h>
 
 #include "../srack/srackInfo.h"
+#include "../type/stack/unity/nodeTypeInfoStack.h"
 
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
@@ -75,6 +76,9 @@ bool VarDirector::init( ) {
 
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyArrayStack );
+	
+	emplace_back_type( NodeTypeInfoStack );
+	
 	count = stacks.size( );
 	arrayPtr = stacks.data( );
 	for( index = 0; index < count; ++index )

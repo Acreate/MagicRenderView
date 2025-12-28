@@ -10,14 +10,14 @@
 AnyArrayStack::~AnyArrayStack( ) {
 
 }
-bool AnyArrayStack::init( ) {
-	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
-	return true;
-}
 AnyArrayStack::AnyArrayStack( ) {
 
 }
 
+bool AnyArrayStack::init( ) {
+	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
+	return true;
+}
 using t_current_unity_type = void *;
 bool AnyArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 
@@ -57,11 +57,14 @@ bool AnyArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &r
 	uint64_t arraySize = vector->size( );
 	if( infoTool::fillTypeVarAtVector< uint64_t >( &arraySize, buff ) == false )
 		return false;
-	auto varDirector = Application::getInstancePtr( )->getVarDirector( );
+
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
 	result_data.append_range( buff );
 	auto arrayPtr = vector->data( );
 	for( size_t index = 0; index < arraySize; ++index )
-		if( varDirector->toVector( *( arrayPtr + index ), buff ) == false )
+		if( varDirector.toVector( *( arrayPtr + index ), buff ) == false )
 			return false;
 		else
 			result_data.append_range( buff );

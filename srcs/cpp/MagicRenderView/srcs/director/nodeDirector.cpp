@@ -20,6 +20,7 @@
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
+#include "../node/nodeType/nodeTypeInfoSerializeion.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
@@ -365,66 +366,18 @@ bool NodeDirector::findNodeOutputPort( OutputPort *&result_output_port_ptr, cons
 }
 
 bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
-	VarDirector varDirector;
-	if( varDirector.init( ) == false )
-		return false;
-	uint64_t *uint64Ptr = nullptr;
-	int32_t *int32Ptr = nullptr;
-	QString *stringPtr = nullptr;
-	if( varDirector.create( uint64Ptr ) == false )
-		return false;
-	if( varDirector.create( int32Ptr ) == false )
-		return false;
-	if( varDirector.create( stringPtr ) == false )
-		return false;
-	std::vector< uint8_t > vectorInfo;
-	std::vector< uint8_t > converResult;
-	size_t refNodeArrayCount = nodeArchiveVector.size( );
-	auto refNodeArrayPtr = nodeArchiveVector.data( );
-	size_t refNodeArrayIndex = 0;
-	// 序列化节点个数
-	*uint64Ptr = refNodeArrayCount;
-	if( varDirector.toVector( uint64Ptr, converResult ) == false )
-		return false;
-	vectorInfo.append_range( converResult );
-	for( ; refNodeArrayIndex < refNodeArrayCount; ++refNodeArrayIndex ) {
-		// 节点
-		Node *currentNode = refNodeArrayPtr[ refNodeArrayIndex ];
-		// 名称
-		*stringPtr = currentNode->nodeName;
-		if( varDirector.toVector( stringPtr, converResult ) == false )
-			return false;
-		vectorInfo.append_range( converResult );
-		// x 坐标
-		*int32Ptr = currentNode->x( );
-		if( varDirector.toVector( int32Ptr, converResult ) == false )
-			return false;
-		vectorInfo.append_range( converResult );
-		// y 坐标
-		*int32Ptr = currentNode->y( );
-		if( varDirector.toVector( int32Ptr, converResult ) == false )
-			return false;
-		vectorInfo.append_range( converResult );
-		// id
-		*uint64Ptr = ( uint64_t ) currentNode;
-		if( varDirector.toVector( uint64Ptr, converResult ) == false )
-			return false;
-		vectorInfo.append_range( converResult );
-		// 节点数据
-		if( currentNode->toUint8VectorData( converResult ) == false )
-			return false;
-		vectorInfo.append_range( converResult );
-		// 连接信息
 
-		// todo : 重构链接
-		//if( refNodeArrayPtr[ refNodeArrayIndex ]->nodePortLinkInfo->toUint8VectorData( converResult ) == false )
-		//	return false;
-		vectorInfo.append_range( converResult );
-	}
-	*uint64Ptr = vectorInfo.size( );
-	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+	NodeTypeInfoSerializeion nodeTypeInfoSerializeion;
+	auto node = nodeArchiveVector.data( );
+	size_t count = nodeArchiveVector.size( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( nodeTypeInfoSerializeion.appendNodePtr( node[ index ] ) == false ) {
+			printerDirector->info( tr( "节点[%1]添加序列失败" ).arg( node[ index ]->toQString( ) ), Create_SrackInfo( ) );
+			return false;
+		}
+	if( nodeTypeInfoSerializeion.toData( result_vector_data ) == false )
 		return false;
-	result_vector_data.append_range( vectorInfo );
 	return true;
 }
 bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
@@ -434,117 +387,56 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		printerDirector->info( error_msg, Create_SrackInfo( ) );
 		return false;
 	}
-
-	VarDirector varDirector;
-	if( varDirector.init( ) == false )
-		return false;
-	uint64_t *uint64Ptr = nullptr;
-	int32_t *int32Ptr = nullptr;
-	QString *stringPtr = nullptr;
-	if( varDirector.create( uint64Ptr ) == false )
-		return false;
-	if( varDirector.create( int32Ptr ) == false )
-		return false;
-	if( varDirector.create( stringPtr ) == false )
-		return false;
-	// 总数判定
-	void *anyPtr = uint64Ptr;
-	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, anyPtr ) == false )
-		return false;
-	auto mod = source_array_count - result_use_count;
-	if( mod < *uint64Ptr )
-		return false;
-	auto offset = source_array_ptr + result_use_count;
-	// 总数
-	if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
-		return false;
-	mod = mod - result_use_count;
-	offset = offset + result_use_count;
-	size_t count = *uint64Ptr;
+	// 删除节点
+	auto buff = nodeArchiveVector;
+	nodeArchiveVector.clear( );
+	size_t count = buff.size( );
 	size_t index = 0;
-	//std::vector< std::vector< InputportLinkOutputPortInfoMap > > resultMapVector;
-	std::vector< std::pair< size_t, Node * > > nodeIdPair;
-	//resultMapVector.resize( count );
-	nodeIdPair.resize( count );
-	//auto pairArrayPtr = resultMapVector.data( );
-	auto nodeIdPairArrayPtr = nodeIdPair.data( );
-	//NodePortLinkInfo temp( nullptr );
-	QPoint pos;
-	releaseNodeResources( );
-	for( ; index < count; ++index ) {
-		// 节点名称
-		anyPtr = stringPtr;
-		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
-			return false;
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-		// x
-		anyPtr = int32Ptr;
-		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
-			return false;
-		pos.setX( *int32Ptr );
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-		// y
-		anyPtr = int32Ptr;
-		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
-			return false;
-		pos.setY( *int32Ptr );
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-		// id
-		anyPtr = uint64Ptr;
-		if( varDirector.toVar( result_use_count, offset, mod, anyPtr ) == false )
-			return false;
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-		// 节点创建
-		auto node = createNode( *stringPtr );
-		if( node == nullptr )
-			return false;
-		node->move( pos );
-		// 节点数据
-		if( node->formUint8ArrayData( result_use_count, offset, mod ) == false )
-			return false;
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-		// 保存节点地址映射
-		nodeIdPairArrayPtr[ index ] = std::pair< uint64_t, Node * >( *uint64Ptr, node );
-		// 连接信息
-		/*	if( temp.toLinkMap( pairArrayPtr[ index ], result_use_count, offset, mod ) == false )
-				return false;*/
-		mod = mod - result_use_count;
-		offset = offset + result_use_count;
-	}
+	auto nodeArray = buff.data( );
+	for( ; index < count; ++index )
+		delete nodeArray;
 
-	//std::pair< std::pair< unsigned long long, QString >, std::vector< std::pair< unsigned long long, QString > > > *linkArrayPtr;
-	//size_t linkArrayCount;
-	//size_t linkArrayIndex;
-	//for( index = 0; index < count; ++index ) {
-	//	linkArrayPtr = pairArrayPtr[ index ].data( );
-	//	linkArrayCount = pairArrayPtr[ index ].size( );
-	//	for( linkArrayIndex = 0; linkArrayIndex < linkArrayCount; ++linkArrayIndex ) {
-	//		auto id = linkArrayPtr[ linkArrayIndex ].first.first;
-	//		InputPort *inputPort = nullptr;
-	//		OutputPort *outputPort = nullptr;
-	//		if( findNodeInputPort( inputPort, id, linkArrayPtr[ linkArrayIndex ].first.second, nodeIdPairArrayPtr, count ) == false )
-	//			return false;
-	//		size_t outCount = linkArrayPtr[ linkArrayIndex ].second.size( );
-	//		auto outArrayPtr = linkArrayPtr[ linkArrayIndex ].second.data( );
-	//		size_t outIndex;
-	//		for( outIndex = 0; outIndex < outCount; ++outIndex ) {
-	//			id = outArrayPtr[ outIndex ].first;
+	NodeTypeInfoSerializeion nodeTypeInfoSerializeion;
 
-	//			if( findNodeOutputPort( outputPort, id, outArrayPtr[ outIndex ].second, nodeIdPairArrayPtr, count ) == false )
-	//				return false;
-	//			if( linkPort( outputPort, inputPort ) == false )
-	//				return false;
-	//		}
+	auto nodeCreateFunction = [this] ( const QString &node_name, const size_t &node_generator_code, const int32_t &node_x_pos, const int32_t &node_y_pos ) ->Node * {
 
-	//	}
-	//}
-	mainWidget->calculateNodeRenderSize( );
-	result_use_count = offset - source_array_ptr;
+		auto createNodePtr = createNode( node_name );
+		if( createNodePtr == nullptr ) {
+			printerDirector->info( tr( "无法创建[%1]节点" ).arg( node_name ), Create_SrackInfo( ) );
+			return nullptr;
+		}
+		createNodePtr->move( node_x_pos, node_y_pos );
+		createNodePtr->generateCode = node_generator_code;
+		return createNodePtr;
+	};
+	auto portLinkFcuntion = [this] ( const uint64_t &output_node_generator_code, const uint64_t &output_port_generator_code, const uint64_t &input_node_generator_code, const uint64_t &input_port_generator_code ) ->bool {
+		auto outputNode = getNode( output_node_generator_code );
+		if( outputNode == nullptr ) {
+			printerDirector->info( tr( "无法匹配生成码[%1]的输出节点" ).arg( output_node_generator_code ), Create_SrackInfo( ) );
+			return false;
+		}
+		auto inputNode = getNode( input_node_generator_code );
+		if( inputNode == nullptr ) {
+			printerDirector->info( tr( "无法匹配生成码[%1]的输入节点" ).arg( input_node_generator_code ), Create_SrackInfo( ) );
+			return false;
+		}
+		auto outputPort = outputNode->getOutputPort( output_port_generator_code );
+		if( outputPort == nullptr ) {
+			printerDirector->info( tr( "无法匹配生成码[%1]的输出端口" ).arg( output_port_generator_code ), Create_SrackInfo( ) );
+			return false;
+		}
+		auto inputPort = inputNode->getInputPort( input_port_generator_code );
+		if( inputPort == nullptr ) {
+			printerDirector->info( tr( "无法匹配生成码[%1]的输入端口" ).arg( input_port_generator_code ), Create_SrackInfo( ) );
+			return false;
+		}
+		return linkPort( outputPort, inputPort );
+	};
+	if( nodeTypeInfoSerializeion.loadData( result_use_count, source_array_ptr, source_array_count, nodeCreateFunction, portLinkFcuntion ) == false )
+		return false;
+	QString errorMsg;
+	if( sortArchiveCode( errorMsg ) == false )
+		printerDirector->info( errorMsg,Create_SrackInfo( ) );
 	return true;
 }
 QSize NodeDirector::getMaxNodeRenderSize( ) const {
@@ -831,9 +723,9 @@ void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signa
 	disLinkPort( output_port, input_port );
 	mainWidget->update( );
 }
-void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node , NodeInfoWidget *show_info_widget ) {
+void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget ) {
 	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
-	show_info_widget->show(  );
+	show_info_widget->show( );
 }
 void NodeDirector::editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node ) {
 	printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );

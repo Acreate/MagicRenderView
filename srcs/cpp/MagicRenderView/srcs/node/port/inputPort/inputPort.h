@@ -29,6 +29,7 @@ private:
 	friend class NodeBuilderTools;
 	friend class NodeRunInfo;
 	friend class NormalNodeEditorPropertyMenu;
+	friend class NodeTypeInfoSerializeion;
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
