@@ -14,7 +14,6 @@ public:
 	using TFCreate_Node_Function = std::function< Node*( const QString &, const uint64_t &, const int32_t &, const int32_t & ) >;
 	using TFLink_Port_Function = std::function< bool( const uint64_t &, const uint64_t &, const uint64_t &, const uint64_t & ) >;
 protected:
-	VarDirector *varDirector;
 	std::vector< Node * > nodeObjPtr;
 	Node **nodeObjPtrArrayPtr;
 	size_t nodeObjPtrArrayCount;

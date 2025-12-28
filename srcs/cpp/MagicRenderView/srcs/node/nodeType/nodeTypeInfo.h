@@ -7,6 +7,8 @@
 class PortTypeInfo;
 class Node;
 class NodeTypeInfo {
+	friend class NodeTypeInfoSerializeion;
+	friend class NodeTypeInfoStack;
 protected:
 	QString nodeName;
 	uint64_t nodeGeneratorCode;
@@ -17,10 +19,6 @@ public:
 	NodeTypeInfo( ) { }
 	virtual ~NodeTypeInfo( );
 	virtual bool load( Node *node_ptr );
-	virtual bool load( size_t &use_count, const uint8_t *source_array_ptr, const size_t &source_array_count );
-	virtual bool load( size_t &use_count, const int8_t *source_array_ptr, const size_t &source_array_count ) {
-		return load( use_count, ( const uint8_t * ) source_array_ptr, source_array_count );
-	}
 	virtual const QString & getNodeName( ) const { return nodeName; }
 	virtual uint64_t getNodeGeneratorCode( ) const { return nodeGeneratorCode; }
 	virtual int32_t getPosX( ) const { return posX; }

@@ -37,6 +37,11 @@ public:
 	virtual bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *&target_var_ptr );
 	virtual bool toVector( const void *ptr, std::vector< uint8_t > &result );
 public:
+	template< typename TPtrType >
+	bool toVar( size_t &result_count, const uint8_t *source_ptr, const size_t &source_count, TPtrType *&target_var_ptr ) {
+		void *converTargetVarPtr = target_var_ptr;
+		return toVar( result_count, source_ptr, source_count, converTargetVarPtr );
+	}
 	template< typename TCreateType >
 	bool create( TCreateType * &result_ptr ) {
 		void *result_create_ptr;

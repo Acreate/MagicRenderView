@@ -1,5 +1,6 @@
 ﻿#include "nodeTypeInfo.h"
 
+#include "../../director/varDirector.h"
 #include "../../menu/edit/normalNodeEditorPropertyMenu.h"
 #include "../node/node.h"
 #include "../port/outputPort/outputPort.h"
@@ -40,7 +41,4 @@ bool NodeTypeInfo::load( Node *node_ptr ) {
 		}
 	}
 	return true;
-}
-bool NodeTypeInfo::load( size_t &use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
-	return false;
 }
