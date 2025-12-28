@@ -17,8 +17,10 @@ bool AppDirector::syncProjectToFile( ) {
 	std::vector< uint8_t > resultData;
 	if( nodeDirector->toUint8VectorData( resultData ) == false )
 		return false;
-	char *data = ( char * ) resultData.data( );
 	size_t writeCount = resultData.size( );
+	if( writeCount == 0 )
+		return false;
+	char *data = ( char * ) resultData.data( );
 	if( file.write( data, writeCount ) == writeCount )
 		return true;
 	return false;

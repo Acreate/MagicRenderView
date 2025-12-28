@@ -110,7 +110,7 @@ bool NodeTypeInfoSerializeion::toData( std::vector< uint8_t > &result_data_vecto
 		if( nodeTypeInfoPtr->load( nodeObjPtrArrayPtr[ index ] ) == false )
 			return false;
 	}
-	if( varDirector.toVector( nodeTypeInfos, result_data_vector ) )
+	if( varDirector.toVector( nodeTypeInfos, result_data_vector ) == false )
 		return false;
 	return true;
 }

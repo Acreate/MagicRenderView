@@ -366,7 +366,6 @@ bool NodeDirector::findNodeOutputPort( OutputPort *&result_output_port_ptr, cons
 }
 
 bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
-
 	NodeTypeInfoSerializeion nodeTypeInfoSerializeion;
 	auto node = nodeArchiveVector.data( );
 	size_t count = nodeArchiveVector.size( );
