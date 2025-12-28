@@ -1,7 +1,10 @@
 ﻿#include "varDirector.h"
 
+#include <app/application.h>
+#include <director/printerDirector.h>
+#include <srack/srackInfo.h>
+#include <tools/infoTool.h>
 #include <type/infoStack.h>
-#include <type/stack/array/anyArrayStack.h>
 #include <type/stack/array/float32ArrayStack.h>
 #include <type/stack/array/float64ArrayStack.h>
 #include <type/stack/array/int16ArrayStack.h>
@@ -13,6 +16,8 @@
 #include <type/stack/array/uInt32ArrayStack.h>
 #include <type/stack/array/uInt64ArrayStack.h>
 #include <type/stack/array/uInt8ArrayStack.h>
+#include <type/stack/arrayPtr/anyPtrArrayStack.h>
+#include <type/stack/arrayPtr/nodeTypeInfoPtrArrayStack.h>
 #include <type/stack/pair/anyPtrPairStack.h>
 #include <type/stack/unity/float32UnityStack.h>
 #include <type/stack/unity/float64UnityStack.h>
@@ -20,19 +25,12 @@
 #include <type/stack/unity/int32UnityStack.h>
 #include <type/stack/unity/int64UnityStack.h>
 #include <type/stack/unity/int8UnityStack.h>
+#include <type/stack/unity/nodeTypeInfoStack.h>
 #include <type/stack/unity/stringUnityStack.h>
 #include <type/stack/unity/uInt16UnityStack.h>
 #include <type/stack/unity/uInt32UnityStack.h>
 #include <type/stack/unity/uInt64UnityStack.h>
 #include <type/stack/unity/uInt8UnityStack.h>
-#include <tools/infoTool.h>
-
-#include "printerDirector.h"
-
-#include <app/application.h>
-
-#include "../srack/srackInfo.h"
-#include "../type/stack/unity/nodeTypeInfoStack.h"
 
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
@@ -75,10 +73,11 @@ bool VarDirector::init( ) {
 	emplace_back_type( StringArrayStack );
 
 	emplace_back_type( AnyPtrPairStack );
-	emplace_back_type( AnyArrayStack );
-	
+	emplace_back_type( AnyPtrArrayStack );
+
 	emplace_back_type( NodeTypeInfoStack );
-	
+	emplace_back_type( NodeTypeInfoPtrArrayStack );
+
 	count = stacks.size( );
 	arrayPtr = stacks.data( );
 	for( index = 0; index < count; ++index )

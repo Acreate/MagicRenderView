@@ -1,13 +1,15 @@
-﻿#ifndef ANYARRAYSTACK_H_H_HEAD__FILE__
-#define ANYARRAYSTACK_H_H_HEAD__FILE__
+﻿#ifndef NODETYPEINFOPTRARRAYSTACK_H_H_HEAD__FILE__
+#define NODETYPEINFOPTRARRAYSTACK_H_H_HEAD__FILE__
 #pragma once
+
+
 #include "../../infoStack.h"
 
-class AnyArrayStack : public InfoStack {
+class NodeTypeInfoPtrArrayStack : public InfoStack {
 	Q_OBJECT;
 public:
-	AnyArrayStack( );
-	~AnyArrayStack( ) override;
+	NodeTypeInfoPtrArrayStack( );
+	~NodeTypeInfoPtrArrayStack( ) override;
 protected:
 	bool init( ) override;
 public:
@@ -16,4 +18,5 @@ public:
 protected:
 	bool toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) override;
 };
-#endif // ANYARRAYSTACK_H_H_HEAD__FILE__
+
+#endif // NODETYPEINFOPTRARRAYSTACK_H_H_HEAD__FILE__

@@ -1,6 +1,9 @@
 ﻿#include "nodeTypeInfoSerializeion.h"
 
+#include "../../app/application.h"
+#include "../../director/printerDirector.h"
 #include "../../director/varDirector.h"
+#include "../../srack/srackInfo.h"
 #include "../node/node.h"
 NodeTypeInfoSerializeion::NodeTypeInfoSerializeion( ) {
 	varDirector = new VarDirector;
@@ -18,10 +21,13 @@ bool NodeTypeInfoSerializeion::appendNodePtr( Node *append_node_ptr ) {
 	else {
 		auto compGenerateCode = append_node_ptr->generateCode;
 		for( size_t index = 0; index < nodeObjPtrArrayCount; ++index )
-			if( append_node_ptr == nodeObjPtrArrayPtr[ index ] )
+			if( append_node_ptr == nodeObjPtrArrayPtr[ index ] ) {
+				Application::getInstancePtr( )->getPrinterDirector( )->info( QObject::tr( "重复添加的节点[%1]" ).arg( append_node_ptr->toQString( ) ), Create_SrackInfo( ) );
 				return false; // 存在已知对象
-			else if( compGenerateCode == nodeObjPtrArrayPtr[ index ]->generateCode )
+			} else if( compGenerateCode == nodeObjPtrArrayPtr[ index ]->generateCode ) {
+				Application::getInstancePtr( )->getPrinterDirector( )->info( QObject::tr( "重复添加的节点生成码[%1] -> [%2]" ).arg( append_node_ptr->toQString( ) ).arg( nodeObjPtrArrayPtr[ index ]->toQString( ) ), Create_SrackInfo( ) );
 				return false; // 存在已知生成码
+			}
 	}
 	nodeObjPtrArrayPtr = nodeObjPtr.data( );
 	nodeObjPtrArrayCount = nodeObjPtr.size( );
@@ -51,5 +57,8 @@ bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_d
 bool NodeTypeInfoSerializeion::toData( std::vector< uint8_t > &result_data_vector ) {
 	if( varDirector->init( ) == false )
 		return false;
+	QString *nodeNamePtr;
+	uint64_t *uint64Ptr;
+	uint32_t *uint32Ptr;
 	return true;
 }

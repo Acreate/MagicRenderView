@@ -1,0 +1,9 @@
+﻿#ifndef NODETYPEINFOARRAYSTACK_H_H_HEAD__FILE__
+#define NODETYPEINFOARRAYSTACK_H_H_HEAD__FILE__
+#pragma once
+
+class NodeTypeInfoArrayStack {
+	
+};
+
+#endif // NODETYPEINFOARRAYSTACK_H_H_HEAD__FILE__
