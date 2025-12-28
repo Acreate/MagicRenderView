@@ -1,4 +1,6 @@
 ﻿#include "saveAsProjectAction.h"
+
+#include "../../../../../director/appDirector.h"
 bool SaveAsProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
@@ -6,5 +8,7 @@ bool SaveAsProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool SaveAsProjectAction::run( QWidget *parent ) {
-	return false;
+	if( appDirector->saveAsAppProject( ) == false )
+		return false;
+	return true;
 }

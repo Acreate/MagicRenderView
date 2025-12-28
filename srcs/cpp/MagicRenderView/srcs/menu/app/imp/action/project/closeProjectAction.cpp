@@ -1,6 +1,7 @@
 ﻿#include "closeProjectAction.h"
 
 #include "../../../../../app/application.h"
+#include "../../../../../director/appDirector.h"
 #include "../../../../../director/nodeDirector.h"
 bool CloseProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
@@ -9,8 +10,7 @@ bool CloseProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool CloseProjectAction::run( QWidget *parent ) {
-	if( nodeDirector->init( ) == false )
+	if( appDirector->closeAppProject( ) == false )
 		return false;
-	if(this->application->setVar(tr( "currentProjectFileName" ),   ))
 	return true;
 }

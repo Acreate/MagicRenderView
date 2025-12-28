@@ -1,4 +1,6 @@
 ﻿#include "updateProjectAction.h"
+
+#include "../../../../../director/appDirector.h"
 bool UpdateProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
@@ -6,5 +8,7 @@ bool UpdateProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool UpdateProjectAction::run( QWidget *parent ) {
-	return false;
+	if( appDirector->updateAppProject( ) == false )
+		return false;
+	return true;
 }

@@ -1,5 +1,6 @@
 ﻿#include "clearProjectAction.h"
 
+#include "../../../../../director/appDirector.h"
 #include "../../../../../director/nodeDirector.h"
 #include "../../../../../director/varDirector.h"
 bool ClearProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
@@ -9,7 +10,7 @@ bool ClearProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool ClearProjectAction::run( QWidget *parent ) {
-	if( nodeDirector->init( ) == false )
+	if( appDirector->clearAppProjectInfo( ) == false )
 		return false;
 	return true;
 }

@@ -20,3 +20,6 @@ bool AppDirector::updateAppProject( ) {
 bool AppDirector::reloadAppProject( ) {
 	return false;
 }
+bool AppDirector::loadAppPorject( ) {
+	return false;
+}

@@ -1,4 +1,6 @@
 ﻿#include "reLoadProjectAction.h"
+
+#include "../../../../../director/appDirector.h"
 bool ReLoadProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
@@ -6,5 +8,7 @@ bool ReLoadProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool ReLoadProjectAction::run( QWidget *parent ) {
-	return false;
+	if( appDirector->reloadAppProject( ) == false )
+		return false;
+	return true;
 }
