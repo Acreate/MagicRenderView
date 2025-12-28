@@ -8,7 +8,7 @@ bool SavePorjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool SavePorjectAction::run( QWidget *parent ) {
-	if( appDirector->saveAppProject( ) == false )
+	if( appDirector->saveAppProject( parent ) == false )
 		return false;
 	return true;
 }

@@ -10,7 +10,7 @@ bool ClearProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool ClearProjectAction::run( QWidget *parent ) {
-	if( appDirector->clearAppProjectInfo( ) == false )
+	if( appDirector->clearAppProjectInfo( parent ) == false )
 		return false;
 	return true;
 }

@@ -8,7 +8,7 @@ bool UpdateProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool UpdateProjectAction::run( QWidget *parent ) {
-	if( appDirector->updateAppProject( ) == false )
+	if( appDirector->updateAppProject( parent ) == false )
 		return false;
 	return true;
 }

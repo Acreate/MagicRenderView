@@ -8,7 +8,7 @@ bool OpenProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool OpenProjectAction::run( QWidget *parent ) {
-	if( appDirector->loadAppPorject( ) == false )
+	if( appDirector->loadAppPorject( parent ) == false )
 		return false;
 	return true;
 }

@@ -8,7 +8,7 @@ bool ReLoadProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool ReLoadProjectAction::run( QWidget *parent ) {
-	if( appDirector->reloadAppProject( ) == false )
+	if( appDirector->reloadAppProject( parent ) == false )
 		return false;
 	return true;
 }

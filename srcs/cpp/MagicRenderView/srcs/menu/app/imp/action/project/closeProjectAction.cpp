@@ -10,7 +10,7 @@ bool CloseProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool CloseProjectAction::run( QWidget *parent ) {
-	if( appDirector->closeAppProject( ) == false )
+	if( appDirector->closeAppProject( parent ) == false )
 		return false;
 	return true;
 }
