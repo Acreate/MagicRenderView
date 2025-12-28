@@ -1,4 +1,6 @@
 ﻿#include "normalApplicationAction.h"
+
+#include "../../../app/application.h"
 void NormalApplicationAction::triggered( ) {
 	emit trigg_signal( this );
 }
@@ -8,6 +10,8 @@ NormalApplicationAction::~NormalApplicationAction( ) {
 }
 bool NormalApplicationAction::init( ApplicationMenuStack *application_menu_stack_ptr ) {
 	disconnect( this );
+	
+	application = Application::getInstancePtr( );
 	connect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
 	return true;
 }

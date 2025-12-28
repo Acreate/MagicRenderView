@@ -4,13 +4,15 @@
 #include <QAction>
 #include <QWidget>
 
+class Application;
 class ApplicationMenuStack;
 class NormalApplicationAction : public QAction {
 	Q_OBJECT;
 protected:
+	Application *application;
 	std::function< bool ( QWidget * ) > actionFunction;
 private:
-	void triggered();
+	void triggered( );
 public:
 	~NormalApplicationAction( ) override;
 	virtual bool init( ApplicationMenuStack *application_menu_stack_ptr );

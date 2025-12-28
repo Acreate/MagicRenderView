@@ -3,6 +3,8 @@
 #pragma once
 #include <QMainWindow>
 
+class NormalApplicationToolBar;
+class NormalApplicationAction;
 class NormalApplicationMenu;
 class BuilderApplicationMenu;
 class NodeRunInfo;
@@ -35,11 +37,15 @@ protected:
 	NormalApplicationMenu *builderMenu;
 	NormalApplicationMenu *appMenu;
 	NormalApplicationMenu *editorMenu;
-	QToolBar *projectToolBar;
-	QToolBar *builderToolBar;
+	NormalApplicationToolBar *projectToolBar;
+	NormalApplicationToolBar *builderToolBar;
 protected:
 	MainWindow( );
 	virtual bool init( );
+protected Q_SLOTS:
+	virtual void triggActionSignal( NormalApplicationAction *action );
+	virtual void triggMenuActionSignal( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action );
+	virtual void triggToolbarActionSignal( NormalApplicationToolBar *normal_application_tool_bar, NormalApplicationAction *action );
 public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
@@ -49,7 +55,6 @@ protected:
 	void resizeEvent( QResizeEvent *event ) override;
 	bool event( QEvent *event ) override;
 protected:
-
 Q_SIGNALS:
 	void release_signal( MainWindow *release_ptr );
 };

@@ -11,6 +11,7 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
+#include "../menu/app/action/normalApplicationAction.h"
 #include "../menu/app/imp/menu/appApplicationMenu.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/menu/editorApplicationMenu.h"
@@ -69,52 +70,73 @@ bool MainWindow::init( ) {
 	projectToolBar = applicationMenuStack->getToolBar< ProjectApplicationToolBar >( );
 	if( projectToolBar == nullptr )
 		return false;
-	projectToolBar->setParent( this );
-	addToolBar( Qt::TopToolBarArea, projectToolBar );
-	projectToolBar->setFloatable( false );
-	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	projectToolBar->setMovable( true );
 
 	if( builderToolBar )
 		delete builderToolBar;
 	builderToolBar = applicationMenuStack->getToolBar< BuilderApplicationToolBar >( );
 	if( builderToolBar == nullptr )
 		return false;
-	builderToolBar->setParent( this );
-	addToolBar( Qt::TopToolBarArea, builderToolBar );
-	builderToolBar->setFloatable( false );
-	builderToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	builderToolBar->setMovable( true );
 
 	if( appMenu )
 		delete appMenu;
 	appMenu = applicationMenuStack->getMenu< AppApplicationMenu >( );
 	if( appMenu == nullptr )
 		return false;
-	appMenuBar->addMenu( appMenu );
 
 	if( projectMenu )
 		delete projectMenu;
 	projectMenu = applicationMenuStack->getMenu< ProjectApplicationMenu >( );
 	if( projectMenu == nullptr )
 		return false;
-	appMenuBar->addMenu( projectMenu );
 
 	if( editorMenu )
 		delete editorMenu;
 	editorMenu = applicationMenuStack->getMenu< EditorApplicationMenu >( );
 	if( editorMenu == nullptr )
 		return false;
-	appMenuBar->addMenu( editorMenu );
 
 	if( builderMenu )
 		delete builderMenu;
 	builderMenu = applicationMenuStack->getMenu< BuilderApplicationMenu >( );
 	if( builderMenu == nullptr )
 		return false;
+
+	projectToolBar->setParent( this );
+	addToolBar( Qt::TopToolBarArea, projectToolBar );
+	projectToolBar->setFloatable( false );
+	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	projectToolBar->setMovable( true );
+	connect( projectToolBar, &NormalApplicationToolBar::trigg_action_signal, this, &MainWindow::triggToolbarActionSignal );
+
+	builderToolBar->setParent( this );
+	addToolBar( Qt::TopToolBarArea, builderToolBar );
+	builderToolBar->setFloatable( false );
+	builderToolBar->setAllowedAreas( Qt::TopToolBarArea );
+	builderToolBar->setMovable( true );
+	connect( builderToolBar, &NormalApplicationToolBar::trigg_action_signal, this, &MainWindow::triggToolbarActionSignal );
+
+	appMenuBar->addMenu( appMenu );
+	connect( appMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
+	appMenuBar->addMenu( projectMenu );
+	connect( projectMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
+	appMenuBar->addMenu( editorMenu );
+	connect( editorMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 	appMenuBar->addMenu( builderMenu );
+	connect( builderMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 
 	return true;
+}
+void MainWindow::triggActionSignal( NormalApplicationAction *action ) {
+	if( action->run( this ) == false )
+		printerDirector->info( tr( "NormalApplicationAction [%1] 执行异常" ).arg( action->text( ) ),Create_SrackInfo( ) );
+}
+void MainWindow::triggMenuActionSignal( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action ) {
+	if( action->run( this ) == false )
+		printerDirector->info( tr( "NormalApplicationMenu [%1] , NormalApplicationAction [%2] 执行异常" ).arg( normal_application_menu->title( ) ).arg( action->text( ) ),Create_SrackInfo( ) );
+}
+void MainWindow::triggToolbarActionSignal( NormalApplicationToolBar *normal_application_tool_bar, NormalApplicationAction *action ) {
+	if( action->run( this ) == false )
+		printerDirector->info( tr( "NormalApplicationToolBar [%1] , NormalApplicationAction [%2] 执行异常" ).arg( normal_application_tool_bar->windowTitle( ) ).arg( action->text( ) ),Create_SrackInfo( ) );
 }
 MainWindow::~MainWindow( ) {
 	emit release_signal( this );
