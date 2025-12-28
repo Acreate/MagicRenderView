@@ -387,13 +387,7 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		return false;
 	}
 	// 删除节点
-	auto buff = nodeArchiveVector;
-	nodeArchiveVector.clear( );
-	size_t count = buff.size( );
-	size_t index = 0;
-	auto nodeArray = buff.data( );
-	for( ; index < count; ++index )
-		delete nodeArray;
+	releaseNodeResources( );
 
 	NodeTypeInfoSerializeion nodeTypeInfoSerializeion;
 
@@ -660,7 +654,7 @@ bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
 	return true;
 }
 bool NodeDirector::sortArchiveCode( QString &error_msg ) {
-	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
+	constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 	size_t count = nodeArchiveVector.size( );
 	auto nodeArrayPtr = nodeArchiveVector.data( );
 	uint64_t maxCode = 0;
@@ -668,7 +662,7 @@ bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 	for( ; index < count; ++index )
 		if( maxCode < nodeArrayPtr[ index ]->generateCode )
 			maxCode = nodeArrayPtr[ index ]->generateCode;
-	if( maxGenerator == maxCode && count != maxCode ) {
+	if( maxGenerator < maxCode ) {
 		// 最大生成号
 		error_msg = tr( "超出可控数量" );
 		return false;

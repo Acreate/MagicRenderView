@@ -58,7 +58,7 @@ bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_d
 	std::vector< NodeTypeInfo * > *nodeTypeInfos = nullptr;
 	if( varDirector.create( nodeTypeInfos ) == false || nodeTypeInfos == nullptr )
 		return false;
-	if( varDirector.toVar( use_count, src_data_ptr, use_count, nodeTypeInfos ) == false )
+	if( varDirector.toVar( use_count, src_data_ptr, src_data_count, nodeTypeInfos ) == false )
 		return false;
 	// 创建节点
 	std::vector< Node * > buff;

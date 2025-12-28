@@ -11,7 +11,7 @@ public:
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
-	Def_Satatic_NodeTypeName( Node::tr( "数值运算/整数加法" ) );
+	Def_Extend_NodeTypeName( Node::tr( "数值运算/整数加法" ) );
 };
 
 #endif // INTADDNODE_H_H_HEAD__FILE__

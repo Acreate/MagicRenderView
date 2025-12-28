@@ -11,7 +11,7 @@ public:
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
-	Def_Satatic_NodeTypeName( Node::tr( "结束/返回" ) );
+	Def_Extend_NodeTypeName( Node::tr( "结束/返回" ) );
 
 };
 

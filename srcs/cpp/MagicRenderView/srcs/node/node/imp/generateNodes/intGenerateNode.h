@@ -19,7 +19,7 @@ public:
 protected:
 	bool initVarPtr( ) override;
 public:
-	Def_Satatic_NodeTypeName( Node::tr( "生成/生成整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "生成/生成整数" ) );
 };
 
 #endif // INTGENERATENODE_H_H_HEAD__FILE__

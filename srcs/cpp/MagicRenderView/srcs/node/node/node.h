@@ -10,7 +10,8 @@
 
 #include "../../widget/mainWidget.h"
 
-#define Def_Satatic_NodeTypeName( _Type_Name ) static QString nodeTypeName( ) { return _Type_Name; }
+#define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) { return _Type_Name; }
+#define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) override { return _Type_Name; }
 class NodeInfoWidget;
 class QHBoxLayout;
 class QLabel;
@@ -235,7 +236,7 @@ protected:
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 public:
-	Def_Satatic_NodeTypeName( Node::tr( "未实现" ) );
+	Def_Interface_NodeTypeName( Node::tr( "未实现" ) );
 	// 信号
 Q_SIGNALS:
 	/// @brief 释放对象产生信号
@@ -291,6 +292,5 @@ Q_SIGNALS:
 	/// @param srack_info 堆栈信息
 	void finish_run_node_signal( Node *finish_node, const SrackInfo &srack_info );
 };
-
 
 #endif // NODE_H_H_HEAD__FILE__

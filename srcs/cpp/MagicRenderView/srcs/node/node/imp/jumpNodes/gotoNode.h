@@ -11,7 +11,7 @@ public:
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
-	Def_Satatic_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
+	Def_Extend_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
 };
 
 #endif // GOTONODE_H_H_HEAD__FILE__

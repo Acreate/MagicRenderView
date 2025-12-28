@@ -19,7 +19,7 @@
 #include "../../node/imp/pointNodes/makeNode.h"
 #include "../../node/imp/processNodes/intAddNode.h"
 
-#define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::nodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
+#define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
 bool BaseNodeStack::init( ) {
 	if( NodeStack::init( ) == false )  // 释放主菜单
 		return false;

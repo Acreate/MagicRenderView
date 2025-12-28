@@ -17,7 +17,8 @@ bool NodeTypeInfo::load( Node *node_ptr ) {
 	auto point = node_ptr->pos( );
 	posX = point.x( );
 	posY = point.y( );
-	nodeName = node_ptr->nodeName;
+	nodeName = node_ptr->getVirtualNodeTypeName( );
+	nodeGeneratorCode = node_ptr->generateCode;
 	auto outputPortsArrayCount = node_ptr->outputPortVector.size( );
 	if( outputPortsArrayCount == 0 )
 		return true;
