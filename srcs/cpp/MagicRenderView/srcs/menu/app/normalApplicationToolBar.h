@@ -10,6 +10,11 @@ class NormalApplicationToolBar : public TranspondTriggNormalActionToolsBar {
 	Q_OBJECT;
 protected:
 	void transpondTriggAction( NormalApplicationAction *action ) override;
+	virtual void setInitVarNumber( const QString &name ) {
+		setObjectName( name );
+		setToolTip( name );
+		setWindowTitle( name );
+	}
 public:
 	NormalApplicationToolBar( );
 	virtual bool init( ApplicationMenuStack *application_menu_stack );

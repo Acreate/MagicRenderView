@@ -10,15 +10,14 @@ NormalApplicationAction::~NormalApplicationAction( ) {
 }
 bool NormalApplicationAction::init( ApplicationMenuStack *application_menu_stack_ptr ) {
 	disconnect( this );
-	
+
 	application = Application::getInstancePtr( );
+	
+	nodeDirector = application->getNodeDirector( );
+	printerDirector = application->getPrinterDirector( );
+	varDirector = application->getVarDirector( );
+	
+	appDirector = application->getAppDirector( );
 	connect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
-	return true;
-}
-bool NormalApplicationAction::run( QWidget *parent ) const {
-	if( actionFunction == nullptr )
-		return false;
-	if( actionFunction( parent ) == false )
-		return false;
 	return true;
 }

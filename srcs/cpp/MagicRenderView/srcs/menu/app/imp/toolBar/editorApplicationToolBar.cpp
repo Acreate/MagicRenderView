@@ -16,9 +16,6 @@ bool EditorApplicationToolBar::init( ApplicationMenuStack *application_menu_stac
 		return false;
 	if( appendAction( application_menu_stack->getAction< PasteNodeAction >( ) ) == false )
 		return false;
-	QString title = tr( "编辑" );
-	setObjectName( title );
-	setToolTip( title );
-	setWindowTitle( title );
+	setInitVarNumber(tr( "编辑工具" ));
 	return true;
 }

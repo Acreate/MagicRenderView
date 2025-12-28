@@ -2,8 +2,9 @@
 bool UpdateProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
-	QString title = tr( "刷新项目" );
-	setText( title );
-	setObjectName( title );
+	setInitVarNumber( tr( "刷新项目" ) );
 	return true;
+}
+bool UpdateProjectAction::run( QWidget *parent ) {
+	return false;
 }

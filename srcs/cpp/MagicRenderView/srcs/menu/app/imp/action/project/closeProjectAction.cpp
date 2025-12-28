@@ -1,9 +1,16 @@
 ﻿#include "closeProjectAction.h"
+
+#include "../../../../../app/application.h"
+#include "../../../../../director/nodeDirector.h"
 bool CloseProjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
-	QString title = tr( "关闭项目" );
-	setText( title );
-	setObjectName( title );
+	setInitVarNumber( tr( "关闭项目" ) );
+	return true;
+}
+bool CloseProjectAction::run( QWidget *parent ) {
+	if( nodeDirector->init( ) == false )
+		return false;
+	if(this->application->setVar(tr( "currentProjectFileName" ),   ))
 	return true;
 }

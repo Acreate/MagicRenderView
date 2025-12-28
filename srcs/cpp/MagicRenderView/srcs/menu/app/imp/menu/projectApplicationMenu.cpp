@@ -27,8 +27,6 @@ bool ProjectApplicationMenu::init( ApplicationMenuStack *application_menu_stack 
 		return false;
 	if( appendAction( application_menu_stack->getAction< CloseProjectAction >( ) ) == false )
 		return false;
-	QString title = tr( "项目" );
-	setObjectName( title );
-	setTitle( title );
+	setInitVarNumber( tr( "项目" ) );
 	return true;
 }

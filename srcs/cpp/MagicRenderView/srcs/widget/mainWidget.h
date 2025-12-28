@@ -36,8 +36,8 @@ protected:
 	QPoint endPoint;
 	bool isDrawLine;
 protected:
-	virtual void removeVector( Node *remove_node );
-	virtual void appendVector( Node *append_node );
+	virtual void removeNodeObj( Node *remove_node );
+	virtual void appendNodeObj( Node *append_node );
 	virtual void raiseNode( Node *raise_node );
 	virtual void drawBegin( const QPoint &start_point );
 	virtual void drawLinePoint( const QPoint &end_point );

@@ -13,9 +13,6 @@ bool AppApplicationToolBar::init( ApplicationMenuStack *application_menu_stack )
 		return false;
 	if( appendAction( application_menu_stack->getAction< ResetAppAction >( ) ) == false )
 		return false;
-	QString title = tr( "软件" );
-	setObjectName( title );
-	setToolTip( title );
-	setWindowTitle( title );
+	setInitVarNumber(tr( "软件工具" ));
 	return true;
 }

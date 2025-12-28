@@ -64,7 +64,7 @@ bool MainWidget::getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo
 		}
 	return false;
 }
-void MainWidget::removeVector( Node *remove_node ) {
+void MainWidget::removeNodeObj( Node *remove_node ) {
 	size_t count = nodeVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;
@@ -82,7 +82,7 @@ void MainWidget::removeVector( Node *remove_node ) {
 			}
 	}
 }
-void MainWidget::appendVector( Node *append_node ) {
+void MainWidget::appendNodeObj( Node *append_node ) {
 	size_t count = nodeVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;
@@ -98,8 +98,8 @@ void MainWidget::appendVector( Node *append_node ) {
 bool MainWidget::addNode( Node *node_ref_link_info ) {
 	if( node_ref_link_info->initEx( this ) == false )
 		return false;
-	appendVector( node_ref_link_info );
-	connect( node_ref_link_info, &Node::release_node_signal, this, &MainWidget::removeVector );
+	appendNodeObj( node_ref_link_info );
+	connect( node_ref_link_info, &Node::release_node_signal, this, &MainWidget::removeNodeObj );
 	return true;
 }
 

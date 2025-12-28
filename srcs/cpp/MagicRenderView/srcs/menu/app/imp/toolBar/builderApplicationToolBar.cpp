@@ -18,9 +18,6 @@ bool BuilderApplicationToolBar::init( ApplicationMenuStack *application_menu_sta
 		return false;
 	if( appendAction( application_menu_stack->getAction< StopBuilderAction >( ) ) == false )
 		return false;
-	QString title = tr( "编译工具" );
-	setObjectName( title );
-	setToolTip( title );
-	setWindowTitle( title );
+	setInitVarNumber(tr( "编译工具" ));
 	return true;
 }

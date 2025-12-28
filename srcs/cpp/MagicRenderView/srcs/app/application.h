@@ -3,6 +3,7 @@
 #pragma once
 #include <QApplication>
 
+class AppDirector;
 class ApplicationMenuStack;
 class NormalApplicationMenu;
 class MenuDirector;
@@ -24,6 +25,7 @@ protected:
 	VarDirector *varDirector;
 	IniDirector *iniDirector;
 	MenuDirector *menuDirector;
+	AppDirector *appDirector;
 protected:
 	MainWindow *mainWindow;
 	ApplicationMenuStack *applicationMenuStack;
@@ -38,18 +40,24 @@ protected:
 protected:
 	QString iniSaveFilePathName;
 	QString logSaveFilePathName;
+protected:
+	
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
 	bool notify( QObject *, QEvent * ) override;
 protected:
 	bool event( QEvent * ) override;
+protected:
+	virtual bool synchronousWindowInfoToVar( ) const;
+	virtual bool synchronousVarToWindowInfo( );
 public:
 	virtual bool init( );
 	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
 	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }
 	virtual const QString & getIniSaveFilePathName( ) const { return iniSaveFilePathName; }
 	virtual const QString & getLogSaveFilePathName( ) const { return logSaveFilePathName; }
+	virtual AppDirector * getAppDirector( ) const { return appDirector; }
 	virtual NodeDirector * getNodeDirector( ) const { return nodeDirector; }
 	virtual PrinterDirector * getPrinterDirector( ) const { return printerDirector; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
@@ -60,8 +68,6 @@ public:
 	virtual bool removeVar( const QString &result_var_key ) const;
 	virtual bool synchronousFileToVar( ) const;
 	virtual bool synchronousVarToFile( ) const;
-	virtual bool synchronousWindowInfoToVar( ) const;
-	virtual bool synchronousVarToWindowInfo( );
 	virtual void clearVar( );
 	virtual bool widgetMoveTargetDispyer( QWidget *move_widget, const size_t &displyer_index ) const;
 	virtual bool widgetMoveTargetDispyer( const size_t &displyer_index ) const;

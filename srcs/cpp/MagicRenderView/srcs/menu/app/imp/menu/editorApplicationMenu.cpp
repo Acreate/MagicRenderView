@@ -15,8 +15,6 @@ bool EditorApplicationMenu::init( ApplicationMenuStack *application_menu_stack )
 		return false;
 	if( appendAction( application_menu_stack->getAction< PasteNodeAction >( ) ) == false )
 		return false;
-	QString title = tr( "编辑" );
-	setObjectName( title );
-	setTitle( title );
+	setInitVarNumber( tr( "编辑" ) );
 	return true;
 }

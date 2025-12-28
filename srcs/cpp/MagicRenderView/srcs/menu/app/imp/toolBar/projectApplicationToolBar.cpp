@@ -27,9 +27,6 @@ bool ProjectApplicationToolBar::init( ApplicationMenuStack *application_menu_sta
 		return false;
 	if( appendAction( application_menu_stack->getAction< CloseProjectAction >( ) ) == false )
 		return false;
-	QString title = tr( "项目工具" );
-	setObjectName( title );
-	setToolTip( title );
-	setWindowTitle( title );
+	setInitVarNumber(tr( "项目工具" ));
 	return true;
 }

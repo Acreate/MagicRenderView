@@ -12,8 +12,6 @@ bool AppApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
 		return false;
 	if( appendAction( application_menu_stack->getAction< ResetAppAction >( ) ) == false )
 		return false;
-	QString title = tr( "软件" );
-	setObjectName( title );
-	setTitle( title );
+	setInitVarNumber( tr( "软件" ) );
 	return true;
 }
