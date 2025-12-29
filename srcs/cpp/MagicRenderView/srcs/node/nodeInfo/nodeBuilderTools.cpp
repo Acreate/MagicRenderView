@@ -8,7 +8,6 @@
 #include "../../srack/srackInfo.h"
 #include "../node/node.h"
 
-class Node;
 void NodeBuilderTools::analysisSubNodeRef( Node *analysis_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
 	std::vector< Node * > subNodeVector;
 	size_t count;

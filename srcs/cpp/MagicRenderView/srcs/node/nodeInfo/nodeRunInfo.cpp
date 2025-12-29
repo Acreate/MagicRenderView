@@ -7,11 +7,11 @@ NodeRunInfo::NodeRunInfo( QObject *parent ) : QObject( parent ), runArrayPtr( nu
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
 }
-void NodeRunInfo::appendBegin( NodeRefLinkInfo *benin_node_ref_link_info ) {
+void NodeRunInfo::appendBegin( TRunBodyObj *benin_node_ref_link_info ) {
 }
-void NodeRunInfo::removeBegin( NodeRefLinkInfo *benin_node_ref_link_info ) {
+void NodeRunInfo::removeBegin( TRunBodyObj *benin_node_ref_link_info ) {
 }
-bool NodeRunInfo::hasNodeRefInRunVector( NodeRefLinkInfo *check_node_ref ) {
+bool NodeRunInfo::hasNodeRefInRunVector( TRunBodyObj *check_node_ref ) {
 	return false;
 }
 bool NodeRunInfo::builderRunInstance( ) {

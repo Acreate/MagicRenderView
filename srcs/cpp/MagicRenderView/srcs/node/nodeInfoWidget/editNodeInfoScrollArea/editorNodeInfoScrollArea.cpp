@@ -49,6 +49,7 @@ EditorNodeInfoScrollArea::EditorNodeInfoScrollArea( NodeInfoWidget *parent ) : Q
 	rightWidget = nullptr;
 }
 bool EditorNodeInfoScrollArea::initNode( Node *init_node ) {
+	releaseResource( );
 	currentNode = init_node;
 	return currentNode != nullptr;
 }

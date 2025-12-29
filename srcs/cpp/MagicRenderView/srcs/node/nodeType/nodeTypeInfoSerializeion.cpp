@@ -76,7 +76,7 @@ bool NodeTypeInfoSerializeion::loadData( NodeDirector *node_director, size_t &us
 	if( node_director->sortArchiveCode( errorMsg ) == false )
 		return false;
 	// 链接端口
-	size_t linkPortIndex = 0;
+	size_t linkPortIndex;
 	PortTypeInfo **linkPortArrayPtr;
 	for( index = 0; index < count; ++index )
 		if( nodeObjPtrArrayCount = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.size( ), nodeObjPtrArrayCount != 0 )

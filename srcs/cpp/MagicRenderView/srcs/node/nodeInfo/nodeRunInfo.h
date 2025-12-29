@@ -8,27 +8,27 @@ namespace NodeEnum {
 	enum class AdviseType;
 }
 class Node;
-class NodeRefLinkInfo;
 class NodeDirector;
 class SrackInfo;
 class NodeRunInfo : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
 protected:
-	using TRunBodyObj = NodeRefLinkInfo *;
-	using TRunBodyInfo = std::pair< TRunBodyObj, size_t >;
-	std::vector< TRunBodyObj > beginNodeRefVector;
+	using TRunBodyObj = Node ;
+	using TRunBodyObjPtr = TRunBodyObj * ;
+	using TRunBodyInfo = std::pair< TRunBodyObjPtr, size_t >;
+	std::vector< TRunBodyObjPtr > beginNodeRefVector;
 	std::vector< TRunBodyInfo > runVector;
 	TRunBodyInfo *runArrayPtr;
 	size_t runArrayCount;
 	size_t runArrayIndex;
 protected:
-	virtual void appendBegin( NodeRefLinkInfo *benin_node_ref_link_info );
-	virtual void removeBegin( NodeRefLinkInfo *benin_node_ref_link_info );
+	virtual void appendBegin( TRunBodyObj *benin_node_ref_link_info );
+	virtual void removeBegin( TRunBodyObj *benin_node_ref_link_info );
 public:
 	NodeRunInfo( QObject *parent );
 	~NodeRunInfo( ) override;
-	virtual bool hasNodeRefInRunVector( NodeRefLinkInfo *check_node_ref );
+	virtual bool hasNodeRefInRunVector( TRunBodyObj *check_node_ref );
 	virtual bool builderRunInstance( );
 	virtual bool runNextNode( );
 	virtual bool runResidueNode( );

@@ -104,4 +104,5 @@ void BeginNodeEditor::releaseResource( ) {
 	beginNodeRefLinkVector.clear( );
 	processNodeRefLinkVector.clear( );
 	endNodeRefLinkVector.clear( );
+	beginNodeRefLinkInfo = nullptr;
 }
