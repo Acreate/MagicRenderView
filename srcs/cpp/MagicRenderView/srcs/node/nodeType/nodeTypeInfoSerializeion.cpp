@@ -46,7 +46,9 @@ bool NodeTypeInfoSerializeion::removeNodePtr( Node *remove_node_ptr ) {
 		}
 	return false;
 }
-bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_data_ptr, const size_t &src_data_count, const TFCreate_Node_Function &node_create_function, const TFLink_Port_Function &prot_link_fcuntion ) {
+bool NodeTypeInfoSerializeion::loadData( NodeDirector *node_director, size_t &use_count, const uint8_t *src_data_ptr, const size_t &src_data_count, const TFCreate_Node_Function &node_create_function, const TFLink_Port_Function &prot_link_fcuntion ) {
+	if( node_director == nullptr )
+		return false;
 	if( node_create_function == nullptr )
 		return false;
 	if( prot_link_fcuntion == nullptr )
@@ -70,12 +72,15 @@ bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_d
 			return false;
 		else
 			buff.emplace_back( node );
+	QString errorMsg;
+	if( node_director->sortArchiveCode( errorMsg ) == false )
+		return false;
 	// 链接端口
 	size_t linkPortIndex = 0;
 	PortTypeInfo **linkPortArrayPtr;
 	for( index = 0; index < count; ++index )
 		if( nodeObjPtrArrayCount = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.size( ), nodeObjPtrArrayCount != 0 )
-			for( linkPortArrayPtr = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.data( ); linkPortIndex < nodeObjPtrArrayCount; ++linkPortIndex )
+			for( linkPortIndex = 0, linkPortArrayPtr = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.data( ); linkPortIndex < nodeObjPtrArrayCount; ++linkPortIndex )
 				if( prot_link_fcuntion( linkPortArrayPtr[ linkPortIndex ]->outputNodeGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->outputPortGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->inputNodeGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->inputPortGeneratorCode ) == false )
 					return false;
 	// 配置节点数据

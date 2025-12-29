@@ -37,6 +37,7 @@ class NodeDirector : public QObject {
 	Q_OBJECT;
 private:
 	friend class Application;
+	friend class NodeTypeInfoSerializeion;
 	using QActionTriggered = void(QAction::*)( bool );
 protected:
 	Application *instancePtr;

@@ -5,6 +5,8 @@
 #include <vector>
 #include <functional>
 
+#include "../../director/nodeDirector.h"
+
 class VarDirector;
 class QString;
 class Node;
@@ -24,7 +26,7 @@ public:
 	virtual void clearNodeVector( );
 	virtual bool appendNodePtr( Node *append_node_ptr );
 	virtual bool removeNodePtr( Node *remove_node_ptr );
-	virtual bool loadData( size_t &use_count, const uint8_t *src_data_ptr, const size_t &src_data_count, const TFCreate_Node_Function &node_create_function, const TFLink_Port_Function &prot_link_fcuntion );
+	virtual bool loadData( NodeDirector *node_director, size_t &use_count, const uint8_t *src_data_ptr, const size_t &src_data_count, const TFCreate_Node_Function &node_create_function, const TFLink_Port_Function &prot_link_fcuntion );
 	virtual bool toData( std::vector< uint8_t > &result_data_vector );
 };
 

@@ -431,7 +431,7 @@ bool NodeDirector::formUint8ArrayData( size_t &result_use_count, const uint8_t *
 		}
 		return linkPort( outputPort, inputPort );
 	};
-	if( nodeTypeInfoSerializeion.loadData( result_use_count, source_array_ptr, source_array_count, nodeCreateFunction, portLinkFcuntion ) == false )
+	if( nodeTypeInfoSerializeion.loadData( this, result_use_count, source_array_ptr, source_array_count, nodeCreateFunction, portLinkFcuntion ) == false )
 		return false;
 	QString errorMsg;
 	if( sortArchiveCode( errorMsg ) == false )
@@ -478,10 +478,12 @@ Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
 	if( count == 0 )
 		return nullptr;
 	auto nodeArrayPtr = nodeArchiveVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( nodeArrayPtr[ index ] != nullptr && nodeArrayPtr[ index ]->generateCode == node_generator_code )
-			return nodeArrayPtr[ index ];
+	if( nodeArrayPtr[ node_generator_code - 1 ] && nodeArrayPtr[ node_generator_code - 1 ]->generateCode == node_generator_code )
+		return nodeArrayPtr[ node_generator_code - 1 ];
+	//size_t index = 0;
+	//for( ; index < count; ++index )
+	//	if( nodeArrayPtr[ index ] != nullptr && nodeArrayPtr[ index ]->generateCode == node_generator_code )
+	//		return nodeArrayPtr[ index ];
 	return nullptr;
 }
 bool NodeDirector::popNormalNodeEditorPropertyMenu( const QPoint &pop_pos, Node *node_target ) const {

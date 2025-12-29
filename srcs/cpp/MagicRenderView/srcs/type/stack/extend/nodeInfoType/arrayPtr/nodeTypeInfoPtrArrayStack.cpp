@@ -35,6 +35,14 @@ bool NodeTypeInfoPtrArrayStack::init( VarDirector *var_director ) {
 	return true;
 }
 bool NodeTypeInfoPtrArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
+	std::vector< t_current_unity_type > *sourcePtr = nullptr;
+	if( hasVarPtr( result_obj_ptr ) == false ) {
+		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
+			return false;
+		result_obj_ptr = sourcePtr;
+		return true;
+	} else
+		sourcePtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;
 
 	uint64_t arrayCount = 0;
 	if( infoTool::fillTypeVectorAtVar< uint64_t >( result_count, obj_start_ptr, obj_memory_size, &arrayCount ) == false )
@@ -44,8 +52,9 @@ bool NodeTypeInfoPtrArrayStack::toObj( uint64_t &result_count, const uint8_t *ob
 	std::vector< t_current_unity_type > buffVar( arrayCount );
 
 	auto arrayPtr = buffVar.data( );
-	for( size_t index = 0; index < arrayCount; ++index, offset = offset + result_count,
-		mod = mod - result_count ) {
+	size_t index = 0;
+	for( ; index < arrayCount; ++index, offset = offset + result_count,
+			mod = mod - result_count ) {
 		NodeTypeInfo *targetVarPtr = *( arrayPtr + index );
 		if( varDirector->create( targetVarPtr ) == false || targetVarPtr == nullptr )
 			return false;
@@ -55,16 +64,11 @@ bool NodeTypeInfoPtrArrayStack::toObj( uint64_t &result_count, const uint8_t *ob
 			return false;
 	}
 	result_count = offset - obj_start_ptr;
-	if( hasVarPtr( result_obj_ptr ) == false ) {
-		std::vector< t_current_unity_type > *sourcePtr = nullptr;
-		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
-			return false;
-		*sourcePtr = buffVar;
-		result_obj_ptr = sourcePtr;
-		return true;
-	}
-	auto createPtr = ( std::vector< t_current_unity_type > * ) result_obj_ptr;
-	*createPtr = buffVar;
+	arrayCount = sourcePtr->size( );
+	if( arrayCount != 0 )
+		for( arrayPtr = sourcePtr->data( ), index = 0; index < arrayCount; ++index )
+			varDirector->release( arrayPtr[ index ] );
+	*sourcePtr = buffVar;
 	return true;
 }
 TypeEnum::Type NodeTypeInfoPtrArrayStack::getType( ) {
