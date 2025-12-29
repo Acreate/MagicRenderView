@@ -103,7 +103,7 @@ private Q_SLOTS:
 	void removeInoutPortRefLinkAction( QAction *tr_obj_ptr );
 	void removeNodeAction( );
 	void removeOutoutPortRefLinkAction( QAction *tr_obj_ptr );
-	void displayInfoWidget( QAction *tr_obj_ptr );
+	void displayInfoWidget( );
 	void displayAtRefOutputNodeEnsureToWidget( QAction *tr_obj_ptr );
 	void displayAtRefInputNodeEnsureToWidget( QAction *tr_obj_ptr );
 public:

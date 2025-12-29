@@ -85,9 +85,7 @@ void NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction( QAction *tr_ob
 			return;
 		}
 }
-void NormalNodeEditorPropertyMenu::displayInfoWidget( QAction *tr_obj_ptr ) {
-	if( tr_obj_ptr != displayInfoWidgetAction )
-		return;
+void NormalNodeEditorPropertyMenu::displayInfoWidget( ) {
 	emit show_node_edit_info_widget_signal( this, currentNode, nodeInfoWidget );
 }
 void NormalNodeEditorPropertyMenu::displayAtRefOutputNodeEnsureToWidget( QAction *tr_obj_ptr ) {
@@ -129,6 +127,8 @@ NormalNodeEditorPropertyMenu::NormalNodeEditorPropertyMenu( ) : QMenu( ) {
 	noteRemoveInputputLinkAction->setEnabled( false );
 
 	connect( deleteNodeAction, &QAction::triggered, this, &NormalNodeEditorPropertyMenu::removeNodeAction );
+
+	connect( displayInfoWidgetAction, &QAction::triggered, this, &NormalNodeEditorPropertyMenu::displayInfoWidget );
 }
 NormalNodeEditorPropertyMenu::~NormalNodeEditorPropertyMenu( ) {
 	size_t index;
@@ -276,7 +276,6 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 }
 void NormalNodeEditorPropertyMenu::hideEvent( QHideEvent *hide_event ) {
 	QMenu::hideEvent( hide_event );
-	nodeInfoWidget = nullptr;
 	unLinkPortActionInputMap.clear( );
 	unLinkPortActionOutputMap.clear( );
 	refOutputPortActionMap.clear( );

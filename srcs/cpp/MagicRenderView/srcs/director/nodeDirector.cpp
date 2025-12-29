@@ -33,7 +33,7 @@
 
 #include "../win/mainWindow.h"
 #include "menuDirector.h"
-
+constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 bool NodeDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
@@ -632,7 +632,6 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistoryIndex = nodeHistorys.size( );
 }
 bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
-	constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 	size_t count = nodeArchiveVector.size( );
 
 	if( count == 0 ) {
@@ -656,7 +655,6 @@ bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
 	return true;
 }
 bool NodeDirector::sortArchiveCode( QString &error_msg ) {
-	constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 	size_t count = nodeArchiveVector.size( );
 	auto nodeArrayPtr = nodeArchiveVector.data( );
 	uint64_t maxCode = 0;
