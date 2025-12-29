@@ -7,6 +7,8 @@
 
 #include <enums/nodeEnum.h>
 
+#include <define/portFrinedClass.h>
+
 class QHBoxLayout;
 class QLabel;
 class SrackInfo;
@@ -18,21 +20,7 @@ class NodeRunInfo;
 class OutputPort : public QWidget {
 	Q_OBJECT;
 private:
-	friend class Node;
-	friend class NodeRefLinkInfo;
-	friend class NodePortLinkInfo;
-	friend class InputportLinkOutputPortInfo;
-	friend class NodePortLinkActionPair;
-	friend class InputPort;
-	friend class NodeDirector;
-	friend class NodeStack;
-	friend class NodeRefLinkInfoTools;
-	friend class NodeBuilderTools;
-	friend class NodeRunInfo;
-	friend class NormalNodeEditorPropertyMenu;
-	friend class NodeTypeInfoSerializeion;
-	friend class NodeTypeInfo;
-	friend class PortTypeInfo;
+	OutputPortFrinedClass( );
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
@@ -52,7 +40,7 @@ private:
 protected:
 	virtual bool emplaceBackInputPortRef( InputPort *input_port_ptr );
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
-	virtual void clearInputPortRef();
+	virtual void clearInputPortRef( );
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;

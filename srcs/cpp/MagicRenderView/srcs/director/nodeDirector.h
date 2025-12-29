@@ -9,6 +9,8 @@
 
 #include "../widget/mainWidget.h"
 
+class AppDirector;
+class PortLinkType;
 class MenuDirector;
 class NormalNodeEditorPropertyMenu;
 class NormalGenerateNodeMenu;
@@ -40,8 +42,9 @@ protected:
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
-	VarDirector *nodeVarDirector;
 	MenuDirector *menuDirector;
+	AppDirector *appDirector;
+	PortLinkType *portLink;
 	NormalGenerateNodeMenu *normalGenerateNodeMenu;
 	NormalNodeEditorPropertyMenu *normalNodeEditorPropertyMenu;
 	MainWindow *mainWindow;

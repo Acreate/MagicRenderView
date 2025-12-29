@@ -23,6 +23,7 @@
 #include "../node/nodeType/nodeTypeInfoSerializeion.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
+#include "../node/portLinkType/portLinkType.h"
 #include "../node/stack/baseNodeStack/baseNodeStack.h"
 
 #include "../srack/srackInfo.h"
@@ -39,8 +40,9 @@ bool NodeDirector::init( ) {
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
 	menuDirector = instancePtr->getMenuDirector( );
+	appDirector = instancePtr->getAppDirector( );
 	releaseObjResources( );
-	if( nodeVarDirector->init( ) == false )
+	if( portLink->init( instancePtr, this, varDirector, appDirector ) == false )
 		return false;
 	QString errorMsg;
 	if( initNodeRenderGraphWidget( errorMsg ) == false ) {
@@ -103,7 +105,7 @@ NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
 }
 
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
-	nodeVarDirector = new VarDirector;
+	portLink = new PortLinkType;
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
 }
@@ -151,8 +153,8 @@ void NodeDirector::releaseNodeHistoryResources( ) {
 }
 NodeDirector::~NodeDirector( ) {
 	releaseObjResources( );
-	if( nodeVarDirector )
-		delete nodeVarDirector;
+	if( portLink )
+		delete portLink;
 }
 Node * NodeDirector::createNode( const QString &node_type_name ) {
 
@@ -175,6 +177,8 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
 		return true;
+	if( portLink->linkPort( output_port, input_port ) == false )
+		return false;
 	input_port->emplaceBackOutputPortRef( output_port );
 	if( mainWidget )
 		mainWidget->update( );

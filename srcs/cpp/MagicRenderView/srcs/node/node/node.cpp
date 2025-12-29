@@ -1,24 +1,16 @@
 ﻿#include "node.h"
 
-#include <QPainter>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QMenu>
-#include <QTimer>
-#include <QVBoxLayout>
-
 #include <app/application.h>
-
 #include <director/varDirector.h>
-
+#include <node/nodeInfo/nodeClickInfo.h>
 #include <node/port/inputPort/inputPort.h>
 #include <node/port/outputPort/outputPort.h>
-
-#include <director/printerDirector.h>
-
-#include "../../srack/srackInfo.h"
-
-#include "../nodeInfo/nodeClickInfo.h"
+#include <QLabel>
+#include <QPainter>
+#include <QTimer>
+#include <QVBoxLayout>
+#include <srack/srackInfo.h>
+#include <widget/mainWidget.h>
 
 Node::~Node( ) {
 

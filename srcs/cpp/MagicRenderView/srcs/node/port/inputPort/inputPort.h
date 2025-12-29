@@ -5,6 +5,9 @@
 #include <QWidget>
 
 #include <enums/nodeEnum.h>
+
+#include <define/portFrinedClass.h>
+
 class SrackInfo;
 class QHBoxLayout;
 class QLabel;
@@ -17,21 +20,7 @@ class NodeRunInfo;
 class InputPort : public QWidget {
 	Q_OBJECT;
 private:
-	friend class Node;
-	friend class NodeRefLinkInfo;
-	friend class NodePortLinkInfo;
-	friend class NodePortLinkActionPair;
-	friend class InputportLinkOutputPortInfo;
-	friend class OutputPort;
-	friend class NodeDirector;
-	friend class NodeStack;
-	friend class NodeRefLinkInfoTools;
-	friend class NodeBuilderTools;
-	friend class NodeRunInfo;
-	friend class NormalNodeEditorPropertyMenu;
-	friend class NodeTypeInfoSerializeion;
-	friend class NodeTypeInfo;
-	friend class PortTypeInfo;
+	InputPortFrinedClass( );
 protected:
 	Application *instancePtr;
 	VarDirector *varDirector;
@@ -57,7 +46,7 @@ public:
 	virtual bool init( Node *parent );
 	~InputPort( ) override;
 	virtual uint64_t getGenerateCode( ) const { return generateCode; }
-	virtual bool hasOutputPortRef(const OutputPort *output_port_ptr ) const;
+	virtual bool hasOutputPortRef( const OutputPort *output_port_ptr ) const;
 	virtual NodeEnum::PortType getPortType( ) const =0;
 	virtual const QString & getPortName( ) const { return portName; }
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }

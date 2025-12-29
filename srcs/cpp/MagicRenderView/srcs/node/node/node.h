@@ -8,10 +8,12 @@
 
 #include <enums/nodeEnum.h>
 
-#include "../../widget/mainWidget.h"
+#include <define/nodeFrinedClass.h>
+
 
 #define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) override { return _Type_Name; }
+class MainWidget;
 class NodeInfoWidget;
 class QHBoxLayout;
 class QLabel;
@@ -26,18 +28,7 @@ class NodeDirector;
 class NodeRunInfo;
 class Node : public QWidget {
 	Q_OBJECT;
-	friend class InputportLinkOutputPortInfo;
-	friend class NodeDirector;
-	friend class NodeStack;
-	friend class NodeRefLinkInfo;
-	friend class NodePortLinkInfo;
-	friend class NodePortLinkActionPair;
-	friend class NodeBuilderTools;
-	friend class NodeRunInfo;
-	friend class NormalNodeEditorPropertyMenu;
-	friend class NodeTypeInfoSerializeion;
-	friend class NodeTypeInfo;
-	friend class PortTypeInfo;
+	NodeFrinedClass(  );
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
