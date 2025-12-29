@@ -55,6 +55,7 @@ bool NodeDirector::init( ) {
 	normalNodeEditorPropertyMenu = editorNodeMenuStack->createNormalNodeEditorPropertyMenu( tr( "常规" ) );
 	if( normalNodeEditorPropertyMenu == nullptr )
 		return false;
+	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::remove_node_action_signal, this, &NodeDirector::removeNodeActionSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::unLink_signal, this, &NodeDirector::nodeEditorMenuUnLinkSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_edit_info_widget_signal, this, &NodeDirector::editorMenuShowEditInfoWidgetSlot );
@@ -272,7 +273,8 @@ void NodeDirector::drawLinkLines( QPainter &draw_link_widget ) {
 	arrayPtr = nodeArchiveVector.data( );
 	for( index = 0; index < count; ++index ) {
 		node = arrayPtr[ index ];
-
+		if( node == nullptr )
+			continue;
 		outputPortCount = node->outputPortVector.size( );
 		outputPortArray = node->outputPortVector.data( );
 		outputPortIndex = 0;
@@ -474,7 +476,7 @@ Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
 	auto nodeArrayPtr = nodeArchiveVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( nodeArrayPtr[ index ]->generateCode == node_generator_code )
+		if( nodeArrayPtr[ index ] != nullptr && nodeArrayPtr[ index ]->generateCode == node_generator_code )
 			return nodeArrayPtr[ index ];
 	return nullptr;
 }
@@ -535,7 +537,6 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
 			data[ index ] = nullptr;
-			delete remove_node;
 			break;
 		}
 }
@@ -631,7 +632,7 @@ void NodeDirector::appendHistorIndexEnd( const std::function< NodeHistory*( ) > 
 	nodeHistoryIndex = nodeHistorys.size( );
 }
 bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
-	constexpr uint64_t maxGenerator = UINT_FAST64_MAX;
+	constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 	size_t count = nodeArchiveVector.size( );
 
 	if( count == 0 ) {
@@ -645,6 +646,7 @@ bool NodeDirector::appendNodeToArchiveVector( Node *update_generate_code ) {
 	for( index = 0; index < count; ++index )
 		if( nodeArrayPtr[ index ] == nullptr ) {
 			update_generate_code->generateCode = index + 1;
+			nodeArrayPtr[ index ] = update_generate_code;
 			return true;
 		}
 	if( maxGenerator == count ) // 最大生成号
@@ -715,6 +717,18 @@ void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signa
 	printerDirector->info( tr( "编辑菜单发出断开信号" ), Create_SrackInfo( ) );
 	disLinkPort( output_port, input_port );
 	mainWidget->update( );
+}
+void NodeDirector::removeNodeActionSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *remove_target ) {
+	if( remove_target == nullptr )
+		return;
+	size_t count = nodeArchiveVector.size( );
+	auto data = nodeArchiveVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == remove_target )
+			break;
+	if( index != count )
+		delete remove_target;
 }
 void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget ) {
 	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );

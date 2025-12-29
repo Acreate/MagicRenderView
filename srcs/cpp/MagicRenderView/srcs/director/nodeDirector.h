@@ -199,6 +199,10 @@ protected:
 	/// @param output_port 断开输出端
 	/// @param input_port 断开输入端
 	void nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port );
+	/// @brief 菜单激活节点删除功能
+	/// @param signal_ptr 信号对象
+	/// @param remove_target 删除对象
+	void removeNodeActionSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *remove_target );
 	/// @brief 菜单激活显示节点详细信息菜单
 	/// @param signal_ptr 信号对象
 	/// @param show_node 显示节点

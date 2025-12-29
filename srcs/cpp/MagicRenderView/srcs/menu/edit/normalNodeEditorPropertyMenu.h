@@ -38,6 +38,8 @@ public:
 protected:
 	/// @brief 当前节点指针
 	Node *currentNode;
+	/// @brief 删除菜单
+	QMenu *deleteMenu;
 	/// @brief 显示菜单
 	QMenu *dislayMenu;
 	/// @brief 输入管理菜单
@@ -77,7 +79,8 @@ protected:
 	size_t refOutputPortActionMapCount;
 	/// @brief 端口输出节点引用映射起始地址
 	ActionNodeInfoPair *refOutputPortActionMapArrayPtr;
-
+	/// @brief 删除该匹配节点
+	AutoAction *deleteNodeAction;
 	/// @brief 显示编辑节点菜单
 	AutoAction *displayInfoWidgetAction;
 	/// @brief 不存在节点编辑窗口时，显示该对象
@@ -98,6 +101,7 @@ protected:
 	virtual bool appendRefInputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port );
 private Q_SLOTS:
 	void removeInoutPortRefLinkAction( QAction *tr_obj_ptr );
+	void removeNodeAction( );
 	void removeOutoutPortRefLinkAction( QAction *tr_obj_ptr );
 	void displayInfoWidget( QAction *tr_obj_ptr );
 	void displayAtRefOutputNodeEnsureToWidget( QAction *tr_obj_ptr );
@@ -111,6 +115,7 @@ protected:
 	void hideEvent( QHideEvent * ) override;
 Q_SIGNALS:
 	void release_signal( NormalNodeEditorPropertyMenu *release_ptr );
+	void remove_node_action_signal( NormalNodeEditorPropertyMenu *signal_ptr, Node *remove_target );
 	void unLink_signal( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port );
 	void show_node_edit_info_widget_signal( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget );
 	void show_node_at_widget_signal( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node );

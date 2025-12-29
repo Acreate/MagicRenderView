@@ -71,6 +71,9 @@ void NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction( QAction *tr_obj
 			return;
 		}
 }
+void NormalNodeEditorPropertyMenu::removeNodeAction( ) {
+	emit remove_node_action_signal( this, currentNode );
+}
 void NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction( QAction *tr_obj_ptr ) {
 	if( unLinkPortActionOutputMapCount == 0 )
 		return;
@@ -116,6 +119,7 @@ NormalNodeEditorPropertyMenu::NormalNodeEditorPropertyMenu( ) : QMenu( ) {
 	refInputPortActionMapCount = 0;
 	refOutputPortActionMapArrayPtr = nullptr;
 	refOutputPortActionMapCount = 0;
+	deleteNodeAction = new AutoAction( tr( "删除该节点" ) );
 	displayInfoWidgetAction = new AutoAction( tr( "显示编辑菜单" ) );
 	noteInfoWidgetAction = new AutoAction( tr( "不存在匹配窗口" ) );
 	noteInfoWidgetAction->setEnabled( false );
@@ -123,6 +127,8 @@ NormalNodeEditorPropertyMenu::NormalNodeEditorPropertyMenu( ) : QMenu( ) {
 	noteRemoveOutputLinkAction->setEnabled( false );
 	noteRemoveInputputLinkAction = new AutoAction( tr( "不存在匹配输入引用" ) );
 	noteRemoveInputputLinkAction->setEnabled( false );
+
+	connect( deleteNodeAction, &QAction::triggered, this, &NormalNodeEditorPropertyMenu::removeNodeAction );
 }
 NormalNodeEditorPropertyMenu::~NormalNodeEditorPropertyMenu( ) {
 	size_t index;
@@ -162,6 +168,7 @@ bool NormalNodeEditorPropertyMenu::initNormalNodeEditorPropertyMenu( ) {
 	refOutputPortActionMapCount = 0;
 
 	clear( );
+	deleteMenu = addMenu( tr( "删除" ) );
 	dislayMenu = addMenu( tr( "显示" ) );
 	inputMneu = addMenu( tr( "输入" ) );
 	displayOutputRef = inputMneu->addMenu( tr( "显示引用" ) );
@@ -169,6 +176,7 @@ bool NormalNodeEditorPropertyMenu::initNormalNodeEditorPropertyMenu( ) {
 	outputMenu = addMenu( tr( "输出" ) );
 	displayInputRef = outputMenu->addMenu( tr( "显示引用" ) );
 	deleteOutputAtInputRef = outputMenu->addMenu( tr( "删除输入端口引用" ) );
+	deleteMenu->addAction( deleteNodeAction );
 	connect( deleteOutputAtInputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction );
 	connect( deleteInputAtOutputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction );
 	connect( displayInputRef, &QMenu::triggered, this, &NormalNodeEditorPropertyMenu::displayAtRefInputNodeEnsureToWidget );
@@ -188,7 +196,7 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 		dislayMenu->addAction( displayInfoWidgetAction );
 	} else
 		dislayMenu->addAction( noteInfoWidgetAction );
-
+	deleteNodeAction->setText( tr( "删除[ %1 ]节点" ).arg( currentNode->toQString( ) ) );
 	size_t userCount = 0;
 	size_t modCount;
 	size_t refOutputCount = 0;
@@ -268,7 +276,6 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 }
 void NormalNodeEditorPropertyMenu::hideEvent( QHideEvent *hide_event ) {
 	QMenu::hideEvent( hide_event );
-	currentNode = nullptr;
 	nodeInfoWidget = nullptr;
 	unLinkPortActionInputMap.clear( );
 	unLinkPortActionOutputMap.clear( );
