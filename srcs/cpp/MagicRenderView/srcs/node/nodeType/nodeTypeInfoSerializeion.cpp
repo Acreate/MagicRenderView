@@ -64,35 +64,26 @@ bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_d
 	size_t count = nodeTypeInfos->size( );
 	NodeTypeInfo **nodeTypeInfoArrayPtr = nodeTypeInfos->data( );
 	size_t index;
-	for( index = 0; index < count; ++index ) {
-		auto node = node_create_function( nodeTypeInfoArrayPtr[ index ]->nodeName, nodeTypeInfoArrayPtr[ index ]->nodeGeneratorCode, nodeTypeInfoArrayPtr[ index ]->posX, nodeTypeInfoArrayPtr[ index ]->posY );
-		if( node == nullptr )
+	Node *node;
+	for( index = 0; index < count; ++index )
+		if( node = node_create_function( nodeTypeInfoArrayPtr[ index ]->nodeName, nodeTypeInfoArrayPtr[ index ]->nodeGeneratorCode, nodeTypeInfoArrayPtr[ index ]->posX, nodeTypeInfoArrayPtr[ index ]->posY ), node == nullptr )
 			return false;
-		buff.emplace_back( node );
-	}
+		else
+			buff.emplace_back( node );
 	// 链接端口
-	for( index = 0; index < count; ++index ) {
-		size_t linkPortCount = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.size( );
-		if( linkPortCount == 0 )
-			continue;
-		auto linkPortArrayPtr = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.data( );
-		size_t linkPortIndex = 0;
-		for( ; linkPortIndex < linkPortCount; ++linkPortIndex ) {
-			PortTypeInfo *portTypeInfo = linkPortArrayPtr[ linkPortIndex ];
-			auto linkResultOk = prot_link_fcuntion( portTypeInfo->outputNodeGeneratorCode, portTypeInfo->outputPortGeneratorCode, portTypeInfo->inputNodeGeneratorCode, portTypeInfo->inputPortGeneratorCode );
-			if( linkResultOk == false )
-				return false;
-		}
-
-	}
-	auto buffNodeArrayPtr = buff.data( );
-	for( index = 0; index < count; ++index ) {
-		auto nodeAppendData = nodeTypeInfoArrayPtr[ index ]->nodeData.data( );
-		size_t nodeAppendDataCount = nodeTypeInfoArrayPtr[ index ]->nodeData.size( );
-		size_t useCount = 0;
-		if( buffNodeArrayPtr[ index ]->formUint8ArrayData( useCount, nodeAppendData, nodeAppendDataCount ) == false )
+	size_t linkPortIndex = 0;
+	PortTypeInfo **linkPortArrayPtr;
+	for( index = 0; index < count; ++index )
+		if( nodeObjPtrArrayCount = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.size( ), nodeObjPtrArrayCount != 0 )
+			for( linkPortArrayPtr = nodeTypeInfoArrayPtr[ index ]->portLinkInfoVector.data( ); linkPortIndex < nodeObjPtrArrayCount; ++linkPortIndex )
+				if( prot_link_fcuntion( linkPortArrayPtr[ linkPortIndex ]->outputNodeGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->outputPortGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->inputNodeGeneratorCode, linkPortArrayPtr[ linkPortIndex ]->inputPortGeneratorCode ) == false )
+					return false;
+	// 配置节点数据
+	nodeObjPtrArrayPtr = buff.data( );
+	nodeObjPtrArrayCount = 0;
+	for( index = 0; index < count; ++index )
+		if( nodeObjPtrArrayPtr[ index ]->formUint8ArrayData( nodeObjPtrArrayCount, nodeTypeInfoArrayPtr[ index ]->nodeData.data( ), nodeTypeInfoArrayPtr[ index ]->nodeData.size( ) ) == false )
 			return false;
-	}
 	nodeObjPtr = buff;
 	nodeObjPtrArrayCount = nodeObjPtr.size( );
 	nodeObjPtrArrayPtr = nodeObjPtr.data( );
@@ -103,20 +94,17 @@ bool NodeTypeInfoSerializeion::toData( std::vector< uint8_t > &result_data_vecto
 	if( varDirector.init( ) == false )
 		return false;
 	std::vector< NodeTypeInfo * > *nodeTypeInfos = nullptr;
-	NodeTypeInfo *nodeTypeInfoPtr = nullptr;
 	if( varDirector.create( nodeTypeInfos ) == false || nodeTypeInfos == nullptr )
 		return false;
 	size_t index = 0;
 	nodeTypeInfos->resize( nodeObjPtrArrayCount );
 	auto nodeTypeInfoArrayPtr = nodeTypeInfos->data( );
-	for( ; index < nodeObjPtrArrayCount; ++index ) {
-		nodeTypeInfoPtr = nullptr;
+	NodeTypeInfo *nodeTypeInfoPtr = nullptr;
+	for( ; index < nodeObjPtrArrayCount; ++index, nodeTypeInfoPtr = nullptr )
 		if( varDirector.create( nodeTypeInfoPtr ) == false || nodeTypeInfoPtr == nullptr )
 			return false;
-		nodeTypeInfoArrayPtr[ index ] = nodeTypeInfoPtr;
-		if( nodeTypeInfoPtr->load( nodeObjPtrArrayPtr[ index ] ) == false )
+		else if( nodeTypeInfoArrayPtr[ index ] = nodeTypeInfoPtr, nodeTypeInfoPtr->load( nodeObjPtrArrayPtr[ index ] ) == false )
 			return false;
-	}
 	if( varDirector.toVector( nodeTypeInfos, result_data_vector ) == false )
 		return false;
 	return true;
