@@ -58,12 +58,10 @@ InputPort::InputPort( const QString &name ) : portName( name ), varPtr( nullptr 
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( ico );
 	mainLayout->addWidget( showTitle );
-	disLinkMenu = new QMenu;
 }
 bool InputPort::init( Node *parent ) {
 	if( parent == nullptr )
 		return false;
-	disLinkMenu->clear( );
 	instancePtr = Application::getInstancePtr( );
 	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
@@ -73,7 +71,6 @@ bool InputPort::init( Node *parent ) {
 InputPort::~InputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );
 	clearOutputPortRef( );
-	delete disLinkMenu;
 }
 bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
 	size_t count = refOutputPortVector.size( );
@@ -89,10 +86,6 @@ bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
 }
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
-}
-QMenu * InputPort::getDisLinkMenu( ) const {
-	// todo : 重构断开链接菜单
-	return disLinkMenu;
 }
 void InputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );

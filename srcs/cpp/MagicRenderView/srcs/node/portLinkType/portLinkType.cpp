@@ -19,6 +19,7 @@ bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 			return false;
 	if( output_port->getVarTypeName( ) != input_port->getVarTypeName( ) )
 		return false;
+	
 	input_port->emplaceBackOutputPortRef( output_port );
 	return true;
 }

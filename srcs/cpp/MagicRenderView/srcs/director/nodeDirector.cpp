@@ -778,18 +778,6 @@ void NodeDirector::disConnectRefOutputPortNodeSlot( Node *input_port_node, Node 
 }
 void NodeDirector::connectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {
 	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
-
-	QString actionText( tr( "断开 [%1.%2] -> [%3.%4] 连接" ) );
-	actionText = actionText.arg( output_port->parentNode->nodeName ).arg( output_port->portName ).arg( ref_input_port->parentNode->nodeName ).arg( ref_input_port->portName );
-	auto outAction = output_port->disLinkMenu->addAction( actionText );
-	auto inAction = ref_input_port->disLinkMenu->addAction( actionText );
-	auto disLink = [this, output_port, ref_input_port]( ) {
-		if( disLinkPort( output_port, ref_input_port ) == false )
-			return;
-	};
-
-	connect( outAction, &QAction::triggered, disLink );
-	connect( inAction, &QAction::triggered, disLink );
 	emit connect_output_port_signal( this, output_port, ref_input_port );
 }
 void NodeDirector::disConnectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {

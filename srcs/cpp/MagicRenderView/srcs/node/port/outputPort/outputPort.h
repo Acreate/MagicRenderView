@@ -34,13 +34,13 @@ protected:
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
 	Node *parentNode;
-	QMenu *disLinkMenu;
 private:
 	std::vector< InputPort * > refInputPortVector;
 protected:
 	virtual bool emplaceBackInputPortRef( InputPort *input_port_ptr );
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
 	virtual void clearInputPortRef( );
+	virtual void * getVarPtr( ) const { return varPtr; }
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
@@ -50,10 +50,8 @@ public:
 	virtual NodeEnum::PortType getPortType( ) const =0;
 	virtual const QString & getPortName( ) const { return portName; }
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }
-	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
-	virtual QMenu * getDisLinkMenu( ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	bool event( QEvent *event ) override;

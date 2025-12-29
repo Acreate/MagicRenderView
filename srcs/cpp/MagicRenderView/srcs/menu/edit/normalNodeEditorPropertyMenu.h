@@ -99,6 +99,7 @@ protected:
 	virtual bool appendRmoveInputRefActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port );
 	virtual bool appendRefOutputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port );
 	virtual bool appendRefInputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port );
+	virtual void clearResources();
 private Q_SLOTS:
 	void removeInoutPortRefLinkAction( QAction *tr_obj_ptr );
 	void removeNodeAction( );

@@ -60,6 +60,23 @@ bool NormalNodeEditorPropertyMenu::appendRefInputNodeActionInfo( AutoAction *aut
 	auto_action->setText( tr( "(%1[%2]) 跳到输出引用节点 (%3[%4])" ).arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( parentNode->getNodeName( ) ).arg( input_port->getPortName( ) ) );
 	return true;
 }
+void NormalNodeEditorPropertyMenu::clearResources( ) {
+	currentNode = nullptr;
+	unLinkPortActionInputMap.clear( );
+	unLinkPortActionOutputMap.clear( );
+	refOutputPortActionMap.clear( );
+	refInputPortActionMap.clear( );
+	refOutputPortActionMapCount = 0;
+	refOutputPortActionMapArrayPtr = nullptr;
+	refInputPortActionMapCount = 0;
+	refInputPortActionMapArrayPtr = nullptr;
+
+	dislayMenu->clear( );
+	displayInputRef->clear( );
+	deleteInputAtOutputRef->clear( );
+	displayOutputRef->clear( );
+	deleteOutputAtInputRef->clear( );
+}
 void NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction( QAction *tr_obj_ptr ) {
 	if( unLinkPortActionInputMapCount == 0 )
 		return;
@@ -186,6 +203,7 @@ bool NormalNodeEditorPropertyMenu::initNormalNodeEditorPropertyMenu( ) {
 bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	if( node == nullptr )
 		return false;
+	clearResources( );
 	currentNode = node;
 	if( qactionArchiveCount == 0 )
 		extendQActionArchiveVectorCount( 1024 );
@@ -276,18 +294,5 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 }
 void NormalNodeEditorPropertyMenu::hideEvent( QHideEvent *hide_event ) {
 	QMenu::hideEvent( hide_event );
-	unLinkPortActionInputMap.clear( );
-	unLinkPortActionOutputMap.clear( );
-	refOutputPortActionMap.clear( );
-	refInputPortActionMap.clear( );
-	refOutputPortActionMapCount = 0;
-	refOutputPortActionMapArrayPtr = nullptr;
-	refInputPortActionMapCount = 0;
-	refInputPortActionMapArrayPtr = nullptr;
 
-	dislayMenu->clear( );
-	displayInputRef->clear( );
-	deleteInputAtOutputRef->clear( );
-	displayOutputRef->clear( );
-	deleteOutputAtInputRef->clear( );
 }

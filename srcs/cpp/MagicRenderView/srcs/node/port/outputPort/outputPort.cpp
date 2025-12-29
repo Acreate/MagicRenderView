@@ -59,12 +59,10 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( showTitle );
 	mainLayout->addWidget( ico );
-	disLinkMenu = new QMenu;
 }
 OutputPort::~OutputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );
 	clearInputPortRef( );
-	delete disLinkMenu;
 }
 bool OutputPort::hasInputPortRef( InputPort *input_port_ptr ) const {
 	size_t count = refInputPortVector.size( );
@@ -83,15 +81,10 @@ bool OutputPort::init( Node *parent ) {
 	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
 	parentNode = parent;
-	disLinkMenu->clear( );
 	return true;
 }
 QPoint OutputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
-}
-QMenu * OutputPort::getDisLinkMenu( ) const {
-	// todo : 重构删除链接菜单
-	return disLinkMenu;
 }
 void OutputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );
