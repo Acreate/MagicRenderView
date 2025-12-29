@@ -14,6 +14,8 @@ NodeTypeInfo::~NodeTypeInfo( ) {
 	}
 }
 bool NodeTypeInfo::load( Node *node_ptr ) {
+	if( node_ptr->toUint8VectorData( nodeData ) == false )
+		return false;
 	auto point = node_ptr->pos( );
 	posX = point.x( );
 	posY = point.y( );

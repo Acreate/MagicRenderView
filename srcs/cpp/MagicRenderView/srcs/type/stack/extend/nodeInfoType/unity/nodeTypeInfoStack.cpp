@@ -35,12 +35,15 @@ bool NodeTypeInfoStack::toObj( uint64_t &result_count, const uint8_t *obj_start_
 	QString *stringPtr = nullptr;
 	uint64_t *uint64Ptr = nullptr;
 	int32_t *int32Ptr = nullptr;
+	std::vector< uint8_t > *uint8DataVectorPtr = nullptr;
 	void *converPtr;
 	if( varDirector.create( stringPtr ) == false || stringPtr == nullptr )
 		return false;
 	if( varDirector.create( uint64Ptr ) == false || uint64Ptr == nullptr )
 		return false;
 	if( varDirector.create( int32Ptr ) == false || int32Ptr == nullptr )
+		return false;
+	if( varDirector.create( uint8DataVectorPtr ) == false || uint8DataVectorPtr == nullptr )
 		return false;
 
 	size_t modCount = obj_memory_size;
@@ -86,6 +89,14 @@ bool NodeTypeInfoStack::toObj( uint64_t &result_count, const uint8_t *obj_start_
 	modCount -= result_count;
 	offsetPtr += result_count;
 	converTarget->posY = *int32Ptr;
+
+	// 节点附加数据
+	converPtr = uint8DataVectorPtr;
+	if( varDirector.toVar( result_count, offsetPtr, modCount, converPtr ) == false )
+		return false;
+	modCount -= result_count;
+	offsetPtr += result_count;
+	converTarget->nodeData = *uint8DataVectorPtr;
 
 	// 获取链接信息
 	converPtr = uint64Ptr;
@@ -147,11 +158,14 @@ bool NodeTypeInfoStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t 
 	QString *stringPtr = nullptr;
 	uint64_t *uint64Ptr = nullptr;
 	int32_t *int32Ptr = nullptr;
+	std::vector< uint8_t > *uint8DataVectorPtr = nullptr;;
 	if( varDirector.create( stringPtr ) == false || stringPtr == nullptr )
 		return false;
 	if( varDirector.create( uint64Ptr ) == false || uint64Ptr == nullptr )
 		return false;
 	if( varDirector.create( int32Ptr ) == false || int32Ptr == nullptr )
+		return false;
+	if( varDirector.create( uint8DataVectorPtr ) == false || uint8DataVectorPtr == nullptr )
 		return false;
 	std::vector< uint8_t > buff;
 	result_data.clear( );
@@ -176,6 +190,12 @@ bool NodeTypeInfoStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t 
 	// 节点 y 坐标
 	*int32Ptr = converTarget->posY;
 	if( varDirector.toVector( int32Ptr, buff ) == false )
+		return false;
+	result_data.append_range( buff );
+
+	// 节点附加数据
+	*uint8DataVectorPtr = converTarget->nodeData;
+	if( varDirector.toVector( uint8DataVectorPtr, buff ) == false )
 		return false;
 	result_data.append_range( buff );
 

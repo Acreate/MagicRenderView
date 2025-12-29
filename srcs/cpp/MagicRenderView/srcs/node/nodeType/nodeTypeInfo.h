@@ -15,6 +15,7 @@ protected:
 	int32_t posX;
 	int32_t posY;
 	std::vector< PortTypeInfo * > portLinkInfoVector;
+	std::vector<uint8_t> nodeData;
 public:
 	NodeTypeInfo( ) { }
 	virtual ~NodeTypeInfo( );

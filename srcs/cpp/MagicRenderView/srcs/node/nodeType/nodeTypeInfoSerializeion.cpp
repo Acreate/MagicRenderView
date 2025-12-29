@@ -18,9 +18,7 @@ void NodeTypeInfoSerializeion::clearNodeVector( ) {
 	nodeObjPtr.clear( );
 }
 bool NodeTypeInfoSerializeion::appendNodePtr( Node *append_node_ptr ) {
-	if( nodeObjPtrArrayCount == 0 )
-		nodeObjPtr.emplace_back( append_node_ptr );
-	else {
+	if( nodeObjPtrArrayCount != 0 ) {
 		auto compGenerateCode = append_node_ptr->generateCode;
 		for( size_t index = 0; index < nodeObjPtrArrayCount; ++index )
 			if( append_node_ptr == nodeObjPtrArrayPtr[ index ] ) {
@@ -31,6 +29,7 @@ bool NodeTypeInfoSerializeion::appendNodePtr( Node *append_node_ptr ) {
 				return false; // 存在已知生成码
 			}
 	}
+	nodeObjPtr.emplace_back( append_node_ptr );
 	nodeObjPtrArrayPtr = nodeObjPtr.data( );
 	nodeObjPtrArrayCount = nodeObjPtr.size( );
 	return true;
@@ -85,6 +84,14 @@ bool NodeTypeInfoSerializeion::loadData( size_t &use_count, const uint8_t *src_d
 				return false;
 		}
 
+	}
+	auto buffNodeArrayPtr = buff.data( );
+	for( index = 0; index < count; ++index ) {
+		auto nodeAppendData = nodeTypeInfoArrayPtr[ index ]->nodeData.data( );
+		size_t nodeAppendDataCount = nodeTypeInfoArrayPtr[ index ]->nodeData.size( );
+		size_t useCount = 0;
+		if( buffNodeArrayPtr[ index ]->formUint8ArrayData( useCount, nodeAppendData, nodeAppendDataCount ) == false )
+			return false;
 	}
 	nodeObjPtr = buff;
 	nodeObjPtrArrayCount = nodeObjPtr.size( );
