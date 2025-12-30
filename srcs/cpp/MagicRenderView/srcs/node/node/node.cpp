@@ -38,7 +38,7 @@ Node::~Node( ) {
 	if( varPtr )
 		varDirector->release( varPtr );
 }
-Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nullptr ), connectWidget( nullptr ), inputPortWidget( nullptr ), outputPortWidget( nullptr ), mainLayout( nullptr ) {
+Node::Node( const QString &node_name ) : nodeName( node_name ), mainLayout( nullptr ) {
 	hide( );
 	generateCode = 0;
 	varPtr = nullptr;
@@ -53,6 +53,43 @@ Node::Node( const QString &node_name ) : nodeName( node_name ), titileWidget( nu
 	errorPen.setColor( QColor( 0xff0000 ) );
 	advisPen.setColor( QColor( 0xff9c65 ) );
 	nodeStyle = NodeEnum::NodeStyleType::Create;
+	// 标题布局
+	titileWidget = new QWidget( this );
+	titileWidgetLayout = new QVBoxLayout( titileWidget );
+	// 标题
+	titileLabel = new QLabel( titileWidget );
+	titileWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	titileWidgetLayout->setSpacing( 0 );
+	titileWidgetLayout->addWidget( titileLabel );
+	// 输出输入面板布局
+	connectWidget = new QWidget( this );
+	connectWidgetLayout = new QHBoxLayout( connectWidget );
+	connectWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	connectWidgetLayout->setSpacing( nodeBorderWidth * 2 );
+	// 输入端布局
+	inputPortWidget = new QWidget( connectWidget );
+	connectWidgetLayout->addWidget( inputPortWidget, 0, Qt::AlignLeft | Qt::AlignTop );
+	inputPortWidgetLayout = new QVBoxLayout( inputPortWidget );
+	inputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	inputPortWidgetLayout->setSpacing( 0 );
+	// 输出端布局
+	outputPortWidget = new QWidget( connectWidget );
+	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
+	outputPortWidgetLayout = new QVBoxLayout( outputPortWidget );
+	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
+	outputPortWidgetLayout->setSpacing( 0 );
+
+	// 主要布局
+	auto oldLayout = layout( );
+	if( oldLayout )
+		delete oldLayout;
+	mainLayout = new QVBoxLayout( this );
+	nodeBorderWidth = 5;
+	mainLayout->setContentsMargins( nodeBorderWidth, nodeBorderWidth, nodeBorderWidth, nodeBorderWidth );
+	mainLayout->setSpacing( 0 );
+	mainLayout->addWidget( titileWidget );
+	mainLayout->addWidget( connectWidget );
+
 }
 bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
@@ -67,6 +104,7 @@ bool Node::appendInputPort( InputPort *input_port ) {
 	if( input_port->init( this ) == false )
 		return false;
 	inputPortVector.emplace_back( input_port );
+	input_port->setParent( this );
 	connect( input_port, &InputPort::connect_input_port_signal, this, &Node::inputDelRef_Slot );
 	connect( input_port, &InputPort::dis_connect_input_port_signal, this, &Node::inputDelRef_Slot );
 	return true;
@@ -84,6 +122,7 @@ bool Node::appendOutputPort( OutputPort *output_port ) {
 	if( output_port->init( this ) == false )
 		return false;
 	outputPortVector.emplace_back( output_port );
+	output_port->setParent( this );
 	connect( output_port, &OutputPort::connect_output_port_signal, this, &Node::outputAddRef_Slot );
 	connect( output_port, &OutputPort::dis_connect_output_port_signal, this, &Node::outputDelRef_Slot );
 	return true;
@@ -438,17 +477,8 @@ bool Node::init( MainWidget *parent ) {
 		outputPortVector.clear( );
 	}
 
-	if( mainLayout )
-		delete mainLayout;
-	if( titileWidget )
-		delete titileWidget;
-	if( connectWidget )
-		delete connectWidget;
-	mainLayout = nullptr;
-	titileWidget = nullptr;
-	connectWidget = nullptr;
-
 	nodeFunction = [] ( VarDirector *var_director ) { };
+	titileLabel->setText( toQString( ) );
 	setParent( parent );
 	return true;
 }
@@ -476,57 +506,17 @@ OutputPort * Node::getOutputPort( const QString &port_name ) const {
 	return nullptr;
 }
 bool Node::updateLayout( ) {
-	nodeBorderWidth = 5;
 
-	if( mainLayout )
-		delete mainLayout;
-	mainLayout = new QVBoxLayout( this );
-
-	mainLayout->setContentsMargins( nodeBorderWidth, nodeBorderWidth, nodeBorderWidth, nodeBorderWidth );
-	mainLayout->setSpacing( 0 );
-	if( titileWidget )
-		delete titileWidget;
-	titileWidget = new QWidget( this );
-	mainLayout->addWidget( titileWidget );
-	titileWidgetLayout = new QVBoxLayout( titileWidget );
-	titileWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
-	titileWidgetLayout->setSpacing( 0 );
-	titileWidget->setLayout( titileWidgetLayout );
-	titileLabel = new QLabel( nodeName, titileWidget );
-	titileWidgetLayout->addWidget( titileLabel );
-
-	if( connectWidget )
-		delete connectWidget;
-	connectWidget = new QWidget( this );
-	mainLayout->addWidget( connectWidget );
-	connectWidgetLayout = new QHBoxLayout( connectWidget );
-	connectWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
-	connectWidgetLayout->setSpacing( nodeBorderWidth * 2 );
-
-	inputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( inputPortWidget, 0, Qt::AlignLeft | Qt::AlignTop );
-	inputPortWidgetLayout = new QVBoxLayout( inputPortWidget );
-	inputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
-	inputPortWidgetLayout->setSpacing( 0 );
 	size_t count = inputPortVector.size( );
 	size_t index;
 	auto inputPortArrayPtr = inputPortVector.data( );
-	for( index = 0; index < count; ++index ) {
-		inputPortArrayPtr[ index ]->setParent( inputPortWidget );
+	for( index = 0; index < count; ++index )
 		inputPortWidgetLayout->addWidget( inputPortArrayPtr[ index ], 0, Qt::AlignLeft | Qt::AlignHCenter );
-	}
 
-	outputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
-	outputPortWidgetLayout = new QVBoxLayout( outputPortWidget );
-	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
-	outputPortWidgetLayout->setSpacing( 0 );
 	count = outputPortVector.size( );
 	auto outputPortArrayPtr = outputPortVector.data( );
-	for( index = 0; index < count; ++index ) {
-		outputPortArrayPtr[ index ]->setParent( outputPortWidget );
+	for( index = 0; index < count; ++index )
 		outputPortWidgetLayout->addWidget( outputPortArrayPtr[ index ], 0, Qt::AlignRight | Qt::AlignHCenter );
-	}
 
 	return true;
 }

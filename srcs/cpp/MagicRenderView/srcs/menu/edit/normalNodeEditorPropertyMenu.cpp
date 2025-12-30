@@ -210,7 +210,7 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	// 添加显示菜单
 	nodeInfoWidget = Application::getInstancePtr( )->getNodeDirector( )->getNodeWidgeInfo( node );
 	if( nodeInfoWidget ) {
-		displayInfoWidgetAction->setText( tr( "显示[%1]编辑窗口" ).arg( node->toQString( ) ) );
+		displayInfoWidgetAction->setText( tr( "显示[ %1 ]( %2 )编辑窗口" ).arg( node->toQString( ) ).arg( nodeInfoWidget->metaObject( )->className( ) ) );
 		dislayMenu->addAction( displayInfoWidgetAction );
 	} else
 		dislayMenu->addAction( noteInfoWidgetAction );

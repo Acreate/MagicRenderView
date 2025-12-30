@@ -3,6 +3,7 @@
 #include <QPainter>
 
 #include <node/stack/nodeStack.h>
+#include <QLabel>
 
 #include "printerDirector.h"
 #include "varDirector.h"
@@ -504,6 +505,7 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 		fromGlobal.setX( 0 );
 	if( fromGlobal.y( ) < 0 )
 		fromGlobal.setY( 0 );
+	append_node->titileLabel->setText( append_node->toQString( ) );
 	append_node->move( fromGlobal );
 	append_node->show( );
 	mainWidget->ensureVisible( append_node );
