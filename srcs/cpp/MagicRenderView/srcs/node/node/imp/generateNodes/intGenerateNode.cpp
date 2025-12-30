@@ -11,7 +11,11 @@ bool IntGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< GenerateInputPort >( tr( "生成" ) ) == nullptr )
 			return false;
-		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
+		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出值" ) ) == nullptr )
+			return false;
+		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出下标" ) ) == nullptr )
+			return false;
+		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出总数" ) ) == nullptr )
 			return false;
 		return true;
 	};
