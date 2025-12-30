@@ -1,0 +1,9 @@
+﻿#ifndef INPUTPORTLINKLIBINFO_H_H_HEAD__FILE__
+#define INPUTPORTLINKLIBINFO_H_H_HEAD__FILE__
+#pragma once
+
+class InputPortLinkLibInfo {
+	
+};
+
+#endif // INPUTPORTLINKLIBINFO_H_H_HEAD__FILE__

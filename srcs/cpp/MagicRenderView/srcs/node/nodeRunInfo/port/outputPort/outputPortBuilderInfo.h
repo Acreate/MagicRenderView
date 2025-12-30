@@ -1,0 +1,9 @@
+﻿#ifndef OUTPUTPORTBUILDERINFO_H_H_HEAD__FILE__
+#define OUTPUTPORTBUILDERINFO_H_H_HEAD__FILE__
+#pragma once
+
+class OutputPortBuilderInfo {
+	
+};
+
+#endif // OUTPUTPORTBUILDERINFO_H_H_HEAD__FILE__

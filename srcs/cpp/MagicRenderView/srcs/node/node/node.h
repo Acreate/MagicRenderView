@@ -10,9 +10,10 @@
 
 #include <define/nodeFrinedClass.h>
 
-
 #define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) override { return _Type_Name; }
+class NodeLinkLibInfo;
+class NodeBuilderInfo;
 class MainWidget;
 class NodeInfoWidget;
 class QHBoxLayout;
@@ -28,7 +29,7 @@ class NodeDirector;
 class NodeRunInfo;
 class Node : public QWidget {
 	Q_OBJECT;
-	NodeFrinedClass(  );
+	NodeFrinedClass( );
 protected:
 	using NodeFunctionResultType = void;
 	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
@@ -102,6 +103,8 @@ protected:
 	QPen advisPen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
+	/// @brief 绑定的编译对象
+	NodeRunInfo *nodeRunInfo;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -150,6 +153,9 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
+	virtual NodeBuilderInfo * builderNodeBuilderInfo( ) {
+		return nullptr;
+	}
 public:
 	~Node( ) override;
 	Node( const QString &node_name );

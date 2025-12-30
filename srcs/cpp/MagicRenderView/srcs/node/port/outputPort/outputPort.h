@@ -9,6 +9,7 @@
 
 #include <define/portFrinedClass.h>
 
+class OutputPortBuilderInfo;
 class QHBoxLayout;
 class QLabel;
 class SrackInfo;
@@ -41,6 +42,9 @@ protected:
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
 	virtual void clearInputPortRef( );
 	virtual void * getVarPtr( ) const { return varPtr; }
+	virtual OutputPortBuilderInfo * builderOutputPortInfo( ) {
+		return nullptr;
+	}
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
