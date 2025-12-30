@@ -12,5 +12,6 @@ public:
 	NodeEnum::PortType getPortType( ) const override {
 		return NodeEnum::PortType::InterFace;
 	}
+	bool isMultiple( ) override { return true; }
 };
 #endif // INTERFACETYPEINPUTPORT_H_H_HEAD__FILE__

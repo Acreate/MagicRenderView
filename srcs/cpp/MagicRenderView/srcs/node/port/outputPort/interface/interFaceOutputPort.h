@@ -3,7 +3,7 @@
 #pragma once
 #include "../InterFaceTypeOutputPort.h"
 
-class InterFaceOutputPort : public InterFaceTypeOutputPort{
+class InterFaceOutputPort : public InterFaceTypeOutputPort {
 	Q_OBJECT;
 public:
 	InterFaceOutputPort( const QString &name )

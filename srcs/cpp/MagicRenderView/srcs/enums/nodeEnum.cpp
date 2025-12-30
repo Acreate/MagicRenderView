@@ -123,6 +123,60 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeStyleType &result_enu
 	}
 	return true;
 }
+bool NodeEnum::converEnum( const QString &enum_string, PortType &result_enum_type_var ) {
+	QMetaEnum metaEnum = QMetaEnum::fromType< NodeType >( );
+	auto optional = metaEnum.keyToValue64( enum_string.toLocal8Bit( ) );
+
+	if( optional.has_value( ) == false )
+		return false;
+	auto *varPtr = optional.operator->( );
+	result_enum_type_var = ( PortType ) *varPtr;
+	switch( result_enum_type_var ) {
+		case PortType::InterFace :
+		case PortType::Generate :
+		case PortType::Unity :
+		case PortType::Array :
+		case PortType::ToBegin :
+		case PortType::Begin :
+		case PortType::Point :
+		case PortType::ToPoint :
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
+bool NodeEnum::converQString( const PortType &enum_type_var, QString &result_enum_string ) {
+	switch( enum_type_var ) {
+		case PortType::InterFace :
+			result_enum_string = "InterFace";
+			break;
+		case PortType::Generate :
+			result_enum_string = "Generate";
+			break;
+		case PortType::Array :
+			result_enum_string = "Array";
+			break;
+		case PortType::ToBegin :
+			result_enum_string = "ToBegin";
+			break;
+		case PortType::Begin :
+			result_enum_string = "Begin";
+			break;
+		case PortType::Unity :
+			result_enum_string = "Unity";
+			break;
+		case PortType::Point :
+			result_enum_string = "Point";
+			break;
+		case PortType::ToPoint :
+			result_enum_string = "ToPoint";
+			break;
+		default :
+			return false;
+	}
+	return true;
+}
 bool NodeEnum::converQString( const NodeStyleType &enum_type_var, QString &result_enum_string ) {
 	switch( enum_type_var ) {
 		case NodeStyleType::None :

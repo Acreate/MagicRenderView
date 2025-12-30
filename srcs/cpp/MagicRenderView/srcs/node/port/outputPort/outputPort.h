@@ -44,14 +44,15 @@ protected:
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
-	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
 	virtual bool init( Node *parent );
-	virtual uint64_t getGenerateCode( ) const { return generateCode; }
 	virtual NodeEnum::PortType getPortType( ) const =0;
 	virtual const QString & getPortName( ) const { return portName; }
 	virtual const QString & getVarTypeName( ) const { return varTypeName; }
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
+	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
+	virtual uint64_t getGenerateCode( ) const { return generateCode; }
+	virtual bool isMultiple( ) { return true; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	bool event( QEvent *event ) override;

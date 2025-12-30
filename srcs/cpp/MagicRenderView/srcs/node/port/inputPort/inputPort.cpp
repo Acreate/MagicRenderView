@@ -39,8 +39,8 @@ void InputPort::clearOutputPortRef( ) {
 	size_t count = refOutputPortVector.size( );
 	for( size_t index = 0; index < count; ++index ) {
 		auto vectorIterator = refOutputPortVector.begin( );
-		refOutputPortVector.erase( vectorIterator );
 		auto outputPort = *vectorIterator;
+		refOutputPortVector.erase( vectorIterator );
 		emit dis_connect_input_port_signal( this, outputPort );
 		outputPort->eraseInputPortRef( this );
 	}

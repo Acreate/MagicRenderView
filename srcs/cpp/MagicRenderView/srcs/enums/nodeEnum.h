@@ -40,12 +40,16 @@ namespace NodeEnum {
 		Array,
 		Unity,
 	};
-	/// @brief 输入类型
+	/// @brief 端口类型
 	enum class PortType {
 		InterFace,
 		Generate,
 		Unity,
-		Array
+		Array,
+		ToBegin,
+		Begin,
+		Point,
+		ToPoint,
 	};
 	/// @brief 点击节点返回类型
 	enum class NodeClickType {
@@ -73,12 +77,14 @@ namespace NodeEnum {
 	bool converEnum( const QString &enum_string, NodeType &result_enum_type_var );
 	bool converEnum( const QString &enum_string, NodeClickType &result_enum_type_var );
 	bool converEnum( const QString &enum_string, NodeStyleType &result_enum_type_var );
+	bool converEnum( const QString &enum_string, PortType &result_enum_type_var );
 	bool converQString( const ErrorType &enum_type_var, QString &result_enum_string );
 	bool converQString( const AdviseType &enum_type_var, QString &result_enum_string );
 	bool converQString( const CreateType &enum_type_var, QString &result_enum_string );
 	bool converQString( const NodeType &enum_type_var, QString &result_enum_string );
 	bool converQString( const NodeClickType &enum_type_var, QString &result_enum_string );
 	bool converQString( const NodeStyleType &enum_type_var, QString &result_enum_string );
+	bool converQString( const PortType &enum_type_var, QString &result_enum_string );
 	Q_NAMESPACE;
 	Q_ENUM_NS( ErrorType );
 	Q_ENUM_NS( AdviseType );
@@ -86,6 +92,7 @@ namespace NodeEnum {
 	Q_ENUM_NS( NodeType );
 	Q_ENUM_NS( NodeClickType );
 	Q_ENUM_NS( NodeStyleType );
+	Q_ENUM_NS( PortType );
 };
 
 #endif // NODEENUM_H_H_HEAD__FILE__

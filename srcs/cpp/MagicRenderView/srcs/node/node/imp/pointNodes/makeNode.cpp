@@ -1,10 +1,12 @@
 ﻿#include "makeNode.h"
-
-#include "../../../port/outputPort/interface/interFaceOutputPort.h"
+#include "../../../port/outputPort/point/pointOutputPort.h"
+#include "../../../port/outputPort/toPoint/toPointOutputPort.h"
 
 bool MakeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendOutputPortType< InterFaceOutputPort >( tr( "过程转移" ) ) == nullptr )
+		if( appendOutputPortType< PointOutputPort >( tr( "定点标记" ) ) == nullptr )
+			return false;
+		if( appendOutputPortType< ToPointOutputPort >( tr( "跳转定点" ) ) == nullptr )
 			return false;
 		return true;
 	};

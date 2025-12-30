@@ -4,13 +4,12 @@
 #include "../../../../director/printerDirector.h"
 #include "../../../../director/varDirector.h"
 #include "../../../../srack/srackInfo.h"
-#include "../../../port/inputPort/interface/interFaceInputPort.h"
-
+#include "../../../port/inputPort/generate/generateInputPort.h"
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
 bool IntGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< InterFaceInputPort >( tr( "过程接入" ) ) == nullptr )
+		if( appendInputPortType< GenerateInputPort >( tr( "生成" ) ) == nullptr )
 			return false;
 		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出生成整数序列" ) ) == nullptr )
 			return false;
