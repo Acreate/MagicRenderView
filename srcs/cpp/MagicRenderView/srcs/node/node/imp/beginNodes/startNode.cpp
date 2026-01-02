@@ -14,9 +14,10 @@ bool StartNode::initEx( MainWidget *parent ) {
 		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) );
 		if( toBeginOutputPort == nullptr )
 			return false;
-		auto nodeCallFucntion = [] ( std::vector< InputPortBuilderInfo * > &input_port_builder_infos, std::vector< OutputPortBuilderInfo * > &output_port_builder_infos, std::vector< NodeBuilderInfo * > &node_builder_infos ) {
-			
-			
+		auto nodeCallFucntion = [beginOutputPort, this] ( std::vector< InputPortBuilderInfo * > &input_port_builder_infos, std::vector< OutputPortBuilderInfo * > &output_port_builder_infos, std::vector< NodeBuilderInfo * > &node_builder_infos ) {
+			auto outputPortBuilderInfo = getOutputPortBuilderInfo( beginOutputPort );
+			if( outputPortBuilderInfo->call( node_builder_infos ) == false )
+				return false;
 			return true;
 		};
 		nodeBuilderInfo->init( nodeCallFucntion );

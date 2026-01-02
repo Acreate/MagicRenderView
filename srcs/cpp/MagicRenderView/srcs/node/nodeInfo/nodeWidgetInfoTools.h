@@ -1,10 +1,11 @@
-﻿#ifndef NODEBUILDERTOOLS_H_H_HEAD__FILE__
-#define NODEBUILDERTOOLS_H_H_HEAD__FILE__
+﻿#ifndef NODEWIDGETINFOTOOLS_H_H_HEAD__FILE__
+#define NODEWIDGETINFOTOOLS_H_H_HEAD__FILE__
 #pragma once
+
 #include <QString>
 
 class Node;
-class NodeBuilderTools {
+class NodeWidgetInfoTools {
 protected:
 	/// @brief 填充依赖到指定序列当中
 	/// @param analysis_node_ref_link_info 依据的依赖对象
@@ -37,7 +38,7 @@ public:
 		Node *const *converStdVectorNodesodeRefLinkInfo = conver_std_vector_node_ref_link_infosodeRefLinkInfo.data( );
 		return toQString( converStdVectorNodesodeRefLinkInfo, conver_std_vector_node_ref_link_infosodeRefLinkInfo.size( ) );
 	}
-	class BeginNodeBuilderTools {
+	class BeginWidgetInfoTools {
 	public:
 		/// @brief 查找第一个匹配的开始节点
 		/// @param analysis_node_ref_link_info 查找对象指针
@@ -46,7 +47,7 @@ public:
 		static bool findRefBeginNode( Node *analysis_node_ref_link_info, Node * &result_begin_node_ref_link );
 
 	};
-	class JumpNodeBuilderTools {
+	class JumpWidgetInfoTools {
 	protected:
 		/// @brief 匹配输入的节点路径
 		/// @param analysis_node_ref_link_info 查找的路径
@@ -61,7 +62,7 @@ public:
 		static bool analysisJumpNodeRef( Node *analysis_node_ref_link_info, std::vector< std::vector< Node * > > &result_node_ref_link_vector );
 	};
 
-	class Point {
+	class PointWidgetInfoTools {
 	public:
 		/// @brief 解析节点输出依赖，从而获取 Jump 节点
 		/// @param analysis_node_ref_link_info 解析节点
@@ -71,4 +72,4 @@ public:
 	};
 };
 
-#endif // NODEBUILDERTOOLS_H_H_HEAD__FILE__
+#endif // NODEWIDGETINFOTOOLS_H_H_HEAD__FILE__

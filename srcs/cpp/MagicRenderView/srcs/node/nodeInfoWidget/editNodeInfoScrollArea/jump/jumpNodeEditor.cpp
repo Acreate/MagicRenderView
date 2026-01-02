@@ -6,7 +6,7 @@
 #include "../../../../director/printerDirector.h"
 #include "../../../../srack/srackInfo.h"
 #include "../../../node/node.h"
-#include "../../../nodeInfo/nodeBuilderTools.h"
+#include "../../../nodeInfo/nodeWidgetInfoTools.h"
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 #include "subWidget/jumpNodeWidgetItem.h"
 void JumpNodeEditor::releaseResource( ) {
@@ -19,7 +19,7 @@ void JumpNodeEditor::releaseResource( ) {
 bool JumpNodeEditor::createJumpItem( Node *node_ref_link_info ) {
 
 	std::vector< std::vector< Node * > > nodeRefLinkVector;
-	if( NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( node_ref_link_info, nodeRefLinkVector ) == false )
+	if( NodeWidgetInfoTools::JumpWidgetInfoTools::analysisJumpNodeRef( node_ref_link_info, nodeRefLinkVector ) == false )
 		return false;
 	size_t count = nodeRefLinkVector.size( );
 	if( count == 0 )
@@ -61,7 +61,7 @@ bool JumpNodeEditor::initNode( Node *init_node ) {
 		return false;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::Point ) {
 		std::vector< Node * > jumpNodeVector;
-		if( NodeBuilderTools::Point::findJumNodeRef( init_node, jumpNodeVector ) == false )
+		if( NodeWidgetInfoTools::PointWidgetInfoTools::findJumNodeRef( init_node, jumpNodeVector ) == false )
 			return false;
 		size_t count = jumpNodeVector.size( );
 		auto arrayPtr = jumpNodeVector.data( );

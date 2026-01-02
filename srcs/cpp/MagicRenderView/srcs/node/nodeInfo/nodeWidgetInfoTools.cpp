@@ -1,4 +1,4 @@
-﻿#include "nodeBuilderTools.h"
+﻿#include "nodeWidgetInfoTools.h"
 
 #include "../../app/application.h"
 
@@ -8,7 +8,7 @@
 #include "../../srack/srackInfo.h"
 #include "../node/node.h"
 
-void NodeBuilderTools::analysisSubNodeRef( Node *analysis_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
+void NodeWidgetInfoTools::analysisSubNodeRef( Node *analysis_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
 	std::vector< Node * > subNodeVector;
 	size_t count;
 	size_t index;
@@ -51,7 +51,7 @@ void NodeBuilderTools::analysisSubNodeRef( Node *analysis_node_ref_link_info, st
 	for( index = 0; index < count; ++index )
 		analysisSubNodeRef( NodeArrayPtr[ index ], result_node_ref_link_vector );
 }
-bool NodeBuilderTools::analysisNodeRef( Node *analysis_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
+bool NodeWidgetInfoTools::analysisNodeRef( Node *analysis_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
 	if( analysis_node_ref_link_info == nullptr )
 		return false;
 
@@ -108,7 +108,7 @@ bool NodeBuilderTools::analysisNodeRef( Node *analysis_node_ref_link_info, std::
 	result_node_ref_link_vector.resize( count );
 	return true;
 }
-bool NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( Node *analysis_node_ref_link_info, Node *&result_begin_node_ref_link ) {
+bool NodeWidgetInfoTools::BeginWidgetInfoTools::findRefBeginNode( Node *analysis_node_ref_link_info, Node *&result_begin_node_ref_link ) {
 	size_t count = analysis_node_ref_link_info->refInputPortNode.size( );
 	auto NodeArrayPtr = analysis_node_ref_link_info->refInputPortNode.data( );
 	size_t index;
@@ -122,11 +122,11 @@ bool NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( Node *analysis_n
 			return true;
 	return false;
 }
-size_t NodeBuilderTools::filterRepetition( Node **check_array_ptr, const size_t &check_array_count ) {
+size_t NodeWidgetInfoTools::filterRepetition( Node **check_array_ptr, const size_t &check_array_count ) {
 	size_t maxCount = check_array_count;
 	return maxCount;
 }
-bool NodeBuilderTools::sortProcessNodeRefArray( Node **sort_array_ptr, const size_t &sort_array_count ) {
+bool NodeWidgetInfoTools::sortProcessNodeRefArray( Node **sort_array_ptr, const size_t &sort_array_count ) {
 	PrinterDirector *printerDirector = Application::getInstancePtr( )->getPrinterDirector( );
 
 	QString msg = toQString( sort_array_ptr, sort_array_count );
@@ -230,7 +230,7 @@ bool NodeBuilderTools::sortProcessNodeRefArray( Node **sort_array_ptr, const siz
 	printerDirector->info( QString( "完成排序 : " ) + toQString( sort_array_ptr, sort_array_count ), Create_SrackInfo( ) );
 	return true;
 }
-QString NodeBuilderTools::toQString( const Node *const*check_array_ptr, const size_t &check_array_count ) {
+QString NodeWidgetInfoTools::toQString( const Node *const*check_array_ptr, const size_t &check_array_count ) {
 	QStringList result;
 	result.append( "{" );
 	for( size_t index = 0; index < check_array_count; ++index )
@@ -239,7 +239,7 @@ QString NodeBuilderTools::toQString( const Node *const*check_array_ptr, const si
 	result.append( "};" );
 	return result.join( "\n" );
 }
-bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( Node *analysis_node_ref_link_info, std::vector< std::pair< Node *, Node * > > &result_input_node_ref_map, std::vector< Node * > &result_node_ref_link_vector ) {
+bool NodeWidgetInfoTools::JumpWidgetInfoTools::findPoint( Node *analysis_node_ref_link_info, std::vector< std::pair< Node *, Node * > > &result_input_node_ref_map, std::vector< Node * > &result_node_ref_link_vector ) {
 
 	if( analysis_node_ref_link_info->getNodeType( ) == NodeEnum::NodeType::Point ) {
 		result_node_ref_link_vector.emplace_back( analysis_node_ref_link_info );
@@ -264,7 +264,7 @@ bool NodeBuilderTools::JumpNodeBuilderTools::findPoint( Node *analysis_node_ref_
 		}
 	return oldCount != result_input_node_ref_map.size( );
 }
-bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( Node *analysis_node_ref_link_info, std::vector< std::vector< Node * > > &result_node_ref_link_vector ) {
+bool NodeWidgetInfoTools::JumpWidgetInfoTools::analysisJumpNodeRef( Node *analysis_node_ref_link_info, std::vector< std::vector< Node * > > &result_node_ref_link_vector ) {
 
 	// 如果不是 jump 节点，即退出
 	if( analysis_node_ref_link_info->getNodeType( ) != NodeEnum::NodeType::Jump )
@@ -306,7 +306,7 @@ bool NodeBuilderTools::JumpNodeBuilderTools::analysisJumpNodeRef( Node *analysis
 	}
 	return true;
 }
-bool NodeBuilderTools::Point::findJumNodeRef( Node * analysis_node_ref_link_info, std::vector<Node *> &result_node_ref_link_vector ) {
+bool NodeWidgetInfoTools::PointWidgetInfoTools::findJumNodeRef( Node * analysis_node_ref_link_info, std::vector<Node *> &result_node_ref_link_vector ) {
 
 	std::vector< Node * > foreachOutNodeRef = analysis_node_ref_link_info->refOutputPortNode;
 	std::vector< Node * > buffOutNodeRef;

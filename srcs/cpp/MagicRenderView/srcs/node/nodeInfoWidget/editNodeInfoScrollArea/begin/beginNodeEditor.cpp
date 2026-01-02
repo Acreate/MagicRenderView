@@ -8,8 +8,7 @@
 #include "../../../../director/nodeDirector.h"
 
 #include "../../../node/node.h"
-
-#include "../../../nodeInfo/nodeBuilderTools.h"
+#include "../../../nodeInfo/nodeWidgetInfoTools.h"
 
 #include "../../mainInfoWidget/nodeInfoWidget.h"
 
@@ -71,10 +70,10 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 
 	beginNodeRefLinkInfo = init_node;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
-		if( NodeBuilderTools::BeginNodeBuilderTools::findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
+		if( NodeWidgetInfoTools::BeginWidgetInfoTools::findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
 			return false;
 	std::vector< Node * > resultNodeRefLinkVector;
-	if( NodeBuilderTools::analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )
+	if( NodeWidgetInfoTools::analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )
 		return false;
 	size_t count = resultNodeRefLinkVector.size( );
 	auto nodeRefLinkInfoArrayPtr = resultNodeRefLinkVector.data( );
@@ -91,7 +90,7 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 				processNodeRefLinkVector.emplace_back( nodeRefLinkInfoArrayPtr[ index ] );
 				break;
 		}
-	if( NodeBuilderTools::sortProcessNodeRefArray( processNodeRefLinkVector.data( ), processNodeRefLinkVector.size( ) ) == false )
+	if( NodeWidgetInfoTools::sortProcessNodeRefArray( processNodeRefLinkVector.data( ), processNodeRefLinkVector.size( ) ) == false )
 		return false; // 缺少依赖
 	beginItem->setNodeRefVector( beginNodeRefLinkVector );
 
