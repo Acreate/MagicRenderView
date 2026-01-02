@@ -28,8 +28,8 @@ protected:
 protected:
 	QString portName;
 	QString varTypeName;
-	void *varPtr;
 	uint64_t generateCode;
+	OutputPortBuilderInfo *outputPortBuilderInfo;
 protected:
 	QLabel *ico;
 	QLabel *showTitle;
@@ -41,10 +41,7 @@ protected:
 	virtual bool emplaceBackInputPortRef( InputPort *input_port_ptr );
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
 	virtual void clearInputPortRef( );
-	virtual void * getVarPtr( ) const { return varPtr; }
-	virtual OutputPortBuilderInfo * builderOutputPortInfo( ) {
-		return nullptr;
-	}
+	virtual OutputPortBuilderInfo * getOutputPortBuilderInfo( ) const { return outputPortBuilderInfo; }
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;

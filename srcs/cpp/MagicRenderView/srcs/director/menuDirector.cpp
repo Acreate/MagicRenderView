@@ -8,8 +8,8 @@
 #include "../menuStack/app/applicationMenuStack.h"
 #include "../menuStack/edit/editorNodeMenuStack.h"
 #include "../menuStack/generateNode/generateNodeMenuStack.h"
+#include "../node/nodeRunInfo/nodeRunInfo.h"
 
-#include "../node/nodeInfo/nodeRunInfo.h"
 #include "../srack/srackInfo.h"
 #include "../tools/path.h"
 #include "nodeDirector.h"
@@ -31,7 +31,7 @@ MenuDirector::MenuDirector( QObject *parent ) : QObject( parent ) {
 	generateNodeMenuStack = new GenerateNodeMenuStack;
 	applicationMenuStack = new ApplicationMenuStack;
 	editorNodeMenuStack = new EditorNodeMenuStack;
-	
+
 }
 
 MenuDirector::~MenuDirector( ) {
@@ -68,10 +68,12 @@ bool MenuDirector::init( ) {
 	for( ; index < count; ++index )
 		delete actionArrayPtr[ index ];
 	actionVector.clear( );
-
-	if( nodeRunBuilderObj ) {
-		nodeRunBuilderObj->clear( );
-		nodeRunBuilderObj = nullptr;
+	
+	if( nodeRunBuilderObj )
+		nodeRunBuilderObj = nodeDirector->freeCurrentAllNodeAtNodeRunInfo( nodeRunBuilderObj );
+	if( nodeRunBuilderObj != nullptr ) {
+		printerDirector->info( tr( "释放对象[NodeRunInfo(0x%1)]异常" ).arg( QString::number( ( size_t ) nodeRunBuilderObj, 16 ).toUpper( ) ), Create_SrackInfo( ) );
+		return false;
 	}
 
 	printerDirector = instancePtr->getPrinterDirector( );
@@ -240,9 +242,12 @@ void MenuDirector::deleteNodeInfo( ) {
 }
 void MenuDirector::builderProject( ) {
 	if( nodeRunBuilderObj )
-		nodeRunBuilderObj->clear( );
-	nodeRunBuilderObj = nullptr;
-	nodeRunBuilderObj = nodeDirector->builderCurrentAllNode( this->mainWidget );
+		nodeRunBuilderObj = nodeDirector->freeCurrentAllNodeAtNodeRunInfo( nodeRunBuilderObj );
+	if( nodeRunBuilderObj != nullptr ) {
+		printerDirector->info( tr( "释放对象[NodeRunInfo(0x%1)]异常" ).arg( QString::number( ( size_t ) nodeRunBuilderObj, 16 ).toUpper( ) ), Create_SrackInfo( ) );
+		return;
+	}
+	nodeRunBuilderObj = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( this->mainWidget );
 	if( nodeRunBuilderObj == nullptr )
 		return;
 	runBuilderAllNodeVectorBtn->setEnabled( true );

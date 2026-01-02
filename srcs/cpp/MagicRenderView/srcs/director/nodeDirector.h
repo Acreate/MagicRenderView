@@ -118,7 +118,11 @@ public:
 	/// @brief 获取最大的渲染大小
 	/// @return 最大的渲染大小
 	virtual QSize getMaxNodeRenderSize( ) const;
-	virtual NodeRunInfo * builderCurrentAllNode( MainWidget *parent );
+	virtual NodeRunInfo * builderCurrentAllNodeAtNodeRunInfo( MainWidget *parent );
+	/// @brief 释放运行对象
+	/// @param node_run_info 释放对象
+	/// @return 成功返回 nullptr
+	virtual NodeRunInfo * freeCurrentAllNodeAtNodeRunInfo( NodeRunInfo *node_run_info );
 	virtual Node * getNode( const uint64_t &node_generator_code ) const;
 	/// @brief 指定位置弹出节点编辑菜单
 	/// @param pop_pos 位置-全局坐标

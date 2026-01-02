@@ -16,11 +16,11 @@
 
 #include "../node/node/node.h"
 #include "../node/nodeInfo/nodeHistory.h"
-#include "../node/nodeInfo/nodeRunInfo.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
+#include "../node/nodeRunInfo/nodeRunInfo.h"
 #include "../node/nodeType/nodeTypeInfoSerializeion.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
@@ -387,7 +387,7 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	}
 	return QSize { x, y };
 }
-NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
+NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( MainWidget *parent ) {
 	NodeRunInfo *result = new NodeRunInfo( parent );
 	size_t count = nodeArchiveVector.size( );
 	if( count != 0 ) {
@@ -403,6 +403,10 @@ NodeRunInfo * NodeDirector::builderCurrentAllNode( MainWidget *parent ) {
 	}
 
 	delete result;
+	return nullptr;
+}
+NodeRunInfo * NodeDirector::freeCurrentAllNodeAtNodeRunInfo( NodeRunInfo *node_run_info ) {
+	delete node_run_info;
 	return nullptr;
 }
 Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
@@ -640,7 +644,7 @@ void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &org_srack_
 
 void NodeDirector::nodeRunInfoClear( NodeRunInfo *clear_obj, const SrackInfo &srack_info ) {
 	emit node_run_info_clear_signal( this, Create_SrackInfo( ), clear_obj, srack_info );
-	delete clear_obj;
+	//delete clear_obj;
 }
 void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QAction *create_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function ) {
 	auto nodeName = create_item->text( );

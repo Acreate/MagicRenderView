@@ -1,16 +1,28 @@
 ﻿#include "startNode.h"
 
+#include "../../../nodeRunInfo/nodeInfo/nodeBuilderInfo.h"
+#include "../../../nodeRunInfo/port/outputPort/outputPortBuilderInfo.h"
 #include "../../../port/outputPort/begin/beginOutputPort .h"
 #include "../../../port/outputPort/toBegin/toBeginOutputPort.h"
 
 bool StartNode::initEx( MainWidget *parent ) {
-	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) ) == nullptr )
+
+	initExCallFunction = [this] ( MainWidget *main_widget ) {
+		auto beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) );
+		if( beginOutputPort == nullptr )
 			return false;
-		if( appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) ) == nullptr )
+		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) );
+		if( toBeginOutputPort == nullptr )
 			return false;
+		auto nodeCallFucntion = [] ( std::vector< InputPortBuilderInfo * > &input_port_builder_infos, std::vector< OutputPortBuilderInfo * > &output_port_builder_infos, std::vector< NodeBuilderInfo * > &node_builder_infos ) {
+			
+			
+			return true;
+		};
+		nodeBuilderInfo->init( nodeCallFucntion );
 		return true;
 	};
+
 	return BeginNode::initEx( parent );
 }
 

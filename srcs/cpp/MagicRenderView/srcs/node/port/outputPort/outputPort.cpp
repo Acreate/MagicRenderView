@@ -11,6 +11,7 @@
 #include "../../../srack/srackInfo.h"
 
 #include "../../node/node.h"
+#include "../../nodeRunInfo/port/outputPort/outputPortBuilderInfo.h"
 
 #include "../inputPort/inputPort.h"
 
@@ -47,7 +48,7 @@ void OutputPort::clearInputPortRef( ) {
 		inputPort->eraseOutputPortRef( this );
 	}
 }
-OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullptr ) {
+OutputPort::OutputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
@@ -59,6 +60,7 @@ OutputPort::OutputPort( const QString &name ) : portName( name ), varPtr( nullpt
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( showTitle );
 	mainLayout->addWidget( ico );
+	outputPortBuilderInfo = new OutputPortBuilderInfo( this );
 }
 OutputPort::~OutputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );

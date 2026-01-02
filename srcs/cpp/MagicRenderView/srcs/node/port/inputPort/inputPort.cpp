@@ -11,6 +11,7 @@
 #include <QMenu>
 
 #include "../../../srack/srackInfo.h"
+#include "../../nodeRunInfo/port/inputPort/inputPortBuilderInfo.h"
 #include "../outputPort/outputPort.h"
 bool InputPort::emplaceBackOutputPortRef( OutputPort *output_port_ptr ) {
 	size_t count = refOutputPortVector.size( );
@@ -45,7 +46,7 @@ void InputPort::clearOutputPortRef( ) {
 		outputPort->eraseInputPortRef( this );
 	}
 }
-InputPort::InputPort( const QString &name ) : portName( name ), varPtr( nullptr ) {
+InputPort::InputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
@@ -58,6 +59,7 @@ InputPort::InputPort( const QString &name ) : portName( name ), varPtr( nullptr 
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( ico );
 	mainLayout->addWidget( showTitle );
+	inputPortBuilderInfo = new InputPortBuilderInfo( this );
 }
 bool InputPort::init( Node *parent ) {
 	if( parent == nullptr )

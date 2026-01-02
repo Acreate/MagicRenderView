@@ -12,7 +12,8 @@
 
 #define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) override { return _Type_Name; }
-class NodeLinkLibInfo;
+class InputPortBuilderInfo;
+class OutputPortBuilderInfo;
 class NodeBuilderInfo;
 class MainWidget;
 class NodeInfoWidget;
@@ -103,8 +104,8 @@ protected:
 	QPen advisPen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
-	/// @brief 绑定的编译对象
-	NodeRunInfo *nodeRunInfo;
+	/// @brief 编译对象
+	NodeBuilderInfo *nodeBuilderInfo;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -125,6 +126,8 @@ private:
 	/// @param ref_input_port 输入端口
 	virtual void outputDelRef_Slot( OutputPort *output_port, InputPort *ref_input_port );
 protected:
+	virtual size_t getInputPortBuilderInfoVector( std::vector< InputPortBuilderInfo * > &result_input_builder_info_vector );
+	virtual size_t getOutputPortBuilderInfoVector( std::vector< OutputPortBuilderInfo * > &result_output_builder_info_vector );
 	/// @brief 增加输入引用
 	/// @param output_port
 	/// @param output_port
@@ -153,9 +156,9 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
-	virtual NodeBuilderInfo * builderNodeBuilderInfo( ) {
-		return nullptr;
-	}
+	virtual NodeBuilderInfo * getNodeBuilderInfo( ) const { return nodeBuilderInfo; }
+	virtual OutputPortBuilderInfo * getOutputPortBuilderInfo( OutputPort *output_port ) const;
+	virtual InputPortBuilderInfo * getInputPortBuilderInfo( InputPort *input_port ) const;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -188,16 +191,6 @@ protected:
 	/// @brief 更新端口的生成代号
 	/// @return 失败返回 false
 	virtual bool updatePortGenerateCodes( );
-	/// @brief 配置端口变量信息
-	/// @param change_var_output_port 修改的输出端口
-	/// @param var_type_name 变量名称
-	/// @param var_type_varlue_ptr 变量值指针
-	virtual void setPortVarInfo( OutputPort *change_var_output_port, const QString &var_type_name, void *var_type_varlue_ptr );
-	/// @brief 配置端口变量信息
-	/// @param change_var_input_port 修改的输入端口
-	/// @param var_type_name 变量名称
-	/// @param var_type_varlue_ptr 变量值指针
-	virtual void setPortVarInfo( InputPort *change_var_input_port, const QString &var_type_name, void *var_type_varlue_ptr );
 private:
 	/// @brief 增加一个输入端口
 	/// @param input_port 输入端

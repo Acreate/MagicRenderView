@@ -14,6 +14,7 @@
 	friend class NodeTypeInfoSerializeion;\
 	friend class NodeTypeInfo;\
 	friend class PortTypeInfo;\
+	friend class NodeBuilderInfo;\
 	friend class PortLinkType
  
 #endif // NODEFRINEDCLASS_H_H_HEAD__FILE__

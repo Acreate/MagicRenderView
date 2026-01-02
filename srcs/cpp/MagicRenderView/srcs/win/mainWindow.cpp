@@ -21,7 +21,7 @@
 #include "../menu/app/normalApplicationMenu.h"
 #include "../menu/app/normalApplicationToolBar.h"
 #include "../menuStack/app/applicationMenuStack.h"
-#include "../node/nodeInfo/nodeRunInfo.h"
+
 
 #include "../srack/srackInfo.h"
 
