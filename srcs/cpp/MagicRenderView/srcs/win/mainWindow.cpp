@@ -22,7 +22,6 @@
 #include "../menu/app/normalApplicationToolBar.h"
 #include "../menuStack/app/applicationMenuStack.h"
 
-
 #include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
@@ -150,6 +149,22 @@ MainWindow::~MainWindow( ) {
 		delete editorMenu;
 	delete mainWidget;
 	delete mainWidgetScrollArea;
+}
+bool MainWindow::builderNodeProject( ) {
+	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
+	return true;
+}
+bool MainWindow::nextStepBuilderNode( ) {
+	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
+	return true;
+}
+bool MainWindow::runBuilderBuilderNode( ) {
+	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
+	return true;
+}
+bool MainWindow::stopBuilderBuilderNode( ) {
+	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
+	return true;
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );

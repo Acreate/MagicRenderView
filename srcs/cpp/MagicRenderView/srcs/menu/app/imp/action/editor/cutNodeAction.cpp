@@ -5,6 +5,6 @@ bool CutNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	setInitVarNumber( tr( "剪切节点" ) );
 	return true;
 }
-bool CutNodeAction::run( QWidget *parent ) {
+bool CutNodeAction::run( MainWindow* parent ) {
 	return false;
 }

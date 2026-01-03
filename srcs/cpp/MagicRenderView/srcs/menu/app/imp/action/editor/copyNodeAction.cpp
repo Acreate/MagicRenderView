@@ -5,6 +5,6 @@ bool CopyNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	setInitVarNumber( tr( "拷贝节点" ) );
 	return true;
 }
-bool CopyNodeAction::run( QWidget *parent ) {
+bool CopyNodeAction::run( MainWindow* parent ) {
 	return false;
 }

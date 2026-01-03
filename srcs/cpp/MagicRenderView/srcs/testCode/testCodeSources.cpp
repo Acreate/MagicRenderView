@@ -317,25 +317,5 @@ bool TestCodeSources::testAll( ) {
 	//TestCodeSources::testAppMoveWidget( );
 	//return false;
 
-	std::vector< void * > ptrArray;
-	std::vector< void * > converArray;
-	ptrArray.emplace_back( ( void * ) 0x45 );
-	ptrArray.emplace_back( ( void * ) 0x0 );
-	ptrArray.emplace_back( ( void * ) 0x89 );
-	ptrArray.emplace_back( ( void * ) 0x0 );
-	ptrArray.emplace_back( ( void * ) 0x77 );
-	ptrArray.emplace_back( ( void * ) 0x7789 );
-	ptrArray.emplace_back( ( void * ) 0x32 );
-	ptrArray.emplace_back( ( void * ) 0x0 );
-	ptrArray.emplace_back( ( void * ) 0x0 );
-	ptrArray.emplace_back( ( void * ) 0x23 );
-	auto sortTarget = ptrArray.data( );
-	void **removePla = nullptr;
-	size_t removeCount = 0;
-	size_t count = ptrArray.size( );
-	qDebug( ) << ptrArray;
-	ArrayTools::removeRepeat( sortTarget, count, removePla, removeCount );
-	ArrayTools::toStdVector( removePla, removeCount, converArray );
-	qDebug( ) << converArray;
-	return false;
+	return true;
 }

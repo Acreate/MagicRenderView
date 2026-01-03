@@ -50,6 +50,10 @@ public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+	virtual bool builderNodeProject( );
+	virtual bool nextStepBuilderNode( );
+	virtual bool runBuilderBuilderNode( );
+	virtual bool stopBuilderBuilderNode( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

@@ -4,6 +4,7 @@
 #include <QAction>
 #include <QWidget>
 
+class MainWindow;
 class AppDirector;
 class VarDirector;
 class PrinterDirector;
@@ -28,7 +29,7 @@ protected:
 public:
 	~NormalApplicationAction( ) override;
 	virtual bool init( ApplicationMenuStack *application_menu_stack_ptr );
-	virtual bool run( QWidget *parent ) = 0;
+	virtual bool run( MainWindow* parent ) = 0;
 Q_SIGNALS:
 	void release_signal( NormalApplicationAction *action );
 	void trigg_signal( NormalApplicationAction *action );

@@ -7,7 +7,7 @@ bool QuitAppAction::init( ApplicationMenuStack *application_menu_stack ) {
 	setInitVarNumber( tr( "退出程序" ) );
 	return true;
 }
-bool QuitAppAction::run( QWidget *parent ) {
+bool QuitAppAction::run( MainWindow* parent ) {
 	application->exit( 0 );
 	return true;
 }

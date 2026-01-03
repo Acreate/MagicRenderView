@@ -5,6 +5,6 @@ bool PasteNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	setInitVarNumber( tr( "粘贴节点" ) );
 	return true;
 }
-bool PasteNodeAction::run( QWidget *parent ) {
+bool PasteNodeAction::run( MainWindow* parent ) {
 	return false;
 }
