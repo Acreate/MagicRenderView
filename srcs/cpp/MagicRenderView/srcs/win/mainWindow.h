@@ -50,10 +50,17 @@ public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+public:
 	virtual bool builderNodeProject( );
 	virtual bool nextStepBuilderNode( );
 	virtual bool runBuilderBuilderNode( );
 	virtual bool stopBuilderBuilderNode( );
+	virtual bool copySelectNodeInfo( );
+	virtual bool pastePointNodeInfo( );
+	virtual bool cutSelectNodeInfo( );
+	virtual bool cancelNodeInfo( );
+	virtual bool deleteSelectNodeInfo( );
+	virtual bool calculateNodeRenderSize( );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

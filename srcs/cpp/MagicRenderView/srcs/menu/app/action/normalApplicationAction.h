@@ -4,6 +4,8 @@
 #include <QAction>
 #include <QWidget>
 
+class EditorDirector;
+class BuilderDirector;
 class MainWindow;
 class AppDirector;
 class VarDirector;
@@ -14,11 +16,13 @@ class ApplicationMenuStack;
 class NormalApplicationAction : public QAction {
 	Q_OBJECT;
 protected:
+	BuilderDirector* builderDirector;
 	Application *application;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	AppDirector *appDirector;
+	EditorDirector *editorDirector;
 private:
 	void triggered( );
 protected:

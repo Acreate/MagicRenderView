@@ -15,6 +15,8 @@
 #include <win/mainWindow.h>
 
 #include "../director/appDirector.h"
+#include "../director/builderDirector.h"
+#include "../director/editorDirector.h"
 #include "../director/menuDirector.h"
 #include "../srack/srackInfo.h"
 
@@ -33,7 +35,9 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	nodeDirector = new NodeDirector;
 	menuDirector = new MenuDirector;
 	appDirector = new AppDirector;
+	editorDirector = new EditorDirector;
 	mainWindow = new MainWindow( );
+	builderDirector = new BuilderDirector;
 	appInitRunDataTime = new QDateTime;
 }
 Application::~Application( ) {
@@ -41,7 +45,9 @@ Application::~Application( ) {
 		printerDirector->error( "窗口状态保存异常", Create_SrackInfo( ) );
 	delete menuDirector;
 	delete appDirector;
+	delete editorDirector;
 	delete mainWindow;
+	delete builderDirector;
 	delete nodeDirector;
 	if( synchronousVarToFile( ) == false )
 		printerDirector->error( "程序信息保存异常", Create_SrackInfo( ) );
@@ -134,12 +140,16 @@ bool Application::init( ) {
 		return false;
 	if( nodeDirector->init( ) == false )
 		return false;
+	if( builderDirector->init( ) == false )
+		return false;
 	applicationMenuStack = menuDirector->getApplicationMenuStack( );
 	if( applicationMenuStack == nullptr )
 		return false;
 	if( mainWindow->init( ) == false )
 		return false;
 	if( synchronousVarToWindowInfo( ) == false )
+		return false;
+	if( editorDirector->init( ) == false )
 		return false;
 	mainWindow->show( );
 	if( mainWindow->isHidden( ) )

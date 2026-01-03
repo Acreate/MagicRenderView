@@ -1,5 +1,6 @@
 ﻿#include "runBuilderAction.h"
 
+#include "../../../../../director/builderDirector.h"
 #include "../../../../../win/mainWindow.h"
 bool RunBuilderAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
@@ -8,7 +9,5 @@ bool RunBuilderAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool RunBuilderAction::run( MainWindow* parent ) {
-	if( parent == nullptr )
-		return false;
-	return parent->runBuilderBuilderNode( );
+	return builderDirector->runBuilderBuilderNode( );
 }

@@ -16,8 +16,9 @@ bool NormalApplicationAction::init( ApplicationMenuStack *application_menu_stack
 	nodeDirector = application->getNodeDirector( );
 	printerDirector = application->getPrinterDirector( );
 	varDirector = application->getVarDirector( );
-	
+	builderDirector = application->getBuilderDirector(  );
 	appDirector = application->getAppDirector( );
+	editorDirector = application->getEditorDirector(  );
 	connect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
 	return true;
 }

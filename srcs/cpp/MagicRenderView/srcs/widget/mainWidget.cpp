@@ -146,49 +146,67 @@ bool MainWidget::init( ) {
 	*oldClickTime = QDateTime::currentDateTime( );
 	return true;
 }
-void MainWidget::copySelectNodeInfo( ) {
+bool MainWidget::copySelectNodeInfo( ) {
 	if( oldSelectNode == nullptr )
-		return;
+		return true;
 	QClipboard *clipboard = QApplication::clipboard( );
 	clipboard->setText( oldSelectNode->getNodeName( ) );
+	return true;
 }
-void MainWidget::pastePointNodeInfo( ) {
+bool MainWidget::pastePointNodeInfo( ) {
 
 	QClipboard *clipboard = QApplication::clipboard( );
 	auto text = clipboard->text( );
 	auto list = text.split( "," );
 	if( list.size( ) == 0 )
-		return;
+		return true;
 	text = list.data( )[ 0 ];
 	auto node = nodeDirector->createNode( text );
 	if( node == nullptr ) {
 		printerDirector->info( tr( "无法匹配 [%1]" ).arg( text ), Create_SrackInfo( ) );
-		return;
+		return true;
 	}
 	auto point = QCursor::pos( );
 	point = mapFromGlobal( point );
 	node->move( point );
+	return true;
 }
-void MainWidget::cutSelectNodeInfo( ) {
+bool MainWidget::cutSelectNodeInfo( ) {
 	if( oldSelectNode == nullptr )
-		return;
+		return true;
 	copySelectNodeInfo( );
 	deleteSelectNodeInfo( );
+	return true;
 }
-void MainWidget::cancelNodeInfo( ) {
+bool MainWidget::cancelNodeInfo( ) {
 	nodeDirector->cancelNodeHistory( );
+	return true;
 }
-void MainWidget::deleteSelectNodeInfo( ) {
+bool MainWidget::deleteSelectNodeInfo( ) {
 	if( oldSelectNode == nullptr )
-		return;
+		return true;
 	delete oldSelectNode;
 	oldSelectNode = nullptr;
+	return true;
 }
 
-void MainWidget::calculateNodeRenderSize( ) {
+bool MainWidget::calculateNodeRenderSize( ) {
 	auto buffMaxSize = nodeDirector->getMaxNodeRenderSize( );
 	if( buffMaxSize.width( ) > this->width( ) || buffMaxSize.height( ) > this->height( ) )
 		setMinimumSize( buffMaxSize );
+	return true;
+}
+bool MainWidget::builderNodeProject( ) {
+	return false;
+}
+bool MainWidget::nextStepBuilderNode( ) {
+	return false;
+}
+bool MainWidget::runBuilderBuilderNode( ) {
+	return false;
+}
+bool MainWidget::stopBuilderBuilderNode( ) {
+	return false;
 }
 void MainWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );

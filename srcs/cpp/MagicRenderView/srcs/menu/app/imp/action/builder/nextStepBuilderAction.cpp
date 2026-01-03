@@ -1,5 +1,6 @@
 ﻿#include "nextStepBuilderAction.h"
 
+#include "../../../../../director/builderDirector.h"
 #include "../../../../../win/mainWindow.h"
 bool NextStepBuilderAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
@@ -8,7 +9,5 @@ bool NextStepBuilderAction::init( ApplicationMenuStack *application_menu_stack )
 	return true;
 }
 bool NextStepBuilderAction::run( MainWindow* parent ) {
-	if( parent == nullptr )
-		return false;
-	return parent->nextStepBuilderNode( );
+	return builderDirector->nextStepBuilderNode( );
 }

@@ -53,12 +53,16 @@ public:
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
 	/// @brief 快捷功能
 public:
-	virtual void copySelectNodeInfo( );
-	virtual void pastePointNodeInfo( );
-	virtual void cutSelectNodeInfo( );
-	virtual void cancelNodeInfo( );
-	virtual void deleteSelectNodeInfo( );
-	virtual void calculateNodeRenderSize( );
+	virtual bool copySelectNodeInfo( );
+	virtual bool pastePointNodeInfo( );
+	virtual bool cutSelectNodeInfo( );
+	virtual bool cancelNodeInfo( );
+	virtual bool deleteSelectNodeInfo( );
+	virtual bool calculateNodeRenderSize( );
+	virtual bool builderNodeProject( );
+	virtual bool nextStepBuilderNode( );
+	virtual bool runBuilderBuilderNode( );
+	virtual bool stopBuilderBuilderNode( );
 	/// @brief 重载
 protected:
 	void showEvent( QShowEvent *event ) override;

@@ -1,5 +1,6 @@
 ﻿#include "builderPorjectAction.h"
 
+#include "../../../../../director/builderDirector.h"
 #include "../../../../../win/mainWindow.h"
 bool BuilderPorjectAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
@@ -8,7 +9,5 @@ bool BuilderPorjectAction::init( ApplicationMenuStack *application_menu_stack ) 
 	return true;
 }
 bool BuilderPorjectAction::run( MainWindow *parent ) {
-	if( parent == nullptr )
-		return false;
-	return parent->builderNodeProject( );
+	return builderDirector->builderNodeProject( );
 }

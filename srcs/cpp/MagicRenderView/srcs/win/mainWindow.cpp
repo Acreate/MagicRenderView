@@ -151,20 +151,54 @@ MainWindow::~MainWindow( ) {
 	delete mainWidgetScrollArea;
 }
 bool MainWindow::builderNodeProject( ) {
-	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
-	return true;
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
 }
 bool MainWindow::nextStepBuilderNode( ) {
-	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
-	return true;
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
 }
 bool MainWindow::runBuilderBuilderNode( ) {
-	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
-	return true;
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
 }
 bool MainWindow::stopBuilderBuilderNode( ) {
-	printerDirector->info( tr( "正确" ), Create_SrackInfo( ) );
-	return true;
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::copySelectNodeInfo( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::pastePointNodeInfo( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::cutSelectNodeInfo( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::cancelNodeInfo( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::deleteSelectNodeInfo( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
+}
+bool MainWindow::calculateNodeRenderSize( ) {
+	if( mainWidget == nullptr )
+		return false;
+	return mainWidget->builderNodeProject( );
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );

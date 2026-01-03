@@ -3,6 +3,7 @@
 #pragma once
 #include <menu/app/action/normalApplicationAction.h>
 
+class BuilderDirector;
 class StopBuilderAction : public NormalApplicationAction {
 	Q_OBJECT;
 public:

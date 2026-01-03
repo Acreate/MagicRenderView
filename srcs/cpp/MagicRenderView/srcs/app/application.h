@@ -3,6 +3,8 @@
 #pragma once
 #include <QApplication>
 
+class EditorDirector;
+class BuilderDirector;
 class AppDirector;
 class ApplicationMenuStack;
 class NormalApplicationMenu;
@@ -26,6 +28,8 @@ protected:
 	IniDirector *iniDirector;
 	MenuDirector *menuDirector;
 	AppDirector *appDirector;
+	BuilderDirector *builderDirector;
+	EditorDirector *editorDirector;
 protected:
 	MainWindow *mainWindow;
 	ApplicationMenuStack *applicationMenuStack;
@@ -41,7 +45,7 @@ protected:
 	QString iniSaveFilePathName;
 	QString logSaveFilePathName;
 protected:
-	
+
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -54,6 +58,8 @@ protected:
 public:
 	virtual bool init( );
 	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
+	virtual EditorDirector * getEditorDirector( ) const { return editorDirector; }
+	virtual BuilderDirector * getBuilderDirector( ) const { return builderDirector; }
 	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }
 	virtual const QString & getIniSaveFilePathName( ) const { return iniSaveFilePathName; }
 	virtual const QString & getLogSaveFilePathName( ) const { return logSaveFilePathName; }

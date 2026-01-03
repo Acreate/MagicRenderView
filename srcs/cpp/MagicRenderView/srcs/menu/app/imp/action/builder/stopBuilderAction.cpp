@@ -1,5 +1,6 @@
 ﻿#include "stopBuilderAction.h"
 
+#include "../../../../../director/builderDirector.h"
 #include "../../../../../win/mainWindow.h"
 bool StopBuilderAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
@@ -8,7 +9,5 @@ bool StopBuilderAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool StopBuilderAction::run( MainWindow *parent ) {
-	if( parent == nullptr )
-		return false;
-	return parent->stopBuilderBuilderNode( );
+	return builderDirector->stopBuilderBuilderNode( );
 }
