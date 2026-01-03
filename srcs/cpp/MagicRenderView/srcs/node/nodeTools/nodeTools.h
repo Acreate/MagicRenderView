@@ -26,11 +26,6 @@ public:
 	/// @param result_ref_node_vector 返回的排序
 	/// @return 失败返回 false
 	static bool sortNodeVectorRefNodeVector( const std::vector< Node * > &check_node_vector, std::vector< Node * > &result_ref_node_vector );
-	/// @brief 去重复
-	/// @param check_node_vector 检查的重复列表
-	/// @param result_ref_node_vector 非重复节点列表
-	/// @return 失败返回 false
-	static bool removeRepeatNode( const std::vector< Node * > &check_node_vector, std::vector< Node * > &result_ref_node_vector );
 };
 
 #endif // NODETOOLS_H_H_HEAD__FILE__
