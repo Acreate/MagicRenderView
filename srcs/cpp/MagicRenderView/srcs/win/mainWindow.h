@@ -51,10 +51,6 @@ public:
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
 public:
-	virtual bool builderNodeProject( );
-	virtual bool nextStepBuilderNode( );
-	virtual bool runBuilderBuilderNode( );
-	virtual bool stopBuilderBuilderNode( );
 	virtual bool copySelectNodeInfo( );
 	virtual bool pastePointNodeInfo( );
 	virtual bool cutSelectNodeInfo( );

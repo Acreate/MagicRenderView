@@ -1,4 +1,6 @@
 ﻿#include "copyNodeAction.h"
+
+#include "../../../../../director/editorDirector.h"
 bool CopyNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
@@ -6,5 +8,5 @@ bool CopyNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool CopyNodeAction::run( MainWindow* parent ) {
-	return false;
+	return editorDirector->copySelectNodeInfo(  );
 }

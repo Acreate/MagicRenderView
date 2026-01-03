@@ -247,7 +247,7 @@ void MenuDirector::builderProject( ) {
 		printerDirector->info( tr( "释放对象[NodeRunInfo(0x%1)]异常" ).arg( QString::number( ( size_t ) nodeRunBuilderObj, 16 ).toUpper( ) ), Create_SrackInfo( ) );
 		return;
 	}
-	nodeRunBuilderObj = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( this->mainWidget );
+	nodeRunBuilderObj = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
 	if( nodeRunBuilderObj == nullptr )
 		return;
 	runBuilderAllNodeVectorBtn->setEnabled( true );

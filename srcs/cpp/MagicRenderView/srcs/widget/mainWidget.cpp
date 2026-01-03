@@ -196,18 +196,6 @@ bool MainWidget::calculateNodeRenderSize( ) {
 		setMinimumSize( buffMaxSize );
 	return true;
 }
-bool MainWidget::builderNodeProject( ) {
-	return false;
-}
-bool MainWidget::nextStepBuilderNode( ) {
-	return false;
-}
-bool MainWidget::runBuilderBuilderNode( ) {
-	return false;
-}
-bool MainWidget::stopBuilderBuilderNode( ) {
-	return false;
-}
 void MainWidget::showEvent( QShowEvent *event ) {
 	QWidget::showEvent( event );
 }

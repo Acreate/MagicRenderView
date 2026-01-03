@@ -2,12 +2,22 @@
 #define BUILDERAPPLICATIONMENU_H_H_HEAD__FILE__
 #pragma once
 
-
-
 #include "../../normalApplicationMenu.h"
 
+class StopBuilderAction;
+class NextStepBuilderAction;
+class RunBuilderAction;
+class BuilderPorjectAction;
 class BuilderApplicationMenu : public NormalApplicationMenu {
 	Q_OBJECT;
+	friend class BuilderDirector;
+protected:
+	struct {
+		BuilderPorjectAction *builderPorjectAction;
+		RunBuilderAction *runBuilderAction;
+		NextStepBuilderAction *nextStepBuilderAction;
+		StopBuilderAction *stopBuilderAction;
+	} normalMenuAction;
 public:
 	BuilderApplicationMenu( );
 	bool init( ApplicationMenuStack *application_menu_stack ) override;

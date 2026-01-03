@@ -59,10 +59,6 @@ public:
 	virtual bool cancelNodeInfo( );
 	virtual bool deleteSelectNodeInfo( );
 	virtual bool calculateNodeRenderSize( );
-	virtual bool builderNodeProject( );
-	virtual bool nextStepBuilderNode( );
-	virtual bool runBuilderBuilderNode( );
-	virtual bool stopBuilderBuilderNode( );
 	/// @brief 重载
 protected:
 	void showEvent( QShowEvent *event ) override;

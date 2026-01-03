@@ -109,16 +109,16 @@ public:
 	virtual NormalApplicationMenu * getMenu( const QString &tool_menu_name );
 	virtual NormalApplicationAction * getAction( const QString &acton_name );
 	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationToolBar, TType > > >
-	NormalApplicationToolBar * getToolBar( ) {
-		return getToolBar( typeid( TType ).name( ) );
+	TType * getToolBar( ) {
+		return ( TType * ) getToolBar( typeid( TType ).name( ) );
 	}
 	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationMenu, TType > > >
-	NormalApplicationMenu * getMenu( ) {
-		return getMenu( typeid( TType ).name( ) );
+	TType * getMenu( ) {
+		return ( TType * ) getMenu( typeid( TType ).name( ) );
 	}
 	template< typename TType, typename=std::enable_if_t< std::is_base_of_v< NormalApplicationAction, TType > > >
-	NormalApplicationAction * getAction( ) {
-		return getAction( typeid( TType ).name( ) );
+	TType * getAction( ) {
+		return ( TType * ) getAction( typeid( TType ).name( ) );
 	}
 };
 #endif // APPLICATIONMENUSTACK_H_H_HEAD__FILE__

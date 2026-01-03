@@ -2,7 +2,7 @@
 
 #include "../../srack/srackInfo.h"
 
-NodeRunInfo::NodeRunInfo( QObject *parent ) : QObject( parent ), beginNodeArrayPtr( nullptr ), beginNodeIndex( 0 ), beginNodeCount( 0 ), errorObj( nullptr ) {
+NodeRunInfo::NodeRunInfo( ) : QObject( ), beginNodeArrayPtr( nullptr ), beginNodeIndex( 0 ), beginNodeCount( 0 ), errorObj( nullptr ) {
 
 }
 NodeRunInfo::~NodeRunInfo( ) {
@@ -44,6 +44,9 @@ bool NodeRunInfo::runNextNode( ) {
 	return false;
 }
 bool NodeRunInfo::runResidueNode( ) {
+	return false;
+}
+bool NodeRunInfo::runStopNode( ) {
 	return false;
 }
 void NodeRunInfo::clear( ) {

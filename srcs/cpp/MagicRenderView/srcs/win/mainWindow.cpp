@@ -150,55 +150,35 @@ MainWindow::~MainWindow( ) {
 	delete mainWidget;
 	delete mainWidgetScrollArea;
 }
-bool MainWindow::builderNodeProject( ) {
-	if( mainWidget == nullptr )
-		return false;
-	return mainWidget->builderNodeProject( );
-}
-bool MainWindow::nextStepBuilderNode( ) {
-	if( mainWidget == nullptr )
-		return false;
-	return mainWidget->builderNodeProject( );
-}
-bool MainWindow::runBuilderBuilderNode( ) {
-	if( mainWidget == nullptr )
-		return false;
-	return mainWidget->builderNodeProject( );
-}
-bool MainWindow::stopBuilderBuilderNode( ) {
-	if( mainWidget == nullptr )
-		return false;
-	return mainWidget->builderNodeProject( );
-}
 bool MainWindow::copySelectNodeInfo( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->copySelectNodeInfo( );
 }
 bool MainWindow::pastePointNodeInfo( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->pastePointNodeInfo( );
 }
 bool MainWindow::cutSelectNodeInfo( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->cutSelectNodeInfo( );
 }
 bool MainWindow::cancelNodeInfo( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->cancelNodeInfo( );
 }
 bool MainWindow::deleteSelectNodeInfo( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->deleteSelectNodeInfo( );
 }
 bool MainWindow::calculateNodeRenderSize( ) {
 	if( mainWidget == nullptr )
 		return false;
-	return mainWidget->builderNodeProject( );
+	return mainWidget->calculateNodeRenderSize( );
 }
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );

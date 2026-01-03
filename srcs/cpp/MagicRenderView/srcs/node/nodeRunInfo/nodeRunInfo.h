@@ -40,7 +40,7 @@ protected:
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );
 public:
-	NodeRunInfo( QObject *parent );
+	NodeRunInfo( );
 	~NodeRunInfo( ) override;
 	/// @brief 检查是否存在指定节点
 	/// @param check_node_ref 检查节点
@@ -52,6 +52,9 @@ public:
 	/// @brief 运行剩余
 	/// @return 成功返回 true
 	virtual bool runResidueNode( );
+	/// @brief 停止运行
+	/// @return 成功返回 true
+	virtual bool runStopNode( );
 	/// @brief 清理所有
 	virtual void clear( );
 	/// @brief 获取错误节点

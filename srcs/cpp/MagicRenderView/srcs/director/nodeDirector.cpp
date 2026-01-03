@@ -387,8 +387,8 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	}
 	return QSize { x, y };
 }
-NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( MainWidget *parent ) {
-	NodeRunInfo *result = new NodeRunInfo( parent );
+NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( ) {
+	NodeRunInfo *result = new NodeRunInfo(  );
 	size_t count = nodeArchiveVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;

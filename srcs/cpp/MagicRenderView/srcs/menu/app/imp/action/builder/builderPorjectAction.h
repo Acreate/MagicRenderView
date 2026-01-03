@@ -6,8 +6,6 @@
 class BuilderDirector;
 class BuilderPorjectAction : public NormalApplicationAction {
 	Q_OBJECT;
-protected:
-	BuilderDirector* builderDirector;
 public:
 	bool init( ApplicationMenuStack *application_menu_stack ) override;
 	bool run( MainWindow* parent ) override;

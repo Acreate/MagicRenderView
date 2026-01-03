@@ -1,4 +1,6 @@
 ﻿#include "cutNodeAction.h"
+
+#include "../../../../../director/editorDirector.h"
 bool CutNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )
 		return false;
@@ -6,5 +8,5 @@ bool CutNodeAction::init( ApplicationMenuStack *application_menu_stack ) {
 	return true;
 }
 bool CutNodeAction::run( MainWindow* parent ) {
-	return false;
+	return editorDirector->cutSelectNodeInfo(  );
 }
