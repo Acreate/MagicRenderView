@@ -113,8 +113,8 @@ QString NodeDirector::nodeArrayToString( const Node *const *printf_nodes, const 
 		return "class {  }[0];";
 	}
 	QStringList nodeToStringList;
-	QString outInfo( R"(class { %1 }[%2];)" );
-	QString number( "%1 [%2] = %3;" );
+	QString outInfo( "class { \n%1 \n\t}[%2];" );
+	QString number( "[%2] : %1 = %3 ;" );
 	for( size_t index = 0; index < printf_node_count; index += 1 ) {
 		auto metaObject = printf_nodes[ index ]->metaObject( );
 		auto className = metaObject->className( );
@@ -406,11 +406,8 @@ NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( ) {
 	NodeRunInfo *result = new NodeRunInfo( );
 	size_t count = nodeArchiveVector.size( );
 	if( count != 0 ) {
-		size_t index = 0;
 		auto nodeRefLinkInfoArrayPtr = nodeArchiveVector.data( );
-		for( ; index < count; ++index )
-			if( nodeRefLinkInfoArrayPtr[ index ]->getNodeType( ) == NodeEnum::NodeType::Begin )
-				result->appendBegin( nodeRefLinkInfoArrayPtr[ index ] );
+		result->appendBuilderNode( nodeRefLinkInfoArrayPtr, count );
 		if( result->builderRunInstance( ) ) {
 			connect( result, &NodeRunInfo::clear_signal, this, &NodeDirector::nodeRunInfoClear );
 			return result;

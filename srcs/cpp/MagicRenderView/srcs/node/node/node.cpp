@@ -231,7 +231,7 @@ bool Node::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_a
 	return true;
 }
 QString Node::toQString( ) const {
-	return nodeName + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ", #" + QString::number( generateCode, 16 ).toUpper( ) + ")";
+	return getVirtualNodeTypeName(  ) + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ", #" + QString::number( generateCode, 16 ).toUpper( ) + ")";
 }
 
 InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {

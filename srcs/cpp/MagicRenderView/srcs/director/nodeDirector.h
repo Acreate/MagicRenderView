@@ -57,6 +57,9 @@ protected:
 	std::vector< NodeHistory * > nodeHistorys;
 public:
 	virtual QString nodeArrayToString( const Node *const*printf_nodes, const size_t &printf_node_count );
+	virtual QString nodeArrayToString( const std::vector< Node * > &printf_node_vector ) {
+		return nodeArrayToString( printf_node_vector.data( ), printf_node_vector.size( ) );
+	}
 	virtual void nodeToString( const Node *printf_nodes ) {
 		nodeArrayToString( &printf_nodes, 1 );
 	}

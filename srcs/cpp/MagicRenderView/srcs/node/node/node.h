@@ -10,8 +10,8 @@
 
 #include <define/nodeFrinedClass.h>
 
-#define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) { return _Type_Name; }
-#define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) override { return _Type_Name; }
+#define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
+#define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 class InputPortBuilderInfo;
 class OutputPortBuilderInfo;
 class NodeBuilderInfo;

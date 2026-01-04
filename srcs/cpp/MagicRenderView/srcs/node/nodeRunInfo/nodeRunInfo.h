@@ -17,21 +17,28 @@ class NodeRunInfo : public QObject {
 protected:
 	using TRunBodyObj = Node;
 	using TRunBodyObjPtr = TRunBodyObj *;
-	std::vector< TRunBodyObjPtr > beginNodeVector;
+	std::vector< TRunBodyObjPtr > builderNodeVector;
 	std::vector< TRunBodyObjPtr > runNodeVector;
-	size_t beginNodeCount;
-	size_t beginNodeIndex;
-	TRunBodyObjPtr *beginNodeArrayPtr;
+	size_t builderNodeCount;
+	size_t builderNodeIndex;
+	TRunBodyObjPtr *builderNodeArrayPtr;
 	size_t runNodeCount;
 	size_t runNodeIndex;
 	TRunBodyObjPtr *runNodeArrayPtr;
 	TRunBodyObjPtr errorObj;
 protected:
-	virtual void appendBegin( TRunBodyObj *benin_node_ref_link_info );
-	virtual void removeBegin( TRunBodyObj *benin_node_ref_link_info );
+	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
+	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
+		appendBuilderNode( append_node_vector.data( ), append_node_vector.size( ) );
+	}
+	virtual void appendBuilderNode( TRunBodyObj *append_node_unity );
+	virtual void removeBuilderNode( TRunBodyObj *append_node_unity );
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );
+	/// @brief 编译实例引用
+	/// @return 失败返回 false
+	virtual bool builderRunInstanceRef( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
@@ -55,8 +62,8 @@ public:
 	virtual TRunBodyObj * getErrorObj( ) const {
 		return errorObj;
 	}
-	virtual size_t getBeginNodeCount( ) const { return beginNodeCount; }
-	virtual TRunBodyObjPtr * getBeginNodeData( ) const { return beginNodeArrayPtr; }
+	virtual size_t getBeginNodeCount( ) const { return builderNodeCount; }
+	virtual TRunBodyObjPtr * getBeginNodeData( ) const { return builderNodeArrayPtr; }
 	virtual size_t getRunNodeCount( ) const { return runNodeCount; }
 	virtual TRunBodyObjPtr * getRunNodeData( ) const { return runNodeArrayPtr; }
 Q_SIGNALS:
