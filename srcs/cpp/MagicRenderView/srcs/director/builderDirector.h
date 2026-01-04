@@ -22,6 +22,7 @@ protected:
 	std::vector< BuilderApplicationMenu * > menus;
 	std::vector< BuilderApplicationToolBar * > toolBars;
 protected:
+	virtual void updateBuilderActionObjInfo( );
 	virtual void resetBuilderActionObjInfo( );
 	virtual void validBuilderActionObjInfo( );
 	virtual void removeMenu( NormalApplicationMenu *remove_target );

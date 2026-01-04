@@ -11,6 +11,12 @@
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 #include "../node/nodeRunInfo/nodeRunInfo.h"
 #include "nodeDirector.h"
+void BuilderDirector::updateBuilderActionObjInfo( ) {
+	if( nodeRunInfo == nullptr )
+		resetBuilderActionObjInfo( );
+	else
+		validBuilderActionObjInfo( );
+}
 void BuilderDirector::resetBuilderActionObjInfo( ) {
 	size_t count;
 	size_t index;
@@ -88,6 +94,7 @@ BuilderDirector::~BuilderDirector( ) {
 		delete nodeRunInfo;
 		nodeRunInfo = nullptr;
 	}
+	updateBuilderActionObjInfo( );
 }
 bool BuilderDirector::init( ) {
 	disconnect( );
@@ -124,12 +131,8 @@ bool BuilderDirector::builderNodeProject( ) {
 	if( nodeRunInfo )
 		delete nodeRunInfo;
 	nodeRunInfo = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
-	if( nodeRunInfo == nullptr ) {
-		resetBuilderActionObjInfo( );
-		return false;
-	}
-	validBuilderActionObjInfo( );
-	return true;
+	updateBuilderActionObjInfo( );
+	return nodeRunInfo != nullptr;
 }
 bool BuilderDirector::nextStepBuilderNode( ) {
 	if( nodeRunInfo == nullptr )
