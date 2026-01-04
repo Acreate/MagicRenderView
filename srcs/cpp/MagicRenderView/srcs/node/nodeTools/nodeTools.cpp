@@ -3,58 +3,6 @@
 #include "../../tools/arrayTools.h"
 #include "../../tools/vectorTools.h"
 #include "../node/node.h"
-bool NodeTools::getNodeInputNodeRef( Node *check_node, std::vector< Node * > &result_ref_node_vector ) {
-	if( check_node == nullptr )
-		return false;
-	std::vector< Node * > buffInputRef;
-	std::vector< Node * > buffOutputRef;
-	size_t count;
-	size_t index;
-	Node **nodeArrayPtr;
-
-	result_ref_node_vector.append_range( check_node->refInputPortNode );
-	count = check_node->refInputPortNode.size( );
-	nodeArrayPtr = check_node->refInputPortNode.data( );
-	for( index = 0; index < count; index += 1 ) {
-		if( getNodeOutputNodeRef( nodeArrayPtr[ index ], buffOutputRef ) == false )
-			return false;
-		result_ref_node_vector.append_range( buffOutputRef );
-		buffOutputRef.clear( );
-	}
-	for( index = 0; index < count; index += 1 ) {
-		if( getNodeInputNodeRef( nodeArrayPtr[ index ], buffInputRef ) == false )
-			return false;
-		result_ref_node_vector.append_range( buffInputRef );
-		buffInputRef.clear( );
-	}
-	return true;
-}
-bool NodeTools::getNodeOutputNodeRef( Node *check_node, std::vector< Node * > &result_ref_node_vector ) {
-	if( check_node == nullptr )
-		return false;
-	std::vector< Node * > buffInputRef;
-	std::vector< Node * > buffOutputRef;
-	size_t count;
-	size_t index;
-	Node **nodeArrayPtr;
-
-	result_ref_node_vector.append_range( check_node->refOutputPortNode );
-	count = check_node->refOutputPortNode.size( );
-	nodeArrayPtr = check_node->refOutputPortNode.data( );
-	for( index = 0; index < count; index += 1 ) {
-		if( getNodeInputNodeRef( nodeArrayPtr[ index ], buffInputRef ) == false )
-			return false;
-		result_ref_node_vector.append_range( buffInputRef );
-		buffInputRef.clear( );
-	}
-	for( index = 0; index < count; index += 1 ) {
-		if( getNodeOutputNodeRef( nodeArrayPtr[ index ], buffOutputRef ) == false )
-			return false;
-		result_ref_node_vector.append_range( buffOutputRef );
-		buffOutputRef.clear( );
-	}
-	return true;
-}
 bool NodeTools::getNodeVectorRefNodeVector( const std::vector< Node * > &check_node_vector, std::vector< Node * > &result_ref_node_vector ) {
 	// 覆盖，无法使用
 	if( &check_node_vector == &result_ref_node_vector )
@@ -62,22 +10,116 @@ bool NodeTools::getNodeVectorRefNodeVector( const std::vector< Node * > &check_n
 	size_t checkCount = check_node_vector.size( );
 	if( checkCount == 0 )
 		return false;
-	result_ref_node_vector.clear( );
 	auto checkArrayPtr = check_node_vector.data( );
 	size_t checkArrayIndex = 0;
-	std::vector< Node * > inputRefNdoeVector;
-	std::vector< Node * > outputRefNdoeVector;
-	std::vector< Node * > buffRefNdoeVector;
-	for( ; checkArrayIndex < checkCount; checkArrayIndex += 1 ) {
-		if( getNodeInputNodeRef( checkArrayPtr[ checkArrayIndex ], inputRefNdoeVector ) == false )
-			return false;
-		buffRefNdoeVector.append_range( inputRefNdoeVector );
-		if( getNodeOutputNodeRef( checkArrayPtr[ checkArrayIndex ], outputRefNdoeVector ) == false )
-			return false;
-		buffRefNdoeVector.append_range( outputRefNdoeVector );
-		VectorTools::removeRepeat( buffRefNdoeVector, result_ref_node_vector );
-		buffRefNdoeVector = result_ref_node_vector;
-	}
+
+	// 临时存储输入依赖
+	std::vector< Node * > buffInputRefNdoeVector;
+	size_t buffInputRefCount;
+	Node **buffInputRefArray;
+	size_t buffInputIndex;
+	// 临时存储输出依赖
+	std::vector< Node * > buffOutputRefNdoeVector;
+	size_t buffOutputRefCount;
+	Node **buffOutputRefArray;
+	size_t buffOutputIndex;
+	// 临时存储依赖
+	std::vector< Node * > buffRefNdoeVector = check_node_vector;
+	auto buffRefArray = buffRefNdoeVector.data( );
+	size_t buffRefCount = buffRefNdoeVector.size( );
+	size_t buffRefIndex;
+	// 下次循环节点
+	std::vector< Node * > nextNode;
+	std::vector< Node * > buffNextNode;
+	// 过滤节点
+	std::vector< Node * > filterNode;
+	size_t filterNodeRefCount = filterNode.size( );
+	Node **filterNodeRefArray = filterNode.data( );
+	size_t filterNodeIndex;
+	do {
+		for( ; checkArrayIndex < checkCount; checkArrayIndex += 1 ) {
+
+			// 获取节点的输入依赖
+			buffInputRefNdoeVector = checkArrayPtr[ checkArrayIndex ]->refInputPortNode;
+			buffInputRefCount = buffInputRefNdoeVector.size( );
+			if( buffInputRefCount ) {
+				buffInputRefArray = buffInputRefNdoeVector.data( );
+				for( buffInputIndex = 0; buffInputIndex < buffInputRefCount; buffInputIndex += 1 ) {
+					for( buffRefIndex = 0; buffRefIndex < buffRefCount; buffRefIndex += 1 )
+						if( buffRefArray[ buffRefIndex ] == buffInputRefArray[ buffInputIndex ] )
+							break;
+					if( buffRefIndex == buffRefCount )
+						continue;
+					buffInputRefArray[ buffInputIndex ] = nullptr;
+				}
+				ArrayTools::sortNullptr( buffInputRefArray, buffInputRefCount );
+				for( buffInputIndex = 0; buffInputIndex < buffInputRefCount; buffInputIndex += 1 )
+					if( buffInputRefArray[ buffInputIndex ] == nullptr )
+						break;
+				if( buffInputIndex ) {
+					buffInputRefCount = buffRefCount + buffInputIndex;//增加长度
+					buffRefNdoeVector.resize( buffInputRefCount ); // 重构大小
+					buffRefArray = buffRefNdoeVector.data( ); // 指向新的地址
+					for( buffInputIndex = 0; buffRefCount < buffInputRefCount; buffRefCount += 1, buffInputIndex += 1 ) {
+						buffRefArray[ buffRefCount ] = buffInputRefArray[ buffInputIndex ]; // 新的大小
+						for( filterNodeIndex = 0; filterNodeIndex < filterNodeRefCount; filterNodeIndex += 1 )
+							if( filterNodeRefArray[ filterNodeIndex ] == buffInputRefArray[ buffInputIndex ] )
+								break;
+						if( filterNodeIndex < filterNodeRefCount )
+							continue; // 过滤
+						nextNode.emplace_back( buffInputRefArray[ buffInputIndex ] ); // 加入到下次遍历
+						filterNode.emplace_back( buffInputRefArray[ buffInputIndex ] ); // 加入到过滤
+						filterNodeRefCount += 1;
+						filterNodeRefArray = filterNode.data( );
+					}
+				}
+			}
+
+			// 获取节点的输出依赖
+			buffOutputRefNdoeVector = checkArrayPtr[ checkArrayIndex ]->refOutputPortNode;
+			buffOutputRefCount = buffOutputRefNdoeVector.size( );
+			if( buffOutputRefCount ) {
+				buffOutputRefArray = buffOutputRefNdoeVector.data( );
+				for( buffOutputIndex = 0; buffOutputIndex < buffOutputRefCount; buffOutputIndex += 1 ) {
+					for( buffRefIndex = 0; buffRefIndex < buffRefCount; buffRefIndex += 1 )
+						if( buffRefArray[ buffRefIndex ] == buffOutputRefArray[ buffOutputIndex ] )
+							break;
+					if( buffRefIndex == buffRefCount )
+						continue;
+					buffOutputRefArray[ buffOutputIndex ] = nullptr;
+				}
+				ArrayTools::sortNullptr( buffOutputRefArray, buffOutputRefCount );
+				for( buffOutputIndex = 0; buffOutputIndex < buffOutputRefCount; buffOutputIndex += 1 )
+					if( buffOutputRefArray[ buffOutputIndex ] == nullptr )
+						break;
+				if( buffOutputIndex ) {
+					buffOutputRefCount = buffRefCount + buffOutputIndex;//增加长度
+					buffRefNdoeVector.resize( buffOutputRefCount ); // 重构大小
+					buffRefArray = buffRefNdoeVector.data( ); // 指向新的地址
+					for( buffOutputIndex = 0; buffRefCount < buffOutputRefCount; buffRefCount += 1, buffOutputIndex += 1 ) {
+						buffRefArray[ buffRefCount ] = buffOutputRefArray[ buffOutputIndex ]; // 新的大小
+						for( filterNodeIndex = 0; filterNodeIndex < filterNodeRefCount; filterNodeIndex += 1 )
+							if( filterNodeRefArray[ filterNodeIndex ] == buffOutputRefArray[ buffOutputIndex ] )
+								break;
+						if( filterNodeIndex < filterNodeRefCount )
+							continue; // 过滤
+						nextNode.emplace_back( buffOutputRefArray[ buffOutputIndex ] ); // 加入到下次遍历
+						filterNode.emplace_back( buffOutputRefArray[ buffOutputIndex ] ); // 加入到过滤
+						filterNodeRefCount += 1;
+						filterNodeRefArray = filterNode.data( );
+					}
+				}
+			}
+		}
+		checkCount = nextNode.size( );
+		// 遍历完毕
+		if( checkCount == 0 )
+			break;
+		buffNextNode = nextNode;
+		// 存在则重新遍历
+		checkArrayPtr = buffNextNode.data( );
+		nextNode.clear( );
+	} while( true );
 
 	if( sortNodeVectorRefNodeVector( buffRefNdoeVector, result_ref_node_vector ) == false )
 		return false;

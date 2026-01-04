@@ -39,12 +39,13 @@ bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_p
 	// 输出端是开始，输入端是生成
 	if( outputPortType == NodeEnum::PortType::Begin && inputPortType == NodeEnum::PortType::Generate )
 		return true;
-	// 端口不匹配，返回 false
-	if( outputPortType != inputPortType )
-		return false;
+	// 非生成输出节点
+	if( outputPortType != NodeEnum::PortType::Generate )
+		if( outputPortType != inputPortType )
+			return false; // 端口不匹配，返回 false
+
 	// 类型不匹配，返回 false
 	if( output_port->getVarTypeName( ) != input_port->getVarTypeName( ) )
 		return false;
-
 	return true;
 }

@@ -56,15 +56,15 @@ protected:
 	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
 public:
-	virtual QString printfNode( const Node *const*printf_nodes, const size_t &printf_node_count );
-	virtual void printfNode( const Node *printf_nodes ) {
-		printfNode( &printf_nodes, 1 );
+	virtual QString nodeArrayToString( const Node *const*printf_nodes, const size_t &printf_node_count );
+	virtual void nodeToString( const Node *printf_nodes ) {
+		nodeArrayToString( &printf_nodes, 1 );
 	}
-	virtual void printfNode( const std::vector< Node * > &printf_nodes ) {
-		printfNode( printf_nodes.data( ), printf_nodes.size( ) );
+	virtual void nodeVectorToString( const std::vector< Node * > &printf_nodes ) {
+		nodeArrayToString( printf_nodes.data( ), printf_nodes.size( ) );
 	}
-	virtual void printfNode( ) {
-		printfNode( nodeArchiveVector );
+	virtual void nodeVectorToString( ) {
+		nodeVectorToString( nodeArchiveVector );
 	}
 protected:
 	virtual void releaseObjResources( );

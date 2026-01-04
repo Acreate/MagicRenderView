@@ -39,8 +39,12 @@ bool NodeRunInfo::builderRunInstance( ) {
 	runNodeArrayPtr = nullptr;
 	runNodeCount = 0;
 	runNodeIndex = 0;
-	if( NodeTools::getNodeVectorRefNodeVector( beginNodeVector, runNodeVector ) == false )
+	bool builderOk = NodeTools::getNodeVectorRefNodeVector( beginNodeVector, runNodeVector );
+
+	if( builderOk == false )
 		return false;
+	runNodeArrayPtr = runNodeVector.data( );
+	runNodeCount = runNodeVector.size( );
 	return true;
 }
 bool NodeRunInfo::runNextNode( ) {

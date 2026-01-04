@@ -10,7 +10,9 @@
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 #include "../node/nodeRunInfo/nodeRunInfo.h"
+#include "../srack/srackInfo.h"
 #include "nodeDirector.h"
+#include "printerDirector.h"
 void BuilderDirector::updateBuilderActionObjInfo( ) {
 	if( nodeRunInfo == nullptr )
 		resetBuilderActionObjInfo( );
@@ -132,7 +134,13 @@ bool BuilderDirector::builderNodeProject( ) {
 		delete nodeRunInfo;
 	nodeRunInfo = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
 	updateBuilderActionObjInfo( );
-	return nodeRunInfo != nullptr;
+	if( nodeRunInfo == nullptr )
+		return false;
+	auto runBodyObjPtr = nodeRunInfo->getRunNodeData( );
+	size_t runNodeCount = nodeRunInfo->getRunNodeCount( );
+	QString printfNode = nodeDirector->nodeArrayToString( runBodyObjPtr, runNodeCount );
+	instancePtr->getPrinterDirector( )->info( printfNode,Create_SrackInfo( ) );
+	return true;
 }
 bool BuilderDirector::nextStepBuilderNode( ) {
 	if( nodeRunInfo == nullptr )

@@ -108,7 +108,10 @@ NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( n
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
 }
-QString NodeDirector::printfNode( const Node *const *printf_nodes, const size_t &printf_node_count ) {
+QString NodeDirector::nodeArrayToString( const Node *const *printf_nodes, const size_t &printf_node_count ) {
+	if( printf_nodes == nullptr || printf_node_count == 0 ) {
+		return "class {  }[0];";
+	}
 	QStringList nodeToStringList;
 	QString outInfo( R"(class { %1 }[%2];)" );
 	QString number( "%1 [%2] = %3;" );

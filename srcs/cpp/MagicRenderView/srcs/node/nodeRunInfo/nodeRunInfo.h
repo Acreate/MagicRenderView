@@ -3,6 +3,7 @@
 #pragma once
 #include <QObject>
 
+class Application;
 namespace NodeEnum {
 	enum class ErrorType;
 	enum class AdviseType;
