@@ -13,14 +13,6 @@ class SrackInfo;
 class NodeRunInfo : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
-	template< typename TNode >
-	class ExtendVector {
-		std::vector< TNode * > nodeVector;
-		size_t index;
-		size_t count;
-	public:
-
-	};
 protected:
 	using TRunBodyObj = Node;
 	using TRunBodyObjPtr = TRunBodyObj *;

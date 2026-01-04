@@ -236,7 +236,7 @@ QString Node::toQString( ) const {
 
 InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
 	size_t count = inputPortVector.size( );
-	if( count == 0 || count == input_port_generate_code || count > input_port_generate_code )
+	if( count == 0  )
 		return nullptr;
 	auto inputPortArrayPtr = inputPortVector.data( );
 	if( inputPortArrayPtr[ input_port_generate_code - 1 ]->generateCode == input_port_generate_code )
@@ -248,7 +248,7 @@ InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
 }
 OutputPort * Node::getOutputPort( const size_t &output_port_generate_code ) const {
 	size_t count = outputPortVector.size( );
-	if( count == 0 || output_port_generate_code == count || output_port_generate_code > count )
+	if( count == 0  )
 		return nullptr;
 	auto outputPortArrayPtr = outputPortVector.data( );
 	if( outputPortArrayPtr[ output_port_generate_code - 1 ]->generateCode == output_port_generate_code )

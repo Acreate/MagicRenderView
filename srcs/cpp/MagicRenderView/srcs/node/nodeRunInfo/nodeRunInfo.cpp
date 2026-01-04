@@ -1,6 +1,7 @@
 ﻿#include "nodeRunInfo.h"
 
 #include "../../srack/srackInfo.h"
+#include "../nodeTools/nodeTools.h"
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ), beginNodeArrayPtr( nullptr ), beginNodeIndex( 0 ), beginNodeCount( 0 ), errorObj( nullptr ) {
 
@@ -38,6 +39,8 @@ bool NodeRunInfo::builderRunInstance( ) {
 	runNodeArrayPtr = nullptr;
 	runNodeCount = 0;
 	runNodeIndex = 0;
+	if( NodeTools::getNodeVectorRefNodeVector( beginNodeVector, runNodeVector ) == false )
+		return false;
 	return true;
 }
 bool NodeRunInfo::runNextNode( ) {

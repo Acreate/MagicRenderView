@@ -108,6 +108,18 @@ NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( n
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
 }
+QString NodeDirector::printfNode( const Node *const *printf_nodes, const size_t &printf_node_count ) {
+	QStringList nodeToStringList;
+	QString outInfo( R"(class { %1 }[%2];)" );
+	QString number( "%1 [%2] = %3;" );
+	for( size_t index = 0; index < printf_node_count; index += 1 ) {
+		auto metaObject = printf_nodes[ index ]->metaObject( );
+		auto className = metaObject->className( );
+		auto nodeToString = printf_nodes[ index ]->toQString( );
+		nodeToStringList.append( number.arg( className ).arg( index ).arg( nodeToString ) );
+	}
+	return outInfo.arg( nodeToStringList.join( "\n" ) ).arg( printf_node_count );
+}
 void NodeDirector::releaseObjResources( ) {
 	releaseMenuResources( );
 	releaseNodeResources( );
@@ -388,7 +400,7 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	return QSize { x, y };
 }
 NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( ) {
-	NodeRunInfo *result = new NodeRunInfo(  );
+	NodeRunInfo *result = new NodeRunInfo( );
 	size_t count = nodeArchiveVector.size( );
 	if( count != 0 ) {
 		size_t index = 0;

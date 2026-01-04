@@ -55,6 +55,17 @@ protected:
 	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
+public:
+	virtual QString printfNode( const Node *const*printf_nodes, const size_t &printf_node_count );
+	virtual void printfNode( const Node *printf_nodes ) {
+		printfNode( &printf_nodes, 1 );
+	}
+	virtual void printfNode( const std::vector< Node * > &printf_nodes ) {
+		printfNode( printf_nodes.data( ), printf_nodes.size( ) );
+	}
+	virtual void printfNode( ) {
+		printfNode( nodeArchiveVector );
+	}
 protected:
 	virtual void releaseObjResources( );
 	virtual void releaseMenuResources( );
@@ -306,6 +317,7 @@ Q_SIGNALS:
 	/// @param clear_obj 原始信号
 	/// @param org_srack_info 原始信号堆栈
 	void node_run_info_clear_signal( NodeDirector *signal_obj_ptr, const SrackInfo &srack_info, NodeRunInfo *clear_obj, const SrackInfo &org_srack_info );
+
 };
 
 #endif // NODEDIRECTOR_H_H_HEAD__FILE__
