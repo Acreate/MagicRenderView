@@ -68,7 +68,7 @@ bool JumpNodeEditor::initNode( Node *init_node ) {
 		size_t index = 0;
 		for( ; index < count; ++index )
 			if( createJumpItem( arrayPtr[ index ] ) == false ) {
-				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "[%1]节点窗口模块创建异常" ).arg( arrayPtr[ index ]->getNodeName( ) ), Create_SrackInfo( ) );
+				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "[%1]节点窗口模块创建异常" ).arg( arrayPtr[ index ]->getNodeTitleName( ) ), Create_SrackInfo( ) );
 				return false;
 			}
 		return true;

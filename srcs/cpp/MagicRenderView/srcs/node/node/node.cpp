@@ -40,7 +40,7 @@ Node::~Node( ) {
 	if( varPtr )
 		varDirector->release( varPtr );
 }
-Node::Node( const QString &node_name ) : nodeName( node_name ), mainLayout( nullptr ) {
+Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout( nullptr ) {
 	hide( );
 	generateCode = 0;
 	nodeBuilderInfo = new NodeBuilderInfo( this );

@@ -150,7 +150,7 @@ bool MainWidget::copySelectNodeInfo( ) {
 	if( oldSelectNode == nullptr )
 		return true;
 	QClipboard *clipboard = QApplication::clipboard( );
-	clipboard->setText( oldSelectNode->getNodeName( ) );
+	clipboard->setText( oldSelectNode->getNodeTitleName( ) );
 	return true;
 }
 bool MainWidget::pastePointNodeInfo( ) {

@@ -9,7 +9,7 @@
 #include "action/autoAction.h"
 NormalNodeEditorPropertyMenu::ActionLinkInfoPair::ActionLinkInfoPair( AutoAction *trig_action, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ), outputPort( output_port ), inputPort( input_port ) {
 	QString titleArgString( tr( "断开 (%1[%2])->(%3[%4]) 链接" ) );
-	titleArgString = titleArgString.arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( input_port->parentNode->getNodeName( ) ).arg( input_port->getPortName( ) );
+	titleArgString = titleArgString.arg( output_port->parentNode->getNodeTitleName( ) ).arg( output_port->getPortName( ) ).arg( input_port->parentNode->getNodeTitleName( ) ).arg( input_port->getPortName( ) );
 	trigAction->setText( titleArgString );
 }
 NormalNodeEditorPropertyMenu::ActionNodeInfoPair::ActionNodeInfoPair( AutoAction *trig_action, Node *node, OutputPort *output_port, InputPort *input_port ) : trigAction( trig_action ),
@@ -45,7 +45,7 @@ bool NormalNodeEditorPropertyMenu::appendRefOutputNodeActionInfo( AutoAction *au
 	refOutputPortActionMap.emplace_back( ActionNodeInfoPair( auto_action, parentNode, output_port, input_port ) );
 	refOutputPortActionMapCount = refOutputPortActionMap.size( );
 	refOutputPortActionMapArrayPtr = refOutputPortActionMap.data( );
-	auto_action->setText( tr( "(%1[%2]) 跳到输入引用节点 (%3[%4])" ).arg( input_port->parentNode->getNodeName( ) ).arg( input_port->getPortName( ) ).arg( parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ) );
+	auto_action->setText( tr( "(%1[%2]) 跳到输入引用节点 (%3[%4])" ).arg( input_port->parentNode->getNodeTitleName( ) ).arg( input_port->getPortName( ) ).arg( parentNode->getNodeTitleName( ) ).arg( output_port->getPortName( ) ) );
 	return true;
 }
 bool NormalNodeEditorPropertyMenu::appendRefInputNodeActionInfo( AutoAction *auto_action, OutputPort *output_port, InputPort *input_port ) {
@@ -57,7 +57,7 @@ bool NormalNodeEditorPropertyMenu::appendRefInputNodeActionInfo( AutoAction *aut
 	refInputPortActionMap.emplace_back( ActionNodeInfoPair( auto_action, parentNode, output_port, input_port ) );
 	refInputPortActionMapCount = refInputPortActionMap.size( );
 	refInputPortActionMapArrayPtr = refInputPortActionMap.data( );
-	auto_action->setText( tr( "(%1[%2]) 跳到输出引用节点 (%3[%4])" ).arg( output_port->parentNode->getNodeName( ) ).arg( output_port->getPortName( ) ).arg( parentNode->getNodeName( ) ).arg( input_port->getPortName( ) ) );
+	auto_action->setText( tr( "(%1[%2]) 跳到输出引用节点 (%3[%4])" ).arg( output_port->parentNode->getNodeTitleName( ) ).arg( output_port->getPortName( ) ).arg( parentNode->getNodeTitleName( ) ).arg( input_port->getPortName( ) ) );
 	return true;
 }
 void NormalNodeEditorPropertyMenu::clearResources( ) {

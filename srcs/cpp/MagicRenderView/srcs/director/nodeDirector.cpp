@@ -528,7 +528,7 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 	finishCreateNode( append_node );
 
 	auto currentHistory = [append_node, this] {
-		auto node = createNode( append_node->nodeName );
+		auto node = createNode( append_node->nodeTitleName );
 		auto mapFromGlobal = mainWidget->mapFromGlobal( QCursor::pos( ) );
 		node->move( mapFromGlobal );
 		if( mainWidget )

@@ -49,7 +49,7 @@ protected:
 	/// @brief 节点调用函数
 	NodeFunctionType nodeFunction;
 	/// @brief 节点名称
-	QString nodeName;
+	QString nodeTitleName;
 	/// @brief 节点主要布局
 	QVBoxLayout *mainLayout;
 	/// @brief 节点标题管理窗口
@@ -171,7 +171,7 @@ public:
 	virtual OutputPort * getOutputPort( const QString &port_name ) const;
 	virtual bool updateLayout( );
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
-	virtual const QString & getNodeName( ) const { return nodeName; }
+	virtual const QString & getNodeTitleName( ) const { return nodeTitleName; }
 	virtual bool getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info );
 	virtual bool hasInputPort( const InputPort *check_input_port ) const;
 	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;
