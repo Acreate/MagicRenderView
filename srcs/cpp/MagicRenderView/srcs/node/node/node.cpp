@@ -13,6 +13,7 @@
 #include <widget/mainWidget.h>
 
 #include "../nodeRunInfo/nodeInfo/nodeBuilderInfo.h"
+#include "../port/inputPort/point/pointInputPort.h"
 
 Node::~Node( ) {
 
@@ -440,7 +441,6 @@ void Node::releaseAllRefNode( ) {
 bool Node::initEx( MainWidget *parent ) {
 	if( init( parent ) == false )
 		return false;
-
 	if( initExCallFunction( parent ) == false )
 		return false;
 	if( updateLayout( ) == false )
