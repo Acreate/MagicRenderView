@@ -30,12 +30,7 @@ bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_p
 	// 接口类型可以任意链接
 	if( outputPortType == NodeEnum::PortType::InterFace || inputPortType == NodeEnum::PortType::InterFace )
 		return true;
-	// 输出为定点
-	if( inputPortType == NodeEnum::PortType::Point )
-		if( outputPortType != NodeEnum::PortType::Point )
-			return true;
-		else
-			return false;
+
 	// 输出端是开始，输入端是生成
 	if( outputPortType == NodeEnum::PortType::Begin && inputPortType == NodeEnum::PortType::Generate )
 		return true;
