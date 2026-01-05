@@ -55,3 +55,15 @@ bool IntGenerateNode::initVarPtr( ) {
 	varPtr = overVarPtr;
 	return true;
 }
+bool IntGenerateNode::readNodeRunData( ) {
+	return true;
+}
+bool IntGenerateNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool IntGenerateNode::fillNodeCall( ) {
+	return true;
+}
+bool IntGenerateNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+	return true;
+}

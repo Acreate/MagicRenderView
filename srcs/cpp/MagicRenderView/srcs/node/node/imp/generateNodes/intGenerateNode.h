@@ -19,6 +19,11 @@ public:
 protected:
 	bool initVarPtr( ) override;
 public:
+	bool readNodeRunData( ) override;
+	bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) override;
+	bool fillNodeCall( ) override;
+	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) override;
+public:
 	Def_Extend_NodeTypeName( Node::tr( "生成/生成整数" ) );
 };
 

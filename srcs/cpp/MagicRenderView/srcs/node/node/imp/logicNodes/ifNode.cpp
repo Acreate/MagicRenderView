@@ -24,3 +24,15 @@ bool IfNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool IfNode::readNodeRunData( ) {
+	return true;
+}
+bool IfNode::fillInputPortCall( std::vector<Node *> &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool IfNode::fillNodeCall( ) {
+	return true;
+}
+bool IfNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector ) {
+	return true;
+}

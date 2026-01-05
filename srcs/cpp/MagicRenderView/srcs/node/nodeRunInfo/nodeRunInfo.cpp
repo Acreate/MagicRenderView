@@ -70,6 +70,16 @@ bool NodeRunInfo::builderRunInstance( ) {
 	runNodeArrayPtr = runNodeVector.data( );
 	runNodeCount = runNodeVector.size( );
 	runNodeIndex = 0;
+	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
+		if( runNodeArrayPtr[ runNodeIndex ]->readNodeRunData( ) == false ) {
+			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
+			runNodeVector.clear( );
+			runNodeArrayPtr = runNodeVector.data( );
+			runNodeCount = runNodeVector.size( );
+			runNodeIndex = 0;
+			return false;
+		} else
+			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
 	return runNodeCount != 0;
 }
 bool NodeRunInfo::builderRunInstanceRef( ) {
@@ -254,6 +264,7 @@ bool NodeRunInfo::runNextNode( ) {
 				break;
 		if( buffRunIndex < runNodeIndex )
 			continue;
+		checkNodeArray[ checkIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Advise );
 		errorNeedNodeVector.emplace_back( checkNodeArray[ checkIndex ] );
 	}
 	// 如果存在错误列表，则输出

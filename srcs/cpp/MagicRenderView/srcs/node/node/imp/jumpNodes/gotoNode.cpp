@@ -19,3 +19,15 @@ bool GotoNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool GotoNode::readNodeRunData( ) {
+	return true;
+}
+bool GotoNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool GotoNode::fillNodeCall( ) {
+	return true;
+}
+bool GotoNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+	return true;
+}

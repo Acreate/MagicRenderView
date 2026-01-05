@@ -334,8 +334,8 @@ bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_
 	if( count == 0 ) {
 		refOutputPortNode.emplace_back( refNode );
 		emit connect_ref_output_port_node_signal( this, refNode );
-		emit connect_input_port_signal( input_port, ref_output_port );
 		refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
+		emit connect_input_port_signal( input_port, ref_output_port );
 		return true;
 	}
 	auto arrayPtr = refOutputPortNode.data( );
@@ -472,9 +472,6 @@ bool Node::init( MainWidget *parent ) {
 		outputPortVector.clear( );
 	}
 
-	fillNodeFunction = nullptr;
-	fillNodeInputPortFunction = nullptr;
-	fillNodeOutputPortFunction = nullptr;
 	titileLabel->setText( nodeTitleName );
 	setParent( parent );
 	return true;

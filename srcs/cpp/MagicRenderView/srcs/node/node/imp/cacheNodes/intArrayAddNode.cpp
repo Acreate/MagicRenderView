@@ -19,3 +19,15 @@ bool IntArrayAddNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool IntArrayAddNode::readNodeRunData( ) {
+	return true;
+}
+bool IntArrayAddNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool IntArrayAddNode::fillNodeCall( ) {
+	return true;
+}
+bool IntArrayAddNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+	return true;
+}

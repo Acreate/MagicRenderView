@@ -30,10 +30,6 @@ class Node : public QWidget {
 	Q_OBJECT;
 	NodeFrinedClass( );
 protected:
-	using NodeFunctionType = std::function< bool( ) >;
-	using NodeFillInputPortFunctionType = std::function< bool( std::vector< Node * > & ) >;
-	using NodeFillOutputPortFunctionType = std::function< bool( std::vector< Node * > & ) >;
-protected:
 	uint64_t generateCode;
 	/// @brief app 实例
 	Application *instancePtr;
@@ -45,12 +41,6 @@ protected:
 	std::vector< InputPort * > inputPortVector;
 	/// @brief 当前节点的输出列表
 	std::vector< OutputPort * > outputPortVector;
-	/// @brief 节点调用函数
-	NodeFunctionType fillNodeFunction;
-	/// @brief 输入填充函数调用
-	NodeFillInputPortFunctionType fillNodeInputPortFunction;
-	/// @brief 输出填充函数调用
-	NodeFillOutputPortFunctionType fillNodeOutputPortFunction;
 	/// @brief 节点名称
 	QString nodeTitleName;
 	/// @brief 节点主要布局
@@ -156,21 +146,20 @@ protected:
 protected:
 	virtual bool init( MainWidget *parent );
 public:
-	virtual bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
-		if( fillNodeInputPortFunction == nullptr )
-			return false;
-		return fillNodeInputPortFunction( result_need_run_ref_node_vector );
-	}
-	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
-		if( fillNodeOutputPortFunction == nullptr )
-			return false;
-		return fillNodeOutputPortFunction( result_next_run_advise_node_vector );
-	}
-	virtual bool fillNodeCall( ) {
-		if( fillNodeFunction == nullptr )
-			return false;
-		return fillNodeFunction( );
-	}
+	/// @brief 配置首次运行所需要的数据
+	/// @return 失败返回 false
+	virtual bool readNodeRunData( ) = 0;
+	/// @brief 填充输入端口
+	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
+	/// @return 失败返回 false
+	virtual bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) = 0;
+	/// @brief 填充输出端口
+	/// @param result_next_run_advise_node_vector 建议后运行节点列表
+	/// @return 失败返回 false
+	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) = 0;
+	/// @brief 节点运行调用
+	/// @return 失败返回 false
+	virtual bool fillNodeCall( ) = 0;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );

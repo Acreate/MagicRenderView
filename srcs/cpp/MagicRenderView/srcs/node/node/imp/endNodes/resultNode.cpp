@@ -18,3 +18,15 @@ bool ResultNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool ResultNode::readNodeRunData( ) {
+	return true;
+}
+bool ResultNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool ResultNode::fillNodeCall( ) {
+	return true;
+}
+bool ResultNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+	return true;
+}

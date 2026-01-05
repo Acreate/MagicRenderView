@@ -22,3 +22,15 @@ bool StartNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool StartNode::readNodeRunData( ) {
+	return true;
+}
+bool StartNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool StartNode::fillNodeCall( ) {
+	return true;
+}
+bool StartNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+	return true;
+}

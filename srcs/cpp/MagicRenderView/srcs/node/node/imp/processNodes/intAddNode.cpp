@@ -20,3 +20,15 @@ bool IntAddNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool IntAddNode::readNodeRunData( ) {
+	return true;
+}
+bool IntAddNode::fillInputPortCall( std::vector<Node *> &result_need_run_ref_node_vector ) {
+	return true;
+}
+bool IntAddNode::fillNodeCall( ) {
+	return true;
+}
+bool IntAddNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector ) {
+	return true;
+}
