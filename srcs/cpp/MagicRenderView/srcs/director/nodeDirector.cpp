@@ -629,7 +629,7 @@ bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 	return true;
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
-	printerDirector->info( "节点释放", Create_SrackInfo( ) );
+	//printerDirector->info( "节点释放", Create_SrackInfo( ) );
 
 	appendHistorIndexEnd(
 		[] {
@@ -641,15 +641,15 @@ void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info 
 	emit release_node_signal( this, release_node, srack_info );
 }
 void NodeDirector::errorRunNode( Node *error_node, const SrackInfo &org_srack_info, NodeEnum::ErrorType error_type, const QString &error_msg ) {
-	printerDirector->info( "节点错误", Create_SrackInfo( ) );
+	//printerDirector->info( "节点错误", Create_SrackInfo( ) );
 	emit error_run_node_signal( this, Create_SrackInfo( ), error_node, org_srack_info, error_type, error_msg );
 }
 void NodeDirector::adviseRunNode( Node *advise_node, const SrackInfo &org_srack_info, NodeEnum::AdviseType advise_type, const QString &advise_msg ) {
-	printerDirector->info( "节点建议", Create_SrackInfo( ) );
+	//printerDirector->info( "节点建议", Create_SrackInfo( ) );
 	emit advise_run_node_signal( this, Create_SrackInfo( ), advise_node, org_srack_info, advise_type, advise_msg );
 }
 void NodeDirector::finishRunNode( Node *finish_node, const SrackInfo &org_srack_info ) {
-	printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
+	//printerDirector->info( "节点运行完成", Create_SrackInfo( ) );
 	emit finish_run_node_signal( this,Create_SrackInfo( ), finish_node, org_srack_info );
 }
 
@@ -666,7 +666,7 @@ void NodeDirector::createNodeSlot( NormalGenerateNodeMenu *signal_obj_ptr, QActi
 	}
 }
 void NodeDirector::nodeEditorMenuUnLinkSlot( NormalNodeEditorPropertyMenu *signal_ptr, OutputPort *output_port, InputPort *input_port ) {
-	printerDirector->info( tr( "编辑菜单发出断开信号" ), Create_SrackInfo( ) );
+	//printerDirector->info( tr( "编辑菜单发出断开信号" ), Create_SrackInfo( ) );
 	disLinkPort( output_port, input_port );
 	mainWidget->update( );
 }
@@ -683,12 +683,12 @@ void NodeDirector::removeNodeActionSlot( NormalNodeEditorPropertyMenu *signal_pt
 		delete remove_target;
 }
 void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget ) {
-	printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
+	//printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
 	if( show_info_widget->initNodeInfo( show_node ) )
 		show_info_widget->show( );
 }
 void NodeDirector::editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node ) {
-	printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );
+	//printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );
 	mainWidget->ensureVisible( ensure_node );
 }
 void NodeDirector::finishCreateNode( Node *finish_node ) {
@@ -710,31 +710,31 @@ void NodeDirector::finishCreateNode( Node *finish_node ) {
 	emit finish_create_node_signal( this, finish_node, Create_SrackInfo( ) );
 }
 void NodeDirector::connectRefInputPortNodeSlot( Node *output_port_node, Node *ref_input_port_node ) {
-	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	//printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
 	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
 		currentShowWidget->newNodeRefLinkInfo( ref_input_port_node, output_port_node );
 	emit connect_ref_input_port_node_signal( this, output_port_node, ref_input_port_node );
 }
 void NodeDirector::disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port ) {
-	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
 	emit dis_connect_ref_input_port_node_signal( this, output_port, output_port );
 }
 void NodeDirector::connectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
-	printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
+	//printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
 	emit connect_ref_output_port_node_signal( this, input_port_node, ref_output_port );
 }
 void NodeDirector::disConnectRefOutputPortNodeSlot( Node *input_port_node, Node *ref_output_port ) {
-	printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口释放链接", Create_SrackInfo( ) );
 	emit dis_connect_ref_output_port_node_signal( this, input_port_node, ref_output_port );
 }
 void NodeDirector::connectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {
-	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
 	emit connect_output_port_signal( this, output_port, ref_input_port );
 }
 void NodeDirector::disConnectOutputPortSlot( OutputPort *output_port, InputPort *ref_input_port ) {
 }
 void NodeDirector::connectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {
-	printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
+	//printerDirector->info( "端口产生链接", Create_SrackInfo( ) );
 	emit connect_input_port_signal( this, input_port, ref_output_port );
 }
 void NodeDirector::disConnectInputPortSlot( InputPort *input_port, OutputPort *ref_output_port ) {

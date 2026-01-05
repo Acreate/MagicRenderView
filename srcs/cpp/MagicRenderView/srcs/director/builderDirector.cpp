@@ -136,10 +136,10 @@ bool BuilderDirector::builderNodeProject( ) {
 	updateBuilderActionObjInfo( );
 	if( nodeRunInfo == nullptr )
 		return false;
-	auto runBodyObjPtr = nodeRunInfo->getRunNodeData( );
+	/*auto runBodyObjPtr = nodeRunInfo->getRunNodeData( );
 	size_t runNodeCount = nodeRunInfo->getRunNodeCount( );
 	QString printfNode = nodeDirector->nodeArrayToString( runBodyObjPtr, runNodeCount );
-	instancePtr->getPrinterDirector( )->info( printfNode,Create_SrackInfo( ) );
+	instancePtr->getPrinterDirector( )->info( printfNode,Create_SrackInfo( ) );*/
 	return true;
 }
 bool BuilderDirector::nextStepBuilderNode( ) {

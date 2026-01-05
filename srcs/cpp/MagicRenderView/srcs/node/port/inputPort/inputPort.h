@@ -8,7 +8,6 @@
 
 #include <define/portFrinedClass.h>
 
-class InputPortBuilderInfo;
 class SrackInfo;
 class QHBoxLayout;
 class QLabel;
@@ -29,7 +28,6 @@ protected:
 	QString portName;
 	QString varTypeName;
 	uint64_t generateCode;
-	InputPortBuilderInfo *inputPortBuilderInfo;
 protected:
 	QLabel *ico;
 	QLabel *showTitle;
@@ -41,10 +39,6 @@ protected:
 	virtual bool emplaceBackOutputPortRef( OutputPort *output_port_ptr );
 	virtual bool eraseOutputPortRef( OutputPort *output_port_ptr );
 	virtual void clearOutputPortRef( );
-	virtual InputPortBuilderInfo * builderInputPortInfo( ) {
-		return nullptr;
-	}
-	virtual InputPortBuilderInfo * getInputPortBuilderInfo( ) const { return inputPortBuilderInfo; }
 public:
 	InputPort( const QString &name );
 	~InputPort( ) override;

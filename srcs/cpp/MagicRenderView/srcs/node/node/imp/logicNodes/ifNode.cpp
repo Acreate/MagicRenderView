@@ -2,7 +2,6 @@
 
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/point/pointInputPort.h"
-#include "../../../port/inputPort/unity/intInputPort.h"
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

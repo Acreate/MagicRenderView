@@ -11,7 +11,6 @@
 #include "../../../srack/srackInfo.h"
 
 #include "../../node/node.h"
-#include "../../nodeRunInfo/port/outputPort/outputPortBuilderInfo.h"
 
 #include "../inputPort/inputPort.h"
 
@@ -60,7 +59,6 @@ OutputPort::OutputPort( const QString &name ) : portName( name ) {
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( showTitle );
 	mainLayout->addWidget( ico );
-	outputPortBuilderInfo = new OutputPortBuilderInfo( this );
 }
 OutputPort::~OutputPort( ) {
 	emit release_node_signal( this, Create_SrackInfo( ) );

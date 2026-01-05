@@ -12,9 +12,7 @@
 
 #define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
-class InputPortBuilderInfo;
-class OutputPortBuilderInfo;
-class NodeBuilderInfo;
+
 class MainWidget;
 class NodeInfoWidget;
 class QHBoxLayout;
@@ -32,8 +30,9 @@ class Node : public QWidget {
 	Q_OBJECT;
 	NodeFrinedClass( );
 protected:
-	using NodeFunctionResultType = void;
-	using NodeFunctionType = std::function< NodeFunctionResultType( VarDirector * ) >;
+	using NodeFunctionType = std::function< bool( ) >;
+	using NodeFillInputPortFunctionType = std::function< bool( std::vector< Node * > & ) >;
+	using NodeFillOutputPortFunctionType = std::function< bool( std::vector< Node * > & ) >;
 protected:
 	uint64_t generateCode;
 	/// @brief app 实例
@@ -47,7 +46,11 @@ protected:
 	/// @brief 当前节点的输出列表
 	std::vector< OutputPort * > outputPortVector;
 	/// @brief 节点调用函数
-	NodeFunctionType nodeFunction;
+	NodeFunctionType fillNodeFunction;
+	/// @brief 输入填充函数调用
+	NodeFillInputPortFunctionType fillNodeInputPortFunction;
+	/// @brief 输出填充函数调用
+	NodeFillOutputPortFunctionType fillNodeOutputPortFunction;
 	/// @brief 节点名称
 	QString nodeTitleName;
 	/// @brief 节点主要布局
@@ -104,8 +107,6 @@ protected:
 	QPen advisPen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
-	/// @brief 编译对象
-	NodeBuilderInfo *nodeBuilderInfo;
 private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
@@ -126,8 +127,6 @@ private:
 	/// @param ref_input_port 输入端口
 	virtual void outputDelRef_Slot( OutputPort *output_port, InputPort *ref_input_port );
 protected:
-	virtual size_t getInputPortBuilderInfoVector( std::vector< InputPortBuilderInfo * > &result_input_builder_info_vector );
-	virtual size_t getOutputPortBuilderInfoVector( std::vector< OutputPortBuilderInfo * > &result_output_builder_info_vector );
 	/// @brief 增加输入引用
 	/// @param output_port
 	/// @param output_port
@@ -156,9 +155,22 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
-	virtual NodeBuilderInfo * getNodeBuilderInfo( ) const { return nodeBuilderInfo; }
-	virtual OutputPortBuilderInfo * getOutputPortBuilderInfo( OutputPort *output_port ) const;
-	virtual InputPortBuilderInfo * getInputPortBuilderInfo( InputPort *input_port ) const;
+public:
+	virtual bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+		if( fillNodeInputPortFunction == nullptr )
+			return false;
+		return fillNodeInputPortFunction( result_need_run_ref_node_vector );
+	}
+	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+		if( fillNodeOutputPortFunction == nullptr )
+			return false;
+		return fillNodeOutputPortFunction( result_next_run_advise_node_vector );
+	}
+	virtual bool fillNodeCall( ) {
+		if( fillNodeFunction == nullptr )
+			return false;
+		return fillNodeFunction( );
+	}
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -183,7 +195,7 @@ public:
 	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual NodeEnum::NodeStyleType getNodeStyle( ) const { return nodeStyle; }
-	virtual void setNodeStyle( NodeEnum::NodeStyleType node_style ) { nodeStyle = node_style; }
+	virtual void setNodeStyle( NodeEnum::NodeStyleType node_style );
 	virtual int getNodeBorderWidth( ) const { return nodeBorderWidth; }
 	virtual InputPort * getInputPort( const size_t &input_port_generate_code ) const;
 	virtual OutputPort * getOutputPort( const size_t &output_port_generate_code ) const;

@@ -12,7 +12,6 @@
 #include <srack/srackInfo.h>
 #include <widget/mainWidget.h>
 
-#include "../nodeRunInfo/nodeInfo/nodeBuilderInfo.h"
 #include "../port/inputPort/point/pointInputPort.h"
 
 Node::~Node( ) {
@@ -44,7 +43,6 @@ Node::~Node( ) {
 Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout( nullptr ) {
 	hide( );
 	generateCode = 0;
-	nodeBuilderInfo = new NodeBuilderInfo( this );
 	varPtr = nullptr;
 	nonePen.setColor( Qt::GlobalColor::black );
 	callFunctionPen.setColor( QColor( 0xff7900 ) );
@@ -235,6 +233,10 @@ QString Node::toQString( ) const {
 	return getVirtualNodeTypeName( ) + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ", #" + QString::number( generateCode, 16 ).toUpper( ) + ")";
 }
 
+void Node::setNodeStyle( NodeEnum::NodeStyleType node_style ) {
+	nodeStyle = node_style;
+	update( );
+}
 InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
 	size_t count = inputPortVector.size( );
 	if( count == 0 )
@@ -289,28 +291,6 @@ void Node::outputAddRef_Slot( OutputPort *output_port, InputPort *ref_input_port
 void Node::outputDelRef_Slot( OutputPort *output_port, InputPort *ref_input_port ) {
 	if( eraseRefInputPortNode( output_port, ref_input_port ) == false )
 		return;
-}
-size_t Node::getInputPortBuilderInfoVector( std::vector< InputPortBuilderInfo * > &result_input_builder_info_vector ) {
-	size_t count = inputPortVector.size( );
-	result_input_builder_info_vector.resize( count );
-	InputPortBuilderInfo **inputPortBuilderInfoArrayPtr;;
-	size_t index = 0;
-	InputPort **inputPortArrayPtr;
-	if( count )
-		for( inputPortBuilderInfoArrayPtr = result_input_builder_info_vector.data( ), inputPortArrayPtr = inputPortVector.data( ); index < count; ++index )
-			inputPortBuilderInfoArrayPtr[ index ] = inputPortArrayPtr[ index ]->inputPortBuilderInfo;
-	return count;
-}
-size_t Node::getOutputPortBuilderInfoVector( std::vector< OutputPortBuilderInfo * > &result_output_builder_info_vector ) {
-	size_t count = outputPortVector.size( );
-	result_output_builder_info_vector.resize( count );
-	OutputPortBuilderInfo **outputPortBuilderInfoArrayPtr;;
-	size_t index = 0;
-	OutputPort **outputPortArrayPtr;
-	if( count )
-		for( outputPortBuilderInfoArrayPtr = result_output_builder_info_vector.data( ), outputPortArrayPtr = outputPortVector.data( ); index < count; ++index )
-			outputPortBuilderInfoArrayPtr[ index ] = outputPortArrayPtr[ index ]->outputPortBuilderInfo;
-	return count;
 }
 bool Node::emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port ) {
 	Node *refNode = ref_input_port->parentNode;
@@ -492,16 +472,12 @@ bool Node::init( MainWidget *parent ) {
 		outputPortVector.clear( );
 	}
 
-	nodeFunction = [] ( VarDirector *var_director ) { };
+	fillNodeFunction = nullptr;
+	fillNodeInputPortFunction = nullptr;
+	fillNodeOutputPortFunction = nullptr;
 	titileLabel->setText( nodeTitleName );
 	setParent( parent );
 	return true;
-}
-OutputPortBuilderInfo * Node::getOutputPortBuilderInfo( OutputPort *output_port ) const {
-	return output_port->outputPortBuilderInfo;
-}
-InputPortBuilderInfo * Node::getInputPortBuilderInfo( InputPort *input_port ) const {
-	return input_port->inputPortBuilderInfo;
 }
 
 InputPort * Node::getInputPort( const QString &port_name ) const {

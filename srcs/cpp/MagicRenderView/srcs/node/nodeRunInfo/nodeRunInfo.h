@@ -26,6 +26,7 @@ protected:
 	size_t runNodeIndex;
 	TRunBodyObjPtr *runNodeArrayPtr;
 	TRunBodyObjPtr errorObj;
+	bool isRunStop;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
