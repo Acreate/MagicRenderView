@@ -12,6 +12,7 @@
 #include <srack/srackInfo.h>
 #include <widget/mainWidget.h>
 
+#include "../../tools/path.h"
 #include "../port/inputPort/point/pointInputPort.h"
 
 Node::~Node( ) {
@@ -128,6 +129,10 @@ bool Node::appendOutputPort( OutputPort *output_port ) {
 	connect( output_port, &OutputPort::connect_output_port_signal, this, &Node::outputAddRef_Slot );
 	connect( output_port, &OutputPort::dis_connect_output_port_signal, this, &Node::outputDelRef_Slot );
 	return true;
+}
+void Node::setNodeTitleName( const QString &node_title_name ) {
+	nodeTitleName = node_title_name;
+	titileLabel->setText( node_title_name );
 }
 bool Node::getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info ) {
 	auto geometry = titileWidget->geometry( );
@@ -472,6 +477,8 @@ bool Node::init( MainWidget *parent ) {
 		outputPortVector.clear( );
 	}
 
+	nodeTitleName = getVirtualNodeTypeName( );
+	nodeTitleName = path::normalPathSeparatorToPath( nodeTitleName );
 	titileLabel->setText( nodeTitleName );
 	setParent( parent );
 	return true;

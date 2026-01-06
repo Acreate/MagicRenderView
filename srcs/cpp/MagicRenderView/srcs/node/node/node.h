@@ -181,6 +181,7 @@ public:
 	virtual bool updateLayout( );
 	virtual NodeEnum::NodeType getNodeType( ) const = 0;
 	virtual const QString & getNodeTitleName( ) const { return nodeTitleName; }
+	virtual void setNodeTitleName( const QString &node_title_name );
 	virtual bool getPointInfo( const QPoint &point, NodeClickInfo &result_node_click_info );
 	virtual bool hasInputPort( const InputPort *check_input_port ) const;
 	virtual bool hasOutputPort( const OutputPort *check_output_port ) const;

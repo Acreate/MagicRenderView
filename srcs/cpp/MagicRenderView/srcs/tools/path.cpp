@@ -98,7 +98,9 @@ QString path::normalPathSeparatorToPath( const QString &normal_target_path ) {
 	if( count == 1 )
 		return result;
 	if( result != '/' )
-		result += '/';
+		result = pointer[ 0 ] + '/';
+	else
+		result += pointer[ 0 ] + '/';
 	count -= 1;
 	do {
 		++index;
