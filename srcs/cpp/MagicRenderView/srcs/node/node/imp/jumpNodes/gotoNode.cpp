@@ -22,12 +22,12 @@ bool GotoNode::updateLayout( ) {
 bool GotoNode::readNodeRunData( ) {
 	return true;
 }
-bool GotoNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+bool GotoNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
 	return true;
 }
-bool GotoNode::fillNodeCall( ) {
+bool GotoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool GotoNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+bool GotoNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

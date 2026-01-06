@@ -5,6 +5,9 @@
 
 class BeginNode : public Node {
 	Q_OBJECT;
+	friend class EndNode;
+protected:
+	virtual bool readNextBeginNodeData( ) = 0;
 public:
 	BeginNode( const QString &node_name )
 		: Node( node_name ) { }

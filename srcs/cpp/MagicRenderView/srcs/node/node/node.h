@@ -150,16 +150,18 @@ public:
 	/// @return 失败返回 false
 	virtual bool readNodeRunData( ) = 0;
 	/// @brief 填充输入端口
+	/// @param ndoe_run_start_data_time
 	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
 	/// @return 失败返回 false
-	virtual bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) = 0;
+	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) = 0;
 	/// @brief 填充输出端口
 	/// @param result_next_run_advise_node_vector 建议后运行节点列表
+	/// @param ndoe_run_start_data_time
 	/// @return 失败返回 false
-	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) = 0;
+	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) = 0;
 	/// @brief 节点运行调用
 	/// @return 失败返回 false
-	virtual bool fillNodeCall( ) = 0;
+	virtual bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) = 0;
 public:
 	~Node( ) override;
 	Node( const QString &node_name );

@@ -20,12 +20,12 @@ bool MakeNode::updateLayout( ) {
 bool MakeNode::readNodeRunData( ) {
 	return true;
 }
-bool MakeNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+bool MakeNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
 	return true;
 }
-bool MakeNode::fillNodeCall( ) {
+bool MakeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool MakeNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+bool MakeNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

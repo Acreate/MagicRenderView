@@ -3,8 +3,11 @@
 #pragma once
 #include "node.h"
 
+class BeginNode;
 class EndNode : public Node {
 	Q_OBJECT;
+protected:
+	virtual bool updateBeginData(BeginNode* begin_node_ptr);
 public:
 	EndNode( const QString &node_name )
 		: Node( node_name ) { }

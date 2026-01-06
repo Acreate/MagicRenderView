@@ -12,9 +12,9 @@ public:
 	bool updateLayout( ) override;
 public:
 	bool readNodeRunData( ) override;
-	bool fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) override;
-	bool fillNodeCall( ) override;
-	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) override;
+	bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) override;
+	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
+	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "数值运算/整数加法" ) );
 };

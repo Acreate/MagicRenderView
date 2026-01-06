@@ -21,12 +21,12 @@ bool ResultNode::updateLayout( ) {
 bool ResultNode::readNodeRunData( ) {
 	return true;
 }
-bool ResultNode::fillInputPortCall( std::vector< Node * > &result_need_run_ref_node_vector ) {
+bool ResultNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
 	return true;
 }
-bool ResultNode::fillNodeCall( ) {
+bool ResultNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool ResultNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector ) {
+bool ResultNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

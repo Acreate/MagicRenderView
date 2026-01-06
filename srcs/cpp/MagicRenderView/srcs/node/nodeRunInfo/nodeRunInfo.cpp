@@ -91,13 +91,12 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	std::vector< Node * > endNodeVector;
 	// 保存流程节点
 	std::vector< Node * > processNodeVector;
-	std::vector< Node * > sortNodeVector;
-	std::vector< Node * > notRootNodeVector;
 	Node *currentNode;
-	NodeEnum::NodeType nodeType;
 	size_t outputRefNodeCount;
 	size_t outputRefNodeIndex;
 	Node **outputRefNodeArray;
+	std::vector< Node * > notRootNodeVector;
+	NodeEnum::NodeType nodeType;
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
 		currentNode = builderNodeArrayPtr[ builderNodeIndex ];
 		nodeType = currentNode->getNodeType( );
@@ -246,7 +245,7 @@ bool NodeRunInfo::runNextNode( ) {
 	Node *currentRunNodePtr;
 	currentRunNodePtr = runNodeArrayPtr[ runNodeIndex ];
 	currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Call_Function );
-	if( currentRunNodePtr->fillInputPortCall( runCurrentNodeNeedNodeVector ) == false ) {
+	if( currentRunNodePtr->fillInputPortCall( TODO, runCurrentNodeNeedNodeVector ) == false ) {
 		Application *instancePtr = Application::getInstancePtr( );
 		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillInputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
 		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
@@ -275,14 +274,14 @@ bool NodeRunInfo::runNextNode( ) {
 		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
 		return false;
 	}
-	if( currentRunNodePtr->fillNodeCall( ) == false ) {
+	if( currentRunNodePtr->fillNodeCall( TODO ) == false ) {
 		Application *instancePtr = Application::getInstancePtr( );
 		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillNodeCall() 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
 		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
 		return false;
 	}
 	std::vector< Node * > resultNextRunAdviseNodeVector;
-	if( currentRunNodePtr->fillOutputPortCall( resultNextRunAdviseNodeVector ) == false ) {
+	if( currentRunNodePtr->fillOutputPortCall( resultNextRunAdviseNodeVector, TODO ) == false ) {
 		Application *instancePtr = Application::getInstancePtr( );
 		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillOutputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
 		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );

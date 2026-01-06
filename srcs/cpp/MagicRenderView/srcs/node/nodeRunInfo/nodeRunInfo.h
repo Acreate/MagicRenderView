@@ -3,6 +3,8 @@
 #pragma once
 #include <QObject>
 
+#include "../../enums/nodeEnum.h"
+
 class Application;
 namespace NodeEnum {
 	enum class ErrorType;
@@ -40,6 +42,7 @@ protected:
 	/// @brief 编译实例引用
 	/// @return 失败返回 false
 	virtual bool builderRunInstanceRef( );
+
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
