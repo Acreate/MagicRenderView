@@ -3,13 +3,17 @@
 #include <qdatetime.h>
 
 #include "../../../../app/application.h"
+#include "../../../../tools/arrayTools.h"
+#include "../../../../tools/vectorTools.h"
+#include "../../../port/inputPort/inputPort.h"
 #include "../../../port/outputPort/begin/beginOutputPort .h"
 #include "../../../port/outputPort/toBegin/toBeginOutputPort.h"
 
 bool StartNode::initEx( MainWidget *parent ) {
 
 	initExCallFunction = [this] ( MainWidget *main_widget ) {
-		auto beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) );
+
+		beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) );
 		if( beginOutputPort == nullptr )
 			return false;
 		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) );
@@ -46,5 +50,38 @@ bool StartNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
 bool StartNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+	size_t refInputPortCount;
+	InputPort **refInputPortArray;
+	size_t refInputPortIndex;
+	size_t desIndex;
+	size_t desCount;
+
+	Node *current;
+	Node **destArray;
+
+	auto ref = getRefPort( beginOutputPort );
+	refInputPortCount = ref.size( );
+	if( refInputPortCount == 0 )
+		return true;
+
+	result_next_run_advise_node_vector.resize( refInputPortCount );
+	refInputPortArray = ref.data( );
+	destArray = result_next_run_advise_node_vector.data( );
+
+	desCount = 0;
+	refInputPortIndex = 0;
+	for( ; refInputPortIndex < refInputPortCount; refInputPortIndex += 1 )
+		if( refInputPortArray[ refInputPortIndex ] == nullptr )
+			continue;
+		else if( current = refInputPortArray[ refInputPortIndex ]->getParentNode( ), current->getNodeType( ) != NodeEnum::NodeType::End ) {
+			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
+				if( destArray[ desIndex ] == current )
+					break;
+			if( desIndex < desCount )
+				continue;
+			destArray[ desCount ] = current;
+			desCount += 1;
+		}
+	result_next_run_advise_node_vector.resize( desCount );
 	return true;
 }

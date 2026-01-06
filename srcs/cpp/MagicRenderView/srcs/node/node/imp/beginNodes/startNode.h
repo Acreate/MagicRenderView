@@ -3,11 +3,13 @@
 #pragma once
 #include "../../beginNode.h"
 
+class BeginOutputPort;
 class StartNode : public BeginNode {
 	Q_OBJECT;
 protected:
 	bool readUpdate;
 	qint64 mSecsSinceEpoch;
+	BeginOutputPort *beginOutputPort;
 public:
 	StartNode( const QString &node_name )
 		: BeginNode( node_name ) { }

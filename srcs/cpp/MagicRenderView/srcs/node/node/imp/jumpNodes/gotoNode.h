@@ -3,8 +3,11 @@
 #pragma once
 #include "../../jumpNode.h"
 
+class ToPointInputPort;
 class GotoNode : public JumpNode {
 	Q_OBJECT;
+protected:
+	ToPointInputPort * toPointInputPort;
 public:
 	GotoNode( const QString &node_name )
 		: JumpNode( node_name ) { }

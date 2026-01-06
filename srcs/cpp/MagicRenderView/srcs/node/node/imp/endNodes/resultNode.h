@@ -3,8 +3,11 @@
 #pragma once
 #include "../../endNode.h"
 
+class ToBeginInputPort;
 class ResultNode : public EndNode {
 	Q_OBJECT;
+protected:
+	ToBeginInputPort * toBeginInputPort;
 public:
 	ResultNode( const QString &node_name )
 		: EndNode( node_name ) { }

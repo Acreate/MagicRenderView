@@ -582,3 +582,154 @@ void Node::paintEvent( QPaintEvent *event ) {
 			break;
 	}
 }
+const std::vector< InputPort * > & Node::getRefPort( const OutputPort *output_port ) {
+	return output_port->refInputPortVector;
+}
+const std::vector< OutputPort * > & Node::getRefPort( const InputPort *input_port ) {
+	return input_port->refOutputPortVector;
+}
+
+bool Node::getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
+	size_t refInputPortCount;
+	InputPort **refInputPortArray;
+	size_t refInputPortIndex;
+	size_t desIndex;
+	size_t desCount;
+
+	Node *current;
+	Node **destArray;
+	auto ref = getRefPort( output_port );
+	refInputPortCount = ref.size( );
+	if( refInputPortCount == 0 )
+		return true;
+
+	result_filter_node_vector.resize( refInputPortCount );
+	refInputPortArray = ref.data( );
+	destArray = result_filter_node_vector.data( );
+
+	desCount = 0;
+	refInputPortIndex = 0;
+	for( ; refInputPortIndex < refInputPortCount; refInputPortIndex += 1 )
+		if( refInputPortArray[ refInputPortIndex ] == nullptr )
+			continue;
+		else if( current = refInputPortArray[ refInputPortIndex ]->getParentNode( ), current->getNodeType( ) == node_type ) {
+			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
+				if( destArray[ desIndex ] == current )
+					break;
+			if( desIndex < desCount )
+				continue;
+			destArray[ desCount ] = current;
+			desCount += 1;
+
+		}
+	result_filter_node_vector.resize( desCount );
+	return true;
+}
+bool Node::getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
+	size_t refInputPortCount;
+	InputPort **refInputPortArray;
+	size_t refInputPortIndex;
+	size_t desIndex;
+	size_t desCount;
+
+	Node *current;
+	Node **destArray;
+	auto ref = getRefPort( output_port );
+	refInputPortCount = ref.size( );
+	if( refInputPortCount == 0 )
+		return true;
+
+	result_filter_node_vector.resize( refInputPortCount );
+	refInputPortArray = ref.data( );
+	destArray = result_filter_node_vector.data( );
+
+	desCount = 0;
+	refInputPortIndex = 0;
+	for( ; refInputPortIndex < refInputPortCount; refInputPortIndex += 1 )
+		if( refInputPortArray[ refInputPortIndex ] == nullptr )
+			continue;
+		else if( current = refInputPortArray[ refInputPortIndex ]->getParentNode( ), current->getNodeType( ) != node_type ) {
+			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
+				if( destArray[ desIndex ] == current )
+					break;
+			if( desIndex < desCount )
+				continue;
+			destArray[ desCount ] = current;
+			desCount += 1;
+
+		}
+	result_filter_node_vector.resize( desCount );
+	return true;
+}
+bool Node::getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
+	size_t refOutputPortCount;
+	OutputPort **refOutputPortArray;
+	size_t refOutputPortIndex;
+	size_t desIndex;
+	size_t desCount;
+
+	Node *current;
+	Node **destArray;
+	auto ref = getRefPort( input_port );
+	refOutputPortCount = ref.size( );
+	if( refOutputPortCount == 0 )
+		return true;
+
+	result_filter_node_vector.resize( refOutputPortCount );
+	refOutputPortArray = ref.data( );
+	destArray = result_filter_node_vector.data( );
+
+	desCount = 0;
+	refOutputPortIndex = 0;
+	for( ; refOutputPortIndex < refOutputPortCount; refOutputPortIndex += 1 )
+		if( refOutputPortArray[ refOutputPortIndex ] == nullptr )
+			continue;
+		else if( current = refOutputPortArray[ refOutputPortIndex ]->getParentNode( ), current->getNodeType( ) == node_type ) {
+			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
+				if( destArray[ desIndex ] == current )
+					break;
+			if( desIndex < desCount )
+				continue;
+			destArray[ desCount ] = current;
+			desCount += 1;
+
+		}
+	result_filter_node_vector.resize( desCount );
+	return true;
+}
+bool Node::getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
+	size_t refOutputPortCount;
+	OutputPort **refOutputPortArray;
+	size_t refOutputPortIndex;
+	size_t desIndex;
+	size_t desCount;
+
+	Node *current;
+	Node **destArray;
+	auto ref = getRefPort( input_port );
+	refOutputPortCount = ref.size( );
+	if( refOutputPortCount == 0 )
+		return true;
+
+	result_filter_node_vector.resize( refOutputPortCount );
+	refOutputPortArray = ref.data( );
+	destArray = result_filter_node_vector.data( );
+
+	desCount = 0;
+	refOutputPortIndex = 0;
+	for( ; refOutputPortIndex < refOutputPortCount; refOutputPortIndex += 1 )
+		if( refOutputPortArray[ refOutputPortIndex ] == nullptr )
+			continue;
+		else if( current = refOutputPortArray[ refOutputPortIndex ]->getParentNode( ), current->getNodeType( ) != node_type ) {
+			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
+				if( destArray[ desIndex ] == current )
+					break;
+			if( desIndex < desCount )
+				continue;
+			destArray[ desCount ] = current;
+			desCount += 1;
+
+		}
+	result_filter_node_vector.resize( desCount );
+	return true;
+}

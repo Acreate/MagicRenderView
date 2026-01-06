@@ -3,12 +3,15 @@
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/point/pointInputPort.h"
 #include "../../../port/inputPort/toPoint/toPointInputPort.h"
+#include "../../../port/outputPort/outputPort.h"
 
 bool GotoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< PointInputPort >( tr( "跳转" ) ) == nullptr )
 			return false;
-		if( appendInputPortType< ToPointInputPort >( tr( "跳到定点" ) ) == nullptr )
+
+		toPointInputPort = appendInputPortType< ToPointInputPort >( tr( "跳到定点" ) );
+		if( toPointInputPort == nullptr )
 			return false;
 		return true;
 	};
@@ -29,5 +32,5 @@ bool GotoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
 bool GotoNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
-	return true;
+	return getFilterRefPortNodeVector( toPointInputPort, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
 }

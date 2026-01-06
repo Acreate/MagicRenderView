@@ -17,6 +17,7 @@
 	friend class NodeTypeInfoSerializeion; \
 	friend class NodeTypeInfo; \
 	friend class PortTypeInfo; \
+	friend class NodeTools; \
 	friend class PortLinkType;
 
 #define InputPortFrinedClass( ) \

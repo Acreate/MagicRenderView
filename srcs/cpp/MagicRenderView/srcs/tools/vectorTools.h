@@ -157,7 +157,8 @@ namespace VectorTools {
 	/// @param result_std_vector 返回非重复序列
 	template< typename TVectorUnityType >
 	bool removeRepeat( const std::vector< TVectorUnityType > &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
-
+		if( &remove_target == &result_std_vector )
+			return false;
 		auto count = remove_target.size( );
 		if( count == 0 )
 			return false;

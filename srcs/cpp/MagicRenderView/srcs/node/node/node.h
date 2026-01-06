@@ -97,9 +97,9 @@ protected:
 	QPen advisPen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
-private:
 	std::vector< Node * > refInputPortNode;
 	std::vector< Node * > refOutputPortNode;
+private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
 	/// @param ref_output_port 输出端口
@@ -153,12 +153,18 @@ public:
 	/// @param ndoe_run_start_data_time
 	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
 	/// @return 失败返回 false
-	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) = 0;
+	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
+		result_need_run_ref_node_vector = refOutputPortNode;
+		return true;
+	}
 	/// @brief 填充输出端口
 	/// @param result_next_run_advise_node_vector 建议后运行节点列表
 	/// @param ndoe_run_start_data_time
 	/// @return 失败返回 false
-	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) = 0;
+	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+		result_next_run_advise_node_vector = refInputPortNode;
+		return true;
+	}
 	/// @brief 节点运行调用
 	/// @return 失败返回 false
 	virtual bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) = 0;
@@ -284,6 +290,14 @@ Q_SIGNALS:
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息
 	void finish_run_node_signal( Node *finish_node, const SrackInfo &srack_info );
+	// 友元-提供子类
+protected:
+	const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
+	bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
+	bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 };
 
 #endif // NODE_H_H_HEAD__FILE__

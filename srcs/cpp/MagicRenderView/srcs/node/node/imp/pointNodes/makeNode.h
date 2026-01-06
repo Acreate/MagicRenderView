@@ -3,8 +3,11 @@
 #pragma once
 #include "../../pointNode.h"
 
+class PointOutputPort;
 class MakeNode : public PointNode {
 	Q_OBJECT;
+protected:
+	PointOutputPort *nextNode;
 public:
 	MakeNode( const QString &node_name )
 		: PointNode( node_name ) { }
