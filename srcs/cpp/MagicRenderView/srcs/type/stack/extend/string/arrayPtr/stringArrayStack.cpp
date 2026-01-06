@@ -3,7 +3,7 @@
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
-#include "../../../../director/varDirector.h"
+#include <director/varDirector.h>
 
 StringArrayStack::~StringArrayStack( ) {
 	size_t count = allVarPtrVector.size( );

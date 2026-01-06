@@ -3,6 +3,7 @@
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/toBegin/toBeginInputPort.h"
 #include "../../../port/outputPort/outputPort.h"
+#include "../../beginNode.h"
 
 bool ResultNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

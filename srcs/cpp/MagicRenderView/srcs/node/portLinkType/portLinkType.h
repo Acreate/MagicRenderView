@@ -1,6 +1,7 @@
 ﻿#ifndef PORTLINKTYPE_H_H_HEAD__FILE__
 #define PORTLINKTYPE_H_H_HEAD__FILE__
 #pragma once
+#include <QString>
 
 class InputPort;
 class OutputPort;
@@ -14,6 +15,7 @@ protected:
 	AppDirector *appDirector;
 	NodeDirector *nodeDirector;
 	VarDirector *varDirector;
+	QString anyVarStringName;
 public:
 	PortLinkType( ) { }
 	virtual ~PortLinkType( ) { }

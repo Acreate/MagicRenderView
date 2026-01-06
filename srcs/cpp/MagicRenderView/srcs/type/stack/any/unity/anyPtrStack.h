@@ -1,13 +1,14 @@
-﻿#ifndef ANYPTRPAIRSTACK_H_H_HEAD__FILE__
-#define ANYPTRPAIRSTACK_H_H_HEAD__FILE__
+﻿#ifndef ANYPTRSTACK_H_H_HEAD__FILE__
+#define ANYPTRSTACK_H_H_HEAD__FILE__
 #pragma once
+
 #include <type/infoStack.h>
 
-class AnyPtrPairStack : public InfoStack {
+class AnyPtrStack : public InfoStack {
 	Q_OBJECT;
 public:
-	AnyPtrPairStack( );
-	~AnyPtrPairStack( ) override;
+	AnyPtrStack( );
+	~AnyPtrStack( ) override;
 protected:
 	bool init( VarDirector *var_director ) override;
 public:
@@ -16,5 +17,4 @@ public:
 protected:
 	bool toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) override;
 };
-
-#endif // ANYPTRPAIRSTACK_H_H_HEAD__FILE__
+#endif // ANYPTRSTACK_H_H_HEAD__FILE__

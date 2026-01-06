@@ -17,7 +17,9 @@
 #include "../../node/imp/jumpNodes/gotoNode.h"
 #include "../../node/imp/logicNodes/ifNode.h"
 #include "../../node/imp/pointNodes/makeNode.h"
-#include "../../node/imp/processNodes/intAddNode.h"
+#include "../../node/imp/processNodes/baseOperation/intAddNode.h"
+#include "../../node/imp/processNodes/file/writeFileTextNode.h"
+#include "../../node/imp/processNodes/toString/toStringNode.h"
 
 #define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
 bool BaseNodeStack::init( ) {
@@ -33,6 +35,8 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( IfNode );
 	emaplace_back_node( MakeNode );
 	emaplace_back_node( IntAddNode );
+	emaplace_back_node( WriteFileTextNode );
+	emaplace_back_node( ToStringNode );
 	return true;
 }
 

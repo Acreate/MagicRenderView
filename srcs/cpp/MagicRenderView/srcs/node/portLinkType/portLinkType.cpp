@@ -1,5 +1,6 @@
 ﻿#include "portLinkType.h"
 
+#include "../../director/varDirector.h"
 #include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"
 bool PortLinkType::init( Application *application, NodeDirector *node_director, VarDirector *var_director, AppDirector *app_director ) {
@@ -7,6 +8,9 @@ bool PortLinkType::init( Application *application, NodeDirector *node_director, 
 	appDirector = app_director;
 	varDirector = var_director;
 	nodeDirector = node_director;
+
+	if( var_director->getTypeName( typeid( void * ), anyVarStringName ) == false )
+		return false;
 	return true;
 }
 bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -34,13 +38,21 @@ bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_p
 	// 输出端是开始，输入端是生成
 	if( outputPortType == NodeEnum::PortType::Begin && inputPortType == NodeEnum::PortType::Generate )
 		return true;
+	if( outputPortType == NodeEnum::PortType::AnyVar )
+		return true;
+	if( inputPortType == NodeEnum::PortType::AnyVar )
+		return true;
+
 	// 非生成输出节点
 	if( outputPortType != NodeEnum::PortType::Generate )
 		if( outputPortType != inputPortType )
 			return false; // 端口不匹配，返回 false
 
+	QString outputPortTypeName = output_port->getVarTypeName( );
+	QString inputPortTypeName = input_port->getVarTypeName( );
+
 	// 类型不匹配，返回 false
-	if( output_port->getVarTypeName( ) != input_port->getVarTypeName( ) )
+	if( outputPortTypeName != inputPortTypeName )
 		return false;
 	return true;
 }

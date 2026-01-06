@@ -8,13 +8,13 @@
 
 #include "../type/stack/any/arrayPtr/anyPtrArrayStack.h"
 #include "../type/stack/any/pairPtr/anyPtrPairStack.h"
+#include "../type/stack/any/unity/anyPtrStack.h"
 #include "../type/stack/base/array/float32ArrayStack.h"
 #include "../type/stack/base/array/float64ArrayStack.h"
 #include "../type/stack/base/array/int16ArrayStack.h"
 #include "../type/stack/base/array/int32ArrayStack.h"
 #include "../type/stack/base/array/int64ArrayStack.h"
 #include "../type/stack/base/array/int8ArrayStack.h"
-#include "../type/stack/base/array/stringArrayStack.h"
 #include "../type/stack/base/array/uInt16ArrayStack.h"
 #include "../type/stack/base/array/uInt32ArrayStack.h"
 #include "../type/stack/base/array/uInt64ArrayStack.h"
@@ -25,13 +25,14 @@
 #include "../type/stack/base/unity/int32UnityStack.h"
 #include "../type/stack/base/unity/int64UnityStack.h"
 #include "../type/stack/base/unity/int8UnityStack.h"
-#include "../type/stack/base/unity/stringUnityStack.h"
 #include "../type/stack/base/unity/uInt16UnityStack.h"
 #include "../type/stack/base/unity/uInt32UnityStack.h"
 #include "../type/stack/base/unity/uInt64UnityStack.h"
 #include "../type/stack/base/unity/uInt8UnityStack.h"
 #include "../type/stack/extend/nodeInfoType/arrayPtr/nodeTypeInfoPtrArrayStack.h"
 #include "../type/stack/extend/nodeInfoType/unity/nodeTypeInfoStack.h"
+#include "../type/stack/extend/string/arrayPtr/stringArrayStack.h"
+#include "../type/stack/extend/string/unity/stringUnityStack.h"
 
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )
@@ -73,6 +74,7 @@ bool VarDirector::init( ) {
 	emplace_back_type( Float64ArrayStack );
 	emplace_back_type( StringArrayStack );
 
+	emplace_back_type( AnyPtrStack );
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyPtrArrayStack );
 

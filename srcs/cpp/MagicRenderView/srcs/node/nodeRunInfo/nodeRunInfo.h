@@ -5,6 +5,7 @@
 
 #include "../../enums/nodeEnum.h"
 
+class QDateTime;
 class Application;
 namespace NodeEnum {
 	enum class ErrorType;
@@ -29,6 +30,7 @@ protected:
 	TRunBodyObjPtr *runNodeArrayPtr;
 	TRunBodyObjPtr errorObj;
 	bool isRunStop;
+	QDateTime *builderDataTime;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -42,7 +44,6 @@ protected:
 	/// @brief 编译实例引用
 	/// @return 失败返回 false
 	virtual bool builderRunInstanceRef( );
-
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;

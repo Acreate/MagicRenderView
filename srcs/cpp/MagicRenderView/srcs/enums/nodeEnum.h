@@ -45,6 +45,7 @@ namespace NodeEnum {
 		InterFace,
 		Generate,
 		Unity,
+		AnyVar,
 		Array,
 		ToBegin,
 		Begin,

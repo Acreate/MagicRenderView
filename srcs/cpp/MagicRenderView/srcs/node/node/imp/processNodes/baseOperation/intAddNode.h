@@ -1,8 +1,6 @@
 ﻿#ifndef INTADDNODE_H_H_HEAD__FILE__
 #define INTADDNODE_H_H_HEAD__FILE__
-#pragma once
-#include "../../processNode.h"
-
+#include "../../../processNode.h"
 class IntAddNode : public ProcessNode {
 	Q_OBJECT;
 public:
