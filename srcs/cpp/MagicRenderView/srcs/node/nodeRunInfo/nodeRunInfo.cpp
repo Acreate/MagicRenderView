@@ -294,12 +294,15 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 				}
 				needRunNodeArrayPtr = resultNeedNodeVector.data( );
 				needRunNodeIndex = 0;
-				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount && overNodeIndex != overNodeCount; needRunNodeIndex += 1, overNodeIndex = 0 )
+				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount; needRunNodeIndex += 1, overNodeIndex = 0 ) {
 					for( ; overNodeIndex < overNodeCount; overNodeIndex += 1 )
 						if( needRunNodeArrayPtr[ needRunNodeIndex ] == overNodeArrayPtr[ overNodeIndex ] )
 							break;
+					if( overNodeIndex == overNodeCount )
+						break;
+				}
 				if( needRunNodeIndex < needRunNodeArratCount )
-					continue;
+					continue; // 不满足
 				result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
 				break;
 			}
