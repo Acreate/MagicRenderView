@@ -3,11 +3,15 @@
 #pragma once
 #include "../../logicNode.h"
 
-class InterFaceInputPort;
+class AnyVarOutputPort;
+class AnyVarInputPort;
 class IfNode : public LogicNode {
 	Q_OBJECT;
 protected:
-	InterFaceInputPort *ifResultPort;
+	AnyVarInputPort *ifResultPort;
+	AnyVarOutputPort *trueOutputPort;
+	AnyVarOutputPort *falseOutputPort;
+	std::vector< Node * > adviseNextVector;
 public:
 	IfNode( const QString &node_name )
 		: LogicNode( node_name ) { }

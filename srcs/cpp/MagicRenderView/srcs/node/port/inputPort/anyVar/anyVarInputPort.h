@@ -10,5 +10,6 @@ public:
 	AnyVarInputPort( const QString &name )
 		: AnyVarTypeInputPort( name ) { }
 	bool init( Node *parent ) override;
+	
 };
 #endif // ANYVARINPUTPORT_H_H_HEAD__FILE__

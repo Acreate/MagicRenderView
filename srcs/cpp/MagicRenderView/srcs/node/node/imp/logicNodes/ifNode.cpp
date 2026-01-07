@@ -1,19 +1,23 @@
 ﻿#include "ifNode.h"
 
+#include "../../../port/inputPort/anyVar/anyVarInputPort.h"
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/point/pointInputPort.h"
+#include "../../../port/outputPort/anyVar/anyVarOutputPort.h"
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		ifResultPort = appendInputPortType< InterFaceInputPort >( tr( "判断" ) );
+		ifResultPort = appendInputPortType< AnyVarInputPort >( tr( "判断" ) );
 		if( ifResultPort == nullptr )
 			return false;
 		if( appendInputPortType< PointInputPort >( tr( "定位" ) ) == nullptr )
 			return false;
-		if( appendOutputPortType< InterFaceOutputPort >( tr( "成立" ) ) == nullptr )
+		trueOutputPort = appendOutputPortType< AnyVarOutputPort >( tr( "成立" ) );
+		if( trueOutputPort == nullptr )
 			return false;
-		if( appendOutputPortType< InterFaceOutputPort >( tr( "失败" ) ) == nullptr )
+		falseOutputPort = appendOutputPortType< AnyVarOutputPort >( tr( "失败" ) );
+		if( falseOutputPort == nullptr )
 			return false;
 
 		return true;
@@ -34,8 +38,18 @@ bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::
 	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	bool result;
+	
+	if( ifResultPort )
+		result = getRefPortNodeVector( trueOutputPort, adviseNextVector );
+	else
+		result = getRefPortNodeVector( falseOutputPort, adviseNextVector );
+	if( result == false )
+		return false;
+	// 保存输入
 	return true;
 }
 bool IfNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
-	return LogicNode::fillOutputPortCall( result_next_run_advise_node_vector, ndoe_run_start_data_time );
+	result_next_run_advise_node_vector = adviseNextVector;
+	return true;
 }
