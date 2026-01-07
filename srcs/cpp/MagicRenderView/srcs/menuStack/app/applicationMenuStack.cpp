@@ -9,6 +9,7 @@
 #include "../../menu/app/imp/action/app/resetAppAction.h"
 #include "../../menu/app/imp/action/builder/builderPorjectAction.h"
 #include "../../menu/app/imp/action/builder/nextStepBuilderAction.h"
+#include "../../menu/app/imp/action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../../menu/app/imp/action/builder/runBuilderAction.h"
 #include "../../menu/app/imp/action/builder/stopBuilderAction.h"
 #include "../../menu/app/imp/action/editor/copyNodeAction.h"
@@ -57,6 +58,7 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, UpdateProjectAction, tr( "刷新当前项目" ) ) );
 	// 编译操作 action
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, BuilderPorjectAction, tr( "编译项目" ), tr( "编译文件" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ResetBuilderStartNodeProjectAction, tr( "重置运行" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, NextStepBuilderAction, tr( "运行下一步" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, RunBuilderAction, tr( "运行" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, StopBuilderAction, tr( "停止" ) ) );

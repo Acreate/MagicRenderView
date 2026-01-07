@@ -4,6 +4,7 @@
 
 #include "../../normalApplicationToolBar.h"
 
+class ResetBuilderStartNodeProjectAction;
 class StopBuilderAction;
 class NextStepBuilderAction;
 class RunBuilderAction;
@@ -14,6 +15,7 @@ class BuilderApplicationToolBar : public NormalApplicationToolBar {
 protected:
 	struct {
 		BuilderPorjectAction *builderPorjectAction;
+		ResetBuilderStartNodeProjectAction *resetBuilderStartNode;
 		RunBuilderAction *runBuilderAction;
 		NextStepBuilderAction *nextStepBuilderAction;
 		StopBuilderAction *stopBuilderAction;

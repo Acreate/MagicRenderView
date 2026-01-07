@@ -33,6 +33,7 @@ public:
 	virtual bool addMenu( BuilderApplicationMenu *builder_application_menu );
 	virtual bool addToolBar( BuilderApplicationToolBar *builder_application_tool_bar );
 	virtual bool builderNodeProject( );
+	virtual bool resetStartNodeProject( );
 	virtual bool nextStepBuilderNode( );
 	virtual bool runBuilderBuilderNode( );
 	virtual bool stopBuilderBuilderNode( );

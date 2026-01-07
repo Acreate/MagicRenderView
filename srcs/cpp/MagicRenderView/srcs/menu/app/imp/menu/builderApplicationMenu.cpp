@@ -5,6 +5,7 @@
 #include "../../../../menuStack/app/applicationMenuStack.h"
 #include "../action/builder/builderPorjectAction.h"
 #include "../action/builder/nextStepBuilderAction.h"
+#include "../action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../action/builder/runBuilderAction.h"
 #include "../action/builder/stopBuilderAction.h"
 BuilderApplicationMenu::BuilderApplicationMenu( ) {
@@ -14,6 +15,10 @@ bool BuilderApplicationMenu::init( ApplicationMenuStack *application_menu_stack 
 		return false;
 	normalMenuAction.builderPorjectAction = application_menu_stack->getAction< BuilderPorjectAction >( );
 	if( appendAction( normalMenuAction.builderPorjectAction ) == false )
+		return false;
+
+	normalMenuAction.resetBuilderStartNode = application_menu_stack->getAction< ResetBuilderStartNodeProjectAction >( );
+	if( appendAction( normalMenuAction.resetBuilderStartNode ) == false )
 		return false;
 
 	normalMenuAction.runBuilderAction = application_menu_stack->getAction< RunBuilderAction >( );

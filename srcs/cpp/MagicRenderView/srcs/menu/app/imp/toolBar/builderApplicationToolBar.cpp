@@ -5,6 +5,7 @@
 #include "../../../../menuStack/app/applicationMenuStack.h"
 #include "../action/builder/builderPorjectAction.h"
 #include "../action/builder/nextStepBuilderAction.h"
+#include "../action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../action/builder/runBuilderAction.h"
 #include "../action/builder/stopBuilderAction.h"
 BuilderApplicationToolBar::BuilderApplicationToolBar( ) {
@@ -14,6 +15,10 @@ bool BuilderApplicationToolBar::init( ApplicationMenuStack *application_menu_sta
 		return false;
 	normalToolBarAction.builderPorjectAction = application_menu_stack->getAction< BuilderPorjectAction >( );
 	if( appendAction( normalToolBarAction.builderPorjectAction ) == false )
+		return false;
+	
+	normalToolBarAction.resetBuilderStartNode = application_menu_stack->getAction< ResetBuilderStartNodeProjectAction >( );
+	if( appendAction( normalToolBarAction.resetBuilderStartNode ) == false )
 		return false;
 	normalToolBarAction.runBuilderAction = application_menu_stack->getAction< RunBuilderAction >( );
 	if( appendAction( normalToolBarAction.runBuilderAction ) == false )

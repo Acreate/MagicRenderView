@@ -34,6 +34,8 @@ protected:
 	std::vector< TRunBodyObjPtr > waiteRunNodeVector;
 	/// @brief 建议运行列表
 	std::vector< TRunBodyObjPtr > adviseNodeVector;
+	/// @brief 开始节点列表
+	std::vector< TRunBodyObjPtr > beginNodeVector;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -71,6 +73,9 @@ public:
 	/// @brief 运行剩余
 	/// @return 成功返回 true
 	virtual bool runResidueNode( );
+	/// @brief 重置开始
+	/// @return 成功返回 true
+	virtual bool resetRunStartNode( );
 	/// @brief 停止运行
 	/// @return 成功返回 true
 	virtual bool runStopNode( );

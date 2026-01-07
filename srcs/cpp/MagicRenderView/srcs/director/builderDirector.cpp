@@ -5,6 +5,7 @@
 
 #include "../menu/app/imp/action/builder/builderPorjectAction.h"
 #include "../menu/app/imp/action/builder/nextStepBuilderAction.h"
+#include "../menu/app/imp/action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../menu/app/imp/action/builder/runBuilderAction.h"
 #include "../menu/app/imp/action/builder/stopBuilderAction.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
@@ -29,6 +30,7 @@ void BuilderDirector::resetBuilderActionObjInfo( ) {
 		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) {
 			auto &normalMenuAction = menuArrayPtr[ index ]->normalMenuAction;
 			normalMenuAction.builderPorjectAction->setEnabled( true );
+			normalMenuAction.resetBuilderStartNode->setEnabled( false );
 			normalMenuAction.nextStepBuilderAction->setEnabled( false );
 			normalMenuAction.runBuilderAction->setEnabled( false );
 			normalMenuAction.stopBuilderAction->setEnabled( false );
@@ -38,6 +40,7 @@ void BuilderDirector::resetBuilderActionObjInfo( ) {
 		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) {
 			auto &normalToolBarAction = toolBarArrayPtr[ index ]->normalToolBarAction;
 			normalToolBarAction.builderPorjectAction->setEnabled( true );
+			normalToolBarAction.resetBuilderStartNode->setEnabled( false );
 			normalToolBarAction.nextStepBuilderAction->setEnabled( false );
 			normalToolBarAction.runBuilderAction->setEnabled( false );
 			normalToolBarAction.stopBuilderAction->setEnabled( false );
@@ -53,6 +56,7 @@ void BuilderDirector::validBuilderActionObjInfo( ) {
 		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) {
 			auto &normalMenuAction = menuArrayPtr[ index ]->normalMenuAction;
 			normalMenuAction.builderPorjectAction->setEnabled( true );
+			normalMenuAction.resetBuilderStartNode->setEnabled( true );
 			normalMenuAction.nextStepBuilderAction->setEnabled( true );
 			normalMenuAction.runBuilderAction->setEnabled( true );
 			normalMenuAction.stopBuilderAction->setEnabled( true );
@@ -62,6 +66,7 @@ void BuilderDirector::validBuilderActionObjInfo( ) {
 		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) {
 			auto &normalToolBarAction = toolBarArrayPtr[ index ]->normalToolBarAction;
 			normalToolBarAction.builderPorjectAction->setEnabled( true );
+			normalToolBarAction.resetBuilderStartNode->setEnabled( true );
 			normalToolBarAction.nextStepBuilderAction->setEnabled( true );
 			normalToolBarAction.runBuilderAction->setEnabled( true );
 			normalToolBarAction.stopBuilderAction->setEnabled( true );
@@ -113,6 +118,7 @@ bool BuilderDirector::init( ) {
 }
 bool BuilderDirector::addMenu( BuilderApplicationMenu *builder_application_menu ) {
 	builder_application_menu->normalMenuAction.builderPorjectAction->setEnabled( true );
+	builder_application_menu->normalMenuAction.resetBuilderStartNode->setEnabled( false );
 	builder_application_menu->normalMenuAction.nextStepBuilderAction->setEnabled( false );
 	builder_application_menu->normalMenuAction.runBuilderAction->setEnabled( false );
 	builder_application_menu->normalMenuAction.stopBuilderAction->setEnabled( false );
@@ -122,6 +128,7 @@ bool BuilderDirector::addMenu( BuilderApplicationMenu *builder_application_menu 
 }
 bool BuilderDirector::addToolBar( BuilderApplicationToolBar *builder_application_tool_bar ) {
 	builder_application_tool_bar->normalToolBarAction.builderPorjectAction->setEnabled( true );
+	builder_application_tool_bar->normalToolBarAction.resetBuilderStartNode->setEnabled( false );
 	builder_application_tool_bar->normalToolBarAction.nextStepBuilderAction->setEnabled( false );
 	builder_application_tool_bar->normalToolBarAction.runBuilderAction->setEnabled( false );
 	builder_application_tool_bar->normalToolBarAction.stopBuilderAction->setEnabled( false );
@@ -136,11 +143,12 @@ bool BuilderDirector::builderNodeProject( ) {
 	updateBuilderActionObjInfo( );
 	if( nodeRunInfo == nullptr )
 		return false;
-	/*auto runBodyObjPtr = nodeRunInfo->getRunNodeData( );
-	size_t runNodeCount = nodeRunInfo->getRunNodeCount( );
-	QString printfNode = nodeDirector->nodeArrayToString( runBodyObjPtr, runNodeCount );
-	instancePtr->getPrinterDirector( )->info( printfNode,Create_SrackInfo( ) );*/
 	return true;
+}
+bool BuilderDirector::resetStartNodeProject( ) {
+	if( nodeRunInfo == nullptr )
+		return false;
+	return nodeRunInfo->resetRunStartNode( );
 }
 bool BuilderDirector::nextStepBuilderNode( ) {
 	if( nodeRunInfo == nullptr )

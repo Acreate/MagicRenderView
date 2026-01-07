@@ -72,32 +72,39 @@ bool NodeRunInfo::hasNodeRefInRunVector( TRunBodyObj *check_node_ref ) {
 bool NodeRunInfo::builderRunInstance( ) {
 	currentRunPtr = nullptr;
 	runNodeVector.clear( );
+	beginNodeVector.clear( );
 	waiteRunNodeVector.clear( );
 	overRunNodeVector.clear( );
 	adviseNodeVector.clear( );
 	if( builderRunInstanceRef( ) == false )
 		return false;
 	size_t runNodeCount;
-	runNodeCount = adviseNodeVector.size( );
+	// 检测开始节点个数
+	runNodeCount = beginNodeVector.size( );
 	if( runNodeCount == 0 )
 		return false;
+	// 检测运行节点个数
 	runNodeCount = runNodeVector.size( );
-	if( runNodeCount == 0 ) 
+	if( runNodeCount == 0 )
 		return false;
+	// 初始化运行列表
 	auto runNodeArrayPtr = runNodeVector.data( );
 	size_t runNodeIndex = 0;
 	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
 		if( runNodeArrayPtr[ runNodeIndex ]->readNodeRunData( ) == false ) {
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
 			runNodeVector.clear( );
+			beginNodeVector.clear( );
 			waiteRunNodeVector.clear( );
+			overRunNodeVector.clear( );
+			adviseNodeVector.clear( );
 			return false;
 		} else
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
 	if( builderDataTime == nullptr )
 		builderDataTime = new QDateTime( );
 	*builderDataTime = QDateTime::currentDateTime( );
-
+	adviseNodeVector = beginNodeVector;
 	return true;
 }
 bool NodeRunInfo::builderRunInstanceRef( ) {
@@ -125,7 +132,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 				break;
 			case NodeEnum::NodeType::Begin :
 				// 开始节点添加到建议节点序列
-				adviseNodeVector.emplace_back( currentNode );
+				beginNodeVector.emplace_back( currentNode );
 				break;
 			case NodeEnum::NodeType::End :
 				endNodeVector.emplace_back( currentNode );
@@ -149,7 +156,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		}
 
 	}
-	if( adviseNodeVector.size( ) == 0 ) {
+	if( beginNodeVector.size( ) == 0 ) {
 		Application *instancePtr = Application::getInstancePtr( );
 		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( builderNodeArrayPtr, builderNodeCount );
 		QString form( "未发现开始节点(NodeEnum::NodeType::Begin):\n\t%1" );
@@ -231,14 +238,14 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	processNodeVector = runNodeVector;
 	processSize = runNodeIndex;
 	// 开始节点大小
-	size_t beginSize = adviseNodeVector.size( );
+	size_t beginSize = beginNodeVector.size( );
 	// 结束节点大小
 	size_t endSize = endNodeVector.size( );
 	// 排序节点所有
 	runNodeCount = beginSize + processSize + endSize;
 	runNodeVector.resize( runNodeCount );
 	runNodeArrayPtr = runNodeVector.data( );
-	buffNodeArrayPtr = adviseNodeVector.data( );
+	buffNodeArrayPtr = beginNodeVector.data( );
 	// 添加开始列表
 	for( builderNodeIndex = 0; builderNodeIndex < beginSize; builderNodeIndex += 1 )
 		runNodeArrayPtr[ builderNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
@@ -400,6 +407,27 @@ bool NodeRunInfo::runResidueNode( ) {
 		if( isRunStop == true )
 			break;
 	} while( true );
+	return true;
+}
+bool NodeRunInfo::resetRunStartNode( ) {
+	// 检测开始节点个数
+	size_t count = beginNodeVector.size( );
+	if( count == 0 )
+		return false;
+	// 检测运行节点个数
+	count = runNodeVector.size( );
+	if( count == 0 )
+		return false;
+	// 重置数据
+	auto runArrayPtr = runNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; index += 1 )
+		if( runArrayPtr[ index ]->readNodeRunData( ) == false )
+			return false;
+	// 清除已运行列表
+	overRunNodeVector.clear( );
+	// 赋予开始节点到建议运行序列
+	adviseNodeVector = beginNodeVector;
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
