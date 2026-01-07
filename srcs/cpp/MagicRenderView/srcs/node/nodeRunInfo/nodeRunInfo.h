@@ -22,15 +22,20 @@ protected:
 	using TRunBodyObjPtr = TRunBodyObj *;
 	std::vector< TRunBodyObjPtr > builderNodeVector;
 	std::vector< TRunBodyObjPtr > runNodeVector;
-	size_t builderNodeCount;
-	size_t builderNodeIndex;
-	TRunBodyObjPtr *builderNodeArrayPtr;
-	size_t runNodeCount;
-	size_t runNodeIndex;
-	TRunBodyObjPtr *runNodeArrayPtr;
-	TRunBodyObjPtr errorObj;
 	bool isRunStop;
 	QDateTime *builderDataTime;
+	/// @brief 当前对象指针
+	TRunBodyObjPtr currentRunPtr;
+	/// @brief 运行的节点
+	std::vector< TRunBodyObjPtr > overRunNodeVector;
+	/// @brief 等待运行的节点
+	std::vector< TRunBodyObjPtr > waiteRunNodeVector;
+	/// @brief 建议运行列表
+	std::vector< TRunBodyObjPtr > adviseNodeVector;
+	/// @brief 开始节点运行的依赖节点
+	std::vector< std::pair< TRunBodyObjPtr, TRunBodyObjPtr > > beginNodeRunNodeStack;
+	/// @brief 节点所依赖的开始节点映射
+	std::vector< std::pair< TRunBodyObjPtr, std::vector< TRunBodyObjPtr > > > nodeMapBeginNode;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -44,6 +49,17 @@ protected:
 	/// @brief 编译实例引用
 	/// @return 失败返回 false
 	virtual bool builderRunInstanceRef( );
+	/// @brief 查找运行节点
+	/// @param result_run_node 返回的运行节点
+	/// @return 失败返回 false
+	virtual bool findNextRunNode( Node * &result_run_node );
+	/// @brief 运行指定节点
+	/// @param run_node 运行的节点
+	/// @return 成功返回 true
+	virtual bool runCurrentNode( Node *run_node );
+	/// @brief 运行完成节点
+	/// @return 成功返回 true
+	virtual bool overRunNode( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
@@ -62,15 +78,6 @@ public:
 	virtual bool runStopNode( );
 	/// @brief 清理所有
 	virtual void clear( );
-	/// @brief 获取错误节点
-	/// @return 如果存在，返回错误节点
-	virtual TRunBodyObj * getErrorObj( ) const {
-		return errorObj;
-	}
-	virtual size_t getBeginNodeCount( ) const { return builderNodeCount; }
-	virtual TRunBodyObjPtr * getBeginNodeData( ) const { return builderNodeArrayPtr; }
-	virtual size_t getRunNodeCount( ) const { return runNodeCount; }
-	virtual TRunBodyObjPtr * getRunNodeData( ) const { return runNodeArrayPtr; }
 Q_SIGNALS:
 	/// @brief 释放对象产生信号
 	/// @param release_obj_ptr 释放对象指针

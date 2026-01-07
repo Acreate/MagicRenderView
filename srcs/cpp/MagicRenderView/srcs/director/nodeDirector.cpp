@@ -123,6 +123,17 @@ QString NodeDirector::nodeArrayToString( const Node *const *printf_nodes, const 
 	}
 	return outInfo.arg( nodeToStringList.join( "\n" ) ).arg( printf_node_count );
 }
+QString NodeDirector::nodeArrayToString( const std::list< Node * > &printf_node_list ) {
+	size_t count = printf_node_list.size( );
+	auto nodeArrayPtr = new Node *[ count ];
+	size_t index = 0;
+	auto listConstIterator = printf_node_list.begin( );
+	for( ; index < count; ++index )
+		nodeArrayPtr[ index ] = *listConstIterator;
+	auto resultString = nodeArrayToString( nodeArrayPtr, count );
+	delete [] nodeArrayPtr;
+	return resultString;
+}
 void NodeDirector::releaseObjResources( ) {
 	releaseMenuResources( );
 	releaseNodeResources( );

@@ -9,7 +9,7 @@
 #include "../../tools/arrayTools.h"
 #include "../node/node.h"
 
-NodeRunInfo::NodeRunInfo( ) : QObject( ), builderNodeArrayPtr( nullptr ), builderNodeIndex( 0 ), builderNodeCount( 0 ), errorObj( nullptr ), builderDataTime( nullptr ) {
+NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ) {
 
 }
 NodeRunInfo::~NodeRunInfo( ) {
@@ -19,9 +19,11 @@ NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
 }
 void NodeRunInfo::appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count ) {
+	auto builderNodeCount = builderNodeVector.size( );
 	size_t newSizet = append_node_array_count + builderNodeCount;
 	builderNodeVector.resize( newSizet );
-	builderNodeArrayPtr = builderNodeVector.data( );
+	auto builderNodeArrayPtr = builderNodeVector.data( );
+	size_t builderNodeIndex;
 	for( size_t index = 0; index < append_node_array_count; index += 1 )
 		if( append_node_array_ptr[ index ] != nullptr ) {
 			for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
@@ -34,63 +36,64 @@ void NodeRunInfo::appendBuilderNode( TRunBodyObj **append_node_array_ptr, const 
 		}
 	if( newSizet != builderNodeCount )
 		builderNodeVector.resize( builderNodeCount );
-	builderNodeArrayPtr = builderNodeVector.data( );
 }
 void NodeRunInfo::appendBuilderNode( TRunBodyObj *append_node_unity ) {
 	if( append_node_unity == nullptr )
 		return;
+	size_t builderNodeIndex;
+	size_t builderNodeCount = builderNodeVector.size( );
+	auto builderNodeArrayPtr = builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity )
 			return;
 	builderNodeVector.emplace_back( append_node_unity );
-	builderNodeArrayPtr = builderNodeVector.data( );
-	builderNodeCount += 1;
 }
 void NodeRunInfo::removeBuilderNode( TRunBodyObj *append_node_unity ) {
 	if( append_node_unity == nullptr )
 		return;
+	size_t builderNodeIndex;
+	size_t builderNodeCount = builderNodeVector.size( );
+	auto builderNodeArrayPtr = builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity ) {
 			builderNodeVector.erase( builderNodeIndex + builderNodeVector.begin( ) );
-			builderNodeArrayPtr = builderNodeVector.data( );
-			builderNodeCount -= 1;
 			return;
 		}
 }
 bool NodeRunInfo::hasNodeRefInRunVector( TRunBodyObj *check_node_ref ) {
+	size_t builderNodeIndex;
+	size_t builderNodeCount = builderNodeVector.size( );
+	auto builderNodeArrayPtr = builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == check_node_ref )
 			return true;
 	return false;
 }
 bool NodeRunInfo::builderRunInstance( ) {
-	errorObj = nullptr;
+	currentRunPtr = nullptr;
 	runNodeVector.clear( );
-	runNodeArrayPtr = nullptr;
-	runNodeCount = 0;
-	runNodeIndex = 0;
+	overRunNodeVector.clear( );
 	if( builderRunInstanceRef( ) == false )
 		return false;
-	runNodeArrayPtr = runNodeVector.data( );
-	runNodeCount = runNodeVector.size( );
-	runNodeIndex = 0;
+	auto runNodeArrayPtr = runNodeVector.data( );
+	auto runNodeCount = runNodeVector.size( );
+	size_t runNodeIndex = 0;
 	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
 		if( runNodeArrayPtr[ runNodeIndex ]->readNodeRunData( ) == false ) {
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
 			runNodeVector.clear( );
-			runNodeArrayPtr = runNodeVector.data( );
-			runNodeCount = runNodeVector.size( );
-			runNodeIndex = 0;
 			return false;
 		} else
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
-
+	if( runNodeCount == 0 )
+		return false;
 	if( builderDataTime == nullptr )
 		builderDataTime = new QDateTime( );
 	*builderDataTime = QDateTime::currentDateTime( );
-	return runNodeCount != 0;
+	return true;
 }
 bool NodeRunInfo::builderRunInstanceRef( ) {
+	auto builderNodeCount = builderNodeVector.size( );
 	if( builderNodeCount == 0 )
 		return false;
 	// 保存开始节点
@@ -102,9 +105,11 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	Node *currentNode;
 	size_t outputRefNodeCount;
 	size_t outputRefNodeIndex;
+	size_t builderNodeIndex;
 	Node **outputRefNodeArray;
 	std::vector< Node * > notRootNodeVector;
 	NodeEnum::NodeType nodeType;
+	auto builderNodeArrayPtr = builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
 		currentNode = builderNodeArrayPtr[ builderNodeIndex ];
 		nodeType = currentNode->getNodeType( );
@@ -156,8 +161,8 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	// 排序对象
 	auto buffNodeArrayPtr = processNodeVector.data( );
 	runNodeVector.resize( processSize );
-	runNodeArrayPtr = runNodeVector.data( );
-	runNodeIndex = 0;
+	auto runNodeArrayPtr = runNodeVector.data( );
+	size_t runNodeIndex = 0;
 	// 匹配依赖为 NodeEnum::NodeType::Begin 类型的节点
 	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
 		currentNode = buffNodeArrayPtr[ builderNodeIndex ];
@@ -184,7 +189,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		if( buffNodeArrayPtr[ builderNodeIndex ] == nullptr )
 			break; // 最大下标
 	processSize = builderNodeIndex; // 重置大小
-
+	size_t runNodeCount;
 	// 开始正式排序内容
 	do {
 		for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
@@ -242,74 +247,72 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		runNodeArrayPtr[ builderNodeIndex + runNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
 	return true;
 }
-bool NodeRunInfo::runNextNode( ) {
-	if( runNodeCount == 0 || runNodeArrayPtr == nullptr )
-		return false;
-	if( runNodeCount == runNodeIndex )
-		return true;
-	std::vector< Node * > runCurrentNodeNeedNodeVector;
-	if( runNodeIndex != 0 )
-		runNodeArrayPtr[ runNodeIndex - 1 ]->setNodeStyle( NodeEnum::NodeStyleType::None );
-	Node *currentRunNodePtr;
-	currentRunNodePtr = runNodeArrayPtr[ runNodeIndex ];
-	currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Call_Function );
-	if( currentRunNodePtr->fillInputPortCall( *builderDataTime, runCurrentNodeNeedNodeVector ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillInputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
-		return false;
-	}
-	size_t checkCount = runCurrentNodeNeedNodeVector.size( );
-	size_t checkIndex = 0;
+bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
+	// 查找上一个节点的建议运行列表
+	if( result_run_node != nullptr ) {
+		// 建议列表的剩余元素填充到等待列表
 
-	auto checkNodeArray = runCurrentNodeNeedNodeVector.data( );
-	size_t buffRunIndex;
-	std::vector< Node * > errorNeedNodeVector;
-	for( ; checkIndex < checkCount; checkIndex += 1 ) {
-		for( buffRunIndex = 0; buffRunIndex < runNodeIndex; buffRunIndex += 1 )
-			if( checkNodeArray[ checkIndex ] == runNodeArrayPtr[ buffRunIndex ] )
-				break;
-		if( buffRunIndex < runNodeIndex )
-			continue;
-		checkNodeArray[ checkIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Advise );
-		errorNeedNodeVector.emplace_back( checkNodeArray[ checkIndex ] );
+		return true;
 	}
-	// 如果存在错误列表，则输出
-	if( errorNeedNodeVector.size( ) != 0 ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( errorNeedNodeVector );
-		instancePtr->getPrinterDirector( )->info( tr( "运行[%1]失败，需要运行前置\n%2" ).arg( currentRunNodePtr->toQString( ) ).arg( arrayToString ), Create_SrackInfo( ) );
-		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	// 无法在建议列表当中查找运行节点，则匹配等待列表
+	if( result_run_node != nullptr ) {
+		// 把当前节点剥离等待列表
+		return true;
+	}
+	return false;
+}
+bool NodeRunInfo::runCurrentNode( Node *run_node ) {
+	if( currentRunPtr )
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+	currentRunPtr = run_node;
+	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
+	if( currentRunPtr->fillNodeCall( *builderDataTime ) == false )
 		return false;
-	}
-	if( currentRunNodePtr->fillNodeCall( *builderDataTime ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillNodeCall() 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
-		return false;
-	}
+	return true;
+}
+bool NodeRunInfo::overRunNode( ) {
+	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Old_Run );
 	std::vector< Node * > resultNextRunAdviseNodeVector;
-	if( currentRunNodePtr->fillOutputPortCall( resultNextRunAdviseNodeVector, *builderDataTime ) == false ) {
+	if( currentRunPtr->fillOutputPortCall( resultNextRunAdviseNodeVector, *builderDataTime ) == false ) {
 		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillOutputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunNodePtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunNodePtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillOutputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
 		return false;
 	}
-	runNodeIndex += 1;
+	// 填充建议列表
+	return false;
+}
+bool NodeRunInfo::runNextNode( ) {
+	Node *currentRunPtr = nullptr;
+	if( findNextRunNode( currentRunPtr ) == false ) {
+		Application *instancePtr = Application::getInstancePtr( );
+		auto nodeDirector = instancePtr->getNodeDirector( );
+		auto arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
+		instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
+		for( auto item : waiteRunNodeVector )
+			item->setNodeStyle( NodeEnum::NodeStyleType::Error );
+		return false;
+	}
+	if( runCurrentNode( currentRunPtr ) == false ) {
+		Application *instancePtr = Application::getInstancePtr( );
+		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillNodeCall() 失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+		return false;
+	}
+	if( overRunNode( ) == false ) {
+		Application *instancePtr = Application::getInstancePtr( );
+		instancePtr->getPrinterDirector( )->info( tr( "节点 [%1] 后调用处理失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+		return false;
+	}
 	return true;
 }
 bool NodeRunInfo::runResidueNode( ) {
-	if( runNodeCount == 0 || runNodeArrayPtr == nullptr )
-		return false;
-	if( runNodeCount == runNodeIndex )
-		return true;
 	isRunStop = false;
 	do {
 		if( runNextNode( ) == false )
 			return false;
 		if( isRunStop == true )
-			break;
-		if( runNodeCount == runNodeIndex )
 			break;
 	} while( true );
 	return true;
@@ -320,13 +323,6 @@ bool NodeRunInfo::runStopNode( ) {
 }
 void NodeRunInfo::clear( ) {
 	builderNodeVector.clear( );
-	builderNodeArrayPtr = nullptr;
-	builderNodeCount = 0;
-	builderNodeIndex = 0;
 	runNodeVector.clear( );
-	runNodeArrayPtr = nullptr;
-	runNodeCount = 0;
-	runNodeIndex = 0;
-	errorObj = nullptr;
 	emit clear_signal( this, Create_SrackInfo( ) );
 }

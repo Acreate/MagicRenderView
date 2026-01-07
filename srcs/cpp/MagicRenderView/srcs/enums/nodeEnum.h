@@ -64,6 +64,8 @@ namespace NodeEnum {
 		None,
 		Call_Function,
 		Create,
+		Current_Run,
+		Old_Run,
 		Select_Active,
 		Select_Old,
 		Select_Output_Ref,

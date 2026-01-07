@@ -57,17 +57,12 @@ protected:
 	std::vector< NodeHistory * > nodeHistorys;
 public:
 	virtual QString nodeArrayToString( const Node *const*printf_nodes, const size_t &printf_node_count );
+	virtual QString nodeArrayToString( const std::list< Node * > &printf_node_list);
 	virtual QString nodeArrayToString( const std::vector< Node * > &printf_node_vector ) {
 		return nodeArrayToString( printf_node_vector.data( ), printf_node_vector.size( ) );
 	}
-	virtual void nodeToString( const Node *printf_nodes ) {
-		nodeArrayToString( &printf_nodes, 1 );
-	}
-	virtual void nodeVectorToString( const std::vector< Node * > &printf_nodes ) {
-		nodeArrayToString( printf_nodes.data( ), printf_nodes.size( ) );
-	}
-	virtual void nodeVectorToString( ) {
-		nodeVectorToString( nodeArchiveVector );
+	virtual QString nodeToString( const Node *printf_nodes ) {
+		return nodeArrayToString( &printf_nodes, 1 );
 	}
 protected:
 	virtual void releaseObjResources( );
