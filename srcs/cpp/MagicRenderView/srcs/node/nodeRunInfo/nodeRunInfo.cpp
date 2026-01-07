@@ -72,32 +72,38 @@ bool NodeRunInfo::hasNodeRefInRunVector( TRunBodyObj *check_node_ref ) {
 bool NodeRunInfo::builderRunInstance( ) {
 	currentRunPtr = nullptr;
 	runNodeVector.clear( );
+	waiteRunNodeVector.clear( );
 	overRunNodeVector.clear( );
+	adviseNodeVector.clear( );
 	if( builderRunInstanceRef( ) == false )
 		return false;
+	size_t runNodeCount;
+	runNodeCount = adviseNodeVector.size( );
+	if( runNodeCount == 0 )
+		return false;
+	runNodeCount = runNodeVector.size( );
+	if( runNodeCount == 0 ) 
+		return false;
 	auto runNodeArrayPtr = runNodeVector.data( );
-	auto runNodeCount = runNodeVector.size( );
 	size_t runNodeIndex = 0;
 	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
 		if( runNodeArrayPtr[ runNodeIndex ]->readNodeRunData( ) == false ) {
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
 			runNodeVector.clear( );
+			waiteRunNodeVector.clear( );
 			return false;
 		} else
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
-	if( runNodeCount == 0 )
-		return false;
 	if( builderDataTime == nullptr )
 		builderDataTime = new QDateTime( );
 	*builderDataTime = QDateTime::currentDateTime( );
+
 	return true;
 }
 bool NodeRunInfo::builderRunInstanceRef( ) {
 	auto builderNodeCount = builderNodeVector.size( );
 	if( builderNodeCount == 0 )
 		return false;
-	// 保存开始节点
-	std::vector< Node * > beginNodeVector;
 	// 保存结束节点
 	std::vector< Node * > endNodeVector;
 	// 保存流程节点
@@ -118,7 +124,8 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 				return false; // 未知节点
 				break;
 			case NodeEnum::NodeType::Begin :
-				beginNodeVector.emplace_back( currentNode );
+				// 开始节点添加到建议节点序列
+				adviseNodeVector.emplace_back( currentNode );
 				break;
 			case NodeEnum::NodeType::End :
 				endNodeVector.emplace_back( currentNode );
@@ -142,17 +149,17 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		}
 
 	}
+	if( adviseNodeVector.size( ) == 0 ) {
+		Application *instancePtr = Application::getInstancePtr( );
+		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( builderNodeArrayPtr, builderNodeCount );
+		QString form( "未发现开始节点(NodeEnum::NodeType::Begin):\n\t%1" );
+		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
+		return false;
+	}
 	if( notRootNodeVector.size( ) != 0 ) {
 		Application *instancePtr = Application::getInstancePtr( );
 		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( notRootNodeVector );
 		QString form( "发现无根节点:\n\t%1" );
-		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
-		return false;
-	}
-	if( beginNodeVector.size( ) == 0 ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( builderNodeArrayPtr, builderNodeCount );
-		QString form( "未发现开始节点(NodeEnum::NodeType::Begin):\n\t%1" );
 		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
 		return false;
 	}
@@ -224,14 +231,14 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	processNodeVector = runNodeVector;
 	processSize = runNodeIndex;
 	// 开始节点大小
-	size_t beginSize = beginNodeVector.size( );
+	size_t beginSize = adviseNodeVector.size( );
 	// 结束节点大小
 	size_t endSize = endNodeVector.size( );
 	// 排序节点所有
 	runNodeCount = beginSize + processSize + endSize;
 	runNodeVector.resize( runNodeCount );
 	runNodeArrayPtr = runNodeVector.data( );
-	buffNodeArrayPtr = beginNodeVector.data( );
+	buffNodeArrayPtr = adviseNodeVector.data( );
 	// 添加开始列表
 	for( builderNodeIndex = 0; builderNodeIndex < beginSize; builderNodeIndex += 1 )
 		runNodeArrayPtr[ builderNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
@@ -255,21 +262,24 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	size_t needRunNodeArratCount;
 	Node **needRunNodeArrayPtr;
 	size_t needRunNodeIndex;
+	Node **findNodeArrayPtr;
+	size_t findNodeArrayIndex;
+
+	std::vector< Node * > resultNeedNodeVector;
 	overNodeCount = overRunNodeVector.size( );
+	size_t findNodeArrayCount;
 	if( overNodeCount != 0 )
 		overNodeArrayPtr = overRunNodeVector.data( );
 	else
 		overNodeArrayPtr = nullptr;
-	size_t adviseNodeCount = adviseNodeVector.size( );
+	findNodeArrayCount = adviseNodeVector.size( );
 	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
-	if( adviseNodeCount != 0 ) {
-		auto adviseNodeArrayPtr = adviseNodeVector.data( );
-		size_t adviseNodeIndex = 0;
-		std::vector< Node * > resultNeedNodeVector;
-		for( ; adviseNodeIndex < adviseNodeCount; adviseNodeIndex += 1 )
-			if( adviseNodeArrayPtr[ adviseNodeIndex ] == nullptr )
+	if( findNodeArrayCount != 0 ) {
+		findNodeArrayPtr = adviseNodeVector.data( );
+		for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+			if( findNodeArrayPtr[ findNodeArrayIndex ] == nullptr )
 				continue;
-			else if( adviseNodeArrayPtr[ adviseNodeIndex ]->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == true ) {
+			else if( findNodeArrayPtr[ findNodeArrayIndex ]->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == true ) {
 				needRunNodeArratCount = resultNeedNodeVector.size( );
 				if( needRunNodeArratCount == 0 )
 					break; // 不需要满足
@@ -281,27 +291,41 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 							break;
 				if( needRunNodeIndex < needRunNodeArratCount )
 					continue;
-				result_run_node = adviseNodeArrayPtr[ adviseNodeIndex ];
+				result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
 				break;
 			}
 		if( result_run_node != nullptr ) {
 			// 建议列表的剩余元素填充到等待列表
-			for( adviseNodeIndex = 0; adviseNodeIndex < adviseNodeCount; adviseNodeIndex += 1 )
-				if( adviseNodeArrayPtr[ adviseNodeIndex ] == nullptr )
+			for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+				if( findNodeArrayPtr[ findNodeArrayIndex ] == nullptr )
 					continue;
-				else if( adviseNodeArrayPtr[ adviseNodeIndex ] != result_run_node )
-					waiteRunNodeVector.emplace_back( adviseNodeArrayPtr[ adviseNodeIndex ] );
+				else if( findNodeArrayPtr[ findNodeArrayIndex ] != result_run_node )
+					waiteRunNodeVector.emplace_back( findNodeArrayPtr[ findNodeArrayIndex ] );
 			return true;
 		}
 	}
 
 	// 无法在建议列表当中查找运行节点，则匹配等待列表
-
-	// 等待列表当中找到相应的节点时候
-	if( result_run_node != nullptr ) {
-		// 把当前节点剥离等待列表
-		return true;
-	}
+	findNodeArrayCount = waiteRunNodeVector.size( );
+	findNodeArrayPtr = waiteRunNodeVector.data( );
+	for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+		if( findNodeArrayPtr[ findNodeArrayIndex ]->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == true ) {
+			needRunNodeArratCount = resultNeedNodeVector.size( );
+			if( needRunNodeArratCount != 0 ) {
+				needRunNodeArrayPtr = resultNeedNodeVector.data( );
+				needRunNodeIndex = 0;
+				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount && overNodeIndex != overNodeCount; needRunNodeIndex += 1, overNodeIndex = 0 )
+					for( ; overNodeIndex < overNodeCount; overNodeIndex += 1 )
+						if( needRunNodeArrayPtr[ needRunNodeIndex ] == overNodeArrayPtr[ overNodeIndex ] )
+							break;
+				if( needRunNodeIndex < needRunNodeArratCount )
+					continue;
+			}
+			result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
+			// 等待列表当中找到相应的节点时候
+			waiteRunNodeVector.erase( waiteRunNodeVector.begin( ) + findNodeArrayIndex );
+			return true;
+		}
 	// 等待列表无法匹配到对应的节点
 	Application *instancePtr;
 	NodeDirector *nodeDirector;

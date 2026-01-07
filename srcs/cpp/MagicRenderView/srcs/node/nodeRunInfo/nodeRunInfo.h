@@ -20,22 +20,20 @@ class NodeRunInfo : public QObject {
 protected:
 	using TRunBodyObj = Node;
 	using TRunBodyObjPtr = TRunBodyObj *;
-	std::vector< TRunBodyObjPtr > builderNodeVector;
-	std::vector< TRunBodyObjPtr > runNodeVector;
+protected:
 	bool isRunStop;
 	QDateTime *builderDataTime;
 	/// @brief 当前对象指针
 	TRunBodyObjPtr currentRunPtr;
+	std::vector< TRunBodyObjPtr > builderNodeVector;
+	/// @brief 运行列表
+	std::vector< TRunBodyObjPtr > runNodeVector;
 	/// @brief 运行的节点
 	std::vector< TRunBodyObjPtr > overRunNodeVector;
 	/// @brief 等待运行的节点
 	std::vector< TRunBodyObjPtr > waiteRunNodeVector;
 	/// @brief 建议运行列表
 	std::vector< TRunBodyObjPtr > adviseNodeVector;
-	/// @brief 开始节点运行的依赖节点
-	std::vector< std::pair< TRunBodyObjPtr, TRunBodyObjPtr > > beginNodeRunNodeStack;
-	/// @brief 节点所依赖的开始节点映射
-	std::vector< std::pair< TRunBodyObjPtr, std::vector< TRunBodyObjPtr > > > nodeMapBeginNode;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
