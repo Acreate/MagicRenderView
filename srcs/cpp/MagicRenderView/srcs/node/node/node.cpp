@@ -13,6 +13,7 @@
 #include <widget/mainWidget.h>
 
 #include "../../tools/path.h"
+#include "../nodeInfo/nodeStyleTypePen.h"
 #include "../port/inputPort/point/pointInputPort.h"
 
 Node::~Node( ) {
@@ -40,21 +41,14 @@ Node::~Node( ) {
 
 	if( varPtr )
 		varDirector->release( varPtr );
+	if( nodeStyleTypePen )
+		delete nodeStyleTypePen;
 }
 Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout( nullptr ) {
 	hide( );
 	generateCode = 0;
 	varPtr = nullptr;
-	nonePen.setColor( Qt::GlobalColor::black );
-	callFunctionPen.setColor( QColor( 0xff7900 ) );
-	createPen.setColor( QColor( 0x009cff ) );
-	selectActivePen.setColor( QColor( 0xff8400 ) );
-	selectOldPen.setColor( QColor( 0xd191ff ) );
-	selectOutputRefPen.setColor( QColor( 0xaaffa3 ) );
-	selectInputRefPen.setColor( QColor( 0x12ff11 ) );
-	warningPen.setColor( QColor( 0xff7559 ) );
-	errorPen.setColor( QColor( 0xff0000 ) );
-	advisPen.setColor( QColor( 0xff9c65 ) );
+	nodeStyleTypePen = new NodeStyleTypePen;
 	nodeStyle = NodeEnum::NodeStyleType::Create;
 	// 标题布局
 	titileWidget = new QWidget( this );
@@ -525,69 +519,7 @@ bool Node::updateLayout( ) {
 void Node::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
-
-	switch( nodeStyle ) {
-		case NodeEnum::NodeStyleType::None :
-			painter.setPen( nonePen );
-			penWidth = nonePen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Call_Function :
-			painter.setPen( callFunctionPen );
-			penWidth = callFunctionPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Create :
-			painter.setPen( createPen );
-			penWidth = createPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Active :
-			painter.setPen( selectActivePen );
-			penWidth = selectActivePen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Old :
-			painter.setPen( selectOldPen );
-			penWidth = selectOldPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Warning :
-			painter.setPen( warningPen );
-			penWidth = warningPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Error :
-			painter.setPen( errorPen );
-			penWidth = errorPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Advise :
-			painter.setPen( advisPen );
-			penWidth = advisPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Output_Ref :
-			painter.setPen( selectOutputRefPen );
-			penWidth = selectOutputRefPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Input_Ref :
-			painter.setPen( selectInputRefPen );
-			penWidth = selectInputRefPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, width( ) - doubleWidth, height( ) - doubleWidth );
-			break;
-	}
+	nodeStyleTypePen->renderPainter( painter, nodeStyle, width( ), height( ) );
 }
 const std::vector< InputPort * > & Node::getRefPort( const OutputPort *output_port ) {
 	return output_port->refInputPortVector;

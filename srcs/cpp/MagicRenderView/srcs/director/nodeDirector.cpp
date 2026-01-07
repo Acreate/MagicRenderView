@@ -58,6 +58,7 @@ bool NodeDirector::init( ) {
 	normalNodeEditorPropertyMenu = editorNodeMenuStack->createNormalNodeEditorPropertyMenu( tr( "常规" ) );
 	if( normalNodeEditorPropertyMenu == nullptr )
 		return false;
+	oldCreateNode = nullptr;
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::remove_node_action_signal, this, &NodeDirector::removeNodeActionSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::unLink_signal, this, &NodeDirector::nodeEditorMenuUnLinkSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
@@ -196,7 +197,11 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 	}
 
 	auto createNodePtr = normalGenerateNodeMenu->getCreateResultNode( node_type_name );
-	appendRefNodeVectorAtNode( node_type_name, createNodePtr );
+	if( appendRefNodeVectorAtNode( node_type_name, createNodePtr ) == nullptr ) {
+		delete createNodePtr;
+		return nullptr;
+	}
+	
 	return createNodePtr;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
@@ -533,6 +538,10 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 	if( fromGlobal.y( ) < 0 )
 		fromGlobal.setY( 0 );
 	append_node->move( fromGlobal );
+	if( oldCreateNode )
+		oldCreateNode->setNodeStyle( NodeEnum::NodeStyleType::None );
+	oldCreateNode = append_node;
+	oldCreateNode->setNodeStyle( NodeEnum::NodeStyleType::Create );
 	append_node->show( );
 	mainWidget->ensureVisible( append_node );
 	finishCreateNode( append_node );
@@ -641,7 +650,8 @@ bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 }
 void NodeDirector::releaseNode( Node *release_node, const SrackInfo &srack_info ) {
 	//printerDirector->info( "节点释放", Create_SrackInfo( ) );
-
+	if( release_node == oldCreateNode )
+		oldCreateNode = nullptr;
 	appendHistorIndexEnd(
 		[] {
 			return nullptr;

@@ -288,8 +288,10 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 				continue;
 			else if( findNodeArrayPtr[ findNodeArrayIndex ]->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == true ) {
 				needRunNodeArratCount = resultNeedNodeVector.size( );
-				if( needRunNodeArratCount == 0 )
+				if( needRunNodeArratCount == 0 ) {
+					result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
 					break; // 不需要满足
+				}
 				needRunNodeArrayPtr = resultNeedNodeVector.data( );
 				needRunNodeIndex = 0;
 				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount && overNodeIndex != overNodeCount; needRunNodeIndex += 1, overNodeIndex = 0 )
@@ -395,6 +397,7 @@ bool NodeRunInfo::runNextNode( ) {
 		return false;
 	if( runCurrentNode( currentRunPtr ) == false )
 		return false;
+	overRunNodeVector.emplace_back( currentRunPtr );
 	if( overRunNode( ) == false )
 		return false;
 	return true;

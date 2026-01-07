@@ -13,6 +13,7 @@
 #define Def_Interface_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 
+class NodeStyleTypePen;
 class MainWidget;
 class NodeInfoWidget;
 class QHBoxLayout;
@@ -75,26 +76,7 @@ protected:
 	NodeEnum::NodeStyleType nodeStyle;
 	int penWidth;
 	int doubleWidth;
-	/// @brief 默认笔刷
-	QPen nonePen;
-	/// @brief 函数调用笔刷
-	QPen callFunctionPen;
-	/// @brief 创建笔刷
-	QPen createPen;
-	/// @brief 选中笔刷
-	QPen selectActivePen;
-	/// @brief 上一次选中笔刷
-	QPen selectOldPen;
-	/// @brief 输出引用笔刷
-	QPen selectOutputRefPen;
-	/// @brief 输入引用笔刷
-	QPen selectInputRefPen;
-	/// @brief 警告笔刷
-	QPen warningPen;
-	/// @brief 错误笔刷
-	QPen errorPen;
-	/// @brief 建议笔刷
-	QPen advisPen;
+	NodeStyleTypePen* nodeStyleTypePen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
 	std::vector< Node * > refInputPortNode;

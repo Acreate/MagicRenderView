@@ -62,7 +62,6 @@ namespace NodeEnum {
 	/// @brief 节点样式
 	enum class NodeStyleType {
 		None,
-		Call_Function,
 		Create,
 		Current_Run,
 		Old_Run,

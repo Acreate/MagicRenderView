@@ -75,6 +75,11 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeType &result_enum_typ
 		case NodeType::Point :
 		case NodeType::Jump :
 		case NodeType::Logic :
+		case NodeType::InterFace :
+		case NodeType::Process :
+		case NodeType::Cache :
+		case NodeType::Array :
+		case NodeType::Unity :
 			break;
 		default :
 			return false;
@@ -111,12 +116,15 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeStyleType &result_enu
 	switch( result_enum_type_var ) {
 		case NodeStyleType::None :
 		case NodeStyleType::Create :
-		case NodeStyleType::Call_Function :
+		case NodeStyleType::Current_Run :
+		case NodeStyleType::Old_Run :
 		case NodeStyleType::Advise :
 		case NodeStyleType::Error :
 		case NodeStyleType::Select_Active :
 		case NodeStyleType::Select_Old :
 		case NodeStyleType::Warning :
+		case NodeStyleType::Select_Output_Ref :
+		case NodeStyleType::Select_Input_Ref :
 			break;
 		default :
 			return false;
@@ -140,6 +148,7 @@ bool NodeEnum::converEnum( const QString &enum_string, PortType &result_enum_typ
 		case PortType::Begin :
 		case PortType::Point :
 		case PortType::ToPoint :
+		case PortType::AnyVar :
 			break;
 		default :
 			return false;
@@ -172,6 +181,9 @@ bool NodeEnum::converQString( const PortType &enum_type_var, QString &result_enu
 		case PortType::ToPoint :
 			result_enum_string = "ToPoint";
 			break;
+		case PortType::AnyVar :
+			result_enum_string = "AnyVar";
+			break;
 		default :
 			return false;
 	}
@@ -197,11 +209,20 @@ bool NodeEnum::converQString( const NodeStyleType &enum_type_var, QString &resul
 		case NodeStyleType::Advise :
 			result_enum_string = "Advise";
 			break;
-		case NodeStyleType::Call_Function :
-			result_enum_string = "Call_Function";
+		case NodeStyleType::Current_Run :
+			result_enum_string = "Current_Run";
+			break;
+		case NodeStyleType::Old_Run :
+			result_enum_string = "Old_Run";
 			break;
 		case NodeStyleType::Create :
 			result_enum_string = "Create";
+			break;
+		case NodeStyleType::Select_Output_Ref :
+			result_enum_string = "Select_Output_Ref";
+			break;
+		case NodeStyleType::Select_Input_Ref :
+			result_enum_string = "Select_Input_Ref";
 			break;
 		default :
 			return false;
@@ -288,6 +309,21 @@ bool NodeEnum::converQString( const NodeType &enum_type_var, QString &result_enu
 			break;
 		case NodeType::Logic :
 			result_enum_string = "Logic";
+			break;
+		case NodeType::InterFace :
+			result_enum_string = "InterFace";
+			break;
+		case NodeType::Process :
+			result_enum_string = "Process";
+			break;
+		case NodeType::Cache :
+			result_enum_string = "Cache";
+			break;
+		case NodeType::Array :
+			result_enum_string = "Array";
+			break;
+		case NodeType::Unity :
+			result_enum_string = "Unity";
 			break;
 		default :
 			return false;
