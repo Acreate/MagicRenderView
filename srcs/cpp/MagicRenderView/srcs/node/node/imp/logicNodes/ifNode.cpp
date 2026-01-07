@@ -27,12 +27,9 @@ bool IfNode::updateLayout( ) {
 bool IfNode::readNodeRunData( ) {
 	return true;
 }
-bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector<Node *> &result_need_run_ref_node_vector ) {
-	return true;
-}
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool IfNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
-	return true;
+bool IfNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+	return LogicNode::fillOutputPortCall( result_next_run_advise_node_vector, ndoe_run_start_data_time );
 }

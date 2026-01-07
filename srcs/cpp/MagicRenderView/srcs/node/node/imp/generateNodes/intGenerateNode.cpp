@@ -58,12 +58,6 @@ bool IntGenerateNode::initVarPtr( ) {
 bool IntGenerateNode::readNodeRunData( ) {
 	return true;
 }
-bool IntGenerateNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
-	return true;
-}
 bool IntGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	return true;
-}
-bool IntGenerateNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

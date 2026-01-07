@@ -25,9 +25,7 @@ bool GotoNode::updateLayout( ) {
 bool GotoNode::readNodeRunData( ) {
 	return true;
 }
-bool GotoNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
-	return true;
-}
+
 bool GotoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
