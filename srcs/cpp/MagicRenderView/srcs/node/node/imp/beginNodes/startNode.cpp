@@ -49,7 +49,7 @@ bool StartNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	mSecsSinceEpoch = mSecsSinceEpoch - ndoe_run_start_data_time.toMSecsSinceEpoch( );
 	return true;
 }
-bool StartNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool StartNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	size_t refInputPortCount;
 	InputPort **refInputPortArray;
 	size_t refInputPortIndex;

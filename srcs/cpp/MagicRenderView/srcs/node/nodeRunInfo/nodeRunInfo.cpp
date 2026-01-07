@@ -264,6 +264,8 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	// 查找上一个节点的建议运行列表
 	Node **overNodeArrayPtr;
+	bool notOverAllRun;
+
 	size_t overNodeIndex;
 	size_t overNodeCount;
 	size_t needRunNodeArratCount;
@@ -271,6 +273,8 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	size_t needRunNodeIndex;
 	Node **findNodeArrayPtr;
 	size_t findNodeArrayIndex;
+	Node *needNode;
+	Node *overNode;
 
 	std::vector< Node * > resultNeedNodeVector;
 	overNodeCount = overRunNodeVector.size( );
@@ -292,16 +296,25 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 					result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
 					break; // 不需要满足
 				}
+				notOverAllRun = true;
 				needRunNodeArrayPtr = resultNeedNodeVector.data( );
 				needRunNodeIndex = 0;
-				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount; needRunNodeIndex += 1, overNodeIndex = 0 ) {
-					for( ; overNodeIndex < overNodeCount; overNodeIndex += 1 )
-						if( needRunNodeArrayPtr[ needRunNodeIndex ] == overNodeArrayPtr[ overNodeIndex ] )
-							break;
-					if( overNodeIndex == overNodeCount )
-						break;
+				overNodeIndex = 0;
+				for( ; needRunNodeIndex < needRunNodeArratCount; needRunNodeIndex += 1 ) {
+					needNode = needRunNodeArrayPtr[ needRunNodeIndex ];
+					for( overNodeIndex = 0; overNodeIndex < overNodeCount; ) {
+						overNode = overNodeArrayPtr[ overNodeIndex ];
+						if( needNode == overNode )
+							break; // 存在当前列表，则跳出
+						overNodeIndex += 1;
+					}
+					// 存在当前列表，则跳出
+					if( overNodeIndex == overNodeCount ) {
+						notOverAllRun = false;
+						break;// 整个结束列表都已经遍历，还找不到完成
+					}
 				}
-				if( needRunNodeIndex < needRunNodeArratCount )
+				if( notOverAllRun == false )
 					continue; // 不满足
 				result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
 				break;
@@ -398,11 +411,15 @@ bool NodeRunInfo::runNextNode( ) {
 	Node *currentRunPtr = nullptr;
 	if( findNextRunNode( currentRunPtr ) == false )
 		return false;
+	auto inatsance = Application::getInstancePtr( );
+	auto printerDirector = inatsance->getPrinterDirector( );
+
 	if( runCurrentNode( currentRunPtr ) == false )
 		return false;
-	overRunNodeVector.emplace_back( currentRunPtr );
+	printerDirector->info( tr( "执行完毕[%1]" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
 	if( overRunNode( ) == false )
 		return false;
+	overRunNodeVector.emplace_back( currentRunPtr );
 	return true;
 }
 bool NodeRunInfo::runResidueNode( ) {
@@ -430,6 +447,9 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	for( ; index < count; index += 1 )
 		if( runArrayPtr[ index ]->readNodeRunData( ) == false )
 			return false;
+	if( currentRunPtr )
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+	currentRunPtr = nullptr;
 	// 清除已运行列表
 	overRunNodeVector.clear( );
 	// 赋予开始节点到建议运行序列

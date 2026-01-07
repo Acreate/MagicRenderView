@@ -25,6 +25,6 @@ bool MakeNode::readNodeRunData( ) {
 bool MakeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool MakeNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool MakeNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return getFilterNotRefPortNodeVector( nextNode, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
 }

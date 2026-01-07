@@ -5,9 +5,11 @@
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< PointInputPort >( tr( "定位" ) ) == nullptr )
+
+		ifResultPort = appendInputPortType< InterFaceInputPort >( tr( "判断" ) );
+		if( ifResultPort == nullptr )
 			return false;
-		if( appendInputPortType< InterFaceInputPort >( tr( "判断" ) ) == nullptr )
+		if( appendInputPortType< PointInputPort >( tr( "定位" ) ) == nullptr )
 			return false;
 		if( appendOutputPortType< InterFaceOutputPort >( tr( "成立" ) ) == nullptr )
 			return false;
@@ -26,6 +28,10 @@ bool IfNode::updateLayout( ) {
 }
 bool IfNode::readNodeRunData( ) {
 	return true;
+}
+bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
+	bool resultBool = getRefPortNodeVector( ifResultPort, result_need_run_ref_node_vector );
+	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;

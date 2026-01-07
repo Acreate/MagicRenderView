@@ -7,7 +7,8 @@
 
 bool GotoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< PointInputPort >( tr( "跳转" ) ) == nullptr )
+		pointInputPort = appendInputPortType< PointInputPort >( tr( "跳转" ) );
+		if( pointInputPort == nullptr )
 			return false;
 
 		toPointInputPort = appendInputPortType< ToPointInputPort >( tr( "跳到定点" ) );
@@ -24,6 +25,9 @@ bool GotoNode::updateLayout( ) {
 }
 bool GotoNode::readNodeRunData( ) {
 	return true;
+}
+bool GotoNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
+	return getRefPortNodeVector( pointInputPort, result_need_run_ref_node_vector );
 }
 
 bool GotoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {

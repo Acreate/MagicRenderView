@@ -28,6 +28,6 @@ bool IntArrayAddNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_ti
 bool IntArrayAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool IntArrayAddNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool IntArrayAddNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

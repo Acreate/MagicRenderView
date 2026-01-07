@@ -29,7 +29,7 @@ bool ResultNode::readNodeRunData( ) {
 bool ResultNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }
-bool ResultNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool ResultNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	size_t refOutputPortCount;
 	OutputPort **refOutputPortArray;
 	size_t refOutputPortIndex;
