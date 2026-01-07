@@ -249,16 +249,74 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 }
 bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	// 查找上一个节点的建议运行列表
-	if( result_run_node != nullptr ) {
-		// 建议列表的剩余元素填充到等待列表
-
-		return true;
+	Node **overNodeArrayPtr;
+	size_t overNodeIndex;
+	size_t overNodeCount;
+	size_t needRunNodeArratCount;
+	Node **needRunNodeArrayPtr;
+	size_t needRunNodeIndex;
+	overNodeCount = overRunNodeVector.size( );
+	if( overNodeCount != 0 )
+		overNodeArrayPtr = overRunNodeVector.data( );
+	else
+		overNodeArrayPtr = nullptr;
+	size_t adviseNodeCount = adviseNodeVector.size( );
+	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
+	if( adviseNodeCount != 0 ) {
+		auto adviseNodeArrayPtr = adviseNodeVector.data( );
+		size_t adviseNodeIndex = 0;
+		std::vector< Node * > resultNeedNodeVector;
+		for( ; adviseNodeIndex < adviseNodeCount; adviseNodeIndex += 1 )
+			if( adviseNodeArrayPtr[ adviseNodeIndex ] == nullptr )
+				continue;
+			else if( adviseNodeArrayPtr[ adviseNodeIndex ]->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == true ) {
+				needRunNodeArratCount = resultNeedNodeVector.size( );
+				if( needRunNodeArratCount == 0 )
+					break; // 不需要满足
+				needRunNodeArrayPtr = resultNeedNodeVector.data( );
+				needRunNodeIndex = 0;
+				for( overNodeIndex = 0; needRunNodeIndex < needRunNodeArratCount && overNodeIndex != overNodeCount; needRunNodeIndex += 1, overNodeIndex = 0 )
+					for( ; overNodeIndex < overNodeCount; overNodeIndex += 1 )
+						if( needRunNodeArrayPtr[ needRunNodeIndex ] == overNodeArrayPtr[ overNodeIndex ] )
+							break;
+				if( needRunNodeIndex < needRunNodeArratCount )
+					continue;
+				result_run_node = adviseNodeArrayPtr[ adviseNodeIndex ];
+				break;
+			}
+		if( result_run_node != nullptr ) {
+			// 建议列表的剩余元素填充到等待列表
+			for( adviseNodeIndex = 0; adviseNodeIndex < adviseNodeCount; adviseNodeIndex += 1 )
+				if( adviseNodeArrayPtr[ adviseNodeIndex ] == nullptr )
+					continue;
+				else if( adviseNodeArrayPtr[ adviseNodeIndex ] != result_run_node )
+					waiteRunNodeVector.emplace_back( adviseNodeArrayPtr[ adviseNodeIndex ] );
+			return true;
+		}
 	}
+
 	// 无法在建议列表当中查找运行节点，则匹配等待列表
+
+	// 等待列表当中找到相应的节点时候
 	if( result_run_node != nullptr ) {
 		// 把当前节点剥离等待列表
 		return true;
 	}
+	// 等待列表无法匹配到对应的节点
+	Application *instancePtr;
+	NodeDirector *nodeDirector;
+	QString arrayToString;
+	std::vector< Node * >::iterator iterator;
+	std::vector< Node * >::iterator end;
+
+	instancePtr = Application::getInstancePtr( );
+	nodeDirector = instancePtr->getNodeDirector( );
+	arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
+	instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
+	iterator = waiteRunNodeVector.begin( );
+	end = waiteRunNodeVector.end( );
+	for( ; iterator != end; ++iterator )
+		( *iterator )->setNodeStyle( NodeEnum::NodeStyleType::Error );
 	return false;
 }
 bool NodeRunInfo::runCurrentNode( Node *run_node ) {
@@ -266,45 +324,48 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
 	currentRunPtr = run_node;
 	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
-	if( currentRunPtr->fillNodeCall( *builderDataTime ) == false )
-		return false;
-	return true;
+	if( currentRunPtr->fillNodeCall( *builderDataTime ) == true )
+		return true;
+
+	Application *instancePtr;
+	PrinterDirector *printerDirector;
+	QString msg;
+	QString nodeToString;
+
+	instancePtr = Application::getInstancePtr( );
+	printerDirector = instancePtr->getPrinterDirector( );
+	msg = tr( "运行 [%1]::fillNodeCall() 失败" );
+	nodeToString = currentRunPtr->toQString( );
+	msg = msg.arg( nodeToString );
+	printerDirector->info( msg, Create_SrackInfo( ) );
+	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	return false;
 }
 bool NodeRunInfo::overRunNode( ) {
 	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Old_Run );
-	std::vector< Node * > resultNextRunAdviseNodeVector;
-	if( currentRunPtr->fillOutputPortCall( resultNextRunAdviseNodeVector, *builderDataTime ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillOutputPortCall(std::vector< Node * > &) 失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
-		return false;
-	}
-	// 填充建议列表
+	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime ) == true )
+		return true;
+	Application *instancePtr;
+	PrinterDirector *printerDirector;
+	QString msg;
+	QString nodeToString;
+	instancePtr = Application::getInstancePtr( );
+	printerDirector = instancePtr->getPrinterDirector( );
+	msg = tr( "节点 [%1] 后调用处理失败" );
+	nodeToString = currentRunPtr->toQString( );
+	msg = msg.arg( nodeToString );
+	printerDirector->info( msg, Create_SrackInfo( ) );
+	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
 	return false;
 }
 bool NodeRunInfo::runNextNode( ) {
 	Node *currentRunPtr = nullptr;
-	if( findNextRunNode( currentRunPtr ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto nodeDirector = instancePtr->getNodeDirector( );
-		auto arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
-		instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
-		for( auto item : waiteRunNodeVector )
-			item->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	if( findNextRunNode( currentRunPtr ) == false )
 		return false;
-	}
-	if( runCurrentNode( currentRunPtr ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "运行 [%1]::fillNodeCall() 失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	if( runCurrentNode( currentRunPtr ) == false )
 		return false;
-	}
-	if( overRunNode( ) == false ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		instancePtr->getPrinterDirector( )->info( tr( "节点 [%1] 后调用处理失败" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	if( overRunNode( ) == false )
 		return false;
-	}
 	return true;
 }
 bool NodeRunInfo::runResidueNode( ) {
