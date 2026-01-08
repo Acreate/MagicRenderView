@@ -229,7 +229,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						*oldClickTime = currentDateTime;
 						auto second = sep.count( );
 						if( second < 200 )
-							if( oldSelectNode == dragNode && nodeDirector->showNodeWidgeInfo( oldSelectNode ) ) {
+							if( oldSelectNode == dragNode ) {
 								dragNode = nullptr;
 								break;
 							}
@@ -252,7 +252,6 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 				break;
 			} else {
 				oldSelectNode = dragNode = nullptr;
-				nodeDirector->showNodeWidgeInfo( nullptr );
 				break;
 			}
 		case Qt::MiddleButton :
@@ -299,7 +298,6 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			}
 			break;
 		case Qt::RightButton :
-			nodeDirector->showNodeWidgeInfo( nullptr );
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
 				ensureVisible( dragNode );

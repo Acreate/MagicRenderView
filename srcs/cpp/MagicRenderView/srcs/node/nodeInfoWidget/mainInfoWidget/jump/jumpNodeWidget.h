@@ -9,9 +9,8 @@ class JumpNodeWidget : public NodeInfoWidget {
 protected:
 	JumpNodeEditor* jumpNodeEditor;
 public:
-	JumpNodeWidget( MainWindow *parent );
+	JumpNodeWidget( );
 	bool initNodeInfo( Node *check_node_ptr ) override;
-	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 
 };
 

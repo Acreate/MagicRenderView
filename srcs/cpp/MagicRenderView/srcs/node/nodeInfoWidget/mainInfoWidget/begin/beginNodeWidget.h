@@ -10,8 +10,7 @@ class BeginNodeWidget : public NodeInfoWidget {
 protected:
 	BeginNodeEditor *beginNodeEditor;
 public:
-	BeginNodeWidget( MainWindow *parent );
-	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
+	BeginNodeWidget( );
 	bool initNodeInfo( Node *check_node_ptr ) override;
 
 };

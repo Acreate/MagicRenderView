@@ -39,8 +39,6 @@ bool JumpNodeEditor::createJumpItem( Node *node_ref_link_info ) {
 		itemPen.setWidth( 4 );
 		createItem->setSubItemPen( itemPen );
 
-		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetLeft, this, &JumpNodeEditor::showNodeInfoWidgetLeft );
-		connect( createItem, &JumpNodeWidgetItem::showNodeInfoWidgetRight, this, &JumpNodeEditor::showNodeInfoWidgetRight );
 		createItem->setIsPopMenu( true );
 		createItem->setNodeRefVector( NodesArrayPtr[ index ] );
 		mainLayout->addWidget( createItem );
@@ -49,8 +47,6 @@ bool JumpNodeEditor::createJumpItem( Node *node_ref_link_info ) {
 	return true;
 }
 JumpNodeEditor::JumpNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
-	leftWidget = nullptr;
-	rightWidget = nullptr;
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );

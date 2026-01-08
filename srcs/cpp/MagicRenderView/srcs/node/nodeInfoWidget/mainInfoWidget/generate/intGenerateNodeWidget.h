@@ -10,9 +10,8 @@ protected:
 	std::function< void*( ) > createFunction;
 	IntGenerateNodeEditor *intGenerateNodeEditor;
 public:
-	IntGenerateNodeWidget( MainWindow *parent );
+	IntGenerateNodeWidget(  );
 	bool initNodeInfo( Node *check_node_ptr ) override;
-	bool isNodeTypeInfoWidget( Node *check_node_ptr ) const override;
 protected:
 	void cancelButtonEvent( ) override;
 	void okButtonEvent( ) override;

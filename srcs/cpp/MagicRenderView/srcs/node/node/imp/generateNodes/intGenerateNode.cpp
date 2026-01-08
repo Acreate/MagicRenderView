@@ -89,16 +89,28 @@ bool IntGenerateNode::readyNodeRunData( ) {
 	return true;
 }
 bool IntGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	auto generateVarPtr = generateInputPort->getVarPtr( );
-	auto parentNode = generateInputPort->getParentNode( );
+	*arrayCount = overVarPtr->size( );
+	if( *arrayCount == 0 )
+		return false;
+	const auto &outputPorts = getRefPort( generateInputPort );
+	size_t count = outputPorts.size( );
+	if( count == 0 )
+		return false;
+	OutputPort *const *port = outputPorts.data( );
+	OutputPort *outputPort = port[ 0 ];
+	auto generateVarPtr = outputPort->getVarPtr( );
+	auto parentNode = outputPort->getParentNode( );
 	auto parentNodeDirector = parentNode->getVarDirector( );
 	size_t *index;
 	*arrayCount = 0;
 	*arrayIndex = 0;
-	*currentIndexVar = overVarPtr->size( );
+	*arrayCount = 0;
 	if( parentNodeDirector->cast_ptr( generateVarPtr, index ) == false )
 		return false;
 	*arrayIndex = *index;
-	*currentIndexVar = overVarPtr->data( )[ *arrayIndex ];
+	if( *arrayIndex > *arrayCount ) // 如果大于，则取重复
+		*arrayIndex = *arrayIndex - *arrayCount;
+	auto data = overVarPtr->data( );
+	*currentIndexVar = data[ *arrayIndex ];
 	return true;
 }

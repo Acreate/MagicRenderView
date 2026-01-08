@@ -16,7 +16,6 @@ class NormalNodeEditorPropertyMenu;
 class NormalGenerateNodeMenu;
 class NodeRunInfo;
 class NodeHistory;
-class NodeInfoWidget;
 class DrawLinkWidget;
 class DrawHighlightWidget;
 class SrackInfo;
@@ -50,15 +49,13 @@ protected:
 	NormalNodeEditorPropertyMenu *normalNodeEditorPropertyMenu;
 	MainWindow *mainWindow;
 	MainWidget *mainWidget;
-	NodeInfoWidget *currentShowWidget;
 	std::vector< Node * > nodeArchiveVector;
-	std::vector< NodeInfoWidget * > nodeInfoWidgets;
 	size_t nodeHistoryIndex;
 	std::vector< NodeHistory * > nodeHistorys;
-	Node* oldCreateNode;
+	Node *oldCreateNode;
 public:
 	virtual QString nodeArrayToString( const Node *const*printf_nodes, const size_t &printf_node_count );
-	virtual QString nodeArrayToString( const std::list< Node * > &printf_node_list);
+	virtual QString nodeArrayToString( const std::list< Node * > &printf_node_list );
 	virtual QString nodeArrayToString( const std::vector< Node * > &printf_node_vector ) {
 		return nodeArrayToString( printf_node_vector.data( ), printf_node_vector.size( ) );
 	}
@@ -75,7 +72,6 @@ protected:
 	/// @param result_error_msg 错误信息
 	/// @return 失败返回 false 并且返回错误信息到 result_error_msg 参数
 	virtual bool initNodeRenderGraphWidget( QString &result_error_msg );
-	virtual bool initNodeInfoWidget( QString &result_error_msg );
 	virtual bool findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 	virtual bool findNodeOutputPort( OutputPort *&result_output_port_ptr, const uint64_t &node_id_key, const QString &output_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count );
 public:
@@ -84,14 +80,6 @@ public:
 	/// @brief 初始化管理对象
 	/// @return 失败返回 false
 	virtual bool init( );
-	/// @brief 显示匹配的信息窗口
-	/// @param association_node 关联节点
-	/// @return 成功显示返回 true
-	virtual bool showNodeWidgeInfo( Node *association_node );
-	/// @brief 显示匹配的信息窗口
-	/// @param association_node 关联节点
-	/// @return 成功显示返回 true
-	virtual NodeInfoWidget * getNodeWidgeInfo( Node *association_node );
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
 	/// @return 失败返回 nullptr
@@ -112,9 +100,6 @@ public:
 	/// @brief 取消历史操作
 	/// @return 失败返回 nullptr
 	virtual bool cancelNodeHistory( );
-	/// @brief 获取当前节点显示详情信息窗口
-	/// @return 不存在显示窗口返回 nullptr
-	virtual NodeInfoWidget * getCurrentShowWidget( ) const { return currentShowWidget; }
 	/// @brief 节点转换到数据序列
 	/// @param result_vector_data 转换存储的数据序列对象
 	/// @return 失败返回 false
@@ -148,7 +133,6 @@ protected:
 	virtual bool connectCreateNodeAction( NodeStack *node_stack_ptr, QAction *connect_qaction_ptr, QActionTriggered connect_qaction_fun_ptr, const QString &node_type_name, const std::function< Node *( const QString & ) > &action_click_function );
 	virtual void removeRefNodeVectorAtNode( Node *remove_node );
 	virtual Node * appendRefNodeVectorAtNode( const QString &append_node_name, Node *append_node );
-	virtual bool appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr );
 	/// @brief 删除历史坐标后续的所有对象
 	virtual void removeHistorIndexEnd( );
 	virtual void appendHistorIndexEnd( const std::function< NodeHistory *( ) > &current_history, const std::function< NodeHistory *( ) > &cancel_history );
@@ -220,12 +204,6 @@ protected:
 	/// @param signal_ptr 信号对象
 	/// @param remove_target 删除对象
 	void removeNodeActionSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *remove_target );
-	/// @brief 菜单激活显示节点详细信息菜单
-	/// @param signal_ptr 信号对象
-	/// @param show_node 显示节点
-	/// @param show_info_widget
-	/// @param show_info_widget
-	void editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget );
 	/// @brief 菜单激活节点显示到主窗口
 	/// @param signal_ptr 信号对象
 	/// @param ensure_node 显示节点

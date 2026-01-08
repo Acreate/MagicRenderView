@@ -2,6 +2,7 @@
 
 #include "../../app/application.h"
 #include "../../director/nodeDirector.h"
+#include "../../director/nodeInfoEditorDirector.h"
 #include "../../node/node/node.h"
 #include "../../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../../node/port/inputPort/inputPort.h"
@@ -208,8 +209,7 @@ bool NormalNodeEditorPropertyMenu::setNode( Node *node ) {
 	if( qactionArchiveCount == 0 )
 		extendQActionArchiveVectorCount( 1024 );
 	// 添加显示菜单
-	nodeInfoWidget = Application::getInstancePtr( )->getNodeDirector( )->getNodeWidgeInfo( node );
-	if( nodeInfoWidget ) {
+	if( Application::getInstancePtr( )->getNodeInfoEditorDirector( )->getNodeInfoEditorWidget( node, nodeInfoWidget ) ) {
 		displayInfoWidgetAction->setText( tr( "显示[ %1 ]( %2 )编辑窗口" ).arg( node->toQString( ) ).arg( nodeInfoWidget->metaObject( )->className( ) ) );
 		dislayMenu->addAction( displayInfoWidgetAction );
 	} else

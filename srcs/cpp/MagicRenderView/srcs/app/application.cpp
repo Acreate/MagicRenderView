@@ -18,6 +18,7 @@
 #include "../director/builderDirector.h"
 #include "../director/editorDirector.h"
 #include "../director/menuDirector.h"
+#include "../director/nodeInfoEditorDirector.h"
 #include "../srack/srackInfo.h"
 
 #include "../tools/path.h"
@@ -38,11 +39,13 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	editorDirector = new EditorDirector;
 	mainWindow = new MainWindow( );
 	builderDirector = new BuilderDirector;
+	nodeInfoEditorDirector = new NodeInfoEditorDirector;
 	appInitRunDataTime = new QDateTime;
 }
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
 		printerDirector->error( "窗口状态保存异常", Create_SrackInfo( ) );
+	delete nodeInfoEditorDirector;
 	delete builderDirector;
 	delete menuDirector;
 	delete appDirector;
@@ -150,6 +153,8 @@ bool Application::init( ) {
 	if( synchronousVarToWindowInfo( ) == false )
 		return false;
 	if( editorDirector->init( ) == false )
+		return false;
+	if( nodeInfoEditorDirector->init( ) == false )
 		return false;
 	mainWindow->show( );
 	if( mainWindow->isHidden( ) )

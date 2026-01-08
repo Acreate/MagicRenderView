@@ -16,22 +16,15 @@
 
 #include "../node/node/node.h"
 #include "../node/nodeInfo/nodeHistory.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/nodeRunInfo/nodeRunInfo.h"
 #include "../node/nodeType/nodeTypeInfoSerializeion.h"
 #include "../node/port/inputPort/inputPort.h"
 #include "../node/port/outputPort/outputPort.h"
 #include "../node/portLinkType/portLinkType.h"
-#include "../node/stack/baseNodeStack/baseNodeStack.h"
 
 #include "../srack/srackInfo.h"
 
-#include "../tools/path.h"
 #include "../widget/mainWidget.h"
-#include "../widget/mainWidgetScrollArea.h"
 
 #include "../win/mainWindow.h"
 #include "menuDirector.h"
@@ -62,49 +55,9 @@ bool NodeDirector::init( ) {
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::remove_node_action_signal, this, &NodeDirector::removeNodeActionSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::unLink_signal, this, &NodeDirector::nodeEditorMenuUnLinkSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
-	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_edit_info_widget_signal, this, &NodeDirector::editorMenuShowEditInfoWidgetSlot );
 	return true;
 }
-bool NodeDirector::showNodeWidgeInfo( Node *association_node ) {
-	if( association_node == nullptr ) {
-		if( currentShowWidget )
-			currentShowWidget->hide( );
-		return false;
-	}
-	if( currentShowWidget && currentShowWidget->isNodeTypeInfoWidget( association_node ) == true ) {
-		currentShowWidget->releaseVar( );
-		currentShowWidget->clearVarPtr( );
-		if( currentShowWidget->initNodeInfo( association_node ) )
-			return true;
-		currentShowWidget->hide( );
-		return false;
-	}
-	auto nodeInfoWidget = getNodeWidgeInfo( association_node );
-
-	if( nodeInfoWidget != nullptr && nodeInfoWidget->isNodeTypeInfoWidget( association_node ) == true ) {
-		if( currentShowWidget )
-			currentShowWidget->hide( );
-		if( nodeInfoWidget->initNodeInfo( association_node ) == false )
-			return false;
-		nodeInfoWidget->show( );
-		return true;
-	}
-	return false;
-}
-NodeInfoWidget * NodeDirector::getNodeWidgeInfo( Node *association_node ) {
-	if( association_node == nullptr )
-		return nullptr;
-	size_t count = nodeInfoWidgets.size( );
-	auto arrayPtr = nodeInfoWidgets.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( arrayPtr[ index ]->isNodeTypeInfoWidget( association_node ) == true )
-			return arrayPtr[ index ];
-
-	return nullptr;
-}
-
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), varDirector( nullptr ), currentShowWidget( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), varDirector( nullptr ) {
 	portLink = new PortLinkType;
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
@@ -159,14 +112,7 @@ void NodeDirector::releaseNodeResources( ) {
 	}
 }
 void NodeDirector::releaseNodeInfoWidgetResources( ) {
-	auto buff = nodeInfoWidgets;
-	nodeInfoWidgets.clear( );
-	size_t count = buff.size( );
-	auto nodeInfoWidgetArrayPtr = buff.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		delete nodeInfoWidgetArrayPtr[ index ];
-	currentShowWidget = nullptr;
+	
 }
 void NodeDirector::releaseNodeHistoryResources( ) {
 	size_t count = nodeHistorys.size( );
@@ -299,16 +245,6 @@ bool NodeDirector::initNodeRenderGraphWidget( QString &result_error_msg ) {
 		} );
 	}
 
-	return initNodeInfoWidget( result_error_msg );
-}
-bool NodeDirector::initNodeInfoWidget( QString &result_error_msg ) {
-	if( mainWindow == nullptr ) {
-		result_error_msg = tr( "缺少主配置窗口，使用 [Application::getMainWindow( )] 获取" );
-		return false;
-	}
-	appendNodeInfoWidget( new JumpNodeWidget( mainWindow ) );
-	appendNodeInfoWidget( new IntGenerateNodeWidget( mainWindow ) );
-	appendNodeInfoWidget( new BeginNodeWidget( mainWindow ) );
 	return true;
 }
 bool NodeDirector::findNodeInputPort( InputPort *&result_input_port_ptr, const uint64_t &node_id_key, const QString &input_port_name, const std::pair< uint64_t, Node * > *source_data, const size_t &source_count ) {
@@ -561,34 +497,6 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 	appendHistorIndexEnd( currentHistory, cancelHistory );
 	return append_node;
 }
-bool NodeDirector::appendNodeInfoWidget( NodeInfoWidget *append_node_info_widget_ptr ) {
-	nodeInfoWidgets.emplace_back( append_node_info_widget_ptr );
-	connect( append_node_info_widget_ptr, &NodeInfoWidget::release_signal, [this] ( NodeInfoWidget *release_ptr ) {
-		size_t count = nodeInfoWidgets.size( );
-		auto nodeInfoWidgetArrayPtr = nodeInfoWidgets.data( );
-		for( size_t index = 0; index < count; ++index )
-			if( nodeInfoWidgetArrayPtr[ index ] == release_ptr ) {
-				if( release_ptr == currentShowWidget )
-					currentShowWidget = nullptr; // 释放的窗口需要配置为 nullptr
-				nodeInfoWidgets.erase( nodeInfoWidgets.begin( ) + index );
-				return;
-			}
-	} );
-	connect( append_node_info_widget_ptr, &NodeInfoWidget::show_signal, [ this] ( NodeInfoWidget *show_ptr ) {
-		currentShowWidget = show_ptr;
-	} );
-	connect( append_node_info_widget_ptr, &NodeInfoWidget::hide_signal, [ this] ( NodeInfoWidget *hid_ptr ) {
-		if( hid_ptr == currentShowWidget )
-			currentShowWidget = nullptr;
-	} );
-	connect( append_node_info_widget_ptr, &NodeInfoWidget::ok_signal, [ this] ( NodeInfoWidget *send_signal_ptr, EditorNodeInfoScrollArea *data_change_widget ) {
-
-	} );
-	connect( append_node_info_widget_ptr, &NodeInfoWidget::cancel_signal, [ this] ( NodeInfoWidget *send_signal_ptr, EditorNodeInfoScrollArea *data_change_widget ) {
-
-	} );
-	return true;
-}
 void NodeDirector::removeHistorIndexEnd( ) {
 	size_t count = nodeHistorys.size( );
 	if( nodeHistoryIndex == count )
@@ -703,11 +611,6 @@ void NodeDirector::removeNodeActionSlot( NormalNodeEditorPropertyMenu *signal_pt
 	if( index != count )
 		delete remove_target;
 }
-void NodeDirector::editorMenuShowEditInfoWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *show_node, NodeInfoWidget *show_info_widget ) {
-	//printerDirector->info( tr( "编辑菜单发出信息菜单显示信号" ), Create_SrackInfo( ) );
-	if( show_info_widget->initNodeInfo( show_node ) )
-		show_info_widget->show( );
-}
 void NodeDirector::editorMenuShowNodeAtWidgetSlot( NormalNodeEditorPropertyMenu *signal_ptr, Node *ensure_node ) {
 	//printerDirector->info( tr( "编辑菜单发出主窗口显示节点信号" ), Create_SrackInfo( ) );
 	mainWidget->ensureVisible( ensure_node );
@@ -732,8 +635,6 @@ void NodeDirector::finishCreateNode( Node *finish_node ) {
 }
 void NodeDirector::connectRefInputPortNodeSlot( Node *output_port_node, Node *ref_input_port_node ) {
 	//printerDirector->info( "节点产生引用", Create_SrackInfo( ) );
-	if( currentShowWidget && currentShowWidget->isHidden( ) == false )
-		currentShowWidget->newNodeRefLinkInfo( ref_input_port_node, output_port_node );
 	emit connect_ref_input_port_node_signal( this, output_port_node, ref_input_port_node );
 }
 void NodeDirector::disConnectRefInputPortNodeSlot( Node *output_port, Node *ref_input_port ) {

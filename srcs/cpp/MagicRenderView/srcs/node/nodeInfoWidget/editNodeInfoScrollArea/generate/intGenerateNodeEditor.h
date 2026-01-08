@@ -3,6 +3,7 @@
 #pragma once
 #include "../editorNodeInfoScrollArea.h"
 
+class IntGenerateNode;
 class GenerateRenderWidget;
 class GenerateRenderScrollArea;
 class AddGenerateTool;
@@ -28,7 +29,7 @@ public:
 	bool initNode( Node *init_node ) override;
 	virtual std::vector< int64_t > * getBindGenerateVector( ) const { return bindGenerateVector; }
 	virtual void setBindGenerateVector( std::vector< int64_t > *bind_generate_vector ) { bindGenerateVector = bind_generate_vector; }
-	virtual void syncVarVector();
+	virtual void syncVarVector( );
 protected:
 	void resizeEvent( QResizeEvent * ) override;
 	void showEvent( QShowEvent *event ) override;

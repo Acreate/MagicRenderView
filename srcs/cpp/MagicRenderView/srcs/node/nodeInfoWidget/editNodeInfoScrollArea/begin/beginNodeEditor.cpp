@@ -54,8 +54,6 @@ BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrol
 	itemPen.setWidth( 4 );
 	endItem->setSubItemPen( itemPen );
 
-	connect( processItem, &BeginNodeItem::showNodeInfoWidgetLeft, this, &BeginNodeEditor::showNodeInfoWidgetLeft );
-	connect( processItem, &BeginNodeItem::showNodeInfoWidgetRight, this, &BeginNodeEditor::showNodeInfoWidgetRight );
 
 	beginItem->setIsPopMenu( false );
 	endItem->setIsPopMenu( false );

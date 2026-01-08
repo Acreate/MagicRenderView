@@ -20,8 +20,6 @@ private:
 	friend class NodeDirector;
 protected:
 	WidgetEnum::ShowType showPosType;
-	MainWindow *parentMainWindow;
-	MainWidgetScrollArea *mainWidgetScrollArea;
 	Node *node;
 	NodeInfoTitle *titile;
 	BottomNodeInfoTool *buttonWidget;
@@ -30,16 +28,10 @@ protected:
 	QScrollBar *vScrollBar;
 	QScrollBar *hScrollBar;
 	QMenuBar *mainWindowMenuBar;
-	int offsetY;
-	int offsetX;
-	int topOffsetY;
-	int leftOffsetX;
 public:
-	NodeInfoWidget( MainWindow *parent );
+	NodeInfoWidget( );
 	~NodeInfoWidget( ) override;
-	virtual MainWindow * getParentMainWindow( ) const { return parentMainWindow; }
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
-	virtual bool isNodeTypeInfoWidget( Node *check_node_ptr ) const;
 	virtual bool initNodeInfo( Node *check_node_ptr );
 	/// @brief 释放资源
 	/// @return 资源释放数量
@@ -57,7 +49,6 @@ public:
 	/// @brief 获取标题
 	/// @return 标题
 	virtual QString getTitleText( ) const;
-	virtual void showNodeInfoWidget( WidgetEnum::ShowType show_pos_type );
 protected:
 	/// @brief 创建节点时候发生
 	/// @param node_ref_link_info 创建的节点的引用
@@ -71,7 +62,6 @@ protected:
 	virtual void okButtonEvent( );
 	virtual void cancelButtonEvent( );
 protected:
-	bool eventFilter( QObject *event_obj_ptr, QEvent *event_type ) override;
 	bool event( QEvent * ) override;
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:

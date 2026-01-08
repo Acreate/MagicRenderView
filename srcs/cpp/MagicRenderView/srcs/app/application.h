@@ -3,6 +3,7 @@
 #pragma once
 #include <QApplication>
 
+class NodeInfoEditorDirector;
 class EditorDirector;
 class BuilderDirector;
 class AppDirector;
@@ -30,6 +31,7 @@ protected:
 	AppDirector *appDirector;
 	BuilderDirector *builderDirector;
 	EditorDirector *editorDirector;
+	NodeInfoEditorDirector *nodeInfoEditorDirector;
 protected:
 	MainWindow *mainWindow;
 	ApplicationMenuStack *applicationMenuStack;
@@ -58,6 +60,7 @@ protected:
 public:
 	virtual bool init( );
 	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
+	virtual NodeInfoEditorDirector * getNodeInfoEditorDirector( ) const { return nodeInfoEditorDirector; }
 	virtual EditorDirector * getEditorDirector( ) const { return editorDirector; }
 	virtual BuilderDirector * getBuilderDirector( ) const { return builderDirector; }
 	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }

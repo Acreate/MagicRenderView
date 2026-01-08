@@ -5,21 +5,13 @@
 #include <qcoreevent.h>
 #include <QScrollBar>
 
-#include <win/mainWindow.h>
-
 #include "../../../director/varDirector.h"
-
-#include "../../../widget/mainWidgetScrollArea.h"
-
 #include "../../node/node.h"
-
 #include "../bottomTool/bottomNodeInfoTool.h"
-
 #include "../editNodeInfoScrollArea/editorNodeInfoScrollArea.h"
-
 #include "../title/nodeInfoTitle.h"
 
-NodeInfoWidget::NodeInfoWidget( MainWindow *parent ) : QWidget( parent ), parentMainWindow( parent ), editorNodeInfoScrollArea( nullptr ) {
+NodeInfoWidget::NodeInfoWidget( ) : editorNodeInfoScrollArea( nullptr ) {
 	varDirector = new VarDirector;
 	hide( );
 	titile = new NodeInfoTitle( this );
@@ -32,12 +24,7 @@ NodeInfoWidget::NodeInfoWidget( MainWindow *parent ) : QWidget( parent ), parent
 		this->cancelButtonEvent( );
 		emit cancel_signal( this, editorNodeInfoScrollArea );
 	} );
-	parentMainWindow->installEventFilter( this );
-	mainWidgetScrollArea = parentMainWindow->getMainWidgetScrollArea( );
-	vScrollBar = mainWidgetScrollArea->verticalScrollBar( );
-	hScrollBar = mainWidgetScrollArea->horizontalScrollBar( );
 
-	mainWindowMenuBar = parentMainWindow->menuBar( );
 	showPosType = WidgetEnum::ShowType::Center;
 }
 NodeInfoWidget::~NodeInfoWidget( ) {
@@ -46,11 +33,10 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 		delete editorNodeInfoScrollArea;
 	delete varDirector;
 }
-bool NodeInfoWidget::isNodeTypeInfoWidget( Node *check_node_ptr ) const {
-	return false;
-}
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
-	if( editorNodeInfoScrollArea && varDirector->init( ) && editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
+	if( editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
+		return false;
+	if( editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
 		return false;
 	titile->setTitleText( check_node_ptr->toQString( ) );
 	return true;
@@ -58,73 +44,17 @@ bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
 }
-void NodeInfoWidget::showNodeInfoWidget( WidgetEnum::ShowType show_pos_type ) {
-
-	showPosType = show_pos_type;
-	QRect geometry;
-	int parentMainWindowWidth;
-	int parentMainWindowHeight;
-	int currentWidth;
-	geometry = mainWidgetScrollArea->geometry( );
-	topOffsetY = geometry.y( );
-	leftOffsetX = geometry.x( );
-	offsetX = leftOffsetX + vScrollBar->width( );
-	parentMainWindowWidth = parentMainWindow->width( ) - offsetX;
-	offsetY = topOffsetY + hScrollBar->height( );
-	parentMainWindowHeight = parentMainWindow->height( ) - offsetY;
-	currentWidth = parentMainWindowWidth / 3;
-	switch( showPosType ) {
-		case WidgetEnum::ShowType::Center :
-			move( currentWidth, topOffsetY );
-			break;
-		case WidgetEnum::ShowType::Left :
-			move( 0, topOffsetY );
-			break;
-		case WidgetEnum::ShowType::Right :
-			move( currentWidth + currentWidth, topOffsetY );
-			break;
-	}
-	resize( currentWidth, parentMainWindowHeight );
-	int titileWidth = titile->width( );
-	titileWidth = ( currentWidth - titileWidth ) / 2;
-	titile->move( titileWidth, 0 );
-	int titileHeight = titile->height( );
-	editorNodeInfoScrollArea->move( 0, titileHeight );
-	int bottonToolHeight = buttonWidget->height( );
-	bottonToolHeight = parentMainWindowHeight - bottonToolHeight;
-	titileWidth = buttonWidget->width( );
-	titileWidth = ( currentWidth - titileWidth ) / 2;
-	buttonWidget->move( titileWidth, bottonToolHeight );
-	titileHeight = bottonToolHeight - titileHeight;
-	editorNodeInfoScrollArea->resize( currentWidth, titileHeight );
-	raise( );
-}
 void NodeInfoWidget::okButtonEvent( ) {
 	hide( );
 }
 void NodeInfoWidget::cancelButtonEvent( ) {
 	hide( );
 }
-bool NodeInfoWidget::eventFilter( QObject *event_obj_ptr, QEvent *event_type ) {
-
-	bool eventFilter = QWidget::eventFilter( event_obj_ptr, event_type );
-	if( isHidden( ) )
-		return eventFilter;
-	auto type = event_type->type( );
-	switch( type ) {
-		case QEvent::Resize :
-			showNodeInfoWidget( showPosType );
-			break;
-	}
-
-	return eventFilter;
-}
 bool NodeInfoWidget::event( QEvent *event ) {
 	bool eventResult = QWidget::event( event );
 	auto type = event->type( );
 	switch( type ) {
 		case QEvent::Show :
-			showNodeInfoWidget( showPosType );
 			emit show_signal( this );
 			break;
 		case QEvent::Hide :
