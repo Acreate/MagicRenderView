@@ -352,6 +352,17 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 				return true;
 			}
 	}
+	findNodeArrayCount = waiteEndNodeVector.size( );
+	if( findNodeArrayCount ) {
+		findNodeArrayPtr = waiteEndNodeVector.data( );
+		for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+			if( isNextRunNode( findNodeArrayPtr[ findNodeArrayIndex ] ) == true == true ) {
+				result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
+				// 等待列表当中找到相应的节点时候
+				waiteEndNodeVector.erase( waiteEndNodeVector.begin( ) + findNodeArrayIndex );
+				return true;
+			}
+	}
 	// 等待列表无法匹配到对应的节点
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
@@ -408,6 +419,38 @@ bool NodeRunInfo::overRunNode( ) {
 	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
 	return false;
 }
+bool NodeRunInfo::filterToAdviseVector( ) {
+	size_t count;
+	Node *currentNode;
+	NodeEnum::NodeType nodeType;
+	Node **adviseArrayPtr;
+	Node **buffArrayPtr;
+	size_t buffIndex;
+	size_t adviseIndex;
+	std::vector< Node * > *buff;
+	count = adviseNodeVector.size( );
+	if( count == 0 )
+		return true;
+	adviseArrayPtr = adviseNodeVector.data( );
+	buff = new std::vector< Node * >( count );
+	buffArrayPtr = buff->data( );
+	buffIndex = 0;
+	adviseIndex = 0;
+	for( ; adviseIndex < count; adviseIndex += 1 ) {
+		currentNode = adviseArrayPtr[ adviseIndex ];
+		nodeType = currentNode->getNodeType( );
+		if( nodeType == NodeEnum::NodeType::End )
+			waiteEndNodeVector.emplace_back( currentNode );
+		else {
+			buffArrayPtr[ buffIndex ] = currentNode;
+			buffIndex += 1;
+		}
+	}
+	if( buffIndex != count )
+		adviseNodeVector = *buff;
+	delete buff;
+	return true;
+}
 bool NodeRunInfo::runNextNode( ) {
 	Node *currentRunPtr = nullptr;
 	if( findNextRunNode( currentRunPtr ) == false )
@@ -419,6 +462,8 @@ bool NodeRunInfo::runNextNode( ) {
 		return false;
 	printerDirector->info( tr( "执行完毕[%1]" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
 	if( overRunNode( ) == false )
+		return false;
+	if( filterToAdviseVector( ) == false )
 		return false;
 	overRunNodeVector.emplace_back( currentRunPtr );
 	return true;

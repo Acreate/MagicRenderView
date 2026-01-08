@@ -36,6 +36,8 @@ protected:
 	std::vector< TRunBodyObjPtr > adviseNodeVector;
 	/// @brief 开始节点列表
 	std::vector< TRunBodyObjPtr > beginNodeVector;
+	/// @brief 等待中的返回节点
+	std::vector< TRunBodyObjPtr > waiteEndNodeVector;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -61,6 +63,9 @@ protected:
 	/// @brief 运行完成节点
 	/// @return 成功返回 true
 	virtual bool overRunNode( );
+	/// @brief 过滤存储列表，筛选建议列表列表存储到匹配列表
+	/// @return 成功返回 true
+	virtual bool filterToAdviseVector( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
