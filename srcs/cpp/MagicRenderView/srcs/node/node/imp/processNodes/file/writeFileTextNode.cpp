@@ -14,7 +14,7 @@ bool WriteFileTextNode::initEx( MainWidget *parent ) {
 bool WriteFileTextNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool WriteFileTextNode::readNodeRunData( ) {
+bool WriteFileTextNode::readyNodeRunData( ) {
 	return false;
 }
 bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {

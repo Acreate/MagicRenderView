@@ -24,6 +24,7 @@ private:
 protected:
 	std::vector< OutputPort * > refOutputPortVector;
 	void *varPtr;
+	bool multiple;
 protected:
 	QString portName;
 	QString varTypeName;
@@ -47,7 +48,7 @@ public:
 	virtual QPoint getLinkPoint( ) const;
 	virtual Node * getParentNode( ) const { return parentNode; }
 	virtual uint64_t getGenerateCode( ) const { return generateCode; }
-	virtual bool isMultiple( ) { return false; }
+	virtual bool isMultiple( ) { return multiple; }
 	virtual bool hasOutputPortRef( const OutputPort *output_port_ptr ) const;
 	virtual void * getVarPtr( ) const { return varPtr; }
 protected:

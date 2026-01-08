@@ -3,12 +3,16 @@
 #include <qdatetime.h>
 
 #include "../../../../app/application.h"
+#include "../../../../director/varDirector.h"
 #include "../../../../tools/arrayTools.h"
 #include "../../../../tools/vectorTools.h"
 #include "../../../port/inputPort/inputPort.h"
 #include "../../../port/outputPort/begin/beginOutputPort .h"
 #include "../../../port/outputPort/toBegin/toBeginOutputPort.h"
 
+StartNode::StartNode( const QString &node_name ) : BeginNode( node_name ) {
+	var = nullptr;
+}
 bool StartNode::initEx( MainWidget *parent ) {
 
 	initExCallFunction = [this] ( MainWidget *main_widget ) {
@@ -18,6 +22,13 @@ bool StartNode::initEx( MainWidget *parent ) {
 			return false;
 		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) );
 		if( toBeginOutputPort == nullptr )
+			return false;
+		if( var == nullptr )
+			if( varDirector->create( var ) == false )
+				return false;
+		*var = 0;
+		// 绑定数据
+		if( setPortVar( beginOutputPort, var ) == false )
 			return false;
 		return true;
 	};
@@ -34,22 +45,20 @@ bool StartNode::readNextBeginNodeData( ) {
 	readUpdate = true;
 	return true;
 }
-bool StartNode::readNodeRunData( ) {
-	mSecsSinceEpoch = 0;
+bool StartNode::readyNodeRunData( ) {
 	return true;
 }
 bool StartNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
 	return true;
 }
 bool StartNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	if( mSecsSinceEpoch != 0 || readUpdate == false )
+	if( readUpdate == false )
 		return true;
-	readUpdate = true;
-	mSecsSinceEpoch = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
-	mSecsSinceEpoch = mSecsSinceEpoch - ndoe_run_start_data_time.toMSecsSinceEpoch( );
+	*var += 1;
+	readUpdate = false;
 	return true;
 }
-bool StartNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool StartNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	size_t refInputPortCount;
 	InputPort **refInputPortArray;
 	size_t refInputPortIndex;

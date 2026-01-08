@@ -22,14 +22,17 @@ bool ResultNode::updateLayout( ) {
 		return false;
 	return true;
 }
-bool ResultNode::readNodeRunData( ) {
+bool ResultNode::readyNodeRunData( ) {
 	return true;
 }
 
 bool ResultNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	return true;
+	auto beginNode = qobject_cast< BeginNode * >( toBeginInputPort->getParentNode( ) );
+	if( beginNode == nullptr )
+		return false;
+	return updateBeginData( beginNode );
 }
-bool ResultNode::fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+bool ResultNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 	size_t refOutputPortCount;
 	OutputPort **refOutputPortArray;
 	size_t refOutputPortIndex;

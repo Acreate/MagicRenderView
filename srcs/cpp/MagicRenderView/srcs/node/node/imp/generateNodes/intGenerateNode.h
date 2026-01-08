@@ -3,13 +3,22 @@
 #pragma once
 #include "../../generateNode.h"
 
+class GenerateInputPort;
+class GenerateIntOutputPort;
 class IntGenerateNode : public GenerateNode {
 	Q_OBJECT;
 protected:
+	GenerateInputPort *generateInputPort;
+	GenerateIntOutputPort *intOutputVarPort;
+	GenerateIntOutputPort *intOutputIndexPort;
+	GenerateIntOutputPort *intOutputCountPort;
+	size_t *arrayCount;
+	size_t *arrayIndex;
+	int64_t *currentIndexVar;
+protected:
 	std::vector< int64_t > *overVarPtr;
 public:
-	IntGenerateNode( const QString &node_name )
-		: GenerateNode( node_name ) { }
+	IntGenerateNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool initArrayUintyTypeName( QString &change_array_unty_type_name ) override;
 	bool updateLayout( ) override;
@@ -19,7 +28,7 @@ public:
 protected:
 	bool initVarPtr( ) override;
 public:
-	bool readNodeRunData( ) override;
+	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "生成/生成整数" ) );

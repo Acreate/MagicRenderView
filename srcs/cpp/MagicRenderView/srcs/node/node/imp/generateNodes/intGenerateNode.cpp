@@ -7,15 +7,44 @@
 #include "../../../port/inputPort/generate/generateInputPort.h"
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
+IntGenerateNode::IntGenerateNode( const QString &node_name ) : GenerateNode( node_name ) {
+	arrayCount = nullptr;
+	arrayIndex = nullptr;
+	currentIndexVar = nullptr;
+	generateInputPort = nullptr;
+	intOutputVarPort = nullptr;
+	intOutputIndexPort = nullptr;
+	intOutputCountPort = nullptr;
+}
 bool IntGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< GenerateInputPort >( tr( "生成" ) ) == nullptr )
+		generateInputPort = appendInputPortType< GenerateInputPort >( tr( "生成" ) );
+		if( generateInputPort == nullptr )
 			return false;
-		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出值" ) ) == nullptr )
+		intOutputVarPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出值" ) );
+		if( intOutputVarPort == nullptr )
 			return false;
-		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出下标" ) ) == nullptr )
+		intOutputIndexPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出下标" ) );
+		if( intOutputIndexPort == nullptr )
 			return false;
-		if( appendOutputPortType< GenerateIntOutputPort >( tr( "导出总数" ) ) == nullptr )
+		intOutputCountPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出总数" ) );
+		if( intOutputCountPort == nullptr )
+			return false;
+		if( arrayCount == nullptr )
+			if( varDirector->create( arrayCount ) == false )
+				return false;
+		if( arrayIndex == nullptr )
+			if( varDirector->create( arrayIndex ) == false )
+				return false;
+		if( currentIndexVar == nullptr )
+			if( varDirector->create( currentIndexVar ) == false )
+				return false;
+		// 绑定指针
+		if( setPortVar( intOutputIndexPort, arrayIndex ) == false )
+			return false;
+		if( setPortVar( intOutputVarPort, currentIndexVar ) == false )
+			return false;
+		if( setPortVar( intOutputCountPort, arrayCount ) == false )
 			return false;
 		return true;
 	};
@@ -53,11 +82,23 @@ bool IntGenerateNode::initVarPtr( ) {
 	if( varDirector->create( overVarPtr ) == false )
 		return false;
 	varPtr = overVarPtr;
+
 	return true;
 }
-bool IntGenerateNode::readNodeRunData( ) {
+bool IntGenerateNode::readyNodeRunData( ) {
 	return true;
 }
 bool IntGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	auto generateVarPtr = generateInputPort->getVarPtr( );
+	auto parentNode = generateInputPort->getParentNode( );
+	auto parentNodeDirector = parentNode->getVarDirector( );
+	size_t *index;
+	*arrayCount = 0;
+	*arrayIndex = 0;
+	*currentIndexVar = overVarPtr->size( );
+	if( parentNodeDirector->cast_ptr( generateVarPtr, index ) == false )
+		return false;
+	*arrayIndex = *index;
+	*currentIndexVar = overVarPtr->data( )[ *arrayIndex ];
 	return true;
 }

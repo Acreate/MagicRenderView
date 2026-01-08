@@ -130,7 +130,7 @@ protected:
 public:
 	/// @brief 配置首次运行所需要的数据
 	/// @return 失败返回 false
-	virtual bool readNodeRunData( ) = 0;
+	virtual bool readyNodeRunData( ) = 0;
 	/// @brief 填充输入端口
 	/// @param ndoe_run_start_data_time
 	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
@@ -276,14 +276,19 @@ Q_SIGNALS:
 	void finish_run_node_signal( Node *finish_node, const SrackInfo &srack_info );
 	// 友元-提供子类
 protected:
-	const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
-	bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
-	bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
+	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
+	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual bool setPortVar( OutputPort *output_port, void *new_par );
+	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
+	
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
-	bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
-	bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
+	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
+	virtual bool setPortVar( InputPort *input_port, void *new_par );
+	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
 };
 
 #endif // NODE_H_H_HEAD__FILE__

@@ -92,7 +92,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 	auto runNodeArrayPtr = runNodeVector.data( );
 	size_t runNodeIndex = 0;
 	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
-		if( runNodeArrayPtr[ runNodeIndex ]->readNodeRunData( ) == false ) {
+		if( runNodeArrayPtr[ runNodeIndex ]->readyNodeRunData( ) == false ) {
 			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
 			runNodeVector.clear( );
 			beginNodeVector.clear( );
@@ -433,6 +433,8 @@ bool NodeRunInfo::filterToAdviseVector( ) {
 		return true;
 	adviseArrayPtr = adviseNodeVector.data( );
 	buff = new std::vector< Node * >( count );
+	if( buff == nullptr )
+		return false; // 内存不足
 	buffArrayPtr = buff->data( );
 	buffIndex = 0;
 	adviseIndex = 0;
@@ -491,7 +493,7 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	auto runArrayPtr = runNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; index += 1 )
-		if( runArrayPtr[ index ]->readNodeRunData( ) == false )
+		if( runArrayPtr[ index ]->readyNodeRunData( ) == false )
 			return false;
 	if( currentRunPtr )
 		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );

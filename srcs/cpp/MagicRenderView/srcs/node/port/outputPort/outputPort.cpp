@@ -58,6 +58,7 @@ void OutputPort::clearInputPortRef( ) {
 }
 OutputPort::OutputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
+	multiple = true;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
 	ico->setPixmap( QPixmap::fromImage( image ) );

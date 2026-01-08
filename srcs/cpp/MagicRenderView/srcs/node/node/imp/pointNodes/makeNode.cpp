@@ -18,7 +18,7 @@ bool MakeNode::updateLayout( ) {
 		return false;
 	return true;
 }
-bool MakeNode::readNodeRunData( ) {
+bool MakeNode::readyNodeRunData( ) {
 	return true;
 }
 

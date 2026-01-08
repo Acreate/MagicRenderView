@@ -16,7 +16,7 @@ bool ToStringNode::initEx( MainWidget *parent ) {
 bool ToStringNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToStringNode::readNodeRunData( ) {
+bool ToStringNode::readyNodeRunData( ) {
 	return false;
 }
 bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {

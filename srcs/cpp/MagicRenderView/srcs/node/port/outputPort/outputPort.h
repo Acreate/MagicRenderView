@@ -24,6 +24,7 @@ private:
 protected:
 	std::vector< InputPort * > refInputPortVector;
 	void * varPtr;
+	bool multiple;
 protected:
 	QString portName;
 	QString varTypeName;
@@ -48,7 +49,7 @@ public:
 	virtual Node * getParentNode( ) const { return parentNode; }
 	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
 	virtual uint64_t getGenerateCode( ) const { return generateCode; }
-	virtual bool isMultiple( ) { return true; }
+	virtual bool isMultiple( ) { return multiple; }
 	virtual void * getVarPtr( ) const { return varPtr; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;

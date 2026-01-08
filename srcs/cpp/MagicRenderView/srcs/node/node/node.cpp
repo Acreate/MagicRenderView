@@ -244,9 +244,10 @@ InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
 	if( count == 0 )
 		return nullptr;
 	auto inputPortArrayPtr = inputPortVector.data( );
-	if( inputPortArrayPtr[ input_port_generate_code - 1 ]->generateCode == input_port_generate_code )
-		return inputPortArrayPtr[ input_port_generate_code - 1 ];
-	for( size_t index = 0; index < count; ++index )
+	size_t index = input_port_generate_code - 1;
+	if( index < count && inputPortArrayPtr[ index ]->generateCode == input_port_generate_code )
+		return inputPortArrayPtr[ index ];
+	for( index = 0; index < count; ++index )
 		if( inputPortArrayPtr[ index ]->generateCode == input_port_generate_code )
 			return inputPortArrayPtr[ index ];
 	return nullptr;
@@ -256,10 +257,11 @@ OutputPort * Node::getOutputPort( const size_t &output_port_generate_code ) cons
 	if( count == 0 )
 		return nullptr;
 	auto outputPortArrayPtr = outputPortVector.data( );
-	if( outputPortArrayPtr[ output_port_generate_code - 1 ]->generateCode == output_port_generate_code )
-		return outputPortArrayPtr[ output_port_generate_code - 1 ];
+	size_t index = output_port_generate_code - 1;
+	if( index < count && outputPortArrayPtr[ index ]->generateCode == output_port_generate_code )
+		return outputPortArrayPtr[ index ];
 
-	for( size_t index = 0; index < count; ++index )
+	for( index = 0; index < count; ++index )
 		if( outputPortArrayPtr[ index ]->generateCode == output_port_generate_code )
 			return outputPortArrayPtr[ index ];
 	return nullptr;
@@ -676,6 +678,30 @@ bool Node::getFilterNotRefPortNodeVector( const OutputPort *output_port, std::ve
 
 		}
 	result_filter_node_vector.resize( desCount );
+	return true;
+}
+bool Node::setPortVar( OutputPort *output_port, void *new_par ) {
+	if( output_port == nullptr )
+		return false;
+	output_port->varPtr = new_par;
+	return true;
+}
+bool Node::setPortMultiple( OutputPort *output_port, bool multiple ) {
+	if( output_port == nullptr )
+		return false;
+	output_port->multiple = multiple;
+	return true;
+}
+bool Node::setPortMultiple( InputPort *input_port, bool multiple ) {
+	if( input_port == nullptr )
+		return false;
+	input_port->multiple = multiple;
+	return true;
+}
+bool Node::setPortVar( InputPort *input_port, void *new_par ) {
+	if( input_port == nullptr )
+		return false;
+	input_port->varPtr = new_par;
 	return true;
 }
 bool Node::getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
