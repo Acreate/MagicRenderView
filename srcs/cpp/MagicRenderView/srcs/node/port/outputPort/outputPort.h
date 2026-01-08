@@ -22,8 +22,8 @@ class OutputPort : public QWidget {
 private:
 	OutputPortFrinedClass( );
 protected:
-	Application *instancePtr;
-	VarDirector *varDirector;
+	std::vector< InputPort * > refInputPortVector;
+	void * varPtr;
 protected:
 	QString portName;
 	QString varTypeName;
@@ -33,8 +33,6 @@ protected:
 	QLabel *showTitle;
 	QHBoxLayout *mainLayout;
 	Node *parentNode;
-private:
-	std::vector< InputPort * > refInputPortVector;
 protected:
 	virtual bool emplaceBackInputPortRef( InputPort *input_port_ptr );
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
@@ -51,6 +49,7 @@ public:
 	virtual bool hasInputPortRef( InputPort *input_port_ptr ) const;
 	virtual uint64_t getGenerateCode( ) const { return generateCode; }
 	virtual bool isMultiple( ) { return true; }
+	virtual void * getVarPtr( ) const { return varPtr; }
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	bool event( QEvent *event ) override;

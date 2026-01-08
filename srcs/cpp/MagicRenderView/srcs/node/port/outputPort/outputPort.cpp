@@ -39,12 +39,21 @@ bool OutputPort::eraseInputPortRef( InputPort *input_port_ptr ) {
 }
 void OutputPort::clearInputPortRef( ) {
 	size_t count = refInputPortVector.size( );
-	for( size_t index = 0; index < count; ++index ) {
-		auto vectorIterator = refInputPortVector.begin( );
-		auto inputPort = *vectorIterator;
+	VarDirector *varDirector;
+	size_t index = 0;
+	std::vector< InputPort * >::iterator vectorIterator;
+	InputPort *inputPort;
+	for( ; index < count; ++index ) {
+		vectorIterator = refInputPortVector.begin( );
+		inputPort = *vectorIterator;
 		refInputPortVector.erase( vectorIterator );
 		emit dis_connect_output_port_signal( this, inputPort );
 		inputPort->eraseOutputPortRef( this );
+	}
+	if( varPtr ) {
+		varDirector = parentNode->getVarDirector( );
+		if( varDirector )
+			varDirector->release( varPtr );
 	}
 }
 OutputPort::OutputPort( const QString &name ) : portName( name ) {
@@ -77,8 +86,6 @@ bool OutputPort::hasInputPortRef( InputPort *input_port_ptr ) const {
 bool OutputPort::init( Node *parent ) {
 	if( parent == nullptr )
 		return false;
-	instancePtr = Application::getInstancePtr( );
-	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
 	parentNode = parent;
 	return true;
@@ -86,6 +93,7 @@ bool OutputPort::init( Node *parent ) {
 QPoint OutputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }
+
 void OutputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );
 }

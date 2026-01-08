@@ -36,17 +36,27 @@ bool InputPort::eraseOutputPortRef( OutputPort *output_port_ptr ) {
 	return false;
 }
 void InputPort::clearOutputPortRef( ) {
+	VarDirector *varDirector;
 	size_t count = refOutputPortVector.size( );
-	for( size_t index = 0; index < count; ++index ) {
-		auto vectorIterator = refOutputPortVector.begin( );
-		auto outputPort = *vectorIterator;
+	size_t index;
+	std::vector< OutputPort * >::iterator vectorIterator;
+	OutputPort *outputPort;
+	for( index = 0; index < count; ++index ) {
+		vectorIterator = refOutputPortVector.begin( );
+		outputPort = *vectorIterator;
 		refOutputPortVector.erase( vectorIterator );
 		emit dis_connect_input_port_signal( this, outputPort );
 		outputPort->eraseInputPortRef( this );
 	}
+	if( varPtr ) {
+		varDirector = parentNode->getVarDirector( );
+		if( varDirector )
+			varDirector->release( varPtr );
+	}
 }
 InputPort::InputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
+	varPtr = nullptr;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
 	ico->setPixmap( QPixmap::fromImage( image ) );
@@ -62,8 +72,6 @@ InputPort::InputPort( const QString &name ) : portName( name ) {
 bool InputPort::init( Node *parent ) {
 	if( parent == nullptr )
 		return false;
-	instancePtr = Application::getInstancePtr( );
-	varDirector = instancePtr->getVarDirector( );
 	setParent( parent );
 	parentNode = parent;
 	return true;
@@ -84,6 +92,7 @@ bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
 	return false;
 
 }
+
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }

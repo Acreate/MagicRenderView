@@ -16,6 +16,9 @@
 #include "../nodeInfo/nodeStyleTypePen.h"
 #include "../port/inputPort/point/pointInputPort.h"
 
+bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	return true;
+}
 Node::~Node( ) {
 
 	emit release_node_signal( this, Create_SrackInfo( ) );
@@ -261,6 +264,7 @@ OutputPort * Node::getOutputPort( const size_t &output_port_generate_code ) cons
 			return outputPortArrayPtr[ index ];
 	return nullptr;
 }
+
 bool Node::updatePortGenerateCodes( ) {
 	size_t count = inputPortVector.size( );
 	size_t index = 0;

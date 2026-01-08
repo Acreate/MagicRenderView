@@ -76,7 +76,7 @@ protected:
 	NodeEnum::NodeStyleType nodeStyle;
 	int penWidth;
 	int doubleWidth;
-	NodeStyleTypePen* nodeStyleTypePen;
+	NodeStyleTypePen *nodeStyleTypePen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
 	std::vector< Node * > refInputPortNode;
@@ -143,13 +143,13 @@ public:
 	/// @param result_next_run_advise_node_vector 建议后运行节点列表
 	/// @param ndoe_run_start_data_time
 	/// @return 失败返回 false
-	virtual bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
+	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
 		result_next_run_advise_node_vector = refInputPortNode;
 		return true;
 	}
 	/// @brief 节点运行调用
 	/// @return 失败返回 false
-	virtual bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) = 0;
+	virtual bool fillNodeCall( const QDateTime &ndoe_run_start_data_time );
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
@@ -179,6 +179,7 @@ public:
 	virtual int getNodeBorderWidth( ) const { return nodeBorderWidth; }
 	virtual InputPort * getInputPort( const size_t &input_port_generate_code ) const;
 	virtual OutputPort * getOutputPort( const size_t &output_port_generate_code ) const;
+	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 protected:
 	/// @brief 更新端口的生成代号
 	/// @return 失败返回 false
