@@ -43,6 +43,7 @@ protected:
 	}
 	virtual void appendBuilderNode( TRunBodyObj *append_node_unity );
 	virtual void removeBuilderNode( TRunBodyObj *append_node_unity );
+	virtual bool isNextRunNode(Node* check_next_node);
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );

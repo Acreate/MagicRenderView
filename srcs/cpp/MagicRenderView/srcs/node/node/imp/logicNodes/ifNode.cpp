@@ -39,8 +39,8 @@ bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	bool result;
-	
-	if( ifResultPort )
+
+	if( false )
 		result = getRefPortNodeVector( trueOutputPort, adviseNextVector );
 	else
 		result = getRefPortNodeVector( falseOutputPort, adviseNextVector );
