@@ -2,15 +2,11 @@
 
 #include "../app/application.h"
 #include "../node/node/node.h"
-#include "../node/nodeInfoWidget/editNodeInfoScrollArea/begin/beginNodeEditor.h"
-#include "../node/nodeInfoWidget/editNodeInfoScrollArea/generate/intGenerateNodeEditor.h"
-#include "../node/nodeInfoWidget/editNodeInfoScrollArea/jump/jumpNodeEditor.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../widget/mainWidget.h"
-#include "../widget/mainWidgetScrollArea.h"
 #include "../win/mainWindow.h"
 bool NodeInfoEditorDirector::appendCreateWidget( MTKey key, const MTCreateFunction &create_function ) {
 	size_t count;
@@ -43,26 +39,62 @@ void NodeInfoEditorDirector::hide_NodeInfoWidget_signal( NodeInfoWidget *hide_pt
 	if( hide_ptr == nullptr )
 		return;
 	size_t count = editorWidgetPackage.size( );
+	if( count == 0 )
+		return;
 	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( nodeInfoWidgetArrayPtr[ index ] == hide_ptr ) {
 			hide_ptr->deleteLater( );
-			editorWidgetPackage.erase( editorWidgetPackage.begin( ) + index );
+			nodeInfoWidgetArrayPtr[ index ] = nullptr;
 		}
 }
 NodeInfoEditorDirector::NodeInfoEditorDirector( ) { }
 void NodeInfoEditorDirector::clearNodeEditorResources( ) {
+	size_t count = editorWidgetPackage.size( );
+	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	std::vector< decltype(editorWidgetPackage)::value_type > copyVector( count );
+	std::vector< decltype(editorWidgetPackage)::value_type > releaseVector( count );
+	size_t index;
+	size_t destArrayPtrIndex = 0;
+	size_t releaseArrayPtrIndex = 0;
+	auto destArrayPtr = copyVector.data( );
+	auto releaseArrayPtr = releaseVector.data( );
+	for( index = 0; index < count; ++index )
+		if( nodeInfoWidgetArrayPtr[ index ] ) {
+			if( nodeInfoWidgetArrayPtr[ index ]->isHidden( ) == true ) {
+				releaseArrayPtr[ releaseArrayPtrIndex ] = nodeInfoWidgetArrayPtr[ index ];
+				releaseArrayPtrIndex += 1;
+				continue;
+			}
+			destArrayPtr[ destArrayPtrIndex ] = nodeInfoWidgetArrayPtr[ index ];
+			destArrayPtrIndex += 1;
+		}
+	editorWidgetPackage.clear( );
+	count = releaseArrayPtrIndex;
+	for( index = 0; index < count; ++index )
+		delete releaseArrayPtr[ releaseArrayPtrIndex ];
+	count = destArrayPtrIndex;
+	editorWidgetPackage.resize( count );
+	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	for( index = 0; index < count; ++index )
+		nodeInfoWidgetArrayPtr[ index ] = destArrayPtr[ index ];
 
+}
+void NodeInfoEditorDirector::releaseNodeEditor( ) {
 	size_t count = editorWidgetPackage.size( );
 	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
 	std::vector< decltype(editorWidgetPackage)::value_type > copyVector( count );
 	size_t index;
+	size_t destArrayPtrIndex = 0;
 	auto destArrayPtr = copyVector.data( );
 	for( index = 0; index < count; ++index )
-		destArrayPtr[ index ] = nodeInfoWidgetArrayPtr[ index ];
+		if( nodeInfoWidgetArrayPtr[ index ] ) {
+			destArrayPtr[ destArrayPtrIndex ] = nodeInfoWidgetArrayPtr[ index ];
+			destArrayPtrIndex += 1;
+		}
 	editorWidgetPackage.clear( );
-	for( ; index < count; ++index )
+	for( index = 0; index < destArrayPtrIndex; ++index )
 		delete destArrayPtr[ index ];
 }
 NodeInfoEditorDirector::~NodeInfoEditorDirector( ) {
@@ -80,6 +112,26 @@ bool NodeInfoEditorDirector::init( ) {
 	appendCreateWidget< JumpNodeWidget >( NodeEnum::NodeType::Point );
 	return true;
 }
+void NodeInfoEditorDirector::appendEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
+	if( node_info_widget == nullptr )
+		return;
+	size_t count = editorWidgetPackage.size( );
+	NodeInfoWidget **nodeInfoWidgetArrayPtr;
+	size_t index;
+	if( count ) {
+		nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+		for( index = 0; index < count; ++index )
+			if( nodeInfoWidgetArrayPtr[ index ] == node_info_widget )
+				return;
+		for( index = 0; index < count; ++index )
+			if( nodeInfoWidgetArrayPtr[ index ] == nullptr ) {
+				nodeInfoWidgetArrayPtr[ index ] = node_info_widget;
+				return;
+			}
+	}
+	editorWidgetPackage.emplace_back( node_info_widget );
+	node_info_widget->setMainWidgetScrollArea( mainWidgetScrollArea );
+}
 bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWidget *&result_node_info_editor_widget ) {
 	size_t count;
 	MTVector< MTKey, MTValue< MTCreateFunction > >::value_type *mapArrayPtr;
@@ -93,7 +145,9 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 	count = editorWidgetPackage.size( );
 	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
 	for( index = 0; index < count; ++index )
-		if( nodeInfoWidgetArrayPtr[ index ]->getNode( ) == node_ptr ) {
+		if( nodeInfoWidgetArrayPtr[ index ] == nullptr )
+			continue;
+		else if( nodeInfoWidgetArrayPtr[ index ]->getNode( ) == node_ptr ) {
 			result_node_info_editor_widget = nodeInfoWidgetArrayPtr[ index ];
 			return true;
 		}
@@ -111,10 +165,8 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 				result_node_info_editor_widget = arrayPtr[ index ].operator()( node_ptr );
 				if( result_node_info_editor_widget == nullptr )
 					continue; // 失败，继续下一个
-				result_node_info_editor_widget->setMainWidgetScrollArea( mainWidgetScrollArea );
-				editorWidgetPackage.emplace_back( result_node_info_editor_widget );
+				appendEditorWidgetPackage( result_node_info_editor_widget );
 				connect( result_node_info_editor_widget, &NodeInfoWidget::hide_signal, this, &NodeInfoEditorDirector::hide_NodeInfoWidget_signal );
-				result_node_info_editor_widget->move( mainWidget->pos( ) );
 				return true;
 			}
 			break; // 没有找到匹配

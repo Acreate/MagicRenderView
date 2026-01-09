@@ -34,7 +34,9 @@ public:
 	virtual bool init( );
 	virtual bool getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWidget *&result_node_info_editor_widget );
 	virtual void clearNodeEditorResources( );
+	virtual void releaseNodeEditor( );
 protected:
+	virtual void appendEditorWidgetPackage( NodeInfoWidget *node_info_widget );
 	virtual bool appendCreateWidget( MTKey key, const MTCreateFunction &create_function );
 	virtual bool checkCreateWidget( Node *node_ptr, NodeInfoWidget *create_widget );
 protected Q_SLOTS:
