@@ -6,12 +6,14 @@
 #include <QScrollBar>
 
 #include "../../../director/varDirector.h"
+#include "../../../widget/mainWidgetScrollArea.h"
 #include "../../node/node.h"
 #include "../bottomTool/bottomNodeInfoTool.h"
 #include "../editNodeInfoScrollArea/editorNodeInfoScrollArea.h"
 #include "../title/nodeInfoTitle.h"
 
 NodeInfoWidget::NodeInfoWidget( ) : editorNodeInfoScrollArea( nullptr ) {
+	setMinimumSize( 100, 250 );
 	varDirector = new VarDirector;
 	hide( );
 	titile = new NodeInfoTitle( this );
@@ -33,14 +35,26 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 		delete editorNodeInfoScrollArea;
 	delete varDirector;
 }
+void NodeInfoWidget::updatePos( ) {
+	if( mainWidgetScrollArea == nullptr )
+		return;
+	auto point = mainWidgetScrollArea->pos( );
+	point = mainWidgetScrollArea->mapToGlobal( point );
+	move( point );
+}
+void NodeInfoWidget::setMainWidgetScrollArea( MainWidgetScrollArea *main_widget_scroll_area ) {
+	mainWidgetScrollArea = main_widget_scroll_area;
+	updatePos( );
+}
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
-	if( editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
+	if( check_node_ptr == nullptr || editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
 		return false;
 	if( editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
 		return false;
 	titile->setTitleText( check_node_ptr->toQString( ) );
 	return true;
 }
+Node * NodeInfoWidget::getNode( ) const { return editorNodeInfoScrollArea->getCurrentNode( ); }
 QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
 }
@@ -55,10 +69,10 @@ bool NodeInfoWidget::event( QEvent *event ) {
 	auto type = event->type( );
 	switch( type ) {
 		case QEvent::Show :
+			updatePos( );
 			emit show_signal( this );
 			break;
 		case QEvent::Hide :
-			node = nullptr;
 			showPosType = WidgetEnum::ShowType::Center;
 			emit hide_signal( this );
 	}

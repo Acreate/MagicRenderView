@@ -104,6 +104,10 @@ void NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction( QAction *tr_ob
 		}
 }
 void NormalNodeEditorPropertyMenu::displayInfoWidget( ) {
+	if( nodeInfoWidget == nullptr )
+		return;
+	nodeInfoWidget->show( );
+	nodeInfoWidget->raise( );
 	emit show_node_edit_info_widget_signal( this, currentNode, nodeInfoWidget );
 }
 void NormalNodeEditorPropertyMenu::displayAtRefOutputNodeEnsureToWidget( QAction *tr_obj_ptr ) {

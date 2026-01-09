@@ -190,3 +190,7 @@ bool MainWindow::event( QEvent *event ) {
 	bool runEventResult = QMainWindow::event( event );
 	return runEventResult;
 }
+void MainWindow::closeEvent( QCloseEvent *event ) {
+	QMainWindow::closeEvent( event );
+	instancePtr->quit( );
+}

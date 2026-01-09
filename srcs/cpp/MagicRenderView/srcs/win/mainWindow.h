@@ -61,7 +61,7 @@ protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 	bool event( QEvent *event ) override;
-protected:
+	void closeEvent( QCloseEvent *event ) override;
 Q_SIGNALS:
 	void release_signal( MainWindow *release_ptr );
 };

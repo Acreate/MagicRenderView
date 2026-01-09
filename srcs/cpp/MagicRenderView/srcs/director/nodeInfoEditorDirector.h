@@ -27,13 +27,18 @@ protected:
 	template< typename K, typename V >
 	using MTVector = std::vector< std::pair< K, V > >;
 	MTVector< MTKey, MTValue< MTCreateFunction > > generaterNodeInfoEditorWidgetMap;
+	std::vector< NodeInfoWidget * > editorWidgetPackage;
 public:
 	NodeInfoEditorDirector( );
+	~NodeInfoEditorDirector( ) override;
 	virtual bool init( );
 	virtual bool getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWidget *&result_node_info_editor_widget );
+	virtual void clearNodeEditorResources( );
 protected:
 	virtual bool appendCreateWidget( MTKey key, const MTCreateFunction &create_function );
 	virtual bool checkCreateWidget( Node *node_ptr, NodeInfoWidget *create_widget );
+protected Q_SLOTS:
+	virtual void hide_NodeInfoWidget_signal( NodeInfoWidget *hide_ptr );
 protected:
 	template< typename TNodeInfoEditorWidget, typename = std::enable_if_t< std::is_base_of_v< NodeInfoWidget, TNodeInfoEditorWidget > > >
 	bool appendCreateWidget( MTKey key ) {

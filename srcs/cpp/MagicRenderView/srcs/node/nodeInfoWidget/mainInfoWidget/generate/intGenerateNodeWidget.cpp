@@ -11,8 +11,10 @@ bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	IntGenerateNode *intGenerateNode = qobject_cast< IntGenerateNode * >( check_node_ptr );
 	if( intGenerateNode == nullptr )
 		return false;
-	intGenerateNodeEditor->setBindGenerateVector( intGenerateNode->getGenerateVarPtr( ) );
 	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
+		return false;
+	intGenerateNodeEditor->setBindGenerateVector( intGenerateNode->getGenerateVarPtr( ) );
+	if( intGenerateNodeEditor->updateGenerateItemInfo( ) == false )
 		return false;
 	return true;
 }

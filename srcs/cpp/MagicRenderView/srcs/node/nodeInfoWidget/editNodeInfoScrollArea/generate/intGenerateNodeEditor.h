@@ -19,8 +19,6 @@ protected:
 	GenerateRenderWidget *generateRenderWidget;
 protected:
 	void releaseResource( ) override;
-	virtual bool updateGenerateItemInfo( );
-	virtual void updateLayout( );
 protected:
 	virtual void addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant );
 	virtual void requesPopItemMenu( QMenu *pop_menu );
@@ -30,6 +28,8 @@ public:
 	virtual std::vector< int64_t > * getBindGenerateVector( ) const { return bindGenerateVector; }
 	virtual void setBindGenerateVector( std::vector< int64_t > *bind_generate_vector ) { bindGenerateVector = bind_generate_vector; }
 	virtual void syncVarVector( );
+	virtual bool updateGenerateItemInfo( );
+	virtual void updateLayout( );
 protected:
 	void resizeEvent( QResizeEvent * ) override;
 	void showEvent( QShowEvent *event ) override;

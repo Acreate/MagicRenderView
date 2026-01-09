@@ -20,7 +20,6 @@ private:
 	friend class NodeDirector;
 protected:
 	WidgetEnum::ShowType showPosType;
-	Node *node;
 	NodeInfoTitle *titile;
 	BottomNodeInfoTool *buttonWidget;
 	EditorNodeInfoScrollArea *editorNodeInfoScrollArea;
@@ -28,9 +27,13 @@ protected:
 	QScrollBar *vScrollBar;
 	QScrollBar *hScrollBar;
 	QMenuBar *mainWindowMenuBar;
+	MainWidgetScrollArea *mainWidgetScrollArea = nullptr;
 public:
 	NodeInfoWidget( );
 	~NodeInfoWidget( ) override;
+	void updatePos( );
+	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
+	virtual void setMainWidgetScrollArea( MainWidgetScrollArea *main_widget_scroll_area );
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 	virtual bool initNodeInfo( Node *check_node_ptr );
 	/// @brief 释放资源
@@ -45,7 +48,7 @@ public:
 	virtual bool copyVarToNode( size_t &copy_cout ) { return true; }
 	/// @brief 获取节点
 	/// @return 节点
-	virtual Node * getNode( ) const { return node; }
+	virtual Node * getNode( ) const;
 	/// @brief 获取标题
 	/// @return 标题
 	virtual QString getTitleText( ) const;

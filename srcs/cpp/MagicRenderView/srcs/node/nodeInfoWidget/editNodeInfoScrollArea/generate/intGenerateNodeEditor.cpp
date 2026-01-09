@@ -71,9 +71,6 @@ IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorN
 bool IntGenerateNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
-	if( bindGenerateVector == nullptr )
-		return false;
-	updateGenerateItemInfo( );
 	return true;
 }
 
