@@ -48,6 +48,7 @@ bool StartNode::readNextBeginNodeData( ) {
 bool StartNode::readyNodeRunData( ) {
 	readUpdate = true;
 	*var = 0;
+	readUpdate = false;
 	return true;
 }
 bool StartNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {

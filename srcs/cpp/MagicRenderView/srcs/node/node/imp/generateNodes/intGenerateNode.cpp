@@ -108,8 +108,8 @@ bool IntGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) 
 	if( parentNodeDirector->cast_ptr( generateVarPtr, index ) == false )
 		return false;
 	*arrayIndex = *index;
-	if( *arrayIndex > *arrayCount ) // 如果大于，则取重复
-		*arrayIndex = *arrayIndex - *arrayCount;
+	if( *arrayIndex >= *arrayCount ) // 如果大于，则取重复
+		*arrayIndex = *arrayIndex % *arrayCount;
 	auto data = overVarPtr->data( );
 	*currentIndexVar = data[ *arrayIndex ];
 	return true;
