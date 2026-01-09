@@ -11,6 +11,7 @@ protected:
 	IntGenerateNodeEditor *intGenerateNodeEditor;
 public:
 	IntGenerateNodeWidget(  );
+	bool checkNodeValid( Node *check_node_ptr ) override;
 	bool initNodeInfo( Node *check_node_ptr ) override;
 protected:
 	void updateLayout( ) override;

@@ -18,3 +18,15 @@ bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	}
 	return false;
 }
+bool BeginNodeWidget::checkNodeValid( Node *check_node_ptr ) {
+	auto nodeType = check_node_ptr->getNodeType( );
+	switch( nodeType ) {
+		case NodeEnum::NodeType::Begin :
+		case NodeEnum::NodeType::End :
+			return true;
+	}
+	return NodeInfoWidget::checkNodeValid( check_node_ptr );
+}
+void BeginNodeWidget::updateLayout( ) {
+	NodeInfoWidget::updateLayout( );
+}

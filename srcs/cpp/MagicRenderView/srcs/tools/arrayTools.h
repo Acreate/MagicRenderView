@@ -13,7 +13,7 @@ namespace ArrayTools {
 	/// @return true 表示存在，start_index 返回下标
 	template< typename TVectorUnityType >
 	bool findIndex( const TVectorUnityType *left, const size_t &count, const TVectorUnityType &find_target_unity, size_t &start_index ) {
-		if( count == 0 || start_index == count || start_index > count )
+		if( left == nullptr || count == 0 || start_index == count || start_index > count )
 			return false;
 		for( ; start_index < count; ++start_index )
 			if( left[ start_index ] == find_target_unity )

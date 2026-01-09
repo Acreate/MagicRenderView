@@ -34,7 +34,7 @@ bool NodeInfoEditorDirector::appendCreateWidget( MTKey key, const MTCreateFuncti
 	return true;
 }
 bool NodeInfoEditorDirector::checkCreateWidget( Node *node_ptr, NodeInfoWidget *create_widget ) {
-	if( create_widget->initNodeInfo( node_ptr ) == false )
+	if( create_widget->checkNodeValid( node_ptr ) == false )
 		return false;
 	return true;
 }

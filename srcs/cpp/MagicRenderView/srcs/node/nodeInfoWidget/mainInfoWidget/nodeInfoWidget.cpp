@@ -40,6 +40,9 @@ void NodeInfoWidget::updateLayout( ) {
 
 }
 
+bool NodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
+	return false;
+}
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr || editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
 		return false;

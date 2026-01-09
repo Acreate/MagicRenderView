@@ -107,6 +107,8 @@ void NormalNodeEditorPropertyMenu::removeOutoutPortRefLinkAction( QAction *tr_ob
 void NormalNodeEditorPropertyMenu::displayInfoWidget( ) {
 	if( nodeInfoWidget == nullptr )
 		return;
+	if( nodeInfoWidget->initNodeInfo( currentNode ) == false )
+		return;
 	if( nodeInfoWidget->isHidden( ) )
 		nodeInfoWidget->show( );
 	else

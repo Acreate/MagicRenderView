@@ -69,10 +69,15 @@ QString NodeDirector::nodeArrayToString( const Node *const *printf_nodes, const 
 	QStringList nodeToStringList;
 	QString outInfo( "class { \n%1 \n\t}[%2];" );
 	QString number( "[%2] : %1 = %3 ;" );
+	const QMetaObject *metaObject;
+	const char *className;
+	QString nodeToString;
 	for( size_t index = 0; index < printf_node_count; index += 1 ) {
-		auto metaObject = printf_nodes[ index ]->metaObject( );
-		auto className = metaObject->className( );
-		auto nodeToString = printf_nodes[ index ]->toQString( );
+		if( printf_nodes[ index ] == nullptr )
+			continue;
+		metaObject = printf_nodes[ index ]->metaObject( );
+		className = metaObject->className( );
+		nodeToString = printf_nodes[ index ]->toQString( );
 		nodeToStringList.append( number.arg( className ).arg( index ).arg( nodeToString ) );
 	}
 	return outInfo.arg( nodeToStringList.join( "\n" ) ).arg( printf_node_count );
@@ -112,7 +117,7 @@ void NodeDirector::releaseNodeResources( ) {
 	}
 }
 void NodeDirector::releaseNodeInfoWidgetResources( ) {
-	
+
 }
 void NodeDirector::releaseNodeHistoryResources( ) {
 	size_t count = nodeHistorys.size( );
@@ -147,7 +152,7 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 		delete createNodePtr;
 		return nullptr;
 	}
-	
+
 	return createNodePtr;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {

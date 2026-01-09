@@ -31,6 +31,7 @@ public:
 	NodeInfoWidget( );
 	~NodeInfoWidget( ) override;
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
+	virtual bool checkNodeValid(Node* check_node_ptr);
 	virtual bool initNodeInfo( Node *check_node_ptr );
 	/// @brief 释放资源
 	/// @return 资源释放数量

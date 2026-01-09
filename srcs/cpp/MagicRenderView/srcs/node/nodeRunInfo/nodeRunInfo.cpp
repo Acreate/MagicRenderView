@@ -145,7 +145,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 			case NodeEnum::NodeType::Cache :
 			case NodeEnum::NodeType::Array :
 			case NodeEnum::NodeType::Unity :
-				outputRefNodeCount = currentNode->refOutputPortNode.size( );
+				outputRefNodeCount = currentNode->outputPortRefThisNodeVector.size( );
 				if( outputRefNodeCount == 0 ) {
 					// 无根节点
 					notRootNodeVector.emplace_back( currentNode );
@@ -181,8 +181,8 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	// 匹配依赖为 NodeEnum::NodeType::Begin 类型的节点
 	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
 		currentNode = buffNodeArrayPtr[ builderNodeIndex ];
-		outputRefNodeCount = currentNode->refOutputPortNode.size( );
-		outputRefNodeArray = currentNode->refOutputPortNode.data( );
+		outputRefNodeCount = currentNode->outputPortRefThisNodeVector.size( );
+		outputRefNodeArray = currentNode->outputPortRefThisNodeVector.data( );
 		for( outputRefNodeIndex = 0; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1 )
 			if( outputRefNodeArray[ outputRefNodeIndex ]->getNodeType( ) != NodeEnum::NodeType::Begin )
 				break;
@@ -209,10 +209,11 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	do {
 		for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
 			currentNode = buffNodeArrayPtr[ builderNodeIndex ];
-			outputRefNodeCount = currentNode->refOutputPortNode.size( );
-			outputRefNodeArray = currentNode->refOutputPortNode.data( );
-			for( outputRefNodeIndex = 0, runNodeCount = 0; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1, runNodeCount = 0 )
-				if( ArrayTools::findIndex( buffNodeArrayPtr, runNodeIndex, outputRefNodeArray[ outputRefNodeIndex ], runNodeCount ) )
+			outputRefNodeCount = currentNode->outputPortRefThisNodeVector.size( );
+			outputRefNodeArray = currentNode->outputPortRefThisNodeVector.data( );
+			outputRefNodeIndex = 0, runNodeCount = 0;
+			for( ; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1, runNodeCount = 0 )
+				if( ArrayTools::findIndex( runNodeArrayPtr, runNodeIndex, outputRefNodeArray[ outputRefNodeIndex ], runNodeCount ) == false )
 					break;
 			if( outputRefNodeIndex != outputRefNodeCount )
 				continue;

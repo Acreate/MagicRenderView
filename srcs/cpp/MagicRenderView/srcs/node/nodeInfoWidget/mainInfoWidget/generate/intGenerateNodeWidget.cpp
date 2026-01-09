@@ -7,6 +7,11 @@ IntGenerateNodeWidget::IntGenerateNodeWidget( ) : NodeInfoWidget( ) {
 	editorNodeInfoScrollArea = intGenerateNodeEditor = new IntGenerateNodeEditor( this );
 	//setMinimumSize( 100, 200 );
 }
+bool IntGenerateNodeWidget::checkNodeValid( Node *check_node_ptr ) {
+	if( check_node_ptr->getNodeType( ) == NodeEnum::NodeType::Generate )
+		return true;
+	return NodeInfoWidget::checkNodeValid( check_node_ptr );
+}
 bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( check_node_ptr->getNodeType( ) != NodeEnum::NodeType::Generate )
 		return false;

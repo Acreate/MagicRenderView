@@ -77,8 +77,10 @@ protected:
 	NodeStyleTypePen *nodeStyleTypePen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
-	std::vector< Node * > refInputPortNode;
-	std::vector< Node * > refOutputPortNode;
+	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
+	std::vector< Node * > thisInputPortRefNodeVector;
+	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
+	std::vector< Node * > outputPortRefThisNodeVector;
 private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
@@ -134,7 +136,7 @@ public:
 	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
 	/// @return 失败返回 false
 	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) {
-		result_need_run_ref_node_vector = refOutputPortNode;
+		result_need_run_ref_node_vector = outputPortRefThisNodeVector;
 		return true;
 	}
 	/// @brief 填充输出端口
@@ -142,7 +144,7 @@ public:
 	/// @param ndoe_run_start_data_time
 	/// @return 失败返回 false
 	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
-		result_next_run_advise_node_vector = refInputPortNode;
+		result_next_run_advise_node_vector = thisInputPortRefNodeVector;
 		return true;
 	}
 	/// @brief 节点运行调用
@@ -152,8 +154,12 @@ public:
 	~Node( ) override;
 	Node( const QString &node_name );
 	virtual bool initEx( MainWidget *parent );
-	virtual const std::vector< Node * > & getRefInputPortNode( ) const { return refInputPortNode; }
-	virtual const std::vector< Node * > & getRefOutputPortNode( ) const { return refOutputPortNode; }
+	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
+	/// @return 依赖序列
+	virtual const std::vector< Node * > & getThisInputPortRefNodeVector( ) const { return thisInputPortRefNodeVector; }
+	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
+	/// @return 依赖序列
+	virtual const std::vector< Node * > & getOutputPortRefThisNodeVector( ) const { return outputPortRefThisNodeVector; }
 	virtual bool hasRefInputNodeRef( InputPort *input_port ) const;
 	virtual bool hasRefOutputNodeRef( OutputPort *output_port ) const;
 	virtual InputPort * getInputPort( const QString &port_name ) const;
@@ -280,7 +286,7 @@ protected:
 	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( OutputPort *output_port, void *new_par );
 	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
-	
+
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
