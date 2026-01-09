@@ -4,7 +4,7 @@
 
 #include "../app/application.h"
 #include "../node/node/node.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/begin/startNodeInfo/startNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../widget/mainWidget.h"
@@ -123,8 +123,8 @@ bool NodeInfoEditorDirector::init( ) {
 	mainWindow = instancePtr->getMainWindow( );
 	mainWidgetScrollArea = mainWindow->getMainWidgetScrollArea( );
 	mainWidget = mainWindow->getMainWidget( );
-	appendCreateWidget< BeginNodeWidget >( NodeEnum::NodeType::Begin );
-	appendCreateWidget< BeginNodeWidget >( NodeEnum::NodeType::End );
+	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::Begin );
+	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::End );
 	appendCreateWidget< IntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	return true;
 }

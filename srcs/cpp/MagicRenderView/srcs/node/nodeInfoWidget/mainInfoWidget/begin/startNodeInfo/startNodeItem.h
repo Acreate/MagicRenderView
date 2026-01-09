@@ -1,13 +1,14 @@
-﻿#ifndef BEGINNODEITEM_H_H_HEAD__FILE__
-#define BEGINNODEITEM_H_H_HEAD__FILE__
-#pragma once
+﻿#ifndef STARTNODEITEM_H_H_HEAD__FILE__
+#define STARTNODEITEM_H_H_HEAD__FILE__
+
+
 #include <QWidget>
 #include <qpen.h>
 
 class Node;
 class QVBoxLayout;
 class Node;
-class BeginNodeItem : public QWidget {
+class StartNodeItem : public QWidget {
 	Q_OBJECT;
 private:
 	using TCurrentAction = std::pair< QAction *, QAction * >;
@@ -29,8 +30,8 @@ protected:
 	virtual void selectionCurrentAction( );
 	virtual void releaseNodeArrayInfo( );
 public:
-	BeginNodeItem( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
-	~BeginNodeItem( ) override;
+	StartNodeItem( QWidget *parent = nullptr, const Qt::WindowFlags &f = Qt::WindowFlags( ) );
+	~StartNodeItem( ) override;
 	virtual void setNodeRefVector( const std::vector< Node * > &node_ref_link_infos );
 	virtual const QPen & getItemPen( ) const { return itemPen; }
 	virtual void setItemPen( const QPen &item_pen ) { itemPen = item_pen; }
@@ -47,5 +48,4 @@ Q_SIGNALS:
 	void showNodeInfoWidgetLeft( Node *node_ref_link_info );
 	void showNodeInfoWidgetRight( Node *node_ref_link_info );
 };
-
-#endif // BEGINNODEITEM_H_H_HEAD__FILE__
+#endif // STARTNODEITEM_H_H_HEAD__FILE__

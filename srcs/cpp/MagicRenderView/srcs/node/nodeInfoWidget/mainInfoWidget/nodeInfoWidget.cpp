@@ -6,11 +6,11 @@
 #include <QScrollBar>
 
 #include "../../../director/varDirector.h"
-#include "../../../widget/mainWidgetScrollArea.h"
 #include "../../node/node.h"
 #include "../bottomTool/bottomNodeInfoTool.h"
-#include "../editNodeInfoScrollArea/editorNodeInfoScrollArea.h"
+
 #include "../title/nodeInfoTitle.h"
+#include "editorNodeInfoScrollArea.h"
 
 NodeInfoWidget::NodeInfoWidget( ) : editorNodeInfoScrollArea( nullptr ) {
 	setMinimumSize( 100, 250 );

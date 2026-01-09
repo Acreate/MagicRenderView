@@ -2,7 +2,7 @@
 
 #include "../../../node/imp/generateNodes/intGenerateNode.h"
 #include "../../bottomTool/bottomNodeInfoTool.h"
-#include "../../editNodeInfoScrollArea/generate/intGenerateNodeEditor.h"
+#include "intGenerateNodeEditor.h"
 IntGenerateNodeWidget::IntGenerateNodeWidget( ) : NodeInfoWidget( ) {
 	editorNodeInfoScrollArea = intGenerateNodeEditor = new IntGenerateNodeEditor( this );
 	//setMinimumSize( 100, 200 );

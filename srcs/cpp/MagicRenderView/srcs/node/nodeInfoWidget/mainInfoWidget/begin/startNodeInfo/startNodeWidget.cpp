@@ -1,17 +1,14 @@
-﻿#include "beginNodeWidget.h"
+﻿#include "startNodeWidget.h"
 
 #include <node/node/node.h>
 
-#include <node/nodeInfoWidget/editNodeInfoScrollArea/begin/beginNodeEditor.h>
+#include "startNodeEditor.h"
 
-#include "../../bottomTool/bottomNodeInfoTool.h"
-#include "../../title/nodeInfoTitle.h"
-
-BeginNodeWidget::BeginNodeWidget( ) : NodeInfoWidget( ) {
-	editorNodeInfoScrollArea = beginNodeEditor = new BeginNodeEditor( this );
+StartNodeWidget::StartNodeWidget( ) : NodeInfoWidget( ) {
+	editorNodeInfoScrollArea = startNodeEditor = new StartNodeEditor( this );
 }
 
-bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
+bool StartNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	auto nodeType = check_node_ptr->getNodeType( );
 	switch( nodeType ) {
 		case NodeEnum::NodeType::Begin :
@@ -21,7 +18,7 @@ bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	}
 	return false;
 }
-bool BeginNodeWidget::checkNodeValid( Node *check_node_ptr ) {
+bool StartNodeWidget::checkNodeValid( Node *check_node_ptr ) {
 	auto nodeType = check_node_ptr->getNodeType( );
 	switch( nodeType ) {
 		case NodeEnum::NodeType::Begin :
@@ -30,6 +27,6 @@ bool BeginNodeWidget::checkNodeValid( Node *check_node_ptr ) {
 	}
 	return NodeInfoWidget::checkNodeValid( check_node_ptr );
 }
-void BeginNodeWidget::updateLayout( ) {
+void StartNodeWidget::updateLayout( ) {
 	NodeInfoWidget::updateLayout( );
 }

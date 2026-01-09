@@ -1,33 +1,29 @@
-﻿#include "beginNodeEditor.h"
+﻿#include "startNodeEditor.h"
 
 #include <QVBoxLayout>
 #include <qcoreevent.h>
 
-#include "../../../../app/application.h"
+#include "../../../../../app/application.h"
+#include "../../../../../director/nodeDirector.h"
+#include "../../../../../director/printerDirector.h"
+#include "../../../../../srack/srackInfo.h"
+#include "../../../../../tools/arrayTools.h"
+#include "../../../../../tools/vectorTools.h"
+#include "../../../../node/node.h"
 
-#include "../../../../director/nodeDirector.h"
-#include "../../../../director/printerDirector.h"
-#include "../../../../srack/srackInfo.h"
-#include "../../../../tools/arrayTools.h"
-#include "../../../../tools/vectorTools.h"
+#include "startNodeItem.h"
 
-#include "../../../node/node.h"
 
-#include "../../mainInfoWidget/nodeInfoWidget.h"
+StartNodeEditor::StartNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 
-#include "subWidget/beginNodeItem.h"
-
-BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
-	leftWidget = nullptr;
-	rightWidget = nullptr;
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
-	beginItem = new BeginNodeItem( mainWidget );
+	beginItem = new StartNodeItem( mainWidget );
 	mainLayout->addWidget( beginItem );
-	processItem = new BeginNodeItem( mainWidget );
+	processItem = new StartNodeItem( mainWidget );
 	mainLayout->addWidget( processItem );
-	endItem = new BeginNodeItem( mainWidget );
+	endItem = new StartNodeItem( mainWidget );
 	mainLayout->addWidget( endItem );
 
 	auto itemPen = beginItem->getItemPen( );
@@ -61,19 +57,19 @@ BeginNodeEditor::BeginNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrol
 	endItem->setIsPopMenu( false );
 }
 
-BeginNodeEditor::~BeginNodeEditor( ) {
+StartNodeEditor::~StartNodeEditor( ) {
 
 }
-bool BeginNodeEditor::initNode( Node *init_node ) {
+bool StartNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
 
-	beginNodeRefLinkInfo = init_node;
+	startNodePtr = init_node;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
-		if( findRefBeginNode( beginNodeRefLinkInfo, beginNodeRefLinkInfo ) == false )
+		if( findRefBeginNode( startNodePtr, startNodePtr ) == false )
 			return false;
 	std::vector< Node * > resultNodeRefLinkVector;
-	if( analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )
+	if( analysisNodeRef( startNodePtr, resultNodeRefLinkVector ) == false )
 		return false;
 	if( sortProcessNodeRefArray( resultNodeRefLinkVector, beginNodeRefLinkVector, processNodeRefLinkVector, endNodeRefLinkVector ) == false )
 		return false; // 缺少依赖
@@ -82,7 +78,7 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 	endItem->setNodeRefVector( endNodeRefLinkVector );
 	return true;
 }
-bool BeginNodeEditor::findRefBeginNode( Node *start_find_current_node, Node *&result_begin_node ) {
+bool StartNodeEditor::findRefBeginNode( Node *start_find_current_node, Node *&result_begin_node ) {
 	auto refOutNodes = start_find_current_node->getOutputPortRefThisNodeVector( );
 	size_t count = refOutNodes.size( );
 	if( count == 0 )
@@ -96,7 +92,7 @@ bool BeginNodeEditor::findRefBeginNode( Node *start_find_current_node, Node *&re
 		}
 	return false;
 }
-bool BeginNodeEditor::analysisNodeRef( Node *begin_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
+bool StartNodeEditor::analysisNodeRef( Node *begin_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
 	if( begin_node_ref_link_info == nullptr )
 		return false;
 	auto &nodes = begin_node_ref_link_info->getThisInputPortRefNodeVector( );
@@ -127,7 +123,7 @@ bool BeginNodeEditor::analysisNodeRef( Node *begin_node_ref_link_info, std::vect
 	result_node_ref_link_vector = clone;
 	return true;
 }
-bool BeginNodeEditor::analysisOutputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
+bool StartNodeEditor::analysisOutputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
 
 	auto &nodes = foreach_output_port_node->getThisInputPortRefNodeVector( );
 	size_t count = nodes.size( );
@@ -141,7 +137,7 @@ bool BeginNodeEditor::analysisOutputPortRefNodeVector( Node *foreach_output_port
 			return false;
 	return true;
 }
-bool BeginNodeEditor::analysisInputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
+bool StartNodeEditor::analysisInputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
 
 	auto &nodes = foreach_output_port_node->getOutputPortRefThisNodeVector( );
 	size_t count = nodes.size( );
@@ -155,7 +151,7 @@ bool BeginNodeEditor::analysisInputPortRefNodeVector( Node *foreach_output_port_
 			return false;
 	return true;
 }
-bool BeginNodeEditor::sortProcessNodeRefArray( const std::vector< Node * > &sort_vector, std::vector< Node * > &result_begin_vector, std::vector< Node * > &result_process_vector, std::vector< Node * > &result_end_vector ) {
+bool StartNodeEditor::sortProcessNodeRefArray( const std::vector< Node * > &sort_vector, std::vector< Node * > &result_begin_vector, std::vector< Node * > &result_process_vector, std::vector< Node * > &result_end_vector ) {
 	size_t sortCount = sort_vector.size( );
 	if( sortCount == 0 )
 		return true; // 不需要排序
@@ -255,10 +251,10 @@ bool BeginNodeEditor::sortProcessNodeRefArray( const std::vector< Node * > &sort
 		buffNodeArrayPtr[ builderNodeIndex ] = sortArray[ builderNodeIndex ];
 	return true;
 }
-void BeginNodeEditor::releaseResource( ) {
+void StartNodeEditor::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
 	beginNodeRefLinkVector.clear( );
 	processNodeRefLinkVector.clear( );
 	endNodeRefLinkVector.clear( );
-	beginNodeRefLinkInfo = nullptr;
+	startNodePtr = nullptr;
 }
