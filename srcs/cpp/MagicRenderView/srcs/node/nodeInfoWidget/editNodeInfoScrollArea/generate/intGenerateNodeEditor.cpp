@@ -31,8 +31,11 @@ bool IntGenerateNodeEditor::updateGenerateItemInfo( ) {
 	addGenerateTool->setMaxIndex( count + 1 );
 	return true;
 }
-void IntGenerateNodeEditor::updateLayout( ) {
-	auto viewportSize = maximumViewportSize( );
+void IntGenerateNodeEditor::updateEditorNodeInfoLayout( ) {
+	QWidget *widget = viewport( );
+	if( widget == nullptr )
+		return;
+	auto viewportSize = widget->size( );
 	int currentWidth = viewportSize.width( );
 	if( currentWidth < 1 )
 		return;
@@ -43,8 +46,12 @@ void IntGenerateNodeEditor::updateLayout( ) {
 	addGenerateTool->setFixedWidth( currentWidth );
 	int addGenerateToolHeight = addGenerateTool->height( );
 	generateRenderScrollArea->move( 0, addGenerateToolHeight );
-	viewportSize = QSize( currentWidth, currentHeight - addGenerateToolHeight );
+	currentHeight -= addGenerateToolHeight;
+	if( currentHeight < 1 )
+		currentHeight = 0;
+	viewportSize = QSize( currentWidth, currentHeight );
 	generateRenderScrollArea->setFixedSize( viewportSize );
+	generateRenderWidget->updateLayoutSort( );
 }
 void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
 	generateRenderWidget->createItem( index );
@@ -57,6 +64,7 @@ void IntGenerateNodeEditor::requesPopItemMenu( QMenu *pop_menu ) {
 IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 	setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+	setWidgetResizable( true );
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	addGenerateTool = new AddGenerateTool( mainWidget );
@@ -86,9 +94,9 @@ void IntGenerateNodeEditor::syncVarVector( ) {
 }
 void IntGenerateNodeEditor::resizeEvent( QResizeEvent *resize_event ) {
 	EditorNodeInfoScrollArea::resizeEvent( resize_event );
-	updateLayout( );
+	updateEditorNodeInfoLayout( );
 }
 void IntGenerateNodeEditor::showEvent( QShowEvent *event ) {
 	EditorNodeInfoScrollArea::showEvent( event );
-	updateLayout( );
+	//updateEditorNodeInfoLayout( );
 }

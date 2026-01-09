@@ -35,20 +35,11 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 		delete editorNodeInfoScrollArea;
 	delete varDirector;
 }
-void NodeInfoWidget::updatePos( ) {
-	if( mainWidgetScrollArea == nullptr )
-		return;
-	auto point = mainWidgetScrollArea->pos( );
-	point = mainWidgetScrollArea->mapToGlobal( point );
-	move( point );
-}
+
 void NodeInfoWidget::updateLayout( ) {
 
 }
-void NodeInfoWidget::setMainWidgetScrollArea( MainWidgetScrollArea *main_widget_scroll_area ) {
-	mainWidgetScrollArea = main_widget_scroll_area;
-	updatePos( );
-}
+
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr || editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
 		return false;
@@ -75,7 +66,6 @@ bool NodeInfoWidget::event( QEvent *event ) {
 			updateLayout( );
 			break;
 		case QEvent::Show :
-			updatePos( );
 			updateLayout( );
 			emit show_signal( this );
 			break;

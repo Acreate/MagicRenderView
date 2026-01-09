@@ -1,5 +1,7 @@
 ﻿#include "nodeInfoEditorDirector.h"
 
+#include <QScrollBar>
+
 #include "../app/application.h"
 #include "../node/node/node.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
@@ -7,6 +9,7 @@
 #include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../widget/mainWidget.h"
+#include "../widget/mainWidgetScrollArea.h"
 #include "../win/mainWindow.h"
 bool NodeInfoEditorDirector::appendCreateWidget( MTKey key, const MTCreateFunction &create_function ) {
 	size_t count;
@@ -145,8 +148,25 @@ void NodeInfoEditorDirector::appendEditorWidgetPackage( NodeInfoWidget *node_inf
 				return;
 			}
 	}
+	auto viewport = mainWidgetScrollArea->viewport( );
+	QSize cureateWidgetSizet = viewport->size( );
+	int width = cureateWidgetSizet.width( );
+	width = width / 3;
+	QPoint point( width, 0 );
+	point = viewport->mapToGlobal( point );
+	node_info_widget->move( point );
+	cureateWidgetSizet.setWidth( width );
+	QScrollBar *verticalScrollBar = mainWidgetScrollArea->horizontalScrollBar( );
+	int newHeight;
+	if( verticalScrollBar ) {
+		newHeight = cureateWidgetSizet.height( ) - verticalScrollBar->height( );
+		if( newHeight > 0 )
+			cureateWidgetSizet.setHeight( newHeight );
+		else
+			cureateWidgetSizet.setHeight( 0 );
+	}
+	node_info_widget->resize( cureateWidgetSizet );
 	editorWidgetPackage.emplace_back( node_info_widget );
-	node_info_widget->setMainWidgetScrollArea( mainWidgetScrollArea );
 }
 bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWidget *&result_node_info_editor_widget ) {
 	size_t count;

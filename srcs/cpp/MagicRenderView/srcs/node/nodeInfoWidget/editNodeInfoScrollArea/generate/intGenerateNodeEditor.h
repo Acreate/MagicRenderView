@@ -29,7 +29,7 @@ public:
 	virtual void setBindGenerateVector( std::vector< int64_t > *bind_generate_vector ) { bindGenerateVector = bind_generate_vector; }
 	virtual void syncVarVector( );
 	virtual bool updateGenerateItemInfo( );
-	virtual void updateLayout( );
+	virtual void updateEditorNodeInfoLayout( );
 protected:
 	void resizeEvent( QResizeEvent * ) override;
 	void showEvent( QShowEvent *event ) override;

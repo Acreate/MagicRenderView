@@ -64,8 +64,6 @@ protected:
 	QWidget *outputPortWidget;
 	/// @brief 节点输出布局
 	QVBoxLayout *outputPortWidgetLayout;
-	/// @brief 节点信息显示菜单
-	NodeInfoWidget *nodeInfoWidget;
 	/// @brief 节点边缘
 	int nodeBorderWidth;
 	/// @brief 生成变量类型（仅在生成节点有效）

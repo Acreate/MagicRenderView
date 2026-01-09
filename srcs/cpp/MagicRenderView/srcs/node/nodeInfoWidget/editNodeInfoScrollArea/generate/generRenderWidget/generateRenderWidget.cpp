@@ -24,7 +24,7 @@ void GenerateRenderWidget::updateLayoutSort( ) {
 		offsetY += intGenerateItemWidgetArratPtr[ intGenerateItemWidgetArratIndex ]->height( );
 
 	}
-	setFixedSize( currentWidth, offsetY );
+	setMinimumSize( currentWidth, offsetY );
 }
 void GenerateRenderWidget::createItem( const size_t &index ) {
 	auto createWidgetItem = new GenerateItemWidget( this );
