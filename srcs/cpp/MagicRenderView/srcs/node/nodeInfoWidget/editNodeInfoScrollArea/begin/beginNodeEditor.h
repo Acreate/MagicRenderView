@@ -28,7 +28,7 @@ protected:
 	virtual bool analysisNodeRef( Node *begin_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector );
 	virtual bool analysisOutputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector );
 	virtual bool analysisInputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector );
-	virtual bool sortProcessNodeRefArray( const std::vector< Node * >::pointer &sort_target_array_ptr, const size_t &sort_target_array_count );
+	virtual bool sortProcessNodeRefArray( const std::vector< Node * > &sort_vector, std::vector< Node * > &result_begin_vector, std::vector< Node * > &result_process_vector, std::vector< Node * > &result_end_vector );
 protected:
 	void releaseResource( ) override;
 public:

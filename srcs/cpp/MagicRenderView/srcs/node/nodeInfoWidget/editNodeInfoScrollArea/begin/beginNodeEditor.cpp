@@ -75,9 +75,7 @@ bool BeginNodeEditor::initNode( Node *init_node ) {
 	std::vector< Node * > resultNodeRefLinkVector;
 	if( analysisNodeRef( beginNodeRefLinkInfo, resultNodeRefLinkVector ) == false )
 		return false;
-	size_t count = resultNodeRefLinkVector.size( );
-	auto nodeRefLinkInfoArrayPtr = resultNodeRefLinkVector.data( );
-	if( sortProcessNodeRefArray( nodeRefLinkInfoArrayPtr, count ) == false )
+	if( sortProcessNodeRefArray( resultNodeRefLinkVector, beginNodeRefLinkVector, processNodeRefLinkVector, endNodeRefLinkVector ) == false )
 		return false; // 缺少依赖
 	beginItem->setNodeRefVector( beginNodeRefLinkVector );
 	processItem->setNodeRefVector( processNodeRefLinkVector );
@@ -157,31 +155,25 @@ bool BeginNodeEditor::analysisInputPortRefNodeVector( Node *foreach_output_port_
 			return false;
 	return true;
 }
-bool BeginNodeEditor::sortProcessNodeRefArray( const std::vector< Node * >::pointer &sort_target_array_ptr, const size_t &sort_target_array_count ) {
-	if( sort_target_array_ptr == nullptr )
-		return false; // 数组不可访问
-	if( sort_target_array_count == 0 )
+bool BeginNodeEditor::sortProcessNodeRefArray( const std::vector< Node * > &sort_vector, std::vector< Node * > &result_begin_vector, std::vector< Node * > &result_process_vector, std::vector< Node * > &result_end_vector ) {
+	size_t sortCount = sort_vector.size( );
+	if( sortCount == 0 )
 		return true; // 不需要排序
-	// 开始节点
-	std::vector< Node * > beginVector;
-	// 结束节点
-	std::vector< Node * > endVector;
-	// 分配流程
-	std::vector< Node * > processVector;
-
+	auto copyVector = sort_vector;
+	auto sortArray = copyVector.data( );
 	size_t index;
 	Node *currentSortNode;
 	NodeEnum::NodeType nodeType;
-	for( index = 0; index < sort_target_array_count; ++index ) {
-		currentSortNode = sort_target_array_ptr[ index ];
-		sort_target_array_ptr[ index ] = nullptr;
+	for( index = 0; index < sortCount; ++index ) {
+		currentSortNode = sortArray[ index ];
+		sortArray[ index ] = nullptr;
 		nodeType = currentSortNode->getNodeType( );
 		switch( nodeType ) {
 			case NodeEnum::NodeType::Begin :
-				beginVector.emplace_back( currentSortNode );
+				result_begin_vector.emplace_back( currentSortNode );
 				break;
 			case NodeEnum::NodeType::End :
-				endVector.emplace_back( currentSortNode );
+				result_end_vector.emplace_back( currentSortNode );
 				break;
 			case NodeEnum::NodeType::Generate :
 			case NodeEnum::NodeType::InterFace :
@@ -192,65 +184,75 @@ bool BeginNodeEditor::sortProcessNodeRefArray( const std::vector< Node * >::poin
 			case NodeEnum::NodeType::Cache :
 			case NodeEnum::NodeType::Array :
 			case NodeEnum::NodeType::Unity :
-				processVector.emplace_back( currentSortNode );
+				result_process_vector.emplace_back( currentSortNode );
 				break;
 		}
 	}
 	Node **buffArrayPtr;
 	size_t buffArrayCount;
 	// 拷贝开始节点
-	buffArrayPtr = beginVector.data( );
-	buffArrayCount = beginVector.size( );
+	buffArrayPtr = result_begin_vector.data( );
+	buffArrayCount = result_begin_vector.size( );
 	for( index = 0; index < buffArrayCount; ++index )
-		sort_target_array_ptr[ index ] = buffArrayPtr[ index ];
+		sortArray[ index ] = buffArrayPtr[ index ];
 
 	// 排序流程节点
-
 	Node **buffNodeArrayPtr;
 	size_t builderNodeIndex;
-	size_t sortArrayCount;
 	size_t outputRefNodeCount;
 	size_t outputRefNodeIndex;
 	size_t runNodeCount;
 	size_t runNodeIndex = index;
 	// 拷贝开始节点
-	buffNodeArrayPtr = processVector.data( );
-	sortArrayCount = processVector.size( );
+	buffNodeArrayPtr = result_process_vector.data( );
+	buffArrayCount = result_process_vector.size( );
+	Node *findTargetNodePtr;
 	const std::vector< Node * > *outputPortRefThisNodeVectorPtr;
 	const std::vector< Node * >::value_type *outputRefNodeArray;
 	do {
-		for( builderNodeIndex = 0; builderNodeIndex < sortArrayCount; builderNodeIndex += 1 ) {
+		for( index = 0, builderNodeIndex = 0; builderNodeIndex < buffArrayCount; builderNodeIndex += 1 ) {
 			currentSortNode = buffNodeArrayPtr[ builderNodeIndex ];
 			outputPortRefThisNodeVectorPtr = &( currentSortNode->getOutputPortRefThisNodeVector( ) );
 			outputRefNodeCount = outputPortRefThisNodeVectorPtr->size( );
-			outputRefNodeArray = outputPortRefThisNodeVectorPtr->data( );
-			outputRefNodeIndex = 0, runNodeCount = 0;
-			while( outputRefNodeIndex < outputRefNodeCount ) {
-				if( ArrayTools::findIndex( sort_target_array_ptr, runNodeIndex, outputRefNodeArray[ outputRefNodeIndex ], runNodeCount ) == false )
-					break;
-				outputRefNodeIndex += 1;
-				runNodeCount = 0;
+			if( outputRefNodeCount ) {
+				outputRefNodeArray = outputPortRefThisNodeVectorPtr->data( );
+				outputRefNodeIndex = 0, runNodeCount = 0;
+				while( outputRefNodeIndex < outputRefNodeCount ) {
+					findTargetNodePtr = outputRefNodeArray[ outputRefNodeIndex ];
+					if( ArrayTools::findIndex( sortArray, runNodeIndex, findTargetNodePtr, runNodeCount ) == false ) {
+						break;
+					}
+					outputRefNodeIndex += 1;
+					runNodeCount = 0;
+				}
+				if( outputRefNodeIndex != outputRefNodeCount )
+					continue;
 			}
-			if( outputRefNodeIndex != outputRefNodeCount )
-				continue;
-			sort_target_array_ptr[ runNodeIndex ] = currentSortNode;
+			sortArray[ runNodeIndex ] = currentSortNode;
 			runNodeIndex += 1;
+			index += 1;
 			buffNodeArrayPtr[ builderNodeIndex ] = nullptr;
 		}
-		if( runNodeIndex == sort_target_array_count )
+		if( index == buffArrayCount )
 			break;// 不需要排序
-		index = sort_target_array_count - runNodeIndex; // 剩余个数
-		if( index == sortArrayCount ) { // 没有进行改变
+		if( index == 0 ) { // 没有进行改变
 			Application *instancePtr = Application::getInstancePtr( );
-			auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( buffNodeArrayPtr, index );
-			QString form( "发现未知依赖节点:\n\t%1" );
-			instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
+			NodeDirector *nodeDirector = instancePtr->getNodeDirector( );
+			auto arrayToString = nodeDirector->nodeArrayToString( buffNodeArrayPtr, index );
+			auto orgToString = nodeDirector->nodeArrayToString( sortArray, sortCount );
+			QString form( "发现未知依赖节点:\n\t%1\n原始:\t%2" );
+			instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ).arg( orgToString ), Create_SrackInfo( ) );
 			return false;
 		}
-		ArrayTools::sortNullptr( buffNodeArrayPtr, sortArrayCount );
-		sortArrayCount -= index;// 重置大小
+		ArrayTools::sortNullptr( buffNodeArrayPtr, buffArrayCount );
+		buffArrayCount -= index;// 重置大小
 	} while( true );
-
+	// 调整进程序列
+	index = result_begin_vector.size( ); // 跳过开始节点
+	buffArrayCount = result_process_vector.size( );
+	sortArray += index;
+	for( builderNodeIndex = 0; builderNodeIndex < buffArrayCount; builderNodeIndex += 1 )
+		buffNodeArrayPtr[ builderNodeIndex ] = sortArray[ builderNodeIndex ];
 	return true;
 }
 void BeginNodeEditor::releaseResource( ) {
