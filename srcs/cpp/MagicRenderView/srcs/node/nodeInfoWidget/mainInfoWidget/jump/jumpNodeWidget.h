@@ -11,7 +11,7 @@ protected:
 public:
 	JumpNodeWidget( );
 	bool initNodeInfo( Node *check_node_ptr ) override;
-
+	bool checkNodeValid( Node *check_node_ptr ) override;
 };
 
 #endif // JUMPNODEWIDGET_H_H_HEAD__FILE__

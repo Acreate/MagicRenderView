@@ -18,3 +18,12 @@ bool JumpNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	}
 	return false;
 }
+bool JumpNodeWidget::checkNodeValid( Node *check_node_ptr ) {
+	NodeEnum::NodeType nodeType = check_node_ptr->getNodeType( );
+	switch( nodeType ) {
+		case NodeEnum::NodeType::Point :
+		case NodeEnum::NodeType::Jump :
+			return true;
+	}
+	return NodeInfoWidget::checkNodeValid( check_node_ptr );
+}
