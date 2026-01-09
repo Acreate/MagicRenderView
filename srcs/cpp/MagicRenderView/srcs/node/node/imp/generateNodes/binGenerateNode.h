@@ -1,14 +1,16 @@
-﻿#ifndef INTGENERATENODE_H_H_HEAD__FILE__
-#define INTGENERATENODE_H_H_HEAD__FILE__
+﻿#ifndef BINGENERATENODE_H_H_HEAD__FILE__
+#define BINGENERATENODE_H_H_HEAD__FILE__
 #pragma once
+
+
 #include "../../generateNode.h"
 
 class GenerateInputPort;
 class GenerateIntOutputPort;
-class IntGenerateNode : public GenerateNode {
+class BinGenerateNode : public GenerateNode {
 	Q_OBJECT;
 private:
-	using TGenerateType = int64_t;
+	using TGenerateType = uint8_t;
 protected:
 	GenerateInputPort *generateInputPort;
 	GenerateIntOutputPort *intOutputVarPort;
@@ -20,7 +22,7 @@ protected:
 protected:
 	std::vector< TGenerateType > *overVarPtr;
 public:
-	IntGenerateNode( const QString &node_name );
+	BinGenerateNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool initArrayUintyTypeName( QString &change_array_unty_type_name ) override;
 	bool updateLayout( ) override;
@@ -33,7 +35,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "生成/生成整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "生成/生成二位十六进制" ) );
 };
 
-#endif // INTGENERATENODE_H_H_HEAD__FILE__
+#endif // BINGENERATENODE_H_H_HEAD__FILE__

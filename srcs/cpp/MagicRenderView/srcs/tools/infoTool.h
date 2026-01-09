@@ -1,6 +1,9 @@
 ﻿#ifndef INFOTOOL_H_H_HEAD__FILE__
 #define INFOTOOL_H_H_HEAD__FILE__
 #pragma once
+#include <QImage>
+#include <QColor>
+#include <QBuffer>
 #include <qstring.h>
 
 namespace infoTool {
@@ -49,6 +52,111 @@ namespace infoTool {
 		auto offset = source_ptr + sizeTypeCount;
 		*stringPtr = QString::fromUtf8( ( const char * ) offset, result_count );
 		result_count = result_count + sizeTypeCount;
+		return result_count;
+	}
+
+	template<>
+	inline bool fillTypeVarAtVector< QImage >( const void *ptr, std::vector< uint8_t > &result ) {
+		QImage *imagePtr = ( QImage * ) ptr;
+		std::vector< uint8_t > buff;
+
+		QByteArray ba;
+		QBuffer buffer( &ba );
+		buffer.open( QIODevice::WriteOnly );
+		imagePtr->save( &buffer, "PNG" );
+
+		auto data = ba.constData( );
+		auto converVar = ba.size( );
+		if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+			return false;
+		if( converVar == 0 )
+			return true;
+		if( fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
+			return false;
+		result.append_range( buff );
+		return true;
+	}
+	template<>
+	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+		QImage *stringPtr = ( QImage * ) target_var_ptr;
+		result_count = *( uint64_t * ) source_ptr;
+		size_t sizeTypeCount = sizeof( uint64_t );
+
+		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+			result_count = sizeTypeCount;
+			return true;
+		}
+		size_t mod = source_count - sizeTypeCount;
+		if( mod < result_count )
+			return false;
+		auto offset = source_ptr + sizeTypeCount;
+		QByteArray ba( ( const char * ) offset, result_count );
+		stringPtr->loadFromData( ba );
+		result_count = result_count + sizeTypeCount;
+		return result_count;
+	}
+
+	template<>
+	inline bool fillTypeVarAtVector< QColor >( const void *ptr, std::vector< uint8_t > &result ) {
+		QColor *colorPtr = ( QColor * ) ptr;
+		int r, g, b, a;
+		colorPtr->getRgb( &r, &g, &b, &a );
+		std::vector< uint8_t > buff;
+		std::vector< uint8_t > colorBuff;
+		if( fillTypeVarAtVector< uint64_t >( &r, buff ) == false )
+			return false;
+		colorBuff.append_range( buff );
+		if( fillTypeVarAtVector< uint64_t >( &g, buff ) == false )
+			return false;
+		colorBuff.append_range( buff );
+		if( fillTypeVarAtVector< uint64_t >( &b, buff ) == false )
+			return false;
+		colorBuff.append_range( buff );
+		if( fillTypeVarAtVector< uint64_t >( &a, buff ) == false )
+			return false;
+		colorBuff.append_range( buff );
+
+		auto converVar = colorBuff.size( );
+		if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+			return false;
+		if( converVar == 0 )
+			return true;
+		auto *data = colorBuff.data( );
+		if( fillVectorTarget( data, converVar, buff ) == false )
+			return false;
+		result.append_range( buff );
+		return true;
+	}
+	template<>
+	inline bool fillTypeVectorAtVar< QColor >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+		QColor *colorPtr = ( QColor * ) target_var_ptr;
+		result_count = *( uint64_t * ) source_ptr;
+		size_t sizeTypeCount = sizeof( uint64_t );
+
+		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+			result_count = sizeTypeCount;
+			return true;
+		}
+		size_t mod = source_count - sizeTypeCount;
+		if( mod < result_count )
+			return false;
+		sizeTypeCount = sizeof( int );
+		if( mod < ( sizeTypeCount * 4 ) )
+			return false;
+		auto offset = source_ptr + sizeTypeCount;
+		int r, g, b, a;
+		r = *( int * ) offset;
+		offset = source_ptr + sizeTypeCount;
+		g = *( int * ) offset;
+		offset = source_ptr + sizeTypeCount;
+		b = *( int * ) offset;
+		offset = source_ptr + sizeTypeCount;
+		a = *( int * ) offset;
+		offset = source_ptr + sizeTypeCount;
+		colorPtr->setRgba( qRgba( r, g, b, a ) );
+
+		*colorPtr = QString::fromUtf8( ( const char * ) offset, result_count );
+		result_count = result_count + sizeof( uint64_t );
 		return result_count;
 	}
 }

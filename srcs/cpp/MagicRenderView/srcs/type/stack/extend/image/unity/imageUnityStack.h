@@ -1,0 +1,20 @@
+﻿#ifndef IMAGEUNITYSTACK_H_H_HEAD__FILE__
+#define IMAGEUNITYSTACK_H_H_HEAD__FILE__
+#pragma once
+
+#include <type/infoStack.h>
+
+class ImageUnityStack : public InfoStack {
+	Q_OBJECT;
+public:
+	ImageUnityStack( );
+	~ImageUnityStack( ) override;
+protected:
+	bool init( VarDirector *var_director ) override;
+public:
+	bool toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) override;
+	TypeEnum::Type getType( ) override;
+protected:
+	bool toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) override;
+};
+#endif // IMAGEUNITYSTACK_H_H_HEAD__FILE__

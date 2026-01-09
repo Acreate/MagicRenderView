@@ -1,4 +1,4 @@
-﻿#include "intGenerateNode.h"
+﻿#include "imageGenerateNode.h"
 
 #include "../../../../app/application.h"
 #include "../../../../director/printerDirector.h"
@@ -7,7 +7,7 @@
 #include "../../../port/inputPort/generate/generateInputPort.h"
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
 
-IntGenerateNode::IntGenerateNode( const QString &node_name ) : GenerateNode( node_name ) {
+ImageGenerateNode::ImageGenerateNode( const QString &node_name ) : GenerateNode( node_name ) {
 	arrayCount = nullptr;
 	arrayIndex = nullptr;
 	currentIndexVar = nullptr;
@@ -16,7 +16,7 @@ IntGenerateNode::IntGenerateNode( const QString &node_name ) : GenerateNode( nod
 	intOutputIndexPort = nullptr;
 	intOutputCountPort = nullptr;
 }
-bool IntGenerateNode::initEx( MainWidget *parent ) {
+bool ImageGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		generateInputPort = appendInputPortType< GenerateInputPort >( tr( "生成" ) );
 		if( generateInputPort == nullptr )
@@ -50,26 +50,26 @@ bool IntGenerateNode::initEx( MainWidget *parent ) {
 	};
 	return GenerateNode::initEx( parent );
 }
-bool IntGenerateNode::initArrayUintyTypeName( QString &change_array_unty_type_name ) {
+bool ImageGenerateNode::initArrayUintyTypeName( QString &change_array_unty_type_name ) {
 	return varDirector->getTypeName( typeid( TGenerateType ), change_array_unty_type_name );
 }
-bool IntGenerateNode::updateLayout( ) {
+bool ImageGenerateNode::updateLayout( ) {
 	if( GenerateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-std::vector< IntGenerateNode::TGenerateType > * IntGenerateNode::getGenerateVarPtr( ) const {
+std::vector< ImageGenerateNode::TGenerateType > * ImageGenerateNode::getGenerateVarPtr( ) const {
 	return overVarPtr;
 }
-bool IntGenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+bool ImageGenerateNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
 	bool formUint8ArrayData = GenerateNode::formUint8ArrayData( result_use_count, source_array_ptr, source_array_count );
 	return formUint8ArrayData;
 }
-bool IntGenerateNode::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
+bool ImageGenerateNode::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
 	bool uint8VectorData = GenerateNode::toUint8VectorData( result_vector_data );
 	return uint8VectorData;
 }
-bool IntGenerateNode::initVarPtr( ) {
+bool ImageGenerateNode::initVarPtr( ) {
 	if( varDirector->getTypeName( typeid( TGenerateType ), generateTypeName ) == false )
 		return false;
 	if( varPtr != nullptr )
@@ -85,10 +85,10 @@ bool IntGenerateNode::initVarPtr( ) {
 
 	return true;
 }
-bool IntGenerateNode::readyNodeRunData( ) {
+bool ImageGenerateNode::readyNodeRunData( ) {
 	return true;
 }
-bool IntGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	*arrayCount = overVarPtr->size( );
 	if( *arrayCount == 0 )
 		return false;

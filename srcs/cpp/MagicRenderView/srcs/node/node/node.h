@@ -286,6 +286,8 @@ protected:
 	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( OutputPort *output_port, void *new_par );
 	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
+	virtual bool getVarDirector( OutputPort *output_port, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool getInfo( OutputPort *output_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
 
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
@@ -293,6 +295,8 @@ protected:
 	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( InputPort *input_port, void *new_par );
 	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
+	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool getInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
 };
 
 #endif // NODE_H_H_HEAD__FILE__

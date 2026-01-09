@@ -1,12 +1,13 @@
-﻿#include "intAddNode.h"
+﻿#include "uIntDivNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/unity/intInputPort.h"
-#include "../../../../port/outputPort/unity/intOutputPort.h"
-IntAddNode::IntAddNode( const QString &node_name ) : ProcessNode( node_name ) {
+#include <director/varDirector.h>
+#include <node/port/inputPort/unity/intInputPort.h>
+#include <node/port/outputPort/unity/intOutputPort.h>
+
+UIntDivNode::UIntDivNode( const QString &node_name ) : ProcessNode( node_name ) {
 	addResult = nullptr;
 }
-bool IntAddNode::initEx( MainWidget *parent ) {
+bool UIntDivNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		multipleAddInputPort = appendInputPortType< IntInputPort >( tr( "整数" ) );
 		if( multipleAddInputPort == nullptr )
@@ -26,15 +27,15 @@ bool IntAddNode::initEx( MainWidget *parent ) {
 	return ProcessNode::initEx( parent );
 
 }
-bool IntAddNode::updateLayout( ) {
+bool UIntDivNode::updateLayout( ) {
 	if( ProcessNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-bool IntAddNode::readyNodeRunData( ) {
+bool UIntDivNode::readyNodeRunData( ) {
 	return true;
 }
-bool IntAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool UIntDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	OutputPort *const*outputPortArray;
 	*addResult = 0;
 	size_t count;

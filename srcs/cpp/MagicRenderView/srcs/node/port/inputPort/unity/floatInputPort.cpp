@@ -1,8 +1,7 @@
 ﻿#include "floatInputPort.h"
-#include <node/node/node.h>
 
-#include "../../../../app/application.h"
-#include "../../../../director/varDirector.h"
+#include <app/application.h>
+#include <director/varDirector.h>
 bool FloatInputPort::init( Node *parent ) {
 	if( UnityTypeInputPort::init( parent ) == false )
 		return false;

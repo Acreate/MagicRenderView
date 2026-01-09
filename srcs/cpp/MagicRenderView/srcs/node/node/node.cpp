@@ -692,6 +692,46 @@ bool Node::setPortMultiple( OutputPort *output_port, bool multiple ) {
 	output_port->multiple = multiple;
 	return true;
 }
+bool Node::getVarDirector( OutputPort *output_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	if( output_port == nullptr )
+		return false;
+	if(  output_port->parentNode == nullptr )
+		return false;
+	result_var_director =  output_port->parentNode->varDirector;
+	result_var_ptr = output_port->varPtr;
+	return true;
+}
+bool Node::getInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	if( output_port == nullptr )
+		return false;
+	result_input_port_node_parent = output_port->parentNode;
+	if( result_input_port_node_parent == nullptr )
+		return false;
+	result_var_director = result_input_port_node_parent->varDirector;
+	result_var_ptr = output_port->varPtr;
+	return true;
+}
+bool Node::getVarDirector( InputPort *input_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	
+	if( input_port == nullptr )
+		return false;
+	if(  input_port->parentNode == nullptr )
+		return false;
+	result_var_director =  input_port->parentNode->varDirector;
+	result_var_ptr = input_port->varPtr;
+	return true;
+}
+bool Node::getInfo( InputPort *input_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
+
+	if( input_port == nullptr )
+		return false;
+	result_input_port_node_parent = input_port->parentNode;
+	if( result_input_port_node_parent == nullptr )
+		return false;
+	result_var_director = result_input_port_node_parent->varDirector;
+	result_var_ptr = input_port->varPtr;
+	return true;
+}
 bool Node::setPortMultiple( InputPort *input_port, bool multiple ) {
 	if( input_port == nullptr )
 		return false;

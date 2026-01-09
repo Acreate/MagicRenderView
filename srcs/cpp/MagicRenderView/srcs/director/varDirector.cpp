@@ -29,6 +29,10 @@
 #include "../type/stack/base/unity/uInt32UnityStack.h"
 #include "../type/stack/base/unity/uInt64UnityStack.h"
 #include "../type/stack/base/unity/uInt8UnityStack.h"
+#include "../type/stack/extend/color/arrayPtr/colorArrayStack.h"
+#include "../type/stack/extend/color/unity/colorUnityStack.h"
+#include "../type/stack/extend/image/arrayPtr/imageArrayStack.h"
+#include "../type/stack/extend/image/unity/imageUnityStack.h"
 #include "../type/stack/extend/nodeInfoType/arrayPtr/nodeTypeInfoPtrArrayStack.h"
 #include "../type/stack/extend/nodeInfoType/unity/nodeTypeInfoStack.h"
 #include "../type/stack/extend/string/arrayPtr/stringArrayStack.h"
@@ -60,7 +64,6 @@ bool VarDirector::init( ) {
 	emplace_back_type( Int64UnityStack );
 	emplace_back_type( Float32UnityStack );
 	emplace_back_type( Float64UnityStack );
-	emplace_back_type( StringUnityStack );
 
 	emplace_back_type( UInt8ArrayStack );
 	emplace_back_type( UInt16ArrayStack );
@@ -72,11 +75,19 @@ bool VarDirector::init( ) {
 	emplace_back_type( Int64ArrayStack );
 	emplace_back_type( Float32ArrayStack );
 	emplace_back_type( Float64ArrayStack );
-	emplace_back_type( StringArrayStack );
 
 	emplace_back_type( AnyPtrStack );
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyPtrArrayStack );
+
+	emplace_back_type( StringUnityStack );
+	emplace_back_type( StringArrayStack );
+
+	emplace_back_type( ColorUnityStack );
+	emplace_back_type( ColorArrayStack );
+
+	emplace_back_type( ImageUnityStack );
+	emplace_back_type( ImageArrayStack );
 
 	emplace_back_type( NodeTypeInfoStack );
 	emplace_back_type( NodeTypeInfoPtrArrayStack );

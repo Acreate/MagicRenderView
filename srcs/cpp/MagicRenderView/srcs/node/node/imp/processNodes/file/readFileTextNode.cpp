@@ -1,7 +1,7 @@
-﻿#include "writeFileTextNode.h"
+﻿#include "readFileTextNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
-bool WriteFileTextNode::initEx( MainWidget *parent ) {
+bool ReadFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< StringInputPort >( tr( "路径" ) ) == nullptr )
 			return false;
@@ -11,12 +11,12 @@ bool WriteFileTextNode::initEx( MainWidget *parent ) {
 	};
 	return ProcessNode::initEx( parent );
 }
-bool WriteFileTextNode::updateLayout( ) {
+bool ReadFileTextNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool WriteFileTextNode::readyNodeRunData( ) {
+bool ReadFileTextNode::readyNodeRunData( ) {
 	return false;
 }
-bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return false;
 }
