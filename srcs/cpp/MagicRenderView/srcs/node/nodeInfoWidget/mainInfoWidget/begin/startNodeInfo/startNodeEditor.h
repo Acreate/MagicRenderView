@@ -3,12 +3,13 @@
 #pragma once
 #include "../../editorNodeInfoScrollArea.h"
 
+class StartNode;
 class StartNodeItem;
 class QVBoxLayout;
 class StartNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 protected:
-	Node *startNodePtr;
+	StartNode *startNodePtr;
 	std::vector< Node * > beginNodeRefLinkVector;
 	std::vector< Node * > processNodeRefLinkVector;
 	std::vector< Node * > endNodeRefLinkVector;

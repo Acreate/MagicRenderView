@@ -1,5 +1,5 @@
-﻿#ifndef file_mac_H_HEAD__FILE__
-#define file_mac_H_HEAD__FILE__
+﻿#ifndef GENERATEFLOATINPUTPORT_H_H_HEAD__FILE__
+#define GENERATEFLOATINPUTPORT_H_H_HEAD__FILE__
 
 #include "../generateTypeInputPort.h"
 
@@ -9,4 +9,5 @@ public:
 	GenerateFloatInputPort( const QString &name )
 		: GenerateTypeInputPort( name ) { }
 };
-#endif // file_mac_H_HEAD__FILE__
+
+#endif // GENERATEFLOATINPUTPORT_H_H_HEAD__FILE__

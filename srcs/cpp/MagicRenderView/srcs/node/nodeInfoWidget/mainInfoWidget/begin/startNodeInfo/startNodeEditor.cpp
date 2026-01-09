@@ -9,10 +9,10 @@
 #include "../../../../../srack/srackInfo.h"
 #include "../../../../../tools/arrayTools.h"
 #include "../../../../../tools/vectorTools.h"
+#include "../../../../node/imp/beginNodes/startNode.h"
 #include "../../../../node/node.h"
 
 #include "startNodeItem.h"
-
 
 StartNodeEditor::StartNodeEditor( NodeInfoWidget *parent ) : EditorNodeInfoScrollArea( parent ) {
 
@@ -64,10 +64,12 @@ bool StartNodeEditor::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
 
-	startNodePtr = init_node;
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
-		if( findRefBeginNode( startNodePtr, startNodePtr ) == false )
+		if( findRefBeginNode( init_node, init_node ) == false )
 			return false;
+	startNodePtr = qobject_cast< StartNode * >( init_node );
+	if( startNodePtr == nullptr )
+		return false;
 	std::vector< Node * > resultNodeRefLinkVector;
 	if( analysisNodeRef( startNodePtr, resultNodeRefLinkVector ) == false )
 		return false;

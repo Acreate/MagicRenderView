@@ -1,6 +1,5 @@
-﻿#ifndef file_mac_H_HEAD__FILE__
-#define file_mac_H_HEAD__FILE__
-#pragma once
+﻿#ifndef TESTCODESOURCES_H_H_HEAD__FILE__
+#define TESTCODESOURCES_H_H_HEAD__FILE__
 
 class TestCodeSources {
 public:
@@ -12,4 +11,4 @@ public:
 	static bool testAll( );
 };
 
-#endif // file_mac_H_HEAD__FILE__
+#endif // TESTCODESOURCES_H_H_HEAD__FILE__

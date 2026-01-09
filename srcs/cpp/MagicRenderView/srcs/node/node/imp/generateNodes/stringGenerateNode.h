@@ -1,6 +1,6 @@
-﻿#ifndef STRGENERATENODE_H_H_HEAD__FILE__
-#define STRGENERATENODE_H_H_HEAD__FILE__
-#pragma once
+﻿#ifndef STRINGGENERATENODE_H_H_HEAD__FILE__
+#define STRINGGENERATENODE_H_H_HEAD__FILE__
+
 
 
 #include <node/node/generateNode.h>
@@ -9,7 +9,7 @@ class StringOutputPort;
 class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
-class StrGenerateNode : public GenerateNode {
+class StringGenerateNode : public GenerateNode {
 	Q_OBJECT;
 private:
 	using TGenerateType = QString;
@@ -24,7 +24,7 @@ protected:
 protected:
 	std::vector< TGenerateType > *overVarPtr;
 public:
-	StrGenerateNode( const QString &node_name );
+	StringGenerateNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool initArrayUintyTypeName( QString &change_array_unty_type_name ) override;
 	bool updateLayout( ) override;
@@ -40,4 +40,4 @@ public:
 	Def_Extend_NodeTypeName( Node::tr( "生成/生成字符串" ) );
 };
 
-#endif // STRGENERATENODE_H_H_HEAD__FILE__
+#endif // STRINGGENERATENODE_H_H_HEAD__FILE__

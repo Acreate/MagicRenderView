@@ -18,7 +18,7 @@
 #include "../../node/imp/generateNodes/floatGenerateNode.h"
 #include "../../node/imp/generateNodes/imageGenerateNode.h"
 #include "../../node/imp/generateNodes/intGenerateNode.h"
-#include "../../node/imp/generateNodes/strGenerateNode.h"
+#include "../../node/imp/generateNodes/stringGenerateNode.h"
 #include "../../node/imp/generateNodes/uIntGenerateNode.h"
 #include "../../node/imp/jumpNodes/gotoNode.h"
 #include "../../node/imp/logicNodes/ifNode.h"
@@ -63,7 +63,7 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( UIntGenerateNode );
 	emaplace_back_node( IntGenerateNode );
 	emaplace_back_node( FloatGenerateNode );
-	emaplace_back_node( StrGenerateNode );
+	emaplace_back_node( StringGenerateNode );
 	emaplace_back_node( ImageGenerateNode );
 	emaplace_back_node( ColorGenerateNode );
 	// 跳转
