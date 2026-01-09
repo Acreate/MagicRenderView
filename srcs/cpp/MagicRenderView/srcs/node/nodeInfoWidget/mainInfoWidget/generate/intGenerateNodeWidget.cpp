@@ -26,23 +26,7 @@ bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	return true;
 }
 void IntGenerateNodeWidget::updateLayout( ) {
-	//NodeInfoWidget::updateLayout( );
-	int currentWidth;
-	int currentHeight;
-	int buttonWidgetHeight;
-	currentWidth = this->width( );
-	if( currentWidth < 1 )
-		return;
-	currentHeight = this->height( );
-	if( currentHeight < 1 )
-		return;
-	buttonWidgetHeight = buttonWidget->height( );
-
-	intGenerateNodeEditor->move( 0, 0 );
-	currentHeight -= buttonWidgetHeight;
-	intGenerateNodeEditor->setFixedSize( currentWidth, currentHeight );
-	buttonWidget->setFixedWidth( currentWidth );
-	buttonWidget->move( 0, currentHeight );
+	NodeInfoWidget::updateLayout( );
 }
 void IntGenerateNodeWidget::cancelButtonEvent( ) {
 	NodeInfoWidget::cancelButtonEvent( );

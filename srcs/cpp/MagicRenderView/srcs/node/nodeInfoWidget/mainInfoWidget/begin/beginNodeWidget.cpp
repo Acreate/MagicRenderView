@@ -4,6 +4,9 @@
 
 #include <node/nodeInfoWidget/editNodeInfoScrollArea/begin/beginNodeEditor.h>
 
+#include "../../bottomTool/bottomNodeInfoTool.h"
+#include "../../title/nodeInfoTitle.h"
+
 BeginNodeWidget::BeginNodeWidget( ) : NodeInfoWidget( ) {
 	editorNodeInfoScrollArea = beginNodeEditor = new BeginNodeEditor( this );
 }

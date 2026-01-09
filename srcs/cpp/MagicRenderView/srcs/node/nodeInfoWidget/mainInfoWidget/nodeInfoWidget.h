@@ -21,7 +21,7 @@ private:
 protected:
 	WidgetEnum::ShowType showPosType;
 	NodeInfoTitle *titile;
-	BottomNodeInfoTool *buttonWidget;
+	BottomNodeInfoTool *bottomButtonTool;
 	EditorNodeInfoScrollArea *editorNodeInfoScrollArea;
 	VarDirector *varDirector;
 	QScrollBar *vScrollBar;

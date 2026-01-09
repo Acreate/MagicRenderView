@@ -17,12 +17,12 @@ NodeInfoWidget::NodeInfoWidget( ) : editorNodeInfoScrollArea( nullptr ) {
 	varDirector = new VarDirector;
 	hide( );
 	titile = new NodeInfoTitle( this );
-	buttonWidget = new BottomNodeInfoTool( this );
-	connect( buttonWidget, &BottomNodeInfoTool::ok_signal, [this]( ) {
+	bottomButtonTool = new BottomNodeInfoTool( this );
+	connect( bottomButtonTool, &BottomNodeInfoTool::ok_signal, [this]( ) {
 		this->okButtonEvent( );
 		emit ok_signal( this, editorNodeInfoScrollArea );
 	} );
-	connect( buttonWidget, &BottomNodeInfoTool::cancel_signal, [this]( ) {
+	connect( bottomButtonTool, &BottomNodeInfoTool::cancel_signal, [this]( ) {
 		this->cancelButtonEvent( );
 		emit cancel_signal( this, editorNodeInfoScrollArea );
 	} );
@@ -37,7 +37,17 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 }
 
 void NodeInfoWidget::updateLayout( ) {
-
+	int currentHeigth = this->height( );
+	int currentWidget = this->width( );
+	int bottomHeight = this->bottomButtonTool->height( );
+	int titleHeight = this->titile->height( );
+	editorNodeInfoScrollArea->move( 0, titleHeight );
+	this->bottomButtonTool->setFixedWidth( currentWidget );
+	this->titile->setFixedWidth( currentWidget );
+	int begWidgetHeight = currentHeigth - bottomHeight - titleHeight;
+	editorNodeInfoScrollArea->setFixedSize( currentWidget, begWidgetHeight );
+	begWidgetHeight = begWidgetHeight + titleHeight;
+	this->bottomButtonTool->move( 0, begWidgetHeight );
 }
 
 bool NodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
