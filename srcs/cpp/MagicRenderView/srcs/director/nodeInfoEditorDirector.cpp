@@ -6,7 +6,6 @@
 #include "../node/node/node.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/beginNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/jump/jumpNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
@@ -127,8 +126,6 @@ bool NodeInfoEditorDirector::init( ) {
 	appendCreateWidget< BeginNodeWidget >( NodeEnum::NodeType::Begin );
 	appendCreateWidget< BeginNodeWidget >( NodeEnum::NodeType::End );
 	appendCreateWidget< IntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
-	appendCreateWidget< JumpNodeWidget >( NodeEnum::NodeType::Jump );
-	appendCreateWidget< JumpNodeWidget >( NodeEnum::NodeType::Point );
 	return true;
 }
 void NodeInfoEditorDirector::appendEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
