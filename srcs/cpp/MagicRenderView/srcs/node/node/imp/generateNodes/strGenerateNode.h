@@ -5,6 +5,8 @@
 
 #include <node/node/generateNode.h>
 #include <qstring.h>
+class StringOutputPort;
+class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class StrGenerateNode : public GenerateNode {
@@ -13,9 +15,9 @@ private:
 	using TGenerateType = QString;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	StringOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

@@ -4,6 +4,8 @@
 
 #include "../../generateNode.h"
 
+class UIntOutputPort;
+class ColorOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class ColorGenerateNode : public GenerateNode {
@@ -12,9 +14,9 @@ private:
 	using TGenerateType = QColor;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	ColorOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

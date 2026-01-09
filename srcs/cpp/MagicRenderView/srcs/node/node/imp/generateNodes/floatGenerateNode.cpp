@@ -6,29 +6,31 @@
 #include "../../../../srack/srackInfo.h"
 #include "../../../port/inputPort/generate/generateInputPort.h"
 #include "../../../port/outputPort/generate/generateIntOutputPort.h"
+#include "../../../port/outputPort/unity/floatOutputPort.h"
+#include "../../../port/outputPort/unity/uIntOutputPort.h"
 
 FloatGenerateNode::FloatGenerateNode( const QString &node_name ) : GenerateNode( node_name ) {
 	arrayCount = nullptr;
 	arrayIndex = nullptr;
 	currentIndexVar = nullptr;
 	generateInputPort = nullptr;
-	intOutputVarPort = nullptr;
-	intOutputIndexPort = nullptr;
-	intOutputCountPort = nullptr;
+	outputVarPort = nullptr;
+	outputIndexPort = nullptr;
+	outputCountPort = nullptr;
 }
 bool FloatGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		generateInputPort = appendInputPortType< GenerateInputPort >( tr( "生成" ) );
 		if( generateInputPort == nullptr )
 			return false;
-		intOutputVarPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出值" ) );
-		if( intOutputVarPort == nullptr )
+		outputVarPort = appendOutputPortType< FloatOutputPort >( tr( "导出值" ) );
+		if( outputVarPort == nullptr )
 			return false;
-		intOutputIndexPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出下标" ) );
-		if( intOutputIndexPort == nullptr )
+		outputIndexPort = appendOutputPortType< UIntOutputPort >( tr( "导出下标" ) );
+		if( outputIndexPort == nullptr )
 			return false;
-		intOutputCountPort = appendOutputPortType< GenerateIntOutputPort >( tr( "导出总数" ) );
-		if( intOutputCountPort == nullptr )
+		outputCountPort = appendOutputPortType< UIntOutputPort >( tr( "导出总数" ) );
+		if( outputCountPort == nullptr )
 			return false;
 		if( arrayCount == nullptr )
 			if( varDirector->create( arrayCount ) == false )
@@ -40,11 +42,11 @@ bool FloatGenerateNode::initEx( MainWidget *parent ) {
 			if( varDirector->create( currentIndexVar ) == false )
 				return false;
 		// 绑定指针
-		if( setPortVar( intOutputIndexPort, arrayIndex ) == false )
+		if( setPortVar( outputIndexPort, arrayIndex ) == false )
 			return false;
-		if( setPortVar( intOutputVarPort, currentIndexVar ) == false )
+		if( setPortVar( outputVarPort, currentIndexVar ) == false )
 			return false;
-		if( setPortVar( intOutputCountPort, arrayCount ) == false )
+		if( setPortVar( outputCountPort, arrayCount ) == false )
 			return false;
 		return true;
 	};

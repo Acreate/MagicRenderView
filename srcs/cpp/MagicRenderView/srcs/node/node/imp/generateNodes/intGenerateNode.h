@@ -3,6 +3,8 @@
 #pragma once
 #include "../../generateNode.h"
 
+class IntOutputPort;
+class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class IntGenerateNode : public GenerateNode {
@@ -11,9 +13,9 @@ private:
 	using TGenerateType = int64_t;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	IntOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

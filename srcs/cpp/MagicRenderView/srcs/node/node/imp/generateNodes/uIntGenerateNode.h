@@ -4,6 +4,7 @@
 
 #include "../../generateNode.h"
 
+class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class UIntGenerateNode : public GenerateNode {
@@ -12,9 +13,9 @@ private:
 	using TGenerateType = uint64_t;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	UIntOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

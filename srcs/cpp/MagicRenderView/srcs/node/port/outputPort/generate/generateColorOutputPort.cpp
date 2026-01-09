@@ -1,9 +1,9 @@
-﻿#include "colorOutputPort.h"
+﻿#include "generateColorOutputPort.h"
 
 #include "../../../../app/application.h"
 #include "../../../../director/varDirector.h"
-bool ColorOutputPort::init( Node *parent ) {
-	if( UnityTypeOutputPort::init( parent ) == false )
+bool GenerateColorOutputPort::init( Node *parent ) {
+	if( GenerateTypeOutputPort::init( parent ) == false )
 		return false;
 	if( Application::getInstancePtr( )->getVarDirector( )->getTypeName( typeid( QColor ), varTypeName ) == false )
 		return false;

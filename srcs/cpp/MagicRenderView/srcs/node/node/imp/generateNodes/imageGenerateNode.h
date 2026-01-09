@@ -2,9 +2,9 @@
 #define IMAGEGENERATENODE_H_H_HEAD__FILE__
 #pragma once
 
-class  {
-	
-};
+class ImageOutputPort;
+class UIntOutputPort;
+
 #include "../../generateNode.h"
 
 class GenerateInputPort;
@@ -15,9 +15,9 @@ private:
 	using TGenerateType = QImage;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	ImageOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

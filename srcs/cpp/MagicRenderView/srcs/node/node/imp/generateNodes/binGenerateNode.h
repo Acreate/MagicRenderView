@@ -2,9 +2,10 @@
 #define BINGENERATENODE_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "../../generateNode.h"
 
+class BinOutputPort;
+class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class BinGenerateNode : public GenerateNode {
@@ -13,9 +14,9 @@ private:
 	using TGenerateType = uint8_t;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	BinOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;

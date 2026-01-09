@@ -4,6 +4,8 @@
 
 #include "../../generateNode.h"
 
+class FloatOutputPort;
+class UIntOutputPort;
 class GenerateInputPort;
 class GenerateIntOutputPort;
 class FloatGenerateNode : public GenerateNode {
@@ -12,9 +14,9 @@ private:
 	using TGenerateType = double_t;
 protected:
 	GenerateInputPort *generateInputPort;
-	GenerateIntOutputPort *intOutputVarPort;
-	GenerateIntOutputPort *intOutputIndexPort;
-	GenerateIntOutputPort *intOutputCountPort;
+	FloatOutputPort *outputVarPort;
+	UIntOutputPort *outputIndexPort;
+	UIntOutputPort *outputCountPort;
 	size_t *arrayCount;
 	size_t *arrayIndex;
 	TGenerateType *currentIndexVar;
