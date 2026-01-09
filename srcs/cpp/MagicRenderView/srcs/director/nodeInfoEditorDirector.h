@@ -33,7 +33,10 @@ public:
 	~NodeInfoEditorDirector( ) override;
 	virtual bool init( );
 	virtual bool getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWidget *&result_node_info_editor_widget );
+
+	/// @brief 清理资源（清理隐藏与空指针窗口）
 	virtual void clearNodeEditorResources( );
+	/// @brief 释放所有节点
 	virtual void releaseNodeEditor( );
 protected:
 	virtual void appendEditorWidgetPackage( NodeInfoWidget *node_info_widget );

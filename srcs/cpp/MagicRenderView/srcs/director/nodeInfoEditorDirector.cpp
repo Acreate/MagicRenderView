@@ -36,30 +36,30 @@ bool NodeInfoEditorDirector::checkCreateWidget( Node *node_ptr, NodeInfoWidget *
 	return true;
 }
 void NodeInfoEditorDirector::hide_NodeInfoWidget_signal( NodeInfoWidget *hide_ptr ) {
-	if( hide_ptr == nullptr )
-		return;
-	size_t count = editorWidgetPackage.size( );
-	if( count == 0 )
-		return;
-	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( nodeInfoWidgetArrayPtr[ index ] == hide_ptr ) {
-			hide_ptr->deleteLater( );
-			nodeInfoWidgetArrayPtr[ index ] = nullptr;
-		}
+	clearNodeEditorResources( );
 }
 NodeInfoEditorDirector::NodeInfoEditorDirector( ) { }
 void NodeInfoEditorDirector::clearNodeEditorResources( ) {
-	size_t count = editorWidgetPackage.size( );
-	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
-	std::vector< decltype(editorWidgetPackage)::value_type > copyVector( count );
-	std::vector< decltype(editorWidgetPackage)::value_type > releaseVector( count );
+	using vector = std::vector< decltype(editorWidgetPackage)::value_type >;
+	vector *copyVector;
+	vector *releaseVector;
+	NodeInfoWidget **nodeInfoWidgetArrayPtr;
+	NodeInfoWidget **releaseArrayPtr;
+	NodeInfoWidget **destArrayPtr;
+	size_t count;
 	size_t index;
-	size_t destArrayPtrIndex = 0;
-	size_t releaseArrayPtrIndex = 0;
-	auto destArrayPtr = copyVector.data( );
-	auto releaseArrayPtr = releaseVector.data( );
+	size_t destArrayPtrIndex;
+	size_t releaseArrayPtrIndex;
+	count = editorWidgetPackage.size( );
+	if( count == 0 )
+		return;
+	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	copyVector = new vector( count );
+	releaseVector = new vector( count );
+	destArrayPtrIndex = 0;
+	releaseArrayPtrIndex = 0;
+	destArrayPtr = copyVector->data( );
+	releaseArrayPtr = releaseVector->data( );
 	for( index = 0; index < count; ++index )
 		if( nodeInfoWidgetArrayPtr[ index ] ) {
 			if( nodeInfoWidgetArrayPtr[ index ]->isHidden( ) == true ) {
@@ -70,24 +70,39 @@ void NodeInfoEditorDirector::clearNodeEditorResources( ) {
 			destArrayPtr[ destArrayPtrIndex ] = nodeInfoWidgetArrayPtr[ index ];
 			destArrayPtrIndex += 1;
 		}
+	// 清理
 	editorWidgetPackage.clear( );
-	count = releaseArrayPtrIndex;
-	for( index = 0; index < count; ++index )
-		delete releaseArrayPtr[ releaseArrayPtrIndex ];
-	count = destArrayPtrIndex;
-	editorWidgetPackage.resize( count );
-	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
-	for( index = 0; index < count; ++index )
-		nodeInfoWidgetArrayPtr[ index ] = destArrayPtr[ index ];
-
+	// 删除个数
+	if( releaseArrayPtrIndex )
+		for( index = 0; index < releaseArrayPtrIndex; ++index )
+			delete releaseArrayPtr[ index ];
+	// 重新保存个数
+	if( destArrayPtrIndex ) {
+		editorWidgetPackage.resize( destArrayPtrIndex );
+		nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+		for( index = 0; index < destArrayPtrIndex; ++index )
+			nodeInfoWidgetArrayPtr[ index ] = destArrayPtr[ index ];
+	}
+	// 释放
+	delete copyVector;
+	delete releaseVector;
 }
 void NodeInfoEditorDirector::releaseNodeEditor( ) {
-	size_t count = editorWidgetPackage.size( );
-	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
-	std::vector< decltype(editorWidgetPackage)::value_type > copyVector( count );
+	using vector = std::vector< decltype(editorWidgetPackage)::value_type >;
+	size_t count;
+	NodeInfoWidget **nodeInfoWidgetArrayPtr;
+	vector *copyVector;
 	size_t index;
-	size_t destArrayPtrIndex = 0;
-	auto destArrayPtr = copyVector.data( );
+	size_t destArrayPtrIndex;
+	NodeInfoWidget **destArrayPtr;
+
+	count = editorWidgetPackage.size( );
+	if( count == 0 )
+		return;;
+	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	copyVector = new vector( count );
+	destArrayPtrIndex = 0;
+	destArrayPtr = copyVector->data( );
 	for( index = 0; index < count; ++index )
 		if( nodeInfoWidgetArrayPtr[ index ] ) {
 			destArrayPtr[ destArrayPtrIndex ] = nodeInfoWidgetArrayPtr[ index ];
@@ -96,9 +111,10 @@ void NodeInfoEditorDirector::releaseNodeEditor( ) {
 	editorWidgetPackage.clear( );
 	for( index = 0; index < destArrayPtrIndex; ++index )
 		delete destArrayPtr[ index ];
+	delete copyVector;
 }
 NodeInfoEditorDirector::~NodeInfoEditorDirector( ) {
-	clearNodeEditorResources( );
+	releaseNodeEditor( );
 }
 bool NodeInfoEditorDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
