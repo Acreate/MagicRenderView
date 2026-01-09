@@ -31,7 +31,6 @@ protected:
 public:
 	NodeInfoWidget( );
 	~NodeInfoWidget( ) override;
-	void updatePos( );
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual void setMainWidgetScrollArea( MainWidgetScrollArea *main_widget_scroll_area );
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
@@ -61,6 +60,9 @@ protected:
 	/// @param node_ref_link_info 移除的节点引用
 	/// @param target_node_ref 移除的目标
 	virtual void removeRefNodeRefLinkInfo( Node *node_ref_link_info, Node *target_node_ref ) { }
+protected:
+	virtual void updatePos( );
+	virtual void updateLayout();
 protected:
 	virtual void okButtonEvent( );
 	virtual void cancelButtonEvent( );

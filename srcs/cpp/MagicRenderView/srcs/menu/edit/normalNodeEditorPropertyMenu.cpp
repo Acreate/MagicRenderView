@@ -77,6 +77,7 @@ void NormalNodeEditorPropertyMenu::clearResources( ) {
 	deleteInputAtOutputRef->clear( );
 	displayOutputRef->clear( );
 	deleteOutputAtInputRef->clear( );
+	 Application::getInstancePtr( )->getNodeInfoEditorDirector( )->clearNodeEditorResources(  );
 }
 void NormalNodeEditorPropertyMenu::removeInoutPortRefLinkAction( QAction *tr_obj_ptr ) {
 	if( unLinkPortActionInputMapCount == 0 )

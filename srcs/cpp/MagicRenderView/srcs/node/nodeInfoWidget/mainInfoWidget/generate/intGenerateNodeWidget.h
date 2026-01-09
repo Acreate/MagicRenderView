@@ -13,6 +13,7 @@ public:
 	IntGenerateNodeWidget(  );
 	bool initNodeInfo( Node *check_node_ptr ) override;
 protected:
+	void updateLayout( ) override;
 	void cancelButtonEvent( ) override;
 	void okButtonEvent( ) override;
 };

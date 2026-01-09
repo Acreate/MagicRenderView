@@ -16,7 +16,12 @@ bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	intGenerateNodeEditor->setBindGenerateVector( intGenerateNode->getGenerateVarPtr( ) );
 	if( intGenerateNodeEditor->updateGenerateItemInfo( ) == false )
 		return false;
+	intGenerateNodeEditor->updateLayout( );
 	return true;
+}
+void IntGenerateNodeWidget::updateLayout( ) {
+	NodeInfoWidget::updateLayout( );
+	intGenerateNodeEditor->updateLayout( );
 }
 void IntGenerateNodeWidget::cancelButtonEvent( ) {
 	NodeInfoWidget::cancelButtonEvent( );

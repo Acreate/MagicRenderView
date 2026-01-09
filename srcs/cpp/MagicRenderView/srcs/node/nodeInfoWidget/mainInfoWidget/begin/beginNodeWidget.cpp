@@ -13,9 +13,8 @@ bool BeginNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	switch( nodeType ) {
 		case NodeEnum::NodeType::Begin :
 		case NodeEnum::NodeType::End :
-			if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
-				return false;
-			return true;
+			if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == true )
+				return true;
 	}
 	return false;
 }

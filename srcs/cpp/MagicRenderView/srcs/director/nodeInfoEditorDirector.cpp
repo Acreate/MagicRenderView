@@ -36,7 +36,7 @@ bool NodeInfoEditorDirector::checkCreateWidget( Node *node_ptr, NodeInfoWidget *
 	return true;
 }
 void NodeInfoEditorDirector::hide_NodeInfoWidget_signal( NodeInfoWidget *hide_ptr ) {
-	clearNodeEditorResources( );
+	//clearNodeEditorResources( );
 }
 NodeInfoEditorDirector::NodeInfoEditorDirector( ) { }
 void NodeInfoEditorDirector::clearNodeEditorResources( ) {

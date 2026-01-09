@@ -42,6 +42,9 @@ void NodeInfoWidget::updatePos( ) {
 	point = mainWidgetScrollArea->mapToGlobal( point );
 	move( point );
 }
+void NodeInfoWidget::updateLayout( ) {
+
+}
 void NodeInfoWidget::setMainWidgetScrollArea( MainWidgetScrollArea *main_widget_scroll_area ) {
 	mainWidgetScrollArea = main_widget_scroll_area;
 	updatePos( );
@@ -68,8 +71,12 @@ bool NodeInfoWidget::event( QEvent *event ) {
 	bool eventResult = QWidget::event( event );
 	auto type = event->type( );
 	switch( type ) {
+		case QEvent::Resize :
+			updateLayout( );
+			break;
 		case QEvent::Show :
 			updatePos( );
+			updateLayout( );
 			emit show_signal( this );
 			break;
 		case QEvent::Hide :
