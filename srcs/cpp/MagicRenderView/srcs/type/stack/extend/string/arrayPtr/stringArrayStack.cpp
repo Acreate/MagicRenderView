@@ -9,7 +9,7 @@ StringArrayStack::~StringArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] )
+		if( arrayPtr[ index ] )
 			delete ( std::vector< QString > * ) arrayPtr[ index ];
 	allVarPtrVector.clear( );
 }

@@ -11,7 +11,7 @@ NodeTypeInfoPtrArrayStack::~NodeTypeInfoPtrArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] ) {
+		if( arrayPtr[ index ] ) {
 			std::vector< t_current_unity_type > *vector = ( std::vector< t_current_unity_type > * ) arrayPtr[ index ];
 			size_t voidPtrArrayCount = vector->size( );
 			auto voidPtrArrayPtr = vector->data( );

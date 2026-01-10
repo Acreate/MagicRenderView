@@ -1,13 +1,13 @@
-﻿#include "imageArrayStack.h"
+﻿#include "charArrayStack.h"
 
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
 #include <director/varDirector.h>
-#include <QImage>
+#include <QChar>
 
-using t_current_unity_type = QImage;
-ImageArrayStack::~ImageArrayStack( ) {
+using t_current_unity_type = QChar;
+CharArrayStack::~CharArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -15,16 +15,16 @@ ImageArrayStack::~ImageArrayStack( ) {
 			delete ( std::vector< t_current_unity_type > * ) arrayPtr[ index ];
 	allVarPtrVector.clear( );
 }
-bool ImageArrayStack::init( VarDirector *var_director ) {
+bool CharArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QImage >, "vector<QImage>", "QImage[]", "QImageArray", "vector<Image>", "Image[]", "ImageArray" );
+	Stack_Type_Name( , std::vector< QChar >, "vector<QChar>", "QChar[]", "QCharArray", "vector<Char>", "Char[]", "CharArray", "vector<char>", "char[]", "charArray" );
 	return true;
 }
-ImageArrayStack::ImageArrayStack( ) {
+CharArrayStack::CharArrayStack( ) {
 }
 
-bool ImageArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
+bool CharArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	uint64_t arrayCount = 0;
 	if( infoTool::fillTypeVectorAtVar< uint64_t >( result_count, obj_start_ptr, obj_memory_size, &arrayCount ) == false )
 		return false;
@@ -48,10 +48,10 @@ bool ImageArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_pt
 	*createPtr = buffVar;
 	return true;
 }
-TypeEnum::Type ImageArrayStack::getType( ) {
+TypeEnum::Type CharArrayStack::getType( ) {
 	return TypeEnum::Type::Array;
 }
-bool ImageArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+bool CharArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
 	std::vector< t_current_unity_type > *vector = ( std::vector< t_current_unity_type > * ) obj_start_ptr;
 	uint64_t arraySize = vector->size( );
 	if( infoTool::fillTypeVarAtVector< uint64_t >( &arraySize, result_data ) == false )

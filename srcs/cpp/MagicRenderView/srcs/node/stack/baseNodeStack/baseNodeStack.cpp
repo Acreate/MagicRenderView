@@ -14,6 +14,7 @@
 #include "../../node/imp/cacheNodes/intArrayAddNode.h"
 #include "../../node/imp/endNodes/resultNode.h"
 #include "../../node/imp/generateNodes/binGenerateNode.h"
+#include "../../node/imp/generateNodes/charGenerateNode.h"
 #include "../../node/imp/generateNodes/colorGenerateNode.h"
 #include "../../node/imp/generateNodes/floatGenerateNode.h"
 #include "../../node/imp/generateNodes/imageGenerateNode.h"
@@ -63,9 +64,10 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( UIntGenerateNode );
 	emaplace_back_node( IntGenerateNode );
 	emaplace_back_node( FloatGenerateNode );
+	emaplace_back_node( CharGenerateNode );
 	emaplace_back_node( StringGenerateNode );
-	emaplace_back_node( ImageGenerateNode );
 	emaplace_back_node( ColorGenerateNode );
+	emaplace_back_node( ImageGenerateNode );
 	// 跳转
 	emaplace_back_node( GotoNode );
 	// 逻辑

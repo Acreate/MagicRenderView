@@ -17,7 +17,7 @@ namespace infoTool {
 		return fillVectorTarget( ( const uint8_t * ) ptr, sizeof( TSourceType ) / sizeof( uint8_t ), result );
 	}
 	template< typename TSourceType >
-	bool fillTypeVectorAtVar( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+	bool fillTypeVectorAtVar( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, TSourceType *target_var_ptr ) {
 		return fillObjTarget( result_count, source_ptr, source_count, ( uint8_t * ) target_var_ptr, sizeof( TSourceType ) / sizeof( uint8_t ) );
 	}
 	template<>
@@ -37,7 +37,7 @@ namespace infoTool {
 		return true;
 	}
 	template<>
-	inline bool fillTypeVectorAtVar< QString >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+	inline bool fillTypeVectorAtVar< QString >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QString *target_var_ptr ) {
 		QString *stringPtr = ( QString * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
@@ -55,6 +55,43 @@ namespace infoTool {
 		return result_count;
 	}
 
+	template<>
+	inline bool fillTypeVarAtVector< QChar >( const void *ptr, std::vector< uint8_t > &result ) {
+		QChar *stringPtr = ( QChar * ) ptr;
+		std::vector< uint8_t > buff;
+		auto local8Bit = stringPtr->unicode( );
+		auto converVar = sizeof( local8Bit );
+		if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+			return false;
+		if( converVar == 0 )
+			return true;
+		char *data = ( char * ) &local8Bit;
+		if( fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
+			return false;
+		result.append_range( buff );
+		return true;
+	}
+	template<>
+	inline bool fillTypeVectorAtVar< QChar >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QChar *target_var_ptr ) {
+		QChar *stringPtr = ( QChar * ) target_var_ptr;
+		result_count = *( uint64_t * ) source_ptr;
+		size_t sizeTypeCount = sizeof( uint64_t );
+
+		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+			result_count = sizeTypeCount;
+			return true;
+		}
+		size_t mod = source_count - sizeTypeCount;
+		if( mod < result_count )
+			return false;
+		auto offset = source_ptr + sizeTypeCount;
+		auto unicodePtr = stringPtr->unicode( );
+		if( fillTypeVectorAtVar( result_count, offset, mod, &unicodePtr ) == false )
+			return false;
+		*stringPtr = QChar::fromUcs2( unicodePtr );
+		result_count = result_count + sizeTypeCount;
+		return result_count;
+	}
 	template<>
 	inline bool fillTypeVarAtVector< QImage >( const void *ptr, std::vector< uint8_t > &result ) {
 		QImage *imagePtr = ( QImage * ) ptr;
@@ -77,7 +114,7 @@ namespace infoTool {
 		return true;
 	}
 	template<>
-	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QImage *target_var_ptr ) {
 		QImage *stringPtr = ( QImage * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
@@ -128,7 +165,7 @@ namespace infoTool {
 		return true;
 	}
 	template<>
-	inline bool fillTypeVectorAtVar< QColor >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, void *target_var_ptr ) {
+	inline bool fillTypeVectorAtVar< QColor >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QColor *target_var_ptr ) {
 		QColor *colorPtr = ( QColor * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );

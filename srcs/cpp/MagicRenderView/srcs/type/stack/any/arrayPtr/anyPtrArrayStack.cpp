@@ -8,7 +8,7 @@ AnyPtrArrayStack::~AnyPtrArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
-		if( nullptr == arrayPtr[ index ] ) {
+		if( arrayPtr[ index ] ) {
 			std::vector< void * > *vector = ( std::vector< void * > * ) arrayPtr[ index ];
 			size_t voidPtrArrayCount = vector->size( );
 			auto voidPtrArrayPtr = vector->data( );
