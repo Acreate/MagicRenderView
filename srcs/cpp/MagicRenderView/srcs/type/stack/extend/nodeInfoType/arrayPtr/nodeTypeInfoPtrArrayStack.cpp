@@ -6,6 +6,10 @@
 
 #include <node/nodeType/nodeTypeInfo.h>
 
+#include "../../../../../app/application.h"
+#include "../../../../../director/printerDirector.h"
+#include "../../../../../srack/srackInfo.h"
+
 using t_current_unity_type = NodeTypeInfo *;
 NodeTypeInfoPtrArrayStack::~NodeTypeInfoPtrArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
@@ -29,6 +33,27 @@ NodeTypeInfoPtrArrayStack::NodeTypeInfoPtrArrayStack( ) {
 }
 
 bool NodeTypeInfoPtrArrayStack::init( VarDirector *var_director ) {
+	size_t count = allVarPtrVector.size( );
+	if( count ) {
+		if( deleteObjTypeFunctionIsNull( ) ) {
+			Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
+			return false;
+		}
+		auto arrayPtr = allVarPtrVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( arrayPtr[ index ] ) {
+				std::vector< t_current_unity_type > *vector = ( std::vector< t_current_unity_type > * ) arrayPtr[ index ];
+				size_t voidPtrArrayCount = vector->size( );
+				auto voidPtrArrayPtr = vector->data( );
+				size_t voidPtrArrayIndex = 0;
+				for( ; voidPtrArrayIndex < voidPtrArrayCount; ++voidPtrArrayIndex )
+					varDirector->release( voidPtrArrayPtr[ voidPtrArrayIndex ] );
+				vector->clear( );
+				delete vector;
+			}
+		allVarPtrVector.clear( );
+
+	}
 	if( InfoStack::init( var_director ) == false )
 		return false;
 	Stack_Type_Name( , std::vector< NodeTypeInfo * >, "vector< NodeTypeInfo * >", "NodeTypeInfo *[]", "NodeTypeInfoPtrArray" );

@@ -7,6 +7,25 @@
 #include <tools/infoTool.h>
 
 #include "../srack/srackInfo.h"
+bool InfoStack::init( VarDirector *var_director ) {
+	size_t count = allVarPtrVector.size( );
+	if( count ) { // 删除旧的数据
+		if( deleteObjTypeFunction == nullptr ) {
+			Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
+			return false;
+		} else {
+			auto arrayPtr = allVarPtrVector.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( nullptr == arrayPtr[ index ] )
+					break;
+				else if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+					Application::getInstancePtr( )->getPrinterDirector( )->error( QString( tr( "释放[ %1 ]对象失败" ) ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ), Create_SrackInfo( ) );
+			allVarPtrVector.clear( );
+		}
+	}
+	varDirector = var_director;
+	return true;
+}
 InfoStack::InfoStack( ) {
 	newObjTypeFunction = nullptr;
 	deleteObjTypeFunction = nullptr;

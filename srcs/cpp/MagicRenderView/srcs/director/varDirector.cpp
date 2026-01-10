@@ -120,6 +120,8 @@ VarDirector::~VarDirector( ) {
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
+		arrayPtr[ index ]->init( this );
+	for( ; index < count; ++index )
 		delete arrayPtr[ index ];
 	stacks.clear( );
 }
@@ -216,7 +218,7 @@ bool VarDirector::release( const void *delete_obj_ptr ) {
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( arrayPtr[ index ]->deleteTypePtr( delete_obj_ptr ) )
+		if( arrayPtr[ index ] && arrayPtr[ index ]->deleteTypePtr( delete_obj_ptr ) )
 			return true;
 	return false;
 }

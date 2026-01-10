@@ -30,12 +30,12 @@
 #include "menuDirector.h"
 constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 bool NodeDirector::init( ) {
+	releaseObjResources( );
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	varDirector = instancePtr->getVarDirector( );
 	menuDirector = instancePtr->getMenuDirector( );
 	appDirector = instancePtr->getAppDirector( );
-	releaseObjResources( );
 	if( portLink->init( instancePtr, this, varDirector, appDirector ) == false )
 		return false;
 	QString errorMsg;
@@ -55,12 +55,18 @@ bool NodeDirector::init( ) {
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::remove_node_action_signal, this, &NodeDirector::removeNodeActionSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::unLink_signal, this, &NodeDirector::nodeEditorMenuUnLinkSlot );
 	connect( normalNodeEditorPropertyMenu, &NormalNodeEditorPropertyMenu::show_node_at_widget_signal, this, &NodeDirector::editorMenuShowNodeAtWidgetSlot );
+	mainWidget->update( );
 	return true;
 }
-NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ), varDirector( nullptr ) {
+NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ) {
 	portLink = new PortLinkType;
 	normalGenerateNodeMenu = nullptr;
 	normalNodeEditorPropertyMenu = nullptr;
+	instancePtr = nullptr;
+	printerDirector = nullptr;
+	varDirector = nullptr;
+	menuDirector = nullptr;
+	appDirector = nullptr;
 }
 QString NodeDirector::nodeArrayToString( const Node *const *printf_nodes, const size_t &printf_node_count ) {
 	if( printf_nodes == nullptr || printf_node_count == 0 ) {

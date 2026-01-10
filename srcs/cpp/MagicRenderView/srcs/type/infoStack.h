@@ -13,13 +13,12 @@ private:
 	std::function< void*( ) > newObjTypeFunction;
 	std::function< bool( void * ) > deleteObjTypeFunction;
 protected:
-	virtual bool init( VarDirector *var_director ) {
-		varDirector = var_director;
-		return true;
-	}
+	virtual bool init( VarDirector *var_director );
 protected:
 	virtual void setNewObjTypeFunction( const std::function< void *( ) > &new_obj_type_function ) { newObjTypeFunction = new_obj_type_function; }
 	virtual void setDeleteObjTypeFunction( const std::function< bool( void * ) > &delete_obj_type_function ) { deleteObjTypeFunction = delete_obj_type_function; }
+	virtual bool deleteObjTypeFunctionIsNull( ) const { return deleteObjTypeFunction == nullptr; }
+	virtual bool NewObjTypeFunctionIsNull( ) const { return newObjTypeFunction == nullptr; }
 protected:
 	VarDirector *varDirector;
 	QString typeName;
