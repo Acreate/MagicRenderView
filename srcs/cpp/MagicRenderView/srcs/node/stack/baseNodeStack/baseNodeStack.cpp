@@ -39,13 +39,19 @@
 #include "../../node/imp/processNodes/baseOperation/uint/uIntModNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntMulNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntSubNode.h"
+#include "../../node/imp/processNodes/conver/toColorNode.h"
+#include "../../node/imp/processNodes/conver/toFloatNode.h"
+#include "../../node/imp/processNodes/conver/toImageNode.h"
+#include "../../node/imp/processNodes/conver/toIntNode.h"
+#include "../../node/imp/processNodes/conver/toStringNode.h"
+#include "../../node/imp/processNodes/conver/toUIntNode.h"
+#include "../../node/imp/processNodes/debug/debugInfoNode.h"
 #include "../../node/imp/processNodes/file/readFileBinDataNode.h"
 #include "../../node/imp/processNodes/file/readFileImageNode.h"
 #include "../../node/imp/processNodes/file/readFileTextNode.h"
 #include "../../node/imp/processNodes/file/writeFileBinDataNode.h"
 #include "../../node/imp/processNodes/file/writeFileImageNode.h"
 #include "../../node/imp/processNodes/file/writeFileTextNode.h"
-#include "../../node/imp/processNodes/toString/toStringNode.h"
 
 #define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
 bool BaseNodeStack::init( ) {
@@ -101,6 +107,13 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( ReadFileImageNode );
 	// 转换
 	emaplace_back_node( ToStringNode );
+	emaplace_back_node( ToIntNode );
+	emaplace_back_node( ToUIntNode );
+	emaplace_back_node( ToFloatNode );
+	emaplace_back_node( ToColorNode );
+	emaplace_back_node( ToImageNode );
+	// 调试
+	emaplace_back_node( DebugInfoNode );
 	return true;
 }
 

@@ -45,3 +45,20 @@ bool NodeTypeInfo::load( Node *node_ptr ) {
 	}
 	return true;
 }
+QString NodeTypeInfo::toString( ) const {
+	QString result( QObject::tr( "%1[%2](%3,%4)" ) );
+	result = result.arg( nodeName ).arg( nodeGeneratorCode ).arg( posX ).arg( posY );
+	QStringList qstringList;
+	size_t count = portLinkInfoVector.size( );
+	auto portTypeInfoPtr = portLinkInfoVector.data( );
+	size_t index;
+	QString nodeColor( QObject::tr( "L(%1/%2,%1/%2)" ) );
+	if( count )
+		for( index = 0; index < count; ++index ) {
+			PortTypeInfo *typeInfoPtr = portTypeInfoPtr[ index ];
+			qstringList.append( nodeColor.arg( typeInfoPtr->outputNodeGeneratorCode ).arg( typeInfoPtr->outputPortGeneratorCode ).arg( typeInfoPtr->inputNodeGeneratorCode ).arg( typeInfoPtr->inputPortGeneratorCode ) );
+		}
+	if( qstringList.length( ) )
+		result += "{ " + qstringList.join( "," ) + " }";
+	return result;
+}

@@ -25,10 +25,10 @@ public:
 	~VarDirector( ) override;
 public:
 	virtual bool init( );
-	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name );
+	virtual bool getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) const;
 	virtual bool release( const void *delete_obj_ptr );
-	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name );
-	virtual bool getTypeName( const std::type_info &type_info_ref, QString &result_type_name ) {
+	virtual bool getTypeName( const QString &type_info_ref, QString &result_type_name ) const;
+	virtual bool getTypeName( const std::type_info &type_info_ref, QString &result_type_name ) const {
 		QString typeInfoName = type_info_ref.name( );
 		return getTypeName( typeInfoName, result_type_name );
 	}
@@ -52,7 +52,7 @@ public:
 	}
 
 	template< typename TCreateType >
-	bool cast_ptr( void *ptr, TCreateType * &result_ptr ) {
+	bool cast_ptr( void *ptr, TCreateType * &result_ptr ) const {
 		if( ptr == nullptr )
 			return false;
 		QString converTypeName;
@@ -73,7 +73,7 @@ public:
 	}
 
 	template< typename TCreateType >
-	bool cast_ptr( const void *ptr, const TCreateType * &result_ptr ) {
+	bool cast_ptr( const void *ptr, const TCreateType * &result_ptr ) const {
 		if( ptr == nullptr )
 			return false;
 		QString converTypeName;
@@ -93,5 +93,25 @@ public:
 		return true;
 	}
 
+	template< typename TCreateType >
+	bool cast_ptr( void *const ptr, TCreateType *const &result_ptr ) const {
+		if( ptr == nullptr )
+			return false;
+		QString converTypeName;
+		// 检查是否存在指定的类型
+		if( getObjPtrAtTypeName( ptr, converTypeName ) == false )
+			return false;
+		QString typeInfoName = typeid( TCreateType ).name( );
+		QString targetTypeName;
+		// 获取转换的目标匹配类型名称
+		if( getTypeName( typeInfoName, targetTypeName ) == false )
+			return false;
+		// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+		if( targetTypeName != converTypeName )
+			return false;
+		// 同一类型返回转换后的类型对象指针
+		result_ptr = ( TCreateType *const ) ptr;
+		return true;
+	}
 };
 #endif // VARDIRECTOR_H_H_HEAD__FILE__

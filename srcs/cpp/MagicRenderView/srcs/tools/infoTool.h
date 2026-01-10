@@ -6,7 +6,13 @@
 #include <QBuffer>
 #include <qstring.h>
 
+class VarDirector;
 namespace infoTool {
+	bool toString( const QColor* conver_color_ptr, QString &result_string );
+	inline bool toString( const QColor& conver_color_ref, QString &result_string ) {
+		return toString( &conver_color_ref, result_string );
+	}
+	bool toString( const VarDirector *var_director_ptr, void const *conver_var_ptr, QString &result_string );
 	bool fillVectorTarget( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result );
 	bool fillObjTarget( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count );
 	inline bool fillObjTarget( uint64_t &result_count, const void *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {
@@ -38,7 +44,6 @@ namespace infoTool {
 	}
 	template<>
 	inline bool fillTypeVectorAtVar< QString >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QString *target_var_ptr ) {
-		QString *stringPtr = ( QString * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
 
@@ -50,14 +55,14 @@ namespace infoTool {
 		if( mod < result_count )
 			return false;
 		auto offset = source_ptr + sizeTypeCount;
-		*stringPtr = QString::fromUtf8( ( const char * ) offset, result_count );
+		*target_var_ptr = QString::fromUtf8( ( const char * ) offset, result_count );
 		result_count = result_count + sizeTypeCount;
 		return result_count;
 	}
 
 	template<>
 	inline bool fillTypeVarAtVector< QChar >( const void *ptr, std::vector< uint8_t > &result ) {
-		QChar *stringPtr = ( QChar * ) ptr;
+		const QChar *stringPtr = ( const QChar * ) ptr;
 		std::vector< uint8_t > buff;
 		auto local8Bit = stringPtr->unicode( );
 		auto converVar = sizeof( local8Bit );
@@ -73,7 +78,6 @@ namespace infoTool {
 	}
 	template<>
 	inline bool fillTypeVectorAtVar< QChar >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QChar *target_var_ptr ) {
-		QChar *stringPtr = ( QChar * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
 
@@ -85,10 +89,10 @@ namespace infoTool {
 		if( mod < result_count )
 			return false;
 		auto offset = source_ptr + sizeTypeCount;
-		auto unicodePtr = stringPtr->unicode( );
+		auto unicodePtr = target_var_ptr->unicode( );
 		if( fillTypeVectorAtVar( result_count, offset, mod, &unicodePtr ) == false )
 			return false;
-		*stringPtr = QChar::fromUcs2( unicodePtr );
+		*target_var_ptr = QChar::fromUcs2( unicodePtr );
 		result_count = result_count + sizeTypeCount;
 		return result_count;
 	}
@@ -115,7 +119,6 @@ namespace infoTool {
 	}
 	template<>
 	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QImage *target_var_ptr ) {
-		QImage *stringPtr = ( QImage * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
 
@@ -128,7 +131,7 @@ namespace infoTool {
 			return false;
 		auto offset = source_ptr + sizeTypeCount;
 		QByteArray ba( ( const char * ) offset, result_count );
-		stringPtr->loadFromData( ba );
+		target_var_ptr->loadFromData( ba );
 		result_count = result_count + sizeTypeCount;
 		return result_count;
 	}
@@ -166,7 +169,6 @@ namespace infoTool {
 	}
 	template<>
 	inline bool fillTypeVectorAtVar< QColor >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QColor *target_var_ptr ) {
-		QColor *colorPtr = ( QColor * ) target_var_ptr;
 		result_count = *( uint64_t * ) source_ptr;
 		size_t sizeTypeCount = sizeof( uint64_t );
 
@@ -190,10 +192,8 @@ namespace infoTool {
 		offset = source_ptr + sizeTypeCount;
 		a = *( int * ) offset;
 		offset = source_ptr + sizeTypeCount;
-		colorPtr->setRgba( qRgba( r, g, b, a ) );
-
-		*colorPtr = QString::fromUtf8( ( const char * ) offset, result_count );
-		result_count = result_count + sizeof( uint64_t );
+		target_var_ptr->setRgba( qRgba( r, g, b, a ) );
+		result_count = offset - source_ptr;
 		return result_count;
 	}
 }

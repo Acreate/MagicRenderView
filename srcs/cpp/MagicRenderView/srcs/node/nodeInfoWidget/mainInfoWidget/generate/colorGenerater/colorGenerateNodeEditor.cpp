@@ -3,6 +3,7 @@
 #include <QMenu>
 #include <QVBoxLayout>
 
+#include "../../../../../tools/infoTool.h"
 #include "../intGenerater/intGenerateNodeEditor.h"
 #include "generRenderWidget/colorGenerateRenderScrollArea.h"
 #include "generRenderWidget/colorGenerateRenderWidget.h"
@@ -20,10 +21,11 @@ bool ColorGenerateNodeEditor::updateGenerateItemInfo( ) {
 	size_t index;
 	generateRenderWidget->resize( count );
 	if( count != 0 ) {
-		auto firtChar = QChar( '0' );
 		auto data = colorGenerateVector->data( );
+		QString resultStr;
 		for( index = 0; index < count; ++index )
-			generateRenderWidget->setInfo( index, QString( "0x%1%2%3%4" ).arg( data[ index ].red( ), 2, 16, firtChar ).arg( data[ index ].green( ), 2, 16, firtChar ).arg( data[ index ].blue( ), 2, 16, firtChar ).arg( data[ index ].alpha( ), 2, 16, firtChar ).toUpper( ) );
+			if( infoTool::toString( data[ index ], resultStr ) )
+				generateRenderWidget->setInfo( index, resultStr );
 	}
 	addGenerateTool->setMaxIndex( count + 1 );
 	return true;

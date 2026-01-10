@@ -173,7 +173,7 @@ bool VarDirector::toVector( const void *ptr, std::vector< uint8_t > &result ) {
 	return false;
 }
 
-bool VarDirector::getTypeName( const QString &type_info_ref, QString &result_type_name ) {
+bool VarDirector::getTypeName( const QString &type_info_ref, QString &result_type_name ) const {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;
@@ -202,7 +202,7 @@ bool VarDirector::getObjPtrType( const void *check_obj_ptr, TypeEnum::Type &resu
 	return false;
 }
 
-bool VarDirector::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) {
+bool VarDirector::getObjPtrAtTypeName( const void *check_obj_ptr, QString &result_type_name ) const {
 	size_t count = stacks.size( );
 	auto arrayPtr = stacks.data( );
 	size_t index = 0;

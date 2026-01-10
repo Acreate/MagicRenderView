@@ -25,6 +25,7 @@ public:
 	virtual int32_t getPosX( ) const { return posX; }
 	virtual int32_t getPosY( ) const { return posY; }
 	virtual const std::vector< PortTypeInfo * > & getPortLinkInfoVector( ) const { return portLinkInfoVector; }
+	virtual QString toString() const;
 };
 
 #endif // NODETYPEINFO_H_H_HEAD__FILE__
