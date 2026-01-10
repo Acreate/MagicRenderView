@@ -1,16 +1,21 @@
 ﻿#include "intGenerateNodeWidget.h"
 
-#include "../../../node/imp/generateNodes/intGenerateNode.h"
-#include "../../bottomTool/bottomNodeInfoTool.h"
+#include <enums/nodeEnum.h>
+#include <node/node/node.h>
+
+#include <node/node/imp/generateNodes/intGenerateNode.h>
 #include "intGenerateNodeEditor.h"
 IntGenerateNodeWidget::IntGenerateNodeWidget( ) : NodeInfoWidget( ) {
 	editorNodeInfoScrollArea = intGenerateNodeEditor = new IntGenerateNodeEditor( this );
 	//setMinimumSize( 100, 200 );
 }
 bool IntGenerateNodeWidget::checkNodeValid( Node *check_node_ptr ) {
-	if( check_node_ptr->getNodeType( ) == NodeEnum::NodeType::Generate )
-		return true;
-	return NodeInfoWidget::checkNodeValid( check_node_ptr );
+	if( check_node_ptr->getNodeType( ) != NodeEnum::NodeType::Generate )
+		return false;
+	IntGenerateNode *intGenerateNode = qobject_cast< IntGenerateNode * >( check_node_ptr );
+	if( intGenerateNode == nullptr )
+		return false;
+	return true;
 }
 bool IntGenerateNodeWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( check_node_ptr->getNodeType( ) != NodeEnum::NodeType::Generate )

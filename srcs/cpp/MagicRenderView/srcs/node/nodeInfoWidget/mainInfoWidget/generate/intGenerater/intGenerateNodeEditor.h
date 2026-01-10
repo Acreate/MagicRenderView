@@ -1,26 +1,25 @@
 ﻿#ifndef INTGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define INTGENERATENODEEDITOR_H_H_HEAD__FILE__
 #pragma once
-#include "../editorNodeInfoScrollArea.h"
+#include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class IntGenerateTool;
+class IntGenerateRenderWidget;
+class IntGenerateRenderScrollArea;
 class IntGenerateNode;
-class GenerateRenderWidget;
-class GenerateRenderScrollArea;
-class AddGenerateTool;
-class GenerateItemWidget;
 class QVBoxLayout;
 class IntGenerateNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 protected:
 	QWidget *mainWidget;
-	GenerateRenderScrollArea *generateRenderScrollArea;
-	AddGenerateTool *addGenerateTool;
+	IntGenerateRenderScrollArea *generateRenderScrollArea;
+	IntGenerateTool *addGenerateTool;
 	std::vector< int64_t > *bindGenerateVector;
-	GenerateRenderWidget *generateRenderWidget;
+	IntGenerateRenderWidget *generateRenderWidget;
 protected:
 	void releaseResource( ) override;
 protected:
-	virtual void addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant );
+	virtual void addItem( IntGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant );
 	virtual void requesPopItemMenu( QMenu *pop_menu );
 public:
 	IntGenerateNodeEditor( NodeInfoWidget *parent );

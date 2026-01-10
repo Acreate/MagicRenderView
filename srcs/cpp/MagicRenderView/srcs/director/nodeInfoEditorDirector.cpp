@@ -5,9 +5,10 @@
 #include "../app/application.h"
 #include "../node/node/node.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/begin/startNodeInfo/startNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerateNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/generate/floatGenerater/floatGenerateNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerater/intGenerateNodeWidget.h"
+#include "../node/nodeInfoWidget/mainInfoWidget/generate/uIntGenerater/uIntGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
-#include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 #include "../win/mainWindow.h"
 bool NodeInfoEditorDirector::appendCreateWidget( MTKey key, const MTCreateFunction &create_function ) {
@@ -126,6 +127,8 @@ bool NodeInfoEditorDirector::init( ) {
 	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::Begin );
 	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::End );
 	appendCreateWidget< IntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
+	appendCreateWidget< UIntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
+	appendCreateWidget< FloatGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	return true;
 }
 void NodeInfoEditorDirector::appendEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {

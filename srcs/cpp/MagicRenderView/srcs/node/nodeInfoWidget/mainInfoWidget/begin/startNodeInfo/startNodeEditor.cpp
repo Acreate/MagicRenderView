@@ -67,11 +67,11 @@ bool StartNodeEditor::initNode( Node *init_node ) {
 	if( init_node->getNodeType( ) == NodeEnum::NodeType::End )
 		if( findRefBeginNode( init_node, init_node ) == false )
 			return false;
-	startNodePtr = qobject_cast< StartNode * >( init_node );
-	if( startNodePtr == nullptr )
+	beginNodePtr = init_node;
+	if( beginNodePtr == nullptr )
 		return false;
 	std::vector< Node * > resultNodeRefLinkVector;
-	if( analysisNodeRef( startNodePtr, resultNodeRefLinkVector ) == false )
+	if( analysisNodeRef( beginNodePtr, resultNodeRefLinkVector ) == false )
 		return false;
 	if( sortProcessNodeRefArray( resultNodeRefLinkVector, beginNodeRefLinkVector, processNodeRefLinkVector, endNodeRefLinkVector ) == false )
 		return false; // 缺少依赖
@@ -258,5 +258,5 @@ void StartNodeEditor::releaseResource( ) {
 	beginNodeRefLinkVector.clear( );
 	processNodeRefLinkVector.clear( );
 	endNodeRefLinkVector.clear( );
-	startNodePtr = nullptr;
+	beginNodePtr = nullptr;
 }

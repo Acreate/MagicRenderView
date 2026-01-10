@@ -3,13 +3,9 @@
 #include <QMenu>
 #include <QVBoxLayout>
 
-#include "../../../../director/varDirector.h"
-#include "../../../node/imp/generateNodes/intGenerateNode.h"
-#include "../../mainInfoWidget/nodeInfoWidget.h"
-#include "generateItemWidget/generateItemWidget.h"
-#include "generRenderWidget/generateRenderScrollArea.h"
-#include "generRenderWidget/generateRenderWidget.h"
-#include "titleTool/addGenerateTool.h"
+#include "generRenderWidget/intGenerateRenderScrollArea.h"
+#include "generRenderWidget/intGenerateRenderWidget.h"
+#include "titleTool/intGenerateTool.h"
 
 void IntGenerateNodeEditor::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
@@ -53,7 +49,7 @@ void IntGenerateNodeEditor::updateEditorNodeInfoLayout( ) {
 	generateRenderScrollArea->setFixedSize( viewportSize );
 	generateRenderWidget->updateLayoutSort( );
 }
-void IntGenerateNodeEditor::addItem( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
+void IntGenerateNodeEditor::addItem( IntGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
 	generateRenderWidget->createItem( index );
 	addGenerateTool->setMaxIndex( generateRenderWidget->getIntGenerateItemWidgetArratCount( ) + 1 );
 	generateRenderWidget->updateVectorIndex( );
@@ -67,12 +63,12 @@ IntGenerateNodeEditor::IntGenerateNodeEditor( NodeInfoWidget *parent ) : EditorN
 	setWidgetResizable( true );
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
-	addGenerateTool = new AddGenerateTool( mainWidget );
-	generateRenderScrollArea = new GenerateRenderScrollArea( this );
+	addGenerateTool = new IntGenerateTool( mainWidget );
+	generateRenderScrollArea = new IntGenerateRenderScrollArea( this );
 
 	generateRenderWidget = generateRenderScrollArea->getViewWidget( );
 
-	connect( addGenerateTool, &AddGenerateTool::addItem_signal, [this] ( AddGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
+	connect( addGenerateTool, &IntGenerateTool::addItem_signal, [this] ( IntGenerateTool *signal_ptr, const size_t &index, const QString &index_text, const QVariant &index_variant ) {
 		this->addItem( signal_ptr, index, index_text, index_variant );
 	} );
 }

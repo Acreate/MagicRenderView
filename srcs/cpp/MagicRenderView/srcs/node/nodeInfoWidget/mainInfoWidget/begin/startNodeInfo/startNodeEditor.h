@@ -9,7 +9,7 @@ class QVBoxLayout;
 class StartNodeEditor : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 protected:
-	StartNode *startNodePtr;
+	Node *beginNodePtr;
 	std::vector< Node * > beginNodeRefLinkVector;
 	std::vector< Node * > processNodeRefLinkVector;
 	std::vector< Node * > endNodeRefLinkVector;

@@ -1,21 +1,23 @@
-﻿#ifndef GENERATERENDERWIDGET_H_H_HEAD__FILE__
-#define GENERATERENDERWIDGET_H_H_HEAD__FILE__
-#pragma once
+﻿#ifndef UINTGENERATERENDERWIDGET_H_H_HEAD__FILE__
+#define UINTGENERATERENDERWIDGET_H_H_HEAD__FILE__
+
+class UIntGenerateRenderScrollArea;
+class UIntGenerateItemWidget;
+
+
 #include <QWidget>
 
-class GenerateRenderScrollArea;
-class GenerateItemWidget;
-class GenerateRenderWidget : public QWidget {
+class UIntGenerateRenderWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	std::vector< GenerateItemWidget * > intGenerateItemWidgetVector;
-	GenerateRenderScrollArea *generateRenderScrollArea;
-	GenerateItemWidget *dragItem;
+	std::vector< UIntGenerateItemWidget * > intGenerateItemWidgetVector;
+	UIntGenerateRenderScrollArea *generateRenderScrollArea;
+	UIntGenerateItemWidget *dragItem;
 	size_t intGenerateItemWidgetArratCount;
 	size_t intGenerateItemWidgetArratIndex;
-	GenerateItemWidget **intGenerateItemWidgetArratPtr;
+	UIntGenerateItemWidget **intGenerateItemWidgetArratPtr;
 public:
-	GenerateRenderWidget( GenerateRenderScrollArea *generate_render_scroll_area );
+	UIntGenerateRenderWidget( UIntGenerateRenderScrollArea *generate_render_scroll_area );
 	virtual void updateLayoutSort( );
 	virtual void createItem( const size_t &index );
 	virtual void setInfo( const size_t &index, const QString &var_value );
@@ -32,4 +34,4 @@ Q_SIGNALS:
 	void requesPopItemMenu_signal( QMenu *pop_menu );
 };
 
-#endif // GENERATERENDERWIDGET_H_H_HEAD__FILE__
+#endif // UINTGENERATERENDERWIDGET_H_H_HEAD__FILE__

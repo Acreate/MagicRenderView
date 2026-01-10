@@ -1,11 +1,12 @@
-﻿#include "generateItemWidget.h"
+﻿#include "floatGenerateItemWidget.h"
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <qpushbutton.h>
 
-GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+FloatGenerateItemWidget::FloatGenerateItemWidget( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
 	mainLayout = new QHBoxLayout( this );
 	showIndexInfo = new QLabel( this );
 	dragLabel = new QLabel( this );
@@ -13,7 +14,7 @@ GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &
 	mainLayout->addWidget( dragLabel, 2 );
 	mainLayout->addWidget( showIndexInfo, 2 );
 	mainLayout->addWidget( editorVarInfo, 92 );
-	infoFormmattion = QString( tr( "int [ %1 ]" ) );
+	infoFormmattion = QString( tr( "float [ %1 ]" ) );
 	QImage image( ":/nodeitemIco/option.png" );
 	dragLabel->setPixmap( QPixmap::fromImage( image ) );
 	popMenu = new QMenu( this );
@@ -31,18 +32,18 @@ GenerateItemWidget::GenerateItemWidget( QWidget *parent, const Qt::WindowFlags &
 	} );
 	setInfo( 0, 0 );
 }
-void GenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
+void FloatGenerateItemWidget::setInfo( const size_t &index, const QString &var_value ) {
 	auto title = infoFormmattion.arg( QString::number( index ) );
 	showIndexInfo->setText( title );
 	editorVarInfo->setText( var_value );
 }
-void GenerateItemWidget::setIndex( const size_t &index ) {
+void FloatGenerateItemWidget::setIndex( const size_t &index ) {
 	auto title = infoFormmattion.arg( QString::number( index ) );
 	showIndexInfo->setText( title );
 }
-bool GenerateItemWidget::isDragWidgetPos( const QPoint &pos ) {
+bool FloatGenerateItemWidget::isDragWidgetPos( const QPoint &pos ) {
 	if( geometry( ).contains( pos ) )
 		return true;
 	return false;
 }
-QString GenerateItemWidget::getVarValue( ) const { return editorVarInfo->text( ); }
+QString FloatGenerateItemWidget::getVarValue( ) const { return editorVarInfo->text( ); }

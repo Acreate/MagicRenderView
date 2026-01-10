@@ -1,9 +1,10 @@
-﻿#include "addGenerateTool.h"
+﻿#include "intGenerateTool.h"
+
 #include <QComboBox>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <qpushbutton.h>
-AddGenerateTool::AddGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
+IntGenerateTool::IntGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ) {
 	auto mainLayout = new QHBoxLayout( this );
 	insertIndexComboBox = new QComboBox( this );
 	insertBtn = new QPushButton( tr( "插入" ), this );
@@ -14,7 +15,7 @@ AddGenerateTool::AddGenerateTool( QWidget *parent, const Qt::WindowFlags &f ) : 
 		emit addItem_signal( this, insertIndexComboBox->currentIndex( ), insertIndexComboBox->currentText( ), insertIndexComboBox->currentData( ) );
 	} );
 }
-void AddGenerateTool::setMaxIndex( const size_t &index ) {
+void IntGenerateTool::setMaxIndex( const size_t &index ) {
 
 	int currentCount = insertIndexComboBox->count( );
 	size_t foreachIndex;
