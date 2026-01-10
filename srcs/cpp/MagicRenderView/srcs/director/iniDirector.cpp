@@ -1,13 +1,11 @@
 ﻿#include "iniDirector.h"
 
+#include <app/application.h>
 #include <qfile.h>
+#include <srack/srackInfo.h>
 
 #include "printerDirector.h"
 #include "varDirector.h"
-
-#include "../app/application.h"
-
-#include "../srack/srackInfo.h"
 
 bool IniDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );

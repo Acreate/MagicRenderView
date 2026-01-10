@@ -4,7 +4,6 @@
 #include <QMetaEnum>
 #include <QResizeEvent>
 #include <QScreen>
-#include <qfile.h>
 #include <qfileinfo.h>
 
 #include <director/iniDirector.h>

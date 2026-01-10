@@ -29,6 +29,8 @@
 #include "../type/stack/base/unity/uInt32UnityStack.h"
 #include "../type/stack/base/unity/uInt64UnityStack.h"
 #include "../type/stack/base/unity/uInt8UnityStack.h"
+#include "../type/stack/extend/char/arrayPtr/charArrayStack.h"
+#include "../type/stack/extend/char/unity/charUnityStack.h"
 #include "../type/stack/extend/color/arrayPtr/colorArrayStack.h"
 #include "../type/stack/extend/color/unity/colorUnityStack.h"
 #include "../type/stack/extend/image/arrayPtr/imageArrayStack.h"
@@ -79,6 +81,9 @@ bool VarDirector::init( ) {
 	emplace_back_type( AnyPtrStack );
 	emplace_back_type( AnyPtrPairStack );
 	emplace_back_type( AnyPtrArrayStack );
+
+	emplace_back_type( CharUnityStack );
+	emplace_back_type( CharArrayStack );
 
 	emplace_back_type( StringUnityStack );
 	emplace_back_type( StringArrayStack );

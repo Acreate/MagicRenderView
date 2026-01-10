@@ -1,13 +1,11 @@
 ﻿#include "printerDirector.h"
 
 // #include <stacktrace>
-#include <QDir>
-#include <cmake_to_c_cpp_header_env.h>
-#include <qfileinfo.h>
-
 #include <app/application.h>
-
-#include "../srack/srackInfo.h"
+#include <cmake_to_c_cpp_header_env.h>
+#include <QDir>
+#include <qfileinfo.h>
+#include <srack/srackInfo.h>
 
 bool PrinterDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );

@@ -11,7 +11,7 @@ ColorUnityStack::~ColorUnityStack( ) {
 bool ColorUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , QColor, "color" );
+	Stack_Type_Name( , QColor, "Color", "color" );
 	return true;
 }
 ColorUnityStack::ColorUnityStack( ) {

@@ -12,7 +12,7 @@ ImageUnityStack::~ImageUnityStack( ) {
 bool ImageUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( "", QString, "string" );
+	Stack_Type_Name( , QImage, "QImage", "Image", "image" );
 	return true;
 }
 ImageUnityStack::ImageUnityStack( ) {

@@ -18,7 +18,7 @@ ColorArrayStack::~ColorArrayStack( ) {
 bool ColorArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QColor >, "vector<QColor>", "QColor[]", "QColorArray", "vector<Color>", "Color[]", "ColorArray" );
+	Stack_Type_Name( , std::vector< QColor >, "vector<QColor>", "QColor[]", "QColorArray", "vector<Color>", "Color[]", "ColorArray" , "vector<color>", "color[]", "colorArray" );
 	return true;
 }
 ColorArrayStack::ColorArrayStack( ) {
