@@ -43,7 +43,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 }
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
-		printerDirector->error( "窗口状态保存异常", Create_SrackInfo( ) );
+		printerDirector->error( tr( "窗口状态保存异常" ), Create_SrackInfo( ) );
 	delete nodeInfoEditorDirector;
 	delete builderDirector;
 	delete menuDirector;
@@ -52,7 +52,7 @@ Application::~Application( ) {
 	delete mainWindow;
 	delete nodeDirector;
 	if( synchronousVarToFile( ) == false )
-		printerDirector->error( "程序信息保存异常", Create_SrackInfo( ) );
+		printerDirector->error( tr( "程序信息保存异常" ), Create_SrackInfo( ) );
 	delete iniDirector;
 	delete varDirector;
 	delete printerDirector;

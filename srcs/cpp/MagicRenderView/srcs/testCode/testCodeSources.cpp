@@ -28,18 +28,18 @@ void testVarGener( const TTestType &default_var ) {
 		std::vector< uint8_t > buff;
 		uint64_t count;
 		if( varDirector->toVector( checkVar, buff ) ) {
-			qDebug( ) << "序列化值:" << *checkVar;
+			qDebug( ) << QObject::tr( "序列化值:" ).toStdString( ).c_str( ) << *checkVar;
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				TTestType *castPtr;
 				varDirector->cast_ptr< TTestType >( converPtr, castPtr );
-				qDebug( ) << "反序列化:" << *castPtr;
+				qDebug( ) << QObject::tr( "反序列化:" ).toStdString( ).c_str( ) << *castPtr;
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
+				instancePtr->getPrinterDirector( )->error( QObject::tr( "反序列哈失败" ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
+			instancePtr->getPrinterDirector( )->error( QObject::tr( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
+		instancePtr->getPrinterDirector( )->error( QObject::tr( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -63,20 +63,20 @@ void testPairVarGener( const TTestFirstType &first_var_value, const TTestScondTy
 		std::vector< uint8_t > buff;
 		uint64_t count;
 		if( varDirector->toVector( checkVar, buff ) ) {
-			qDebug( ) << "序列化值:" << *first << ", " << *scond;
+			qDebug( ) << QObject::tr( "序列化值:" ).toStdString( ).c_str( ) << *first << ", " << *scond;
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				std::pair< void *, void * > *castPtr;
 				varDirector->cast_ptr< std::pair< void *, void * > >( converPtr, castPtr );
 				varDirector->cast_ptr< int32_t >( castPtr->first, first );
 				varDirector->cast_ptr< QString >( castPtr->second, scond );
-				qDebug( ) << "反序列化:" << *first << ", " << *scond;
+				qDebug( ) << QObject::tr( "反序列化:" ).toStdString( ).c_str( ) << *first << ", " << *scond;
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
+				instancePtr->getPrinterDirector( )->error( QObject::tr( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
+			instancePtr->getPrinterDirector( )->error( QObject::tr( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
+		instancePtr->getPrinterDirector( )->error( QObject::tr( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -97,7 +97,7 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 			auto arrayDataPtr = checkVar->data( );
 			for( size_t index = 0; index < array_count; ++index )
 				data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
-			qDebug( ) << "序列化值:" << data.join( ", " );
+			qDebug( ) << QObject::tr( "序列化值:" ).toStdString( ).c_str( ) << data.join( ", " ).toStdString( ).c_str( );
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
@@ -108,15 +108,15 @@ void testArrayVarGener( const TTestFirstType &first_var_value, const size_t &arr
 					arrayDataPtr = castPtr->data( );
 					for( size_t index = 0; index < array_count; ++index )
 						data.append( QString( "%1" ).arg( arrayDataPtr[ index ] ) );
-					qDebug( ) << "反序列化:" << data.join( ", " );
+					qDebug( ) << QObject::tr( "反序列化:" ).toStdString( ).c_str( ) << data.join( ", " ).toStdString( ).c_str( );
 				} else
-					instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败[数量不匹配] " ) + name, Create_SrackInfo( ) );
+					instancePtr->getPrinterDirector( )->error( QObject::tr( "反序列哈失败[数量不匹配] " ) + name, Create_SrackInfo( ) );
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
+				instancePtr->getPrinterDirector( )->error( QObject::tr( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
+			instancePtr->getPrinterDirector( )->error( QObject::tr( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
+		instancePtr->getPrinterDirector( )->error( QObject::tr( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -136,7 +136,7 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 		for( size_t index = 0; index < array_count; ++index ) {
 			if( varDirector->create< TTestFirstType >( unityVar ) == false ) {
 				auto name = typeid( std::vector< void * > ).name( );
-				qDebug( ) << "单元创建失败:" << name;
+				qDebug( ) << QObject::tr( "单元创建失败:" ).toStdString( ).c_str( ) << name;
 				return;
 			}
 			*unityVar = first_var_value;
@@ -146,7 +146,7 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 		std::vector< uint8_t > buff;
 		uint64_t count;
 		if( varDirector->toVector( checkVar, buff ) ) {
-			qDebug( ) << "序列化值:" << data.join( ", " );
+			qDebug( ) << QObject::tr( "序列化值:" ).toStdString( ).c_str( ) << data.join( ", " ).toStdString( ).c_str( );
 			void *converPtr = nullptr;
 			if( varDirector->toVar( count, buff.data( ), buff.size( ), converPtr ) ) {
 				data.clear( );
@@ -157,18 +157,18 @@ void testAnyArrayVarGener( const TTestFirstType &first_var_value, const size_t &
 				for( size_t index = 0; index < array_count; ++index ) {
 					if( varDirector->cast_ptr< TTestFirstType >( arrayDataPtr[ index ], unityVar ) == false ) {
 						auto name = typeid( std::vector< void * > ).name( );
-						qDebug( ) << "单元转换失败:" << name;
+						qDebug( ) << QObject::tr( "单元转换失败:" ).toStdString( ).c_str( ) << name;
 						return;
 					}
 					data.append( QString( "%1" ).arg( *unityVar ) );
 				}
-				qDebug( ) << "反序列化:" << data.join( ", " );
+				qDebug( ) << QObject::tr( "反序列化:" ).toStdString( ).c_str( ) << data.join( ", " ).toStdString( ).c_str( );
 			} else
-				instancePtr->getPrinterDirector( )->error( QString( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
+				instancePtr->getPrinterDirector( )->error( QObject::tr( "反序列哈失败 " ) + name, Create_SrackInfo( ) );
 		} else
-			instancePtr->getPrinterDirector( )->error( QString( "序列化失败 " ) + name, Create_SrackInfo( ) );
+			instancePtr->getPrinterDirector( )->error( QObject::tr( "序列化失败 " ) + name, Create_SrackInfo( ) );
 	} else
-		instancePtr->getPrinterDirector( )->error( QString( "创建失败 " ) + name, Create_SrackInfo( ) );
+		instancePtr->getPrinterDirector( )->error( QObject::tr( "创建失败 " ) + name, Create_SrackInfo( ) );
 	qDebug( ) << "";
 }
 
@@ -225,27 +225,27 @@ void TestCodeSources::testEnumConver( ) {
 	if( NodeEnum::converEnum( enum_string, result_ErrorType_var ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "字符串转枚举失败 [NodeEnum::ErrorType]", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "字符串转枚举失败 [NodeEnum::ErrorType]" ), Create_SrackInfo( ) );
 
 	enum_string = "Result";
 	if( NodeEnum::converEnum( enum_string, result_AdviseType_var ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "字符串转枚举失败 [NodeEnum::AdviseType]", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "字符串转枚举失败 [NodeEnum::AdviseType]" ), Create_SrackInfo( ) );
 
 	result_ErrorType_var = NodeEnum::ErrorType::Other;
 	enum_string.clear( );
 	if( NodeEnum::converQString( result_ErrorType_var, enum_string ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "枚举转字符串失败 [NodeEnum::ErrorType]", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "枚举转字符串失败 [NodeEnum::ErrorType]" ), Create_SrackInfo( ) );
 
 	result_AdviseType_var = NodeEnum::AdviseType::Result;
 	enum_string.clear( );
 	if( NodeEnum::converQString( result_AdviseType_var, enum_string ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
-		printerDirector->error( "枚举转字符串失败 [NodeEnum::AdviseType]", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "枚举转字符串失败 [NodeEnum::AdviseType]" ), Create_SrackInfo( ) );
 
 }
 void TestCodeSources::testAppFile( ) {
@@ -254,43 +254,42 @@ void TestCodeSources::testAppFile( ) {
 	auto printerDirector = instancePtr->getPrinterDirector( );
 
 	if( path::hasDir( "." ) )
-		printerDirector->info( "存在路径[.]", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "存在路径[.]" ), Create_SrackInfo( ) );
 	else
-		printerDirector->info( "非法路径[.]", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "非法路径[.]" ), Create_SrackInfo( ) );
 
 	if( path::hasFile( "." ) )
-		printerDirector->info( "存在文件[.]", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "存在文件[.]" ), Create_SrackInfo( ) );
 	else
-		printerDirector->info( "非法文件[.]", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "非法文件[.]" ), Create_SrackInfo( ) );
 	if( path::createFile( "./45/file" ) )
-		printerDirector->info( "创建文件[./45/file]成功", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "创建文件[./45/file]成功" ), Create_SrackInfo( ) );
 	else
-		printerDirector->info( "创建文件[./45/file]失败", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "创建文件[./45/file]失败" ), Create_SrackInfo( ) );
 	QFileInfo getPathInfo;
 	if( path::getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
-		printerDirector->info( "获取路径[./4541/88]成功", Create_SrackInfo( ) );
-		QString outMsg( "获取路径[%1]是%2" );
+		printerDirector->info( QObject::tr( "获取路径[./4541/88]成功" ), Create_SrackInfo( ) );
 		if( getPathInfo.isFile( ) )
-			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "文件" ), Create_SrackInfo( ) );
+			printerDirector->info( QObject::tr( "获取路径[%1]是%2" ).arg( getPathInfo.absoluteFilePath( ) ).arg( QObject::tr( "文件" ) ), Create_SrackInfo( ) );
 		else
-			printerDirector->info( outMsg.arg( getPathInfo.absoluteFilePath( ) ).arg( "目录" ), Create_SrackInfo( ) );
+			printerDirector->info( QObject::tr( "获取路径[%1]是%2" ).arg( getPathInfo.absoluteFilePath( ) ).arg( QObject::tr( "目录" ) ), Create_SrackInfo( ) );
 	} else
-		printerDirector->info( "获取路径[./4541/88]失败", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "获取路径[./4541/88]失败" ), Create_SrackInfo( ) );
 	printerDirector->info( path::normalPathSeparatorToPath( "/1/2//3/////4" ), Create_SrackInfo( ) );
 	printerDirector->info( path::normalPathSeparatorToPath( "1/2//3/////4" ), Create_SrackInfo( ) );
 	path::pathTree pathTree( "..../123/456" );
 	if( pathTree.appSubPath( "123/123/45" ) == false ) {
-		printerDirector->error( "123/123/45 配置异常", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "123/123/45 配置异常" ), Create_SrackInfo( ) );
 	} else
 		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
 
 	if( pathTree.appSubPath( "123/784/45" ) == false ) {
-		printerDirector->error( "123/123/45 配置异常", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "123/123/45 配置异常" ), Create_SrackInfo( ) );
 	} else
 		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
 
 	if( pathTree.appSubPath( "123/784/1" ) == false ) {
-		printerDirector->error( "123/123/1 配置异常", Create_SrackInfo( ) );
+		printerDirector->error( QObject::tr( "123/123/1 配置异常" ), Create_SrackInfo( ) );
 	} else
 		printerDirector->info( pathTree.toQString( ), Create_SrackInfo( ) );
 }
@@ -299,13 +298,13 @@ void TestCodeSources::testAppMoveWidget( ) {
 	auto instancePtr = Application::getInstancePtr( );
 	auto printerDirector = instancePtr->getPrinterDirector( );
 	if( instancePtr->widgetMoveTargetDispyer( 1 ) )
-		printerDirector->info( "移动成功到 0 号屏幕", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "移动成功到 0 号屏幕" ), Create_SrackInfo( ) );
 	else
-		printerDirector->info( "移动失败，0 号屏幕不存在", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "移动失败，0 号屏幕不存在" ), Create_SrackInfo( ) );
 	if( instancePtr->widgetAllMoveTargetDispyer( 0 ) )
-		printerDirector->info( "全部移动成功到 0 号屏幕", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "全部移动成功到 0 号屏幕" ), Create_SrackInfo( ) );
 	else
-		printerDirector->info( "全部移动失败，0 号屏幕不存在", Create_SrackInfo( ) );
+		printerDirector->info( QObject::tr( "全部移动失败，0 号屏幕不存在" ), Create_SrackInfo( ) );
 }
 /// @brief 运行测试函数
 /// @return 返回 true，表示继续程序，否则退出 

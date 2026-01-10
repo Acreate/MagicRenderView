@@ -102,7 +102,7 @@ bool VarDirector::init( ) {
 	for( index = 0; index < count; ++index )
 		if( arrayPtr[ index ]->init( this ) == false ) {
 			auto className = arrayPtr[ index ]->metaObject( )->className( );
-			QString msg( "[ %1 ]变量堆栈类初始化失败" );
+			QString msg( tr( "[ %1 ]变量堆栈类初始化失败" ) );
 			printerDirector->error( msg.arg( className ), Create_SrackInfo( ) );
 			for( index = 0; index < count; ++index )
 				delete arrayPtr[ index ];

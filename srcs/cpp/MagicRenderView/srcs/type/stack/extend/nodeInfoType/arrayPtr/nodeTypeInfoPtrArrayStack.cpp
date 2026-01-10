@@ -36,7 +36,7 @@ bool NodeTypeInfoPtrArrayStack::init( VarDirector *var_director ) {
 	size_t count = allVarPtrVector.size( );
 	if( count ) {
 		if( deleteObjTypeFunctionIsNull( ) ) {
-			Application::getInstancePtr( )->getPrinterDirector( )->error( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用", Create_SrackInfo( ) );
+			Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" ), Create_SrackInfo( ) );
 			return false;
 		}
 		auto arrayPtr = allVarPtrVector.data( );
