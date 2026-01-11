@@ -188,6 +188,12 @@ protected:
 	/// @brief 更新端口的生成代号
 	/// @return 失败返回 false
 	virtual bool updatePortGenerateCodes( );
+	/// @brief 绑定端口信息
+	/// @return 成功返回 true
+	virtual bool bindPortInfo( );
+	/// @brief 释放端口信息
+	/// @return 成功返回 true
+	virtual bool releasePortInfo( );
 private:
 	/// @brief 增加一个输入端口
 	/// @param input_port 输入端
@@ -219,6 +225,37 @@ protected:
 			return resultPortPtr;
 		delete resultPortPtr;
 		return nullptr;
+	}
+
+	template< typename TOutputPortType >
+		requires requires ( TOutputPortType *create_ptr, OutputPort *port ) {
+			port = create_ptr;
+		}
+	bool appendOutputPortType( const QString &output_port_name, TOutputPortType *&result_output_port_ptr ) {
+		TOutputPortType *resultPortPtr = new TOutputPortType( output_port_name );
+		if( resultPortPtr == nullptr )
+			return false;
+		if( appendOutputPort( resultPortPtr ) == true ) {
+			result_output_port_ptr = resultPortPtr;
+			return true;
+		}
+		delete resultPortPtr;
+		return false;
+	}
+	template< typename TInputPortType >
+		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
+			port = create_ptr;
+		}
+	bool appendInputPortType( const QString &output_port_name, TInputPortType *&result_input_port_ptr ) {
+		TInputPortType *resultPortPtr = new TInputPortType( output_port_name );
+		if( resultPortPtr == nullptr )
+			return false;
+		if( appendInputPort( resultPortPtr ) == true ) {
+			result_input_port_ptr = resultPortPtr;
+			return true;
+		}
+		delete resultPortPtr;
+		return false;
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
@@ -287,7 +324,9 @@ protected:
 	virtual bool setPortVar( OutputPort *output_port, void *new_par );
 	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
 	virtual bool getVarDirector( OutputPort *output_port, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool setVarDirector( OutputPort *output_port, VarDirector *var_director );
 	virtual bool getInfo( OutputPort *output_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr );
 
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
@@ -295,8 +334,10 @@ protected:
 	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( InputPort *input_port, void *new_par );
 	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
+	virtual bool setVarDirector( InputPort *input_port, VarDirector *var_director );
 	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr );
 	virtual bool getInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr );
 };
 
 #endif // NODE_H_H_HEAD__FILE__

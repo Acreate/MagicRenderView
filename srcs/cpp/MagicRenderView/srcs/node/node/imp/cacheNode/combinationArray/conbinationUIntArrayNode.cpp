@@ -4,24 +4,26 @@
 #include <node/port/inputPort/array/intVectorInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-ConbinationUIntArrayNode::ConbinationUIntArrayNode( const QString &node_name ) : CacheNode( node_name ) {
-	addResultVar = nullptr;
+#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
+#include "../../../../port/outputPort/anyVar/anyVarOutputPort.h"
+#include "../../../../port/outputPort/array/uIntVectorOutputPort.h"
 
+ConbinationUIntArrayNode::ConbinationUIntArrayNode( const QString &node_name ) : CacheNode( node_name ) {
+	outVarPtr = nullptr;
+	anyOutputVarPtr = nullptr;
 }
 bool ConbinationUIntArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		intVectorInputPort = appendInputPortType< IntVectorInputPort >( tr( "整数" ) );
-		if( intVectorInputPort == nullptr )
+		if( appendInputPortType( tr( "无符号整数" ), vectorInputPortPtr ) == false )
 			return false;
-		intOutputPort = appendOutputPortType< IntOutputPort >( tr( "整数和" ) );
-		if( intOutputPort == nullptr )
+		if( appendInputPortType( tr( "条件" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( setPortMultiple( intVectorInputPort, true ) == false )
+
+		if( appendOutputPortType( tr( "无符号整数" ), outputArrayPortPtr ) == false )
 			return false;
-		if( addResultVar )
-			if( varDirector->create( addResultVar ) == false )
-				return false;
-		if( setPortVar( intOutputPort, addResultVar ) == false )
+		if( appendOutputPortType( tr( "条件" ), anyVarOutputPortPtr ) == false )
+			return false;
+		if( setPortMultiple( vectorInputPortPtr, true ) == false )
 			return false;
 		return true;
 	};
@@ -37,22 +39,13 @@ bool ConbinationUIntArrayNode::readyNodeRunData( ) {
 }
 
 bool ConbinationUIntArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	*addResultVar = 0;
-	auto outputPorts = getRefPort( intVectorInputPort );
-	size_t count = outputPorts.size( );
-	auto outputPortArrayPtr = outputPorts.data( );
-	size_t index = 0;
-	void *outputVarPtr;
-	Node *parentNode;
-	VarDirector *varDirector;
-	int64_t *converVar;
-	for( ; index < count; index += 1 ) {
-		outputVarPtr = outputPortArrayPtr[ index ]->getVarPtr( );
-		parentNode = outputPortArrayPtr[ index ]->getParentNode( );
-		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( outputVarPtr, converVar ) == false )
-			return false;
-		*addResultVar += *converVar;
-	}
+	if( outVarPtr )
+		varDirector->release( outVarPtr );
+	if( varDirector->create( outVarPtr ) == false )
+		return false;
+	if( setPortVar( outputArrayPortPtr, outVarPtr ) == false )
+		return false;
+	if( setPortVar( anyVarOutputPortPtr, anyOutputVarPtr ) == false )
+		return false;
 	return true;
 }

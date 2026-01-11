@@ -54,6 +54,25 @@ void InputPort::clearOutputPortRef( ) {
 			varDirector->release( varPtr );
 	}
 }
+bool InputPort::bindPortInfo( ) {
+	/*auto varDirector = getVarDirector( );
+	if( varDirector == nullptr )
+		return false;
+	if( varDirector->create( varTypeName, varPtr ) == false )
+		return false;
+	return true;*/
+	return true;
+}
+
+bool InputPort::releasePortInfo( ) {
+	//if( varPtr == nullptr )
+	//	return true;
+	//auto varDirector = getVarDirector( );
+	//if( varDirector )
+	//	return varDirector->release( varPtr );
+	//return false;
+	return true;
+}
 InputPort::InputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
 	multiple = false;
@@ -96,6 +115,13 @@ bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
 
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
+}
+VarDirector * InputPort::getVarDirector( ) const {
+	if( varDirectorPtr )
+		return varDirectorPtr;
+	if( parentNode )
+		return parentNode->getVarDirector( );
+	return nullptr;
 }
 void InputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );

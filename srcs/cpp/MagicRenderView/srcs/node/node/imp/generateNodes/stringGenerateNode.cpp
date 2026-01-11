@@ -101,13 +101,12 @@ bool StringGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	OutputPort *const *port = outputPorts.data( );
 	OutputPort *outputPort = port[ 0 ];
 	auto generateVarPtr = outputPort->getVarPtr( );
-	auto parentNode = outputPort->getParentNode( );
-	auto parentNodeDirector = parentNode->getVarDirector( );
+	auto nodeDirector = outputPort->getVarDirector( );
 	size_t *index;
 	*arrayCount = 0;
 	*arrayIndex = 0;
 	*arrayCount = 0;
-	if( parentNodeDirector->cast_ptr( generateVarPtr, index ) == false )
+	if( nodeDirector->cast_ptr( generateVarPtr, index ) == false )
 		return false;
 	*arrayIndex = *index;
 	if( *arrayIndex >= *arrayCount ) // 如果大于，则取重复

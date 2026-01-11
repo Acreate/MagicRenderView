@@ -23,8 +23,9 @@ private:
 	OutputPortFrinedClass( );
 protected:
 	std::vector< InputPort * > refInputPortVector;
-	void * varPtr;
+	void *varPtr;
 	bool multiple;
+	VarDirector *varDirectorPtr;
 protected:
 	QString portName;
 	QString varTypeName;
@@ -38,6 +39,12 @@ protected:
 	virtual bool emplaceBackInputPortRef( InputPort *input_port_ptr );
 	virtual bool eraseInputPortRef( InputPort *input_port_ptr );
 	virtual void clearInputPortRef( );
+	/// @brief 绑定端口信息
+	/// @return 成功返回 true
+	virtual bool bindPortInfo( );
+	/// @brief 释放端口信息
+	/// @return 成功返回 true
+	virtual bool releasePortInfo( );
 public:
 	OutputPort( const QString &name );
 	~OutputPort( ) override;
@@ -51,6 +58,7 @@ public:
 	virtual uint64_t getGenerateCode( ) const { return generateCode; }
 	virtual bool isMultiple( ) { return multiple; }
 	virtual void * getVarPtr( ) const { return varPtr; }
+	VarDirector * getVarDirector( ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	bool event( QEvent *event ) override;

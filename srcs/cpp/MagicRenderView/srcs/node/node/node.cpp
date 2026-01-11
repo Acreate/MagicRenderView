@@ -91,6 +91,28 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout(
 	mainLayout->addWidget( connectWidget );
 
 }
+bool Node::bindPortInfo( ) {
+	size_t count = outputPortVector.size( );
+	size_t index;
+	OutputPort **outputPortArrayPtr;
+	if( count ) {
+		outputPortArrayPtr = outputPortVector.data( );
+		for( index = 0; index < count; ++index )
+			outputPortArrayPtr[ index ]->bindPortInfo( );
+	}
+	return true;
+}
+bool Node::releasePortInfo( ) {
+	size_t count = outputPortVector.size( );
+	size_t index;
+	OutputPort **outputPortArrayPtr;
+	if( count ) {
+		outputPortArrayPtr = outputPortVector.data( );
+		for( index = 0; index < count; ++index )
+			outputPortArrayPtr[ index ]->releasePortInfo( );
+	}
+	return true;
+}
 bool Node::appendInputPort( InputPort *input_port ) {
 	size_t count, index;
 	InputPort **outputPortArrayPtr;
@@ -281,6 +303,7 @@ bool Node::updatePortGenerateCodes( ) {
 		outputPortArrayPtr[ index ]->generateCode = index + 1;
 	return true;
 }
+
 void Node::inputAddRef_Slot( InputPort *input_port, OutputPort *ref_output_port ) {
 	if( emplaceBackRefOutputPortNode( input_port, ref_output_port ) == false )
 		return;
@@ -695,10 +718,22 @@ bool Node::setPortMultiple( OutputPort *output_port, bool multiple ) {
 bool Node::getVarDirector( OutputPort *output_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
 	if( output_port == nullptr )
 		return false;
-	if(  output_port->parentNode == nullptr )
+	result_var_director = output_port->getVarDirector( );
+	if( result_var_director == nullptr )
 		return false;
-	result_var_director =  output_port->parentNode->varDirector;
 	result_var_ptr = output_port->varPtr;
+	return true;
+}
+bool Node::setVarDirector( OutputPort *output_port, VarDirector *var_director ) {
+	if( output_port == nullptr )
+		return false;
+	output_port->varDirectorPtr = var_director;
+	return true;
+}
+bool Node::setVarDirector( InputPort *input_port, VarDirector *var_director ) {
+	if( input_port == nullptr )
+		return false;
+	input_port->varDirectorPtr = var_director;
 	return true;
 }
 bool Node::getInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
@@ -711,13 +746,26 @@ bool Node::getInfo( OutputPort *output_port, Node *&result_input_port_node_paren
 	result_var_ptr = output_port->varPtr;
 	return true;
 }
+bool Node::setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr ) {
+	if( output_port )
+		return false;
+	output_port->varDirectorPtr = var_director;
+	output_port->varPtr = varPtr;
+	return true;
+}
+bool Node::setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
+	if( input_port )
+		return false;
+	input_port->varDirectorPtr = var_director;
+	input_port->varPtr = varPtr;
+	return true;
+}
 bool Node::getVarDirector( InputPort *input_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
-	
 	if( input_port == nullptr )
 		return false;
-	if(  input_port->parentNode == nullptr )
+	result_var_director = input_port->getVarDirector( );
+	if( result_var_director == nullptr )
 		return false;
-	result_var_director =  input_port->parentNode->varDirector;
 	result_var_ptr = input_port->varPtr;
 	return true;
 }

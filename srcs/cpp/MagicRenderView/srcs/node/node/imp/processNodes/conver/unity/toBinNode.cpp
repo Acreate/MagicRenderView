@@ -39,8 +39,7 @@ bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		return true;
 	auto outputPortArrayPtr = outputPortsPtr.data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
-	auto parentNodePtr = outputPortPtr->getParentNode( );
-	auto varDirectorPtr = parentNodePtr->getVarDirector( );
+	auto nodeDirector = outputPortPtr->getVarDirector( );
 	auto varPtr = outputPortPtr->getVarPtr( );
 	auto setNumberVar = [this] ( const auto &number_var ) ->bool {
 		*outVarPtr = number_var;
@@ -48,7 +47,7 @@ bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	};
 
 	QColor *colorPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
+	if( nodeDirector->cast_ptr( varPtr, colorPtr ) ) {
 		uint64_t buffVar;
 		uint64_t orVar = colorPtr->red( );
 		buffVar = colorPtr->green( );
@@ -62,7 +61,7 @@ bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	}
 
 	QString *stringPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, stringPtr ) ) {
+	if( nodeDirector->cast_ptr( varPtr, stringPtr ) ) {
 		bool result = false;
 		*outVarPtr = stringPtr->toULongLong( &result );
 		if( result )
@@ -76,7 +75,7 @@ bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	}
 
 	QChar *charPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, charPtr ) ) {
+	if( nodeDirector->cast_ptr( varPtr, charPtr ) ) {
 		*outVarPtr = charPtr->unicode( );
 		return true;
 	}
@@ -85,33 +84,33 @@ bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	uint16_t *uint16t;
 	uint32_t *uint32t;
 	uint64_t *uint64t;
-	if( varDirectorPtr->cast_ptr( varPtr, uint8t ) )
+	if( nodeDirector->cast_ptr( varPtr, uint8t ) )
 		return setNumberVar( *uint8t );
-	if( varDirectorPtr->cast_ptr( varPtr, uint16t ) )
+	if( nodeDirector->cast_ptr( varPtr, uint16t ) )
 		return setNumberVar( *uint16t );
-	if( varDirectorPtr->cast_ptr( varPtr, uint32t ) )
+	if( nodeDirector->cast_ptr( varPtr, uint32t ) )
 		return setNumberVar( *uint32t );
-	if( varDirectorPtr->cast_ptr( varPtr, uint64t ) )
+	if( nodeDirector->cast_ptr( varPtr, uint64t ) )
 		return setNumberVar( *uint64t );
 
 	int8_t *int8t;
 	int16_t *int16t;
 	int32_t *int32t;
 	int64_t *int64t;
-	if( varDirectorPtr->cast_ptr( varPtr, int8t ) )
+	if( nodeDirector->cast_ptr( varPtr, int8t ) )
 		return setNumberVar( *int8t );
-	if( varDirectorPtr->cast_ptr( varPtr, int16t ) )
+	if( nodeDirector->cast_ptr( varPtr, int16t ) )
 		return setNumberVar( *int16t );
-	if( varDirectorPtr->cast_ptr( varPtr, int32t ) )
+	if( nodeDirector->cast_ptr( varPtr, int32t ) )
 		return setNumberVar( *int32t );
-	if( varDirectorPtr->cast_ptr( varPtr, int64t ) )
+	if( nodeDirector->cast_ptr( varPtr, int64t ) )
 		return setNumberVar( *int64t );
 
 	float *floatPtr;
 	double *doublePtr;
-	if( varDirectorPtr->cast_ptr( varPtr, floatPtr ) )
+	if( nodeDirector->cast_ptr( varPtr, floatPtr ) )
 		return setNumberVar( *floatPtr );
-	if( varDirectorPtr->cast_ptr( varPtr, doublePtr ) )
+	if( nodeDirector->cast_ptr( varPtr, doublePtr ) )
 		return setNumberVar( *doublePtr );
 	return setNumberVar( 0 );
 }

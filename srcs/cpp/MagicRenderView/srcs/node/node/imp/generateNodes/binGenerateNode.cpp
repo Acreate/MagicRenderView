@@ -31,21 +31,12 @@ bool BinGenerateNode::initEx( MainWidget *parent ) {
 		outputCountPort = appendOutputPortType< UIntOutputPort >( tr( "导出总数" ) );
 		if( outputCountPort == nullptr )
 			return false;
-		if( arrayCount == nullptr )
-			if( varDirector->create( arrayCount ) == false )
-				return false;
-		if( arrayIndex == nullptr )
-			if( varDirector->create( arrayIndex ) == false )
-				return false;
-		if( currentIndexVar == nullptr )
-			if( varDirector->create( currentIndexVar ) == false )
-				return false;
 		// 绑定指针
-		if( setPortVar( outputIndexPort, arrayIndex ) == false )
+		if( setInfo( outputIndexPort, varDirector, arrayIndex ) == false )
 			return false;
-		if( setPortVar( outputVarPort, currentIndexVar ) == false )
+		if( setInfo( outputVarPort, varDirector, currentIndexVar ) == false )
 			return false;
-		if( setPortVar( outputCountPort, arrayCount ) == false )
+		if( setInfo( outputCountPort, varDirector, arrayCount ) == false )
 			return false;
 		return true;
 	};
@@ -100,14 +91,13 @@ bool BinGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) 
 	OutputPort *const *port = outputPorts.data( );
 	OutputPort *outputPort = port[ 0 ];
 	auto generateVarPtr = outputPort->getVarPtr( );
-	auto parentNode = outputPort->getParentNode( );
-	auto parentNodeDirector = parentNode->getVarDirector( );
+	auto nodeDirector = outputPort->getVarDirector( );
 	size_t *index;
 	*arrayCount = 0;
 	*arrayIndex = 0;
 	*arrayCount = 0;
-	if( parentNodeDirector->cast_ptr( generateVarPtr, index ) == false )
-		return false;
+	if( nodeDirector->cast_ptr( generateVarPtr, index ) == false )
+		return true;
 	*arrayIndex = *index;
 	if( *arrayIndex >= *arrayCount ) // 如果大于，则取重复
 		*arrayIndex = *arrayIndex % *arrayCount;
