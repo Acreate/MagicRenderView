@@ -54,6 +54,7 @@
 #include "../../node/imp/processNodes/baseOperation/uint/uIntModNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntMulNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntSubNode.h"
+#include "../../node/imp/processNodes/conver/toCharNode.h"
 #include "../../node/imp/processNodes/conver/toColorNode.h"
 #include "../../node/imp/processNodes/conver/toFloatNode.h"
 #include "../../node/imp/processNodes/conver/toImageNode.h"
@@ -84,13 +85,13 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( IntArrayDivNode );
 	emaplace_back_node( IntArrayMulNode );
 	emaplace_back_node( IntArrayModNode );
-	
+
 	emaplace_back_node( UIntArrayAddNode );
 	emaplace_back_node( UIntArraySubNode );
 	emaplace_back_node( UIntArrayDivNode );
 	emaplace_back_node( UIntArrayMulNode );
 	emaplace_back_node( UIntArrayModNode );
-	
+
 	emaplace_back_node( FloatArrayAddNode );
 	emaplace_back_node( FloatArraySubNode );
 	emaplace_back_node( FloatArrayDivNode );
@@ -145,6 +146,7 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( ReadFileBinDataNode );
 	emaplace_back_node( ReadFileImageNode );
 	// 转换
+	emaplace_back_node( ToCharNode );
 	emaplace_back_node( ToStringNode );
 	emaplace_back_node( ToIntNode );
 	emaplace_back_node( ToUIntNode );

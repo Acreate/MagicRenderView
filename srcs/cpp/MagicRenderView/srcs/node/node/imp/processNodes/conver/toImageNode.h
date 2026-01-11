@@ -3,11 +3,16 @@
 
 #include "../../../processNode.h"
 
+class AnyVarInputPort;
+class ImageOutputPort;
 class ToImageNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	AnyVarInputPort *anyVarInputPortPtr;
+	ImageOutputPort *imageOutputPortPtr;
+	QImage *outVarPtr;
 public:
-	ToImageNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ToImageNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

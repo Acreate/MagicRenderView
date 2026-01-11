@@ -3,11 +3,16 @@
 
 #include "../../../processNode.h"
 
+class AnyVarInputPort;
+class StringOutputPort;
 class ToStringNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	AnyVarInputPort *anyVarInputPortPtr;
+	StringOutputPort *stringOutputPortPtr;
+	QString *outVarPtr;
 public:
-	ToStringNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ToStringNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

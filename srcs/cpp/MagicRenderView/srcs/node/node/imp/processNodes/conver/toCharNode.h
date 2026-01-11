@@ -1,24 +1,25 @@
-﻿#ifndef TOINTNODE_H_H_HEAD__FILE__
-#define TOINTNODE_H_H_HEAD__FILE__
+﻿#ifndef TOCHARNODE_H_H_HEAD__FILE__
+#define TOCHARNODE_H_H_HEAD__FILE__
 
 #include "../../../processNode.h"
 
+class CharOutputPort;
 class AnyVarInputPort;
 class IntOutputPort;
-class ToIntNode : public ProcessNode {
+class ToCharNode : public ProcessNode {
 	Q_OBJECT;
 protected:
 	AnyVarInputPort *anyVarInputPortPtr;
-	IntOutputPort *intOutputPortPtr;
-	int64_t *outVarPtr;
+	CharOutputPort *charOutputPortPtr;
+	QChar *outVarPtr;
 public:
-	ToIntNode( const QString &node_name );
+	ToCharNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "转换/字符" ) );
 };
-#endif // TOINTNODE_H_H_HEAD__FILE__
+#endif // TOCHARNODE_H_H_HEAD__FILE__

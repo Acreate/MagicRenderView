@@ -1,13 +1,23 @@
 ﻿#include "toStringNode.h"
 
+#include "../../../../../director/varDirector.h"
 #include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
 #include "../../../../port/outputPort/unity/stringOutputPort.h"
 
+ToStringNode::ToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< AnyVarInputPort >( tr( "值" ) ) == nullptr )
+		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
+		if( anyVarInputPortPtr == nullptr )
 			return false;
-		if( appendOutputPortType< StringOutputPort >( tr( "字符串" ) ) == nullptr )
+		stringOutputPortPtr = appendOutputPortType< StringOutputPort >( tr( "字符串" ) );
+		if( stringOutputPortPtr == nullptr )
+			return false;
+		if( outVarPtr )
+			varDirector->release( outVarPtr );
+		if( varDirector->create( outVarPtr ) == false )
+			return false;
+		if( setPortVar( stringOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};

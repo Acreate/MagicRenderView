@@ -23,7 +23,6 @@ bool ToColorNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( colorOutputPortPtr, outVarPtr ) == false )
 			return false;
-		outVarPtr->setRgb( 0, 0, 0, 0 );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

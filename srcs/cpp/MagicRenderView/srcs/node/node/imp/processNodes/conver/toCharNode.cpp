@@ -1,37 +1,37 @@
-﻿#include "toUIntNode.h"
+﻿#include "toCharNode.h"
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
-#include "../../../../port/outputPort/unity/uIntOutputPort.h"
+#include "../../../../port/outputPort/unity/charOutputPort.h"
+#include "../../../../port/outputPort/unity/intOutputPort.h"
 
-ToUIntNode::ToUIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
-bool ToUIntNode::initEx( MainWidget *parent ) {
+ToCharNode::ToCharNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
+bool ToCharNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
 		if( anyVarInputPortPtr == nullptr )
 			return false;
-		uIntOutputPortPtr = appendOutputPortType< UIntOutputPort >( tr( "无符号整数" ) );
-		if( uIntOutputPortPtr == nullptr )
+		charOutputPortPtr = appendOutputPortType< CharOutputPort >( tr( "字符" ) );
+		if( charOutputPortPtr == nullptr )
 			return false;
 		if( outVarPtr )
 			varDirector->release( outVarPtr );
 		if( varDirector->create( outVarPtr ) == false )
 			return false;
-		if( setPortVar( uIntOutputPortPtr, outVarPtr ) == false )
+		if( setPortVar( charOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
 }
-bool ToUIntNode::updateLayout( ) {
+bool ToCharNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToUIntNode::readyNodeRunData( ) {
-	*outVarPtr = 0;
+bool ToCharNode::readyNodeRunData( ) {
+	*outVarPtr = ( short ) 0;
 	return true;
 }
-bool ToUIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToCharNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
@@ -49,30 +49,24 @@ bool ToUIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
 	QColor *colorPtr;
 	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
-		uint64_t buffVar;
 		uint64_t orVar = colorPtr->red( );
-		buffVar = colorPtr->green( );
-		orVar = orVar | buffVar << 16;
-		buffVar = colorPtr->blue( );
-		orVar = orVar | buffVar << 32;
-		buffVar = colorPtr->alpha( );
-		orVar = orVar | buffVar << 48;
-		*outVarPtr = orVar;
+		*outVarPtr = ( short ) orVar;
 		return true;
 	}
 
 	QString *stringPtr;
 	if( varDirectorPtr->cast_ptr( varPtr, stringPtr ) ) {
 		bool result = false;
-		*outVarPtr = stringPtr->toULongLong( &result );
+		*outVarPtr = ( short ) stringPtr->toULongLong( &result );
 		if( result )
 			return true;
-		*outVarPtr = stringPtr->toLongLong( &result );
+		*outVarPtr = ( short ) stringPtr->toLongLong( &result );
 		if( result )
 			return true;
-		*outVarPtr = stringPtr->toDouble( &result );
+		*outVarPtr = ( short ) stringPtr->toDouble( &result );
 		if( result )
 			return true;
+		return true;
 	}
 
 	QChar *charPtr;
