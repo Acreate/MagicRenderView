@@ -1,8 +1,6 @@
 ﻿#include "uIntSubNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/unity/intInputPort.h>
-#include <node/port/outputPort/unity/intOutputPort.h>
 
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 #include "../../../../../port/outputPort/unity/uIntOutputPort.h"
