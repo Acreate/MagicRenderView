@@ -8,7 +8,7 @@ class UIntInputPort;
 class UIntSubNode : public UnityNode {
 	Q_OBJECT;
 private:
-	using NodeType = int64_t;
+	using NodeType = uint64_t;
 protected:
 	UIntInputPort *firstInputPort;
 	UIntInputPort *secondInputPort;

@@ -6,11 +6,13 @@ class FloatOutputPort;
 class FloatInputPort;
 class FloatAddNode : public UnityNode {
 	Q_OBJECT;
+private:
+	using NodeType = double;
 protected:
 	FloatInputPort *firstInputPort;
 	FloatInputPort *secondInputPort;
 	FloatOutputPort *outputPort;
-	double *outputVarPtr;
+	NodeType *outputVarPtr;
 public:
 	FloatAddNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

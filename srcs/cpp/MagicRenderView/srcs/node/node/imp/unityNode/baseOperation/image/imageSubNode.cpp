@@ -1,19 +1,19 @@
-﻿#include "floatDivNode.h"
+﻿#include "imageSubNode.h"
 
 #include <director/varDirector.h>
+#include <node/port/inputPort/unity/imageInputPort.h>
+#include <node/port/outputPort/unity/imageOutputPort.h>
 
-#include "../../../../../port/inputPort/unity/floatInputPort.h"
-#include "../../../../../port/outputPort/unity/floatOutputPort.h"
+#include "../../../../../../tools/imageTools.h"
 
-FloatDivNode::FloatDivNode( const QString &node_name ) : UnityNode( node_name ) {
+ImageSubNode::ImageSubNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
-bool FloatDivNode::initEx( MainWidget *parent ) {
+bool ImageSubNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
 			return false;
-		if( appendInputPortType( tr( "浮点列表" ), secondInputPort ) == false )
+		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -30,17 +30,15 @@ bool FloatDivNode::initEx( MainWidget *parent ) {
 	return UnityNode::initEx( parent );
 
 }
-bool FloatDivNode::updateLayout( ) {
+bool ImageSubNode::updateLayout( ) {
 	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-bool FloatDivNode::readyNodeRunData( ) {
-	*outputVarPtr = 0;
-
+bool ImageSubNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;
@@ -65,11 +63,7 @@ bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	varDirector = outputPortArray[ 0 ]->getVarDirector( );
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
-	if( *converInt == 0 ) {
-		*outputVarPtr = 0;
-		return true;
-	}
-	*outputVarPtr /= *converInt;
+	ImageTools::imageOperation::sub( *outputVarPtr, *converInt );
 
 	return true;
 }

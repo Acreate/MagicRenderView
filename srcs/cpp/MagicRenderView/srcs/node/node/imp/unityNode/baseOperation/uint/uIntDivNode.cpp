@@ -2,7 +2,6 @@
 
 #include <director/varDirector.h>
 
-
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 #include "../../../../../port/outputPort/unity/uIntOutputPort.h"
 
@@ -41,10 +40,8 @@ bool UIntDivNode::readyNodeRunData( ) {
 bool UIntDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
-	size_t index;
 	NodeType *converInt;
 	void *portVarPtr;
-	Node *parentNode;
 	VarDirector *varDirector;
 	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
 	count = outputPorts->size( );
@@ -57,15 +54,19 @@ bool UIntDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		return true;
 	*outputVarPtr = *converInt;
 	outputPorts = &getRefPort( secondInputPort );
-	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
-	for( index = 0; index < count; index += 1 ) {
-		portVarPtr = outputPortArray[ index ]->getVarPtr( );
-		parentNode = outputPortArray[ index ]->getParentNode( );
-		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
-			continue;
-		*outputVarPtr += *converInt;
+	if( count == 0 )
+		return true;
+	outputPortArray = outputPorts->data( );
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	varDirector = outputPortArray[ 0 ]->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+		return true;
+	if( *converInt == 0 ) {
+		*outputVarPtr = 0;
+		return true;
 	}
+	*outputVarPtr /= *converInt;
+
 	return true;
 }

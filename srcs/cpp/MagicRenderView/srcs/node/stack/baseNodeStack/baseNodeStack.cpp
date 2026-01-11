@@ -1,8 +1,7 @@
 ﻿#include "baseNodeStack.h"
 
-#include <QMenu>
-
 #include <director/printerDirector.h>
+#include <QMenu>
 
 #include "../../node/imp/arrayNodes/addObjToArray/charAddToArrayNode.h"
 #include "../../node/imp/arrayNodes/addObjToArray/colorAddToArrayNode.h"
@@ -66,21 +65,6 @@
 #include "../../node/imp/jumpNodes/gotoNode.h"
 #include "../../node/imp/logicNodes/ifNode.h"
 #include "../../node/imp/pointNodes/makeNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatModNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intModNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntModNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntSubNode.h"
 #include "../../node/imp/processNodes/conver/toBinNode.h"
 #include "../../node/imp/processNodes/conver/toCharNode.h"
 #include "../../node/imp/processNodes/conver/toColorNode.h"
@@ -96,6 +80,31 @@
 #include "../../node/imp/processNodes/file/writeFileBinDataNode.h"
 #include "../../node/imp/processNodes/file/writeFileImageNode.h"
 #include "../../node/imp/processNodes/file/writeFileTextNode.h"
+#include "../../node/imp/unityNode/baseOperation/color/colorAddNode.h"
+#include "../../node/imp/unityNode/baseOperation/color/colorDivNode.h"
+#include "../../node/imp/unityNode/baseOperation/color/colorModNode.h"
+#include "../../node/imp/unityNode/baseOperation/color/colorMulNode.h"
+#include "../../node/imp/unityNode/baseOperation/color/colorSubNode.h"
+#include "../../node/imp/unityNode/baseOperation/float/floatAddNode.h"
+#include "../../node/imp/unityNode/baseOperation/float/floatDivNode.h"
+#include "../../node/imp/unityNode/baseOperation/float/floatModNode.h"
+#include "../../node/imp/unityNode/baseOperation/float/floatMulNode.h"
+#include "../../node/imp/unityNode/baseOperation/float/floatSubNode.h"
+#include "../../node/imp/unityNode/baseOperation/image/imageAddNode.h"
+#include "../../node/imp/unityNode/baseOperation/image/imageDivNode.h"
+#include "../../node/imp/unityNode/baseOperation/image/imageModNode.h"
+#include "../../node/imp/unityNode/baseOperation/image/imageMulNode.h"
+#include "../../node/imp/unityNode/baseOperation/image/imageSubNode.h"
+#include "../../node/imp/unityNode/baseOperation/int/intAddNode.h"
+#include "../../node/imp/unityNode/baseOperation/int/intDivNode.h"
+#include "../../node/imp/unityNode/baseOperation/int/intModNode.h"
+#include "../../node/imp/unityNode/baseOperation/int/intMulNode.h"
+#include "../../node/imp/unityNode/baseOperation/int/intSubNode.h"
+#include "../../node/imp/unityNode/baseOperation/uint/uIntAddNode.h"
+#include "../../node/imp/unityNode/baseOperation/uint/uIntDivNode.h"
+#include "../../node/imp/unityNode/baseOperation/uint/uIntModNode.h"
+#include "../../node/imp/unityNode/baseOperation/uint/uIntMulNode.h"
+#include "../../node/imp/unityNode/baseOperation/uint/uIntSubNode.h"
 
 #define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
 bool BaseNodeStack::init( ) {
@@ -148,6 +157,18 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( FloatDivNode );
 	emaplace_back_node( FloatMulNode );
 	emaplace_back_node( FloatModNode );
+
+	emaplace_back_node( ColorAddNode );
+	emaplace_back_node( ColorSubNode );
+	emaplace_back_node( ColorDivNode );
+	emaplace_back_node( ColorMulNode );
+	emaplace_back_node( ColorModNode );
+
+	emaplace_back_node( ImageAddNode );
+	emaplace_back_node( ImageSubNode );
+	emaplace_back_node( ImageDivNode );
+	emaplace_back_node( ImageMulNode );
+	emaplace_back_node( ImageModNode );
 	// 序列基础四则运算
 	emaplace_back_node( IntArrayAddNode );
 	emaplace_back_node( IntArraySubNode );

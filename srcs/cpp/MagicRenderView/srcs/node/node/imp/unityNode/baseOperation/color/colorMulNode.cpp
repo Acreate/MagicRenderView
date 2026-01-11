@@ -1,19 +1,19 @@
-﻿#include "floatDivNode.h"
+﻿#include "colorMulNode.h"
 
 #include <director/varDirector.h>
+#include <node/port/inputPort/unity/colorInputPort.h>
+#include <node/port/outputPort/unity/colorOutputPort.h>
 
-#include "../../../../../port/inputPort/unity/floatInputPort.h"
-#include "../../../../../port/outputPort/unity/floatOutputPort.h"
+#include "../../../../../../tools/imageTools.h"
 
-FloatDivNode::FloatDivNode( const QString &node_name ) : UnityNode( node_name ) {
+ColorMulNode::ColorMulNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
-bool FloatDivNode::initEx( MainWidget *parent ) {
+bool ColorMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
 			return false;
-		if( appendInputPortType( tr( "浮点列表" ), secondInputPort ) == false )
+		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -21,26 +21,20 @@ bool FloatDivNode::initEx( MainWidget *parent ) {
 			varDirector->release( outputVarPtr );
 		if( varDirector->create( outputVarPtr ) == false )
 			return false;
-		if( setPortVar( outputPort, outputVarPtr ) == false )
-			return false;
-		if( setPortMultiple( secondInputPort, true ) == false )
-			return false;
 		return true;
 	};
 	return UnityNode::initEx( parent );
 
 }
-bool FloatDivNode::updateLayout( ) {
+bool ColorMulNode::updateLayout( ) {
 	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-bool FloatDivNode::readyNodeRunData( ) {
-	*outputVarPtr = 0;
-
+bool ColorMulNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ColorMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;
@@ -62,14 +56,10 @@ bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		return true;
 	outputPortArray = outputPorts->data( );
 	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
-	varDirector = outputPortArray[ 0 ]->getVarDirector( );
+	varDirector =  outputPortArray[ 0 ]->getVarDirector( );
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
-	if( *converInt == 0 ) {
-		*outputVarPtr = 0;
-		return true;
-	}
-	*outputVarPtr /= *converInt;
+	ImageTools::colorOperation::mul( *outputVarPtr, *converInt );
 
 	return true;
 }
