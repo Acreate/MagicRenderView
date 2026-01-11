@@ -4,6 +4,8 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../../tools/baseOperationTools.h"
+
 IntModNode::IntModNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -63,7 +65,7 @@ bool IntModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 			continue;
-		*outputVarPtr %= *converInt;
+		BaseOperationTools::mod( *outputVarPtr, *converInt );
 	}
 	return true;
 }

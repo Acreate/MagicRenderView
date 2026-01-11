@@ -2,6 +2,7 @@
 
 #include <director/varDirector.h>
 
+#include "../../../../../../tools/baseOperationTools.h"
 #include "../../../../../port/inputPort/unity/floatInputPort.h"
 #include "../../../../../port/outputPort/unity/floatOutputPort.h"
 
@@ -68,7 +69,7 @@ bool FloatModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 			continue;
-		*outputVarPtr = *outputVarPtr - *outputVarPtr / *converInt;
+		BaseOperationTools::mod( *outputVarPtr, *converInt );
 	}
 	return true;
 }

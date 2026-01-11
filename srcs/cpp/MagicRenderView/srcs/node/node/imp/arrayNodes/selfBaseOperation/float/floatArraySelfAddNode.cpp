@@ -2,10 +2,9 @@
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/floatVectorInputPort.h>
-#include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
-
-#include "../../../../../port/outputPort/unity/floatOutputPort.h"
+#include <node/port/outputPort/array/floatVectorOutputPort.h>
+#include <node/port/outputPort/unity/floatOutputPort.h>
 
 FloatArraySelfAddNode::FloatArraySelfAddNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;

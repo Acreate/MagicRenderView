@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 
-
+#include "../../../../../../tools/baseOperationTools.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 #include "../../../../../port/outputPort/unity/uIntOutputPort.h"
 
@@ -65,7 +65,7 @@ bool UIntModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 			continue;
-		*outputVarPtr += *converInt;
+		BaseOperationTools::mod( *outputVarPtr, *converInt );
 	}
 	return true;
 }

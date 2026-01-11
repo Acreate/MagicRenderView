@@ -1,18 +1,18 @@
-﻿#include "floatArraySelfMulNode.h"
+﻿#include "colorArraySelfAddNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/array/floatVectorInputPort.h>
-#include <node/port/inputPort/unity/floatInputPort.h>
-#include <node/port/outputPort/array/floatVectorOutputPort.h>
-#include <node/port/outputPort/unity/floatOutputPort.h>
+#include <node/port/inputPort/array/colorVectorInputPort.h>
+#include <node/port/outputPort/unity/colorOutputPort.h>
 
-FloatArraySelfMulNode::FloatArraySelfMulNode( const QString &node_name ) : ArrayNode( node_name ) {
+ColorArraySelfAddNode::ColorArraySelfAddNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
-bool FloatArraySelfMulNode::initEx( MainWidget *parent ) {
+bool ColorArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
+
 		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
 			return false;
+
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
 		if( outputVarPtr )
@@ -21,23 +21,20 @@ bool FloatArraySelfMulNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( outputPort, outputVarPtr ) == false )
 			return false;
-	
 		return true;
 	};
 	return ArrayNode::initEx( parent );
-
 }
-bool FloatArraySelfMulNode::updateLayout( ) {
+bool ColorArraySelfAddNode::updateLayout( ) {
 	if( ArrayNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-bool FloatArraySelfMulNode::readyNodeRunData( ) {
-
+bool ColorArraySelfAddNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-		OutputPort *const*outputPortArray;
+bool ColorArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;
 	NodeType *secondConverPtr;
@@ -53,7 +50,7 @@ bool FloatArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 		varDirector = outputPortArray[ index ]->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
-		*outputVarPtr *= *secondConverPtr;
+		outputVarPtr->setRgb( outputVarPtr->red( ) + secondConverPtr->red( ), outputVarPtr->green( ) + secondConverPtr->green( ), outputVarPtr->blue( ) + secondConverPtr->blue( ), outputVarPtr->alpha( ) + secondConverPtr->alpha( ) );
 	}
 	return true;
 }

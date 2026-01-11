@@ -22,8 +22,6 @@ bool IntArrayDivNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( outputPort, outputVarPtr ) == false )
 			return false;
-		if( setPortMultiple( secondInputPort, true ) == false )
-			return false;
 		return true;
 	};
 	return ArrayNode::initEx( parent );
@@ -43,7 +41,6 @@ bool IntArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) 
 	size_t index;
 	std::vector< NodeType > *converInt;
 	NodeType *secondConverPtr;
-	NodeType accumulativeTotal;
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
@@ -63,18 +60,16 @@ bool IntArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) 
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
-	accumulativeTotal = 1;
-	for( index = 0; index < count; index += 1 ) {
-		portVarPtr = outputPortArray[ index ]->getVarPtr( );
-		parentNode = outputPortArray[ index ]->getParentNode( );
-		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
-			continue;
-		accumulativeTotal *= *secondConverPtr;
-	}
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	parentNode = outputPortArray[ 0 ]->getParentNode( );
+	varDirector = parentNode->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+		return true;
+	if( *secondConverPtr == 0 )
+		return true;
 	count = outputVarPtr->size( );
 	auto outputArrayPtr = outputVarPtr->data( );
 	for( index = 0; index < count; index += 1 )
-		outputArrayPtr[ index ] /= accumulativeTotal;
+		outputArrayPtr[ index ] /= *secondConverPtr;
 	return true;
 }

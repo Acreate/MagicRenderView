@@ -1,17 +1,16 @@
-﻿#include "floatArraySelfMulNode.h"
+﻿#include "floatAddToArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/array/floatVectorInputPort.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
-#include <node/port/outputPort/unity/floatOutputPort.h>
 
-FloatArraySelfMulNode::FloatArraySelfMulNode( const QString &node_name ) : ArrayNode( node_name ) {
+FloatAddToArrayNode::FloatAddToArrayNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
-bool FloatArraySelfMulNode::initEx( MainWidget *parent ) {
+bool FloatAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
+
+		if( appendInputPortType( tr( "无符号整数" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -21,23 +20,23 @@ bool FloatArraySelfMulNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( outputPort, outputVarPtr ) == false )
 			return false;
-	
+		if( setPortMultiple( firstInputPort, true ) == false )
+			return false;
 		return true;
 	};
 	return ArrayNode::initEx( parent );
-
 }
-bool FloatArraySelfMulNode::updateLayout( ) {
+bool FloatAddToArrayNode::updateLayout( ) {
 	if( ArrayNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
-bool FloatArraySelfMulNode::readyNodeRunData( ) {
-
+bool FloatAddToArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-		OutputPort *const*outputPortArray;
+bool FloatAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	outputVarPtr->clear( );
+	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;
 	NodeType *secondConverPtr;
@@ -53,7 +52,7 @@ bool FloatArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 		varDirector = outputPortArray[ index ]->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
-		*outputVarPtr *= *secondConverPtr;
+		outputVarPtr->emplace_back( *secondConverPtr );
 	}
 	return true;
 }

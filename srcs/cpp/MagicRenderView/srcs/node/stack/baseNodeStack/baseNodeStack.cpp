@@ -4,6 +4,13 @@
 
 #include <director/printerDirector.h>
 
+#include "../../node/imp/arrayNodes/addObjToArray/charAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/colorAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/floatAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/imageAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/intAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/stringAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/addObjToArray/uIntAddToArrayNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayAddNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayDivNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayModNode.h"
@@ -19,8 +26,12 @@
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayModNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayMulNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArraySubNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfAddNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfMulNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfAddNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfMulNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/image/imageArraySelfAddNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/image/imageArraySelfMulNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfAddNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfMulNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/uint/uIntArraySelfAddNode.h"
@@ -154,11 +165,25 @@ bool BaseNodeStack::init( ) {
 
 	emaplace_back_node( UIntArraySelfAddNode );
 	emaplace_back_node( UIntArraySelfMulNode );
+
+	emaplace_back_node( ColorArraySelfAddNode );
+	emaplace_back_node( ColorArraySelfMulNode );
+
+	emaplace_back_node( ImageArraySelfAddNode );
+	emaplace_back_node( ImageArraySelfMulNode );
+	// 组成序列
+	emaplace_back_node( CharAddToArrayNode );
+	emaplace_back_node( ColorAddToArrayNode );
+	emaplace_back_node( FloatAddToArrayNode );
+	emaplace_back_node( ImageAddToArrayNode );
+	emaplace_back_node( IntAddToArrayNode );
+	emaplace_back_node( StringAddToArrayNode );
+	emaplace_back_node( UIntAddToArrayNode );
 	// 文件
 	emaplace_back_node( WriteFileTextNode );
 	emaplace_back_node( WriteFileBinDataNode );
 	emaplace_back_node( WriteFileImageNode );
-	
+
 	emaplace_back_node( ReadFileTextNode );
 	emaplace_back_node( ReadFileBinDataNode );
 	emaplace_back_node( ReadFileImageNode );
