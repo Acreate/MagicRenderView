@@ -3,11 +3,16 @@
 
 #include "../../../processNode.h"
 
+class AnyVarInputPort;
+class FloatOutputPort;
 class ToFloatNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	AnyVarInputPort *anyVarInputPortPtr;
+	FloatOutputPort *floatOutputPortPtr;
+	double* outVarPtr;
 public:
-	ToFloatNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ToFloatNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
