@@ -1,27 +1,36 @@
 ﻿#include "conbinationIntArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/array/intVectorInputPort.h>
-#include <node/port/outputPort/unity/intOutputPort.h>
+#include <tools/varDirectorTools.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/inputPort/cache/stringCacheInputPort.h>
+#include <node/port/outputPort/anyVar/anyVarOutputPort.h>
+#include <node/port/outputPort/array/stringVectorOutputPort.h>
+
+#include "../../../../port/inputPort/cache/intCacheInputPort.h"
+#include "../../../../port/outputPort/array/intVectorOutputPort.h"
 
 ConbinationIntArrayNode::ConbinationIntArrayNode( const QString &node_name ) : CacheNode( node_name ) {
-	addResultVar = nullptr;
-
+	outVarPtr = nullptr;
 }
 bool ConbinationIntArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		intVectorInputPort = appendInputPortType< IntVectorInputPort >( tr( "整数" ) );
-		if( intVectorInputPort == nullptr )
+
+		if( appendInputPortType( tr( "无符号整数" ), cacheInputPort ) == false )
 			return false;
-		intOutputPort = appendOutputPortType< IntOutputPort >( tr( "整数和" ) );
-		if( intOutputPort == nullptr )
+		if( appendInputPortType( tr( "条件" ), anyInputPort ) == false )
 			return false;
-		if( setPortMultiple( intVectorInputPort, true ) == false )
+		if( appendOutputPortType( tr( "无符号整数序列" ), vectorOutPortPtr ) == false )
 			return false;
-		if( addResultVar )
-			if( varDirector->create( addResultVar ) == false )
-				return false;
-		if( setPortVar( intOutputPort, addResultVar ) == false )
+		if( appendOutputPortType( tr( "条件" ), anyOutputPort ) == false )
+			return false;
+		if( outVarPtr )
+			varDirector->release( outVarPtr );
+		if( varDirector->create( outVarPtr ) == false )
+			return false;
+		if( setPortVar( vectorOutPortPtr, outVarPtr ) == false )
+			return false;
+		if( setPortMultiple( cacheInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -37,22 +46,35 @@ bool ConbinationIntArrayNode::readyNodeRunData( ) {
 }
 
 bool ConbinationIntArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	*addResultVar = 0;
-	auto outputPorts = getRefPort( intVectorInputPort );
-	size_t count = outputPorts.size( );
-	auto outputPortArrayPtr = outputPorts.data( );
-	size_t index = 0;
-	void *outputVarPtr;
-	Node *parentNode;
-	VarDirector *varDirector;
-	int64_t *converVar;
-	for( ; index < count; index += 1 ) {
-		outputVarPtr = outputPortArrayPtr[ index ]->getVarPtr( );
-		parentNode = outputPortArrayPtr[ index ]->getParentNode( );
-		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( outputVarPtr, converVar ) == false )
-			return false;
-		*addResultVar += *converVar;
+
+	auto anyOutputPorts = getRefPort( anyInputPort );
+	size_t count = anyOutputPorts.size( );
+	if( count == 0 )
+		return true;
+	auto anyOutputArrayPtr = anyOutputPorts.data( );
+	auto anyOutputPtr = anyOutputArrayPtr[ 0 ];
+	auto varPtr = anyOutputPtr->getVarPtr( );
+	VarDirector *varDirector = anyOutputPtr->getVarDirector( );
+	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
+		if( getRefPortNodeVector( anyOutputPtr, adviseNextNodeVector ) == false )
+			adviseNextNodeVector.clear( );
+		setInfo( anyOutputPort, varDirector, varPtr );
+		return true; // 指向的对象为 true，则返回 true
 	}
+	anyOutputPorts = getRefPort( cacheInputPort );
+	count = anyOutputPorts.size( );
+	if( count == 0 )
+		return true;
+	anyOutputArrayPtr = anyOutputPorts.data( );
+	size_t index;
+	int64_t *converPtr;
+	for( index = 0; index < count; ++index ) {
+		varDirector = anyOutputArrayPtr[ index ]->getVarDirector( );
+		varPtr = anyOutputArrayPtr[ index ]->getVarPtr( );
+		if( varDirector->cast_ptr( varPtr, converPtr ) == false )
+			continue;
+		outVarPtr->emplace_back( *converPtr );
+	}
+
 	return true;
 }

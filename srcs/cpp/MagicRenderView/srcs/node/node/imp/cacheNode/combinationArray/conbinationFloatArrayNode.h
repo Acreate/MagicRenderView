@@ -1,22 +1,32 @@
 ﻿#ifndef CONBINATIONFLOATARRAYNODE_H_H_HEAD__FILE__
 #define CONBINATIONFLOATARRAYNODE_H_H_HEAD__FILE__
 
-
 #include <node/node/cacheNode.h>
 
+class FloatCacheInputPort;
+class FloatVectorOutputPort;
+class AnyVarOutputPort;
+class AnyVarInputPort;
 class IntVectorInputPort;
 class IntOutputPort;
 class ConbinationFloatArrayNode : public CacheNode {
 	Q_OBJECT;
 protected:
-	IntOutputPort *intOutputPort;
-	IntVectorInputPort *intVectorInputPort;
-	int64_t* addResultVar;
+	FloatCacheInputPort* cacheInputPort;
+	FloatVectorOutputPort *vectorOutPortPtr;
+	AnyVarInputPort *anyInputPort;
+	AnyVarOutputPort *anyOutputPort;
+	std::vector< double > *outVarPtr;
+	std::vector< Node * > adviseNextNodeVector;
 public:
 	ConbinationFloatArrayNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
+	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override {
+		result_next_run_advise_node_vector = adviseNextNodeVector;
+		return true;
+	}
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:

@@ -3,6 +3,7 @@
 
 #include <node/node/cacheNode.h>
 
+class UIntCacheInputPort;
 class UIntVectorOutputPort;
 class UIntOutputPort;
 class AnyVarOutputPort;
@@ -12,17 +13,18 @@ class IntOutputPort;
 class ConbinationUIntArrayNode : public CacheNode {
 	Q_OBJECT;
 protected:
-	AnyVarInputPort *vectorInputPortPtr;
-	UIntVectorOutputPort *outputArrayPortPtr;
-	AnyVarInputPort *anyVarInputPortPtr;
-	AnyVarOutputPort *anyVarOutputPortPtr;
+	UIntCacheInputPort* cacheInputPort;
+	UIntVectorOutputPort *vectorOutPortPtr;
+	AnyVarInputPort *anyInputPort;
+	AnyVarOutputPort *anyOutputPort;
 	std::vector< uint64_t > *outVarPtr;
-	void *anyOutputVarPtr;
+	std::vector<Node*> adviseNextNodeVector;
 public:
 	ConbinationUIntArrayNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
+	bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:

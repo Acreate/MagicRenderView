@@ -43,6 +43,7 @@ namespace NodeEnum {
 	/// @brief 端口类型
 	enum class PortType {
 		InterFace,
+		Cache,
 		Generate,
 		Unity,
 		AnyVar,
