@@ -54,6 +54,7 @@
 #include "../../node/imp/processNodes/baseOperation/uint/uIntModNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntMulNode.h"
 #include "../../node/imp/processNodes/baseOperation/uint/uIntSubNode.h"
+#include "../../node/imp/processNodes/conver/unity/toBinNode.h"
 #include "../../node/imp/processNodes/conver/unity/toCharNode.h"
 #include "../../node/imp/processNodes/conver/unity/toColorNode.h"
 #include "../../node/imp/processNodes/conver/unity/toFloatNode.h"
@@ -148,6 +149,7 @@ bool BaseNodeStack::init( ) {
 	// 转换
 	emaplace_back_node( ToCharNode );
 	emaplace_back_node( ToStringNode );
+	emaplace_back_node( ToBinNode );
 	emaplace_back_node( ToIntNode );
 	emaplace_back_node( ToUIntNode );
 	emaplace_back_node( ToFloatNode );
