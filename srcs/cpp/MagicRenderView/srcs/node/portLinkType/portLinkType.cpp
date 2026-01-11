@@ -42,11 +42,13 @@ bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_p
 		return true;
 	if( inputPortType == NodeEnum::PortType::AnyVar )
 		return true;
-
-	// 非生成输出节点
-	if( outputPortType != NodeEnum::PortType::Generate )
-		if( outputPortType != inputPortType )
-			return false; // 端口不匹配，返回 false
+	
+	// 不是缓冲节点
+	if( inputPortType != NodeEnum::PortType::Cache )
+		// 非生成输出节点
+		if( outputPortType != NodeEnum::PortType::Generate )
+			if( outputPortType != inputPortType )
+				return false; // 端口不匹配，返回 false
 
 	QString outputPortTypeName = output_port->getVarTypeName( );
 	QString inputPortTypeName = input_port->getVarTypeName( );
