@@ -7,10 +7,13 @@ class IntOutputPort;
 class IntInputPort;
 class IntMulNode : public ProcessNode {
 	Q_OBJECT;
+private:
+	using NodeType = int64_t;
 protected:
-	IntOutputPort *outputPortType;
-	IntInputPort *multipleAddInputPort;
-	int64_t *addResult;
+	IntInputPort *firstInputPort;
+	IntInputPort *secondInputPort;
+	IntOutputPort *outputPort;
+	NodeType *outputVarPtr;
 public:
 	IntMulNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

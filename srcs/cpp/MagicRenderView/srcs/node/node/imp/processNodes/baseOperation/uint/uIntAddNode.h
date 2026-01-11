@@ -2,16 +2,18 @@
 #define UINTADDNODE_H_H_HEAD__FILE__
 #pragma once
 
-
 #include <node/node/processNode.h>
-class IntOutputPort;
-class IntInputPort;
+class UIntOutputPort;
+class UIntInputPort;
 class UIntAddNode : public ProcessNode {
 	Q_OBJECT;
+private:
+	using NodeType = uint64_t;
 protected:
-	IntOutputPort *outputPortType;
-	IntInputPort *multipleAddInputPort;
-	uint64_t *addResult;
+	UIntInputPort *firstInputPort;
+	UIntInputPort *secondInputPort;
+	UIntOutputPort *outputPort;
+	NodeType *outputVarPtr;
 public:
 	UIntAddNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

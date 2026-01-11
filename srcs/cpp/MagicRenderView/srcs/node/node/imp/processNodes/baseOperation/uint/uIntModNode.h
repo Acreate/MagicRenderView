@@ -3,14 +3,17 @@
 #pragma once
 
 #include <node/node/processNode.h>
-class IntOutputPort;
-class IntInputPort;
+class UIntOutputPort;
+class UIntInputPort;
 class UIntModNode : public ProcessNode {
 	Q_OBJECT;
+private:
+	using NodeType = int64_t;
 protected:
-	IntOutputPort *outputPortType;
-	IntInputPort *multipleAddInputPort;
-	uint64_t *addResult;
+	UIntInputPort *firstInputPort;
+	UIntInputPort *secondInputPort;
+	UIntOutputPort *outputPort;
+	NodeType *outputVarPtr;
 public:
 	UIntModNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

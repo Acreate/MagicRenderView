@@ -3,14 +3,15 @@
 #pragma once
 
 #include <node/node/processNode.h>
-class IntOutputPort;
-class IntInputPort;
+class FloatOutputPort;
+class FloatInputPort;
 class FloatSubNode : public ProcessNode {
 	Q_OBJECT;
 protected:
-	IntOutputPort *outputPortType;
-	IntInputPort *multipleAddInputPort;
-	double *addResult;
+	FloatInputPort *firstInputPort;
+	FloatInputPort *secondInputPort;
+	FloatOutputPort *outputPort;
+	double *outputVarPtr;
 public:
 	FloatSubNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

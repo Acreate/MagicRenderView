@@ -4,23 +4,27 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../port/inputPort/unity/uIntInputPort.h"
+#include "../../../../../port/outputPort/unity/uIntOutputPort.h"
+
 UIntAddNode::UIntAddNode( const QString &node_name ) : ProcessNode( node_name ) {
-	addResult = nullptr;
+	outputVarPtr = nullptr;
 }
 bool UIntAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		multipleAddInputPort = appendInputPortType< IntInputPort >( tr( "整数" ) );
-		if( multipleAddInputPort == nullptr )
+		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
 			return false;
-		outputPortType = appendOutputPortType< IntOutputPort >( tr( "和" ) );
-		if( outputPortType == nullptr )
+		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
 			return false;
-		if( setPortMultiple( multipleAddInputPort, true ) == false )
+		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
-		if( addResult == nullptr )
-			if( varDirector->create( addResult ) == false )
-				return false;
-		if( setPortVar( outputPortType, addResult ) == false )
+		if( outputVarPtr )
+			varDirector->release( outputVarPtr );
+		if( varDirector->create( outputVarPtr ) == false )
+			return false;
+		if( setPortVar( outputPort, outputVarPtr ) == false )
+			return false;
+		if( setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -37,23 +41,32 @@ bool UIntAddNode::readyNodeRunData( ) {
 }
 bool UIntAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	OutputPort *const*outputPortArray;
-	*addResult = 0;
 	size_t count;
-	size_t index = 0;
-	int64_t *converInt;
+	size_t index;
+	NodeType *converInt;
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > &outputPorts = getRefPort( multipleAddInputPort );
-	outputPortArray = outputPorts.data( );
-	count = outputPorts.size( );
-	for( ; index < count; index += 1 ) {
+	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	outputPortArray = outputPorts->data( );
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	varDirector = outputPortArray[ 0 ]->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+		return true;
+	*outputVarPtr = *converInt;
+	outputPorts = &getRefPort( secondInputPort );
+	outputPortArray = outputPorts->data( );
+	count = outputPorts->size( );
+	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		parentNode = outputPortArray[ index ]->getParentNode( );
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
-			return false;
-		*addResult += *converInt;
+			continue;
+		*outputVarPtr += *converInt;
 	}
 	return true;
 }

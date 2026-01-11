@@ -8,9 +8,10 @@ class IntAddNode : public ProcessNode {
 private:
 	using NodeType = int64_t;
 protected:
-	IntOutputPort *outputPortType;
-	IntInputPort *multipleAddInputPort;
-	NodeType *addResult;
+	IntInputPort *firstInputPort;
+	IntInputPort *secondInputPort;
+	IntOutputPort *outputPort;
+	NodeType *outputVarPtr;
 public:
 	IntAddNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
