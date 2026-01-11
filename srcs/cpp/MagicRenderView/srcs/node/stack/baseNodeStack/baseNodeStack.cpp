@@ -2,16 +2,31 @@
 
 #include <QMenu>
 
-#include "../../../app/application.h"
+#include <director/printerDirector.h>
 
-#include "../../../director/printerDirector.h"
-
-#include "../../../widget/mainWidget.h"
-
-#include "../../../win/mainWindow.h"
-
+#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayAddNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayDivNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayModNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayMulNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/float/floatArraySubNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/int/intArrayAddNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/int/intArrayDivNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/int/intArrayModNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/int/intArrayMulNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/int/intArraySubNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayAddNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayDivNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayModNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayMulNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArraySubNode.h"
 #include "../../node/imp/beginNodes/startNode.h"
-#include "../../node/imp/cacheNodes/intArrayAddNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationCharArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationColorArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationFloatArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationImageArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationIntArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationStringArrayNode.h"
+#include "../../node/imp/cacheNode/combinationArray/conbinationUIntArrayNode.h"
 #include "../../node/imp/endNodes/resultNode.h"
 #include "../../node/imp/generateNodes/binGenerateNode.h"
 #include "../../node/imp/generateNodes/charGenerateNode.h"
@@ -63,8 +78,32 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( StartNode );
 	// 结束返回
 	emaplace_back_node( ResultNode );
-	// 数组
+	// 数组运算
 	emaplace_back_node( IntArrayAddNode );
+	emaplace_back_node( IntArraySubNode );
+	emaplace_back_node( IntArrayDivNode );
+	emaplace_back_node( IntArrayMulNode );
+	emaplace_back_node( IntArrayModNode );
+	
+	emaplace_back_node( UIntArrayAddNode );
+	emaplace_back_node( UIntArraySubNode );
+	emaplace_back_node( UIntArrayDivNode );
+	emaplace_back_node( UIntArrayMulNode );
+	emaplace_back_node( UIntArrayModNode );
+	
+	emaplace_back_node( FloatArrayAddNode );
+	emaplace_back_node( FloatArraySubNode );
+	emaplace_back_node( FloatArrayDivNode );
+	emaplace_back_node( FloatArrayMulNode );
+	emaplace_back_node( FloatArrayModNode );
+	// 缓存
+	emaplace_back_node( ConbinationCharArrayNode );
+	emaplace_back_node( ConbinationStringArrayNode );
+	emaplace_back_node( ConbinationColorArrayNode );
+	emaplace_back_node( ConbinationImageArrayNode );
+	emaplace_back_node( ConbinationIntArrayNode );
+	emaplace_back_node( ConbinationUIntArrayNode );
+	emaplace_back_node( ConbinationFloatArrayNode );
 	// 生成
 	emaplace_back_node( BinGenerateNode );
 	emaplace_back_node( UIntGenerateNode );

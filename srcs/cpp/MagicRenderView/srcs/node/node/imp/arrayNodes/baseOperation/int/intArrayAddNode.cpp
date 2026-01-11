@@ -1,16 +1,15 @@
 ﻿#include "intArrayAddNode.h"
 
-#include "../../../../director/varDirector.h"
-#include "../../../port/inputPort/array/intVectorInputPort.h"
-#include "../../../port/inputPort/unity/intInputPort.h"
-#include "../../../port/outputPort/unity/intOutputPort.h"
+#include <director/varDirector.h>
+#include <node/port/inputPort/array/intVectorInputPort.h>
+#include <node/port/outputPort/unity/intOutputPort.h>
 
 IntArrayAddNode::IntArrayAddNode( const QString &node_name ) : ArrayNode( node_name ) {
 	addResultVar = nullptr;
+	
 }
 bool IntArrayAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
 		intVectorInputPort = appendInputPortType< IntVectorInputPort >( tr( "整数" ) );
 		if( intVectorInputPort == nullptr )
 			return false;
