@@ -32,8 +32,20 @@ bool VarDirectorTools::isTrue( const VarDirector *varDirectorPtr, const void *va
 				return false;
 			else if( stringPtr->isEmpty( ) == false )
 				return false;
-			else
+			else {
+				auto upper = stringPtr->toUpper( );
+				QString converUpperString;
+				converUpperString = QObject::tr( "false" ).toUpper( );
+				if( upper == converUpperString )
+					return false;
+				converUpperString = QObject::tr( "not" ).toUpper( );
+				if( upper == converUpperString )
+					return false;
+				converUpperString = QObject::tr( "null" ).toUpper( );
+				if( upper == converUpperString )
+					return false;
 				return true;
+			}
 		}
 
 	const QChar *charPtr;
