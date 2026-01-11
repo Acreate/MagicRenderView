@@ -11,11 +11,21 @@
 #include "../../node/imp/arrayNodes/addObjToArray/intAddToArrayNode.h"
 #include "../../node/imp/arrayNodes/addObjToArray/stringAddToArrayNode.h"
 #include "../../node/imp/arrayNodes/addObjToArray/uIntAddToArrayNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayAddNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayDivNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayModNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayMulNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/color/colorArraySubNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayAddNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayDivNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayModNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArrayMulNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/float/floatArraySubNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayAddNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayDivNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayModNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayMulNode.h"
+#include "../../node/imp/arrayNodes/baseOperation/image/imageArraySubNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/int/intArrayAddNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/int/intArrayDivNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/int/intArrayModNode.h"
@@ -156,6 +166,18 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( FloatArrayDivNode );
 	emaplace_back_node( FloatArrayMulNode );
 	emaplace_back_node( FloatArrayModNode );
+
+	emaplace_back_node( ColorArrayAddNode );
+	emaplace_back_node( ColorArraySubNode );
+	emaplace_back_node( ColorArrayDivNode );
+	emaplace_back_node( ColorArrayMulNode );
+	emaplace_back_node( ColorArrayModNode );
+
+	emaplace_back_node( ImageArrayAddNode );
+	emaplace_back_node( ImageArraySubNode );
+	emaplace_back_node( ImageArrayDivNode );
+	emaplace_back_node( ImageArrayMulNode );
+	emaplace_back_node( ImageArrayModNode );
 	// 序列自运算
 	emaplace_back_node( IntArraySelfAddNode );
 	emaplace_back_node( IntArraySelfMulNode );

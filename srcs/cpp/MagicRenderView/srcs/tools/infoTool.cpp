@@ -77,7 +77,7 @@ bool infoTool::toString( const VarDirector *var_director_ptr, const void *conver
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, colorPtr ) == true && toString( colorPtr, result_string ) )
 		return true;
-	if( var_director_ptr->cast_ptr( conver_var_ptr, imagePtr ) == true && ImageTools::imageToBase64( *imagePtr, result_string ) )
+	if( var_director_ptr->cast_ptr( conver_var_ptr, imagePtr ) == true && ImageTools::conver::imageToBase64( *imagePtr, result_string ) )
 		return true;
 	if( var_director_ptr->cast_ptr( conver_var_ptr, nodeTypeInfoPtr ) == true ) {
 		result_string = nodeTypeInfoPtr->toString( );
@@ -222,7 +222,7 @@ bool infoTool::toString( const VarDirector *var_director_ptr, const void *conver
 		size_t index = 0;
 		QStringList buffList;
 		for( ; index < count; ++index )
-			if( ImageTools::imageToBase64( dataPtr[ index ], result_string ) )
+			if( ImageTools::conver::imageToBase64( dataPtr[ index ], result_string ) )
 				buffList.append( result_string );
 		result_string = "{" + buffList.join( "," ) + "}";
 		return true;

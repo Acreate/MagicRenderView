@@ -2,8 +2,8 @@
 #define IMAGEARRAYSELFMULNODE_H_H_HEAD__FILE__
 
 #include <node/node/arrayNode.h>
-class FloatOutputPort;
-class FloatVectorInputPort;
+class ImageOutputPort;
+class ImageVectorInputPort;
 class ImageArraySelfMulNode : public ArrayNode {
 	Q_OBJECT;
 private:

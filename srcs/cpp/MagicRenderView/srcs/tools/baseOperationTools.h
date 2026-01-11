@@ -1,6 +1,7 @@
 ﻿#ifndef BASEOPERATIONTOOLS_H_H_HEAD__FILE__
 #define BASEOPERATIONTOOLS_H_H_HEAD__FILE__
 
+class QColor;
 namespace BaseOperationTools {
 	template< typename TLModType, typename TRModType >
 	bool mod( TLModType &left_var, const TRModType &right_var ) {
@@ -8,6 +9,8 @@ namespace BaseOperationTools {
 			left_var -= right_var;
 		return true;
 	}
+	
+
 };
 
 #endif // BASEOPERATIONTOOLS_H_H_HEAD__FILE__

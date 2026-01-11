@@ -4,6 +4,8 @@
 #include <node/port/inputPort/array/colorVectorInputPort.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
+#include "../../../../../../tools/imageTools.h"
+
 ColorArraySelfAddNode::ColorArraySelfAddNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -50,7 +52,7 @@ bool ColorArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 		varDirector = outputPortArray[ index ]->getVarDirector( );
 		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
-		outputVarPtr->setRgb( outputVarPtr->red( ) + secondConverPtr->red( ), outputVarPtr->green( ) + secondConverPtr->green( ), outputVarPtr->blue( ) + secondConverPtr->blue( ), outputVarPtr->alpha( ) + secondConverPtr->alpha( ) );
+		ImageTools::colorOperation::add( *outputVarPtr, *secondConverPtr );
 	}
 	return true;
 }

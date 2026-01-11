@@ -24,7 +24,7 @@ bool ImageGenerateNodeEditor::updateGenerateItemInfo( ) {
 		auto data = generateVector->data( );
 		QString base64;
 		for( index = 0; index < count; ++index )
-			if( ImageTools::imageToBase64( data[ index ], base64 ) )
+			if( ImageTools::conver::imageToBase64( data[ index ], base64 ) )
 				generateRenderWidget->setInfo( index, base64 );
 			else
 				generateRenderWidget->setInfo( index, "error::转换异常!" );
@@ -93,7 +93,7 @@ void ImageGenerateNodeEditor::syncVarVector( ) {
 	QImage resultIame;
 	for( ; index < count; ++index )
 		if( arrayPtr[ index ].length( ) > 0 )
-			if( ImageTools::base64ToImage( arrayPtr[ index ], resultIame ) )
+			if( ImageTools::conver::base64ToImage( arrayPtr[ index ], resultIame ) )
 				charPtr[ index ] = resultIame;
 }
 void ImageGenerateNodeEditor::resizeEvent( QResizeEvent *resize_event ) {

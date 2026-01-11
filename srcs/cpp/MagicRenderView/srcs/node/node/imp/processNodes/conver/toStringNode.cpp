@@ -61,7 +61,7 @@ bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	QImage *image;
 	if( varDirectorPtr->cast_ptr( varPtr, image ) ) {
 		outVarPtr->clear( );
-		ImageTools::imageToBase64( *image, *outVarPtr );
+		ImageTools::conver::imageToBase64( *image, *outVarPtr );
 		return true;
 	}
 
