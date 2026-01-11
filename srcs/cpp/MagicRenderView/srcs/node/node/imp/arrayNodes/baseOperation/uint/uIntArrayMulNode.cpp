@@ -1,58 +1,73 @@
 ﻿#include "uIntArrayMulNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/array/intVectorInputPort.h>
-#include <node/port/outputPort/unity/intOutputPort.h>
 
-UIntArrayMulNode::UIntArrayMulNode( const QString &node_name ) : ArrayNode( node_name ) {
-	addResultVar = nullptr;
-	
+#include "../../../../../port/inputPort/unity/uIntInputPort.h"
+#include "../../../../../port/outputPort/unity/uIntOutputPort.h"
+
+UIntArrayMulNode::UIntArrayMulNode( const QString &node_name ) : ProcessNode( node_name ) {
+	outputVarPtr = nullptr;
 }
 bool UIntArrayMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		intVectorInputPort = appendInputPortType< IntVectorInputPort >( tr( "整数" ) );
-		if( intVectorInputPort == nullptr )
+		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
 			return false;
-		intOutputPort = appendOutputPortType< IntOutputPort >( tr( "整数和" ) );
-		if( intOutputPort == nullptr )
+		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
 			return false;
-		if( setPortMultiple( intVectorInputPort, true ) == false )
+		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
-		if( addResultVar )
-			if( varDirector->create( addResultVar ) == false )
-				return false;
-		if( setPortVar( intOutputPort, addResultVar ) == false )
+		if( outputVarPtr )
+			varDirector->release( outputVarPtr );
+		if( varDirector->create( outputVarPtr ) == false )
+			return false;
+		if( setPortVar( outputPort, outputVarPtr ) == false )
+			return false;
+		if( setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
-	return ArrayNode::initEx( parent );
+	return ProcessNode::initEx( parent );
+
 }
 bool UIntArrayMulNode::updateLayout( ) {
-	if( ArrayNode::updateLayout( ) == false )
+	if( ProcessNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
 bool UIntArrayMulNode::readyNodeRunData( ) {
 	return true;
 }
-
 bool UIntArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	*addResultVar = 0;
-	auto outputPorts = getRefPort( intVectorInputPort );
-	size_t count = outputPorts.size( );
-	auto outputPortArrayPtr = outputPorts.data( );
-	size_t index = 0;
-	void *outputVarPtr;
+	OutputPort *const*outputPortArray;
+	size_t count;
+	size_t index;
+	std::vector< NodeType > *converInt;
+	NodeType *secondConverPtr;
+	NodeType accumulativeTotal;
+	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	int64_t *converVar;
-	for( ; index < count; index += 1 ) {
-		outputVarPtr = outputPortArrayPtr[ index ]->getVarPtr( );
-		parentNode = outputPortArrayPtr[ index ]->getParentNode( );
+	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	outputVarPtr->clear(  );
+	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	outputPortArray = outputPorts->data( );
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	varDirector = outputPortArray[ 0 ]->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+		return true;
+	*outputVarPtr = *converInt;
+	outputPorts = &getRefPort( secondInputPort );
+	outputPortArray = outputPorts->data( );
+	count = outputPorts->size( );
+	for( index = 0; index < count; index += 1 ) {
+		portVarPtr = outputPortArray[ index ]->getVarPtr( );
+		parentNode = outputPortArray[ index ]->getParentNode( );
 		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( outputVarPtr, converVar ) == false )
-			return false;
-		*addResultVar += *converVar;
+		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+			continue;
+		*outputVarPtr += *converInt;
 	}
 	return true;
 }

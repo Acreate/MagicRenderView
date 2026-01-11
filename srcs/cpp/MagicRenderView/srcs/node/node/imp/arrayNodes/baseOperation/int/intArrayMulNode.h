@@ -1,17 +1,21 @@
 ﻿#ifndef INTARRAYMULNODE_H_H_HEAD__FILE__
 #define INTARRAYMULNODE_H_H_HEAD__FILE__
+#pragma once
 
-
-#include <node/node/arrayNode.h>
-
+#include <node/node/processNode.h>
 class IntVectorInputPort;
+class IntVectorOutputPort;
 class IntOutputPort;
-class IntArrayMulNode : public ArrayNode {
+class IntInputPort;
+class IntArrayMulNode : public ProcessNode {
 	Q_OBJECT;
+private:
+	using NodeType = int64_t;
 protected:
-	IntOutputPort *intOutputPort;
-	IntVectorInputPort *intVectorInputPort;
-	int64_t* addResultVar;
+	IntVectorInputPort *firstInputPort;
+	IntInputPort *secondInputPort;
+	IntVectorOutputPort *outputPort;
+	std::vector< NodeType >  *outputVarPtr;
 public:
 	IntArrayMulNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
@@ -20,7 +24,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "数组/整数/序列乘" ) );
+	Def_Extend_NodeTypeName( Node::tr( "运算/序列/整数/乘法" ) );
 };
 
 #endif // INTARRAYMULNODE_H_H_HEAD__FILE__

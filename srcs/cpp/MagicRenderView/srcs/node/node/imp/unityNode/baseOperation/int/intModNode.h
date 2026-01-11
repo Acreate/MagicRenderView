@@ -23,7 +23,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "数值运算/整数/求余" ) );
+	Def_Extend_NodeTypeName( Node::tr( "运算/单元/整数/求余" ) );
 };
 
 #endif // INTMODNODE_H_H_HEAD__FILE__
