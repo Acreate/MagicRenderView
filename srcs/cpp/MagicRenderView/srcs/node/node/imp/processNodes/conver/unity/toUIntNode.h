@@ -1,7 +1,7 @@
 ﻿#ifndef TOUINTNODE_H_H_HEAD__FILE__
 #define TOUINTNODE_H_H_HEAD__FILE__
 
-#include "../../../processNode.h"
+#include <node/node/processNode.h>
 
 class AnyVarInputPort;
 class UIntOutputPort;
@@ -19,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/无符号整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "转换/单元/无符号整数" ) );
 };
 #endif // TOUINTNODE_H_H_HEAD__FILE__

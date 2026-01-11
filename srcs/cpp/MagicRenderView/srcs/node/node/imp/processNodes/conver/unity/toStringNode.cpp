@@ -1,8 +1,8 @@
 ﻿#include "toStringNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
+#include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/stringOutputPort.h>
 
 ToStringNode::ToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToStringNode::initEx( MainWidget *parent ) {

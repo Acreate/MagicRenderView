@@ -1,10 +1,8 @@
 ﻿#include "toColorNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/colorOutputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
-
+#include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/colorOutputPort.h>
 ToColorNode::ToColorNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outVarPtr = nullptr;
 }

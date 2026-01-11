@@ -1,10 +1,8 @@
 ﻿#include "toFloatNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/floatOutputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
-
+#include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/floatOutputPort.h>
 ToFloatNode::ToFloatNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToFloatNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

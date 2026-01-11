@@ -1,10 +1,8 @@
 ﻿#include "toImageNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/imageOutputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
-
+#include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/imageOutputPort.h>
 ToImageNode::ToImageNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

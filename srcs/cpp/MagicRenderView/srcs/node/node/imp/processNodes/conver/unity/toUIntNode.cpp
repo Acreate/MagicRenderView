@@ -1,9 +1,8 @@
 ﻿#include "toUIntNode.h"
 
-#include "../../../../../director/varDirector.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
-#include "../../../../port/outputPort/unity/uIntOutputPort.h"
+#include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/uIntOutputPort.h>
 
 ToUIntNode::ToUIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToUIntNode::initEx( MainWidget *parent ) {

@@ -1,7 +1,7 @@
 ﻿#ifndef TOINTNODE_H_H_HEAD__FILE__
 #define TOINTNODE_H_H_HEAD__FILE__
 
-#include "../../../processNode.h"
+#include <node/node/processNode.h>
 
 class AnyVarInputPort;
 class IntOutputPort;
@@ -19,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "转换/单元/整数" ) );
 };
 #endif // TOINTNODE_H_H_HEAD__FILE__
