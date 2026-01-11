@@ -19,24 +19,32 @@ BinGenerateNode::BinGenerateNode( const QString &node_name ) : GenerateNode( nod
 }
 bool BinGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		generateInputPort = appendInputPortType< GenerateInputPort >( tr( "生成" ) );
-		if( generateInputPort == nullptr )
+		if( appendInputPortType< GenerateInputPort >( tr( "生成" ), generateInputPort ) == false )
 			return false;
-		outputVarPort = appendOutputPortType< BinOutputPort >( tr( "导出值" ) );
-		if( outputVarPort == nullptr )
+		if( appendOutputPortType< BinOutputPort >( tr( "导出值" ), outputVarPort ) == false )
 			return false;
-		outputIndexPort = appendOutputPortType< UIntOutputPort >( tr( "导出下标" ) );
-		if( outputIndexPort == nullptr )
+		if( appendOutputPortType< UIntOutputPort >( tr( "导出下标" ), outputIndexPort ) == false )
 			return false;
-		outputCountPort = appendOutputPortType< UIntOutputPort >( tr( "导出总数" ) );
-		if( outputCountPort == nullptr )
+		if( appendOutputPortType< UIntOutputPort >( tr( "导出总数" ), outputCountPort ) == false )
+			return false;
+		if( arrayIndex )
+			varDirector->release( arrayIndex );
+		if( varDirector->create( arrayIndex ) == false )
+			return false;
+		if( currentIndexVar )
+			varDirector->release( currentIndexVar );
+		if( varDirector->create( currentIndexVar ) == false )
+			return false;
+		if( arrayCount )
+			varDirector->release( arrayCount );
+		if( varDirector->create( arrayCount ) == false )
 			return false;
 		// 绑定指针
-		if( setInfo( outputIndexPort, varDirector, arrayIndex ) == false )
+		if( setPortVar( outputIndexPort, arrayIndex ) == false )
 			return false;
-		if( setInfo( outputVarPort, varDirector, currentIndexVar ) == false )
+		if( setPortVar( outputVarPort, currentIndexVar ) == false )
 			return false;
-		if( setInfo( outputCountPort, varDirector, arrayCount ) == false )
+		if( setPortVar( outputCountPort, arrayCount ) == false )
 			return false;
 		return true;
 	};
