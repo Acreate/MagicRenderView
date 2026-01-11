@@ -1,5 +1,6 @@
 ﻿#include "ifNode.h"
 
+#include "../../../../tools/varDirectorTools.h"
 #include "../../../port/inputPort/anyVar/anyVarInputPort.h"
 #include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/point/pointInputPort.h"
@@ -38,15 +39,15 @@ bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::
 	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	bool result;
-
-	if( false )
-		result = getRefPortNodeVector( trueOutputPort, adviseNextVector );
-	else
-		result = getRefPortNodeVector( falseOutputPort, adviseNextVector );
-	if( result == false )
-		return false;
-	// 保存输入
+	auto varDirector = ifResultPort->getVarDirector( );
+	auto varPtr = ifResultPort->getVarPtr( );
+	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
+		getRefPortNodeVector( trueOutputPort, adviseNextVector );
+		setInfo( trueOutputPort, varDirector, varPtr );
+	} else {
+		getRefPortNodeVector( falseOutputPort, adviseNextVector );
+		setInfo( falseOutputPort, varDirector, varPtr );
+	}
 	return true;
 }
 bool IfNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) {
