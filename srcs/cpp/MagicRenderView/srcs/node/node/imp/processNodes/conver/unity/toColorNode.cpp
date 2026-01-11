@@ -43,10 +43,6 @@ bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );
 	auto varPtr = outputPortPtr->getVarPtr( );
-	auto setNumberVar = [this] ( const quint64 &number_var ) ->bool {
-		outVarPtr->setRgba( qRgba64( number_var ) );
-		return true;
-	};
 
 	QColor *colorPtr;
 	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
@@ -65,7 +61,10 @@ bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		outVarPtr->setAlpha( charPtr->unicode( ) );
 		return true;
 	}
-
+	auto setNumberVar = [this] ( const quint64 &number_var ) ->bool {
+		outVarPtr->setRgba( qRgba64( number_var ) );
+		return true;
+	};
 	uint8_t *uint8t;
 	uint16_t *uint16t;
 	uint32_t *uint32t;
@@ -98,5 +97,5 @@ bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		return setNumberVar( *floatPtr );
 	if( varDirectorPtr->cast_ptr( varPtr, doublePtr ) )
 		return setNumberVar( *doublePtr );
-	return false;
+	return setNumberVar( 0 );
 }

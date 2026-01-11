@@ -112,5 +112,5 @@ bool ToUIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 		return setNumberVar( *floatPtr );
 	if( varDirectorPtr->cast_ptr( varPtr, doublePtr ) )
 		return setNumberVar( *doublePtr );
-	return false;
+	return setNumberVar( 0 );
 }
