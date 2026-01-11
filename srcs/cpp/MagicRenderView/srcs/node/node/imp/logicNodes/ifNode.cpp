@@ -39,8 +39,16 @@ bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::
 	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	auto varDirector = ifResultPort->getVarDirector( );
-	auto varPtr = ifResultPort->getVarPtr( );
+
+	auto outputPorts = getRefPort( ifResultPort );
+	size_t count = outputPorts.size( );
+	if( count == 0 ) {
+		adviseNextVector.clear( );
+		return true;
+	}
+	OutputPort *outputPort = outputPorts.data( )[ 0 ];
+	auto varDirector = outputPort->getVarDirector( );
+	auto varPtr = outputPort->getVarPtr( );
 	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
 		getRefPortNodeVector( trueOutputPort, adviseNextVector );
 		setInfo( trueOutputPort, varDirector, varPtr );
