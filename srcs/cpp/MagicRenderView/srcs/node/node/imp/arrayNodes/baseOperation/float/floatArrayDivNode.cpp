@@ -5,7 +5,7 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
 
-FloatArrayDivNode::FloatArrayDivNode( const QString &node_name ) : ProcessNode( node_name ) {
+FloatArrayDivNode::FloatArrayDivNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool FloatArrayDivNode::initEx( MainWidget *parent ) {
@@ -27,11 +27,11 @@ bool FloatArrayDivNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return ArrayNode::initEx( parent );
 
 }
 bool FloatArrayDivNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( ArrayNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

@@ -1,11 +1,11 @@
 ﻿#ifndef FLOATMULNODE_H_H_HEAD__FILE__
 #define FLOATMULNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/unityNode.h>
+
 class FloatOutputPort;
 class FloatInputPort;
-class FloatMulNode : public ProcessNode {
+class FloatMulNode : public UnityNode {
 	Q_OBJECT;
 protected:
 	FloatInputPort *firstInputPort;

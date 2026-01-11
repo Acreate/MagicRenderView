@@ -19,6 +19,12 @@
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayModNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayMulNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArraySubNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfAddNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfMulNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfAddNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfMulNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/uint/uIntArraySelfAddNode.h"
+#include "../../node/imp/arrayNodes/selfBaseOperation/uint/uIntArraySelfMulNode.h"
 #include "../../node/imp/beginNodes/startNode.h"
 #include "../../node/imp/cacheNode/combinationArray/conbinationCharArrayNode.h"
 #include "../../node/imp/cacheNode/combinationArray/conbinationColorArrayNode.h"
@@ -80,24 +86,6 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( StartNode );
 	// 结束返回
 	emaplace_back_node( ResultNode );
-	// 数组运算
-	emaplace_back_node( IntArrayAddNode );
-	emaplace_back_node( IntArraySubNode );
-	emaplace_back_node( IntArrayDivNode );
-	emaplace_back_node( IntArrayMulNode );
-	emaplace_back_node( IntArrayModNode );
-
-	emaplace_back_node( UIntArrayAddNode );
-	emaplace_back_node( UIntArraySubNode );
-	emaplace_back_node( UIntArrayDivNode );
-	emaplace_back_node( UIntArrayMulNode );
-	emaplace_back_node( UIntArrayModNode );
-
-	emaplace_back_node( FloatArrayAddNode );
-	emaplace_back_node( FloatArraySubNode );
-	emaplace_back_node( FloatArrayDivNode );
-	emaplace_back_node( FloatArrayMulNode );
-	emaplace_back_node( FloatArrayModNode );
 	// 缓存
 	emaplace_back_node( ConbinationCharArrayNode );
 	emaplace_back_node( ConbinationStringArrayNode );
@@ -121,7 +109,7 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( IfNode );
 	// 标记
 	emaplace_back_node( MakeNode );
-	// 基础四则运算
+	// 单元基础四则运算
 	emaplace_back_node( IntAddNode );
 	emaplace_back_node( IntSubNode );
 	emaplace_back_node( IntDivNode );
@@ -139,10 +127,38 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( FloatDivNode );
 	emaplace_back_node( FloatMulNode );
 	emaplace_back_node( FloatModNode );
+	// 序列基础四则运算
+	emaplace_back_node( IntArrayAddNode );
+	emaplace_back_node( IntArraySubNode );
+	emaplace_back_node( IntArrayDivNode );
+	emaplace_back_node( IntArrayMulNode );
+	emaplace_back_node( IntArrayModNode );
+
+	emaplace_back_node( UIntArrayAddNode );
+	emaplace_back_node( UIntArraySubNode );
+	emaplace_back_node( UIntArrayDivNode );
+	emaplace_back_node( UIntArrayMulNode );
+	emaplace_back_node( UIntArrayModNode );
+
+	emaplace_back_node( FloatArrayAddNode );
+	emaplace_back_node( FloatArraySubNode );
+	emaplace_back_node( FloatArrayDivNode );
+	emaplace_back_node( FloatArrayMulNode );
+	emaplace_back_node( FloatArrayModNode );
+	// 序列自运算
+	emaplace_back_node( IntArraySelfAddNode );
+	emaplace_back_node( IntArraySelfMulNode );
+
+	emaplace_back_node( FloatArraySelfAddNode );
+	emaplace_back_node( FloatArraySelfMulNode );
+
+	emaplace_back_node( UIntArraySelfAddNode );
+	emaplace_back_node( UIntArraySelfMulNode );
 	// 文件
 	emaplace_back_node( WriteFileTextNode );
 	emaplace_back_node( WriteFileBinDataNode );
 	emaplace_back_node( WriteFileImageNode );
+	
 	emaplace_back_node( ReadFileTextNode );
 	emaplace_back_node( ReadFileBinDataNode );
 	emaplace_back_node( ReadFileImageNode );

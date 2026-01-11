@@ -5,7 +5,7 @@
 #include "../../../../../port/inputPort/unity/floatInputPort.h"
 #include "../../../../../port/outputPort/unity/floatOutputPort.h"
 
-FloatModNode::FloatModNode( const QString &node_name ) : ProcessNode( node_name ) {
+FloatModNode::FloatModNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool FloatModNode::initEx( MainWidget *parent ) {
@@ -26,11 +26,11 @@ bool FloatModNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return UnityNode::initEx( parent );
 
 }
 bool FloatModNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

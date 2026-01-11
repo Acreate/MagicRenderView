@@ -1,14 +1,12 @@
 ﻿#ifndef INTARRAYDIVNODE_H_H_HEAD__FILE__
 #define INTARRAYDIVNODE_H_H_HEAD__FILE__
-#pragma once
 
-
-#include <node/node/processNode.h>
+#include <node/node/arrayNode.h>
 class IntVectorInputPort;
 class IntVectorOutputPort;
 class IntOutputPort;
 class IntInputPort;
-class IntArrayDivNode : public ProcessNode {
+class IntArrayDivNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;

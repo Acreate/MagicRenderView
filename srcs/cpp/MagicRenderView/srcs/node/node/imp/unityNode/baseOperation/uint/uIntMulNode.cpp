@@ -5,7 +5,7 @@
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 #include "../../../../../port/outputPort/unity/uIntOutputPort.h"
 
-UIntMulNode::UIntMulNode( const QString &node_name ) : ProcessNode( node_name ) {
+UIntMulNode::UIntMulNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool UIntMulNode::initEx( MainWidget *parent ) {
@@ -26,11 +26,11 @@ bool UIntMulNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return UnityNode::initEx( parent );
 
 }
 bool UIntMulNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

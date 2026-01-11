@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-IntMulNode::IntMulNode( const QString &node_name ) : ProcessNode( node_name ) {
+IntMulNode::IntMulNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool IntMulNode::initEx( MainWidget *parent ) {
@@ -25,11 +25,11 @@ bool IntMulNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return UnityNode::initEx( parent );
 
 }
 bool IntMulNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include "../../../../../../tools/imageTools.h"
+#include <tools/imageTools.h>
 
 ToStringNode::ToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToStringNode::initEx( MainWidget *parent ) {

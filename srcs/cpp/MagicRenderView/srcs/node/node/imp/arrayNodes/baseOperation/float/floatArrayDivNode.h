@@ -1,13 +1,12 @@
 ﻿#ifndef FLOATARRAYDIVNODE_H_H_HEAD__FILE__
 #define FLOATARRAYDIVNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/arrayNode.h>
 class FloatVectorOutputPort;
 class FloatVectorInputPort;
 class FloatOutputPort;
 class FloatInputPort;
-class FloatArrayDivNode : public ProcessNode {
+class FloatArrayDivNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = double;

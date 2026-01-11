@@ -1,18 +1,19 @@
 ﻿#ifndef UINTARRAYSUBNODE_H_H_HEAD__FILE__
 #define UINTARRAYSUBNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/arrayNode.h>
+class UIntVectorInputPort;
+class UIntVectorOutputPort;
 class UIntOutputPort;
 class UIntInputPort;
-class UIntArraySubNode : public ProcessNode {
+class UIntArraySubNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;
 protected:
-	UIntInputPort *firstInputPort;
+	UIntVectorInputPort *firstInputPort;
 	UIntInputPort *secondInputPort;
-	UIntOutputPort *outputPort;
+	UIntVectorOutputPort *outputPort;
 	std::vector< NodeType >  *outputVarPtr;
 public:
 	UIntArraySubNode( const QString &node_name );

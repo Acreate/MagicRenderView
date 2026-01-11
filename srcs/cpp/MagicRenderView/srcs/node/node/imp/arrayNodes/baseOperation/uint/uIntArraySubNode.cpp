@@ -1,11 +1,11 @@
 ﻿#include "uIntArraySubNode.h"
 
 #include <director/varDirector.h>
+#include <node/port/inputPort/array/uIntVectorInputPort.h>
+#include <node/port/inputPort/unity/uIntInputPort.h>
+#include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
-#include "../../../../../port/inputPort/unity/uIntInputPort.h"
-#include "../../../../../port/outputPort/unity/uIntOutputPort.h"
-
-UIntArraySubNode::UIntArraySubNode( const QString &node_name ) : ProcessNode( node_name ) {
+UIntArraySubNode::UIntArraySubNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool UIntArraySubNode::initEx( MainWidget *parent ) {
@@ -27,11 +27,11 @@ bool UIntArraySubNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return ArrayNode::initEx( parent );
 
 }
 bool UIntArraySubNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( ArrayNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
@@ -43,8 +43,8 @@ bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 	size_t count;
 	size_t index;
 	std::vector< NodeType > *converInt;
-	NodeType accumulativeTotal;
 	NodeType *secondConverPtr;
+	NodeType accumulativeTotal;
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
@@ -62,6 +62,8 @@ bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 	outputPorts = &getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
 	accumulativeTotal = 0;
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
@@ -71,5 +73,9 @@ bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 			continue;
 		accumulativeTotal += *secondConverPtr;
 	}
+	count = outputVarPtr->size( );
+	auto outputArrayPtr = outputVarPtr->data( );
+	for( index = 0; index < count; index += 1 )
+		outputArrayPtr[ index ] = outputArrayPtr[ index ] - accumulativeTotal;
 	return true;
 }

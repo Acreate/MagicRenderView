@@ -1,13 +1,12 @@
 ﻿#ifndef FLOATARRAYSUBNODE_H_H_HEAD__FILE__
 #define FLOATARRAYSUBNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/arrayNode.h>
 class FloatVectorInputPort;
 class FloatVectorOutputPort;
 class FloatOutputPort;
 class FloatInputPort;
-class FloatArraySubNode : public ProcessNode {
+class FloatArraySubNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = double;

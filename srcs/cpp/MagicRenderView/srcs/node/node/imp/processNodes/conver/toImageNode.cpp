@@ -4,7 +4,8 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/imageOutputPort.h>
 
-#include "../../../../../../tools/imageTools.h"
+#include <tools/imageTools.h>
+
 ToImageNode::ToImageNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

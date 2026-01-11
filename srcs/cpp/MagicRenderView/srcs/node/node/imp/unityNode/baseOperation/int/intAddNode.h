@@ -1,9 +1,11 @@
 ﻿#ifndef INTADDNODE_H_H_HEAD__FILE__
 #define INTADDNODE_H_H_HEAD__FILE__
-#include <node/node/processNode.h>
+
+#include <node/node/unityNode.h>
+
 class IntOutputPort;
 class IntInputPort;
-class IntAddNode : public ProcessNode {
+class IntAddNode : public UnityNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;

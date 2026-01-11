@@ -1,11 +1,11 @@
 ﻿#ifndef FLOATDIVNODE_H_H_HEAD__FILE__
 #define FLOATDIVNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/unityNode.h>
+
 class FloatOutputPort;
 class FloatInputPort;
-class FloatDivNode : public ProcessNode {
+class FloatDivNode : public UnityNode {
 	Q_OBJECT;
 protected:
 	FloatInputPort *firstInputPort;

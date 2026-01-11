@@ -1,11 +1,12 @@
 ﻿#include "uIntArrayMulNode.h"
 
+
 #include <director/varDirector.h>
+#include <node/port/inputPort/array/uIntVectorInputPort.h>
+#include <node/port/inputPort/unity/uIntInputPort.h>
+#include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
-#include "../../../../../port/inputPort/unity/uIntInputPort.h"
-#include "../../../../../port/outputPort/unity/uIntOutputPort.h"
-
-UIntArrayMulNode::UIntArrayMulNode( const QString &node_name ) : ProcessNode( node_name ) {
+UIntArrayMulNode::UIntArrayMulNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool UIntArrayMulNode::initEx( MainWidget *parent ) {
@@ -26,11 +27,11 @@ bool UIntArrayMulNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return ArrayNode::initEx( parent );
 
 }
 bool UIntArrayMulNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( ArrayNode::updateLayout( ) == false )
 		return false;
 	return true;
 }
@@ -48,7 +49,7 @@ bool UIntArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 	Node *parentNode;
 	VarDirector *varDirector;
 	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
-	outputVarPtr->clear(  );
+	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -61,13 +62,20 @@ bool UIntArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 	outputPorts = &getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	accumulativeTotal = 1;
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		parentNode = outputPortArray[ index ]->getParentNode( );
 		varDirector = parentNode->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
-		*outputVarPtr += *converInt;
+		accumulativeTotal *= *secondConverPtr;
 	}
+	count = outputVarPtr->size( );
+	auto outputArrayPtr = outputVarPtr->data( );
+	for( index = 0; index < count; index += 1 )
+		outputArrayPtr[ index ] = outputArrayPtr[ index ] * accumulativeTotal;
 	return true;
 }

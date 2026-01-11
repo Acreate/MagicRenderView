@@ -1,11 +1,11 @@
 ﻿#ifndef UINTSUBNODE_H_H_HEAD__FILE__
 #define UINTSUBNODE_H_H_HEAD__FILE__
-#pragma once
 
-#include <node/node/processNode.h>
+#include <node/node/unityNode.h>
+
 class UIntOutputPort;
 class UIntInputPort;
-class UIntSubNode : public ProcessNode {
+class UIntSubNode : public UnityNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;

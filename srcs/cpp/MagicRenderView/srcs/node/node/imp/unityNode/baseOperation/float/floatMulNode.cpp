@@ -6,7 +6,7 @@
 #include "../../../../../port/inputPort/unity/floatInputPort.h"
 #include "../../../../../port/outputPort/unity/floatOutputPort.h"
 
-FloatMulNode::FloatMulNode( const QString &node_name ) : ProcessNode( node_name ) {
+FloatMulNode::FloatMulNode( const QString &node_name ) : UnityNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool FloatMulNode::initEx( MainWidget *parent ) {
@@ -27,11 +27,11 @@ bool FloatMulNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return UnityNode::initEx( parent );
 
 }
 bool FloatMulNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( UnityNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

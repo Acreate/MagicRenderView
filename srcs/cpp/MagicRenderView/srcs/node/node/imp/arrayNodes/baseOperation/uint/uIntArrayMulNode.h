@@ -1,19 +1,19 @@
 ﻿#ifndef UINTARRAYMULNODE_H_H_HEAD__FILE__
 #define UINTARRAYMULNODE_H_H_HEAD__FILE__
-#pragma once
 
-
-#include <node/node/processNode.h>
+#include <node/node/arrayNode.h>
+class UIntVectorOutputPort;
+class UIntVectorInputPort;
 class UIntOutputPort;
 class UIntInputPort;
-class UIntArrayMulNode : public ProcessNode {
+class UIntArrayMulNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;
 protected:
-	UIntInputPort *firstInputPort;
+	UIntVectorInputPort *firstInputPort;
 	UIntInputPort *secondInputPort;
-	UIntOutputPort *outputPort;
+	UIntVectorOutputPort *outputPort;
 	std::vector< NodeType >  *outputVarPtr;
 public:
 	UIntArrayMulNode( const QString &node_name );

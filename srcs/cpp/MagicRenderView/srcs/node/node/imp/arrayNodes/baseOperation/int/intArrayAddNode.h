@@ -1,13 +1,12 @@
 ﻿#ifndef INTARRAYADDNODE_H_H_HEAD__FILE__
 #define INTARRAYADDNODE_H_H_HEAD__FILE__
 
-#include <node/node/processNode.h>
-
+#include <node/node/arrayNode.h>
 class IntVectorOutputPort;
 class IntVectorInputPort;
 class IntOutputPort;
 class IntInputPort;
-class IntArrayAddNode : public ProcessNode {
+class IntArrayAddNode : public ArrayNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;
