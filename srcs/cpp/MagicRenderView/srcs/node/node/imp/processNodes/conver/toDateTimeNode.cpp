@@ -14,8 +14,7 @@ bool ToDateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendInputPortType< >( tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-
-		if( appendOutputPortType< >( tr( "字符串" ), dateTimeOutputPortPtr ) == false )
+		if( appendOutputPortType< >( tr( "时间" ), dateTimeOutputPortPtr ) == false )
 			return false;
 		if( outVarPtr )
 			varDirector->release( outVarPtr );

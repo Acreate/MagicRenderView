@@ -1,29 +1,23 @@
-﻿#include "appInfoNode.h"
+﻿#include "splitDataTimeNode.h"
 
-#include <app/application.h>
 #include <director/varDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
-#include <QLibraryInfo>
-#include <QVersionNumber>
 #include <tools/infoTool.h>
-#include <cmake_include_to_c_cpp_header_env.h>
 
-AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
+SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;
 	appPathVarPtr = nullptr;
 	builderTimeVarPtr = nullptr;
 	builderToolVarPtr = nullptr;
 	versionVarPtr = nullptr;
-	appStartTimeVarPtr = nullptr;
 }
-bool AppInfoNode::initEx( MainWidget *parent ) {
+bool SplitDataTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( appendOutputPortType< >( tr( "名称" ), appNameOutputPort ) == false )
 			return false;
 		if( appendOutputPortType< >( tr( "路径" ), appPathOutputPort ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "启动时间" ), appStartTimeOutputPort ) == false )
 			return false;
 		if( appendOutputPortType< >( tr( "编译时间" ), builderTimeOutputPort ) == false )
 			return false;
@@ -51,10 +45,6 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 			varDirector->release( versionVarPtr );
 		if( varDirector->create( versionVarPtr ) == false )
 			return false;
-		if( appStartTimeVarPtr )
-			varDirector->release( appStartTimeVarPtr );
-		if( varDirector->create( appStartTimeVarPtr ) == false )
-			return false;
 		if( setPortVar( appNameOutputPort, appNameVarPtr ) == false )
 			return false;
 		if( setPortVar( appPathOutputPort, appPathVarPtr ) == false )
@@ -65,26 +55,17 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( versionOutputPort, versionVarPtr ) == false )
 			return false;
-		if( setPortVar( appStartTimeOutputPort, appStartTimeVarPtr ) == false )
-			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
 }
-bool AppInfoNode::updateLayout( ) {
+bool SplitDataTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool AppInfoNode::readyNodeRunData( ) {
+bool SplitDataTimeNode::readyNodeRunData( ) {
 	return true;
 }
-bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	Application *instancePtr = Application::getInstancePtr( );
-	*appNameVarPtr = instancePtr->applicationName( );
-	*appPathVarPtr = instancePtr->applicationFilePath( );
-	QVersionNumber versionInfo = QLibraryInfo::version( );
-	*builderToolVarPtr = tr( "QT %1 (%2.%3.%4.%5)" ).arg( QT_VERSION_STR ).arg( cmake_value_CMAKE_SYSTEM ).arg( cmake_value_CMAKE_SYSTEM_PROCESSOR ).arg( Builder_Tools_MSVC ? "MSVC" : Builder_Tools_GNU ? "GNU" : Builder_Tools_Clang ? "Clang" : "null" ).arg( cmake_value_CMAKE_BUILD_TYPE );
-	*builderTimeVarPtr = QDateTime::fromString( tr( "%1 %2" ).arg( __DATE__ ).arg( __TIME__ ) );
-	*versionVarPtr = tr( "%1.%2.%3" ).arg( 0 ).arg( 0 ).arg( 1 );
-	*appStartTimeVarPtr = *instancePtr->getAppInitRunDataTime( );
-	return true;
+bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	// todo : 未实现
+	return false;
 }

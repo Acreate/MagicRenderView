@@ -84,7 +84,6 @@ bool StringGenerateNode::initVarPtr( ) {
 	if( varDirector->create( overVarPtr ) == false )
 		return false;
 	varPtr = overVarPtr;
-
 	return true;
 }
 bool StringGenerateNode::readyNodeRunData( ) {
@@ -93,11 +92,11 @@ bool StringGenerateNode::readyNodeRunData( ) {
 bool StringGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	*arrayCount = overVarPtr->size( );
 	if( *arrayCount == 0 )
-		return false;
+		return true;
 	const auto &outputPorts = getRefPort( generateInputPort );
 	size_t count = outputPorts.size( );
 	if( count == 0 )
-		return false;
+		return true;
 	OutputPort *const *port = outputPorts.data( );
 	OutputPort *outputPort = port[ 0 ];
 	auto generateVarPtr = outputPort->getVarPtr( );
@@ -107,7 +106,7 @@ bool StringGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	*arrayIndex = 0;
 	*arrayCount = 0;
 	if( nodeDirector->cast_ptr( generateVarPtr, index ) == false )
-		return false;
+		return true;
 	*arrayIndex = *index;
 	if( *arrayIndex >= *arrayCount ) // 如果大于，则取重复
 		*arrayIndex = *arrayIndex % *arrayCount;

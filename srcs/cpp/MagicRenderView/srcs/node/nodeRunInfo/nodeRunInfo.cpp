@@ -147,9 +147,11 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 			case NodeEnum::NodeType::Unity :
 				outputRefNodeCount = currentNode->outputPortRefThisNodeVector.size( );
 				if( outputRefNodeCount == 0 ) {
-					// 无根节点
-					notRootNodeVector.emplace_back( currentNode );
-					break;
+					if( currentNode->inputPortVector.size( ) != 0 ) {
+						// 无根节点
+						notRootNodeVector.emplace_back( currentNode );
+						break;
+					}
 				}
 			case NodeEnum::NodeType::Point : // point 允许无根节点
 				processNodeVector.emplace_back( currentNode );
@@ -322,6 +324,12 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	Node **findNodeArrayPtr;
 	size_t findNodeArrayIndex;
 	size_t findNodeArrayCount;
+	size_t thisInputRefNodeCount;
+	Node **thisInputRefNodeArray;
+	size_t thisInputRefNodeIndex;
+	Node **waiteRunArray;
+	size_t waiteRunCount;
+	size_t findResultIndex;
 	findNodeArrayCount = adviseNodeVector.size( );
 	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
 	if( findNodeArrayCount != 0 ) {
@@ -364,22 +372,52 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 				return true;
 			}
 	}
-	// 等待列表无法匹配到对应的节点
-	Application *instancePtr;
-	NodeDirector *nodeDirector;
-	QString arrayToString;
-	std::vector< Node * >::iterator iterator;
-	std::vector< Node * >::iterator end;
+	// 把 adviseNodeVector 序列当中的需求节点放置到 adviseNodeVector 当中，并且把旧的 adviseNodeVector 放置到 waiteRunNodeVector 序列当中
+	findNodeArrayCount = adviseNodeVector.size( );
+	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
+	if( findNodeArrayCount != 0 ) {
+		waiteRunNodeVector.append_range( adviseNodeVector );
+		std::vector< Node * > buffVector;
+		buffVector = adviseNodeVector;
+		adviseNodeVector.clear( );
+		findNodeArrayPtr = buffVector.data( );
+		for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+			if( findNodeArrayPtr[ findNodeArrayIndex ] == nullptr )
+				continue;
+			else {
 
-	instancePtr = Application::getInstancePtr( );
-	nodeDirector = instancePtr->getNodeDirector( );
-	arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
-	instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
-	iterator = waiteRunNodeVector.begin( );
-	end = waiteRunNodeVector.end( );
-	for( ; iterator != end; ++iterator )
-		( *iterator )->setNodeStyle( NodeEnum::NodeStyleType::Error );
-	return false;
+				waiteRunArray = waiteRunNodeVector.data( );
+				waiteRunCount = waiteRunNodeVector.size( );
+				thisInputRefNodeCount = findNodeArrayPtr[ findNodeArrayIndex ]->thisInputPortRefNodeVector.size( );
+				thisInputRefNodeArray = findNodeArrayPtr[ findNodeArrayIndex ]->thisInputPortRefNodeVector.data( );
+
+				for( thisInputRefNodeIndex = 0; thisInputRefNodeIndex < thisInputRefNodeCount; ++thisInputRefNodeIndex )
+					if( ArrayTools::findIndex( waiteRunArray, waiteRunCount, thisInputRefNodeArray[ thisInputRefNodeIndex ], findResultIndex ) == false ) {
+						adviseNodeVector.emplace_back( thisInputRefNodeArray[ thisInputRefNodeIndex ] );
+					}
+
+			}
+		result_run_node = nullptr;
+		return true;
+	} else { // 无法发现匹配的列表
+		Application *instancePtr;
+		NodeDirector *nodeDirector;
+		QString arrayToString;
+		std::vector< Node * >::iterator iterator;
+		std::vector< Node * >::iterator end;
+
+		instancePtr = Application::getInstancePtr( );
+		nodeDirector = instancePtr->getNodeDirector( );
+		arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
+		instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
+		iterator = waiteRunNodeVector.begin( );
+		end = waiteRunNodeVector.end( );
+		for( ; iterator != end; ++iterator )
+			( *iterator )->setNodeStyle( NodeEnum::NodeStyleType::Error );
+		result_run_node = nullptr;
+		return false;
+	}
+
 }
 bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 	if( currentRunPtr )
@@ -456,8 +494,11 @@ bool NodeRunInfo::filterToAdviseVector( ) {
 }
 bool NodeRunInfo::runNextNode( ) {
 	Node *currentRunPtr = nullptr;
-	if( findNextRunNode( currentRunPtr ) == false )
-		return false;
+	do
+		if( findNextRunNode( currentRunPtr ) == false )
+			return false;
+	while( currentRunPtr == nullptr );
+
 	auto inatsance = Application::getInstancePtr( );
 	auto printerDirector = inatsance->getPrinterDirector( );
 

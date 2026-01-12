@@ -75,6 +75,7 @@
 #include "../../node/imp/processNodes/conver/toIntNode.h"
 #include "../../node/imp/processNodes/conver/toStringNode.h"
 #include "../../node/imp/processNodes/conver/toUIntNode.h"
+#include "../../node/imp/processNodes/dateTime/splitDataTimeNode.h"
 #include "../../node/imp/processNodes/debug/debugInfoNode.h"
 #include "../../node/imp/processNodes/debug/previewImageNode.h"
 #include "../../node/imp/processNodes/image/imageChannelNode.h"
@@ -262,6 +263,8 @@ bool BaseNodeStack::init( ) {
 	// 软件
 	emaplace_back_node( AppInfoNode );
 
+	// 时间
+	emaplace_back_node( SplitDataTimeNode );
 	return true;
 }
 

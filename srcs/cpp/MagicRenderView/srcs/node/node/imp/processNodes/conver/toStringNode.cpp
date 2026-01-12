@@ -3,6 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
+#include <QDateTime>
 
 #include <tools/imageTools.h>
 
@@ -29,11 +30,10 @@ bool ToStringNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 bool ToStringNode::readyNodeRunData( ) {
-	outVarPtr->clear( );
 	return true;
 }
 bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-
+	outVarPtr->clear( );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )
@@ -43,27 +43,6 @@ bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );
 	auto varPtr = outputPortPtr->getVarPtr( );
-
-	QColor *colorPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
-		uint64_t buffVar;
-		uint64_t orVar = colorPtr->red( );
-		buffVar = colorPtr->green( );
-		orVar = orVar | buffVar << 16;
-		buffVar = colorPtr->blue( );
-		orVar = orVar | buffVar << 32;
-		buffVar = colorPtr->alpha( );
-		orVar = orVar | buffVar << 48;
-		*outVarPtr = QString::number( orVar );
-		return true;
-	}
-
-	QImage *image;
-	if( varDirectorPtr->cast_ptr( varPtr, image ) ) {
-		outVarPtr->clear( );
-		ImageTools::conver::imageToBase64( *image, *outVarPtr );
-		return true;
-	}
 
 	QString *stringPtr;
 	if( varDirectorPtr->cast_ptr( varPtr, stringPtr ) ) {
@@ -113,6 +92,43 @@ bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	if( varDirectorPtr->cast_ptr( varPtr, doublePtr ) )
 		return setNumberVar( *doublePtr );
 
-	outVarPtr->clear( );
+	QColor *colorPtr;
+	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
+		uint64_t buffVar;
+		uint64_t orVar = colorPtr->red( );
+		buffVar = colorPtr->green( );
+		orVar = orVar | buffVar << 16;
+		buffVar = colorPtr->blue( );
+		orVar = orVar | buffVar << 32;
+		buffVar = colorPtr->alpha( );
+		orVar = orVar | buffVar << 48;
+		*outVarPtr = QString::number( orVar );
+		return true;
+	}
+
+	QImage *image;
+	if( varDirectorPtr->cast_ptr( varPtr, image ) ) {
+		ImageTools::conver::imageToBase64( *image, *outVarPtr );
+		return true;
+	}
+
+	QDateTime *dateTimePtr;
+	if( varDirectorPtr->cast_ptr( varPtr, dateTimePtr ) ) {
+		*outVarPtr = dateTimePtr->toString( "yyyy年MM月dd日.hh时mm分ss秒.zzz" );
+		return true;
+	}
+
+	QDate *datePtr;
+	if( varDirectorPtr->cast_ptr( varPtr, datePtr ) ) {
+		*outVarPtr = datePtr->toString( "yyyy年MM月dd日" );
+		return true;
+	}
+
+	QTime *timePtr;
+	if( varDirectorPtr->cast_ptr( varPtr, timePtr ) ) {
+		*outVarPtr = timePtr->toString( "hh时mm分ss秒.zzz" );
+		return true;
+	}
+
 	return true;
 }
