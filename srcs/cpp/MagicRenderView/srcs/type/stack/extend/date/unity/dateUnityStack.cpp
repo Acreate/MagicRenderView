@@ -1,30 +1,29 @@
-﻿#include "timeUnityStack.h"
+﻿#include "dateUnityStack.h"
 
 #include <define/macro.h>
 #include <tools/infoTool.h>
 #include <director/varDirector.h>
-#include <QTime>
-
-using t_current_unity_type = QTime;
-TimeUnityStack::~TimeUnityStack( ) {
+#include <QDate>
+using t_current_unity_type = QDate;
+DateUnityStack::~DateUnityStack( ) {
 	delete dateTimeFormat;
 }
-bool TimeUnityStack::init( VarDirector *var_director ) {
+bool DateUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , QDateTime, "QDateTime", "DateTime", "Date", "Time" );
+	Stack_Type_Name( , QDate, "QDate", "Date" );
 	return true;
 }
-TimeUnityStack::TimeUnityStack( ) {
-	dateTimeFormat = new QString( "hh时mm分ss秒.zzz" );
+DateUnityStack::DateUnityStack( ) {
+	dateTimeFormat = new QString( "yyyy年MM月dd日" );
 }
 
-bool TimeUnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
+bool DateUnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	QString dateTimeString;
 	t_current_unity_type buffVar;
 	if( infoTool::fillTypeVectorAtVar< >( result_count, obj_start_ptr, obj_memory_size, &dateTimeString ) == false )
 		return false;
-	buffVar = QTime::fromString( dateTimeString, *dateTimeFormat );
+	buffVar = QDate::fromString( dateTimeString, *dateTimeFormat );
 	if( hasVarPtr( result_obj_ptr ) == false ) {
 		t_current_unity_type *sourcePtr = nullptr;
 		if( varDirector->create( sourcePtr ) == false || sourcePtr == nullptr )
@@ -38,11 +37,11 @@ bool TimeUnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr
 	*createPtr = buffVar;
 	return true;
 }
-TypeEnum::Type TimeUnityStack::getType( ) {
+TypeEnum::Type DateUnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
 }
-bool TimeUnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	t_current_unity_type *converVarPtr = ( t_current_unity_type * ) obj_start_ptr;
+bool DateUnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	QDate *converVarPtr = ( QDate * ) obj_start_ptr;
 	QString dateTimeString = converVarPtr->toString( *dateTimeFormat );
 	if( infoTool::fillTypeVarAtVector< QString >( &dateTimeString, result_data ) == false )
 		return false;

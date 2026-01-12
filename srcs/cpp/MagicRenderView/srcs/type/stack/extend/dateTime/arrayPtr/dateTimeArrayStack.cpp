@@ -19,7 +19,7 @@ DateTimeArrayStack::~DateTimeArrayStack( ) {
 bool DateTimeArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QDateTime >, "vector<QDateTime>", "QDateTime[]", "QDateTimeArray", "vector<DateTime>", "DateTime[]", "DateTimeArray", "vector<DateTime>", "DateTime[]", "DateTimeArray", "vector<Date>", "Date[]", "DateArray", "vector<Date>", "Time[]", "TimeArray", "vector<Time>", "Time[]", "TimeArray" );
+	Stack_Type_Name( , std::vector< QDateTime >, "vector<QDateTime>", "QDateTime[]", "QDateTimeArray", "vector<DateTime>", "DateTime[]", "DateTimeArray" );
 	return true;
 }
 DateTimeArrayStack::DateTimeArrayStack( ) {

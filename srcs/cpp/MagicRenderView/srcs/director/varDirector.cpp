@@ -32,11 +32,9 @@
 #include "../type/stack/extend/char/arrayPtr/charArrayStack.h"
 #include "../type/stack/extend/char/unity/charUnityStack.h"
 #include "../type/stack/extend/color/arrayPtr/colorArrayStack.h"
-#include "../type/stack/extend/color/date/arrayPtr/dateArrayStack.h"
-#include "../type/stack/extend/color/date/unity/dateUnityStack.h"
-#include "../type/stack/extend/color/time/arrayPtr/timeArrayStack.h"
-#include "../type/stack/extend/color/time/unity/timeUnityStack.h"
 #include "../type/stack/extend/color/unity/colorUnityStack.h"
+#include "../type/stack/extend/date/arrayPtr/dateArrayStack.h"
+#include "../type/stack/extend/date/unity/dateUnityStack.h"
 #include "../type/stack/extend/dateTime/arrayPtr/dateTimeArrayStack.h"
 #include "../type/stack/extend/dateTime/unity/dateTimeUnityStack.h"
 #include "../type/stack/extend/image/arrayPtr/imageArrayStack.h"
@@ -45,6 +43,8 @@
 #include "../type/stack/extend/nodeInfoType/unity/nodeTypeInfoStack.h"
 #include "../type/stack/extend/string/arrayPtr/stringArrayStack.h"
 #include "../type/stack/extend/string/unity/stringUnityStack.h"
+#include "../type/stack/extend/time/arrayPtr/timeArrayStack.h"
+#include "../type/stack/extend/time/unity/timeUnityStack.h"
 
 #define emplace_back_type( _Type )\
 	stacks.emplace_back( new _Type )

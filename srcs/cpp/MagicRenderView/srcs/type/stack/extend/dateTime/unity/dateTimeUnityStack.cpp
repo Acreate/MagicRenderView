@@ -12,7 +12,7 @@ DateTimeUnityStack::~DateTimeUnityStack( ) {
 bool DateTimeUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , QDateTime, "QDateTime", "DateTime", "Date", "Time" );
+	Stack_Type_Name( , QDateTime, "QDateTime", "DateTime" );
 	return true;
 }
 DateTimeUnityStack::DateTimeUnityStack( ) {
