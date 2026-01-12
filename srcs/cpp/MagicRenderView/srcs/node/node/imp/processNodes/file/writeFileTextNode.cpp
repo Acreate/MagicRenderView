@@ -1,11 +1,16 @@
 ﻿#include "writeFileTextNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
+#include <qfile.h>
+
+#include "../../../../../director/varDirector.h"
+#include "../../../../../tools/path.h"
+#include "../../../../port/outputPort/outputPort.h"
 bool WriteFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< StringInputPort >( tr( "路径" ) ) == nullptr )
+		if( appendInputPortType< StringInputPort >( tr( "路径" ), writeFilePathPort ) == false )
 			return false;
-		if( appendInputPortType< StringInputPort >( tr( "写入内容" ) ) == nullptr )
+		if( appendInputPortType< StringInputPort >( tr( "写入内容" ), writeTextPort ) == false )
 			return false;
 		return true;
 	};
@@ -18,5 +23,32 @@ bool WriteFileTextNode::readyNodeRunData( ) {
 	return false;
 }
 bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	return false;
+	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
+	size_t count = wirteFileRefPort.size( );
+	if( count == 0 )
+		return true;
+	auto &writeBinRefPorts = getRefPort( writeTextPort );
+	count = writeBinRefPorts.size( );
+	if( count == 0 )
+		return true;
+	auto wrietFilePathPort = wirteFileRefPort.data( )[ 0 ];
+	auto varDirector = wrietFilePathPort->getVarDirector( );
+	auto varPtr = wrietFilePathPort->getVarPtr( );
+	QString *filePath;
+	if( varDirector->cast_ptr( varPtr, filePath ) == false )
+		return true;
+	if( path::createFile( *filePath ) == false )
+		return true;
+	auto wrietBinVector = writeBinRefPorts.data( )[ 0 ];
+	varDirector = wrietBinVector->getVarDirector( );
+	varPtr = wrietBinVector->getVarPtr( );
+	QString *data;
+	if( varDirector->cast_ptr( varPtr, data ) == false )
+		return true;
+	QFile file( *filePath );
+	if( file.open( QIODeviceBase::ReadWrite ) == false )
+		return true;
+	auto byteArray = data->toUtf8( );
+	file.write( byteArray.data( ), byteArray.size( ) );
+	return true;
 }

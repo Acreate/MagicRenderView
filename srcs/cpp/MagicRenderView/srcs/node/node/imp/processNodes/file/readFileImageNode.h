@@ -1,6 +1,5 @@
 ﻿#ifndef READFILEIMAGENODE_H_H_HEAD__FILE__
 #define READFILEIMAGENODE_H_H_HEAD__FILE__
-#pragma once
 
 
 #include "../../../processNode.h"

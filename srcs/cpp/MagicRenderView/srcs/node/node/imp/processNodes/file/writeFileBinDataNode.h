@@ -1,10 +1,14 @@
 ﻿#ifndef WRITEFILEBINDATANODE_H_H_HEAD__FILE__
 #define WRITEFILEBINDATANODE_H_H_HEAD__FILE__
-#pragma once
 
 #include "../../../processNode.h"
+class StringInputPort;
+class BinVectorInputPort;
 class WriteFileBinDataNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort* writeFilePathPort;
+	BinVectorInputPort* writeBinVectorPort;
 public:
 	WriteFileBinDataNode( const QString &node_name )
 		: ProcessNode( node_name ) { }

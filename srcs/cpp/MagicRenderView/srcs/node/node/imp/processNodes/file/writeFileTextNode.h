@@ -2,8 +2,12 @@
 #define WRITEFILETEXTNODE_H_H_HEAD__FILE__
 
 #include "../../../processNode.h"
+class StringInputPort;
 class WriteFileTextNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort *writeFilePathPort;
+	StringInputPort *writeTextPort;
 public:
 	WriteFileTextNode( const QString &node_name )
 		: ProcessNode( node_name ) { }

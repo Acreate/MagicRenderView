@@ -1,12 +1,14 @@
 ﻿#ifndef WRITEFILEIMAGENODE_H_H_HEAD__FILE__
 #define WRITEFILEIMAGENODE_H_H_HEAD__FILE__
-#pragma once
-
-
 
 #include "../../../processNode.h"
+class StringInputPort;
+class ImageInputPort;
 class WriteFileImageNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort *writeFilePathPort;
+	ImageInputPort *writeImagePort;
 public:
 	WriteFileImageNode( const QString &node_name )
 		: ProcessNode( node_name ) { }

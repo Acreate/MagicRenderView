@@ -1,6 +1,5 @@
 ﻿#ifndef READFILEBINDATANODE_H_H_HEAD__FILE__
 #define READFILEBINDATANODE_H_H_HEAD__FILE__
-#pragma once
 
 #include "../../../processNode.h"
 class UIntOutputPort;
