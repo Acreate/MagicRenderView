@@ -69,6 +69,7 @@
 #include "../../node/imp/processNodes/conver/toBinNode.h"
 #include "../../node/imp/processNodes/conver/toCharNode.h"
 #include "../../node/imp/processNodes/conver/toColorNode.h"
+#include "../../node/imp/processNodes/conver/toDateTimeNode.h"
 #include "../../node/imp/processNodes/conver/toFloatNode.h"
 #include "../../node/imp/processNodes/conver/toImageNode.h"
 #include "../../node/imp/processNodes/conver/toIntNode.h"
@@ -245,6 +246,7 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( ToFloatNode );
 	emaplace_back_node( ToColorNode );
 	emaplace_back_node( ToImageNode );
+	emaplace_back_node( ToDateTimeNode );
 	// 调试
 	emaplace_back_node( DebugInfoNode );
 	// 预览

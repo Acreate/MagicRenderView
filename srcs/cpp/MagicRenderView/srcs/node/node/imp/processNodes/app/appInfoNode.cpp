@@ -1,13 +1,10 @@
 ﻿#include "appInfoNode.h"
 
-#include <app/application.h>
-#include <director/printerDirector.h>
+#include <director/varDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
-#include <srack/srackInfo.h>
 #include <tools/infoTool.h>
-
-#include "../../../../../director/varDirector.h"
 
 AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;

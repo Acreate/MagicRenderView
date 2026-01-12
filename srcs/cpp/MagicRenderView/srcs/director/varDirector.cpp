@@ -33,6 +33,8 @@
 #include "../type/stack/extend/char/unity/charUnityStack.h"
 #include "../type/stack/extend/color/arrayPtr/colorArrayStack.h"
 #include "../type/stack/extend/color/unity/colorUnityStack.h"
+#include "../type/stack/extend/dateTime/arrayPtr/dateTimeArrayStack.h"
+#include "../type/stack/extend/dateTime/unity/dateTimeUnityStack.h"
 #include "../type/stack/extend/image/arrayPtr/imageArrayStack.h"
 #include "../type/stack/extend/image/unity/imageUnityStack.h"
 #include "../type/stack/extend/nodeInfoType/arrayPtr/nodeTypeInfoPtrArrayStack.h"
@@ -96,6 +98,9 @@ bool VarDirector::init( ) {
 
 	emplace_back_type( NodeTypeInfoStack );
 	emplace_back_type( NodeTypeInfoPtrArrayStack );
+
+	emplace_back_type( DateTimeUnityStack );
+	emplace_back_type( DateTimeArrayStack );
 
 	count = stacks.size( );
 	arrayPtr = stacks.data( );

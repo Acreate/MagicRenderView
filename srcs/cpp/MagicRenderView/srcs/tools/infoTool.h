@@ -4,12 +4,13 @@
 #include <QImage>
 #include <QColor>
 #include <QBuffer>
+#include <QDateTime>
 #include <qstring.h>
 
 class VarDirector;
 namespace infoTool {
-	bool toString( const QColor* conver_color_ptr, QString &result_string );
-	inline bool toString( const QColor& conver_color_ref, QString &result_string ) {
+	bool toString( const QColor *conver_color_ptr, QString &result_string );
+	inline bool toString( const QColor &conver_color_ref, QString &result_string ) {
 		return toString( &conver_color_ref, result_string );
 	}
 	bool toString( const VarDirector *var_director_ptr, void const *conver_var_ptr, QString &result_string );
@@ -194,6 +195,32 @@ namespace infoTool {
 		offset = source_ptr + sizeTypeCount;
 		target_var_ptr->setRgba( qRgba( r, g, b, a ) );
 		result_count = offset - source_ptr;
+		return result_count;
+	}
+
+	template<>
+	inline bool fillTypeVarAtVector< QDateTime >( const void *ptr, std::vector< uint8_t > &result ) {
+		QDateTime *dateTime = ( QDateTime * ) ptr;
+		auto string = dateTime->toString( "yyyy年MM月dd日.hh时mm分ss秒.zzz" );
+		return fillTypeVarAtVector< QString >( &string, result );
+	}
+	template<>
+	inline bool fillTypeVectorAtVar< QDateTime >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QDateTime *target_var_ptr ) {
+		result_count = *( uint64_t * ) source_ptr;
+		size_t sizeTypeCount = sizeof( uint64_t );
+
+		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+			result_count = sizeTypeCount;
+			return true;
+		}
+		size_t mod = source_count - sizeTypeCount;
+		if( mod < result_count )
+			return false;
+		QString resultString;
+		if( fillTypeVectorAtVar< QString >( result_count, source_ptr + sizeTypeCount, mod, &resultString ) == false )
+			return false;
+		*target_var_ptr = target_var_ptr->fromString( resultString, "yyyy年MM月dd日.hh时mm分ss秒.zzz" );
+		result_count += sizeTypeCount;
 		return result_count;
 	}
 }

@@ -3,6 +3,7 @@
 
 #include "../../../processNode.h"
 
+class DateTimeOutputPort;
 class StringOutputPort;
 class AnyVarInputPort;
 class AppInfoNode : public ProcessNode {
@@ -10,12 +11,12 @@ class AppInfoNode : public ProcessNode {
 protected:
 	StringOutputPort *appNameOutputPort;
 	StringOutputPort *appPathOutputPort;
-	StringOutputPort *builderTimeOutputPort;
+	DateTimeOutputPort *builderTimeOutputPort;
 	StringOutputPort *builderToolOutputPort;
 	StringOutputPort *versionOutputPort;
 	QString * appNameVarPtr;
 	QString * appPathVarPtr;
-	QString * builderTimeVarPtr;
+	QDateTime * builderTimeVarPtr;
 	QString * builderToolVarPtr;
 	QString * versionVarPtr;
 public:
