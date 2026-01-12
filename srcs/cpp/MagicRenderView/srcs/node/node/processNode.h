@@ -1,6 +1,6 @@
 ﻿#ifndef PROCESSNODE_H_H_HEAD__FILE__
 #define PROCESSNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class ProcessNode : public Node {

@@ -1,6 +1,6 @@
 ﻿#ifndef STRINGVECTORINPUTPORT_H_H_HEAD__FILE__
 #define STRINGVECTORINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../arrayTypeInputPort.h"
 
 class StringVectorInputPort : public ArrayTypeInputPort {

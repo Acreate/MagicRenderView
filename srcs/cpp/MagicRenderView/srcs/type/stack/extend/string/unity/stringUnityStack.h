@@ -1,6 +1,6 @@
 ﻿#ifndef STRINGUNITYSTACK_H_H_HEAD__FILE__
 #define STRINGUNITYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class StringUnityStack : public InfoStack {

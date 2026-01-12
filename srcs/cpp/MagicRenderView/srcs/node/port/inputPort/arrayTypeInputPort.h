@@ -1,6 +1,6 @@
 ﻿#ifndef ARRAYTYPEINPUTPORT_H_H_HEAD__FILE__
 #define ARRAYTYPEINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "inputPort.h"
 
 class ArrayTypeInputPort : public InputPort {

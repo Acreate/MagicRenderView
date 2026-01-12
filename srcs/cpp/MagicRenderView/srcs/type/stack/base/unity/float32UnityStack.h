@@ -1,6 +1,6 @@
 ﻿#ifndef FLOAT32UNITYSTACK_H_H_HEAD__FILE__
 #define FLOAT32UNITYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class Float32UnityStack : public InfoStack {

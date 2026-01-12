@@ -1,6 +1,6 @@
 ﻿#ifndef ANYVARTYPEOUTPUTPORT_H_H_HEAD__FILE__
 #define ANYVARTYPEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "outputPort.h"
 

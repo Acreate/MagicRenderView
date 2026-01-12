@@ -1,6 +1,6 @@
 ﻿#ifndef PORTFRINEDCLASS_H_H_HEAD__FILE__
 #define PORTFRINEDCLASS_H_H_HEAD__FILE__
-#pragma once
+
 
 #define ConjugatePortFrinedClass( ) \
 	friend class Node; \

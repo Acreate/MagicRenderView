@@ -1,6 +1,6 @@
 ﻿#ifndef UINTGENERATENODEWIDGET_H_H_HEAD__FILE__
 #define UINTGENERATENODEWIDGET_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../nodeInfoWidget.h"
 
 class UIntGenerateNodeEditor;

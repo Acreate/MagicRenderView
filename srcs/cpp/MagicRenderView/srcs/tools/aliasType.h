@@ -1,6 +1,6 @@
 ﻿#ifndef ALIASTYPE_H_H_HEAD__FILE__
 #define ALIASTYPE_H_H_HEAD__FILE__
-#pragma once
+
 #include <QString>
 #include <utility>
 

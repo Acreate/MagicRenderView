@@ -1,6 +1,6 @@
 ﻿#ifndef IFNODE_H_H_HEAD__FILE__
 #define IFNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../logicNode.h"
 
 class AnyVarOutputPort;

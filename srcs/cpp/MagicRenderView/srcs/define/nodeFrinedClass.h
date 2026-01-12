@@ -1,6 +1,6 @@
 ﻿#ifndef NODEFRINEDCLASS_H_H_HEAD__FILE__
 #define NODEFRINEDCLASS_H_H_HEAD__FILE__
-#pragma once
+
 #define NodeFrinedClass() \
 	friend class InputportLinkOutputPortInfo; \
 	friend class NodeDirector;\

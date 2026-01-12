@@ -1,6 +1,6 @@
 ﻿#ifndef RESULTNODE_H_H_HEAD__FILE__
 #define RESULTNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../endNode.h"
 
 class ToBeginInputPort;

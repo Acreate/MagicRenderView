@@ -1,6 +1,6 @@
 ﻿#ifndef RUNBUILDERACTION_H_H_HEAD__FILE__
 #define RUNBUILDERACTION_H_H_HEAD__FILE__
-#pragma once
+
 #include <menu/app/action/normalApplicationAction.h>
 
 class RunBuilderAction  : public NormalApplicationAction {

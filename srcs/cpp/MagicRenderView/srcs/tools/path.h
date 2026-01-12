@@ -1,6 +1,6 @@
 ﻿#ifndef PATH_H_H_HEAD__FILE__
 #define PATH_H_H_HEAD__FILE__
-#pragma once
+
 #include <qstring.h>
 
 class QFileInfo;

@@ -1,6 +1,6 @@
 ﻿#ifndef APPLICATIONMENUSTACK_H_H_HEAD__FILE__
 #define APPLICATIONMENUSTACK_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <QObject>
 

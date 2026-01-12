@@ -1,6 +1,6 @@
 ﻿#ifndef LOGICNODE_H_H_HEAD__FILE__
 #define LOGICNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class LogicNode : public Node {

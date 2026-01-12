@@ -1,6 +1,6 @@
 ﻿#ifndef GENERATEINTOUTPUTPORT_H_H_HEAD__FILE__
 #define GENERATEINTOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../generateTypeOutputPort.h"
 
 class GenerateIntOutputPort : public GenerateTypeOutputPort{

@@ -1,0 +1,9 @@
+﻿#ifndef PREVIEWIMAGENODE_H_H_HEAD__FILE__
+#define PREVIEWIMAGENODE_H_H_HEAD__FILE__
+
+
+class PreviewImageNode {
+	
+};
+
+#endif // PREVIEWIMAGENODE_H_H_HEAD__FILE__

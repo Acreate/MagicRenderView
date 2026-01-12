@@ -1,6 +1,6 @@
 ﻿#ifndef NORMALAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
 #define NORMALAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
-#pragma once
+
 #include <QToolBar>
 
 #include "transpondTriggNormalAction/transpondTriggNormalActionToolsBar.h"

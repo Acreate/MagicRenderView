@@ -1,6 +1,6 @@
 ﻿#ifndef TOBEGINTYPEOUTPUTPORT_H_H_HEAD__FILE__
 #define TOBEGINTYPEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "outputPort.h"
 

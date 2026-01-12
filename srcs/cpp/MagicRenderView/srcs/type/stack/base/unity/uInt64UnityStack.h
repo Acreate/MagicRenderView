@@ -1,6 +1,6 @@
 ﻿#ifndef UINT64UNITYSTACK_H_H_HEAD__FILE__
 #define UINT64UNITYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class UInt64UnityStack : public InfoStack {

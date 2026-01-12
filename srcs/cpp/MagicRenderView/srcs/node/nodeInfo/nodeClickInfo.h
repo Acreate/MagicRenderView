@@ -1,6 +1,6 @@
 ﻿#ifndef NODECLICKINFO_H_H_HEAD__FILE__
 #define NODECLICKINFO_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../enums/nodeEnum.h"
 
 class OutputPort;

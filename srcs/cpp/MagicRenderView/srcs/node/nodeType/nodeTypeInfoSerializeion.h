@@ -1,6 +1,6 @@
 ﻿#ifndef NODETYPEINFOSERIALIZEION_H_H_HEAD__FILE__
 #define NODETYPEINFOSERIALIZEION_H_H_HEAD__FILE__
-#pragma once
+
 #include <cstdint>
 #include <vector>
 #include <functional>

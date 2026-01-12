@@ -1,6 +1,6 @@
 ﻿#ifndef IMAGEGENERATENODE_H_H_HEAD__FILE__
 #define IMAGEGENERATENODE_H_H_HEAD__FILE__
-#pragma once
+
 
 class ImageOutputPort;
 class UIntOutputPort;

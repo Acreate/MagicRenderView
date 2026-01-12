@@ -1,6 +1,6 @@
 ﻿#ifndef POINTINPUTPORT_H_H_HEAD__FILE__
 #define POINTINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../pointTypeInputPort.h"
 
 class PointInputPort : public PointTypeInputPort {

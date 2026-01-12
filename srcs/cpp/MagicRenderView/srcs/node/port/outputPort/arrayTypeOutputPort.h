@@ -1,6 +1,6 @@
 ﻿#ifndef ARRAYTYPEOUTPUTPORT_H_H_HEAD__FILE__
 #define ARRAYTYPEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "outputPort.h"
 
 class ArrayTypeOutputPort : public OutputPort {

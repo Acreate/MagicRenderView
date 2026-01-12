@@ -1,6 +1,6 @@
 ﻿#ifndef GENERATETYPEOUTPUTPORT_H_H_HEAD__FILE__
 #define GENERATETYPEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 
 #include "outputPort.h"

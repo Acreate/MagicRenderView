@@ -1,6 +1,6 @@
 ﻿#ifndef BEGININPUTPORT_H_H_HEAD__FILE__
 #define BEGININPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../beginTypeInputPort.h"
 
 class BeginInputPort : public BeginTypeInputPort {

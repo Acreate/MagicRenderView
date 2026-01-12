@@ -1,6 +1,6 @@
 ﻿#ifndef SAVEPORJECTACTION_H_H_HEAD__FILE__
 #define SAVEPORJECTACTION_H_H_HEAD__FILE__
-#pragma once
+
 #include <menu/app/action/normalApplicationAction.h>
 
 class SavePorjectAction  : public NormalApplicationAction {

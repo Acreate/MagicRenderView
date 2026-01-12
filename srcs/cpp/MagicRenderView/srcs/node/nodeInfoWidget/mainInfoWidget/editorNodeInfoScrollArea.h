@@ -1,6 +1,6 @@
 ﻿#ifndef EDITORNODEINFOSCROLLAREA_H_H_HEAD__FILE__
 #define EDITORNODEINFOSCROLLAREA_H_H_HEAD__FILE__
-#pragma once
+
 #include <QScrollArea>
 
 class VarDirector;

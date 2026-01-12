@@ -1,6 +1,6 @@
 ﻿#ifndef COLORGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define COLORGENERATENODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class ColorGenerateTool;

@@ -1,6 +1,6 @@
 ﻿#ifndef JUMPNODE_H_H_HEAD__FILE__
 #define JUMPNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class JumpNode : public Node {

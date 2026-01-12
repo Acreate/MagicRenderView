@@ -1,6 +1,6 @@
 ﻿#ifndef INFOSTACK_H_H_HEAD__FILE__
 #define INFOSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 #include <vector>
 #include <qstring.h>

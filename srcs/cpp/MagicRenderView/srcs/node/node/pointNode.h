@@ -1,6 +1,6 @@
 ﻿#ifndef POINTNODE_H_H_HEAD__FILE__
 #define POINTNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class PointNode : public Node {

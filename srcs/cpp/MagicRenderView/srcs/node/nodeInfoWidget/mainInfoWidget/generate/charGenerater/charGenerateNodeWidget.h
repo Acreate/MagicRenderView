@@ -1,6 +1,6 @@
 ﻿#ifndef CHARGENERATENODEWIDGET_H_H_HEAD__FILE__
 #define CHARGENERATENODEWIDGET_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../nodeInfoWidget.h"
 
 

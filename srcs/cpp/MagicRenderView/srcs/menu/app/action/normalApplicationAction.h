@@ -1,6 +1,6 @@
 ﻿#ifndef NORMALAPPLICATIONACTION_H_H_HEAD__FILE__
 #define NORMALAPPLICATIONACTION_H_H_HEAD__FILE__
-#pragma once
+
 #include <QAction>
 #include <QWidget>
 

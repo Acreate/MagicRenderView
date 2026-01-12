@@ -1,6 +1,6 @@
 ﻿#ifndef STRINGOUTPUTPORT_H_H_HEAD__FILE__
 #define STRINGOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../unityTypeOutputPort.h"
 
 class StringOutputPort : public UnityTypeOutputPort {

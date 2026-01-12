@@ -1,6 +1,6 @@
 ﻿#ifndef EDITORAPPLICATIONMENU_H_H_HEAD__FILE__
 #define EDITORAPPLICATIONMENU_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../normalApplicationMenu.h"
 
 class EditorApplicationMenu : public NormalApplicationMenu {

@@ -1,6 +1,6 @@
 ﻿#ifndef COLORINPUTPORT_H_H_HEAD__FILE__
 #define COLORINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../unityTypeInputPort.h"
 

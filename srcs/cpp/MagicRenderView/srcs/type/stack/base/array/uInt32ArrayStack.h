@@ -1,6 +1,6 @@
 ﻿#ifndef UINT32ARRAYSTACK_H_H_HEAD__FILE__
 #define UINT32ARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class UInt32ArrayStack : public InfoStack {

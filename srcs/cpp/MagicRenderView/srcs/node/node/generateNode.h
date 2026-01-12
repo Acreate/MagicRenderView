@@ -1,6 +1,6 @@
 ﻿#ifndef GENERATENODE_H_H_HEAD__FILE__
 #define GENERATENODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class GenerateNode : public Node {

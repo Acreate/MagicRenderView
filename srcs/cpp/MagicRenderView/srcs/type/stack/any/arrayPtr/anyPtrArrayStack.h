@@ -1,6 +1,6 @@
 ﻿#ifndef ANYPTRARRAYSTACK_H_H_HEAD__FILE__
 #define ANYPTRARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../../../infoStack.h"
 

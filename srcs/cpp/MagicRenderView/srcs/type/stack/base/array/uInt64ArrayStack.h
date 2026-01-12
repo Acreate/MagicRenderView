@@ -1,6 +1,6 @@
 ﻿#ifndef UINT64ARRAYSTACK_H_H_HEAD__FILE__
 #define UINT64ARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../../infoStack.h"
 
 class UInt64ArrayStack : public InfoStack {

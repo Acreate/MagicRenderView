@@ -1,6 +1,6 @@
 ﻿#ifndef STARTNODEWIDGET_H_H_HEAD__FILE__
 #define STARTNODEWIDGET_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../nodeInfoWidget.h"
 #include "startNodeEditor.h"
 

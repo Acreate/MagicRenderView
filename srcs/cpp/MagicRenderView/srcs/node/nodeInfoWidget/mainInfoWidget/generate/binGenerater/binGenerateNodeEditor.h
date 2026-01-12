@@ -1,6 +1,6 @@
 ﻿#ifndef BINGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define BINGENERATENODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class BinGenerateTool;

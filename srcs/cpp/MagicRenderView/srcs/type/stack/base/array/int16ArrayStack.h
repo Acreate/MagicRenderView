@@ -1,6 +1,6 @@
 ﻿#ifndef INT16ARRAYSTACK_H_H_HEAD__FILE__
 #define INT16ARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class Int16ArrayStack : public InfoStack {

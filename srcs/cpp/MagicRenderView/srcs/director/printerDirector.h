@@ -1,6 +1,6 @@
 ﻿#ifndef PRINTERDIRECTOR_H_H_HEAD__FILE__
 #define PRINTERDIRECTOR_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <QObject>
 //#include <stacktrace>

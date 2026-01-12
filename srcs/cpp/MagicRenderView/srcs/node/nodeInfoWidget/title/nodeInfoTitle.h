@@ -1,6 +1,6 @@
 ﻿#ifndef NODEINFOTITLE_H_H_HEAD__FILE__
 #define NODEINFOTITLE_H_H_HEAD__FILE__
-#pragma once
+
 #include <QWidget>
 
 class QLabel;

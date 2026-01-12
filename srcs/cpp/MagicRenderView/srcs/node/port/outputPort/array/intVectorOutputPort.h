@@ -1,6 +1,6 @@
 ﻿#ifndef INTVECTOROUTPUTPORT_H_H_HEAD__FILE__
 #define INTVECTOROUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "../arrayTypeOutputPort.h"
 #include "../outputPort.h"
 

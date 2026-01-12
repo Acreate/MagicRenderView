@@ -1,6 +1,6 @@
 ﻿#ifndef NODEDIRECTOR_H_H_HEAD__FILE__
 #define NODEDIRECTOR_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <enums/nodeEnum.h>
 

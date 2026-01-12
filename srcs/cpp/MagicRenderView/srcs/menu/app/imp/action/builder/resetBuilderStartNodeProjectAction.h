@@ -1,6 +1,6 @@
 ﻿#ifndef RESETBUILDERSTARTNODEPROJECTACTION_H_H_HEAD__FILE__
 #define RESETBUILDERSTARTNODEPROJECTACTION_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <menu/app/action/normalApplicationAction.h>
 

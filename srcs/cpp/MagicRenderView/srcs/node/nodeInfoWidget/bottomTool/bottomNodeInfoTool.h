@@ -1,6 +1,6 @@
 ﻿#ifndef BOTTOMNODEINFOTOOL_H_H_HEAD__FILE__
 #define BOTTOMNODEINFOTOOL_H_H_HEAD__FILE__
-#pragma once
+
 #include <QWidget>
 
 class QPushButton;

@@ -1,6 +1,6 @@
 ﻿#ifndef FLOATGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define FLOATGENERATENODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class FloatGenerateRenderWidget;

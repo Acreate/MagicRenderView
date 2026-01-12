@@ -1,6 +1,6 @@
 ﻿#ifndef GOTONODE_H_H_HEAD__FILE__
 #define GOTONODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../jumpNode.h"
 
 class PointInputPort;

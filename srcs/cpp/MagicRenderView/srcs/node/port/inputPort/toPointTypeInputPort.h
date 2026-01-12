@@ -1,6 +1,6 @@
 ﻿#ifndef TOPOINTTYPEINPUTPORT_H_H_HEAD__FILE__
 #define TOPOINTTYPEINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "inputPort.h"
 
 class ToPointTypeInputPort : public InputPort {

@@ -1,6 +1,6 @@
 ﻿#ifndef STARTNODE_H_H_HEAD__FILE__
 #define STARTNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../beginNode.h"
 
 class BeginOutputPort;

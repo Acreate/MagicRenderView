@@ -1,6 +1,6 @@
 ﻿#ifndef GENERATETYPEINPUTPORT_H_H_HEAD__FILE__
 #define GENERATETYPEINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 
 #include "inputPort.h"

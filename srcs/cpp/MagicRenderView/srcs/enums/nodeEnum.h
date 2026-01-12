@@ -1,6 +1,6 @@
 ﻿#ifndef NODEENUM_H_H_HEAD__FILE__
 #define NODEENUM_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 
 namespace NodeEnum {

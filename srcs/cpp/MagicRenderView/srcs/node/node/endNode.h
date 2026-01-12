@@ -1,6 +1,6 @@
 ﻿#ifndef ENDNODE_H_H_HEAD__FILE__
 #define ENDNODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class BeginNode;

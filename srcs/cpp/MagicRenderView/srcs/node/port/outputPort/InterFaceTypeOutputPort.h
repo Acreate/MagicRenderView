@@ -1,6 +1,6 @@
 ﻿#ifndef INTERFACETYPEOUTPUTPORT_H_H_HEAD__FILE__
 #define INTERFACETYPEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "outputPort.h"
 
 class InterFaceTypeOutputPort : public OutputPort {

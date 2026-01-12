@@ -1,6 +1,6 @@
 ﻿#ifndef UNITYTYPEINPUTPORT_H_H_HEAD__FILE__
 #define UNITYTYPEINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 #include "inputPort.h"
 
 class UnityTypeInputPort : public InputPort {

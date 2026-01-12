@@ -1,6 +1,6 @@
 ﻿#ifndef STRINGARRAYSTACK_H_H_HEAD__FILE__
 #define STRINGARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class StringArrayStack : public InfoStack {

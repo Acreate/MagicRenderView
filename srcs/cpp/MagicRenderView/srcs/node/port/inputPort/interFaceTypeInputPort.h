@@ -1,6 +1,6 @@
 ﻿#ifndef INTERFACETYPEINPUTPORT_H_H_HEAD__FILE__
 #define INTERFACETYPEINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "inputPort.h"
 

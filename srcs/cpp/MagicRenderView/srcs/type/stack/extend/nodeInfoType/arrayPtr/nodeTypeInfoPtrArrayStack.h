@@ -1,6 +1,6 @@
 ﻿#ifndef NODETYPEINFOPTRARRAYSTACK_H_H_HEAD__FILE__
 #define NODETYPEINFOPTRARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 
 
 #include <type/infoStack.h>

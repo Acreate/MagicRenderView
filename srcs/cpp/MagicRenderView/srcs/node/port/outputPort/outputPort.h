@@ -1,6 +1,6 @@
 ﻿#ifndef OUTPUTPORT_H_H_HEAD__FILE__
 #define OUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <QObject>
 #include <QWidget>

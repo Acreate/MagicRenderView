@@ -1,6 +1,6 @@
 ﻿#ifndef APPDIRECTOR_H_H_HEAD__FILE__
 #define APPDIRECTOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 class Application;
 class PrinterDirector;

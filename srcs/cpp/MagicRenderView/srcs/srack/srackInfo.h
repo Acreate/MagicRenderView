@@ -1,6 +1,6 @@
 ﻿#ifndef SRACKINFO_H_H_HEAD__FILE__
 #define SRACKINFO_H_H_HEAD__FILE__
-#pragma once
+
 #include <qstring.h>
 
 class SrackInfo {

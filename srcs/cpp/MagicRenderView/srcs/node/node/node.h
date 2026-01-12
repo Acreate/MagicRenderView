@@ -1,6 +1,5 @@
 ﻿#ifndef NODE_H_H_HEAD__FILE__
 #define NODE_H_H_HEAD__FILE__
-#pragma once
 
 #include <QWidget>
 #include <qpen.h>
@@ -81,6 +80,8 @@ protected:
 	std::vector< Node * > thisInputPortRefNodeVector;
 	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
 	std::vector< Node * > outputPortRefThisNodeVector;
+	/// @brief 节点编辑窗口
+	NodeInfoWidget *nodeEditorWidget = nullptr;
 private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
@@ -153,6 +154,7 @@ public:
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
+	virtual NodeInfoWidget * getNodeEditorWidget( ) const;
 	virtual bool initEx( MainWidget *parent );
 	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
 	/// @return 依赖序列

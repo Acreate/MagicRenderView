@@ -1,6 +1,6 @@
 ﻿#ifndef ARRAYTOOLS_H_H_HEAD__FILE__
 #define ARRAYTOOLS_H_H_HEAD__FILE__
-#pragma once
+
 #include <QDebug>
 
 namespace ArrayTools {

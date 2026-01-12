@@ -1,6 +1,6 @@
 ﻿#ifndef CACHENODE_H_H_HEAD__FILE__
 #define CACHENODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "node.h"
 
 class CacheNode : public Node {

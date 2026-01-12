@@ -1,6 +1,6 @@
 ﻿#ifndef INT8UNITYSTACK_H_H_HEAD__FILE__
 #define INT8UNITYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <type/infoStack.h>
 
 class Int8UnityStack : public InfoStack {

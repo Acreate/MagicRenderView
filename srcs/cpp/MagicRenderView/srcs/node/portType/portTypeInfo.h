@@ -1,6 +1,6 @@
 ﻿#ifndef PORTTYPEINFO_H_H_HEAD__FILE__
 #define PORTTYPEINFO_H_H_HEAD__FILE__
-#pragma once
+
 #include <cstdint>
 class InputPort;
 class OutputPort;

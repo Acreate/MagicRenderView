@@ -1,6 +1,6 @@
 ﻿#ifndef ARRAYNODE_H_H_HEAD__FILE__
 #define ARRAYNODE_H_H_HEAD__FILE__
-#pragma once
+
 
 
 #include "node.h"

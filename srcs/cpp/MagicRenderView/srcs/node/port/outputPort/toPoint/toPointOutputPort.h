@@ -1,6 +1,6 @@
 ﻿#ifndef TOPOINTOUTPUTPORT_H_H_HEAD__FILE__
 #define TOPOINTOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../toPointTypeOutputPort.h"
 

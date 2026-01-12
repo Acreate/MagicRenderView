@@ -1,6 +1,6 @@
 ﻿#ifndef NORMALAPPLICATIONMENU_H_H_HEAD__FILE__
 #define NORMALAPPLICATIONMENU_H_H_HEAD__FILE__
-#pragma once
+
 #include <QMenu>
 #include <QObject>
 

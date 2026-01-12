@@ -1,6 +1,6 @@
 ﻿#ifndef BINGENERATENODE_H_H_HEAD__FILE__
 #define BINGENERATENODE_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../../generateNode.h"
 

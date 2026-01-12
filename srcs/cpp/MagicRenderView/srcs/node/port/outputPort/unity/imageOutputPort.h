@@ -1,6 +1,6 @@
 ﻿#ifndef IMAGEOUTPUTPORT_H_H_HEAD__FILE__
 #define IMAGEOUTPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../unityTypeOutputPort.h"
 

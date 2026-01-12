@@ -1,6 +1,6 @@
 ﻿#ifndef NODESTACK_H_H_HEAD__FILE__
 #define NODESTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 
 #include "../../enums/nodeEnum.h"

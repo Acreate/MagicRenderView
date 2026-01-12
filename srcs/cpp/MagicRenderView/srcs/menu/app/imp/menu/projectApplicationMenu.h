@@ -1,6 +1,6 @@
 ﻿#ifndef PROJECTAPPLICATIONMENU_H_H_HEAD__FILE__
 #define PROJECTAPPLICATIONMENU_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../normalApplicationMenu.h"
 
 class ProjectApplicationMenu : public NormalApplicationMenu {

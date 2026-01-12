@@ -1,6 +1,6 @@
 ﻿#ifndef UINTVECTORINPUTPORT_H_H_HEAD__FILE__
 #define UINTVECTORINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../arrayTypeInputPort.h"
 

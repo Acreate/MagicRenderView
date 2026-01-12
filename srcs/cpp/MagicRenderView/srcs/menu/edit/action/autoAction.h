@@ -1,6 +1,6 @@
 ﻿#ifndef AUTOACTION_H_H_HEAD__FILE__
 #define AUTOACTION_H_H_HEAD__FILE__
-#pragma once
+
 #include <QAction>
 
 class AutoAction : public QAction {

@@ -1,6 +1,6 @@
 ﻿#ifndef QUITAPPACTION_H_H_HEAD__FILE__
 #define QUITAPPACTION_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <menu/app/action/normalApplicationAction.h>
 

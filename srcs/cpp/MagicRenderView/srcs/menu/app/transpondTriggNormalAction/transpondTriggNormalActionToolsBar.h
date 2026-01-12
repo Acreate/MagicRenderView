@@ -1,6 +1,6 @@
 ﻿#ifndef TRANSPONDTRIGGNORMALACTIONTOOLSBAR_H_H_HEAD__FILE__
 #define TRANSPONDTRIGGNORMALACTIONTOOLSBAR_H_H_HEAD__FILE__
-#pragma once
+
 #include <QToolBar>
 
 class NormalApplicationAction;

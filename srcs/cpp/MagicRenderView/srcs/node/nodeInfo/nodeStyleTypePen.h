@@ -1,6 +1,6 @@
 ﻿#ifndef NODESTYLETYPEPEN_H_H_HEAD__FILE__
 #define NODESTYLETYPEPEN_H_H_HEAD__FILE__
-#pragma once
+
 #include <qpen.h>
 
 namespace NodeEnum {

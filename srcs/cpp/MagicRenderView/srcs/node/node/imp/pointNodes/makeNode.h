@@ -1,6 +1,6 @@
 ﻿#ifndef MAKENODE_H_H_HEAD__FILE__
 #define MAKENODE_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../pointNode.h"
 
 class PointOutputPort;

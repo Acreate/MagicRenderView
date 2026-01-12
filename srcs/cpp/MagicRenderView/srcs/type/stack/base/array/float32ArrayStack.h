@@ -1,6 +1,6 @@
 ﻿#ifndef FLOAT32ARRAYSTACK_H_H_HEAD__FILE__
 #define FLOAT32ARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../../infoStack.h"
 
 class Float32ArrayStack : public InfoStack {

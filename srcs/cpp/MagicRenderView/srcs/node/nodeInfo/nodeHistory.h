@@ -1,6 +1,6 @@
 ﻿#ifndef NODEHISTORY_H_H_HEAD__FILE__
 #define NODEHISTORY_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 #include <functional>
 // todo : 改进该类，实现节点更多操作

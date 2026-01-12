@@ -1,6 +1,6 @@
 ﻿#ifndef TYPEENUM_H_H_HEAD__FILE__
 #define TYPEENUM_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 namespace TypeEnum {
 	enum class Type {

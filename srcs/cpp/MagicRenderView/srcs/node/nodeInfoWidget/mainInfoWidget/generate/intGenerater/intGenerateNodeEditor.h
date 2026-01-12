@@ -1,6 +1,6 @@
 ﻿#ifndef INTGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define INTGENERATENODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class IntGenerateTool;

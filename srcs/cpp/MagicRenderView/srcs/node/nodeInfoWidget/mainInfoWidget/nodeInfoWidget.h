@@ -1,6 +1,6 @@
 ﻿#ifndef NODEINFOWIDGET_H_H_HEAD__FILE__
 #define NODEINFOWIDGET_H_H_HEAD__FILE__
-#pragma once
+
 #include <QScrollArea>
 
 #include "../../../enums/widgetEnum.h"

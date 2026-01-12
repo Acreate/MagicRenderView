@@ -1,6 +1,6 @@
 ﻿#ifndef FLOATGENERATENODE_H_H_HEAD__FILE__
 #define FLOATGENERATENODE_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../../generateNode.h"
 

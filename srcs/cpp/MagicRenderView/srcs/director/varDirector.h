@@ -1,6 +1,6 @@
 ﻿#ifndef VARDIRECTOR_H_H_HEAD__FILE__
 #define VARDIRECTOR_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <QObject>
 #include <typeinfo>

@@ -1,6 +1,6 @@
 ﻿#ifndef STRINGINPUTPORT_H_H_HEAD__FILE__
 #define STRINGINPUTPORT_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../unityTypeInputPort.h"
 

@@ -1,6 +1,6 @@
 ﻿#ifndef STARTNODEEDITOR_H_H_HEAD__FILE__
 #define STARTNODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../editorNodeInfoScrollArea.h"
 
 class StartNode;

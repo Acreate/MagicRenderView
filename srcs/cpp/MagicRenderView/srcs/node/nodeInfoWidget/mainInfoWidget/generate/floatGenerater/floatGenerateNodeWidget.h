@@ -1,6 +1,6 @@
 ﻿#ifndef FLOATGENERATENODEWIDGET_H_H_HEAD__FILE__
 #define FLOATGENERATENODEWIDGET_H_H_HEAD__FILE__
-#pragma once
+
 #include "../../nodeInfoWidget.h"
 
 class FloatGenerateNodeEditor;

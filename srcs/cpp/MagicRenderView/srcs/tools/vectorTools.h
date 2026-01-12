@@ -1,6 +1,6 @@
 ﻿#ifndef VECTORTOOLS_H_H_HEAD__FILE__
 #define VECTORTOOLS_H_H_HEAD__FILE__
-#pragma once
+
 #include <vector>
 
 namespace VectorTools {

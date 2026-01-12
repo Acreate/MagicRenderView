@@ -1,6 +1,6 @@
 ﻿#ifndef EDITORDIRECTOR_H_H_HEAD__FILE__
 #define EDITORDIRECTOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <QObject>
 
 class Application;

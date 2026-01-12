@@ -1,6 +1,6 @@
 ﻿#ifndef IMAGEARRAYSTACK_H_H_HEAD__FILE__
 #define IMAGEARRAYSTACK_H_H_HEAD__FILE__
-#pragma once
+
 
 #include <type/infoStack.h>
 

@@ -1,6 +1,6 @@
 ﻿#ifndef APPAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
 #define APPAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
-#pragma once
+
 
 #include "../../normalApplicationToolBar.h"
 

@@ -1,6 +1,6 @@
 ﻿#ifndef IMAGEGENERATENODEEDITOR_H_H_HEAD__FILE__
 #define IMAGEGENERATENODEEDITOR_H_H_HEAD__FILE__
-#pragma once
+
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class ImageGenerateTool;
