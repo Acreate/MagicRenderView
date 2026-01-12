@@ -16,6 +16,7 @@
 	friend class NodeTypeInfo;\
 	friend class PortTypeInfo;\
 	friend class NodeTools;\
+	friend class NodeInfoEditorDirector;\
 	friend class PortLinkType
  
 #endif // NODEFRINEDCLASS_H_H_HEAD__FILE__

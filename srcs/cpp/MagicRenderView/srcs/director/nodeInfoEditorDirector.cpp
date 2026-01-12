@@ -183,6 +183,7 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 	NodeInfoWidget **nodeInfoWidgetArrayPtr;
 	if( node_ptr == nullptr )
 		return false;
+
 	// 遍历已经保存的列表
 	count = editorWidgetPackage.size( );
 	nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
@@ -192,6 +193,16 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 		else if( nodeInfoWidgetArrayPtr[ index ]->getNode( ) == node_ptr ) {
 			result_node_info_editor_widget = nodeInfoWidgetArrayPtr[ index ];
 			return true;
+		}
+	// 获取窗口
+	result_node_info_editor_widget = node_ptr->getNodeEditorWidget( );
+	if( result_node_info_editor_widget )
+		if( result_node_info_editor_widget->initNodeInfo( node_ptr ) ) {
+			appendEditorWidgetPackage( result_node_info_editor_widget );
+			connect( result_node_info_editor_widget, &NodeInfoWidget::hide_signal, this, &NodeInfoEditorDirector::hide_NodeInfoWidget_signal );
+		} else {
+			delete result_node_info_editor_widget;
+			result_node_info_editor_widget = nullptr;
 		}
 	// 遍历创建调用
 	count = generaterNodeInfoEditorWidgetMap.size( );

@@ -80,8 +80,6 @@ protected:
 	std::vector< Node * > thisInputPortRefNodeVector;
 	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
 	std::vector< Node * > outputPortRefThisNodeVector;
-	/// @brief 节点编辑窗口
-	NodeInfoWidget *nodeEditorWidget = nullptr;
 private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
@@ -128,6 +126,9 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
+	/// @brief 该窗口应该被 NodeInfoEditorDirector::getNodeInfoEditorWidget 调用，并且交由 NodeInfoEditorDirector 销毁
+	/// @return 成功返回编辑窗口
+	virtual NodeInfoWidget * getNodeEditorWidget( ) const;
 public:
 	/// @brief 配置首次运行所需要的数据
 	/// @return 失败返回 false
@@ -154,7 +155,6 @@ public:
 public:
 	~Node( ) override;
 	Node( const QString &node_name );
-	virtual NodeInfoWidget * getNodeEditorWidget( ) const;
 	virtual bool initEx( MainWidget *parent );
 	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
 	/// @return 依赖序列
@@ -217,17 +217,6 @@ protected:
 		delete resultPortPtr;
 		return nullptr;
 	}
-	template< typename TInputPortType >
-		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
-			port = create_ptr;
-		}
-	TInputPortType * appendInputPortType( const QString &output_port_name ) {
-		TInputPortType *resultPortPtr = new TInputPortType( output_port_name );
-		if( appendInputPort( resultPortPtr ) == true )
-			return resultPortPtr;
-		delete resultPortPtr;
-		return nullptr;
-	}
 
 	template< typename TOutputPortType >
 		requires requires ( TOutputPortType *create_ptr, OutputPort *port ) {
@@ -244,6 +233,35 @@ protected:
 		delete resultPortPtr;
 		return false;
 	}
+
+	template< typename TOutputPortType, typename TCreateBindVar >
+		requires requires ( TOutputPortType *create_ptr, OutputPort *port ) {
+			port = create_ptr;
+		}
+	bool appendOutputPortType( const QString &output_port_name, TOutputPortType *&result_output_port_ptr, TCreateBindVar *bind_port_var_ptr ) {
+		TOutputPortType *resultPortPtr = new TOutputPortType( output_port_name );
+		if( resultPortPtr == nullptr )
+			return false;
+		if( appendOutputPort( resultPortPtr ) == true ) {
+			result_output_port_ptr = resultPortPtr;
+			if( setPortVar( resultPortPtr, bind_port_var_ptr ) == true )
+				return true;
+			return true;
+		}
+		delete resultPortPtr;
+		return false;
+	}
+	template< typename TInputPortType >
+		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
+			port = create_ptr;
+		}
+	TInputPortType * appendInputPortType( const QString &output_port_name ) {
+		TInputPortType *resultPortPtr = new TInputPortType( output_port_name );
+		if( appendInputPort( resultPortPtr ) == true )
+			return resultPortPtr;
+		delete resultPortPtr;
+		return nullptr;
+	}
 	template< typename TInputPortType >
 		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
 			port = create_ptr;
@@ -255,6 +273,22 @@ protected:
 		if( appendInputPort( resultPortPtr ) == true ) {
 			result_input_port_ptr = resultPortPtr;
 			return true;
+		}
+		delete resultPortPtr;
+		return false;
+	}
+	template< typename TInputPortType, typename TCreateBindVar >
+		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
+			port = create_ptr;
+		}
+	bool appendInputPortType( const QString &output_port_name, TInputPortType *&result_input_port_ptr, TCreateBindVar *bind_port_var_ptr ) {
+		TInputPortType *resultPortPtr = new TInputPortType( output_port_name );
+		if( resultPortPtr == nullptr )
+			return false;
+		if( appendInputPort( resultPortPtr ) == true ) {
+			result_input_port_ptr = resultPortPtr;
+			if( setPortVar( resultPortPtr, bind_port_var_ptr ) == true )
+				return true;
 		}
 		delete resultPortPtr;
 		return false;

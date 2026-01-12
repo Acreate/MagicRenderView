@@ -65,6 +65,7 @@
 #include "../../node/imp/jumpNodes/gotoNode.h"
 #include "../../node/imp/logicNodes/ifNode.h"
 #include "../../node/imp/pointNodes/makeNode.h"
+#include "../../node/imp/processNodes/app/appInfoNode.h"
 #include "../../node/imp/processNodes/conver/toBinNode.h"
 #include "../../node/imp/processNodes/conver/toCharNode.h"
 #include "../../node/imp/processNodes/conver/toColorNode.h"
@@ -74,12 +75,17 @@
 #include "../../node/imp/processNodes/conver/toStringNode.h"
 #include "../../node/imp/processNodes/conver/toUIntNode.h"
 #include "../../node/imp/processNodes/debug/debugInfoNode.h"
-#include "../../node/imp/processNodes/file/readFileBinDataNode.h"
-#include "../../node/imp/processNodes/file/readFileImageNode.h"
-#include "../../node/imp/processNodes/file/readFileTextNode.h"
-#include "../../node/imp/processNodes/file/writeFileBinDataNode.h"
-#include "../../node/imp/processNodes/file/writeFileImageNode.h"
-#include "../../node/imp/processNodes/file/writeFileTextNode.h"
+#include "../../node/imp/processNodes/debug/previewImageNode.h"
+#include "../../node/imp/processNodes/image/imageChannelNode.h"
+#include "../../node/imp/processNodes/image/imageInfoNode.h"
+#include "../../node/imp/processNodes/path/fileInfoNode.h"
+#include "../../node/imp/processNodes/path/systemPathInfo.h"
+#include "../../node/imp/processNodes/read/readFileBinDataNode.h"
+#include "../../node/imp/processNodes/read/readFileImageNode.h"
+#include "../../node/imp/processNodes/read/readFileTextNode.h"
+#include "../../node/imp/processNodes/write/writeFileBinDataNode.h"
+#include "../../node/imp/processNodes/write/writeFileImageNode.h"
+#include "../../node/imp/processNodes/write/writeFileTextNode.h"
 #include "../../node/imp/unityNode/baseOperation/color/colorAddNode.h"
 #include "../../node/imp/unityNode/baseOperation/color/colorDivNode.h"
 #include "../../node/imp/unityNode/baseOperation/color/colorModNode.h"
@@ -241,6 +247,19 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( ToImageNode );
 	// 调试
 	emaplace_back_node( DebugInfoNode );
+	// 预览
+	emaplace_back_node( PreviewImageNode );
+	// 图像
+	emaplace_back_node( ImageInfoNode );
+	emaplace_back_node( ImageChannelNode );
+
+	// 路径
+	emaplace_back_node( FileInfoNode );
+	emaplace_back_node( SystemPathInfo );
+
+	// 软件
+	emaplace_back_node( AppInfoNode );
+
 	return true;
 }
 

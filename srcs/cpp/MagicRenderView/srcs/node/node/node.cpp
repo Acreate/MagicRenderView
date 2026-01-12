@@ -91,7 +91,9 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout(
 	mainLayout->addWidget( connectWidget );
 
 }
-NodeInfoWidget * Node::getNodeEditorWidget( ) const { return nodeEditorWidget; }
+NodeInfoWidget * Node::getNodeEditorWidget( ) const {
+	return nullptr;
+}
 bool Node::bindPortInfo( ) {
 	size_t count = outputPortVector.size( );
 	size_t index;

@@ -1,11 +1,11 @@
 ﻿#include "debugInfoNode.h"
 
-#include "../../../../../app/application.h"
-#include "../../../../../director/printerDirector.h"
-#include "../../../../../srack/srackInfo.h"
-#include "../../../../../tools/infoTool.h"
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
-#include "../../../../port/outputPort/unity/stringOutputPort.h"
+#include <app/application.h>
+#include <director/printerDirector.h>
+#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <node/port/outputPort/unity/stringOutputPort.h>
+#include <srack/srackInfo.h>
+#include <tools/infoTool.h>
 
 bool DebugInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
