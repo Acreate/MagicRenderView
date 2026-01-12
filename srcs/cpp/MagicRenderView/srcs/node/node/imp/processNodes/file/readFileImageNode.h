@@ -4,11 +4,16 @@
 
 
 #include "../../../processNode.h"
+class StringInputPort;
+class ImageOutputPort;
 class ReadFileImageNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort* filePathPort;
+	ImageOutputPort* imageOutputPort;
+	QImage* outVarPtr;
 public:
-	ReadFileImageNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ReadFileImageNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

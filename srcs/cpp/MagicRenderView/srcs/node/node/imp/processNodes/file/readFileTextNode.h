@@ -2,13 +2,17 @@
 #define READFILETEXTNODE_H_H_HEAD__FILE__
 #pragma once
 
-
 #include "../../../processNode.h"
+class StringOutputPort;
+class StringInputPort;
 class ReadFileTextNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort *filePathInputPort;
+	StringOutputPort *outTextPort;
+	QString *outTextPtr;
 public:
-	ReadFileTextNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ReadFileTextNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

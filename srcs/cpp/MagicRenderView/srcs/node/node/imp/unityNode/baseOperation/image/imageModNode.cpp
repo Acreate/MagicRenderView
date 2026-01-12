@@ -23,8 +23,6 @@ bool ImageModNode::initEx( MainWidget *parent ) {
 			return false;
 		if( setPortVar( outputPort, outputVarPtr ) == false )
 			return false;
-		if( setPortMultiple( secondInputPort, true ) == false )
-			return false;
 		return true;
 	};
 	return UnityNode::initEx( parent );

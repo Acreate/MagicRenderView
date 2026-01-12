@@ -3,11 +3,19 @@
 #pragma once
 
 #include "../../../processNode.h"
+class UIntOutputPort;
+class BinVectorOutputPort;
+class StringInputPort;
 class ReadFileBinDataNode : public ProcessNode {
 	Q_OBJECT;
+protected:
+	StringInputPort* filePathInputPort;
+	BinVectorOutputPort* outBinVectorPort;
+	UIntOutputPort* outVectorCountPort;
+	std::vector<uint8_t>* outVectorPtr;
+	uint64_t* outVectorCountPtr;
 public:
-	ReadFileBinDataNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	ReadFileBinDataNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

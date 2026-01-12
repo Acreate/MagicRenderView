@@ -21,6 +21,8 @@ bool ColorMulNode::initEx( MainWidget *parent ) {
 			varDirector->release( outputVarPtr );
 		if( varDirector->create( outputVarPtr ) == false )
 			return false;
+		if( setPortVar( outputPort, outputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return UnityNode::initEx( parent );
