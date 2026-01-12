@@ -5,6 +5,8 @@
 
 class DateTimeUnityStack : public InfoStack {
 	Q_OBJECT;
+protected:
+	QString * dateTimeFormat;
 public:
 	DateTimeUnityStack( );
 	~DateTimeUnityStack( ) override;

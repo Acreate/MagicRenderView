@@ -15,7 +15,6 @@ AnyPtrArrayStack::~AnyPtrArrayStack( ) {
 			size_t voidPtrArrayIndex = 0;
 			for( ; voidPtrArrayIndex < voidPtrArrayCount; ++voidPtrArrayIndex )
 				varDirector->release( voidPtrArrayPtr[ voidPtrArrayIndex ] );
-			vector->clear( );
 			delete vector;
 		}
 	allVarPtrVector.clear( );
@@ -26,6 +25,24 @@ AnyPtrArrayStack::AnyPtrArrayStack( ) {
 }
 
 bool AnyPtrArrayStack::init( VarDirector *var_director ) {
+	if( varDirector ) {
+		size_t count = allVarPtrVector.size( );
+		if( count ) {
+			auto arrayPtr = allVarPtrVector.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( arrayPtr[ index ] ) {
+					std::vector< void * > *vector = ( std::vector< void * > * ) arrayPtr[ index ];
+					size_t voidPtrArrayCount = vector->size( );
+					auto voidPtrArrayPtr = vector->data( );
+					size_t voidPtrArrayIndex = 0;
+					for( ; voidPtrArrayIndex < voidPtrArrayCount; ++voidPtrArrayIndex )
+						varDirector->release( voidPtrArrayPtr[ voidPtrArrayIndex ] );
+					delete vector;
+				}
+			allVarPtrVector.clear( );
+		}
+	}
+
 	if( InfoStack::init( var_director ) == false )
 		return false;
 	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );

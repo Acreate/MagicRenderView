@@ -32,6 +32,10 @@
 #include "../type/stack/extend/char/arrayPtr/charArrayStack.h"
 #include "../type/stack/extend/char/unity/charUnityStack.h"
 #include "../type/stack/extend/color/arrayPtr/colorArrayStack.h"
+#include "../type/stack/extend/color/date/arrayPtr/dateArrayStack.h"
+#include "../type/stack/extend/color/date/unity/dateUnityStack.h"
+#include "../type/stack/extend/color/time/arrayPtr/timeArrayStack.h"
+#include "../type/stack/extend/color/time/unity/timeUnityStack.h"
 #include "../type/stack/extend/color/unity/colorUnityStack.h"
 #include "../type/stack/extend/dateTime/arrayPtr/dateTimeArrayStack.h"
 #include "../type/stack/extend/dateTime/unity/dateTimeUnityStack.h"
@@ -101,6 +105,12 @@ bool VarDirector::init( ) {
 
 	emplace_back_type( DateTimeUnityStack );
 	emplace_back_type( DateTimeArrayStack );
+
+	emplace_back_type( TimeUnityStack );
+	emplace_back_type( TimeArrayStack );
+
+	emplace_back_type( DateUnityStack );
+	emplace_back_type( DateArrayStack );
 
 	count = stacks.size( );
 	arrayPtr = stacks.data( );

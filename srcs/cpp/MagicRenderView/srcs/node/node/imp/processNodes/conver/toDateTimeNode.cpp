@@ -45,40 +45,14 @@ bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );
 	auto varPtr = outputPortPtr->getVarPtr( );
 
-	QColor *colorPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, colorPtr ) ) {
-		uint64_t buffVar;
-		uint64_t orVar = colorPtr->red( );
-		buffVar = colorPtr->green( );
-		orVar = orVar | buffVar << 16;
-		buffVar = colorPtr->blue( );
-		orVar = orVar | buffVar << 32;
-		buffVar = colorPtr->alpha( );
-		orVar = orVar | buffVar << 48;
-		*outVarPtr = QString::number( orVar );
-		return true;
-	}
-
-	QImage *image;
-	if( varDirectorPtr->cast_ptr( varPtr, image ) ) {
-		outVarPtr->clear( );
-		ImageTools::conver::imageToBase64( *image, *outVarPtr );
-		return true;
-	}
-
 	QString *stringPtr;
 	if( varDirectorPtr->cast_ptr( varPtr, stringPtr ) ) {
-		*outVarPtr = *stringPtr;
+		*outVarPtr = QDateTime::fromString( *stringPtr );
 		return true;
 	}
 
-	QChar *charPtr;
-	if( varDirectorPtr->cast_ptr( varPtr, charPtr ) ) {
-		*outVarPtr = *charPtr;
-		return true;
-	}
 	auto setNumberVar = [this] ( const auto &number_var ) ->bool {
-		*outVarPtr = QString::number( number_var );
+		*outVarPtr = QDateTime::fromMSecsSinceEpoch( number_var );
 		return true;
 	};
 	uint8_t *uint8t;
@@ -114,6 +88,5 @@ bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	if( varDirectorPtr->cast_ptr( varPtr, doublePtr ) )
 		return setNumberVar( *doublePtr );
 
-	outVarPtr->clear( );
 	return true;
 }

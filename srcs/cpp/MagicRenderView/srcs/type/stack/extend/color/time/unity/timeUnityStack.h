@@ -1,15 +1,15 @@
-﻿#ifndef DATETIMEARRAYSTACK_H_H_HEAD__FILE__
-#define DATETIMEARRAYSTACK_H_H_HEAD__FILE__
+﻿#ifndef TIMEUNITYSTACK_H_H_HEAD__FILE__
+#define TIMEUNITYSTACK_H_H_HEAD__FILE__
 
 #include <type/infoStack.h>
 
-class DateTimeArrayStack : public InfoStack {
+class TimeUnityStack : public InfoStack {
 	Q_OBJECT;
 protected:
-	QString * dateTimeFormat;
+	QString *dateTimeFormat;
 public:
-	DateTimeArrayStack( );
-	~DateTimeArrayStack( ) override;
+	TimeUnityStack( );
+	~TimeUnityStack( ) override;
 protected:
 	bool init( VarDirector *var_director ) override;
 public:
@@ -18,4 +18,5 @@ public:
 protected:
 	bool toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) override;
 };
-#endif // DATETIMEARRAYSTACK_H_H_HEAD__FILE__
+
+#endif // TIMEUNITYSTACK_H_H_HEAD__FILE__

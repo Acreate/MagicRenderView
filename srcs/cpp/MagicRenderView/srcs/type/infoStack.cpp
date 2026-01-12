@@ -27,6 +27,7 @@ bool InfoStack::init( VarDirector *var_director ) {
 	return true;
 }
 InfoStack::InfoStack( ) {
+	varDirector = nullptr;
 	newObjTypeFunction = nullptr;
 	deleteObjTypeFunction = nullptr;
 }

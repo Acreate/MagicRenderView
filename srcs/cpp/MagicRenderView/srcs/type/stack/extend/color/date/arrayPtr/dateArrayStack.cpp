@@ -1,13 +1,13 @@
-﻿#include "dateTimeArrayStack.h"
+﻿#include "dateArrayStack.h"
 
 #include <define/macro.h>
 #include <tools/infoTool.h>
 
 #include <director/varDirector.h>
-#include <QDateTime>
+#include <QDate>
 
-using t_current_unity_type = QDateTime;
-DateTimeArrayStack::~DateTimeArrayStack( ) {
+using t_current_unity_type = QDate;
+DateArrayStack::~DateArrayStack( ) {
 	size_t count = allVarPtrVector.size( );
 	auto arrayPtr = allVarPtrVector.data( );
 	for( size_t index = 0; index < count; ++index )
@@ -16,17 +16,17 @@ DateTimeArrayStack::~DateTimeArrayStack( ) {
 	allVarPtrVector.clear( );
 	delete dateTimeFormat;
 }
-bool DateTimeArrayStack::init( VarDirector *var_director ) {
+bool DateArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
 	Stack_Type_Name( , std::vector< QDateTime >, "vector<QDateTime>", "QDateTime[]", "QDateTimeArray", "vector<DateTime>", "DateTime[]", "DateTimeArray", "vector<DateTime>", "DateTime[]", "DateTimeArray", "vector<Date>", "Date[]", "DateArray", "vector<Date>", "Time[]", "TimeArray", "vector<Time>", "Time[]", "TimeArray" );
 	return true;
 }
-DateTimeArrayStack::DateTimeArrayStack( ) {
-	dateTimeFormat = new QString( "yyyy年MM月dd日.hh时mm分ss秒.zzz" );
+DateArrayStack::DateArrayStack( ) {
+	dateTimeFormat = new QString( "yyyy年MM月dd日" );
 }
 
-bool DateTimeArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
+bool DateArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	uint64_t arrayCount = 0;
 	if( infoTool::fillTypeVectorAtVar< uint64_t >( result_count, obj_start_ptr, obj_memory_size, &arrayCount ) == false )
 		return false;
@@ -38,7 +38,7 @@ bool DateTimeArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start
 	for( size_t index = 0; index < arrayCount; ++index, offset = offset + result_count, mod = mod - result_count ) {
 		if( infoTool::fillTypeVectorAtVar< >( result_count, offset, mod, &dateTimeString ) == false )
 			return false;
-		arrayPtr[ index ] = QDateTime::fromString( dateTimeString, *dateTimeFormat );
+		arrayPtr[ index ] = QDate::fromString( dateTimeString, *dateTimeFormat );
 	}
 	result_count = offset - obj_start_ptr;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
@@ -53,10 +53,10 @@ bool DateTimeArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start
 	*createPtr = buffVar;
 	return true;
 }
-TypeEnum::Type DateTimeArrayStack::getType( ) {
+TypeEnum::Type DateArrayStack::getType( ) {
 	return TypeEnum::Type::Array;
 }
-bool DateTimeArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+bool DateArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
 	std::vector< t_current_unity_type > *vector = ( std::vector< t_current_unity_type > * ) obj_start_ptr;
 	uint64_t arraySize = vector->size( );
 	if( infoTool::fillTypeVarAtVector< uint64_t >( &arraySize, result_data ) == false )
@@ -68,7 +68,8 @@ bool DateTimeArrayStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t
 		dateTimeString = arrayPtr[ index ].toString( *dateTimeFormat );
 		if( infoTool::fillTypeVarAtVector< QString >( &dateTimeString, buff ) == false )
 			return false;
-		result_data.append_range( buff );
+		else
+			result_data.append_range( buff );
 	}
 	return true;
 }
