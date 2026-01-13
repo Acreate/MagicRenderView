@@ -16,20 +16,8 @@ StartNode::StartNode( const QString &node_name ) : BeginNode( node_name ) {
 bool StartNode::initEx( MainWidget *parent ) {
 
 	initExCallFunction = [this] ( MainWidget *main_widget ) {
-
-		beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "开始" ) );
-		if( beginOutputPort == nullptr )
-			return false;
-		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "返回" ) );
-		if( toBeginOutputPort == nullptr )
-			return false;
-		if( var == nullptr )
-			if( varDirector->create( var ) == false )
-				return false;
-		*var = 0;
-		// 绑定数据
-		if( setPortVar( beginOutputPort, var ) == false )
-			return false;
+		Def_AppendBindVarOutputPortType( tr( "开始" ), beginOutputPort, var );
+		Def_AppendOutputPortType( tr( "返回" ), toBeginOutputPort );
 		return true;
 	};
 

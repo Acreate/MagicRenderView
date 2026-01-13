@@ -22,7 +22,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "运算/单元/整数/乘法" ) );
+	Def_Extend_NodeTypeName( Node::tr( "单元/运算/整数/乘法" ) );
 };
 
 #endif // INTMULNODE_H_H_HEAD__FILE__

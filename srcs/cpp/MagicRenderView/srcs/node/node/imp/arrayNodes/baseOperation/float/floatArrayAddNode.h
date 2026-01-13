@@ -25,7 +25,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "运算/序列/浮点/加法" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/运算/浮点/加法" ) );
 };
 
 #endif // FLOATARRAYADDNODE_H_H_HEAD__FILE__

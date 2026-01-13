@@ -10,18 +10,8 @@
 ToStringNode::ToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
-		if( anyVarInputPortPtr == nullptr )
-			return false;
-		stringOutputPortPtr = appendOutputPortType< StringOutputPort >( tr( "字符串" ) );
-		if( stringOutputPortPtr == nullptr )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( stringOutputPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "字符串" ), stringOutputPortPtr, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

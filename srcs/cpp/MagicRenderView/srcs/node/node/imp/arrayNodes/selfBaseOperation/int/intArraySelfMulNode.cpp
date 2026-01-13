@@ -10,16 +10,8 @@ IntArraySelfMulNode::IntArraySelfMulNode( const QString &node_name ) : ArrayNode
 }
 bool IntArraySelfMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "整数序列" ), firstInputPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
-			return false;
-		if( outputVarPtr )
-			varDirector->release( outputVarPtr );
-		if( varDirector->create( outputVarPtr ) == false )
-			return false;
-		if( setPortVar( outputPort, outputVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "整数序列" ), firstInputPort );
+		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
 		return true;
 	};
 	return ArrayNode::initEx( parent );

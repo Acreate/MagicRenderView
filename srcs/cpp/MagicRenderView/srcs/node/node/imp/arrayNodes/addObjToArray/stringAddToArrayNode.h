@@ -2,6 +2,7 @@
 #define STRINGADDTOARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/arrayNode.h>
+class StringVectorInputPort;
 class StringVectorOutputPort;
 class StringInputPort;
 class StringAddToArrayNode : public ArrayNode {
@@ -9,7 +10,8 @@ class StringAddToArrayNode : public ArrayNode {
 private:
 	using NodeType = QString;
 protected:
-	StringInputPort *firstInputPort;
+	StringVectorInputPort* firstInputPort;
+	StringInputPort *secondInputPort;
 	StringVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
 public:
@@ -20,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "组合/序列/字符串" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/字符串序列" ) );
 };
 #endif // STRINGADDTOARRAYNODE_H_H_HEAD__FILE__

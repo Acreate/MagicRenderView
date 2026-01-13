@@ -19,33 +19,10 @@ BinGenerateNode::BinGenerateNode( const QString &node_name ) : GenerateNode( nod
 }
 bool BinGenerateNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< GenerateInputPort >( tr( "生成" ), generateInputPort ) == false )
-			return false;
-		if( appendOutputPortType< BinOutputPort >( tr( "导出值" ), outputVarPort ) == false )
-			return false;
-		if( appendOutputPortType< UIntOutputPort >( tr( "导出下标" ), outputIndexPort ) == false )
-			return false;
-		if( appendOutputPortType< UIntOutputPort >( tr( "导出总数" ), outputCountPort ) == false )
-			return false;
-		if( arrayIndex )
-			varDirector->release( arrayIndex );
-		if( varDirector->create( arrayIndex ) == false )
-			return false;
-		if( currentIndexVar )
-			varDirector->release( currentIndexVar );
-		if( varDirector->create( currentIndexVar ) == false )
-			return false;
-		if( arrayCount )
-			varDirector->release( arrayCount );
-		if( varDirector->create( arrayCount ) == false )
-			return false;
-		// 绑定指针
-		if( setPortVar( outputIndexPort, arrayIndex ) == false )
-			return false;
-		if( setPortVar( outputVarPort, currentIndexVar ) == false )
-			return false;
-		if( setPortVar( outputCountPort, arrayCount ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "生成" ), generateInputPort );
+		Def_AppendBindVarOutputPortType( tr( "导出值" ), outputVarPort, currentIndexVar );
+		Def_AppendBindVarOutputPortType( tr( "导出下标" ), outputIndexPort, arrayIndex );
+		Def_AppendBindVarOutputPortType( tr( "导出总数" ), outputCountPort, arrayCount );
 		return true;
 	};
 	return GenerateNode::initEx( parent );

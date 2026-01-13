@@ -28,7 +28,7 @@
 	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
 		return false
 
-#define Def_AappendBindVarOutputPortType( port_name_, port_ptr_ , bind_var_ptr_) \
+#define Def_AppendBindVarOutputPortType( port_name_, port_ptr_ , bind_var_ptr_) \
 	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
 		return false; \
 	Def_BindPortVar(port_ptr_, bind_var_ptr_)

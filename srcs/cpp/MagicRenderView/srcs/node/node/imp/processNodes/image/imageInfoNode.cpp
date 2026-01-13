@@ -15,33 +15,10 @@ ImageInfoNode::ImageInfoNode( const QString &node_name ) : ProcessNode( node_nam
 }
 bool ImageInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType< >( tr( "输出" ), imageInputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "宽度" ), widthOutputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "长度" ), heightOutputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "格式" ), fromatOutputPortPtr ) == false )
-			return false;
-		if( width )
-			varDirector->release( width );
-		if( varDirector->create( width ) == false )
-			return false;
-		if( height )
-			varDirector->release( height );
-		if( varDirector->create( height ) == false )
-			return false;
-		if( fromat )
-			varDirector->release( fromat );
-		if( varDirector->create( fromat ) == false )
-			return false;
-		if( setPortVar( widthOutputPortPtr, width ) == false )
-			return false;
-		if( setPortVar( heightOutputPortPtr, height ) == false )
-			return false;
-		if( setPortVar( fromatOutputPortPtr, fromat ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "图像" ), imageInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "宽度" ), widthOutputPortPtr, width );
+		Def_AppendBindVarOutputPortType( tr( "长度" ), heightOutputPortPtr, height );
+		Def_AppendBindVarOutputPortType( tr( "格式" ), fromatOutputPortPtr, fromat );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

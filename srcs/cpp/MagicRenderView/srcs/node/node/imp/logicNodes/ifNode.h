@@ -3,11 +3,13 @@
 
 #include "../../logicNode.h"
 
+class PointInputPort;
 class AnyVarOutputPort;
 class AnyVarInputPort;
 class IfNode : public LogicNode {
 	Q_OBJECT;
 protected:
+	PointInputPort * pointInputPort;
 	AnyVarInputPort *ifResultPort;
 	AnyVarOutputPort *trueOutputPort;
 	AnyVarOutputPort *falseOutputPort;

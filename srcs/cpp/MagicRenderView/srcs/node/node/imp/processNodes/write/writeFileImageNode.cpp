@@ -10,10 +10,8 @@
 #include "../../../../port/outputPort/outputPort.h"
 bool WriteFileImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< >( tr( "路径" ), writeFilePathPort ) == false )
-			return false;
-		if( appendInputPortType< >( tr( "写入内容" ), writeImagePort ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "路径" ), writeFilePathPort );
+		Def_AppendInputPortType( tr( "写入内容" ), writeImagePort );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

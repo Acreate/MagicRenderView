@@ -11,17 +11,8 @@ ReadFileImageNode::ReadFileImageNode( const QString &node_name ) : ProcessNode( 
 }
 bool ReadFileImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
-		if( appendInputPortType( tr( "路径" ), filePathPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "图像" ), imageOutputPort ) == false )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( imageOutputPort, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "路径" ), filePathPort );
+		Def_AppendBindVarOutputPortType( tr( "图像" ), imageOutputPort, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

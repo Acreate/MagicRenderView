@@ -2,6 +2,7 @@
 #define COLORADDTOARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/arrayNode.h>
+class ColorVectorInputPort;
 class ColorVectorOutputPort;
 class ColorInputPort;
 class ColorAddToArrayNode : public ArrayNode {
@@ -9,7 +10,8 @@ class ColorAddToArrayNode : public ArrayNode {
 private:
 	using NodeType = QColor;
 protected:
-	ColorInputPort *firstInputPort;
+	ColorVectorInputPort* firstInputPort;
+	ColorInputPort *secondInputPort;
 	ColorVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
 public:
@@ -20,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "组合/序列/颜色" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/颜色序列" ) );
 };
 #endif // COLORADDTOARRAYNODE_H_H_HEAD__FILE__

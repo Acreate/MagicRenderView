@@ -7,18 +7,8 @@
 ToUIntNode::ToUIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToUIntNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
-		if( anyVarInputPortPtr == nullptr )
-			return false;
-		uIntOutputPortPtr = appendOutputPortType< UIntOutputPort >( tr( "无符号整数" ) );
-		if( uIntOutputPortPtr == nullptr )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( uIntOutputPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "无符号整数" ), uIntOutputPortPtr, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

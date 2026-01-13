@@ -12,16 +12,8 @@
 ToDateTimeNode::ToDateTimeNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToDateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< >( tr( "值" ), anyVarInputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "时间" ), dateTimeOutputPortPtr ) == false )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( dateTimeOutputPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "时间" ), dateTimeOutputPortPtr, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

@@ -25,6 +25,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "软件/软件信息" ) );
+	Def_Extend_NodeTypeName( Node::tr( "单元/转换/日期与时间" ) );
 };
 #endif // SPLITDATATIMENODE_H_H_HEAD__FILE__

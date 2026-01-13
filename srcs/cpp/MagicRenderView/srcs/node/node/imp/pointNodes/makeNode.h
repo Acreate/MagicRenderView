@@ -3,11 +3,13 @@
 
 #include "../../pointNode.h"
 
+class ToPointOutputPort;
 class PointOutputPort;
 class MakeNode : public PointNode {
 	Q_OBJECT;
 protected:
 	PointOutputPort *nextNode;
+	ToPointOutputPort* toPointOutputPortPtr;
 public:
 	MakeNode( const QString &node_name )
 		: PointNode( node_name ) { }

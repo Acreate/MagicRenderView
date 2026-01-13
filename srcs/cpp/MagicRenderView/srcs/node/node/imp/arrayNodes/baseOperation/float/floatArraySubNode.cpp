@@ -10,18 +10,9 @@ FloatArraySubNode::FloatArraySubNode( const QString &node_name ) : ArrayNode( no
 }
 bool FloatArraySubNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
-			return false;
-		if( appendInputPortType( tr( "浮点列表" ), secondInputPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
-			return false;
-		if( outputVarPtr )
-			varDirector->release( outputVarPtr );
-		if( varDirector->create( outputVarPtr ) == false )
-			return false;
-		if( setPortVar( outputPort, outputVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "浮点序列" ), firstInputPort );
+		Def_AppendInputPortType( tr( "浮点" ), secondInputPort );
+		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
 		return true;
 	};
 	return ArrayNode::initEx( parent );

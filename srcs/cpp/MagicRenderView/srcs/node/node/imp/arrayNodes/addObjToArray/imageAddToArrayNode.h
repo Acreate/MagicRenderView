@@ -3,6 +3,7 @@
 
 
 #include <node/node/arrayNode.h>
+class ImageVectorInputPort;
 class ImageVectorOutputPort;
 class ImageInputPort;
 class ImageAddToArrayNode : public ArrayNode {
@@ -10,7 +11,8 @@ class ImageAddToArrayNode : public ArrayNode {
 private:
 	using NodeType = QImage;
 protected:
-	ImageInputPort *firstInputPort;
+	ImageVectorInputPort* firstInputPort;
+	ImageInputPort *secondInputPort;
 	ImageVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
 public:
@@ -21,6 +23,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "组合/序列/图像" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/图像序列" ) );
 };
 #endif // IMAGEADDTOARRAYNODE_H_H_HEAD__FILE__

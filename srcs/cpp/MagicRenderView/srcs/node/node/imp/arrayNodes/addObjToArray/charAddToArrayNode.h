@@ -2,6 +2,7 @@
 #define CHARADDTOARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/arrayNode.h>
+class CharVectorInputPort;
 class CharVectorOutputPort;
 class CharInputPort;
 class CharAddToArrayNode : public ArrayNode {
@@ -9,7 +10,8 @@ class CharAddToArrayNode : public ArrayNode {
 private:
 	using NodeType = QChar;
 protected:
-	CharInputPort *firstInputPort;
+	CharVectorInputPort* firstInputPort;
+	CharInputPort *secondInputPort;
 	CharVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
 public:
@@ -20,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "组合/序列/字符" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/字符序列" ) );
 };
 #endif // CHARADDTOARRAYNODE_H_H_HEAD__FILE__

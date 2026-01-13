@@ -16,24 +16,9 @@ SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( 
 }
 bool SplitDataTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< >( tr( "日期时间" ), dateTimeInputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "日期" ), dateOutputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "时间" ), timeOutputPortPtr ) == false )
-			return false;
-		if( outDatePtr )
-			varDirector->release( outDatePtr );
-		if( varDirector->create( outDatePtr ) == false )
-			return false;
-		if( outTimePtr )
-			varDirector->release( outTimePtr );
-		if( varDirector->create( outTimePtr ) == false )
-			return false;
-		if( setPortVar( dateOutputPortPtr, outDatePtr ) == false )
-			return false;
-		if( setPortVar( timeOutputPortPtr, outTimePtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "日期时间" ), dateTimeInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "日期" ), dateOutputPortPtr, outDatePtr );
+		Def_AppendBindVarOutputPortType( tr( "时间" ), timeOutputPortPtr, outTimePtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

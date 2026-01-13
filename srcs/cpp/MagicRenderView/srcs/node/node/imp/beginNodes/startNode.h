@@ -3,13 +3,15 @@
 
 #include "../../beginNode.h"
 
+class ToBeginOutputPort;
 class BeginOutputPort;
 class StartNode : public BeginNode {
 	Q_OBJECT;
 protected:
+	BeginOutputPort *beginOutputPort;
+	ToBeginOutputPort *toBeginOutputPort;
 	bool readUpdate;
 	size_t *var;
-	BeginOutputPort *beginOutputPort;
 public:
 	StartNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

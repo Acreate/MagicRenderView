@@ -68,6 +68,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "路径/系统路径" ) );
+	Def_Extend_NodeTypeName( Node::tr( "单元/路径/系统路径" ) );
 };
 #endif // SYSTEMPATHINFO_H_H_HEAD__FILE__

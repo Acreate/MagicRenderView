@@ -19,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/单元/浮点" ) );
+	Def_Extend_NodeTypeName( Node::tr( "单元/转换/浮点" ) );
 };
 #endif // TOFLOATNODE_H_H_HEAD__FILE__

@@ -7,19 +7,8 @@
 ToBinNode::ToBinNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBinNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
-		if( anyVarInputPortPtr == nullptr )
-			return false;
-		
-		binOutputPortPtr = appendOutputPortType< BinOutputPort >( tr( "二进制" ) );
-		if( binOutputPortPtr == nullptr )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( binOutputPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "二进制" ), binOutputPortPtr, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

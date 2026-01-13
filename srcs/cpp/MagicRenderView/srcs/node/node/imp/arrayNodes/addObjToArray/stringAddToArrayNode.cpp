@@ -4,23 +4,17 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/array/stringVectorOutputPort.h>
 
+#include "../../../../port/inputPort/array/stringVectorInputPort.h"
+
 StringAddToArrayNode::StringAddToArrayNode( const QString &node_name ) : ArrayNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool StringAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType( tr( "字符串" ), firstInputPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
-			return false;
-		if( outputVarPtr )
-			varDirector->release( outputVarPtr );
-		if( varDirector->create( outputVarPtr ) == false )
-			return false;
-		if( setPortVar( outputPort, outputVarPtr ) == false )
-			return false;
-		if( setPortMultiple( firstInputPort, true ) == false )
+		Def_AppendInputPortType( tr( "字符串序列" ), firstInputPort );
+		Def_AppendInputPortType( tr( "字符串" ), secondInputPort );
+		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -36,24 +30,38 @@ bool StringAddToArrayNode::readyNodeRunData( ) {
 }
 bool StringAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	outputVarPtr->clear( );
+
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
-	count = outputPorts->size( );
+	auto refPort = getRefPort( firstInputPort );
+	count = refPort.size( );
 	if( count == 0 )
 		return true;
-	outputPortArray = outputPorts->data( );
-	for( index = 0; index < count; index += 1 )
-		if( outputPortArray[ index ] ) {
-			portVarPtr = outputPortArray[ index ]->getVarPtr( );
-			varDirector = outputPortArray[ index ]->getVarDirector( );
-			if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
-				continue;
-			outputVarPtr->emplace_back( *secondConverPtr );
-		}
+	auto outputPort = refPort.data( )[ 0 ];
+	varDirector = outputPort->getVarDirector( );
+	if( varDirector == nullptr )
+		return true;
+	portVarPtr = outputPort->getVarPtr( );
+	std::vector< NodeType > *conver;
+	if( varDirector->cast_ptr( portVarPtr, conver ) == false )
+		return true;
+	*outputVarPtr = *conver;
+	
+	const std::vector< OutputPort * > &outputPorts = getRefPort( secondInputPort );
+	count = outputPorts.size( );
+	if( count == 0 )
+		return true;
+	outputPortArray = outputPorts.data( );
+	for( index = 0; index < count; index += 1 ) {
+		portVarPtr = outputPortArray[ index ]->getVarPtr( );
+		varDirector = outputPortArray[ index ]->getVarDirector( );
+		if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+			continue;
+		outputVarPtr->emplace_back( *secondConverPtr );
+	}
 	return true;
 }

@@ -7,29 +7,12 @@
 #include "../../../../port/outputPort/array/binVectorOutputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
 ReadFileBinDataNode::ReadFileBinDataNode( const QString &node_name ) : ProcessNode( node_name ) {
-	outVectorCountPtr = nullptr;
 	outVectorPtr = nullptr;
 }
 bool ReadFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "路径" ), filePathInputPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "二进制" ), this->outBinVectorPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "二进制" ), this->outVectorCountPort ) == false )
-			return false;
-		if( outVectorPtr )
-			varDirector->release( outVectorPtr );
-		if( varDirector->create( outVectorPtr ) == false )
-			return false;
-		if( outVectorCountPtr )
-			varDirector->release( outVectorCountPtr );
-		if( varDirector->create( outVectorCountPtr ) == false )
-			return false;
-		if( setPortVar( outBinVectorPort, outVectorPtr ) == false )
-			return false;
-		if( setPortVar( outVectorCountPort, outVectorCountPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "路径" ), filePathInputPort );
+		Def_AppendBindVarOutputPortType( tr( "二进制" ), this->outBinVectorPort, outVectorPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -42,7 +25,6 @@ bool ReadFileBinDataNode::readyNodeRunData( ) {
 }
 bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	outVectorPtr->clear( );
-	*outVectorCountPtr = 0;
 	auto &outputPorts = getRefPort( filePathInputPort );
 	size_t count = outputPorts.size( );
 	if( count == 0 )
@@ -60,13 +42,13 @@ bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	if( file.open( QIODeviceBase::ReadWrite ) == false )
 		return true;
 	auto readAll = file.readAll( );
-	*outVectorCountPtr = readAll.size( );
-	if( *outVectorCountPtr == 0 )
+	auto outVectorCountPtr = readAll.size( );
+	if( outVectorCountPtr == 0 )
 		return true;
-	outVectorPtr->resize( *outVectorCountPtr );
+	outVectorPtr->resize( outVectorCountPtr );
 	char *sourceData = readAll.data( );
 	auto destData = outVectorPtr->data( );
-	for( count = 0; count < *outVectorCountPtr; ++count )
+	for( count = 0; count < outVectorCountPtr; ++count )
 		destData[ count ] = sourceData[ count ];
 	return true;
 }

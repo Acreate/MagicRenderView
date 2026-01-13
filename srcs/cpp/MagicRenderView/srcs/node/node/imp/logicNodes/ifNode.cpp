@@ -8,19 +8,10 @@
 #include "../../../port/outputPort/interface/interFaceOutputPort.h"
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		ifResultPort = appendInputPortType< AnyVarInputPort >( tr( "判断" ) );
-		if( ifResultPort == nullptr )
-			return false;
-		if( appendInputPortType< PointInputPort >( tr( "定位" ) ) == nullptr )
-			return false;
-		trueOutputPort = appendOutputPortType< AnyVarOutputPort >( tr( "成立" ) );
-		if( trueOutputPort == nullptr )
-			return false;
-		falseOutputPort = appendOutputPortType< AnyVarOutputPort >( tr( "失败" ) );
-		if( falseOutputPort == nullptr )
-			return false;
-
+		Def_AppendInputPortType( tr( "判断" ), ifResultPort );
+		Def_AppendInputPortType( tr( "定位" ), pointInputPort );
+		Def_AppendOutputPortType( tr( "成立" ), trueOutputPort );
+		Def_AppendOutputPortType( tr( "失败" ), falseOutputPort );
 		return true;
 	};
 	return LogicNode::initEx( parent );

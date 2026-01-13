@@ -3,6 +3,7 @@
 
 
 #include <node/node/arrayNode.h>
+class IntVectorInputPort;
 class IntInputPort;
 class IntVectorOutputPort;
 class IntAddToArrayNode : public ArrayNode {
@@ -10,7 +11,8 @@ class IntAddToArrayNode : public ArrayNode {
 private:
 	using NodeType = int64_t;
 protected:
-	IntInputPort *firstInputPort;
+	IntVectorInputPort* firstInputPort;
+	IntInputPort *secondInputPort;
 	IntVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
 public:
@@ -21,6 +23,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "组合/序列/整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/整数序列" ) );
 };
 #endif // INTADDTOARRAYNODE_H_H_HEAD__FILE__

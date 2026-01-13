@@ -10,14 +10,8 @@ ReadFileTextNode::ReadFileTextNode( const QString &node_name ) : ProcessNode( no
 }
 bool ReadFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType< >( tr( "路径" ), filePathInputPort ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "文本" ), outTextPort ) == false )
-			return false;
-		if( outTextPtr )
-			varDirector->release( outTextPtr );
-		if( varDirector->create( outTextPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "路径" ), filePathInputPort );
+		Def_AppendBindVarOutputPortType( tr( "文本" ), outTextPort, outTextPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

@@ -6,18 +6,8 @@
 ToFloatNode::ToFloatNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToFloatNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		anyVarInputPortPtr = appendInputPortType< AnyVarInputPort >( tr( "值" ) );
-		if( anyVarInputPortPtr == nullptr )
-			return false;
-		floatOutputPortPtr = appendOutputPortType< FloatOutputPort >( tr( "浮点" ) );
-		if( floatOutputPortPtr == nullptr )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( floatOutputPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "浮点" ), floatOutputPortPtr, outVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

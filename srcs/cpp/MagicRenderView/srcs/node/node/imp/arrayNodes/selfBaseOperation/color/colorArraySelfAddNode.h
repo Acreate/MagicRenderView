@@ -21,6 +21,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "自运算/序列/颜色/加法" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/自运算/颜色/加法" ) );
 };
 #endif // COLORARRAYSELFADDNODE_H_H_HEAD__FILE__

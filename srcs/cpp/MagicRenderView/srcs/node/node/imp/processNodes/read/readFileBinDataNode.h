@@ -10,9 +10,7 @@ class ReadFileBinDataNode : public ProcessNode {
 protected:
 	StringInputPort* filePathInputPort;
 	BinVectorOutputPort* outBinVectorPort;
-	UIntOutputPort* outVectorCountPort;
 	std::vector<uint8_t>* outVectorPtr;
-	uint64_t* outVectorCountPtr;
 public:
 	ReadFileBinDataNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
@@ -21,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "文件/读取/二进制" ) );
+	Def_Extend_NodeTypeName( Node::tr( "单元/文件/读取/二进制" ) );
 };
 #endif // READFILEBINDATANODE_H_H_HEAD__FILE__

@@ -17,41 +17,11 @@ ImageChannelNode::ImageChannelNode( const QString &node_name ) : ProcessNode( no
 }
 bool ImageChannelNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType< >( tr( "输出" ), imageInputPortPtr ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "红色" ), redOutputPort ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "绿色" ), greenOutputPort ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "蓝色" ), blueOutputPort ) == false )
-			return false;
-		if( appendOutputPortType< >( tr( "透明" ), alphaOutputPort ) == false )
-			return false;
-		if( redOutVectorVarPtr )
-			varDirector->release( redOutVectorVarPtr );
-		if( varDirector->create( redOutVectorVarPtr ) == false )
-			return false;
-		if( greenOutVectorVarPtr )
-			varDirector->release( greenOutVectorVarPtr );
-		if( varDirector->create( greenOutVectorVarPtr ) == false )
-			return false;
-		if( blueOutVectorVarPtr )
-			varDirector->release( blueOutVectorVarPtr );
-		if( varDirector->create( blueOutVectorVarPtr ) == false )
-			return false;
-		if( alphaOutVectorVarPtr )
-			varDirector->release( alphaOutVectorVarPtr );
-		if( varDirector->create( alphaOutVectorVarPtr ) == false )
-			return false;
-		if( setPortVar( redOutputPort, redOutVectorVarPtr ) == false )
-			return false;
-		if( setPortVar( greenOutputPort, greenOutVectorVarPtr ) == false )
-			return false;
-		if( setPortVar( blueOutputPort, blueOutVectorVarPtr ) == false )
-			return false;
-		if( setPortVar( alphaOutputPort, alphaOutVectorVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "图像" ), imageInputPortPtr );
+		Def_AppendBindVarOutputPortType( tr( "红色" ), redOutputPort, redOutVectorVarPtr );
+		Def_AppendBindVarOutputPortType( tr( "绿色" ), greenOutputPort, greenOutVectorVarPtr );
+		Def_AppendBindVarOutputPortType( tr( "蓝色" ), blueOutputPort, blueOutVectorVarPtr );
+		Def_AppendBindVarOutputPortType( tr( "透明" ), alphaOutputPort, alphaOutVectorVarPtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

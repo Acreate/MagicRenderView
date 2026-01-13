@@ -15,21 +15,10 @@ ConbinationIntArrayNode::ConbinationIntArrayNode( const QString &node_name ) : C
 }
 bool ConbinationIntArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-
-		if( appendInputPortType( tr( "整数" ), cacheInputPort ) == false )
-			return false;
-		if( appendInputPortType( tr( "条件" ), anyInputPort ) == false )
-			return false;
-		if( appendOutputPortType( tr( "整数序列" ), vectorOutPortPtr ) == false )
-			return false;
-		if( appendOutputPortType( tr( "条件" ), anyOutputPort ) == false )
-			return false;
-		if( outVarPtr )
-			varDirector->release( outVarPtr );
-		if( varDirector->create( outVarPtr ) == false )
-			return false;
-		if( setPortVar( vectorOutPortPtr, outVarPtr ) == false )
-			return false;
+		Def_AppendInputPortType( tr( "整数" ), cacheInputPort );
+		Def_AppendInputPortType( tr( "条件" ), anyInputPort );
+		Def_AppendBindVarOutputPortType( tr( "无符号整数序列" ), vectorOutPortPtr, outVarPtr );
+		Def_AppendOutputPortType( tr( "条件" ), anyOutputPort );
 		if( setPortMultiple( cacheInputPort, true ) == false )
 			return false;
 		return true;

@@ -3,10 +3,12 @@
 
 #include "../../endNode.h"
 
+class InterFaceInputPort;
 class ToBeginInputPort;
 class ResultNode : public EndNode {
 	Q_OBJECT;
 protected:
+	InterFaceInputPort *interFaceInputPort;
 	ToBeginInputPort *toBeginInputPort;
 public:
 	ResultNode( const QString &node_name )
@@ -16,7 +18,7 @@ public:
 public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
-	bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
+	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "结束/返回" ) );
 

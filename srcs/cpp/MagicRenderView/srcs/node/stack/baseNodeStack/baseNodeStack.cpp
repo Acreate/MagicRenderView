@@ -35,6 +35,13 @@
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayModNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayMulNode.h"
 #include "../../node/imp/arrayNodes/baseOperation/uint/uIntArraySubNode.h"
+#include "../../node/imp/arrayNodes/create/charCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/colorCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/floatCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/imageCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/intCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/stringCreateArrayNode.h"
+#include "../../node/imp/arrayNodes/create/uIntCreateArrayNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfAddNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfMulNode.h"
 #include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfAddNode.h"
@@ -230,6 +237,15 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( IntAddToArrayNode );
 	emaplace_back_node( StringAddToArrayNode );
 	emaplace_back_node( UIntAddToArrayNode );
+	// 生成序列
+	emaplace_back_node( CharCreateArrayNode );
+	emaplace_back_node( ColorCreateArrayNode );
+	emaplace_back_node( FloatCreateArrayNode );
+	emaplace_back_node( ImageCreateArrayNode );
+	emaplace_back_node( IntCreateArrayNode );
+	emaplace_back_node( StringCreateArrayNode );
+	emaplace_back_node( UIntCreateArrayNode );
+	
 	// 文件
 	emaplace_back_node( WriteFileTextNode );
 	emaplace_back_node( WriteFileBinDataNode );
