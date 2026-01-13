@@ -10,7 +10,7 @@ StringUnityStack::~StringUnityStack( ) {
 bool StringUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( "", QString, "string" );
+	Stack_Type_Name( "", QString,tr ("string") );
 	return true;
 }
 StringUnityStack::StringUnityStack( ) {

@@ -11,7 +11,7 @@ Int8UnityStack::~Int8UnityStack( ) {
 bool Int8UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, int8_t, "int8" );
+	Stack_Type_Name( 0, int8_t,tr ("int8") );
 	return true;
 }
 Int8UnityStack::Int8UnityStack( ) {

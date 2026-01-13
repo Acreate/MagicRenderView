@@ -45,7 +45,7 @@ bool AnyPtrArrayStack::init( VarDirector *var_director ) {
 
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< void * >, "vector< void * >", "void *[]", "voidPtrArray" );
+	Stack_Type_Name( , std::vector< void * >, tr( "vector< void * >"), tr("void *[]"), tr("voidPtrArray" ) );
 	return true;
 }
 using t_current_unity_type = void *;

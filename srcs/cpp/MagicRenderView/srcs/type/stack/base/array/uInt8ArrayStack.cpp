@@ -11,7 +11,7 @@ UInt8ArrayStack::~UInt8ArrayStack( ) {
 bool UInt8ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< uint8_t >, "vector<uint8_t>", "uint8_t[]", "uint8_tArray", "vector<uint8>", "uint8[]", "uint8Array" );
+	Stack_Type_Name( , std::vector< uint8_t >, tr ("vector<uint8_t>"), tr("uint8_t[]"), tr("uint8_tArray"), tr ("vector<uint8>"), tr ("uint8[]"), tr("uint8Array") );
 	return true;
 }
 UInt8ArrayStack::UInt8ArrayStack( ) {

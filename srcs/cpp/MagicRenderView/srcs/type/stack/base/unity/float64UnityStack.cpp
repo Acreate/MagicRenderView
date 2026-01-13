@@ -11,7 +11,7 @@ Float64UnityStack::~Float64UnityStack( ) {
 bool Float64UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, double, "float64", "double64", "double_t" );
+	Stack_Type_Name( 0, double,tr ("float64"),tr ("double64"),tr ("double_t") );
 	return true;
 }
 Float64UnityStack::Float64UnityStack( ) {

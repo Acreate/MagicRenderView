@@ -3,6 +3,7 @@
 
 #include "../../../processNode.h"
 
+class IntOutputPort;
 class DateTimeOutputPort;
 class StringOutputPort;
 class AnyVarInputPort;
@@ -15,12 +16,14 @@ protected:
 	DateTimeOutputPort *builderTimeOutputPort;
 	StringOutputPort *builderToolOutputPort;
 	StringOutputPort *versionOutputPort;
+	IntOutputPort *isSharedOutputPort;
 	QString * appNameVarPtr;
 	QString * appPathVarPtr;
 	QDateTime * builderTimeVarPtr;
 	QDateTime * appStartTimeVarPtr;
 	QString * builderToolVarPtr;
 	QString * versionVarPtr;
+	int64_t * isShared;
 public:
 	AppInfoNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

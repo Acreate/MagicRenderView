@@ -11,7 +11,7 @@ Float32UnityStack::~Float32UnityStack( ) {
 bool Float32UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0.0f, float, "float32", "double32", "float_t" );
+	Stack_Type_Name( 0.0f, float, tr ("float32"), tr ("double32"), tr ("float_t") );
 	return true;
 }
 Float32UnityStack::Float32UnityStack( ) {

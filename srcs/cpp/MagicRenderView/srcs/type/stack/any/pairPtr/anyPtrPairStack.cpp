@@ -11,7 +11,7 @@ bool AnyPtrPairStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
 	typeName = "std::pair< void *, void * >";
-	aliasTypeNames = std::vector< QString >( { typeid( std::pair< void *, void * > ).name( ), "pair< void *, void * >", "pair" } );
+	aliasTypeNames = std::vector< QString >( { typeid( std::pair< void *, void * > ).name( ), tr( "pair< void *, void * >" ), tr( "pair" ) } );
 	setNewObjTypeFunction( [] {
 		return new std::pair< void *, void * >( nullptr, nullptr );
 	} );

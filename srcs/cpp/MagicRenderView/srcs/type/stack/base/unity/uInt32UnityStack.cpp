@@ -11,7 +11,7 @@ UInt32UnityStack::~UInt32UnityStack( ) {
 bool UInt32UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, uint32_t, "uint32", "unsigned int" );
+	Stack_Type_Name( 0, uint32_t, tr("uint32"),tr( "unsigned int") );
 	return true;
 }
 UInt32UnityStack::UInt32UnityStack( ) {

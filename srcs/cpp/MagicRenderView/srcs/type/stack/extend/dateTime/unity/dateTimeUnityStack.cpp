@@ -12,11 +12,11 @@ DateTimeUnityStack::~DateTimeUnityStack( ) {
 bool DateTimeUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , QDateTime, "QDateTime", "DateTime" );
+	Stack_Type_Name( , QDateTime, tr( "QDateTime"), tr ("DateTime") );
 	return true;
 }
 DateTimeUnityStack::DateTimeUnityStack( ) {
-	dateTimeFormat = new QString( "yyyy年MM月dd日.hh时mm分ss秒.zzz" );
+	dateTimeFormat = new QString( tr( "yyyy年MM月dd日.hh时mm分ss秒.zzz" ) );
 }
 
 bool DateTimeUnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

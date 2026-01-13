@@ -11,7 +11,7 @@ Int32ArrayStack::~Int32ArrayStack( ) {
 bool Int32ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< int32_t >, "vector<int32_t>", "int32_t[]", "int32_tArray", "vector<int32>", "int32[]", "int32Array" );
+	Stack_Type_Name( , std::vector< int32_t >, tr( "vector<int32_t>"), tr("int32_t[]"), tr("int32_tArray"), tr ("vector<int32>"), tr("int32[]"), tr ("int32Array") );
 	return true;
 }
 Int32ArrayStack::Int32ArrayStack( ) {

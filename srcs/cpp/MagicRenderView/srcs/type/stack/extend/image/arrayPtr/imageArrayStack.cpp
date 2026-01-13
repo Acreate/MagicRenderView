@@ -18,7 +18,7 @@ ImageArrayStack::~ImageArrayStack( ) {
 bool ImageArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( {}, std::vector< QImage >, "vector<QImage>", "QImage[]", "QImageArray", "vector<Image>", "Image[]", "ImageArray" , "vector<image>", "image[]", "imageArray" );
+	Stack_Type_Name( {}, std::vector< QImage >, tr ("vector<QImage>"), tr( "QImage[]"), tr("QImageArray"), tr ("vector<Image>"), tr( "Image[]"), tr ("ImageArray"), tr ("vector<image>"), tr("image[]"), tr( "imageArray" ) );
 	return true;
 }
 ImageArrayStack::ImageArrayStack( ) {

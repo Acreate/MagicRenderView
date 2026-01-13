@@ -11,7 +11,7 @@ Float32ArrayStack::~Float32ArrayStack( ) {
 bool Float32ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector<float>, "vector<float>", "float[]", "floatArray", "vector<double32>", "double32[]", "double32Array", "vector<float32>", "float32[]", "float32Array" );
+	Stack_Type_Name( , std::vector<float>, tr("vector<float>"), tr("float[]"), tr( "floatArray"), tr("vector<double32>"), tr("double32[]"), tr ("double32Array"), tr("vector<float32>"), tr("float32[]"), tr("float32Array") );
 	return true;
 }
 Float32ArrayStack::Float32ArrayStack( ) {

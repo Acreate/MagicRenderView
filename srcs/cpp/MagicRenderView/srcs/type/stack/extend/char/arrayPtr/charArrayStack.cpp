@@ -18,7 +18,7 @@ CharArrayStack::~CharArrayStack( ) {
 bool CharArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QChar >, "vector<QChar>", "QChar[]", "QCharArray", "vector<Char>", "Char[]", "CharArray", "vector<char>", "char[]", "charArray" );
+	Stack_Type_Name( , std::vector< QChar >, tr ("vector<QChar>"), tr("QChar[]"), tr("QCharArray"), tr("vector<Char>"), tr("Char[]"), tr("CharArray"), tr("vector<char>"), tr("char[]"), tr("charArray" ) );
 	return true;
 }
 CharArrayStack::CharArrayStack( ) {

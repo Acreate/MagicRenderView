@@ -11,7 +11,7 @@ UInt8UnityStack::~UInt8UnityStack( ) {
 bool UInt8UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, uint8_t, "uint8", "unsigned char" );
+	Stack_Type_Name( 0, uint8_t, tr("uint8"), tr("unsigned char") );
 	return true;
 }
 UInt8UnityStack::UInt8UnityStack( ) {

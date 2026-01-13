@@ -11,7 +11,7 @@ Int32UnityStack::~Int32UnityStack( ) {
 bool Int32UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, int32_t, "int32", "int" );
+	Stack_Type_Name( 0, int32_t,tr ("int32"), tr("int") );
 	return true;
 }
 Int32UnityStack::Int32UnityStack( ) {

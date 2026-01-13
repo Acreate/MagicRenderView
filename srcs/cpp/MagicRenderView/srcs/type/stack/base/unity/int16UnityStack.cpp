@@ -11,7 +11,7 @@ Int16UnityStack::~Int16UnityStack( ) {
 bool Int16UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, int16_t, "int16", "short" );
+	Stack_Type_Name( 0, int16_t,tr ("int16"),tr ("short") );
 	return true;
 }
 Int16UnityStack::Int16UnityStack( ) {

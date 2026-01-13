@@ -11,7 +11,7 @@ UInt16ArrayStack::~UInt16ArrayStack( ) {
 bool UInt16ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< uint16_t >, "vector<uint16_t>", "uint16_t[]", "uint16_tArray", "vector<uint16>", "uint16[]", "uint16Array" );
+	Stack_Type_Name( , std::vector< uint16_t >, tr ("vector<uint16_t>"), tr("uint16_t[]"), tr("uint16_tArray"), tr ("vector<uint16>"), tr("uint16[]"), tr ("uint16Array") );
 	return true;
 }
 UInt16ArrayStack::UInt16ArrayStack( ) {

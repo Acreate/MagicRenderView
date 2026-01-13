@@ -9,6 +9,8 @@
 #include <tools/infoTool.h>
 #include <cmake_include_to_c_cpp_header_env.h>
 
+#include "../../../../port/outputPort/unity/intOutputPort.h"
+
 AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;
 	appPathVarPtr = nullptr;
@@ -16,6 +18,7 @@ AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) 
 	builderToolVarPtr = nullptr;
 	versionVarPtr = nullptr;
 	appStartTimeVarPtr = nullptr;
+	isShared = nullptr;
 }
 bool AppInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -30,6 +33,8 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 		if( appendOutputPortType< >( tr( "编译工具" ), builderToolOutputPort ) == false )
 			return false;
 		if( appendOutputPortType< >( tr( "软件版本" ), versionOutputPort ) == false )
+			return false;
+		if( appendOutputPortType< >( tr( "是否动态库" ), isSharedOutputPort ) == false )
 			return false;
 		if( appNameVarPtr )
 			varDirector->release( appNameVarPtr );
@@ -55,6 +60,10 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 			varDirector->release( appStartTimeVarPtr );
 		if( varDirector->create( appStartTimeVarPtr ) == false )
 			return false;
+		if( isShared )
+			varDirector->release( isShared );
+		if( varDirector->create( isShared ) == false )
+			return false;
 		if( setPortVar( appNameOutputPort, appNameVarPtr ) == false )
 			return false;
 		if( setPortVar( appPathOutputPort, appPathVarPtr ) == false )
@@ -66,6 +75,8 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 		if( setPortVar( versionOutputPort, versionVarPtr ) == false )
 			return false;
 		if( setPortVar( appStartTimeOutputPort, appStartTimeVarPtr ) == false )
+			return false;
+		if( setPortVar( isSharedOutputPort, isShared ) == false )
 			return false;
 		return true;
 	};
@@ -81,13 +92,14 @@ bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	Application *instancePtr = Application::getInstancePtr( );
 	*appNameVarPtr = instancePtr->applicationName( );
 	*appPathVarPtr = instancePtr->applicationFilePath( );
-	QVersionNumber versionInfo = QLibraryInfo::version( );
 	*builderToolVarPtr = tr( "QT %1 (%2.%3.%4.%5)" ).arg( QT_VERSION_STR ).arg( cmake_value_CMAKE_SYSTEM ).arg( cmake_value_CMAKE_SYSTEM_PROCESSOR ).arg( Builder_Tools_MSVC ? "MSVC" : Builder_Tools_GNU ? "GNU" : Builder_Tools_Clang ? "Clang" : "null" ).arg( cmake_value_CMAKE_BUILD_TYPE );
 	*builderTimeVarPtr = QDateTime(
 		QDate::fromString( __DATE__, "MMM dd yyyy" ),
 		QTime::fromString( __TIME__, "hh:mm:ss" )
-		);;
-	*versionVarPtr = tr( "%1.%2.%3" ).arg( 0 ).arg( 0 ).arg( 1 );
+		);
+	auto versionNumber = QLibraryInfo::version( );
+	*versionVarPtr = tr( "%1.%2.%3" ).arg( versionNumber.majorVersion( ) ).arg( versionNumber.minorVersion( ) ).arg( versionNumber.microVersion( ) );
 	*appStartTimeVarPtr = *instancePtr->getAppInitRunDataTime( );
+	*isShared = QLibraryInfo::isSharedBuild( );
 	return true;
 }

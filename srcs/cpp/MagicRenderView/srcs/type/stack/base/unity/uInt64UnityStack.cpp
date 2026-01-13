@@ -13,7 +13,7 @@ UInt64UnityStack::UInt64UnityStack( ) {
 bool UInt64UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, uint64_t, "uint64", "unsigned long long" );
+	Stack_Type_Name( 0, uint64_t, tr( "uint64"), tr( "unsigned long long") );
 	return true;
 }
 

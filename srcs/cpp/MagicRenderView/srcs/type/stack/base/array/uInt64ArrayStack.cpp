@@ -12,7 +12,7 @@ UInt64ArrayStack::~UInt64ArrayStack( ) {
 bool UInt64ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector<uint64_t>, "vector<uint64_t>", "uint64_t[]", "uint64_tArray", "vector<uint64>", "uint64[]", "uint64Array" );
+	Stack_Type_Name( , std::vector<uint64_t>, tr ("vector<uint64_t>"), tr( "uint64_t[]"), tr ("uint64_tArray"), tr( "vector<uint64>"), tr ("uint64[]"), tr( "uint64Array" ) );
 	return true;
 }
 UInt64ArrayStack::UInt64ArrayStack( ) {

@@ -19,11 +19,11 @@ TimeArrayStack::~TimeArrayStack( ) {
 bool TimeArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QTime >, "vector<QTime>", "QTime[]", "QTimeArray", "vector<Time>", "Time[]", "DTimeArray", "vector<Time>", "Time[]" );
+	Stack_Type_Name( , std::vector< QTime >, tr ("vector<QTime>"), tr( "QTime[]"), tr ("QTimeArray"), tr ("vector<Time>"), tr ("Time[]"), tr( "DTimeArray"), tr( "vector<Time>"), tr("Time[]" ) );
 	return true;
 }
 TimeArrayStack::TimeArrayStack( ) {
-	dateTimeFormat = new QString( "hh时mm分ss秒.zzz" );
+	dateTimeFormat = new QString( tr( "hh时mm分ss秒.zzz" ) );
 }
 
 bool TimeArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

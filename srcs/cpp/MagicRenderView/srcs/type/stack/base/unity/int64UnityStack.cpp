@@ -11,7 +11,7 @@ Int64UnityStack::~Int64UnityStack( ) {
 bool Int64UnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( 0, int64_t, "int64", "long long" );
+	Stack_Type_Name( 0, int64_t,tr ("int64"),tr ("long long") );
 	return true;
 }
 Int64UnityStack::Int64UnityStack( ) {

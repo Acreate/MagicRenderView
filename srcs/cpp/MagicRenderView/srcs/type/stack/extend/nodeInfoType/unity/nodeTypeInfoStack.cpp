@@ -11,7 +11,7 @@ NodeTypeInfoStack::~NodeTypeInfoStack( ) {
 bool NodeTypeInfoStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , NodeTypeInfo, "NodeTypeInfo" );
+	Stack_Type_Name( , NodeTypeInfo, tr ("NodeTypeInfo") );
 	return true;
 }
 NodeTypeInfoStack::NodeTypeInfoStack( ) {

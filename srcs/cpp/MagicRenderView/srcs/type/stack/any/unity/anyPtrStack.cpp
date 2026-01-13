@@ -12,7 +12,7 @@ bool AnyPtrStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
 	typeName = "void *";
-	aliasTypeNames = std::vector< QString >( { typeid( t_current_unity_type ).name( ), "anyPtr" } );
+	aliasTypeNames = std::vector< QString >( { typeid( t_current_unity_type ).name( ), tr( "anyPtr" ) } );
 	setNewObjTypeFunction( [] {
 		return nullptr;
 	} );

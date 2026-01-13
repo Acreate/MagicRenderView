@@ -56,7 +56,7 @@ bool NodeTypeInfoPtrArrayStack::init( VarDirector *var_director ) {
 	}
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< NodeTypeInfo * >, "vector< NodeTypeInfo * >", "NodeTypeInfo *[]", "NodeTypeInfoPtrArray" );
+	Stack_Type_Name( , std::vector< NodeTypeInfo * >, tr ("vector< NodeTypeInfo * >"), tr( "NodeTypeInfo *[]"), tr ("NodeTypeInfoPtrArray") );
 	return true;
 }
 bool NodeTypeInfoPtrArrayStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {

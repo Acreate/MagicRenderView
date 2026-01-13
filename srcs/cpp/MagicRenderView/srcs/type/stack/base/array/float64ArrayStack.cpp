@@ -11,7 +11,7 @@ Float64ArrayStack::~Float64ArrayStack( ) {
 bool Float64ArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector<double>, "vector<double>", "double[]", "doubleArray", "vector<double64>", "double64[]", "double64Array", "vector<float64>", "float64[]", "float64Array" );
+	Stack_Type_Name( , std::vector<double>, tr ("vector<double>"), tr( "double[]"), tr("doubleArray"), tr("vector<double64>"), tr("double64[]"), tr("double64Array"), tr ("vector<float64>"), tr("float64[]"), tr("float64Array" ) );
 	return true;
 }
 Float64ArrayStack::Float64ArrayStack( ) {

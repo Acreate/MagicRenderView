@@ -16,7 +16,7 @@ StringArrayStack::~StringArrayStack( ) {
 bool StringArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector< QString >, "vector<QString>", "QString[]", "QStringArray", "vector<String>", "String[]", "StringArray" );
+	Stack_Type_Name( , std::vector< QString >, tr ("vector<QString>"), tr ("QString[]"), tr ("QStringArray"), tr ("vector<String>"), tr ("String[]"), tr( "StringArray") );
 	return true;
 }
 StringArrayStack::StringArrayStack( ) {

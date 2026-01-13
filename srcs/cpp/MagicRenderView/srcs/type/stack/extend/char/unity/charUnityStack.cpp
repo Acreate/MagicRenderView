@@ -11,7 +11,7 @@ CharUnityStack::~CharUnityStack( ) {
 bool CharUnityStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( '\0', QChar, "Char", "char" );
+	Stack_Type_Name( '\0', QChar, tr ("Char"), tr("char" ) );
 	return true;
 }
 CharUnityStack::CharUnityStack( ) {
