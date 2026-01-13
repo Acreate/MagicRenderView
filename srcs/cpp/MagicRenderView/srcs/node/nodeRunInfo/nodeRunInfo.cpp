@@ -507,12 +507,8 @@ bool NodeRunInfo::runNextNode( ) {
 		if( findNextRunNode( currentRunPtr ) == false )
 			return false;
 	while( currentRunPtr == nullptr );
-
-	auto inatsance = Application::getInstancePtr( );
-	auto printerDirector = inatsance->getPrinterDirector( );
 	if( runCurrentNode( currentRunPtr ) == false )
 		return false;
-	printerDirector->info( tr( "执行完毕[%1]" ).arg( currentRunPtr->toQString( ) ), Create_SrackInfo( ) );
 	if( overRunNode( ) == false )
 		return false;
 	if( filterToAdviseVector( ) == false )

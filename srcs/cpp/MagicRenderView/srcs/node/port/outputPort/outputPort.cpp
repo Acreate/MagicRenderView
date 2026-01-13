@@ -75,6 +75,7 @@ bool OutputPort::releasePortInfo( ) {
 OutputPort::OutputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
 	multiple = true;
+	varDirectorPtr = nullptr;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
 	ico->setPixmap( QPixmap::fromImage( image ) );

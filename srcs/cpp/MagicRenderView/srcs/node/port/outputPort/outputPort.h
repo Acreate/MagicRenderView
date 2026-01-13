@@ -1,7 +1,6 @@
 ﻿#ifndef OUTPUTPORT_H_H_HEAD__FILE__
 #define OUTPUTPORT_H_H_HEAD__FILE__
 
-
 #include <QObject>
 #include <QWidget>
 

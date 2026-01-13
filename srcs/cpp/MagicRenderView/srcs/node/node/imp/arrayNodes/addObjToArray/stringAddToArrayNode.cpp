@@ -47,12 +47,13 @@ bool StringAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_ti
 	if( count == 0 )
 		return true;
 	outputPortArray = outputPorts->data( );
-	for( index = 0; index < count; index += 1 ) {
-		portVarPtr = outputPortArray[ index ]->getVarPtr( );
-		varDirector = outputPortArray[ index ]->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
-			continue;
-		outputVarPtr->emplace_back( *secondConverPtr );
-	}
+	for( index = 0; index < count; index += 1 )
+		if( outputPortArray[ index ] ) {
+			portVarPtr = outputPortArray[ index ]->getVarPtr( );
+			varDirector = outputPortArray[ index ]->getVarDirector( );
+			if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+				continue;
+			outputVarPtr->emplace_back( *secondConverPtr );
+		}
 	return true;
 }
