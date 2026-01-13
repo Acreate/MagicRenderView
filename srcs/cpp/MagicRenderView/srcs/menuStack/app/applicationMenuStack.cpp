@@ -5,6 +5,7 @@
 
 #include "../../app/application.h"
 #include "../../menu/app/action/normalApplicationAction.h"
+#include "../../menu/app/imp/action/app/aboutAooAction.h"
 #include "../../menu/app/imp/action/app/quitAppAction.h"
 #include "../../menu/app/imp/action/app/resetAppAction.h"
 #include "../../menu/app/imp/action/builder/builderPorjectAction.h"
@@ -67,8 +68,9 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, CutNodeAction, tr( "剪切" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, PasteNodeAction, tr( "粘贴" ) ) );
 	// 软件操作 action
-	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, QuitAppAction, tr( "退出软件" ) ) );
-	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ResetAppAction, tr( "重启软件" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, QuitAppAction, tr( "退出软件" ), tr( "退出" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ResetAppAction, tr( "重启软件" ), tr( "重启" ) ) );
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, AboutAooAction, tr( "关于软件" ), tr( "关于" ) ) );
 	return true;
 }
 bool ApplicationMenuStack::initMenuGenerator( ) {

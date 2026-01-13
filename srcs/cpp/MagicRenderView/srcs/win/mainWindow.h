@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class AboutApplicationWindow;
 class NormalApplicationToolBar;
 class NormalApplicationAction;
 class NormalApplicationMenu;
@@ -39,6 +40,7 @@ protected:
 	NormalApplicationMenu *editorMenu;
 	NormalApplicationToolBar *projectToolBar;
 	NormalApplicationToolBar *builderToolBar;
+	AboutApplicationWindow* aboutApplicationWindowPtr;
 protected:
 	MainWindow( );
 	virtual bool init( );
@@ -50,6 +52,7 @@ public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
+	virtual bool popAboutApplicationWindow();
 public:
 	virtual bool copySelectNodeInfo( );
 	virtual bool pastePointNodeInfo( );

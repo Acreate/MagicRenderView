@@ -1,10 +1,11 @@
 ﻿#include "mainWindow.h"
 
 #include <QShortcut>
-#include <QMenu>
+#include <QMessageBox>
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QMouseEvent>
+#include <QScrollBar>
 #include <QToolBar>
 
 #include "../app/application.h"
@@ -24,10 +25,9 @@
 
 #include "../srack/srackInfo.h"
 
-#include "../tools/path.h"
-
 #include "../widget/mainWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
+#include "aboutApplicationWindow.h"
 
 MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 
@@ -54,7 +54,7 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 		appMenuBar = new QMenuBar( this );
 		setMenuBar( appMenuBar );
 	}
-
+	aboutApplicationWindowPtr = new AboutApplicationWindow( this );
 }
 bool MainWindow::init( ) {
 	if( mainWidget->init( ) == false )
@@ -147,8 +147,13 @@ MainWindow::~MainWindow( ) {
 		delete appMenu;
 	if( editorMenu )
 		delete editorMenu;
+	delete aboutApplicationWindowPtr;
 	delete mainWidget;
 	delete mainWidgetScrollArea;
+}
+bool MainWindow::popAboutApplicationWindow( ) {
+	aboutApplicationWindowPtr->show( );
+	return aboutApplicationWindowPtr;
 }
 bool MainWindow::copySelectNodeInfo( ) {
 	if( mainWidget == nullptr )
