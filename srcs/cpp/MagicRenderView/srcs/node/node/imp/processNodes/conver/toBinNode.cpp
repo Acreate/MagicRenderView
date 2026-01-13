@@ -11,7 +11,7 @@ bool ToBinNode::initEx( MainWidget *parent ) {
 		if( anyVarInputPortPtr == nullptr )
 			return false;
 		
-		binOutputPortPtr = appendOutputPortType< BinOutputPort >( tr( "无符号整数" ) );
+		binOutputPortPtr = appendOutputPortType< BinOutputPort >( tr( "二进制" ) );
 		if( binOutputPortPtr == nullptr )
 			return false;
 		if( outVarPtr )

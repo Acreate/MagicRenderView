@@ -17,10 +17,10 @@ bool StartNode::initEx( MainWidget *parent ) {
 
 	initExCallFunction = [this] ( MainWidget *main_widget ) {
 
-		beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "过程开始" ) );
+		beginOutputPort = appendOutputPortType< BeginOutputPort >( tr( "开始" ) );
 		if( beginOutputPort == nullptr )
 			return false;
-		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "过程返回" ) );
+		auto toBeginOutputPort = appendOutputPortType< ToBeginOutputPort >( tr( "返回" ) );
 		if( toBeginOutputPort == nullptr )
 			return false;
 		if( var == nullptr )

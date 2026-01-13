@@ -6,54 +6,33 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <tools/infoTool.h>
 
+#include "../../../../port/inputPort/unity/dateTimeInputPort.h"
+#include "../../../../port/outputPort/unity/dateOutputPort.h"
+#include "../../../../port/outputPort/unity/timeOutputPort.h"
+
 SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
-	appNameVarPtr = nullptr;
-	appPathVarPtr = nullptr;
-	builderTimeVarPtr = nullptr;
-	builderToolVarPtr = nullptr;
-	versionVarPtr = nullptr;
+	outDatePtr = nullptr;
+	outTimePtr = nullptr;
 }
 bool SplitDataTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendOutputPortType< >( tr( "名称" ), appNameOutputPort ) == false )
+		if( appendInputPortType< >( tr( "日期时间" ), dateTimeInputPortPtr ) == false )
 			return false;
-		if( appendOutputPortType< >( tr( "路径" ), appPathOutputPort ) == false )
+		if( appendOutputPortType< >( tr( "日期" ), dateOutputPortPtr ) == false )
 			return false;
-		if( appendOutputPortType< >( tr( "编译时间" ), builderTimeOutputPort ) == false )
+		if( appendOutputPortType< >( tr( "时间" ), timeOutputPortPtr ) == false )
 			return false;
-		if( appendOutputPortType< >( tr( "编译工具" ), builderToolOutputPort ) == false )
+		if( outDatePtr )
+			varDirector->release( outDatePtr );
+		if( varDirector->create( outDatePtr ) == false )
 			return false;
-		if( appendOutputPortType< >( tr( "软件版本" ), versionOutputPort ) == false )
+		if( outTimePtr )
+			varDirector->release( outTimePtr );
+		if( varDirector->create( outTimePtr ) == false )
 			return false;
-		if( appNameVarPtr )
-			varDirector->release( appNameVarPtr );
-		if( varDirector->create( appNameVarPtr ) == false )
+		if( setPortVar( dateOutputPortPtr, outDatePtr ) == false )
 			return false;
-		if( appPathVarPtr )
-			varDirector->release( appPathVarPtr );
-		if( varDirector->create( appPathVarPtr ) == false )
-			return false;
-		if( builderTimeVarPtr )
-			varDirector->release( builderTimeVarPtr );
-		if( varDirector->create( builderTimeVarPtr ) == false )
-			return false;
-		if( builderToolVarPtr )
-			varDirector->release( builderToolVarPtr );
-		if( varDirector->create( builderToolVarPtr ) == false )
-			return false;
-		if( versionVarPtr )
-			varDirector->release( versionVarPtr );
-		if( varDirector->create( versionVarPtr ) == false )
-			return false;
-		if( setPortVar( appNameOutputPort, appNameVarPtr ) == false )
-			return false;
-		if( setPortVar( appPathOutputPort, appPathVarPtr ) == false )
-			return false;
-		if( setPortVar( builderTimeOutputPort, builderTimeVarPtr ) == false )
-			return false;
-		if( setPortVar( builderToolOutputPort, builderToolVarPtr ) == false )
-			return false;
-		if( setPortVar( versionOutputPort, versionVarPtr ) == false )
+		if( setPortVar( timeOutputPortPtr, outTimePtr ) == false )
 			return false;
 		return true;
 	};
@@ -66,6 +45,19 @@ bool SplitDataTimeNode::readyNodeRunData( ) {
 	return true;
 }
 bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
-	// todo : 未实现
-	return false;
+	auto outputPorts = getRefPort( dateTimeInputPortPtr );
+	size_t count = outputPorts.size( );
+	if( count == 0 )
+		return true;
+	auto outputPort = outputPorts.data( )[ 0 ];
+	auto varDirector = outputPort->getVarDirector( );
+	if( varDirector == nullptr )
+		return true;
+	auto varPtr = outputPort->getVarPtr( );
+	QDateTime *converDateTimePtr;
+	if( varDirector->cast_ptr( varPtr, converDateTimePtr ) == false )
+		return true;
+	*outDatePtr = converDateTimePtr->date( );
+	*outTimePtr = converDateTimePtr->time( );
+	return true;
 }

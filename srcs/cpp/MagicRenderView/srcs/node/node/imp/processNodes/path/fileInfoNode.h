@@ -3,14 +3,35 @@
 
 #include "../../../processNode.h"
 
+class IntOutputPort;
+class UIntOutputPort;
+class StringOutputPort;
+class DateTimeOutputPort;
+class StringInputPort;
 class AnyVarInputPort;
 class FileInfoNode : public ProcessNode {
 	Q_OBJECT;
 protected:
-	AnyVarInputPort *inputBugPort;
+	StringInputPort *filePtahInputPortPtr;
+	StringOutputPort *filePtahOutputPortPtr;
+	StringOutputPort *dirNameOutputPortPtr;
+	StringOutputPort *baseNameOutputPortPtr;
+	StringOutputPort *authorNameOutputPortPtr;
+	DateTimeOutputPort *createTimeOutputPortPtr;
+	DateTimeOutputPort *lastChangeTimeOutputPortPtr;
+	UIntOutputPort *fileSizeOutputPortPtr;
+	IntOutputPort *isReadOutputPortPtr;
+
+	QString *outFilePtahPtr;
+	QString *outDirNamePtr;
+	QString *outBaseNamePtr;
+	QString *outAuthorNamePtr;
+	QDateTime *outCreateTimePtr;
+	QDateTime *outLastChangeTimePtr;
+	uint64_t *outFileSizePtr;
+	int64_t *outIsReadPtr;
 public:
-	FileInfoNode( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	FileInfoNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

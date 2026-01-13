@@ -1,6 +1,8 @@
 ﻿#include "testCodeSources.h"
 #include <QDebug>
 #include <qfileinfo.h>
+#include <QMetaEnum>
+#include <QStandardPaths>
 
 #include "../app/application.h"
 
@@ -315,6 +317,9 @@ bool TestCodeSources::testAll( ) {
 	//TestCodeSources::testAppSaveBin( );
 	//TestCodeSources::testAppMoveWidget( );
 	//return false;
-
+	//QMetaEnum metaEnum = QMetaEnum::fromType< QStandardPaths::StandardLocation >( );
+	//for( int i = 0; i < metaEnum.keyCount( ); ++i ) {
+	//	qDebug( ) << "(" << metaEnum.key( i ) << "," << metaEnum.value( i ) << "):" << QStandardPaths::writableLocation( ( QStandardPaths::StandardLocation ) metaEnum.value( i ) );
+	//}
 	return true;
 }

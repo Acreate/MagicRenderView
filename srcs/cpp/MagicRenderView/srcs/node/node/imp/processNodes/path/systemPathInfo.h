@@ -1,16 +1,67 @@
 ﻿#ifndef SYSTEMPATHINFO_H_H_HEAD__FILE__
 #define SYSTEMPATHINFO_H_H_HEAD__FILE__
 
+#include <qstandardpaths.h>
+
 #include "../../../processNode.h"
 
-class AnyVarInputPort;
+class StringOutputPort;
 class SystemPathInfo : public ProcessNode {
 	Q_OBJECT;
 protected:
-	AnyVarInputPort *inputBugPort;
+	StringOutputPort *fontsPathOutputPortPtr;
+	StringOutputPort *applicationsPathOutputPortPtr;
+	StringOutputPort *appLocalDataPathOutputPortPtr;
+	StringOutputPort *genericDataPathOutputPortPtr;
+	StringOutputPort *runtimePathOutputPortPtr;
+	StringOutputPort *configPathOutputPortPtr;
+	StringOutputPort *genericCachePathOutputPortPtr;
+	StringOutputPort *genericConfigPathOutputPortPtr;
+	StringOutputPort *appConfigPathOutputPortPtr;
+	StringOutputPort *publicSharePathOutputPortPtr;
+	StringOutputPort *templatesPathOutputPortPtr;
+	StringOutputPort *statePathOutputPortPtr;
+	StringOutputPort *genericStatePathOutputPortPtr;
+	StringOutputPort *desktopPathOutputPortPtr;
+	StringOutputPort *documentsPathOutputPortPtr;
+	StringOutputPort *downloadsPathOutputPortPtr;
+	StringOutputPort *picturesPathOutputPortPtr;
+	StringOutputPort *musicPathOutputPortPtr;
+	StringOutputPort *videosPathOutputPortPtr;
+	StringOutputPort *homePathOutputPortPtr;
+	StringOutputPort *appDataPathOutputPortPtr;
+	StringOutputPort *cachePathOutputPortPtr;
+	StringOutputPort *tempPathOutputPortPtr;
+
+	QString *fontsPathPtr;
+	QString *applicationsPathPtr;
+	QString *appLocalDataPathPtr;
+	QString *genericDataPathPtr;
+	QString *runtimePathPtr;
+	QString *configPathPtr;
+	QString *genericCachePathPtr;
+	QString *genericConfigPathPtr;
+	QString *appConfigPathPtr;
+	QString *publicSharePathPtr;
+	QString *templatesPathPtr;
+	QString *statePathPtr;
+	QString *genericStatePathPtr;
+	QString *desktopPathPtr;
+	QString *documentsPathPtr;
+	QString *downloadsPathPtr;
+	QString *picturesPathPtr;
+	QString *musicPathPtr;
+	QString *videosPathPtr;
+	QString *homePathPtr;
+	QString *appDataPathPtr;
+	QString *cachePathPtr;
+	QString *tempPathPtr;
+private:
+	bool oldClassInit( );
+protected:
+	virtual void writableLocationPath ( QString &result_path, const QStandardPaths::StandardLocation &standard_location_type );
 public:
-	SystemPathInfo( const QString &node_name )
-		: ProcessNode( node_name ) { }
+	SystemPathInfo( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:

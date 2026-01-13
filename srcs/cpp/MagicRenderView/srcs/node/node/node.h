@@ -12,6 +12,27 @@
 #define Def_Interface_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
 #define Def_Extend_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 
+#define Def_BindPortVar( pro_var_ptr_, bind_var_ptr_) \
+	if( bind_var_ptr_ ) \
+		varDirector->release( bind_var_ptr_ );\
+	if( varDirector->create( bind_var_ptr_ ) == false )\
+		return false;\
+	if( setPortVar( pro_var_ptr_, bind_var_ptr_ ) == false )\
+		return false
+
+#define Def_AppendInputPortType( port_name_, port_ptr_ ) \
+	if( appendInputPortType< >( port_name_, port_ptr_ ) == false ) \
+		return false
+
+#define Def_AppendOutputPortType( port_name_, port_ptr_ ) \
+	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
+		return false
+
+#define Def_AappendBindVarOutputPortType( port_name_, port_ptr_ , bind_var_ptr_) \
+	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
+		return false; \
+	Def_BindPortVar(port_ptr_, bind_var_ptr_)
+
 class NodeStyleTypePen;
 class MainWidget;
 class NodeInfoWidget;
@@ -156,7 +177,7 @@ public:
 	~Node( ) override;
 	Node( const QString &node_name );
 	virtual bool initEx( MainWidget *parent );
-	
+
 	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
 	/// @return 依赖序列
 	virtual const std::vector< Node * > & getThisNodeOutputPortRefOtherNodeInputPortVector( ) const { return thisNodeOutputPortRefOtherNodeInputPortVector; }

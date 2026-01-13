@@ -3,22 +3,20 @@
 
 #include "../../../processNode.h"
 
+class TimeOutputPort;
+class DateOutputPort;
+class DateTimeInputPort;
 class DateTimeOutputPort;
 class StringOutputPort;
 class AnyVarInputPort;
 class SplitDataTimeNode : public ProcessNode {
 	Q_OBJECT;
 protected:
-	StringOutputPort *appNameOutputPort;
-	StringOutputPort *appPathOutputPort;
-	DateTimeOutputPort *builderTimeOutputPort;
-	StringOutputPort *builderToolOutputPort;
-	StringOutputPort *versionOutputPort;
-	QString * appNameVarPtr;
-	QString * appPathVarPtr;
-	QDateTime * builderTimeVarPtr;
-	QString * builderToolVarPtr;
-	QString * versionVarPtr;
+	DateTimeInputPort *dateTimeInputPortPtr;
+	DateOutputPort *dateOutputPortPtr;
+	TimeOutputPort *timeOutputPortPtr;
+	QDate *outDatePtr;
+	QTime *outTimePtr;
 public:
 	SplitDataTimeNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

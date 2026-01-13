@@ -12,11 +12,11 @@ ConbinationStringArrayNode::ConbinationStringArrayNode( const QString &node_name
 }
 bool ConbinationStringArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "无符号整数" ), cacheInputPort ) == false )
+		if( appendInputPortType( tr( "字符串" ), cacheInputPort ) == false )
 			return false;
 		if( appendInputPortType( tr( "条件" ), anyInputPort ) == false )
 			return false;
-		if( appendOutputPortType( tr( "无符号整数序列" ), vectorOutPortPtr ) == false )
+		if( appendOutputPortType( tr( "字符串序列" ), vectorOutPortPtr ) == false )
 			return false;
 		if( appendOutputPortType( tr( "条件" ), anyOutputPort ) == false )
 			return false;
