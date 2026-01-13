@@ -1,5 +1,6 @@
 ﻿#include "aboutApplicationWidget.h"
 
+#include <QDate>
 #include <QLabel>
 #include <QMessageBox>
 #include <qstyle.h>
@@ -20,9 +21,6 @@ AboutApplicationWidget::AboutApplicationWidget( AboutApplicationWindow *parent_w
 	auto icon = stylePtr->standardPixmap( QStyle::SP_TitleBarMenuButton );
 	icon = icon.scaled( 64, 64 );
 	qtIco->setPixmap( icon );
-	//
-	//QPixmap pixmap = application->windowIcon(  ).pixmap( 64,64 );
-	//qtIco->setPixmap( pixmap );
 
 	auto pixmap = QPixmap::fromImage( QImage( ":/qt-project.org/qmessagebox/images/qtlogo-64.png" ) );
 	qtIco->setPixmap( pixmap );
@@ -34,18 +32,22 @@ AboutApplicationWidget::AboutApplicationWidget( AboutApplicationWindow *parent_w
 	textBox->setText( getSoftwareProtocolInfo( ) );
 	textBox->setAutoFormatting( QTextEdit::AutoAll );
 }
-// 核心函数：获取软件编译/运行 协议+环境+编译配置 完整信息
+
 QString AboutApplicationWidget::getSoftwareProtocolInfo( ) {
 	QString softInfo;
 	// ===== 1. 软件基础信息（自定义）
 	softInfo += "<h3 style='color:#2980b9;margin:0;padding:0;'>📄 软件编译&运行协议信息</h3><hr/>";
 	softInfo += QString( "<p><b>软件版本：</b>%1</p>" ).arg( "V1.2.0" );
-	softInfo += QString( "<p><b>编译时间：</b>%1</p>" ).arg( __DATE__ " " __TIME__ );
+
+	QDateTime compileDateTime = QDateTime(
+		QDate::fromString( __DATE__, "MMM dd yyyy" ),
+		QTime::fromString( __TIME__, "hh:mm:ss" )
+		);
+	softInfo += QString( "<p><b>编译时间：</b>%1</p>" ).arg( compileDateTime.toString( "yyyy年MM月dd日 hh时mm分ss秒.zzz" ) );
 
 	// ===== 2. Qt核心协议/版本信息（重中之重）
 	softInfo += "<p><b>▷ Qt 编译协议信息</b></p>";
 	softInfo += QString( "<p>Qt库版本：</p><p style='padding-left:20px;'>%1</p>" ).arg( QT_VERSION_STR );
-	softInfo += QString( "<p>Qt版本类型：</p><p style='padding-left:20px;'>%1</p>" ).arg( QT_VERSION >= QT_VERSION_CHECK( 6, 0, 0 ) ? "Qt6 正式版" : "Qt5 正式版" );
 #ifdef QT_DEBUG
 	softInfo += "<p>Qt编译模式：</p><p style='padding-left:20px;color:red;'>调试版(Debug)</p>";
 #else
@@ -83,6 +85,9 @@ QString AboutApplicationWidget::getSoftwareProtocolInfo( ) {
 	stringList.append( tr( "<p %2 >%1</p>" ).arg( tr( "Qt 及其相应标识均为 Qt 公司有限公司在芬兰及其他国家/地区的商标。" ) ).arg( pStyle ) );
 	stringList.append( tr( "<p %2 >%1</p>" ).arg( tr( "所提供的 QT 库受 %1 许可证限制。" ).arg( "LGPL 3.0" ) ).arg( pStyle ) );
 	stringList.append( tr( "<p %2 >%1</p>" ).arg( tr( "所有其他商标均归其各自所有者所有。" ) ).arg( pStyle ) );
+	pStyle = QStringLiteral( "style='color:#0079ff;text-align:center;'" );
+	stringList.append( tr( "<p %2 >%1</p>" ).arg( tr( "gitee : <a href='https://gitee.com/ChenYLhuman/MagicRenderView'>https://gitee.com/ChenYLhuman/MagicRenderView</a>" ) ).arg( pStyle ) );
+	stringList.append( tr( "<p %2 >%1</p>" ).arg( tr( "github : <a href='https://github.com/Acreate/MagicRenderView'>https://github.com/Acreate/MagicRenderView</a>" ) ).arg( pStyle ) );
 	softInfo += tr( "<hr/>" ) + stringList.join( "\n" );
 
 	return softInfo;

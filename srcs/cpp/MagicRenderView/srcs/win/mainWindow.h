@@ -38,6 +38,7 @@ protected:
 	NormalApplicationMenu *builderMenu;
 	NormalApplicationMenu *appMenu;
 	NormalApplicationMenu *editorMenu;
+	NormalApplicationMenu *helpMenu;
 	NormalApplicationToolBar *projectToolBar;
 	NormalApplicationToolBar *builderToolBar;
 	AboutApplicationWindow* aboutApplicationWindowPtr;

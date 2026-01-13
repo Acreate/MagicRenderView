@@ -83,8 +83,10 @@ bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	*appPathVarPtr = instancePtr->applicationFilePath( );
 	QVersionNumber versionInfo = QLibraryInfo::version( );
 	*builderToolVarPtr = tr( "QT %1 (%2.%3.%4.%5)" ).arg( QT_VERSION_STR ).arg( cmake_value_CMAKE_SYSTEM ).arg( cmake_value_CMAKE_SYSTEM_PROCESSOR ).arg( Builder_Tools_MSVC ? "MSVC" : Builder_Tools_GNU ? "GNU" : Builder_Tools_Clang ? "Clang" : "null" ).arg( cmake_value_CMAKE_BUILD_TYPE );
-	// 解析错误
-	*builderTimeVarPtr = QDateTime::fromString( tr( "%1 %2" ).arg( __DATE__ ).arg( __TIME__ ) );
+	*builderTimeVarPtr = QDateTime(
+		QDate::fromString( __DATE__, "MMM dd yyyy" ),
+		QTime::fromString( __TIME__, "hh:mm:ss" )
+		);;
 	*versionVarPtr = tr( "%1.%2.%3" ).arg( 0 ).arg( 0 ).arg( 1 );
 	*appStartTimeVarPtr = *instancePtr->getAppInitRunDataTime( );
 	return true;

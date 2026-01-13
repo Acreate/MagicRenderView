@@ -16,6 +16,7 @@
 #include "../menu/app/imp/menu/appApplicationMenu.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/menu/editorApplicationMenu.h"
+#include "../menu/app/imp/menu/helpApplicationMenu.h"
 #include "../menu/app/imp/menu/projectApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 #include "../menu/app/imp/toolBar/projectApplicationToolBar.h"
@@ -48,6 +49,7 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	projectMenu = nullptr;
 	builderMenu = nullptr;
 	appMenu = nullptr;
+	helpMenu = nullptr;
 	editorMenu = nullptr;
 	appMenuBar = menuBar( );
 	if( appMenuBar == nullptr ) {
@@ -94,6 +96,12 @@ bool MainWindow::init( ) {
 	if( editorMenu == nullptr )
 		return false;
 
+	if( helpMenu )
+		delete helpMenu;
+	helpMenu = applicationMenuStack->getMenu< HelpApplicationMenu >( );
+	if( helpMenu == nullptr )
+		return false;
+
 	if( builderMenu )
 		delete builderMenu;
 	builderMenu = applicationMenuStack->getMenu< BuilderApplicationMenu >( );
@@ -122,6 +130,8 @@ bool MainWindow::init( ) {
 	connect( editorMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 	appMenuBar->addMenu( builderMenu );
 	connect( builderMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
+	appMenuBar->addMenu( helpMenu );
+	connect( helpMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 
 	return true;
 }
@@ -147,6 +157,8 @@ MainWindow::~MainWindow( ) {
 		delete appMenu;
 	if( editorMenu )
 		delete editorMenu;
+	if( helpMenu )
+		delete helpMenu;
 	delete aboutApplicationWindowPtr;
 	delete mainWidget;
 	delete mainWidgetScrollArea;
