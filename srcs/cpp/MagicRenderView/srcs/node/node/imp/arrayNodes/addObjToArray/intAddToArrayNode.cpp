@@ -10,7 +10,7 @@ IntAddToArrayNode::IntAddToArrayNode( const QString &node_name ) : ArrayNode( no
 bool IntAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( appendInputPortType( tr( "无符号整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -50,7 +50,7 @@ bool IntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time 
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		varDirector = outputPortArray[ index ]->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+		if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
 		outputVarPtr->emplace_back( *secondConverPtr );
 	}

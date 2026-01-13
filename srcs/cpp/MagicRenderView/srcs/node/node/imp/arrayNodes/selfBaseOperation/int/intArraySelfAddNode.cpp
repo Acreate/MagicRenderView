@@ -10,7 +10,7 @@ IntArraySelfAddNode::IntArraySelfAddNode( const QString &node_name ) : ArrayNode
 }
 bool IntArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "整数序列" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;

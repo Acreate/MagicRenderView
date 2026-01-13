@@ -12,7 +12,7 @@ ColorArraySelfAddNode::ColorArraySelfAddNode( const QString &node_name ) : Array
 bool ColorArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "颜色序列" ), firstInputPort ) == false )
 			return false;
 
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )

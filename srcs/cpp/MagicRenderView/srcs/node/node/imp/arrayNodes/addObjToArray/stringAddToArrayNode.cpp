@@ -10,7 +10,7 @@ StringAddToArrayNode::StringAddToArrayNode( const QString &node_name ) : ArrayNo
 bool StringAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( appendInputPortType( tr( "无符号整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "字符串" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;

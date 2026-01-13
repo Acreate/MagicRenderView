@@ -12,9 +12,9 @@ ColorArraySubNode::ColorArraySubNode( const QString &node_name ) : ArrayNode( no
 }
 bool ColorArraySubNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "颜色" ), firstInputPort ) == false )
 			return false;
-		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
+		if( appendInputPortType( tr( "颜色列表" ), secondInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -54,7 +54,7 @@ bool ColorArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time 
 	outputPortArray = outputPorts->data( );
 	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
 	varDirector = outputPortArray[ 0 ]->getVarDirector( );
-	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+	if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
 	outputPorts = &getRefPort( secondInputPort );
@@ -65,7 +65,7 @@ bool ColorArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time 
 	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
 	parentNode = outputPortArray[ 0 ]->getParentNode( );
 	varDirector = parentNode->getVarDirector( );
-	if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+	if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 		return true;
 	count = outputVarPtr->size( );
 	auto outputArrayPtr = outputVarPtr->data( );

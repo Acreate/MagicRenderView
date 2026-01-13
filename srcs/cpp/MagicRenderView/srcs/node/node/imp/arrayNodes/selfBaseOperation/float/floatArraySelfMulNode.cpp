@@ -11,7 +11,7 @@ FloatArraySelfMulNode::FloatArraySelfMulNode( const QString &node_name ) : Array
 }
 bool FloatArraySelfMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "浮点" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "浮点序列" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;

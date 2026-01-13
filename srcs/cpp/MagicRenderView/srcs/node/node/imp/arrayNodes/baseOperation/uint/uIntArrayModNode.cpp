@@ -12,9 +12,9 @@ UIntArrayModNode::UIntArrayModNode( const QString &node_name ) : ArrayNode( node
 }
 bool UIntArrayModNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( appendInputPortType( tr( "整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "无符号整数" ), firstInputPort ) == false )
 			return false;
-		if( appendInputPortType( tr( "整数列表" ), secondInputPort ) == false )
+		if( appendInputPortType( tr( "无符号整数列表" ), secondInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;

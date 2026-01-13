@@ -10,7 +10,7 @@ ColorAddToArrayNode::ColorAddToArrayNode( const QString &node_name ) : ArrayNode
 bool ColorAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( appendInputPortType( tr( "无符号整数" ), firstInputPort ) == false )
+		if( appendInputPortType( tr( "颜色" ), firstInputPort ) == false )
 			return false;
 		if( appendOutputPortType( tr( "结果" ), outputPort ) == false )
 			return false;
@@ -50,7 +50,7 @@ bool ColorAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		varDirector = outputPortArray[ index ]->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+		if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
 		outputVarPtr->emplace_back( *secondConverPtr );
 	}

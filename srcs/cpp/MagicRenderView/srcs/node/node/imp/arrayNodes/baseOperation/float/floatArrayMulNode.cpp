@@ -53,7 +53,7 @@ bool FloatArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time 
 	outputPortArray = outputPorts->data( );
 	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
 	varDirector = outputPortArray[ 0 ]->getVarDirector( );
-	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+	if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
 	outputPorts = &getRefPort( secondInputPort );
@@ -64,7 +64,7 @@ bool FloatArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time 
 	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
 	parentNode = outputPortArray[ 0 ]->getParentNode( );
 	varDirector = parentNode->getVarDirector( );
-	if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+	if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 		return true;
 	count = outputVarPtr->size( );
 	auto outputArrayPtr = outputVarPtr->data( );

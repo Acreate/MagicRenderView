@@ -50,7 +50,7 @@ bool UIntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		varDirector = outputPortArray[ index ]->getVarDirector( );
-		if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+		if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
 			continue;
 		outputVarPtr->emplace_back( *secondConverPtr );
 	}
