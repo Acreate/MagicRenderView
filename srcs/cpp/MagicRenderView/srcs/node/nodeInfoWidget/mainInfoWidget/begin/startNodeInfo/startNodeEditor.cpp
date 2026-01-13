@@ -81,7 +81,7 @@ bool StartNodeEditor::initNode( Node *init_node ) {
 	return true;
 }
 bool StartNodeEditor::findRefBeginNode( Node *start_find_current_node, Node *&result_begin_node ) {
-	auto refOutNodes = start_find_current_node->getOutputPortRefThisNodeVector( );
+	auto refOutNodes = start_find_current_node->getOtherNodeOutputPortRefThisNodeInputPortVector( );
 	size_t count = refOutNodes.size( );
 	if( count == 0 )
 		return false;
@@ -97,7 +97,7 @@ bool StartNodeEditor::findRefBeginNode( Node *start_find_current_node, Node *&re
 bool StartNodeEditor::analysisNodeRef( Node *begin_node_ref_link_info, std::vector< Node * > &result_node_ref_link_vector ) {
 	if( begin_node_ref_link_info == nullptr )
 		return false;
-	auto &nodes = begin_node_ref_link_info->getThisInputPortRefNodeVector( );
+	auto &nodes = begin_node_ref_link_info->getThisNodeOutputPortRefOtherNodeInputPortVector( );
 	size_t count = nodes.size( );
 	result_node_ref_link_vector.clear( );
 	result_node_ref_link_vector.emplace_back( begin_node_ref_link_info );
@@ -127,7 +127,7 @@ bool StartNodeEditor::analysisNodeRef( Node *begin_node_ref_link_info, std::vect
 }
 bool StartNodeEditor::analysisOutputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
 
-	auto &nodes = foreach_output_port_node->getThisInputPortRefNodeVector( );
+	auto &nodes = foreach_output_port_node->getThisNodeOutputPortRefOtherNodeInputPortVector( );
 	size_t count = nodes.size( );
 	if( count == 0 )
 		return true;
@@ -141,7 +141,7 @@ bool StartNodeEditor::analysisOutputPortRefNodeVector( Node *foreach_output_port
 }
 bool StartNodeEditor::analysisInputPortRefNodeVector( Node *foreach_output_port_node, std::vector< Node * > &result_node_ref_link_vector ) {
 
-	auto &nodes = foreach_output_port_node->getOutputPortRefThisNodeVector( );
+	auto &nodes = foreach_output_port_node->getOtherNodeOutputPortRefThisNodeInputPortVector( );
 	size_t count = nodes.size( );
 	if( count == 0 )
 		return true;
@@ -210,7 +210,7 @@ bool StartNodeEditor::sortProcessNodeRefArray( const std::vector< Node * > &sort
 	do {
 		for( index = 0, builderNodeIndex = 0; builderNodeIndex < buffArrayCount; builderNodeIndex += 1 ) {
 			currentSortNode = buffNodeArrayPtr[ builderNodeIndex ];
-			outputPortRefThisNodeVectorPtr = &( currentSortNode->getOutputPortRefThisNodeVector( ) );
+			outputPortRefThisNodeVectorPtr = &( currentSortNode->getOtherNodeOutputPortRefThisNodeInputPortVector( ) );
 			outputRefNodeCount = outputPortRefThisNodeVectorPtr->size( );
 			if( outputRefNodeCount ) {
 				outputRefNodeArray = outputPortRefThisNodeVectorPtr->data( );

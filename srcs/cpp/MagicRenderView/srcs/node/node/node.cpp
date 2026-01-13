@@ -325,19 +325,19 @@ void Node::outputDelRef_Slot( OutputPort *output_port, InputPort *ref_input_port
 }
 bool Node::emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port ) {
 	Node *refNode = ref_input_port->parentNode;
-	size_t count = thisInputPortRefNodeVector.size( );
+	size_t count = thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 	if( count == 0 ) {
-		thisInputPortRefNodeVector.emplace_back( refNode );
+		thisNodeOutputPortRefOtherNodeInputPortVector.emplace_back( refNode );
 		emit connect_ref_input_port_node_signal( this, refNode );
 		refNode->emplaceBackRefOutputPortNode( ref_input_port, output_port );
 		emit connect_output_port_signal( output_port, ref_input_port );
 		return true;
 	}
-	auto arrayPtr = thisInputPortRefNodeVector.data( );
+	auto arrayPtr = thisNodeOutputPortRefOtherNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode )
 			return false;
-	thisInputPortRefNodeVector.emplace_back( refNode );
+	thisNodeOutputPortRefOtherNodeInputPortVector.emplace_back( refNode );
 	emit connect_ref_input_port_node_signal( this, refNode );
 	refNode->emplaceBackRefOutputPortNode( ref_input_port, output_port );
 	emit connect_output_port_signal( output_port, ref_input_port );
@@ -345,13 +345,13 @@ bool Node::emplaceBackRefInputPortNode( OutputPort *output_port, InputPort *ref_
 }
 bool Node::eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_port ) {
 	Node *refNode = ref_input_port->parentNode;
-	size_t count = thisInputPortRefNodeVector.size( );
+	size_t count = thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 	if( count == 0 )
 		return false;
-	auto arrayPtr = thisInputPortRefNodeVector.data( );
+	auto arrayPtr = thisNodeOutputPortRefOtherNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode ) {
-			thisInputPortRefNodeVector.erase( thisInputPortRefNodeVector.begin( ) + index );
+			thisNodeOutputPortRefOtherNodeInputPortVector.erase( thisNodeOutputPortRefOtherNodeInputPortVector.begin( ) + index );
 			emit dis_connect_ref_input_port_node_signal( this, refNode );
 			refNode->eraseRefOutputPortNode( ref_input_port, output_port );
 			emit dis_connect_output_port_signal( output_port, ref_input_port );
@@ -361,19 +361,19 @@ bool Node::eraseRefInputPortNode( OutputPort *output_port, InputPort *ref_input_
 }
 bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_output_port ) {
 	Node *refNode = ref_output_port->parentNode;
-	size_t count = outputPortRefThisNodeVector.size( );
+	size_t count = otherNodeOutputPortRefThisNodeInputPortVector.size( );
 	if( count == 0 ) {
-		outputPortRefThisNodeVector.emplace_back( refNode );
+		otherNodeOutputPortRefThisNodeInputPortVector.emplace_back( refNode );
 		emit connect_ref_output_port_node_signal( this, refNode );
 		refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
 		emit connect_input_port_signal( input_port, ref_output_port );
 		return true;
 	}
-	auto arrayPtr = outputPortRefThisNodeVector.data( );
+	auto arrayPtr = otherNodeOutputPortRefThisNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode )
 			return false;
-	outputPortRefThisNodeVector.emplace_back( refNode );
+	otherNodeOutputPortRefThisNodeInputPortVector.emplace_back( refNode );
 	emit connect_ref_output_port_node_signal( this, refNode );
 	refNode->emplaceBackRefInputPortNode( ref_output_port, input_port );
 	emit connect_input_port_signal( input_port, ref_output_port );
@@ -381,13 +381,13 @@ bool Node::emplaceBackRefOutputPortNode( InputPort *input_port, OutputPort *ref_
 }
 bool Node::eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output_port ) {
 	Node *refNode = ref_output_port->parentNode;
-	size_t count = outputPortRefThisNodeVector.size( );
+	size_t count = otherNodeOutputPortRefThisNodeInputPortVector.size( );
 	if( count == 0 )
 		return false;
-	auto arrayPtr = outputPortRefThisNodeVector.data( );
+	auto arrayPtr = otherNodeOutputPortRefThisNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode ) {
-			outputPortRefThisNodeVector.erase( outputPortRefThisNodeVector.begin( ) + index );
+			otherNodeOutputPortRefThisNodeInputPortVector.erase( otherNodeOutputPortRefThisNodeInputPortVector.begin( ) + index );
 			emit dis_connect_ref_output_port_node_signal( this, refNode );
 			refNode->eraseRefInputPortNode( ref_output_port, input_port );
 			emit dis_connect_input_port_signal( input_port, ref_output_port );
@@ -396,51 +396,51 @@ bool Node::eraseRefOutputPortNode( InputPort *input_port, OutputPort *ref_output
 	return false;
 }
 void Node::releaseInputPortRefNode( Node *node ) {
-	size_t count = thisInputPortRefNodeVector.size( );
+	size_t count = thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 	if( count == 0 )
 		return;
-	auto arrayPtr = thisInputPortRefNodeVector.data( );
+	auto arrayPtr = thisNodeOutputPortRefOtherNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == node ) {
-			thisInputPortRefNodeVector.erase( thisInputPortRefNodeVector.begin( ) + index );
+			thisNodeOutputPortRefOtherNodeInputPortVector.erase( thisNodeOutputPortRefOtherNodeInputPortVector.begin( ) + index );
 			emit dis_connect_ref_input_port_node_signal( this, node );
 			node->releaseOutputPortRefNode( this );
 			return;
 		}
 }
 void Node::releaseOutputPortRefNode( Node *node ) {
-	size_t count = outputPortRefThisNodeVector.size( );
+	size_t count = otherNodeOutputPortRefThisNodeInputPortVector.size( );
 	if( count == 0 )
 		return;
-	auto arrayPtr = outputPortRefThisNodeVector.data( );
+	auto arrayPtr = otherNodeOutputPortRefThisNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == node ) {
-			outputPortRefThisNodeVector.erase( outputPortRefThisNodeVector.begin( ) + index );
+			otherNodeOutputPortRefThisNodeInputPortVector.erase( otherNodeOutputPortRefThisNodeInputPortVector.begin( ) + index );
 			emit dis_connect_ref_output_port_node_signal( this, node );
 			node->releaseInputPortRefNode( this );
 			return;
 		}
 }
 void Node::releaseAllInputPortRefNode( ) {
-	size_t count = thisInputPortRefNodeVector.size( );
+	size_t count = thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 	if( count == 0 )
 		return;
 	for( size_t index = 0; index < count; ++index ) {
-		auto node = thisInputPortRefNodeVector.begin( );
+		auto node = thisNodeOutputPortRefOtherNodeInputPortVector.begin( );
 		auto nodePtr = *node;
-		thisInputPortRefNodeVector.erase( node );
+		thisNodeOutputPortRefOtherNodeInputPortVector.erase( node );
 		emit dis_connect_ref_input_port_node_signal( this, nodePtr );
 		nodePtr->releaseOutputPortRefNode( this );
 	}
 }
 void Node::releaseAllOutputPortRefNode( ) {
-	size_t count = outputPortRefThisNodeVector.size( );
+	size_t count = otherNodeOutputPortRefThisNodeInputPortVector.size( );
 	if( count == 0 )
 		return;
 	for( size_t index = 0; index < count; ++index ) {
-		auto node = outputPortRefThisNodeVector.begin( );
+		auto node = otherNodeOutputPortRefThisNodeInputPortVector.begin( );
 		auto nodePtr = *node;
-		outputPortRefThisNodeVector.erase( node );
+		otherNodeOutputPortRefThisNodeInputPortVector.erase( node );
 		emit dis_connect_ref_output_port_node_signal( this, nodePtr );
 		nodePtr->releaseInputPortRefNode( this );
 	}
@@ -462,10 +462,10 @@ bool Node::initEx( MainWidget *parent ) {
 }
 bool Node::hasRefInputNodeRef( InputPort *input_port ) const {
 	Node *refNode = input_port->parentNode;
-	size_t count = thisInputPortRefNodeVector.size( );
+	size_t count = thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 	if( count == 0 )
 		return false;
-	auto arrayPtr = thisInputPortRefNodeVector.data( );
+	auto arrayPtr = thisNodeOutputPortRefOtherNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode )
 			return true;
@@ -473,10 +473,10 @@ bool Node::hasRefInputNodeRef( InputPort *input_port ) const {
 }
 bool Node::hasRefOutputNodeRef( OutputPort *output_port ) const {
 	Node *refNode = output_port->parentNode;
-	size_t count = outputPortRefThisNodeVector.size( );
+	size_t count = otherNodeOutputPortRefThisNodeInputPortVector.size( );
 	if( count == 0 )
 		return false;
-	auto arrayPtr = outputPortRefThisNodeVector.data( );
+	auto arrayPtr = otherNodeOutputPortRefThisNodeInputPortVector.data( );
 	for( size_t index = 0; index < count; ++index )
 		if( arrayPtr[ index ] == refNode )
 			return true;
