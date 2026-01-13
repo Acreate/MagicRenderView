@@ -19,9 +19,7 @@ bool ToStringNode::initEx( MainWidget *parent ) {
 bool ToStringNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToStringNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	outVarPtr->clear( );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );

@@ -20,9 +20,7 @@ bool ReadFileBinDataNode::initEx( MainWidget *parent ) {
 bool ReadFileBinDataNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ReadFileBinDataNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	outVectorPtr->clear( );
 	auto &outputPorts = getRefPort( filePathInputPort );

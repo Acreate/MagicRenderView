@@ -29,9 +29,7 @@ bool ImageChannelNode::initEx( MainWidget *parent ) {
 bool ImageChannelNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ImageChannelNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool ImageChannelNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	return true;
 }

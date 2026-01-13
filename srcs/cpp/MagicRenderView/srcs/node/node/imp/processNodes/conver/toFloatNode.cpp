@@ -15,12 +15,10 @@ bool ToFloatNode::initEx( MainWidget *parent ) {
 bool ToFloatNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToFloatNode::readyNodeRunData( ) {
-	*outVarPtr = 0.0f;
-	return true;
-}
+
 bool ToFloatNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+	*outVarPtr = 0.0f;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

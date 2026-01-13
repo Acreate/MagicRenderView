@@ -18,9 +18,7 @@ bool WriteFileBinDataNode::initEx( MainWidget *parent ) {
 bool WriteFileBinDataNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool WriteFileBinDataNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool WriteFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort.size( );

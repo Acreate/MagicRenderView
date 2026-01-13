@@ -26,9 +26,7 @@ bool SplitDataTimeNode::initEx( MainWidget *parent ) {
 bool SplitDataTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool SplitDataTimeNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto outputPorts = getRefPort( dateTimeInputPortPtr );
 	size_t count = outputPorts.size( );

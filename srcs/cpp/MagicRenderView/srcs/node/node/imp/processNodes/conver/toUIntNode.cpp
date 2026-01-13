@@ -16,12 +16,10 @@ bool ToUIntNode::initEx( MainWidget *parent ) {
 bool ToUIntNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToUIntNode::readyNodeRunData( ) {
-	*outVarPtr = 0;
-	return true;
-}
+
 bool ToUIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+	*outVarPtr = 0;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

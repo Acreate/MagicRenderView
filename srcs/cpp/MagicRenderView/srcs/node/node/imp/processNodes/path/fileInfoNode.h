@@ -19,8 +19,10 @@ protected:
 	StringOutputPort *authorNameOutputPortPtr;
 	DateTimeOutputPort *createTimeOutputPortPtr;
 	DateTimeOutputPort *lastChangeTimeOutputPortPtr;
+	DateTimeOutputPort *lastReadTimeOutputPortPtr;
 	UIntOutputPort *fileSizeOutputPortPtr;
-	IntOutputPort *isReadOutputPortPtr;
+	IntOutputPort *isOnlyReadOutputPortPtr;
+	IntOutputPort *isExisOutputPortPtr;
 
 	QString *outFilePtahPtr;
 	QString *outDirNamePtr;
@@ -28,14 +30,15 @@ protected:
 	QString *outAuthorNamePtr;
 	QDateTime *outCreateTimePtr;
 	QDateTime *outLastChangeTimePtr;
+	QDateTime *outLastReadTimePtr;
 	uint64_t *outFileSizePtr;
-	int64_t *outIsReadPtr;
+	int64_t *outIsOnlyReadPtr;
+	int64_t *outIsExisPtr;
 public:
 	FileInfoNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
-	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "单元/路径/路径信息" ) );

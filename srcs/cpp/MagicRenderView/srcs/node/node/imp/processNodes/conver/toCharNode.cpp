@@ -16,12 +16,10 @@ bool ToCharNode::initEx( MainWidget *parent ) {
 bool ToCharNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToCharNode::readyNodeRunData( ) {
-	*outVarPtr = ( short ) 0;
-	return true;
-}
+
 bool ToCharNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+	*outVarPtr = ( short ) 0;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

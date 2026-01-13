@@ -18,9 +18,7 @@ bool DebugInfoNode::initEx( MainWidget *parent ) {
 bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool DebugInfoNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto outputPorts = getRefPort( inputBugPort );
 	size_t count = outputPorts.size( );

@@ -20,9 +20,7 @@ bool ReadFileImageNode::initEx( MainWidget *parent ) {
 bool ReadFileImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ReadFileImageNode::readyNodeRunData( ) {
-	return false;
-}
+
 bool ReadFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
 	auto &outputPorts = getRefPort( filePathPort );

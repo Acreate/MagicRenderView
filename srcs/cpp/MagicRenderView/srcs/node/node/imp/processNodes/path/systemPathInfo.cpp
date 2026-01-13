@@ -157,29 +157,7 @@ bool SystemPathInfo::initEx( MainWidget *parent ) {
 		Def_AppendBindVarOutputPortType( tr( "当前用户模板路径" ), templatesPathOutputPortPtr, templatesPathPtr );
 		Def_AppendBindVarOutputPortType( tr( "当前用户的应用程序数据和缓存路径" ), statePathOutputPortPtr, statePathPtr );
 		Def_AppendBindVarOutputPortType( tr( "当前用户的应用程序共享数据和缓存路径" ), genericStatePathOutputPortPtr, genericStatePathPtr );
-		writableLocationPath( *desktopPathPtr, QStandardPaths::DesktopLocation );
-		writableLocationPath( *documentsPathPtr, QStandardPaths::DocumentsLocation );
-		writableLocationPath( *fontsPathPtr, QStandardPaths::FontsLocation );
-		writableLocationPath( *applicationsPathPtr, QStandardPaths::ApplicationsLocation );
-		writableLocationPath( *musicPathPtr, QStandardPaths::MusicLocation );
-		writableLocationPath( *videosPathPtr, QStandardPaths::MoviesLocation );
-		writableLocationPath( *picturesPathPtr, QStandardPaths::PicturesLocation );
-		writableLocationPath( *tempPathPtr, QStandardPaths::TempLocation );
-		writableLocationPath( *homePathPtr, QStandardPaths::HomeLocation );
-		writableLocationPath( *appLocalDataPathPtr, QStandardPaths::AppLocalDataLocation );
-		writableLocationPath( *cachePathPtr, QStandardPaths::CacheLocation );
-		writableLocationPath( *genericDataPathPtr, QStandardPaths::GenericDataLocation );
-		writableLocationPath( *runtimePathPtr, QStandardPaths::RuntimeLocation );
-		writableLocationPath( *configPathPtr, QStandardPaths::ConfigLocation );
-		writableLocationPath( *downloadsPathPtr, QStandardPaths::DownloadLocation );
-		writableLocationPath( *genericCachePathPtr, QStandardPaths::GenericCacheLocation );
-		writableLocationPath( *genericConfigPathPtr, QStandardPaths::GenericConfigLocation );
-		writableLocationPath( *appDataPathPtr, QStandardPaths::AppDataLocation );
-		writableLocationPath( *appConfigPathPtr, QStandardPaths::AppConfigLocation );
-		writableLocationPath( *publicSharePathPtr, QStandardPaths::PublicShareLocation );
-		writableLocationPath( *templatesPathPtr, QStandardPaths::TemplatesLocation );
-		writableLocationPath( *statePathPtr, QStandardPaths::StateLocation );
-		writableLocationPath( *genericStatePathPtr, QStandardPaths::GenericStateLocation );
+
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -188,6 +166,29 @@ bool SystemPathInfo::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 bool SystemPathInfo::readyNodeRunData( ) {
+	writableLocationPath( *desktopPathPtr, QStandardPaths::DesktopLocation );
+	writableLocationPath( *documentsPathPtr, QStandardPaths::DocumentsLocation );
+	writableLocationPath( *fontsPathPtr, QStandardPaths::FontsLocation );
+	writableLocationPath( *applicationsPathPtr, QStandardPaths::ApplicationsLocation );
+	writableLocationPath( *musicPathPtr, QStandardPaths::MusicLocation );
+	writableLocationPath( *videosPathPtr, QStandardPaths::MoviesLocation );
+	writableLocationPath( *picturesPathPtr, QStandardPaths::PicturesLocation );
+	writableLocationPath( *tempPathPtr, QStandardPaths::TempLocation );
+	writableLocationPath( *homePathPtr, QStandardPaths::HomeLocation );
+	writableLocationPath( *appLocalDataPathPtr, QStandardPaths::AppLocalDataLocation );
+	writableLocationPath( *cachePathPtr, QStandardPaths::CacheLocation );
+	writableLocationPath( *genericDataPathPtr, QStandardPaths::GenericDataLocation );
+	writableLocationPath( *runtimePathPtr, QStandardPaths::RuntimeLocation );
+	writableLocationPath( *configPathPtr, QStandardPaths::ConfigLocation );
+	writableLocationPath( *downloadsPathPtr, QStandardPaths::DownloadLocation );
+	writableLocationPath( *genericCachePathPtr, QStandardPaths::GenericCacheLocation );
+	writableLocationPath( *genericConfigPathPtr, QStandardPaths::GenericConfigLocation );
+	writableLocationPath( *appDataPathPtr, QStandardPaths::AppDataLocation );
+	writableLocationPath( *appConfigPathPtr, QStandardPaths::AppConfigLocation );
+	writableLocationPath( *publicSharePathPtr, QStandardPaths::PublicShareLocation );
+	writableLocationPath( *templatesPathPtr, QStandardPaths::TemplatesLocation );
+	writableLocationPath( *statePathPtr, QStandardPaths::StateLocation );
+	writableLocationPath( *genericStatePathPtr, QStandardPaths::GenericStateLocation );
 	return true;
 }
 bool SystemPathInfo::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {

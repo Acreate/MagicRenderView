@@ -17,12 +17,10 @@ bool ToColorNode::initEx( MainWidget *parent ) {
 bool ToColorNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToColorNode::readyNodeRunData( ) {
-	outVarPtr->setRgb( 0, 0, 0, 0 );
-	return true;
-}
+
 bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+	outVarPtr->setRgb( 0, 0, 0, 0 );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

@@ -78,9 +78,6 @@ bool CharGenerateNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time )
 	auto generateVarPtr = outputPort->getVarPtr( );
 	auto nodeDirector = outputPort->getVarDirector( );
 	size_t *index;
-	*arrayCount = 0;
-	*arrayIndex = 0;
-	*arrayCount = 0;
 	if( nodeDirector->cast_ptr( generateVarPtr, index ) == false )
 		return false;
 	*arrayIndex = *index;

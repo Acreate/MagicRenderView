@@ -21,9 +21,7 @@ bool ToDateTimeNode::initEx( MainWidget *parent ) {
 bool ToDateTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToDateTimeNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	*outVarPtr = QDateTime::fromMSecsSinceEpoch( 0 );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );

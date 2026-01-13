@@ -16,10 +16,8 @@ bool PreviewImageNode::initEx( MainWidget *parent ) {
 bool PreviewImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool PreviewImageNode::readyNodeRunData( ) {
-	return true;
-}
-bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	// todo : 未完成
 	return true;
 }

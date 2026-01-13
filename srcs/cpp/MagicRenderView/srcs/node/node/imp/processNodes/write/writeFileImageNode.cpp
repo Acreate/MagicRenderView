@@ -19,9 +19,7 @@ bool WriteFileImageNode::initEx( MainWidget *parent ) {
 bool WriteFileImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool WriteFileImageNode::readyNodeRunData( ) {
-	return false;
-}
+
 bool WriteFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort.size( );

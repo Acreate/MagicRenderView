@@ -153,7 +153,7 @@ protected:
 public:
 	/// @brief 配置首次运行所需要的数据
 	/// @return 失败返回 false
-	virtual bool readyNodeRunData( ) = 0;
+	virtual bool readyNodeRunData( ) { return true; }
 	/// @brief 填充输入端口
 	/// @param ndoe_run_start_data_time
 	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表

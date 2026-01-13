@@ -16,12 +16,9 @@ bool ToBinNode::initEx( MainWidget *parent ) {
 bool ToBinNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToBinNode::readyNodeRunData( ) {
-	*outVarPtr = 0;
-	return true;
-}
-bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+	*outVarPtr = 0;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

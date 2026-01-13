@@ -19,9 +19,7 @@ bool ReadFileTextNode::initEx( MainWidget *parent ) {
 bool ReadFileTextNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ReadFileTextNode::readyNodeRunData( ) {
-	return false;
-}
+
 bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 	auto &outputPorts = getRefPort( filePathInputPort );
 	size_t count = outputPorts.size( );

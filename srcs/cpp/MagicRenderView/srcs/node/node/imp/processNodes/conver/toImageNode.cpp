@@ -18,12 +18,10 @@ bool ToImageNode::initEx( MainWidget *parent ) {
 bool ToImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ToImageNode::readyNodeRunData( ) {
-	*outVarPtr = QImage( );
-	return true;
-}
+
 bool ToImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
+	*outVarPtr = QImage( );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );
 	if( count == 0 )

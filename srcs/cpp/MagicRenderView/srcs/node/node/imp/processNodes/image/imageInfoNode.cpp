@@ -26,9 +26,7 @@ bool ImageInfoNode::initEx( MainWidget *parent ) {
 bool ImageInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool ImageInfoNode::readyNodeRunData( ) {
-	return true;
-}
+
 bool ImageInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
 
 	return true;
