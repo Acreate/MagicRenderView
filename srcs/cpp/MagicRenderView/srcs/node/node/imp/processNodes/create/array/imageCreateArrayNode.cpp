@@ -21,7 +21,7 @@ bool ImageCreateArrayNode::updateLayout( ) {
 bool ImageCreateArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool ImageCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	return true;
 }

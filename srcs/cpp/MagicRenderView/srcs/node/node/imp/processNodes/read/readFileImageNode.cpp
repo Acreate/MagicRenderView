@@ -21,7 +21,7 @@ bool ReadFileImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ReadFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ReadFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	auto &outputPorts = getRefPort( filePathPort );
 	size_t count = outputPorts.size( );

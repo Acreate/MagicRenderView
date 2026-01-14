@@ -19,7 +19,7 @@ bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto outputPorts = getRefPort( inputBugPort );
 	size_t count = outputPorts.size( );
 	size_t index = 0;

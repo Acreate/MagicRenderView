@@ -21,7 +21,7 @@ public:
 	bool updateLayout( ) override;
 public:
 	bool readyNodeRunData( ) override;
-	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
+	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "序列/运算/整数/乘法" ) );
 };

@@ -23,7 +23,7 @@ bool SplitDataTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto outputPorts = getRefPort( dateTimeInputPortPtr );
 	size_t count = outputPorts.size( );
 	if( count == 0 )

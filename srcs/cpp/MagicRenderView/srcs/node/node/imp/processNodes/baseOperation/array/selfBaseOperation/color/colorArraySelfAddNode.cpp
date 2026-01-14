@@ -25,7 +25,7 @@ bool ColorArraySelfAddNode::updateLayout( ) {
 bool ColorArraySelfAddNode::readyNodeRunData( ) {
 	return true;
 }
-bool ColorArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ColorArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;

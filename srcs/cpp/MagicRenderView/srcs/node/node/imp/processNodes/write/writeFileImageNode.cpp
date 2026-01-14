@@ -20,7 +20,7 @@ bool WriteFileImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool WriteFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool WriteFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort.size( );
 	if( count == 0 )

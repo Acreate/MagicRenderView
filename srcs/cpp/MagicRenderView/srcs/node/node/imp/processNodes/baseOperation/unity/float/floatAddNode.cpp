@@ -26,7 +26,7 @@ bool FloatAddNode::updateLayout( ) {
 bool FloatAddNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

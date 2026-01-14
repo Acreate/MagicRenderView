@@ -27,7 +27,7 @@ bool UIntAddToArrayNode::updateLayout( ) {
 bool UIntAddToArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool UIntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool UIntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 
 	OutputPort *const*outputPortArray;

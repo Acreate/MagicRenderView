@@ -21,7 +21,7 @@ bool ReadFileBinDataNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVectorPtr->clear( );
 	auto &outputPorts = getRefPort( filePathInputPort );
 	size_t count = outputPorts.size( );

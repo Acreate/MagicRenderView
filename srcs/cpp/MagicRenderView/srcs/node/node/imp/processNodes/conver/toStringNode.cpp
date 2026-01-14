@@ -20,7 +20,7 @@ bool ToStringNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );

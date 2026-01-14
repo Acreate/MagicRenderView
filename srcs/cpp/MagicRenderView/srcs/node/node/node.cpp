@@ -16,7 +16,7 @@
 #include "../nodeInfo/nodeStyleTypePen.h"
 #include "../port/inputPort/point/pointInputPort.h"
 
-bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
 }
 Node::~Node( ) {

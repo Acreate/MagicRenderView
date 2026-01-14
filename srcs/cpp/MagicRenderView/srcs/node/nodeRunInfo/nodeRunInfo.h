@@ -3,8 +3,6 @@
 
 #include <QObject>
 
-#include "../../enums/nodeEnum.h"
-
 class QDateTime;
 class Application;
 namespace NodeEnum {
@@ -21,23 +19,32 @@ protected:
 	using TRunBodyObj = Node;
 	using TRunBodyObjPtr = TRunBodyObj *;
 protected:
+	/// @brief 应用实例
+	Application *appinstancePtr;
+	/// @brief 当前帧
+	size_t currentFrame;
+	/// @brief 是否停止
 	bool isRunStop;
+	/// @brief 编译时间
 	QDateTime *builderDataTime;
+	/// @brief 上一个节点运行时间
+	QDateTime *brforeRunDataTime;
+	/// @brief 当前节点运行时间
+	QDateTime *currentRunDataTime;
+	/// @brief 等待下一面
+	long long waiteNextTime;
 	/// @brief 当前对象指针
 	TRunBodyObjPtr currentRunPtr;
+	/// @brief 编译列表
 	std::vector< TRunBodyObjPtr > builderNodeVector;
-	/// @brief 运行列表
-	std::vector< TRunBodyObjPtr > runNodeVector;
-	/// @brief 运行的节点
+	/// @brief 完成列表
 	std::vector< TRunBodyObjPtr > overRunNodeVector;
-	/// @brief 等待运行的节点
+	/// @brief 等待列表
 	std::vector< TRunBodyObjPtr > waiteRunNodeVector;
-	/// @brief 建议运行列表
+	/// @brief 建议列表
 	std::vector< TRunBodyObjPtr > adviseNodeVector;
-	/// @brief 开始节点列表
+	/// @brief 开始列表
 	std::vector< TRunBodyObjPtr > beginNodeVector;
-	/// @brief 等待中的返回节点
-	std::vector< TRunBodyObjPtr > waiteEndNodeVector;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -45,7 +52,7 @@ protected:
 	}
 	virtual void appendBuilderNode( TRunBodyObj *append_node_unity );
 	virtual void removeBuilderNode( TRunBodyObj *append_node_unity );
-	virtual bool isNextRunNode(Node* check_next_node);
+	virtual bool isNextRunNode( Node *check_next_node );
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );

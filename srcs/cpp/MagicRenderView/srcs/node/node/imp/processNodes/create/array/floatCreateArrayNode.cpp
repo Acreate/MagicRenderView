@@ -20,7 +20,7 @@ bool FloatCreateArrayNode::updateLayout( ) {
 bool FloatCreateArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	return true;
 }

@@ -26,7 +26,7 @@ bool FloatArraySubNode::updateLayout( ) {
 bool FloatArraySubNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;

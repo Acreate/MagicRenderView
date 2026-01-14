@@ -18,7 +18,7 @@ bool ToColorNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	outVarPtr->setRgb( 0, 0, 0, 0 );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );

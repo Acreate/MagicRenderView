@@ -26,7 +26,7 @@ bool FloatSubNode::readyNodeRunData( ) {
 	*outputVarPtr = 0;
 	return true;
 }
-bool FloatSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

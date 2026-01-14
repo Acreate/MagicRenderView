@@ -17,8 +17,8 @@ public:
 	bool updateLayout( ) override;
 public:
 	bool readyNodeRunData( ) override;
-	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
-	bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
+	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
+	bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
 	Def_Extend_NodeTypeName( Node::tr( "控制/记录位置" ) );
 };

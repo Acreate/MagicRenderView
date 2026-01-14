@@ -191,6 +191,6 @@ bool SystemPathInfo::readyNodeRunData( ) {
 	writableLocationPath( *genericStatePathPtr, QStandardPaths::GenericStateLocation );
 	return true;
 }
-bool SystemPathInfo::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool SystemPathInfo::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
 }

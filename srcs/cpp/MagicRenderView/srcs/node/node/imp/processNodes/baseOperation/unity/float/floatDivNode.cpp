@@ -27,7 +27,7 @@ bool FloatDivNode::readyNodeRunData( ) {
 
 	return true;
 }
-bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

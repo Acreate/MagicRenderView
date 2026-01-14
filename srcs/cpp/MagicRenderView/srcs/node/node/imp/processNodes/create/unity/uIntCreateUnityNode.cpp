@@ -21,7 +21,7 @@ bool UIntCreateUnityNode::updateLayout( ) {
 bool UIntCreateUnityNode::readyNodeRunData( ) {
 	return true;
 }
-bool UIntCreateUnityNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool UIntCreateUnityNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outputVarPtr = '\0';
 	return true;
 }

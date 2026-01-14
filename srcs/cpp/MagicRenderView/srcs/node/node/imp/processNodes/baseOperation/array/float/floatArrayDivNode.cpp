@@ -26,7 +26,7 @@ bool FloatArrayDivNode::updateLayout( ) {
 bool FloatArrayDivNode::readyNodeRunData( ) {
 	return true;
 }
-bool FloatArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FloatArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;

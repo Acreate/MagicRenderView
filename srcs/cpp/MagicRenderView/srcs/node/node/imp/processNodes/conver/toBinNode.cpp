@@ -17,7 +17,7 @@ bool ToBinNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = 0;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );

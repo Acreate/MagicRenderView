@@ -26,7 +26,7 @@ bool ImageMulNode::updateLayout( ) {
 bool ImageMulNode::readyNodeRunData( ) {
 	return true;
 }
-bool ImageMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

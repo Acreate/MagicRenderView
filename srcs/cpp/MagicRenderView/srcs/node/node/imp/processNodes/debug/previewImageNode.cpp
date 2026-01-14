@@ -17,7 +17,7 @@ bool PreviewImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	// todo : 未完成
 	return true;
 }

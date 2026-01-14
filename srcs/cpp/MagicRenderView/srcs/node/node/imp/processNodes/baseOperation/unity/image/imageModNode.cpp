@@ -26,7 +26,7 @@ bool ImageModNode::updateLayout( ) {
 bool ImageModNode::readyNodeRunData( ) {
 	return true;
 }
-bool ImageModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

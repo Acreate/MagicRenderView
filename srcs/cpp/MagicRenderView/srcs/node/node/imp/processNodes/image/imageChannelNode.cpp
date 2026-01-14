@@ -30,6 +30,6 @@ bool ImageChannelNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ImageChannelNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageChannelNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
 }

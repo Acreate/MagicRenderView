@@ -25,7 +25,7 @@ bool IntDivNode::updateLayout( ) {
 bool IntDivNode::readyNodeRunData( ) {
 	return true;
 }
-bool IntDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool IntDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

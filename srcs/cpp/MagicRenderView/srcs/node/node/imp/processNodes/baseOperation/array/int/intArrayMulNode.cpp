@@ -26,7 +26,7 @@ bool IntArrayMulNode::updateLayout( ) {
 bool IntArrayMulNode::readyNodeRunData( ) {
 	return true;
 }
-bool IntArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool IntArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;

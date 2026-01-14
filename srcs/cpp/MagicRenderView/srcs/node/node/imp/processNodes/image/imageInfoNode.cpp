@@ -27,7 +27,7 @@ bool ImageInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ImageInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	return true;
 }

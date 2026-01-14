@@ -21,7 +21,7 @@ bool StringCreateArrayNode::updateLayout( ) {
 bool StringCreateArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool StringCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool StringCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	return true;
 }

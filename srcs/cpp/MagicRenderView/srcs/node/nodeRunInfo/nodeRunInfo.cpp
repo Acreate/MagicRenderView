@@ -1,6 +1,7 @@
 ﻿#include "nodeRunInfo.h"
 
 #include <qdatetime.h>
+#include <QThread>
 
 #include "../../app/application.h"
 #include "../../director/nodeDirector.h"
@@ -10,13 +11,18 @@
 #include "../../tools/vectorTools.h"
 #include "../node/node.h"
 
-NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ) {
-
+NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
+	// 等待1秒执行下一个节点
+	waiteNextTime = 1000;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	clear( );
 	if( builderDataTime )
 		delete builderDataTime;
+	if( brforeRunDataTime )
+		delete brforeRunDataTime;
+	if( currentRunDataTime )
+		delete currentRunDataTime;
 	emit release_signal( this, Create_SrackInfo( ) );
 }
 void NodeRunInfo::appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count ) {
@@ -72,8 +78,11 @@ bool NodeRunInfo::hasNodeRefInRunVector( TRunBodyObj *check_node_ref ) {
 	return false;
 }
 bool NodeRunInfo::builderRunInstance( ) {
+	appinstancePtr = Application::getInstancePtr( );
+	if( appinstancePtr == nullptr )
+		return false;
+	currentFrame = 0;
 	currentRunPtr = nullptr;
-	runNodeVector.clear( );
 	beginNodeVector.clear( );
 	waiteRunNodeVector.clear( );
 	overRunNodeVector.clear( );
@@ -85,27 +94,16 @@ bool NodeRunInfo::builderRunInstance( ) {
 	runNodeCount = beginNodeVector.size( );
 	if( runNodeCount == 0 )
 		return false;
-	// 检测运行节点个数
-	runNodeCount = runNodeVector.size( );
-	if( runNodeCount == 0 )
-		return false;
-	// 初始化运行列表
-	auto runNodeArrayPtr = runNodeVector.data( );
-	size_t runNodeIndex = 0;
-	for( ; runNodeIndex < runNodeCount; ++runNodeIndex )
-		if( runNodeArrayPtr[ runNodeIndex ]->readyNodeRunData( ) == false ) {
-			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::Error );
-			runNodeVector.clear( );
-			beginNodeVector.clear( );
-			waiteRunNodeVector.clear( );
-			overRunNodeVector.clear( );
-			adviseNodeVector.clear( );
-			return false;
-		} else
-			runNodeArrayPtr[ runNodeIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
+	// todo : 初始化运行列表
 	if( builderDataTime == nullptr )
 		builderDataTime = new QDateTime( );
 	*builderDataTime = QDateTime::currentDateTime( );
+	if( brforeRunDataTime == nullptr )
+		brforeRunDataTime = new QDateTime( );
+	*brforeRunDataTime = *builderDataTime;
+	if( currentRunDataTime == nullptr )
+		currentRunDataTime = new QDateTime( );
+	*currentRunDataTime = *builderDataTime;
 	adviseNodeVector = beginNodeVector;
 	return true;
 }
@@ -166,7 +164,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	size_t processSize = processNodeVector.size( );
 	// 排序对象
 	auto buffNodeArrayPtr = processNodeVector.data( );
-	runNodeVector.resize( processSize );
+	std::vector< Node * > runNodeVector( processSize );
 	auto runNodeArrayPtr = runNodeVector.data( );
 	size_t runNodeIndex = 0;
 	auto beginCount = beginNodeVector.size( );
@@ -272,7 +270,7 @@ bool NodeRunInfo::isNextRunNode( Node *check_next_node ) {
 	Node **nodeArrayPtr;
 	overNodeCount = overRunNodeVector.size( );
 
-	if( check_next_node->fillInputPortCall( *builderDataTime, resultNeedNodeVector ) == false )
+	if( check_next_node->fillInputPortCall( *builderDataTime, resultNeedNodeVector, currentFrame ) == false )
 		return false; // 输入要求获取异常
 	needRunNodeArratCount = resultNeedNodeVector.size( );
 	if( needRunNodeArratCount == 0 )
@@ -288,7 +286,7 @@ bool NodeRunInfo::isNextRunNode( Node *check_next_node ) {
 		needNodeType = needNode->getNodeType( );
 		// 如果需求是逻辑节点
 		if( needNodeType == NodeEnum::NodeType::Logic ) {
-			if( needNode->fillOutputPortCall( adviseNodeVector, *builderDataTime ) == false )
+			if( needNode->fillOutputPortCall( adviseNodeVector, *builderDataTime, currentFrame ) == false )
 				return false; // 条件获取失败
 			adviseCount = adviseNodeVector.size( );
 			if( adviseCount == 0 )
@@ -354,17 +352,6 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 				return true;
 			}
 	}
-	findNodeArrayCount = waiteEndNodeVector.size( );
-	if( findNodeArrayCount ) {
-		findNodeArrayPtr = waiteEndNodeVector.data( );
-		for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
-			if( isNextRunNode( findNodeArrayPtr[ findNodeArrayIndex ] ) == true == true ) {
-				result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
-				// 等待列表当中找到相应的节点时候
-				waiteEndNodeVector.erase( waiteEndNodeVector.begin( ) + findNodeArrayIndex );
-				return true;
-			}
-	}
 	// 把 adviseNodeVector 序列当中的需求节点放置到 adviseNodeVector 当中，并且把旧的 adviseNodeVector 放置到 waiteRunNodeVector 序列当中
 	findNodeArrayCount = adviseNodeVector.size( );
 	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
@@ -402,21 +389,7 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 		result_run_node = nullptr;
 		return true;
 	}
-	Application *instancePtr;
-	NodeDirector *nodeDirector;
-	QString arrayToString;
-	std::vector< Node * >::iterator iterator;
-	std::vector< Node * >::iterator end;
-
-	instancePtr = Application::getInstancePtr( );
-	nodeDirector = instancePtr->getNodeDirector( );
-	arrayToString = nodeDirector->nodeArrayToString( waiteRunNodeVector );
-	instancePtr->getPrinterDirector( )->info( tr( "无法匹配下一个节点:\n%2" ).arg( arrayToString ), Create_SrackInfo( ) );
-	iterator = waiteRunNodeVector.begin( );
-	end = waiteRunNodeVector.end( );
-	for( ; iterator != end; ++iterator )
-		( *iterator )->setNodeStyle( NodeEnum::NodeStyleType::Error );
-	result_run_node = nullptr;
+	// 全部节点已经运行完毕
 	return false;
 }
 bool NodeRunInfo::runCurrentNode( Node *run_node ) {
@@ -424,7 +397,7 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
 	currentRunPtr = run_node;
 	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
-	if( currentRunPtr->fillNodeCall( *builderDataTime ) == true )
+	if( currentRunPtr->fillNodeCall( *builderDataTime, currentFrame ) == true )
 		return true;
 
 	Application *instancePtr;
@@ -443,7 +416,7 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 }
 bool NodeRunInfo::overRunNode( ) {
 	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Old_Run );
-	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime ) == true )
+	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime, currentFrame ) == true )
 		return true;
 	Application *instancePtr;
 	PrinterDirector *printerDirector;
@@ -504,11 +477,23 @@ bool NodeRunInfo::runNextNode( ) {
 }
 bool NodeRunInfo::runResidueNode( ) {
 	isRunStop = false;
+	std::chrono::milliseconds milliseconds;
+	long long count;
 	do {
 		if( runNextNode( ) == false )
 			return false;
 		if( isRunStop == true )
 			break;
+		do {
+			appinstancePtr->processEvents( );
+			*currentRunDataTime = QDateTime::currentDateTime( );
+			milliseconds = *currentRunDataTime - *builderDataTime;
+			count = milliseconds.count( );
+			if( count > waiteNextTime )
+				break;
+			QThread::msleep( 10 );
+		} while( true );
+		*builderDataTime = *currentRunDataTime;
 	} while( true );
 	return true;
 }
@@ -517,18 +502,8 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	size_t count = beginNodeVector.size( );
 	if( count == 0 )
 		return false;
-	// 检测运行节点个数
-	count = runNodeVector.size( );
-	if( count == 0 )
-		return false;
-	// 重置数据
-	auto runArrayPtr = runNodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; index += 1 )
-		if( runArrayPtr[ index ]->readyNodeRunData( ) == false )
-			return false;
-	if( currentRunPtr )
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+	// todo : 重置数据
+	currentFrame = 0;
 	currentRunPtr = nullptr;
 	// 清除已运行列表
 	overRunNodeVector.clear( );
@@ -542,6 +517,10 @@ bool NodeRunInfo::runStopNode( ) {
 }
 void NodeRunInfo::clear( ) {
 	builderNodeVector.clear( );
-	runNodeVector.clear( );
+	beginNodeVector.clear( );
+	adviseNodeVector.clear( );
+	overRunNodeVector.clear( );
+	currentRunPtr = nullptr;
+	currentFrame = 0;
 	emit clear_signal( this, Create_SrackInfo( ) );
 }

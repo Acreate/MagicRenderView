@@ -26,7 +26,7 @@ bool ImageAddNode::updateLayout( ) {
 bool ImageAddNode::readyNodeRunData( ) {
 	return true;
 }
-bool ImageAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

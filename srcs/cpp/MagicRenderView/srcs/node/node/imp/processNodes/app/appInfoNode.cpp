@@ -38,7 +38,7 @@ bool AppInfoNode::updateLayout( ) {
 bool AppInfoNode::readyNodeRunData( ) {
 	return true;
 }
-bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	Application *instancePtr = Application::getInstancePtr( );
 	*appNameVarPtr = instancePtr->applicationName( );
 	*appPathVarPtr = instancePtr->applicationFilePath( );

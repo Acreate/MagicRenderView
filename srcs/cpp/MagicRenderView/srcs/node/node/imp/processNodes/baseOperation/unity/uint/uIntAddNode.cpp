@@ -25,7 +25,7 @@ bool UIntAddNode::updateLayout( ) {
 bool UIntAddNode::readyNodeRunData( ) {
 	return true;
 }
-bool UIntAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool UIntAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

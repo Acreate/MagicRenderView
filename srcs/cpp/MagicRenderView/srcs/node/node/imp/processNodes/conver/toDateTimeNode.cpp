@@ -22,7 +22,7 @@ bool ToDateTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = QDateTime::fromMSecsSinceEpoch( 0 );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr.size( );

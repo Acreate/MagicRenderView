@@ -17,7 +17,7 @@ bool ToIntNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	*outVarPtr = 0;
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );

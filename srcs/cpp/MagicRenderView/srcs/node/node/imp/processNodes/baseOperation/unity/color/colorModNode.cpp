@@ -27,7 +27,7 @@ bool ColorModNode::updateLayout( ) {
 bool ColorModNode::readyNodeRunData( ) {
 	return true;
 }
-bool ColorModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ColorModNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;

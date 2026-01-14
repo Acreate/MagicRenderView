@@ -18,7 +18,7 @@ bool WriteFileTextNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort.size( );
 	if( count == 0 )

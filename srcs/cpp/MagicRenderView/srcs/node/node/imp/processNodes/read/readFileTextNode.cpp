@@ -20,7 +20,7 @@ bool ReadFileTextNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto &outputPorts = getRefPort( filePathInputPort );
 	size_t count = outputPorts.size( );
 	if( count == 0 )

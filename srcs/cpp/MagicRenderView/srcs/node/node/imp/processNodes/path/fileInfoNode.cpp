@@ -48,7 +48,7 @@ bool FileInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool FileInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool FileInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto outputPorts = getRefPort( filePtahInputPortPtr );
 	if( outputPorts.size( ) == 0 )
 		return true;

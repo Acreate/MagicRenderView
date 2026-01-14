@@ -19,7 +19,7 @@ bool ToImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool ToImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ToImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	*outVarPtr = QImage( );
 	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );

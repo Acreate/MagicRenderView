@@ -27,7 +27,7 @@ bool ColorAddToArrayNode::updateLayout( ) {
 bool ColorAddToArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool ColorAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ColorAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 
 	OutputPort *const*outputPortArray;

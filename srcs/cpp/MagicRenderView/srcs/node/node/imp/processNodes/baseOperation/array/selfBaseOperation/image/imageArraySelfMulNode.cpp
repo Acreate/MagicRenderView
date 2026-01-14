@@ -33,7 +33,7 @@ struct ImageDataInfo {
 	size_t height;
 
 };
-bool ImageArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ImageArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	OutputPort *const*outputPortArray;
 	size_t count;
 	size_t index;

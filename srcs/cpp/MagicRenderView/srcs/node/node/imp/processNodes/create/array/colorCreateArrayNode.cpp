@@ -21,7 +21,7 @@ bool ColorCreateArrayNode::updateLayout( ) {
 bool ColorCreateArrayNode::readyNodeRunData( ) {
 	return true;
 }
-bool ColorCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time ) {
+bool ColorCreateArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	return true;
 }
