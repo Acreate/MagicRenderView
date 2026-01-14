@@ -1,12 +1,16 @@
 ﻿#include "normalGenerateNodeMenu.h"
 
+#include "../../app/application.h"
+#include "../../director/printerDirector.h"
 #include "../../node/stack/baseNodeStack/baseNodeStack.h"
 #include "../../node/stack/contrlNodeStack/contrlNodeStack.h"
 #include "../../node/stack/dateTimeNodeStack/dateTimeNodeStack.h"
+#include "../../node/stack/debugNodeStack/debugNodeStack.h"
 #include "../../node/stack/fileNodeStack/fileNodeStack.h"
 #include "../../node/stack/imageNodeStack/imageNodeStack.h"
 #include "../../node/stack/stringNodeStack/stringNodeStack.h"
 #include "../../node/stack/systemNodeStack/systemNodeStack.h"
+#include "../../srack/srackInfo.h"
 #include "../../tools/path.h"
 
 void NormalGenerateNodeMenu::releaseObjResource( ) {
@@ -14,7 +18,8 @@ void NormalGenerateNodeMenu::releaseObjResource( ) {
 	if( createCount != 0 ) {
 		createIndex = 0;
 		for( ; createIndex < createCount; ++createIndex )
-			delete createArrayPtr[ createIndex ].first;
+			if( createArrayPtr[ createIndex ].first )
+				delete createArrayPtr[ createIndex ].first;
 		createVector.clear( );
 		createCount = 0;
 		createArrayPtr = nullptr;
@@ -37,6 +42,7 @@ NormalGenerateNodeMenu::NormalGenerateNodeMenu( ) : QMenu( ) {
 bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	releaseObjResource( );
 	// 这里加入节点窗口创建函数
+	appendCreateSubMenuAtNodeStack< DebugNodeStack >( );
 	appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
 	appendCreateSubMenuAtNodeStack< ContrlNodeStack >( );
 	appendCreateSubMenuAtNodeStack< DateTimeNodeStack >( );
@@ -126,9 +132,11 @@ bool NormalGenerateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &t
 			for( index = 0; index < node_create_stack_array_count; ++index )
 				if( node_create_stack_array_ptr[ index ].first == absolutePathName )
 					break;
-			if( index == node_create_stack_array_count )
-				return false;
-			appendCareateItem( parent_menu->addAction( name ), absolutePathName, node_create_stack_array_ptr[ index ].second );
+			if( index != node_create_stack_array_count )
+				appendCareateItem( parent_menu->addAction( name ), absolutePathName, node_create_stack_array_ptr[ index ].second );
+			else
+				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "无法匹配 [%1]" ).arg( absolutePathName ),Create_SrackInfo( ) );
+
 		} else
 			subPathTree.emplace_back( pathTreeSubPathTree[ subPathIndex ] );
 	for( auto &forreachPathTree : subPathTree ) {

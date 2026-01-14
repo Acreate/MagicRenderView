@@ -22,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "序列/追加/整数序列" ) );
+	Def_Extend_NodeTypeName( Node::tr( "序列/追加/二进制序列" ) );
 };
 #endif // BINADDTOARRAYNODE_H_H_HEAD__FILE__

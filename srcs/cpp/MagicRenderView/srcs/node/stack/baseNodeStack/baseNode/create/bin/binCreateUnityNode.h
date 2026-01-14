@@ -18,6 +18,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "创建/单元/整数" ) );
+	Def_Extend_NodeTypeName (Node::tr("创建/单元/二进制"  ));
 };
 #endif // BINCREATEUNITYNODE__H_H_HEAD__FILE__

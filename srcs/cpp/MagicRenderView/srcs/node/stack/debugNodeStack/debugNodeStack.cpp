@@ -1,7 +1,7 @@
 ﻿#include "debugNodeStack.h"
 
-#include "debugNodes/debug/debugInfoNode.h"
-#include "debugNodes/debug/previewImageNode.h"
+#include "debugNodes/outInfo/debugInfoNode.h"
+#include "debugNodes/view/previewImageNode.h"
 
 bool DebugNodeStack::init( ) {
 	if( NodeStack::init( ) == false )  // 释放主菜单
