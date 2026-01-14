@@ -383,6 +383,8 @@ Q_SIGNALS:
 	// 友元-提供子类
 protected:
 	virtual const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
+	virtual bool getRefPort( OutputPort *output_port, std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
+	virtual bool getRefPort( const OutputPort *output_port, const std::vector<InputPort *>::value_type *&result_data_ptr, size_t &result_data_count );
 	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
@@ -394,6 +396,8 @@ protected:
 	virtual bool setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr );
 
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
+	virtual bool getRefPort( InputPort *input_port, std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
+	virtual bool getRefPort(const InputPort *input_port,const std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );

@@ -556,6 +556,34 @@ void Node::paintEvent( QPaintEvent *event ) {
 const std::vector< InputPort * > & Node::getRefPort( const OutputPort *output_port ) {
 	return output_port->refInputPortVector;
 }
+bool Node::getRefPort( OutputPort *output_port, std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count ) {
+	if( output_port == nullptr )
+		return false;
+	result_data_count = output_port->refInputPortVector.size( );
+	result_data_ptr = output_port->refInputPortVector.data( );
+	return true;
+}
+bool Node::getRefPort( const OutputPort *output_port, const std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count ) {
+	if( output_port == nullptr )
+		return false;
+	result_data_count = output_port->refInputPortVector.size( );
+	result_data_ptr = output_port->refInputPortVector.data( );
+	return true;
+}
+bool Node::getRefPort( InputPort *input_port, std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count ) {
+	if( input_port == nullptr )
+		return false;
+	result_data_count = input_port->refOutputPortVector.size( );
+	result_data_ptr = input_port->refOutputPortVector.data( );
+	return true;
+}
+bool Node::getRefPort( const InputPort *input_port, const std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count ) {
+	if( input_port == nullptr )
+		return false;
+	result_data_count = input_port->refOutputPortVector.size( );
+	result_data_ptr = input_port->refOutputPortVector.data( );
+	return true;
+}
 bool Node::getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector ) {
 	size_t refInputPortCount;
 	InputPort **refInputPortArray;
