@@ -123,7 +123,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	for( ; builderIndex < builderNodeCount; ++builderIndex ) {
 		erroRefInputNode.clear( );
 		erroRefInputNode.clear( );
-
+		builderArrayPrr[ builderIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
 		refCount = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 		if( refCount != 0 ) {
 			refArrayPtr = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.data( );
@@ -169,6 +169,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	auto nodeDirector = appinstancePtr->getNodeDirector( );
 
 	for( refIndex = 0; refIndex < refCount; ++refIndex ) {
+		errorMapArray[ refIndex ].first->setNodeStyle( NodeEnum::NodeStyleType::Error );
 		nodeTypeName = errorMapArray[ refIndex ].first->toQString( );
 		appendErrorMsg = errorNodeMsgFormat.arg( refIndex ).arg( nodeTypeName );
 		builderNodeCount = errorMapArray[ refIndex ].second.first.size( );
