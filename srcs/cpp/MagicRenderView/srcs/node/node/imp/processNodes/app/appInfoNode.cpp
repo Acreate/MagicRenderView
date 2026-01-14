@@ -1,15 +1,14 @@
 ﻿#include "appInfoNode.h"
 
 #include <app/application.h>
+#include <cmake_include_to_c_cpp_header_env.h>
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
+#include <node/port/outputPort/unity/intOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QLibraryInfo>
 #include <QVersionNumber>
 #include <tools/infoTool.h>
-#include <cmake_include_to_c_cpp_header_env.h>
-
-#include "../../../../port/outputPort/unity/intOutputPort.h"
 
 AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;

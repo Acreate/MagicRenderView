@@ -129,23 +129,9 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		currentNode = builderNodeArrayPtr[ builderNodeIndex ];
 		nodeType = currentNode->getNodeType( );
 		switch( nodeType ) {
-			case NodeEnum::NodeType::InterFace :
-				return false; // 未知节点
-				break;
-			case NodeEnum::NodeType::Begin :
-				// 开始节点添加到建议节点序列
-				beginNodeVector.emplace_back( currentNode );
-				break;
-			case NodeEnum::NodeType::End :
-				endNodeVector.emplace_back( currentNode );
-				break;
-			case NodeEnum::NodeType::Generate :
 			case NodeEnum::NodeType::Jump :
 			case NodeEnum::NodeType::Logic :
 			case NodeEnum::NodeType::Process :
-			case NodeEnum::NodeType::Cache :
-			case NodeEnum::NodeType::Array :
-			case NodeEnum::NodeType::Unity :
 				outputRefNodeCount = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.size( );
 				if( outputRefNodeCount == 0 ) {
 					if( currentNode->inputPortVector.size( ) != 0 ) {
@@ -153,6 +139,8 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 						notRootNodeVector.emplace_back( currentNode );
 						break;
 					}
+					beginNodeVector.emplace_back( currentNode );
+					break;
 				}
 			case NodeEnum::NodeType::Point : // point 允许无根节点
 				processNodeVector.emplace_back( currentNode );
@@ -181,13 +169,16 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	runNodeVector.resize( processSize );
 	auto runNodeArrayPtr = runNodeVector.data( );
 	size_t runNodeIndex = 0;
+	auto beginCount = beginNodeVector.size( );
+	auto beginArray = beginNodeVector.data( );
+	size_t beginFindResult;
 	// 匹配依赖为 NodeEnum::NodeType::Begin 类型的节点
 	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
 		currentNode = buffNodeArrayPtr[ builderNodeIndex ];
 		outputRefNodeCount = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.size( );
 		outputRefNodeArray = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.data( );
 		for( outputRefNodeIndex = 0; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1 )
-			if( outputRefNodeArray[ outputRefNodeIndex ]->getNodeType( ) != NodeEnum::NodeType::Begin )
+			if( beginFindResult = 0, ArrayTools::findIndex( beginArray, beginCount, outputRefNodeArray[ outputRefNodeIndex ], beginFindResult ) == false )
 				break;
 		if( outputRefNodeIndex != outputRefNodeCount )
 			continue;
@@ -488,13 +479,8 @@ bool NodeRunInfo::filterToAdviseVector( ) {
 	adviseIndex = 0;
 	for( ; adviseIndex < count; adviseIndex += 1 ) {
 		currentNode = adviseArrayPtr[ adviseIndex ];
-		nodeType = currentNode->getNodeType( );
-		if( nodeType == NodeEnum::NodeType::End )
-			waiteEndNodeVector.emplace_back( currentNode );
-		else {
-			buffArrayPtr[ buffIndex ] = currentNode;
-			buffIndex += 1;
-		}
+		buffArrayPtr[ buffIndex ] = currentNode;
+		buffIndex += 1;
 	}
 	if( buffIndex != count )
 		adviseNodeVector = *buff;

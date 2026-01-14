@@ -11,6 +11,8 @@ class IfNode : public LogicNode {
 protected:
 	PointInputPort * pointInputPort;
 	AnyVarInputPort *ifResultPort;
+	AnyVarInputPort *trueInputPort;
+	AnyVarInputPort *falseInputPort;
 	AnyVarOutputPort *trueOutputPort;
 	AnyVarOutputPort *falseOutputPort;
 	std::vector< Node * > adviseNextVector;
@@ -24,7 +26,7 @@ public:
 	bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
-	Def_Extend_NodeTypeName( Node::tr( "逻辑/分支" ) );
+	Def_Extend_NodeTypeName( Node::tr( "控制/逻辑判定" ) );
 };
 
 #endif // IFNODE_H_H_HEAD__FILE__

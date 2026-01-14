@@ -1,7 +1,7 @@
 ﻿#ifndef WRITEFILETEXTNODE_H_H_HEAD__FILE__
 #define WRITEFILETEXTNODE_H_H_HEAD__FILE__
 
-#include "../../../processNode.h"
+#include <node/node/processNode.h>
 class StringInputPort;
 class WriteFileTextNode : public ProcessNode {
 	Q_OBJECT;
@@ -16,6 +16,6 @@ public:
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "单元/文件/写入/字符串" ) );
+	Def_Extend_NodeTypeName( Node::tr( "文件/写入/字符串" ) );
 };
 #endif // WRITEFILETEXTNODE_H_H_HEAD__FILE__

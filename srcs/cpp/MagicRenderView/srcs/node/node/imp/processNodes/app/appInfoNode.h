@@ -1,7 +1,7 @@
 ﻿#ifndef APPINFONODE_H_H_HEAD__FILE__
 #define APPINFONODE_H_H_HEAD__FILE__
 
-#include "../../../processNode.h"
+#include <node/node/processNode.h>
 
 class IntOutputPort;
 class DateTimeOutputPort;
@@ -32,6 +32,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "单元/软件/软件信息" ) );
+	Def_Extend_NodeTypeName( Node::tr( "生成/软件信息" ) );
 };
 #endif // APPINFONODE_H_H_HEAD__FILE__

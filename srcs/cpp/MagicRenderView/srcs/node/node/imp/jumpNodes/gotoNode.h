@@ -21,7 +21,7 @@ public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "跳转/跳转位置" ) );
+	Def_Extend_NodeTypeName( Node::tr( "控制/跳转" ) );
 };
 
 #endif // GOTONODE_H_H_HEAD__FILE__

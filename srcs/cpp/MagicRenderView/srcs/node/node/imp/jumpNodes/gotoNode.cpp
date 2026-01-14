@@ -1,6 +1,5 @@
 ﻿#include "gotoNode.h"
 
-#include "../../../port/inputPort/interface/interFaceInputPort.h"
 #include "../../../port/inputPort/point/pointInputPort.h"
 #include "../../../port/inputPort/toPoint/toPointInputPort.h"
 #include "../../../port/outputPort/outputPort.h"

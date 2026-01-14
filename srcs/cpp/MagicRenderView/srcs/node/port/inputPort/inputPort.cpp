@@ -48,10 +48,10 @@ void InputPort::clearOutputPortRef( ) {
 		emit dis_connect_input_port_signal( this, outputPort );
 		outputPort->eraseInputPortRef( this );
 	}
-	if( varPtr ) {
+	if( inputPortVarPtr ) {
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector )
-			varDirector->release( varPtr );
+			varDirector->release( inputPortVarPtr );
 	}
 }
 bool InputPort::bindPortInfo( ) {
@@ -76,7 +76,8 @@ bool InputPort::releasePortInfo( ) {
 InputPort::InputPort( const QString &name ) : portName( name ) {
 	generateCode = 0;
 	multiple = false;
-	varPtr = nullptr;
+	inputPortVarPtr = nullptr;
+	inputPortVarDirectorPtr = nullptr;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
 	ico->setPixmap( QPixmap::fromImage( image ) );
@@ -117,8 +118,8 @@ QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }
 VarDirector * InputPort::getVarDirector( ) const {
-	if( varDirectorPtr )
-		return varDirectorPtr;
+	if( inputPortVarDirectorPtr )
+		return inputPortVarDirectorPtr;
 	if( parentNode )
 		return parentNode->getVarDirector( );
 	return nullptr;

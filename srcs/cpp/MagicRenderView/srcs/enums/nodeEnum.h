@@ -28,28 +28,16 @@ namespace NodeEnum {
 	};
 	/// @brief 节点类型
 	enum class NodeType {
-		InterFace,
-		Begin,
-		End,
-		Generate,
 		Point,
 		Jump,
 		Logic,
-		Process,
-		Cache,
-		Array,
-		Unity,
+		Process
 	};
 	/// @brief 端口类型
 	enum class PortType {
-		InterFace,
-		Cache,
-		Generate,
 		Unity,
 		AnyVar,
 		Array,
-		ToBegin,
-		Begin,
 		Point,
 		ToPoint,
 	};

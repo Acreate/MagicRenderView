@@ -1,7 +1,7 @@
 ﻿#ifndef READFILEBINDATANODE_H_H_HEAD__FILE__
 #define READFILEBINDATANODE_H_H_HEAD__FILE__
 
-#include "../../../processNode.h"
+#include <node/node/processNode.h>
 class UIntOutputPort;
 class BinVectorOutputPort;
 class StringInputPort;
@@ -18,6 +18,6 @@ public:
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "单元/文件/读取/二进制" ) );
+	Def_Extend_NodeTypeName( Node::tr( "文件/读取/二进制" ) );
 };
 #endif // READFILEBINDATANODE_H_H_HEAD__FILE__

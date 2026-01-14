@@ -1,14 +1,10 @@
 ﻿#include "splitDataTimeNode.h"
 
 #include <director/varDirector.h>
-#include <node/port/inputPort/anyVar/anyVarInputPort.h>
-#include <node/port/outputPort/unity/dateTimeOutputPort.h>
-#include <node/port/outputPort/unity/stringOutputPort.h>
+#include <node/port/inputPort/unity/dateTimeInputPort.h>
+#include <node/port/outputPort/unity/dateOutputPort.h>
+#include <node/port/outputPort/unity/timeOutputPort.h>
 #include <tools/infoTool.h>
-
-#include "../../../../port/inputPort/unity/dateTimeInputPort.h"
-#include "../../../../port/outputPort/unity/dateOutputPort.h"
-#include "../../../../port/outputPort/unity/timeOutputPort.h"
 
 SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outDatePtr = nullptr;

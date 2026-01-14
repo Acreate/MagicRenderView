@@ -4,13 +4,6 @@
 
 #include "../app/application.h"
 #include "../node/node/node.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/begin/startNodeInfo/startNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/binGenerater/binGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/charGenerater/charGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/floatGenerater/floatGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/intGenerater/intGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/stringGenerater/stringGenerateNodeWidget.h"
-#include "../node/nodeInfoWidget/mainInfoWidget/generate/uIntGenerater/uIntGenerateNodeWidget.h"
 #include "../node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../widget/mainWidgetScrollArea.h"
 #include "../win/mainWindow.h"
@@ -127,14 +120,14 @@ bool NodeInfoEditorDirector::init( ) {
 	mainWindow = instancePtr->getMainWindow( );
 	mainWidgetScrollArea = mainWindow->getMainWidgetScrollArea( );
 	mainWidget = mainWindow->getMainWidget( );
-	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::Begin );
+	/*appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::Begin );
 	appendCreateWidget< StartNodeWidget >( NodeEnum::NodeType::End );
 	appendCreateWidget< IntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	appendCreateWidget< UIntGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	appendCreateWidget< FloatGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	appendCreateWidget< BinGenerateNodeWidget >( NodeEnum::NodeType::Generate );
 	appendCreateWidget< StringGenerateNodeWidget >( NodeEnum::NodeType::Generate );
-	appendCreateWidget< CharGenerateNodeWidget >( NodeEnum::NodeType::Generate );
+	appendCreateWidget< CharGenerateNodeWidget >( NodeEnum::NodeType::Generate );*/
 	return true;
 }
 void NodeInfoEditorDirector::appendEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {

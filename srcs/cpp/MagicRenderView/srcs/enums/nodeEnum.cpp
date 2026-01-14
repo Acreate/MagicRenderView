@@ -69,17 +69,10 @@ bool NodeEnum::converEnum( const QString &enum_string, NodeType &result_enum_typ
 	auto *varPtr = optional.operator->( );
 	result_enum_type_var = ( NodeType ) *varPtr;
 	switch( result_enum_type_var ) {
-		case NodeType::Begin :
-		case NodeType::End :
-		case NodeType::Generate :
 		case NodeType::Point :
 		case NodeType::Jump :
 		case NodeType::Logic :
-		case NodeType::InterFace :
 		case NodeType::Process :
-		case NodeType::Cache :
-		case NodeType::Array :
-		case NodeType::Unity :
 			break;
 		default :
 			return false;
@@ -140,12 +133,8 @@ bool NodeEnum::converEnum( const QString &enum_string, PortType &result_enum_typ
 	auto *varPtr = optional.operator->( );
 	result_enum_type_var = ( PortType ) *varPtr;
 	switch( result_enum_type_var ) {
-		case PortType::InterFace :
-		case PortType::Generate :
 		case PortType::Unity :
 		case PortType::Array :
-		case PortType::ToBegin :
-		case PortType::Begin :
 		case PortType::Point :
 		case PortType::ToPoint :
 		case PortType::AnyVar :
@@ -157,20 +146,8 @@ bool NodeEnum::converEnum( const QString &enum_string, PortType &result_enum_typ
 }
 bool NodeEnum::converQString( const PortType &enum_type_var, QString &result_enum_string ) {
 	switch( enum_type_var ) {
-		case PortType::InterFace :
-			result_enum_string = "InterFace";
-			break;
-		case PortType::Generate :
-			result_enum_string = "Generate";
-			break;
 		case PortType::Array :
 			result_enum_string = "Array";
-			break;
-		case PortType::ToBegin :
-			result_enum_string = "ToBegin";
-			break;
-		case PortType::Begin :
-			result_enum_string = "Begin";
 			break;
 		case PortType::Unity :
 			result_enum_string = "Unity";
@@ -292,15 +269,6 @@ bool NodeEnum::converQString( const CreateType &enum_type_var, QString &result_e
 }
 bool NodeEnum::converQString( const NodeType &enum_type_var, QString &result_enum_string ) {
 	switch( enum_type_var ) {
-		case NodeType::Begin :
-			result_enum_string = "Begin";
-			break;
-		case NodeType::End :
-			result_enum_string = "End";
-			break;
-		case NodeType::Generate :
-			result_enum_string = "Generate";
-			break;
 		case NodeType::Point :
 			result_enum_string = "Point";
 			break;
@@ -310,20 +278,8 @@ bool NodeEnum::converQString( const NodeType &enum_type_var, QString &result_enu
 		case NodeType::Logic :
 			result_enum_string = "Logic";
 			break;
-		case NodeType::InterFace :
-			result_enum_string = "InterFace";
-			break;
 		case NodeType::Process :
 			result_enum_string = "Process";
-			break;
-		case NodeType::Cache :
-			result_enum_string = "Cache";
-			break;
-		case NodeType::Array :
-			result_enum_string = "Array";
-			break;
-		case NodeType::Unity :
-			result_enum_string = "Unity";
 			break;
 		default :
 			return false;

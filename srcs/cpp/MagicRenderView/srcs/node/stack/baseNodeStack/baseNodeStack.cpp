@@ -1,125 +1,114 @@
 ﻿#include "baseNodeStack.h"
 
 #include <director/printerDirector.h>
+#include <node/node/imp/jumpNodes/gotoNode.h>
+#include <node/node/imp/logicNodes/ifNode.h>
+#include <node/node/imp/pointNodes/makeNode.h>
+#include <node/node/imp/processNodes/addObjToArray/charAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/colorAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/floatAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/imageAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/intAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/stringAddToArrayNode.h>
+#include <node/node/imp/processNodes/addObjToArray/uIntAddToArrayNode.h>
+#include <node/node/imp/processNodes/app/appInfoNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/color/colorArrayAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/color/colorArrayDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/color/colorArrayModNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/color/colorArrayMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/color/colorArraySubNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/float/floatArrayAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/float/floatArrayDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/float/floatArrayModNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/float/floatArrayMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/float/floatArraySubNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/image/imageArrayAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/image/imageArrayDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/image/imageArrayModNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/image/imageArrayMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/image/imageArraySubNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/int/intArrayAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/int/intArrayDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/int/intArrayModNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/int/intArrayMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/int/intArraySubNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/color/colorArraySelfAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/color/colorArraySelfMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/float/floatArraySelfAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/float/floatArraySelfMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/image/imageArraySelfAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/image/imageArraySelfMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/int/intArraySelfAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/int/intArraySelfMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/uint/uIntArraySelfAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/selfBaseOperation/uint/uIntArraySelfMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/uint/uIntArrayAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/uint/uIntArrayDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/uint/uIntArrayModNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/uint/uIntArrayMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/array/uint/uIntArraySubNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/color/colorAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/color/colorDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/color/colorModNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/color/colorMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/color/colorSubNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/float/floatAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/float/floatDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/float/floatModNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/float/floatMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/float/floatSubNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/image/imageAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/image/imageDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/image/imageModNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/image/imageMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/image/imageSubNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/int/intAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/int/intDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/int/intModNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/int/intMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/int/intSubNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/uint/uIntAddNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/uint/uIntDivNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/uint/uIntModNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/uint/uIntMulNode.h>
+#include <node/node/imp/processNodes/baseOperation/unity/uint/uIntSubNode.h>
+#include <node/node/imp/processNodes/conver/toBinNode.h>
+#include <node/node/imp/processNodes/conver/toCharNode.h>
+#include <node/node/imp/processNodes/conver/toColorNode.h>
+#include <node/node/imp/processNodes/conver/toDateTimeNode.h>
+#include <node/node/imp/processNodes/conver/toFloatNode.h>
+#include <node/node/imp/processNodes/conver/toImageNode.h>
+#include <node/node/imp/processNodes/conver/toIntNode.h>
+#include <node/node/imp/processNodes/conver/toStringNode.h>
+#include <node/node/imp/processNodes/conver/toUIntNode.h>
+#include <node/node/imp/processNodes/create/array/charCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/colorCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/floatCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/imageCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/intCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/stringCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/array/uIntCreateArrayNode.h>
+#include <node/node/imp/processNodes/create/unity/charCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/colorCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/floatCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/imageCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/intCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/stringCreateUnityNode.h>
+#include <node/node/imp/processNodes/create/unity/uIntCreateUnityNode.h>
+#include <node/node/imp/processNodes/dateTime/splitDataTimeNode.h>
+#include <node/node/imp/processNodes/debug/debugInfoNode.h>
+#include <node/node/imp/processNodes/debug/previewImageNode.h>
+#include <node/node/imp/processNodes/image/imageChannelNode.h>
+#include <node/node/imp/processNodes/image/imageInfoNode.h>
+#include <node/node/imp/processNodes/path/fileInfoNode.h>
+#include <node/node/imp/processNodes/path/systemPathInfo.h>
+#include <node/node/imp/processNodes/read/readFileBinDataNode.h>
+#include <node/node/imp/processNodes/read/readFileImageNode.h>
+#include <node/node/imp/processNodes/read/readFileTextNode.h>
+#include <node/node/imp/processNodes/write/writeFileBinDataNode.h>
+#include <node/node/imp/processNodes/write/writeFileImageNode.h>
+#include <node/node/imp/processNodes/write/writeFileTextNode.h>
 #include <QMenu>
-
-#include "../../node/imp/arrayNodes/addObjToArray/charAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/colorAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/floatAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/imageAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/intAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/stringAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/addObjToArray/uIntAddToArrayNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayAddNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayDivNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayModNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/color/colorArrayMulNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/color/colorArraySubNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayAddNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayDivNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayModNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/float/floatArrayMulNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/float/floatArraySubNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayAddNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayDivNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayModNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/image/imageArrayMulNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/image/imageArraySubNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/int/intArrayAddNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/int/intArrayDivNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/int/intArrayModNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/int/intArrayMulNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/int/intArraySubNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayAddNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayDivNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayModNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArrayMulNode.h"
-#include "../../node/imp/arrayNodes/baseOperation/uint/uIntArraySubNode.h"
-#include "../../node/imp/arrayNodes/create/charCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/colorCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/floatCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/imageCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/intCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/stringCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/create/uIntCreateArrayNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfAddNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/color/colorArraySelfMulNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfAddNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/float/floatArraySelfMulNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/image/imageArraySelfAddNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/image/imageArraySelfMulNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfAddNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/int/intArraySelfMulNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/uint/uIntArraySelfAddNode.h"
-#include "../../node/imp/arrayNodes/selfBaseOperation/uint/uIntArraySelfMulNode.h"
-#include "../../node/imp/beginNodes/startNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationCharArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationColorArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationFloatArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationImageArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationIntArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationStringArrayNode.h"
-#include "../../node/imp/cacheNode/combinationArray/conbinationUIntArrayNode.h"
-#include "../../node/imp/endNodes/resultNode.h"
-#include "../../node/imp/generateNodes/binGenerateNode.h"
-#include "../../node/imp/generateNodes/charGenerateNode.h"
-#include "../../node/imp/generateNodes/colorGenerateNode.h"
-#include "../../node/imp/generateNodes/floatGenerateNode.h"
-#include "../../node/imp/generateNodes/imageGenerateNode.h"
-#include "../../node/imp/generateNodes/intGenerateNode.h"
-#include "../../node/imp/generateNodes/stringGenerateNode.h"
-#include "../../node/imp/generateNodes/uIntGenerateNode.h"
-#include "../../node/imp/jumpNodes/gotoNode.h"
-#include "../../node/imp/logicNodes/ifNode.h"
-#include "../../node/imp/pointNodes/makeNode.h"
-#include "../../node/imp/processNodes/app/appInfoNode.h"
-#include "../../node/imp/processNodes/conver/toBinNode.h"
-#include "../../node/imp/processNodes/conver/toCharNode.h"
-#include "../../node/imp/processNodes/conver/toColorNode.h"
-#include "../../node/imp/processNodes/conver/toDateTimeNode.h"
-#include "../../node/imp/processNodes/conver/toFloatNode.h"
-#include "../../node/imp/processNodes/conver/toImageNode.h"
-#include "../../node/imp/processNodes/conver/toIntNode.h"
-#include "../../node/imp/processNodes/conver/toStringNode.h"
-#include "../../node/imp/processNodes/conver/toUIntNode.h"
-#include "../../node/imp/processNodes/dateTime/splitDataTimeNode.h"
-#include "../../node/imp/processNodes/debug/debugInfoNode.h"
-#include "../../node/imp/processNodes/debug/previewImageNode.h"
-#include "../../node/imp/processNodes/image/imageChannelNode.h"
-#include "../../node/imp/processNodes/image/imageInfoNode.h"
-#include "../../node/imp/processNodes/path/fileInfoNode.h"
-#include "../../node/imp/processNodes/path/systemPathInfo.h"
-#include "../../node/imp/processNodes/read/readFileBinDataNode.h"
-#include "../../node/imp/processNodes/read/readFileImageNode.h"
-#include "../../node/imp/processNodes/read/readFileTextNode.h"
-#include "../../node/imp/processNodes/write/writeFileBinDataNode.h"
-#include "../../node/imp/processNodes/write/writeFileImageNode.h"
-#include "../../node/imp/processNodes/write/writeFileTextNode.h"
-#include "../../node/imp/unityNode/baseOperation/color/colorAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/color/colorDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/color/colorModNode.h"
-#include "../../node/imp/unityNode/baseOperation/color/colorMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/color/colorSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatModNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/float/floatSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/image/imageAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/image/imageDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/image/imageModNode.h"
-#include "../../node/imp/unityNode/baseOperation/image/imageMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/image/imageSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intModNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/int/intSubNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntAddNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntDivNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntModNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntMulNode.h"
-#include "../../node/imp/unityNode/baseOperation/uint/uIntSubNode.h"
 
 #define emaplace_back_node( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
 bool BaseNodeStack::init( ) {
@@ -127,27 +116,7 @@ bool BaseNodeStack::init( ) {
 		return false;
 	QString name = tr( "基础节点" );
 	setObjectName( name );
-	// 开始
-	emaplace_back_node( StartNode );
-	// 结束返回
-	emaplace_back_node( ResultNode );
-	// 缓存
-	emaplace_back_node( ConbinationCharArrayNode );
-	emaplace_back_node( ConbinationStringArrayNode );
-	emaplace_back_node( ConbinationColorArrayNode );
-	emaplace_back_node( ConbinationImageArrayNode );
-	emaplace_back_node( ConbinationIntArrayNode );
-	emaplace_back_node( ConbinationUIntArrayNode );
-	emaplace_back_node( ConbinationFloatArrayNode );
-	// 生成
-	emaplace_back_node( BinGenerateNode );
-	emaplace_back_node( UIntGenerateNode );
-	emaplace_back_node( IntGenerateNode );
-	emaplace_back_node( FloatGenerateNode );
-	emaplace_back_node( CharGenerateNode );
-	emaplace_back_node( StringGenerateNode );
-	emaplace_back_node( ColorGenerateNode );
-	emaplace_back_node( ImageGenerateNode );
+
 	// 跳转
 	emaplace_back_node( GotoNode );
 	// 逻辑
@@ -245,7 +214,15 @@ bool BaseNodeStack::init( ) {
 	emaplace_back_node( IntCreateArrayNode );
 	emaplace_back_node( StringCreateArrayNode );
 	emaplace_back_node( UIntCreateArrayNode );
-	
+	// 生成单元
+	emaplace_back_node( CharCreateUnityNode );
+	emaplace_back_node( ColorCreateUnityNode );
+	emaplace_back_node( FloatCreateUnityNode );
+	emaplace_back_node( ImageCreateUnityNode );
+	emaplace_back_node( IntCreateUnityNode );
+	emaplace_back_node( StringCreateUnityNode );
+	emaplace_back_node( UIntCreateUnityNode );
+
 	// 文件
 	emaplace_back_node( WriteFileTextNode );
 	emaplace_back_node( WriteFileBinDataNode );

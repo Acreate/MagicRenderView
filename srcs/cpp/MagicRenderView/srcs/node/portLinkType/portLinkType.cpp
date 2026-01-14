@@ -31,24 +31,14 @@ bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_port ) {
 	auto inputPortType = input_port->getPortType( );
 	auto outputPortType = output_port->getPortType( );
-	// 接口类型可以任意链接
-	if( outputPortType == NodeEnum::PortType::InterFace || inputPortType == NodeEnum::PortType::InterFace )
-		return true;
 
-	// 输出端是开始，输入端是生成
-	if( outputPortType == NodeEnum::PortType::Begin && inputPortType == NodeEnum::PortType::Generate )
-		return true;
 	if( outputPortType == NodeEnum::PortType::AnyVar )
 		return true;
 	if( inputPortType == NodeEnum::PortType::AnyVar )
 		return true;
-	
-	// 不是缓冲节点
-	if( inputPortType != NodeEnum::PortType::Cache )
-		// 非生成输出节点
-		if( outputPortType != NodeEnum::PortType::Generate )
-			if( outputPortType != inputPortType )
-				return false; // 端口不匹配，返回 false
+
+	if( outputPortType != inputPortType )
+		return false; // 端口不匹配，返回 false
 
 	QString outputPortTypeName = output_port->getVarTypeName( );
 	QString inputPortTypeName = input_port->getVarTypeName( );

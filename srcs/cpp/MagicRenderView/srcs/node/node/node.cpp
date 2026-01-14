@@ -736,7 +736,7 @@ bool Node::setVarDirector( OutputPort *output_port, VarDirector *var_director ) 
 bool Node::setVarDirector( InputPort *input_port, VarDirector *var_director ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->varDirectorPtr = var_director;
+	input_port->inputPortVarDirectorPtr = var_director;
 	return true;
 }
 bool Node::getInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
@@ -759,8 +759,8 @@ bool Node::setInfo( OutputPort *output_port, VarDirector *var_director, void *va
 bool Node::setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
 	if( input_port )
 		return false;
-	input_port->varDirectorPtr = var_director;
-	input_port->varPtr = varPtr;
+	input_port->inputPortVarDirectorPtr = var_director;
+	input_port->inputPortVarPtr = varPtr;
 	return true;
 }
 bool Node::getVarDirector( InputPort *input_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
@@ -769,7 +769,7 @@ bool Node::getVarDirector( InputPort *input_port, VarDirector *&result_var_direc
 	result_var_director = input_port->getVarDirector( );
 	if( result_var_director == nullptr )
 		return false;
-	result_var_ptr = input_port->varPtr;
+	result_var_ptr = input_port->inputPortVarPtr;
 	return true;
 }
 bool Node::getInfo( InputPort *input_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
@@ -780,7 +780,7 @@ bool Node::getInfo( InputPort *input_port, Node *&result_input_port_node_parent,
 	if( result_input_port_node_parent == nullptr )
 		return false;
 	result_var_director = result_input_port_node_parent->varDirector;
-	result_var_ptr = input_port->varPtr;
+	result_var_ptr = input_port->inputPortVarPtr;
 	return true;
 }
 bool Node::setPortMultiple( InputPort *input_port, bool multiple ) {
@@ -792,7 +792,7 @@ bool Node::setPortMultiple( InputPort *input_port, bool multiple ) {
 bool Node::setPortVar( InputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->varPtr = new_par;
+	input_port->inputPortVarPtr = new_par;
 	return true;
 }
 bool Node::getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {
