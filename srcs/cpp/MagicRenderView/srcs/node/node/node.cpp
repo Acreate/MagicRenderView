@@ -14,7 +14,9 @@
 
 #include "../../tools/path.h"
 #include "../nodeInfo/nodeStyleTypePen.h"
+#include "../port/inputPort/dynamicTypeInputPort.h"
 #include "../port/inputPort/point/pointInputPort.h"
+#include "../port/outputPort/dynamicTypeOutputPort.h"
 
 bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
@@ -151,6 +153,48 @@ bool Node::appendOutputPort( OutputPort *output_port ) {
 	connect( output_port, &OutputPort::connect_output_port_signal, this, &Node::outputAddRef_Slot );
 	connect( output_port, &OutputPort::dis_connect_output_port_signal, this, &Node::outputDelRef_Slot );
 	return true;
+}
+bool Node::appendDynamicTypeInputPort( DynamicTypeInputPort *input_port ) {
+	return appendInputPort( input_port );
+}
+bool Node::appendDynamicTypeOutputPort( DynamicTypeOutputPort *output_port ) {
+	return appendOutputPort( output_port );
+}
+DynamicTypeInputPort * Node::createDynamicTypeInputPort( const NodeEnum::PortType &port_enum_type, const QString &input_port_name, const QString &input_port_var_name ) {
+	QString typeName;
+	if( varDirector == nullptr || varDirector->getTypeName( input_port_var_name, typeName ) == false )
+		return nullptr;
+	return new DynamicTypeInputPort( port_enum_type, input_port_name, typeName );
+}
+DynamicTypeInputPort * Node::createDynamicTypeInputPort( const NodeEnum::PortType &port_enum_type, const QString &input_port_name, const std::type_info &input_port_var_type_info ) {
+	QString typeName;
+	if( varDirector == nullptr || varDirector->getTypeName( input_port_var_type_info, typeName ) == false )
+		return nullptr;
+	return new DynamicTypeInputPort( port_enum_type, input_port_name, typeName );;
+}
+bool Node::releaseDynamicTypeInputPort( DynamicTypeInputPort *delete_dynamic_type_input_port ) {
+	if( delete_dynamic_type_input_port == nullptr )
+		return true;
+	delete delete_dynamic_type_input_port;
+	return true;
+}
+bool Node::releaseDynamicTypeOutputPort( DynamicTypeOutputPort *delete_dynamic_type_output_port ) {
+	if( delete_dynamic_type_output_port == nullptr )
+		return true;
+	delete delete_dynamic_type_output_port;
+	return true;
+}
+DynamicTypeOutputPort * Node::createDynamicTypeOutputPort( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, const QString &output_port_var_name ) {
+	QString typeName;
+	if( varDirector == nullptr || varDirector->getTypeName( output_port_var_name, typeName ) == false )
+		return nullptr;
+	return new DynamicTypeOutputPort( port_enum_type, output_port_name, typeName );
+}
+DynamicTypeOutputPort * Node::createDynamicTypeOutputPort( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, const type_info &output_port_var_type_info ) {
+	QString typeName;
+	if( varDirector == nullptr || varDirector->getTypeName( output_port_var_type_info, typeName ) == false )
+		return nullptr;
+	return new DynamicTypeOutputPort( port_enum_type, output_port_name, typeName );
 }
 void Node::setNodeTitleName( const QString &node_title_name ) {
 	nodeTitleName = node_title_name;
@@ -740,6 +784,12 @@ bool Node::setPortVar( OutputPort *output_port, void *new_par ) {
 	output_port->varPtr = new_par;
 	return true;
 }
+bool Node::setPortVar( DynamicTypeOutputPort *output_port, void *new_par ) {
+	if( output_port == nullptr )
+		return false;
+	output_port->varPtr = new_par;
+	return true;
+}
 bool Node::setPortMultiple( OutputPort *output_port, bool multiple ) {
 	if( output_port == nullptr )
 		return false;
@@ -818,6 +868,12 @@ bool Node::setPortMultiple( InputPort *input_port, bool multiple ) {
 	return true;
 }
 bool Node::setPortVar( InputPort *input_port, void *new_par ) {
+	if( input_port == nullptr )
+		return false;
+	input_port->inputPortVarPtr = new_par;
+	return true;
+}
+bool Node::setPortVar( DynamicTypeInputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
 	input_port->inputPortVarPtr = new_par;

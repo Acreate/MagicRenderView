@@ -34,10 +34,23 @@
 		return false
 
 #define Def_AppendBindVarOutputPortType( port_name_, port_ptr_ , bind_var_ptr_) \
-	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
-		return false; \
+	Def_AppendOutputPortType( port_name_, port_ptr_ ); \
 	Def_BindPortVar(port_ptr_, bind_var_ptr_)
 
+#define Def_AppendDynamicInputPortType(type_name_, port_type_, port_name_, port_ptr_ ) \
+	if( appendDynamicInputPortType< type_name_ >(port_type_, port_name_, port_ptr_ ) == false ) \
+		return false
+
+#define Def_AppendDynamicOutputPortType( type_name_, port_type_, port_name_, port_ptr_) \
+	if( appendDynamicOutputPortType<type_name_ >(port_type_,  port_name_, port_ptr_ ) == false ) \
+		return false
+
+#define Def_AppendDynamicBindVarOutputPortType(type_name_, port_type_, port_name_, port_ptr_ , bind_var_ptr_) \
+	Def_AppendDynamicOutputPortType( type_name_, port_type_, port_name_, port_ptr_); \
+	Def_BindPortVar(port_ptr_, bind_var_ptr_)
+
+class DynamicTypeOutputPort;
+class DynamicTypeInputPort;
 class NodeStyleTypePen;
 class MainWidget;
 class NodeInfoWidget;
@@ -234,6 +247,46 @@ private:
 	/// @param output_port 输出端口
 	/// @return 失败返回 false
 	virtual bool appendOutputPort( OutputPort *output_port );
+	/// @brief 增加一个输入端口
+	/// @param input_port 输入端
+	/// @return 失败返回 false
+	virtual bool appendDynamicTypeInputPort( DynamicTypeInputPort *input_port );
+	/// @brief 增加一个输出端口
+	/// @param output_port 输出端口
+	/// @return 失败返回 false
+	virtual bool appendDynamicTypeOutputPort( DynamicTypeOutputPort *output_port );
+	/// @brief 创建一个动态输入端口对象
+	/// @param port_enum_type 端口类型
+	/// @param input_port_name 端口名称
+	/// @param input_port_var_name 端口输入类型
+	/// @return 失败返回 nullptr
+	virtual DynamicTypeInputPort * createDynamicTypeInputPort( const NodeEnum::PortType &port_enum_type, const QString &input_port_name, const QString &input_port_var_name );
+	/// @brief 创建一个动态输入端口对象
+	/// @param port_enum_type 端口类型
+	/// @param input_port_name 端口名称
+	/// @param input_port_var_type_info 端口输入类型
+	/// @return 失败返回 nullptr
+	virtual DynamicTypeInputPort * createDynamicTypeInputPort( const NodeEnum::PortType &port_enum_type, const QString &input_port_name, const std::type_info &input_port_var_type_info );
+	/// @brief 释放一个动态输入端口对象
+	/// @param delete_dynamic_type_input_port 释放指针对象
+	/// @return 成功释放返回 true
+	virtual bool releaseDynamicTypeInputPort( DynamicTypeInputPort *delete_dynamic_type_input_port );
+	/// @brief 创建一个动态输出端口对象
+	/// @param port_enum_type 端口类型
+	/// @param output_port_name 端口名称 
+	/// @param output_port_var_name 端口输出类型
+	/// @return 失败返回 nullptr
+	virtual DynamicTypeOutputPort * createDynamicTypeOutputPort( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, const QString &output_port_var_name );
+	/// @brief 创建一个动态输出端口对象
+	/// @param port_enum_type 端口类型
+	/// @param output_port_name 端口名称 
+	/// @param output_port_var_type_info 端口输出类型
+	/// @return 失败返回 nullptr
+	virtual DynamicTypeOutputPort * createDynamicTypeOutputPort( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, const type_info &output_port_var_type_info );
+	/// @brief 释放一个动态输出端口对象
+	/// @param delete_dynamic_type_output_port 释放指针对象
+	/// @return 成功释放返回 true
+	virtual bool releaseDynamicTypeOutputPort( DynamicTypeOutputPort *delete_dynamic_type_output_port );
 protected:
 	template< typename TOutputPortType >
 		requires requires ( TOutputPortType *create_ptr, OutputPort *port ) {
@@ -263,23 +316,30 @@ protected:
 		return false;
 	}
 
-	template< typename TOutputPortType, typename TCreateBindVar >
-		requires requires ( TOutputPortType *create_ptr, OutputPort *port ) {
-			port = create_ptr;
-		}
-	bool appendOutputPortType( const QString &output_port_name, TOutputPortType *&result_output_port_ptr, TCreateBindVar *bind_port_var_ptr ) {
-		TOutputPortType *resultPortPtr = new TOutputPortType( output_port_name );
-		if( resultPortPtr == nullptr )
+	template< typename TCInputTypePort >
+	bool appendDynamicOutputPortType( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, DynamicTypeOutputPort *&result_output_port_ptr ) {
+		result_output_port_ptr = createDynamicTypeOutputPort( port_enum_type, output_port_name, typeid( TCInputTypePort ) );
+		if( result_output_port_ptr == nullptr )
 			return false;
-		if( appendOutputPort( resultPortPtr ) == true ) {
-			result_output_port_ptr = resultPortPtr;
-			if( setPortVar( resultPortPtr, bind_port_var_ptr ) == true )
-				return true;
+		if( appendDynamicTypeOutputPort( result_output_port_ptr ) == true )
 			return true;
-		}
-		delete resultPortPtr;
+		releaseDynamicTypeOutputPort( result_output_port_ptr );
 		return false;
 	}
+
+	template< typename TCInputTypePort, typename TCreateBindVar >
+	bool appendDynamicOutputPortType( const NodeEnum::PortType &port_enum_type, const QString &output_port_name, DynamicTypeOutputPort *&result_output_port_ptr, TCreateBindVar *bind_port_var_ptr ) {
+		result_output_port_ptr = createDynamicTypeOutputPort( port_enum_type, output_port_name, typeid( TCInputTypePort ) );
+		if( result_output_port_ptr == nullptr )
+			return false;
+		if( appendDynamicTypeOutputPort( result_output_port_ptr ) == true ) {
+			if( setPortVar( result_output_port_ptr, bind_port_var_ptr ) == true )
+				return true;
+		}
+		releaseDynamicTypeOutputPort( result_output_port_ptr );
+		return false;
+	}
+
 	template< typename TInputPortType >
 		requires requires ( TInputPortType *create_ptr, InputPort *port ) {
 			port = create_ptr;
@@ -320,6 +380,28 @@ protected:
 				return true;
 		}
 		delete resultPortPtr;
+		return false;
+	}
+	template< typename TCInputTypePort >
+	bool appendDynamicInputPortType( const NodeEnum::PortType &port_enum_type, const QString &port_name, DynamicTypeInputPort *&result_ptr ) {
+		result_ptr = createDynamicTypeInputPort( port_enum_type, port_name, typeid( TCInputTypePort ) );
+		if( result_ptr == nullptr )
+			return false;
+		if( appendDynamicTypeInputPort( result_ptr ) == true )
+			return true;
+		releaseDynamicTypeInputPort( result_ptr );
+		return false;
+	}
+	template< typename TCInputTypePort, typename TCreateBindVar >
+	bool appendDynamicInputPortType( const NodeEnum::PortType &port_enum_type, const QString &port_name, DynamicTypeInputPort *&result_ptr, TCreateBindVar *bind_port_var_ptr ) {
+		result_ptr = createDynamicTypeInputPort( port_enum_type, port_name, typeid( TCInputTypePort ) );
+		if( result_ptr == nullptr )
+			return false;
+		if( appendDynamicTypeInputPort( result_ptr ) == true ) {
+			if( setPortVar( result_ptr, bind_port_var_ptr ) == true )
+				return true;
+		}
+		releaseDynamicTypeInputPort( result_ptr );
 		return false;
 	}
 protected:
@@ -384,11 +466,12 @@ Q_SIGNALS:
 protected:
 	virtual const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
 	virtual bool getRefPort( OutputPort *output_port, std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPort( const OutputPort *output_port, const std::vector<InputPort *>::value_type *&result_data_ptr, size_t &result_data_count );
+	virtual bool getRefPort( const OutputPort *output_port, const std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
 	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( OutputPort *output_port, void *new_par );
+	virtual bool setPortVar( DynamicTypeOutputPort *output_port, void *new_par );
 	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
 	virtual bool getVarDirector( OutputPort *output_port, VarDirector * &result_var_director, void *&result_var_ptr );
 	virtual bool setVarDirector( OutputPort *output_port, VarDirector *var_director );
@@ -397,11 +480,12 @@ protected:
 
 	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
 	virtual bool getRefPort( InputPort *input_port, std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPort(const InputPort *input_port,const std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
+	virtual bool getRefPort( const InputPort *input_port, const std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool setPortVar( InputPort *input_port, void *new_par );
+	virtual bool setPortVar( DynamicTypeInputPort *input_port, void *new_par );
 	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
 	virtual bool setVarDirector( InputPort *input_port, VarDirector *var_director );
 	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr );

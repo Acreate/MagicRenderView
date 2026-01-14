@@ -1,6 +1,12 @@
 ﻿#include "normalGenerateNodeMenu.h"
 
 #include "../../node/stack/baseNodeStack/baseNodeStack.h"
+#include "../../node/stack/contrlNodeStack/contrlNodeStack.h"
+#include "../../node/stack/dateTimeNodeStack/dateTimeNodeStack.h"
+#include "../../node/stack/fileNodeStack/fileNodeStack.h"
+#include "../../node/stack/imageNodeStack/imageNodeStack.h"
+#include "../../node/stack/stringNodeStack/stringNodeStack.h"
+#include "../../node/stack/systemNodeStack/systemNodeStack.h"
 #include "../../tools/path.h"
 
 void NormalGenerateNodeMenu::releaseObjResource( ) {
@@ -32,6 +38,12 @@ bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	releaseObjResource( );
 	// 这里加入节点窗口创建函数
 	appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
+	appendCreateSubMenuAtNodeStack< ContrlNodeStack >( );
+	appendCreateSubMenuAtNodeStack< DateTimeNodeStack >( );
+	appendCreateSubMenuAtNodeStack< FileNodeStack >( );
+	appendCreateSubMenuAtNodeStack< ImageNodeStack >( );
+	appendCreateSubMenuAtNodeStack< StringNodeStack >( );
+	appendCreateSubMenuAtNodeStack< SystemNodeStack >( );
 	createCount = createVector.size( );
 	createArrayPtr = createVector.data( );
 	return createCount != 0;

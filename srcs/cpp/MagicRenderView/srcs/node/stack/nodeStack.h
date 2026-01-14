@@ -5,6 +5,8 @@
 
 #include "../../enums/nodeEnum.h"
 
+#define Def_EmaplaceBackNode( _Type) appendNodeGenerateUnity( _Type::getStaticNodeTypeName( ), [](const QString& node_name) { return new _Type( node_name ); }  )
+
 class VarDirector;
 class PrinterDirector;
 class Application;
