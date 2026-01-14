@@ -19,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "生成/序列/图像序列" ) );
+	Def_Extend_NodeTypeName( Node::tr( "创建/序列/图像序列" ) );
 };
 #endif // IMAGECREATEARRAYNODE_H_H_HEAD__FILE__

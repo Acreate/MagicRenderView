@@ -1,5 +1,5 @@
-﻿#ifndef file_mac_H_HEAD__FILE__
-#define file_mac_H_HEAD__FILE__
+﻿#ifndef IMAGECREATEUNITYNODE_H_H_HEAD__FILE__
+#define IMAGECREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
 class CharOutputPort;
@@ -18,6 +18,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "生成/单元/图像" ) );
+	Def_Extend_NodeTypeName( Node::tr( "创建/单元/图像" ) );
 };
-#endif // file_mac_H_HEAD__FILE__
+
+#endif // IMAGECREATEUNITYNODE_H_H_HEAD__FILE__

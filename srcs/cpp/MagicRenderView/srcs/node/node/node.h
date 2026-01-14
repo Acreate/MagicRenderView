@@ -9,7 +9,12 @@
 
 #include <define/nodeFrinedClass.h>
 
+/// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
+/// @param _Type_Name 名称
 #define Def_Interface_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
+
+/// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
+/// @param _Type_Name 名称
 #define Def_Extend_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 
 #define Def_BindPortVar( pro_var_ptr_, bind_var_ptr_) \

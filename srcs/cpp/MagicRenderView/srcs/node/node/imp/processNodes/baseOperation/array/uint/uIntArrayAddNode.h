@@ -23,7 +23,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "序列/运算/无符号整数/加法" ) );
+	Def_Extend_NodeTypeName( Node::tr( "运算/序列/无符号整数序列/加法" ) );
 };
 
 #endif // UINTARRAYADDNODE_H_H_HEAD__FILE__
