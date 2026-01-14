@@ -1,0 +1,193 @@
+﻿#include "infoStack.h"
+
+#include <app/application.h>
+
+#include <director/printerDirector.h>
+
+#include <tools/infoTool.h>
+
+#include "../srack/srackInfo.h"
+bool InfoStack::init( VarDirector *var_director ) {
+	size_t count = allVarPtrVector.size( );
+	if( count ) { // 删除旧的数据
+		if( deleteObjTypeFunction == nullptr ) {
+			Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" ), Create_SrackInfo( ) );
+			return false;
+		} else {
+			auto arrayPtr = allVarPtrVector.data( );
+			for( size_t index = 0; index < count; ++index )
+				if( nullptr == arrayPtr[ index ] )
+					break;
+				else if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+					Application::getInstancePtr( )->getPrinterDirector( )->error( QString( tr( "释放[ %1 ]对象失败" ) ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ), Create_SrackInfo( ) );
+			allVarPtrVector.clear( );
+		}
+	}
+	varDirector = var_director;
+	return true;
+}
+InfoStack::InfoStack( ) {
+	varDirector = nullptr;
+	newObjTypeFunction = nullptr;
+	deleteObjTypeFunction = nullptr;
+}
+InfoStack::~InfoStack( ) {
+
+	if( deleteObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" ), Create_SrackInfo( ) );
+	} else {
+		size_t count = allVarPtrVector.size( );
+		auto arrayPtr = allVarPtrVector.data( );
+		for( size_t index = 0; index < count; ++index )
+			if( nullptr == arrayPtr[ index ] )
+				break;
+			else if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+				Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "释放[ %1 ]对象失败" ).arg( QString::number( ( size_t ) arrayPtr[ index ], 16 ).toUpper( ) ), Create_SrackInfo( ) );
+		allVarPtrVector.clear( );
+	}
+
+}
+bool InfoStack::createTypePtr( void *&result_create_obj_ptr ) {
+	if( newObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "未初始化创建函数表达式，请初始化 newObjTypeFunction 函数指向调用" ), Create_SrackInfo( ) );
+		return false;
+	}
+	result_create_obj_ptr = newObjTypeFunction( );
+	if( result_create_obj_ptr == nullptr )
+		return false;
+	size_t count = allVarPtrVector.size( );
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( nullptr == arrayPtr[ index ] ) {
+			arrayPtr[ index ] = result_create_obj_ptr;
+			return arrayPtr[ index ];
+		}
+	allVarPtrVector.emplace_back( result_create_obj_ptr );
+	return true;
+}
+bool InfoStack::deleteTypePtr( const void *delete_obj_ptr ) {
+	if( deleteObjTypeFunction == nullptr ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->error( tr( "未初始化创建函数表达式，请初始化 deleteObjTypeFunction 函数指向调用" ), Create_SrackInfo( ) );
+		return false;
+	}
+	size_t count = allVarPtrVector.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( delete_obj_ptr == arrayPtr[ index ] ) {
+			if( deleteObjTypeFunction( arrayPtr[ index ] ) == false )
+				return false;
+			count -= 1;
+			for( ; index < count; ++index )
+				if( arrayPtr[ index ] == nullptr )
+					return true;
+				else
+					arrayPtr[ index ] = arrayPtr[ index + 1 ];
+			arrayPtr[ index ] = nullptr;
+			return true;
+		}
+	return false;
+}
+bool InfoStack::isTypeName( const QString &check_type_name ) const {
+	return check_type_name == typeName;
+}
+bool InfoStack::isAliasTypeNames( const QString &check_type_name ) const {
+	size_t count = aliasTypeNames.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = aliasTypeNames.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ] == check_type_name )
+			return true;
+	return false;
+}
+bool InfoStack::hasVarPtr( const void *check_obj_ptr ) const {
+	if( check_obj_ptr == nullptr )
+		return false;
+	size_t count = allVarPtrVector.size( );
+	if( count == 0 )
+		return false;
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count && arrayPtr[ index ] != nullptr; ++index )
+		if( arrayPtr[ index ] == check_obj_ptr )
+			return true;
+	return false;
+}
+uint64_t InfoStack::size( ) const {
+	size_t count = allVarPtrVector.size( );
+	if( count == 0 )
+		return 0;
+	auto arrayPtr = allVarPtrVector.data( );
+	for( size_t index = 0; index < count; ++index )
+		if( arrayPtr[ index ] == nullptr )
+			return index + 1;
+	return count;
+}
+void * const* InfoStack::arrayPtr( ) const {
+	return allVarPtrVector.data( );
+}
+void ** InfoStack::arrayPtr( ) {
+	return allVarPtrVector.data( );
+}
+
+bool InfoStack::toData( const void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
+	auto result_count = allVarPtrVector.size( );
+	if( result_count == 0 )
+		return false;
+	auto arrayPtr = allVarPtrVector.data( );
+	std::vector< uint8_t > buff;
+	for( size_t index = 0; index < result_count; ++index )
+		if( obj_start_ptr == arrayPtr[ index ] ) {
+			if( toVectorData( arrayPtr[ index ], buff ) == false )
+				return false;
+			if( getTypeNameAtData( result_data ) == false )
+				return false;
+			result_data.append_range( buff );
+			return true;
+		}
+	return false;
+}
+bool InfoStack::getTypeNameAtData( std::vector< uint8_t > &result_data ) {
+	return infoTool::fillTypeVarAtVector< QString >( &typeName, result_data );
+}
+bool InfoStack::getDataAtTypeName( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QString &result_type_name ) {
+	uint64_t converVar = *( uint64_t * ) source_ptr;
+	result_count = sizeof( uint64_t );
+	size_t mod = source_count - result_count;
+	if( mod < converVar )
+		return false;
+	auto offset = source_ptr + result_count;
+	size_t newSize = converVar / ( sizeof( QChar ) / sizeof( uint8_t ) );
+	result_type_name.resize( newSize );
+	auto data = ( uint8_t * ) result_type_name.data( );
+	size_t index = 0;
+	for( ; index < converVar; ++index )
+		data[ index ] = offset[ index ];
+	result_count = converVar + result_count;
+	return true;
+}
+bool operator==( const InfoStack &lhs, const InfoStack &rhs ) {
+	if( lhs.typeName == rhs.typeName )
+		return true;
+	size_t rightCount = rhs.aliasTypeNames.size( );
+	size_t leftCount = lhs.aliasTypeNames.size( );
+
+	auto rightArratPtr = rhs.aliasTypeNames.data( );
+	auto leftArratPtr = lhs.aliasTypeNames.data( );
+	size_t rightIndex = 0;
+	for( ; rightIndex < rightCount; ++rightIndex )
+		if( lhs.typeName == rightArratPtr[ rightIndex ] )
+			return true;
+	size_t leftIndex = 0;
+	for( ; leftIndex < leftCount; ++leftIndex )
+		if( rhs.typeName == leftArratPtr[ leftIndex ] )
+			return true;
+	if( leftCount == 0 || rightCount == 0 )
+		return false;
+	for( rightIndex = 0; rightIndex < rightCount; ++rightIndex )
+		for( leftIndex = 0; leftIndex < leftCount; ++leftIndex )
+			if( rightArratPtr[ rightIndex ] == leftArratPtr[ leftIndex ] )
+				return true;
+	return false;
+}
