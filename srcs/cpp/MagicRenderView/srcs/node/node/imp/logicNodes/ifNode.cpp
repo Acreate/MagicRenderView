@@ -7,11 +7,9 @@
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendInputPortType( tr( "判断" ), ifResultPort );
-		Def_AppendInputPortType( tr( "成立传递" ), trueInputPort );
-		Def_AppendInputPortType( tr( "失败传递" ), falseInputPort );
+		Def_AppendInputPortType( tr( "传递" ), channelInputPort );
 		Def_AppendInputPortType( tr( "定位" ), pointInputPort );
-		Def_AppendOutputPortType( tr( "成立" ), trueOutputPort );
-		Def_AppendOutputPortType( tr( "失败" ), falseOutputPort );
+		Def_AppendOutputPortType( tr( "传递" ), channelOutputPort );
 		return true;
 	};
 	return LogicNode::initEx( parent );
@@ -31,25 +29,24 @@ bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
+	adviseNextVector.clear( );
 	auto &outputPorts = getRefPort( ifResultPort );
 	size_t count = outputPorts.size( );
-	if( count == 0 ) {
-		adviseNextVector.clear( );
+	if( count == 0 )
 		return true;
-	}
 	OutputPort *outputPort = outputPorts.data( )[ 0 ];
 	auto varDirector = outputPort->getVarDirector( );
 	auto varPtr = outputPort->getVarPtr( );
 	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
-		varDirector = trueInputPort->getVarDirector( );
-		varPtr = trueInputPort->getVarPtr( );
-		getRefPortNodeVector( trueOutputPort, adviseNextVector );
-		setInfo( trueOutputPort, varDirector, varPtr );
-	} else {
-		varDirector = falseInputPort->getVarDirector( );
-		varPtr = falseInputPort->getVarPtr( );
-		getRefPortNodeVector( falseOutputPort, adviseNextVector );
-		setInfo( falseOutputPort, varDirector, varPtr );
+		auto &outputPorts = getRefPort( channelInputPort );
+		count = outputPorts.size( );
+		if( count == 0 )
+			return true;
+		outputPort = outputPorts.data( )[ 0 ];
+		varDirector = outputPort->getVarDirector( );
+		varPtr = outputPort->getVarPtr( );
+		getRefPortNodeVector( channelOutputPort, adviseNextVector );
+		setInfo( channelOutputPort, varDirector, varPtr );
 	}
 	return true;
 }

@@ -14,6 +14,7 @@
 NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
 	// 等待1秒执行下一个节点
 	waiteNextTime = 1000;
+	maxFrame = 60;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	clear( );

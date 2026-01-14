@@ -23,6 +23,8 @@ protected:
 	Application *appinstancePtr;
 	/// @brief 当前帧
 	size_t currentFrame;
+	/// @brief 最大帧
+	size_t maxFrame;
 	/// @brief 是否停止
 	bool isRunStop;
 	/// @brief 编译时间

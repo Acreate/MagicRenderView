@@ -11,10 +11,8 @@ class IfNode : public LogicNode {
 protected:
 	PointInputPort * pointInputPort;
 	AnyVarInputPort *ifResultPort;
-	AnyVarInputPort *trueInputPort;
-	AnyVarInputPort *falseInputPort;
-	AnyVarOutputPort *trueOutputPort;
-	AnyVarOutputPort *falseOutputPort;
+	AnyVarInputPort *channelInputPort;
+	AnyVarOutputPort *channelOutputPort;
 	std::vector< Node * > adviseNextVector;
 public:
 	IfNode( const QString &node_name )
