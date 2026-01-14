@@ -33,16 +33,17 @@ bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_p
 	auto outputPortType = output_port->getPortType( );
 
 	if( outputPortType == NodeEnum::PortType::AnyVar )
-		return true;
+		if( inputPortType == NodeEnum::PortType::Unity || inputPortType == NodeEnum::PortType::Array )
+			return true;
 	if( inputPortType == NodeEnum::PortType::AnyVar )
-		return true;
+		if( outputPortType == NodeEnum::PortType::Unity || outputPortType == NodeEnum::PortType::Array )
+			return true;
 
 	if( outputPortType != inputPortType )
 		return false; // 端口不匹配，返回 false
 
 	QString outputPortTypeName = output_port->getVarTypeName( );
 	QString inputPortTypeName = input_port->getVarTypeName( );
-
 	// 类型不匹配，返回 false
 	if( outputPortTypeName != inputPortTypeName )
 		return false;

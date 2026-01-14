@@ -9,6 +9,7 @@ CharCreateUnityNode::CharCreateUnityNode( const QString &node_name ) : ProcessNo
 bool CharCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		*outputVarPtr = '\0';
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -22,6 +23,5 @@ bool CharCreateUnityNode::readyNodeRunData( ) {
 	return true;
 }
 bool CharCreateUnityNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	*outputVarPtr = '\0';
 	return true;
 }

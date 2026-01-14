@@ -9,6 +9,7 @@ ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : Process
 bool ColorCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		*outputVarPtr = QColor( 0, 0, 0, 255 );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -22,6 +23,5 @@ bool ColorCreateUnityNode::readyNodeRunData( ) {
 	return true;
 }
 bool ColorCreateUnityNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	*outputVarPtr = '\0';
 	return true;
 }

@@ -6,7 +6,7 @@ class CharOutputPort;
 class StringCreateUnityNode : public ProcessNode {
 	Q_OBJECT;
 private:
-	using NodeType = uint64_t;
+	using NodeType = QString;
 protected:
 	CharOutputPort *outputPort;
 	NodeType *outputVarPtr;
@@ -18,7 +18,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "生成/单元/无符号整数" ) );
+	Def_Extend_NodeTypeName( Node::tr( "生成/单元/字符串" ) );
 };
 
 #endif // STRINGCREATEUNITYNODE_H_H_HEAD__FILE__

@@ -3,12 +3,13 @@
 
 #include "../../jumpNode.h"
 
+class AnyVarInputPort;
 class PointInputPort;
 class ToPointInputPort;
 class GotoNode : public JumpNode {
 	Q_OBJECT;
 protected:
-	PointInputPort *pointInputPort;
+	AnyVarInputPort *pointInputPort;
 	ToPointInputPort *toPointInputPort;
 public:
 	GotoNode( const QString &node_name )

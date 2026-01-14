@@ -111,149 +111,79 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	auto builderNodeCount = builderNodeVector.size( );
 	if( builderNodeCount == 0 )
 		return false;
-	// 保存结束节点
-	std::vector< Node * > endNodeVector;
-	// 保存流程节点
-	std::vector< Node * > processNodeVector;
-	Node *currentNode;
-	size_t outputRefNodeCount;
-	size_t outputRefNodeIndex;
-	size_t builderNodeIndex;
-	Node **outputRefNodeArray;
-	std::vector< Node * > notRootNodeVector;
-	NodeEnum::NodeType nodeType;
-	auto builderNodeArrayPtr = builderNodeVector.data( );
-	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
-		currentNode = builderNodeArrayPtr[ builderNodeIndex ];
-		nodeType = currentNode->getNodeType( );
-		switch( nodeType ) {
-			case NodeEnum::NodeType::Jump :
-			case NodeEnum::NodeType::Logic :
-			case NodeEnum::NodeType::Process :
-				outputRefNodeCount = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.size( );
-				if( outputRefNodeCount == 0 ) {
-					if( currentNode->inputPortVector.size( ) != 0 ) {
-						// 无根节点
-						notRootNodeVector.emplace_back( currentNode );
-						break;
-					}
-					beginNodeVector.emplace_back( currentNode );
-					break;
-				}
-			case NodeEnum::NodeType::Point : // point 允许无根节点
-				processNodeVector.emplace_back( currentNode );
-				break;
-		}
+	std::vector< std::pair< Node *, std::pair< std::vector< Node * >, std::vector< Node * > > > > erroNode;
+	std::vector< Node * > erroRefInputNode;
+	std::vector< Node * > erroRefOutputNode;
+	auto builderArrayPrr = builderNodeVector.data( );
+	size_t builderIndex = 0;
+	size_t findNodeIndex = 0;
+	size_t refCount;
+	size_t refIndex;
+	Node **refArrayPtr;
+	for( ; builderIndex < builderNodeCount; ++builderIndex ) {
+		erroRefInputNode.clear( );
+		erroRefInputNode.clear( );
 
-	}
-	if( beginNodeVector.size( ) == 0 ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( builderNodeArrayPtr, builderNodeCount );
-		QString form( "未发现开始节点(NodeEnum::NodeType::Begin):\n\t%1" );
-		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
-		return false;
-	}
-	if( notRootNodeVector.size( ) != 0 ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( notRootNodeVector );
-		QString form( "发现无根节点:\n\t%1" );
-		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
-		return false;
-	}
-	// 流程节点大小
-	size_t processSize = processNodeVector.size( );
-	// 排序对象
-	auto buffNodeArrayPtr = processNodeVector.data( );
-	std::vector< Node * > runNodeVector( processSize );
-	auto runNodeArrayPtr = runNodeVector.data( );
-	size_t runNodeIndex = 0;
-	auto beginCount = beginNodeVector.size( );
-	auto beginArray = beginNodeVector.data( );
-	size_t beginFindResult;
-	// 匹配依赖为 NodeEnum::NodeType::Begin 类型的节点
-	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
-		currentNode = buffNodeArrayPtr[ builderNodeIndex ];
-		outputRefNodeCount = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.size( );
-		outputRefNodeArray = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.data( );
-		for( outputRefNodeIndex = 0; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1 )
-			if( beginFindResult = 0, ArrayTools::findIndex( beginArray, beginCount, outputRefNodeArray[ outputRefNodeIndex ], beginFindResult ) == false )
-				break;
-		if( outputRefNodeIndex != outputRefNodeCount )
-			continue;
-		runNodeArrayPtr[ runNodeIndex ] = currentNode;
-		runNodeIndex += 1;
-		buffNodeArrayPtr[ builderNodeIndex ] = nullptr;
-	}
-	if( runNodeIndex == 0 ) {
-		Application *instancePtr = Application::getInstancePtr( );
-		auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( builderNodeArrayPtr, builderNodeCount );
-		QString form( "未发现开始节点(NodeEnum::NodeType::Begin)依赖输出节点:\n\t%1" );
-		instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
-		return false;
-	}
-	ArrayTools::sortNullptr( buffNodeArrayPtr, processSize );
-	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 )
-		if( buffNodeArrayPtr[ builderNodeIndex ] == nullptr )
-			break; // 最大下标
-	processSize = builderNodeIndex; // 重置大小
-	size_t runNodeCount;
-	// 开始正式排序内容
-	do {
-		for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 ) {
-			currentNode = buffNodeArrayPtr[ builderNodeIndex ];
-			outputRefNodeCount = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.size( );
-			outputRefNodeArray = currentNode->otherNodeOutputPortRefThisNodeInputPortVector.data( );
-			outputRefNodeIndex = 0, runNodeCount = 0;
-			for( ; outputRefNodeIndex < outputRefNodeCount; outputRefNodeIndex += 1, runNodeCount = 0 )
-				if( ArrayTools::findIndex( runNodeArrayPtr, runNodeIndex, outputRefNodeArray[ outputRefNodeIndex ], runNodeCount ) == false )
-					break;
-			if( outputRefNodeIndex != outputRefNodeCount )
+		refCount = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.size( );
+		if( refCount != 0 ) {
+			refArrayPtr = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.data( );
+			for( refIndex = 0, findNodeIndex = 0; refIndex < refCount; ++refIndex, findNodeIndex = 0 )
+				if( ArrayTools::findIndex( builderArrayPrr, builderNodeCount, refArrayPtr[ refIndex ], findNodeIndex ) == false )
+					erroRefOutputNode.emplace_back( refArrayPtr[ refIndex ] );
+		}
+		auto nodeType = builderArrayPrr[ builderIndex ]->getNodeType( );
+		// 定点节点
+		if( nodeType == NodeEnum::NodeType::Point ) {
+			if( erroRefOutputNode.size( ) == 0 )
 				continue;
-			runNodeArrayPtr[ runNodeIndex ] = currentNode;
-			runNodeIndex += 1;
-			buffNodeArrayPtr[ builderNodeIndex ] = nullptr;
+			erroNode.emplace_back( std::pair( builderArrayPrr[ builderIndex ], std::pair( erroRefInputNode, erroRefOutputNode ) ) );
+			continue;
 		}
-		ArrayTools::sortNullptr( buffNodeArrayPtr, processSize );
-		for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 )
-			if( buffNodeArrayPtr[ builderNodeIndex ] == nullptr )
-				break; // 最大下标
-		if( builderNodeIndex == 0 )
-			break;// 不需要排序
-		if( processSize == builderNodeIndex ) {
-			Application *instancePtr = Application::getInstancePtr( );
-			auto arrayToString = instancePtr->getNodeDirector( )->nodeArrayToString( buffNodeArrayPtr, processSize );
-			QString form( "发现未知依赖节点:\n\t%1" );
-			instancePtr->getPrinterDirector( )->info( form.arg( arrayToString ), Create_SrackInfo( ) );
-			return false;
+		refCount = builderArrayPrr[ builderIndex ]->otherNodeOutputPortRefThisNodeInputPortVector.size( );
+		if( refCount != 0 ) {
+			refArrayPtr = builderArrayPrr[ builderIndex ]->otherNodeOutputPortRefThisNodeInputPortVector.data( );
+			for( refIndex = 0, findNodeIndex = 0; refIndex < refCount; ++refIndex, findNodeIndex = 0 )
+				if( ArrayTools::findIndex( builderArrayPrr, builderNodeCount, refArrayPtr[ refIndex ], findNodeIndex ) == false )
+					erroRefInputNode.emplace_back( refArrayPtr[ refIndex ] );
 		}
-		processSize = builderNodeIndex; // 重置大小
-	} while( true );
-	// 拷贝数据
-	processNodeVector = runNodeVector;
-	processSize = runNodeIndex;
-	// 开始节点大小
-	size_t beginSize = beginNodeVector.size( );
-	// 结束节点大小
-	size_t endSize = endNodeVector.size( );
-	// 排序节点所有
-	runNodeCount = beginSize + processSize + endSize;
-	runNodeVector.resize( runNodeCount );
-	runNodeArrayPtr = runNodeVector.data( );
-	buffNodeArrayPtr = beginNodeVector.data( );
-	// 添加开始列表
-	for( builderNodeIndex = 0; builderNodeIndex < beginSize; builderNodeIndex += 1 )
-		runNodeArrayPtr[ builderNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
-	// 添加流程列表
-	buffNodeArrayPtr = processNodeVector.data( );
-	runNodeIndex = beginSize;
-	for( builderNodeIndex = 0; builderNodeIndex < processSize; builderNodeIndex += 1 )
-		runNodeArrayPtr[ builderNodeIndex + runNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
-	// 添加结束列表
-	buffNodeArrayPtr = endNodeVector.data( );
-	runNodeIndex = runNodeIndex + processSize;
-	for( builderNodeIndex = 0; builderNodeIndex < endSize; builderNodeIndex += 1 )
-		runNodeArrayPtr[ builderNodeIndex + runNodeIndex ] = buffNodeArrayPtr[ builderNodeIndex ];
-	return true;
+		// 如果存在错误列表，则存储到错误信息
+		if( erroRefInputNode.size( ) != 0 || erroRefOutputNode.size( ) != 0 )
+			erroNode.emplace_back( std::pair( builderArrayPrr[ builderIndex ], std::pair( erroRefInputNode, erroRefOutputNode ) ) );
+		else if( refCount == 0 )
+			// 输入依赖为 0，则放入开始列表
+			beginNodeVector.emplace_back( builderArrayPrr[ builderIndex ] );
+	}
+
+	refCount = erroNode.size( );
+	if( refCount == 0 )
+		// 没有错误信息，则返回 true
+		return true;
+	// 输出错误信息
+	auto errorMapArray = erroNode.data( );
+	QString nodeTypeName;
+	QStringList errorMsgList;
+	QString appendErrorMsg;
+	QString errorNodeMsgFormat( tr( "[%1] 发现错误节点->%2" ) );
+	QString errorRefInMsgFormat( tr( "\n\t缺少输入依赖 : \n\t%1" ) );
+	QString errorRefOutMsgFormat( tr( "\n\t缺少输出依赖 : \n\t%1" ) );
+	auto nodeDirector = appinstancePtr->getNodeDirector( );
+
+	for( refIndex = 0; refIndex < refCount; ++refIndex ) {
+		nodeTypeName = errorMapArray[ refIndex ].first->toQString( );
+		appendErrorMsg = errorNodeMsgFormat.arg( refIndex ).arg( nodeTypeName );
+		builderNodeCount = errorMapArray[ refIndex ].second.first.size( );
+		if( builderNodeCount )
+			appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.first ) );
+		builderNodeCount = errorMapArray[ refIndex ].second.second.size( );
+		if( builderNodeCount )
+			appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.second ) );
+		errorMsgList.append( appendErrorMsg );
+	}
+	appendErrorMsg = errorMsgList.join( "\n-----\n" );
+	auto printerDirector = appinstancePtr->getPrinterDirector( );
+	printerDirector->info( appendErrorMsg,Create_SrackInfo( ) );
+	// 错误返回 false
+	return false;
 }
 bool NodeRunInfo::isNextRunNode( Node *check_next_node ) {
 	Node **overNodeArrayPtr;
@@ -321,6 +251,17 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	Node **overRunArray;
 	size_t overRunCount;
 	size_t findResultIndex;
+	// 匹配开始节点
+	findNodeArrayCount = beginNodeVector.size( );
+	findNodeArrayPtr = adviseNodeVector.data( );
+	for( findNodeArrayIndex = 0; findNodeArrayIndex < findNodeArrayCount; findNodeArrayIndex += 1 )
+		if( findNodeArrayPtr[ findNodeArrayIndex ] == nullptr )
+			continue;
+		else if( isNextRunNode( findNodeArrayPtr[ findNodeArrayIndex ] ) == true ) {
+			result_run_node = findNodeArrayPtr[ findNodeArrayIndex ];
+			return true;
+		}
+	findNodeArrayCount = beginNodeVector.size( );
 	findNodeArrayCount = adviseNodeVector.size( );
 	// 建议列表存在时，遍历建议列表，并且从中获取一个可运行节点
 	if( findNodeArrayCount != 0 ) {
