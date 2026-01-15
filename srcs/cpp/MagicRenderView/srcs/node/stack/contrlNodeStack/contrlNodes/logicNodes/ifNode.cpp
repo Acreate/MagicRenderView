@@ -6,6 +6,8 @@
 
 #include <tools/varDirectorTools.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
@@ -27,29 +29,29 @@ bool IfNode::readyNodeRunData( ) {
 	return true;
 }
 bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector, size_t current_frame ) {
-	bool resultBool = getRefPortNodeVector( ifResultPort, result_need_run_ref_node_vector );
+	bool resultBool = nodeToolsPtr->getRefPortNodeVector( ifResultPort, result_need_run_ref_node_vector );
 	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	adviseNextVector.clear( );
-	auto &outputPorts = getRefPort( ifResultPort );
-	size_t count = outputPorts.size( );
+	auto outputPorts = nodeToolsPtr->getRefPort( ifResultPort );
+	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;
-	OutputPort *outputPort = outputPorts.data( )[ 0 ];
+	OutputPort *outputPort = outputPorts->data( )[ 0 ];
 	auto varDirector = outputPort->getVarDirector( );
 	auto varPtr = outputPort->getVarPtr( );
 	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
-		auto &outputPorts = getRefPort( channelInputPort );
-		count = outputPorts.size( );
+		outputPorts = nodeToolsPtr->getRefPort( channelInputPort );
+		count = outputPorts->size( );
 		if( count == 0 )
 			return true;
-		outputPort = outputPorts.data( )[ 0 ];
+		outputPort = outputPorts->data( )[ 0 ];
 		varDirector = outputPort->getVarDirector( );
 		varPtr = outputPort->getVarPtr( );
-		getRefPortNodeVector( channelOutputPort, adviseNextVector );
-		setInfo( channelOutputPort, varDirector, varPtr );
+		nodeToolsPtr->getRefPortNodeVector( channelOutputPort, adviseNextVector );
+		nodeToolsPtr->setInfo( channelOutputPort, varDirector, varPtr );
 	}
 	return true;
 }

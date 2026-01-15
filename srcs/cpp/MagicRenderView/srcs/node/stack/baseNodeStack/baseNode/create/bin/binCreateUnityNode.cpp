@@ -1,6 +1,7 @@
 ﻿#include "binCreateUnityNode.h"
 
 #include <director/varDirector.h>
+#include <node/nodeTools/nodeTools.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
 BinCreateUnityNode::BinCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {

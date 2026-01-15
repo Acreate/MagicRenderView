@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 IntCreateUnityNode::IntCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -4,6 +4,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/inputPort/unity/intInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
@@ -30,5 +31,31 @@ bool StringFindIndexStartSubStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringFindIndexStartSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	auto outputPorts = nodeToolsPtr->getRefPort( stringInputPortPtr );
+	size_t count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	auto outputPort = outputPorts->data( )[ 0 ];
+	auto varDirector = outputPort->getVarDirector( );
+	if( varDirector == nullptr )
+		return true;
+	auto varPtr = outputPort->getVarPtr( );
+	QString *orgString;
+	if( varDirector->cast_ptr( varPtr, orgString ) == false )
+		return true;
+
+	outputPorts = nodeToolsPtr->getRefPort( findTargetSubStringInputPortPtr );
+	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	outputPort = outputPorts->data( )[ 0 ];
+	varDirector = outputPort->getVarDirector( );
+	if( varDirector == nullptr )
+		return true;
+	varPtr = outputPort->getVarPtr( );
+	QString *findString;
+	if( varDirector->cast_ptr( varPtr, findString ) == false )
+		return true;
+	*outputVarPtr = orgString->indexOf( *findString );
 	return true;
 }

@@ -1,5 +1,6 @@
 ﻿#include "floatCreateArrayNode.h"
 
+#include <node/nodeTools/nodeTools.h>
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 FloatCreateArrayNode::FloatCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {

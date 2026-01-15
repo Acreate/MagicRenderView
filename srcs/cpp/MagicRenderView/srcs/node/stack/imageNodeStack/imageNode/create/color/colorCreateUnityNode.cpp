@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

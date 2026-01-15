@@ -2,6 +2,8 @@
 
 #include <director/varDirector.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ImageToGrayscaleNode::ImageToGrayscaleNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outImagePtr = nullptr;
 }

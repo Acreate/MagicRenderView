@@ -5,6 +5,7 @@
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../../tools/path.h"
+#include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/outputPort.h"
 bool WriteFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -19,15 +20,12 @@ bool WriteFileTextNode::updateLayout( ) {
 }
 
 bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto &wirteFileRefPort = getRefPort( writeFilePathPort );
-	size_t count = wirteFileRefPort.size( );
+	auto wirteFileRefPort = nodeToolsPtr->getRefPort( writeFilePathPort );
+	size_t count = wirteFileRefPort->size( );
 	if( count == 0 )
 		return true;
-	auto &writeBinRefPorts = getRefPort( writeTextPort );
-	count = writeBinRefPorts.size( );
-	if( count == 0 )
-		return true;
-	auto wrietFilePathPort = wirteFileRefPort.data( )[ 0 ];
+	auto wrietFilePathPort = wirteFileRefPort->data( )[ 0 ];
+
 	auto varDirector = wrietFilePathPort->getVarDirector( );
 	auto varPtr = wrietFilePathPort->getVarPtr( );
 	QString *filePath;
@@ -35,9 +33,14 @@ bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 		return true;
 	if( path::createFile( *filePath ) == false )
 		return true;
-	auto wrietBinVector = writeBinRefPorts.data( )[ 0 ];
-	varDirector = wrietBinVector->getVarDirector( );
-	varPtr = wrietBinVector->getVarPtr( );
+
+	wirteFileRefPort = nodeToolsPtr->getRefPort( writeTextPort );
+	count = wirteFileRefPort->size( );
+	if( count == 0 )
+		return true;
+	wrietFilePathPort = wirteFileRefPort->data( )[ 0 ];
+	varDirector = wrietFilePathPort->getVarDirector( );
+	varPtr = wrietFilePathPort->getVarPtr( );
 	QString *data;
 	if( varDirector->cast_ptr( varPtr, data ) == false )
 		return true;

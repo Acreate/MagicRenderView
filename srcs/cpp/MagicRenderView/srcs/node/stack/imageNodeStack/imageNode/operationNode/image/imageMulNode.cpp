@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/imageOutputPort.h>
 #include <tools/imageTools.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ImageMulNode::ImageMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -32,7 +34,7 @@ bool ImageMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size
 	NodeType *converInt;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -42,7 +44,7 @@ bool ImageMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = &getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

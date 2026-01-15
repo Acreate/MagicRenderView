@@ -11,6 +11,8 @@
 #include <QVersionNumber>
 #include <tools/infoTool.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;
 	appPathVarPtr = nullptr;

@@ -7,6 +7,7 @@
 #include <node/port/inputPort/unity/imageInputPort.h>
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 
 ImageChannelNode::ImageChannelNode( const QString &node_name ) : ProcessNode( node_name ) {
 	redOutVectorVarPtr = nullptr;

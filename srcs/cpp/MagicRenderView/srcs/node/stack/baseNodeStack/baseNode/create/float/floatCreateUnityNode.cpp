@@ -2,6 +2,7 @@
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
+#include <node/nodeTools/nodeTools.h>
 
 FloatCreateUnityNode::FloatCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;

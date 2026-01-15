@@ -4,6 +4,7 @@
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
+#include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/unity/stringOutputPort.h"
 ReadFileTextNode::ReadFileTextNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outTextPtr = nullptr;
@@ -21,11 +22,11 @@ bool ReadFileTextNode::updateLayout( ) {
 }
 
 bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto &outputPorts = getRefPort( filePathInputPort );
-	size_t count = outputPorts.size( );
+	auto outputPorts = nodeToolsPtr->getRefPort( filePathInputPort );
+	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPorts.data( );
+	auto outputPortArrayPtr = outputPorts->data( );
 	auto varDirector = outputPortArrayPtr[ 0 ]->getVarDirector( );
 	auto varPtr = outputPortArrayPtr[ 0 ]->getVarPtr( );
 	QString *resultFilePth;

@@ -5,6 +5,7 @@
 #include <srack/srackInfo.h>
 
 #include "../../../../../director/varDirector.h"
+#include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/unity/imageInputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
 

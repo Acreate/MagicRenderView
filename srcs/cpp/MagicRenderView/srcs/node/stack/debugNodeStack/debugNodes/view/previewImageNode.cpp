@@ -5,10 +5,12 @@
 
 #include <node/port/inputPort/unity/imageInputPort.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 bool PreviewImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendInputPortType( tr( "预览图像" ), imageInputPortPtr );
-		setPortMultiple( imageInputPortPtr, true );
+		nodeToolsPtr->setPortMultiple( imageInputPortPtr, true );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

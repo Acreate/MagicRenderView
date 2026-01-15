@@ -6,6 +6,8 @@
 
 #include <tools/imageTools.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ImageArraySelfAddNode::ImageArraySelfAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -38,7 +40,7 @@ bool ImageArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

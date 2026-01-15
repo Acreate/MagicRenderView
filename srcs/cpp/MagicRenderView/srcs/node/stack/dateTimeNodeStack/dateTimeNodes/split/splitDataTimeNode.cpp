@@ -6,6 +6,8 @@
 #include <node/port/outputPort/unity/timeOutputPort.h>
 #include <tools/infoTool.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outDatePtr = nullptr;
 	outTimePtr = nullptr;
@@ -24,11 +26,11 @@ bool SplitDataTimeNode::updateLayout( ) {
 }
 
 bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = getRefPort( dateTimeInputPortPtr );
-	size_t count = outputPorts.size( );
+	auto outputPorts = nodeToolsPtr->getRefPort( dateTimeInputPortPtr );
+	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;
-	auto outputPort = outputPorts.data( )[ 0 ];
+	auto outputPort = outputPorts->data( )[ 0 ];
 	auto varDirector = outputPort->getVarDirector( );
 	if( varDirector == nullptr )
 		return true;

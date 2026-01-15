@@ -4,6 +4,8 @@
 #include <node/port/inputPort/array/uIntVectorInputPort.h>
 #include <node/port/outputPort/unity/uIntOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 UIntArraySelfAddNode::UIntArraySelfAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -31,7 +33,7 @@ bool UIntArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_ti
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

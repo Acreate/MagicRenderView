@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 UIntCreateArrayNode::UIntCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

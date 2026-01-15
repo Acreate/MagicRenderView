@@ -4,6 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
+#include <node/nodeTools/nodeTools.h>
 ToBinNode::ToBinNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBinNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -19,11 +20,11 @@ bool ToBinNode::updateLayout( ) {
 
 bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = 0;
-	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
-	size_t count = outputPortsPtr.size( );
+	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPortsPtr.data( );
+	auto outputPortArrayPtr = outputPortsPtr->data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
 	auto nodeDirector = outputPortPtr->getVarDirector( );
 	auto varPtr = outputPortPtr->getVarPtr( );

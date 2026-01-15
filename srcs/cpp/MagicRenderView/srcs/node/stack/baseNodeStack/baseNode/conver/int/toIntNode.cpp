@@ -1,5 +1,6 @@
 ﻿#include "toIntNode.h"
 
+#include <node/nodeTools/nodeTools.h>
 #include <director/varDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
@@ -20,11 +21,11 @@ bool ToIntNode::updateLayout( ) {
 bool ToIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	*outVarPtr = 0;
-	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
-	size_t count = outputPortsPtr.size( );
+	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPortsPtr.data( );
+	auto outputPortArrayPtr = outputPortsPtr->data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );

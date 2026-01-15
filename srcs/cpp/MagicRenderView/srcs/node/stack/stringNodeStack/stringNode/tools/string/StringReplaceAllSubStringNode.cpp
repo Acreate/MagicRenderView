@@ -4,6 +4,8 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 StringReplaceAllSubStringNode::StringReplaceAllSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

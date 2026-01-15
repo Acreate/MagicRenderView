@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/imageOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

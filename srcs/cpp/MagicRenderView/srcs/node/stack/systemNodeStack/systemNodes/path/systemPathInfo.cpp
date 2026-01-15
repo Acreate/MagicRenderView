@@ -9,6 +9,7 @@
 #include <tools/infoTool.h>
 
 #include "../../../../../director/varDirector.h"
+#include "../../../../nodeTools/nodeTools.h"
 
 bool SystemPathInfo::oldClassInit( ) {
 	Def_AppendBindVarOutputPortType( tr( "当前用户桌面路径" ), desktopPathOutputPortPtr, desktopPathPtr );

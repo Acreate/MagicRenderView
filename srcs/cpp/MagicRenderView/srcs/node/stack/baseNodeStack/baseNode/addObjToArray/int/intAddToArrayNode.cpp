@@ -5,6 +5,7 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
+#include <node/nodeTools/nodeTools.h>
 IntAddToArrayNode::IntAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -13,7 +14,7 @@ bool IntAddToArrayNode::initEx( MainWidget *parent ) {
 		Def_AppendInputPortType( tr( "整数序列" ), firstInputPort );
 		Def_AppendInputPortType( tr( "整数" ), secondInputPort );
 		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
-		if( setPortMultiple( secondInputPort, true ) == false )
+		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -36,11 +37,11 @@ bool IntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = getRefPort( firstInputPort );
-	count = refPort.size( );
+	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	count = refPort->size(  );
 	if( count == 0 )
 		return true;
-	auto outputPort = refPort.data( )[ 0 ];
+	auto outputPort = refPort->data( )[ 0 ];
 	varDirector = outputPort->getVarDirector( );
 	if( varDirector == nullptr )
 		return true;
@@ -49,12 +50,12 @@ bool IntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	if( varDirector->cast_ptr( portVarPtr, conver ) == false )
 		return true;
 	*outputVarPtr = *conver;
-	
-	const std::vector< OutputPort * > &outputPorts = getRefPort( secondInputPort );
-	count = outputPorts.size( );
+
+	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	count = refPort->size( );
 	if( count == 0 )
 		return true;
-	outputPortArray = outputPorts.data( );
+	outputPortArray = refPort->data( );
 	for( index = 0; index < count; index += 1 ) {
 		portVarPtr = outputPortArray[ index ]->getVarPtr( );
 		varDirector = outputPortArray[ index ]->getVarDirector( );

@@ -22,7 +22,7 @@
 		varDirector->release( bind_var_ptr_ );\
 	if( varDirector->create( bind_var_ptr_ ) == false )\
 		return false;\
-	if( setPortVar( pro_var_ptr_, bind_var_ptr_ ) == false )\
+	if( nodeToolsPtr->setPortVar( pro_var_ptr_, bind_var_ptr_ ) == false )\
 		return false
 
 #define Def_AppendInputPortType( port_name_, port_ptr_ ) \
@@ -69,6 +69,8 @@ class Node : public QWidget {
 	Q_OBJECT;
 	NodeFrinedClass( );
 protected:
+	/// @brief 节点工具指针对象
+	NodeTools* nodeToolsPtr;
 	uint64_t generateCode;
 	/// @brief app 实例
 	Application *instancePtr;
@@ -462,35 +464,7 @@ Q_SIGNALS:
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息
 	void finish_run_node_signal( Node *finish_node, const SrackInfo &srack_info );
-	// 友元-提供子类
-protected:
-	virtual const std::vector< InputPort * > & getRefPort( const OutputPort *output_port );
-	virtual bool getRefPort( OutputPort *output_port, std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPort( const OutputPort *output_port, const std::vector< InputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
-	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	virtual bool setPortVar( OutputPort *output_port, void *new_par );
-	virtual bool setPortVar( DynamicTypeOutputPort *output_port, void *new_par );
-	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
-	virtual bool getVarDirector( OutputPort *output_port, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool setVarDirector( OutputPort *output_port, VarDirector *var_director );
-	virtual bool getInfo( OutputPort *output_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr );
-
-	const std::vector< OutputPort * > & getRefPort( const InputPort *input_port );
-	virtual bool getRefPort( InputPort *input_port, std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPort( const InputPort *input_port, const std::vector< OutputPort * >::value_type *&result_data_ptr, size_t &result_data_count );
-	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
-	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	virtual bool getFilterNotRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
-	virtual bool setPortVar( InputPort *input_port, void *new_par );
-	virtual bool setPortVar( DynamicTypeInputPort *input_port, void *new_par );
-	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
-	virtual bool setVarDirector( InputPort *input_port, VarDirector *var_director );
-	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool getInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr );
+	
 };
 
 #endif // NODE_H_H_HEAD__FILE__

@@ -3,6 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 
 StringRemoveAllSubStringNode::StringRemoveAllSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {

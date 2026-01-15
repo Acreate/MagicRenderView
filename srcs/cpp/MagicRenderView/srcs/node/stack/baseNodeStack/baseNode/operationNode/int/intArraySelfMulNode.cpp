@@ -5,6 +5,8 @@
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 IntArraySelfMulNode::IntArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -32,7 +34,7 @@ bool IntArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

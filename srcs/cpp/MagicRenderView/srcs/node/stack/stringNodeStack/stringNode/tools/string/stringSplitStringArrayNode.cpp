@@ -4,6 +4,7 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/outputPort/array/stringVectorOutputPort.h"
 
 StringSplitStringArrayNode::StringSplitStringArrayNode( const QString &node_name ) : ProcessNode( node_name ) {

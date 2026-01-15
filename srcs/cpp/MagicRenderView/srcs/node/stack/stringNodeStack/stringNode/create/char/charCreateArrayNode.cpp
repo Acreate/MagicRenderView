@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/charVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 CharCreateArrayNode::CharCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

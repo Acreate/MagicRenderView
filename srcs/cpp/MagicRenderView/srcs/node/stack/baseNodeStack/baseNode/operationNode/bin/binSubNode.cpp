@@ -4,12 +4,14 @@
 #include <node/port/inputPort/unity/binInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 BinSubNode::BinSubNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool BinSubNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
+
 		Def_AppendInputPortType( tr( "二进制" ), firstInputPort );
 		Def_AppendInputPortType( tr( "二进制" ), secondInputPort );
 		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
@@ -32,7 +34,7 @@ bool BinSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t
 	NodeType *converInt;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -42,7 +44,7 @@ bool BinSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = &getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

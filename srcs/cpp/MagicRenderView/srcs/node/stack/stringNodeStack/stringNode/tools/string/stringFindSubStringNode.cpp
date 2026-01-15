@@ -4,6 +4,8 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 StringFindSubStringNode::StringFindSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

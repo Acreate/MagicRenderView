@@ -4,6 +4,8 @@
 #include <node/port/inputPort/unity/binInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 BinAddNode::BinAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -26,13 +28,13 @@ bool BinAddNode::readyNodeRunData( ) {
 	return true;
 }
 bool BinAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	
+
 	OutputPort *const*outputPortArray;
 	size_t count;
 	NodeType *converInt;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	auto outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -42,7 +44,7 @@ bool BinAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = &getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

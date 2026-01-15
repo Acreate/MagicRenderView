@@ -2,6 +2,7 @@
 
 #include <director/varDirector.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/outputPort/array/charVectorOutputPort.h"
 
@@ -21,11 +22,11 @@ bool StringConverToCharArrayNode::updateLayout( ) {
 
 bool StringConverToCharArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
-	auto outputPortsPtr = getRefPort( stringInputPortPtr );
-	size_t count = outputPortsPtr.size( );
+	auto outputPortsPtr = nodeToolsPtr->getRefPort( stringInputPortPtr );
+	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPortsPtr.data( );
+	auto outputPortArrayPtr = outputPortsPtr->data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );

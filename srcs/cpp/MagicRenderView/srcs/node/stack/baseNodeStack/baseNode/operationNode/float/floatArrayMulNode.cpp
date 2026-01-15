@@ -5,6 +5,8 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 FloatArrayMulNode::FloatArrayMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -36,7 +38,7 @@ bool FloatArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts =nodeToolsPtr->getRefPort( firstInputPort );
 	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )
@@ -47,7 +49,7 @@ bool FloatArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	if( varDirector == nullptr || varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = &getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
 	if( count == 0 )

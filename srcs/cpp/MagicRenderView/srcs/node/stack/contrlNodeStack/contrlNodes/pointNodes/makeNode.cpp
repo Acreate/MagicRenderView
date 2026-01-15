@@ -3,6 +3,8 @@
 #include <node/port/outputPort/point/pointOutputPort.h>
 #include <node/port/outputPort/toPoint/toPointOutputPort.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 bool MakeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
@@ -25,5 +27,5 @@ bool MakeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t c
 	return true;
 }
 bool MakeNode::fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	return getFilterNotRefPortNodeVector( nextNode, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
+	return nodeToolsPtr->getFilterNotRefPortNodeVector( nextNode, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
 }

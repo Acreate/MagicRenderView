@@ -7,10 +7,12 @@
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
 
+#include "../../../../nodeTools/nodeTools.h"
+
 bool DebugInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendInputPortType( tr( "输出" ), inputBugPort );
-		setPortMultiple( inputBugPort, true );
+		nodeToolsPtr->setPortMultiple( inputBugPort, true );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -20,8 +22,8 @@ bool DebugInfoNode::updateLayout( ) {
 }
 
 bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = getRefPort( inputBugPort );
-	size_t count = outputPorts.size( );
+	auto outputPorts = nodeToolsPtr->getRefPort( inputBugPort );
+	size_t count = outputPorts->size( );
 	size_t index = 0;
 	OutputPort **outputPortArrayPtr;
 	VarDirector *varDirectorPtr;
@@ -33,7 +35,7 @@ bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, siz
 	if( count ) {
 		instance = Application::getInstancePtr( );
 		printerDirectorPtr = instance->getPrinterDirector( );
-		outputPortArrayPtr = outputPorts.data( );
+		outputPortArrayPtr = outputPorts->data( );
 		for( ; index < count; ++index ) {
 			parentNodePtr = outputPortArrayPtr[ index ]->getParentNode( );
 			if( parentNodePtr ) {

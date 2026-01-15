@@ -4,6 +4,7 @@
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
+#include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../../../port/outputPort/unity/imageOutputPort.h"
 ReadFileImageNode::ReadFileImageNode( const QString &node_name ) : ProcessNode( node_name ) {
@@ -23,11 +24,11 @@ bool ReadFileImageNode::updateLayout( ) {
 
 bool ReadFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
-	auto &outputPorts = getRefPort( filePathPort );
-	size_t count = outputPorts.size( );
+	auto outputPorts = nodeToolsPtr->getRefPort( filePathPort );
+	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPorts.data( );
+	auto outputPortArrayPtr = outputPorts->data( );
 	auto varDirector = outputPortArrayPtr[ 0 ]->getVarDirector( );
 	auto varPtr = outputPortArrayPtr[ 0 ]->getVarPtr( );
 	QString *resultFilePth;

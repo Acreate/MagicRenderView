@@ -4,6 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/charOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/inputPort/array/charVectorInputPort.h"
 #include "../../../../../port/outputPort/unity/stringOutputPort.h"
 
@@ -22,11 +23,11 @@ bool CharArrayConverToStringNode::updateLayout( ) {
 
 bool CharArrayConverToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
-	auto outputPortsPtr = getRefPort( charVectorInputPortPtr );
-	size_t count = outputPortsPtr.size( );
+	auto outputPortsPtr = nodeToolsPtr->getRefPort( charVectorInputPortPtr );
+	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPortsPtr.data( );
+	auto outputPortArrayPtr = outputPortsPtr->data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );

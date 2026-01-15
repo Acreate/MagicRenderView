@@ -7,6 +7,7 @@
 
 #include <tools/imageTools.h>
 
+#include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
 
 ToDateTimeNode::ToDateTimeNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
@@ -24,11 +25,11 @@ bool ToDateTimeNode::updateLayout( ) {
 
 bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = QDateTime::fromMSecsSinceEpoch( 0 );
-	auto outputPortsPtr = getRefPort( anyVarInputPortPtr );
-	size_t count = outputPortsPtr.size( );
+	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;
-	auto outputPortArrayPtr = outputPortsPtr.data( );
+	auto outputPortArrayPtr = outputPortsPtr->data( );
 	OutputPort *outputPortPtr = outputPortArrayPtr[ 0 ];
 	auto parentNodePtr = outputPortPtr->getParentNode( );
 	auto varDirectorPtr = parentNodePtr->getVarDirector( );

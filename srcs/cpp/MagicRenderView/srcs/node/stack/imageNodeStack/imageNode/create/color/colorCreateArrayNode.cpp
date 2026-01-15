@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ColorCreateArrayNode::ColorCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

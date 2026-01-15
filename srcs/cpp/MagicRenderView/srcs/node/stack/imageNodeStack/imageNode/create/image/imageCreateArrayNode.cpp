@@ -3,6 +3,8 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/imageVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 ImageCreateArrayNode::ImageCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -5,6 +5,8 @@
 #include <node/port/inputPort/unity/uIntInputPort.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
+#include "../../../../../nodeTools/nodeTools.h"
+
 UIntArraySubNode::UIntArraySubNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -35,7 +37,7 @@ bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = &getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )
@@ -46,7 +48,7 @@ bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = &getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
 	if( count == 0 )

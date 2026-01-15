@@ -2,6 +2,7 @@
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/binVectorOutputPort.h>
+#include <node/nodeTools/nodeTools.h>
 
 BinCreateArrayNode::BinCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
