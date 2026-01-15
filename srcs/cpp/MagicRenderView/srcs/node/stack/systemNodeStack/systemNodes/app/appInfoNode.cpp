@@ -6,6 +6,7 @@
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
+#include <QDir>
 #include <QLibraryInfo>
 #include <QVersionNumber>
 #include <tools/infoTool.h>
@@ -18,11 +19,13 @@ AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) 
 	versionVarPtr = nullptr;
 	appStartTimeVarPtr = nullptr;
 	isShared = nullptr;
+	sep = nullptr;
 }
 bool AppInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		Def_AppendBindVarOutputPortType( tr( "名称" ), appNameOutputPort, appNameVarPtr );
 		Def_AppendBindVarOutputPortType( tr( "路径" ), appPathOutputPort, appPathVarPtr );
+		Def_AppendBindVarOutputPortType( tr( "路径分隔符" ), pathSepOutputPort, sep );
 		Def_AppendBindVarOutputPortType( tr( "启动时间" ), appStartTimeOutputPort, appStartTimeVarPtr );
 		Def_AppendBindVarOutputPortType( tr( "编译时间" ), builderTimeOutputPort, builderTimeVarPtr );
 		Def_AppendBindVarOutputPortType( tr( "编译工具" ), builderToolOutputPort, builderToolVarPtr );
@@ -51,5 +54,6 @@ bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_
 	*versionVarPtr = tr( "%1.%2.%3" ).arg( versionNumber.majorVersion( ) ).arg( versionNumber.minorVersion( ) ).arg( versionNumber.microVersion( ) );
 	*appStartTimeVarPtr = *instancePtr->getAppInitRunDataTime( );
 	*isShared = QLibraryInfo::isSharedBuild( );
+	*sep = QDir::separator( );
 	return true;
 }

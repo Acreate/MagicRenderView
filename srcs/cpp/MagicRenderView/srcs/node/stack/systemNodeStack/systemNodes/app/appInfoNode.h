@@ -16,6 +16,7 @@ protected:
 	DateTimeOutputPort *builderTimeOutputPort;
 	StringOutputPort *builderToolOutputPort;
 	StringOutputPort *versionOutputPort;
+	StringOutputPort *pathSepOutputPort;
 	IntOutputPort *isSharedOutputPort;
 	QString * appNameVarPtr;
 	QString * appPathVarPtr;
@@ -23,6 +24,7 @@ protected:
 	QDateTime * appStartTimeVarPtr;
 	QString * builderToolVarPtr;
 	QString * versionVarPtr;
+	QString * sep;
 	int64_t * isShared;
 public:
 	AppInfoNode( const QString &node_name );
