@@ -1,20 +1,16 @@
 ﻿#include "fileInfoNode.h"
 
 #include <app/application.h>
-#include <director/printerDirector.h>
-#include <node/port/inputPort/anyVar/anyVarInputPort.h>
+#include <director/varDirector.h>
+#include <node/nodeTools/nodeTools.h>
+#include <node/port/inputPort/unity/stringInputPort.h>
+#include <node/port/outputPort/unity/dateTimeOutputPort.h>
+#include <node/port/outputPort/unity/intOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
+#include <node/port/outputPort/unity/uIntOutputPort.h>
 #include <QDir>
 #include <qfileinfo.h>
-#include <srack/srackInfo.h>
 #include <tools/infoTool.h>
-
-#include "../../../../../director/varDirector.h"
-#include "../../../../nodeTools/nodeTools.h"
-#include "../../../../port/inputPort/unity/stringInputPort.h"
-#include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
-#include "../../../../port/outputPort/unity/intOutputPort.h"
-#include "../../../../port/outputPort/unity/uIntOutputPort.h"
 
 FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outFilePtahPtr = nullptr;
@@ -27,6 +23,7 @@ FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name 
 	outIsOnlyReadPtr = nullptr;
 	outIsExisPtr = nullptr;
 	outLastReadTimePtr = nullptr;
+	outisFilePtr = nullptr;
 }
 bool FileInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -41,6 +38,7 @@ bool FileInfoNode::initEx( MainWidget *parent ) {
 		Def_AppendBindVarOutputPortType( tr( "大小" ), fileSizeOutputPortPtr, outFileSizePtr );
 		Def_AppendBindVarOutputPortType( tr( "只读" ), isOnlyReadOutputPortPtr, outIsOnlyReadPtr );
 		Def_AppendBindVarOutputPortType( tr( "存在" ), isExisOutputPortPtr, outIsExisPtr );
+		Def_AppendBindVarOutputPortType( tr( "是否为文件" ), isFileOutputPortPtr, outisFilePtr );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -82,5 +80,9 @@ bool FileInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size
 	*outCreateTimePtr = fileInfo.birthTime( );
 	*outLastChangeTimePtr = fileInfo.lastModified( );
 	*outLastReadTimePtr = fileInfo.lastRead( );
+	if( fileInfo.isDir( ) )
+		*outisFilePtr = false;
+	else
+		*outisFilePtr = true;
 	return true;
 }

@@ -75,7 +75,7 @@ bool path::pathTree::appSubPath( const QString &sub_file_path ) {
 	}
 	return true;
 }
-QString path::pathTree::toQString( const size_t index, const QChar fill_char ) const {
+QString path::pathTree::toQString( size_t index, QChar fill_char ) const {
 	QString tabChar( index, fill_char );
 	QString result = tabChar + name;
 	size_t currentCount = subPath.size( );
@@ -230,5 +230,70 @@ bool path::getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &re
 			return false;
 		dir = result_file_info.dir( );
 	} while( true );
+	return false;
+}
+bool path::getOnPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
+	QDir info( get_path );
+	if( info.exists( ) == false )
+		return false;
+	auto entryInfoList = info.entryInfoList( QDir::NoDotAndDotDot );
+	qsizetype count = entryInfoList.size( );
+	auto entryInfoArray = entryInfoList.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( entryInfoArray[ index ].isFile( ) )
+			result_file_path_vector.emplace_back( entryInfoArray[ index ].absoluteFilePath( ) );
+		else
+			result_dir_path_vector.emplace_back( entryInfoArray[ index ].absoluteFilePath( ) );
+	return true;
+}
+bool path::getInPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
+	// 遍历指向
+	std::vector< QString > *freachPtr;
+	// 子目录指向
+	std::vector< QString > *subContrlPtr;
+	// 指向交换存储的临时指向
+	std::vector< QString > *temp;
+	// 返回目录
+	std::vector< QString > dirPathVector;
+	// 返回文件
+	std::vector< QString > filePathVector;
+	// 存储遍历目录
+	std::vector< QString > findSubPath;
+	// 存储下一次遍历目录
+	std::vector< QString > nextFindSubPath;
+	if( getOnPathInfoVector( get_path, dirPathVector, filePathVector ) == false )
+		return false;
+	result_dir_path_vector.append_range( dirPathVector );
+	result_file_path_vector.append_range( filePathVector );
+	freachPtr = &findSubPath;
+	subContrlPtr = &nextFindSubPath;
+	freachPtr->append_range( dirPathVector );
+	size_t count = findSubPath.size( );
+	if( count == 0 )
+		return true;
+	auto findSubPathArray = freachPtr->data( );
+	size_t index;
+
+	do {
+		for( index = 0; index < count; ++index )
+			if( getOnPathInfoVector( findSubPathArray[ index ], dirPathVector, filePathVector ) ) {
+				result_dir_path_vector.append_range( dirPathVector );
+				result_file_path_vector.append_range( filePathVector );
+				subContrlPtr->append_range( dirPathVector );
+			}
+		count = subContrlPtr->size( );
+		if( count == 0 )
+			break; // 不需要下次变量
+		// 交换指向
+		temp = freachPtr;
+		freachPtr = subContrlPtr;
+		subContrlPtr = temp;
+		// 获取遍历起始地址
+		findSubPathArray = freachPtr->data( );
+		// 清理子目录存储
+		subContrlPtr->clear( );
+	} while( true );
+
 	return false;
 }

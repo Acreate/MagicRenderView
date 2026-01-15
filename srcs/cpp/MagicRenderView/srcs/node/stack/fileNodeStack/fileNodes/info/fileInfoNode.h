@@ -23,6 +23,7 @@ protected:
 	UIntOutputPort *fileSizeOutputPortPtr;
 	IntOutputPort *isOnlyReadOutputPortPtr;
 	IntOutputPort *isExisOutputPortPtr;
+	IntOutputPort *isFileOutputPortPtr;
 
 	QString *outFilePtahPtr;
 	QString *outDirNamePtr;
@@ -34,6 +35,7 @@ protected:
 	uint64_t *outFileSizePtr;
 	int64_t *outIsOnlyReadPtr;
 	int64_t *outIsExisPtr;
+	int64_t *outisFilePtr;
 public:
 	FileInfoNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

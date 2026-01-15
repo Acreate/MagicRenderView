@@ -1,6 +1,8 @@
 ﻿#include "fileNodeStack.h"
 
 #include "fileNodes/info/fileInfoNode.h"
+#include "fileNodes/info/pathGetInPathInfoArrayNode.h"
+#include "fileNodes/info/pathGetOnPathInfoArrayNode.h"
 #include "fileNodes/read/readFileBinDataNode.h"
 #include "fileNodes/read/readFileImageNode.h"
 #include "fileNodes/read/readFileTextNode.h"
@@ -20,6 +22,8 @@ bool FileNodeStack::init( ) {
 	Def_EmaplaceBackNode( WriteFileImageNode );
 	Def_EmaplaceBackNode( WriteFileTextNode );
 	Def_EmaplaceBackNode( FileInfoNode );
+	Def_EmaplaceBackNode( PathGetOnPathInfoArrayNode );
+	Def_EmaplaceBackNode( PathGetInPathInfoArrayNode );
 	return true;
 }
 
