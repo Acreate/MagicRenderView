@@ -243,3 +243,31 @@ bool AppDirector::loadAppPorject( QWidget *parent, const QString &open_file_path
 	appendProjectPath( currentProjectAbsoluteFilePathName );
 	return true;
 }
+bool AppDirector::clearHirstort( ) {
+	VarDirector varDirector;
+	std::vector< QString > *strVectorVar;
+	if( varDirector.init( ) == false ) {
+		printerDirector->info( tr( "初始化 VarDirector 失败" ), Create_SrackInfo( ) );
+		return false;
+	}
+
+	if( varDirector.create( strVectorVar ) == false ) {
+		printerDirector->info( tr( "创建 std::vector<QString> 失败" ), Create_SrackInfo( ) );
+		return false;
+	}
+	std::vector< uint8_t > result;
+
+	strVectorVar->clear( );
+	if( varDirector.toVector( strVectorVar, result ) == false ) {
+		printerDirector->info( tr( "AppDirector::currentProjectHistory 序列化失败" ), Create_SrackInfo( ) );
+		return false;
+	} else if( application->setVar( tr( "AppDirector::currentProjectHistory" ), result ) == false ) {
+		printerDirector->info( tr( "AppDirector::currentProjectHistory 保存失败" ), Create_SrackInfo( ) );
+		return false;
+	}
+	if( application->synchronousVarToFile( ) == false )
+		return false;
+	projectHistory.clear( );
+	emit changeHistoryProject_Signal( this, tr( "" ) );
+	return true;
+}

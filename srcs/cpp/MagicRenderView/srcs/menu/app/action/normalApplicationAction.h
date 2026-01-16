@@ -16,7 +16,7 @@ class ApplicationMenuStack;
 class NormalApplicationAction : public QAction {
 	Q_OBJECT;
 protected:
-	BuilderDirector* builderDirector;
+	BuilderDirector *builderDirector;
 	Application *application;
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
@@ -25,15 +25,11 @@ protected:
 	EditorDirector *editorDirector;
 private:
 	void triggered( );
-protected:
-	virtual void setInitVarNumber( const QString &name ) {
-		setText( name );
-		setObjectName( name );
-	}
 public:
 	~NormalApplicationAction( ) override;
 	virtual bool init( ApplicationMenuStack *application_menu_stack_ptr );
-	virtual bool run( MainWindow* parent ) = 0;
+	virtual bool run( MainWindow *parent ) = 0;
+	virtual void setInitVarNumber( const QString &name );
 Q_SIGNALS:
 	void release_signal( NormalApplicationAction *action );
 	void trigg_signal( NormalApplicationAction *action );

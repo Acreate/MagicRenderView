@@ -22,3 +22,7 @@ bool NormalApplicationAction::init( ApplicationMenuStack *application_menu_stack
 	connect( this, &QAction::triggered, this, &NormalApplicationAction::triggered );
 	return true;
 }
+void NormalApplicationAction::setInitVarNumber( const QString &name ) {
+	setText( name );
+	setObjectName( name );
+}

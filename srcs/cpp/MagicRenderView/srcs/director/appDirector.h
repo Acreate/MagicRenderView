@@ -65,6 +65,9 @@ public:
 	/// @param open_file_path 路径
 	/// @return 成功返回 true
 	virtual bool loadAppPorject( QWidget *parent, const QString &open_file_path );
+	/// @brief 清理历史项目
+	/// @return 成功返回 true
+	virtual bool clearHirstort();
 Q_SIGNALS:
 	void changeHistoryProject_Signal( AppDirector *signal_obj_ptr, const QString &open_file_path );
 	void openProject_Signal( AppDirector *signal_obj_ptr, const QString &open_file_path );

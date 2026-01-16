@@ -13,6 +13,7 @@
 #include "../../menu/app/imp/action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../../menu/app/imp/action/builder/runBuilderAction.h"
 #include "../../menu/app/imp/action/builder/stopBuilderAction.h"
+#include "../../menu/app/imp/action/dynamic/actionDynmicAction.h"
 #include "../../menu/app/imp/action/dynamic/openFileDynamicAction.h"
 #include "../../menu/app/imp/action/editor/copyNodeAction.h"
 #include "../../menu/app/imp/action/editor/cutNodeAction.h"
@@ -55,6 +56,7 @@
 bool ApplicationMenuStack::initActionGenerator( ) {
 
 	// 项目操作 action
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ActionDynmicAction, tr( "自由动作" ), tr( "自由项目" ), tr( "自由功能" ), tr( "自由能力" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, OpenFileDynamicAction, tr( "自由文件" ), tr( "自由打开项目" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, OpenProjectAction, tr( "打开文件" ), tr( "打开..." ), tr( "打开项目" ), tr( "打开项目..." ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ClearProjectAction, tr( "清理文件" ), tr( "清理项目" ) ) );
