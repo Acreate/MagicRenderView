@@ -12,9 +12,12 @@ UIntArrayAddNode::UIntArrayAddNode( const QString &node_name ) : ProcessNode( no
 }
 bool UIntArrayAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "无符号整数序列" ), firstInputPort );
-		Def_AppendInputPortType( tr( "无符号整数" ), secondInputPort );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数" ), firstInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数" ), secondInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

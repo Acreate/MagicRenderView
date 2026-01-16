@@ -8,9 +8,10 @@ BinCreateArrayNode::BinCreateArrayNode( const QString &node_name ) : ProcessNode
 	outputVarPtr = nullptr;
 }
 bool BinCreateArrayNode::initEx( MainWidget *parent ) {
-	
+
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

@@ -1,5 +1,6 @@
 ﻿#include "nodeTools.h"
 
+#include "../../director/varDirector.h"
 #include "../node/node.h"
 #include "../port/inputPort/dynamicTypeInputPort.h"
 #include "../port/inputPort/inputPort.h"
@@ -235,6 +236,68 @@ bool NodeTools::setInfo( InputPort *input_port, VarDirector *var_director, void 
 	input_port->inputPortVarDirectorPtr = var_director;
 	input_port->inputPortVarPtr = var_ptr;
 	return true;
+}
+bool NodeTools::bindPortVar( const QString &bind_type_name, OutputPort *bind_output_port, void *&result_var_ptr ) {
+	if( bind_output_port == nullptr )
+		return false;
+	auto varDirector = bind_output_port->getVarDirector( );
+	if( varDirector == nullptr )
+		return false;
+	if( varDirector->create( bind_type_name, result_var_ptr ) == false )
+		return false;
+	if( setPortVar( bind_output_port, result_var_ptr ) == false ) {
+		varDirector->release( result_var_ptr );
+		return false;
+	}
+	return true;
+}
+bool NodeTools::bindPortVar( const QString &bind_type_name, DynamicTypeOutputPort *bind_output_port, void *&result_var_ptr ) {
+	if( bind_output_port == nullptr )
+		return false;
+	auto varDirector = bind_output_port->getVarDirector( );
+	if( varDirector == nullptr )
+		return false;
+	if( varDirector->create( bind_type_name, result_var_ptr ) == false )
+		return false;
+	if( setPortVar( bind_output_port, result_var_ptr ) == false ) {
+		varDirector->release( result_var_ptr );
+		return false;
+	}
+	return true;
+}
+bool NodeTools::appendInputPortType( Node *append_input_port_target_node, InputPort *result_input_port ) {
+	return append_input_port_target_node->appendInputPort( result_input_port );
+}
+bool NodeTools::getNodeTypeName( Node *form_node_type_name, const QString &conver_type_name, QString &result_type_name ) {
+	auto varDirector = form_node_type_name->getVarDirector( );
+	if( varDirector == nullptr )
+		return false;
+	if( varDirector->getTypeName( conver_type_name, result_type_name ) == false )
+		return false;
+	return true;
+}
+bool NodeTools::createDynamicTypeOutputPort( const QString &dynamic_type_output_port_type_name, const NodeEnum::PortType &port_enum_type, const QString &name, const QString &dynamic_type_var_name, DynamicTypeOutputPort *&result_dynamic_type_output_port_ptr ) {
+	if( dynamic_type_output_port_type_name == typeid( DynamicTypeOutputPort ).name( ) ) {
+		result_dynamic_type_output_port_ptr = new DynamicTypeOutputPort( port_enum_type, name, dynamic_type_var_name );
+		return true;
+	}
+	return false;
+}
+bool NodeTools::createDynamicTypeInputPort( const QString &dynamic_type_input_port_type_name, const NodeEnum::PortType &port_enum_type, const QString &name, const QString &dynamic_type_var_name, DynamicTypeInputPort *&result_dynamic_type_input_port_ptr ) {
+	if( dynamic_type_input_port_type_name == typeid( DynamicTypeInputPort ).name( ) ) {
+		result_dynamic_type_input_port_ptr = new DynamicTypeInputPort( port_enum_type, name, dynamic_type_var_name );
+		return true;
+	}
+	return false;
+}
+bool NodeTools::appendOutputPortType( Node *append_output_port_target_node, OutputPort *result_output_port ) {
+	return append_output_port_target_node->appendOutputPort( result_output_port );
+}
+bool NodeTools::appendInputPortType( Node *append_input_port_target_node, DynamicTypeInputPort *result_input_port ) {
+	return append_input_port_target_node->appendInputPort( result_input_port );
+}
+bool NodeTools::appendOutputPortType( Node *append_output_port_target_node, DynamicTypeOutputPort *result_output_port ) {
+	return append_output_port_target_node->appendOutputPort( result_output_port );
 }
 bool NodeTools::getVarDirector( InputPort *input_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
 	if( input_port == nullptr )

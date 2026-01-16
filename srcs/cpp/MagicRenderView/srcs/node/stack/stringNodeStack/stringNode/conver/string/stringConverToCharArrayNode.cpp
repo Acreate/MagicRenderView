@@ -10,8 +10,10 @@ StringConverToCharArrayNode::StringConverToCharArrayNode( const QString &node_na
 bool StringConverToCharArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		Def_AppendInputPortType( tr( "值" ), stringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "字符" ), charVectorOutputPortPtr, outVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符" ), charVectorOutputPortPtr, outVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

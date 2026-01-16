@@ -12,10 +12,13 @@ StringSplitStringArrayNode::StringSplitStringArrayNode( const QString &node_name
 }
 bool StringSplitStringArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), stringInputPortPtr );
-		Def_AppendInputPortType( tr( "切分符串" ), splitSubStringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
-		outputVarPtr->clear(  );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "切分符串" ), splitSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
+		outputVarPtr->clear( );
 		return true;
 	};
 	return ProcessNode::initEx( parent );

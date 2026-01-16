@@ -11,9 +11,13 @@ BinArrayMulNode::BinArrayMulNode( const QString &node_name ) : ProcessNode( node
 }
 bool BinArrayMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "二进制序列" ), firstInputPort );
-		Def_AppendInputPortType( tr( "二进制" ), secondInputPort );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+
+		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制序列" ), firstInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制" ), secondInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -36,7 +40,7 @@ bool BinArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, s
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts =  nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )
@@ -47,7 +51,7 @@ bool BinArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, s
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts =  nodeToolsPtr->getRefPort( secondInputPort );
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
 	if( count == 0 )

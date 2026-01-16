@@ -55,8 +55,6 @@ protected:
 	QString *appDataPathPtr;
 	QString *cachePathPtr;
 	QString *tempPathPtr;
-private:
-	bool oldClassInit( );
 protected:
 	virtual void writableLocationPath ( QString &result_path, const QStandardPaths::StandardLocation &standard_location_type );
 public:

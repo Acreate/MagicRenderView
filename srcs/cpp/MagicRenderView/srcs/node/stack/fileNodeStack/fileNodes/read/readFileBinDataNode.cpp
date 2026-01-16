@@ -12,8 +12,10 @@ ReadFileBinDataNode::ReadFileBinDataNode( const QString &node_name ) : ProcessNo
 }
 bool ReadFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "路径" ), filePathInputPort );
-		Def_AppendBindVarOutputPortType( tr( "二进制" ), this->outBinVectorPort, outVectorPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), filePathInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "二进制" ), this->outBinVectorPort, outVectorPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

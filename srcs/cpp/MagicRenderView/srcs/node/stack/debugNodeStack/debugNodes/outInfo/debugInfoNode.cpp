@@ -11,7 +11,8 @@
 
 bool DebugInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "输出" ), inputBugPort );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "输出" ), inputBugPort ) == false )
+			return false;
 		nodeToolsPtr->setPortMultiple( inputBugPort, true );
 		return true;
 	};

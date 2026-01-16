@@ -8,9 +8,7 @@ class LogicNode : public Node {
 public:
 	LogicNode( const QString &node_name )
 		: Node( node_name ) { }
-	NodeEnum::NodeType getNodeType( ) const override {
-		return NodeEnum::NodeType::Logic;
-	}
+	NodeEnum::NodeType getNodeType( ) const override;
 };
 
 #endif // LOGICNODE_H_H_HEAD__FILE__

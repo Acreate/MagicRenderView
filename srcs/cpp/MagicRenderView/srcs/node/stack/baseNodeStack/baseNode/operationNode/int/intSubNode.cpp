@@ -11,9 +11,13 @@ IntSubNode::IntSubNode( const QString &node_name ) : ProcessNode( node_name ) {
 }
 bool IntSubNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "整数" ), firstInputPort );
-		Def_AppendInputPortType( tr( "整数" ), secondInputPort );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+
+		if( nodeToolsPtr->appendInputPortType( this, tr( "整数" ), firstInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "整数" ), secondInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -33,7 +37,7 @@ bool IntSubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t
 	NodeType *converInt;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts =nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

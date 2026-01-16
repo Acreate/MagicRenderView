@@ -11,9 +11,12 @@ StringRemoveAllSubStringNode::StringRemoveAllSubStringNode( const QString &node_
 }
 bool StringRemoveAllSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), orgStringInputPortPtr );
-		Def_AppendInputPortType( tr( "删除匹配" ), removeSubStringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "删除匹配" ), removeSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = '\0';
 		return true;
 	};

@@ -5,7 +5,6 @@
 #include <qpen.h>
 #include <typeinfo>
 
-#include <enums/nodeEnum.h>
 
 #include <define/nodeFrinedClass.h>
 
@@ -17,38 +16,13 @@
 /// @param _Type_Name 名称
 #define Def_Extend_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 
-#define Def_BindPortVar( pro_var_ptr_, bind_var_ptr_) \
-	if( bind_var_ptr_ ) \
-		varDirector->release( bind_var_ptr_ );\
-	if( varDirector->create( bind_var_ptr_ ) == false )\
-		return false;\
-	if( nodeToolsPtr->setPortVar( pro_var_ptr_, bind_var_ptr_ ) == false )\
-		return false
-
-#define Def_AppendInputPortType( port_name_, port_ptr_ ) \
-	if( appendInputPortType< >( port_name_, port_ptr_ ) == false ) \
-		return false
-
-#define Def_AppendOutputPortType( port_name_, port_ptr_ ) \
-	if( appendOutputPortType< >( port_name_, port_ptr_ ) == false ) \
-		return false
-
-#define Def_AppendBindVarOutputPortType( port_name_, port_ptr_ , bind_var_ptr_) \
-	Def_AppendOutputPortType( port_name_, port_ptr_ ); \
-	Def_BindPortVar(port_ptr_, bind_var_ptr_)
-
-#define Def_AppendDynamicInputPortType(type_name_, port_type_, port_name_, port_ptr_ ) \
-	if( appendDynamicInputPortType< type_name_ >(port_type_, port_name_, port_ptr_ ) == false ) \
-		return false
-
-#define Def_AppendDynamicOutputPortType( type_name_, port_type_, port_name_, port_ptr_) \
-	if( appendDynamicOutputPortType<type_name_ >(port_type_,  port_name_, port_ptr_ ) == false ) \
-		return false
-
-#define Def_AppendDynamicBindVarOutputPortType(type_name_, port_type_, port_name_, port_ptr_ , bind_var_ptr_) \
-	Def_AppendDynamicOutputPortType( type_name_, port_type_, port_name_, port_ptr_); \
-	Def_BindPortVar(port_ptr_, bind_var_ptr_)
-
+namespace NodeEnum {
+	enum class AdviseType;
+	enum class ErrorType;
+	enum class PortType;
+	enum class NodeStyleType;
+	enum class NodeType;
+}
 class DynamicTypeOutputPort;
 class DynamicTypeInputPort;
 class NodeStyleTypePen;

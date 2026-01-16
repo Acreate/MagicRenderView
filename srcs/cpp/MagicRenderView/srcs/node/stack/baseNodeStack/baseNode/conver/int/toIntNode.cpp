@@ -8,8 +8,11 @@
 ToIntNode::ToIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToIntNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "整数" ), intOutputPortPtr, outVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+			return false;
+
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "整数" ), intOutputPortPtr, outVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

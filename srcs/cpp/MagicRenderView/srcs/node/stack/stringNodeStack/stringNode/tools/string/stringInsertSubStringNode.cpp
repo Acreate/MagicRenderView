@@ -12,11 +12,15 @@ StringInsertSubStringNode::StringInsertSubStringNode( const QString &node_name )
 }
 bool StringInsertSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
-		Def_AppendInputPortType( tr( "原始字符串" ), stringInputPortPtr );
-		Def_AppendInputPortType( tr( "插入字符串" ), insertStringInputPortPtr );
-		Def_AppendInputPortType( tr( "插入位置" ), insertIndexInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "插入字符串" ), insertStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "插入位置" ), insertIndexInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = '\0';
 		return true;
 	};

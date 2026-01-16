@@ -9,7 +9,8 @@
 
 bool PreviewImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "预览图像" ), imageInputPortPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "预览图像" ), imageInputPortPtr ) == false )
+			return false;
 		nodeToolsPtr->setPortMultiple( imageInputPortPtr, true );
 		return true;
 	};

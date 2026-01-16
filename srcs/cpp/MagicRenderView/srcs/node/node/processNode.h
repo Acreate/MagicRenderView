@@ -8,9 +8,7 @@ class ProcessNode : public Node {
 public:
 	ProcessNode( const QString &node_name )
 		: Node( node_name ) { }
-	NodeEnum::NodeType getNodeType( ) const override {
-		return NodeEnum::NodeType::Process;
-	}
+	NodeEnum::NodeType getNodeType( ) const override;
 };
 
 #endif // PROCESSNODE_H_H_HEAD__FILE__

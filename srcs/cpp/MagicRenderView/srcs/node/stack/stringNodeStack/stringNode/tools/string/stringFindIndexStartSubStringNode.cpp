@@ -13,10 +13,14 @@ StringFindIndexStartSubStringNode::StringFindIndexStartSubStringNode( const QStr
 }
 bool StringFindIndexStartSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), stringInputPortPtr );
-		Def_AppendInputPortType( tr( "查找字符串" ), findTargetSubStringInputPortPtr );
-		Def_AppendInputPortType( tr( "开始位置" ), findStrtIndexInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "位置" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "查找字符串" ), findTargetSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "开始位置" ), findStrtIndexInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "位置" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = -1;
 		return true;
 	};

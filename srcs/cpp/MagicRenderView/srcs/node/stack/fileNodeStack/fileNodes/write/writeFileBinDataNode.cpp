@@ -10,8 +10,10 @@
 #include "../../../../port/outputPort/outputPort.h"
 bool WriteFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "路径" ), writeFilePathPort );
-		Def_AppendInputPortType( tr( "写入内容" ), writeBinVectorPort );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "写入内容" ), writeBinVectorPort ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -33,7 +35,7 @@ bool WriteFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_ti
 		return true;
 	if( path::createFile( *filePath ) == false )
 		return true;
-	
+
 	wirteFileRefPort = nodeToolsPtr->getRefPort( writeBinVectorPort );
 	count = wirteFileRefPort->size( );
 	if( count == 0 )

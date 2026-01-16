@@ -10,7 +10,8 @@ ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : Process
 }
 bool ColorCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = QColor( 0, 0, 0, 255 );
 		return true;
 	};

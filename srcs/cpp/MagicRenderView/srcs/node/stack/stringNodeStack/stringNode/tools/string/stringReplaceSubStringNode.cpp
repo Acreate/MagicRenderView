@@ -12,11 +12,16 @@ StringReplaceSubStringNode::StringReplaceSubStringNode( const QString &node_name
 }
 bool StringReplaceSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), orgStringInputPortPtr );
-		Def_AppendInputPortType( tr( "替换原始字符串" ), replaceSourceSubStringInputPortPtr );
-		Def_AppendInputPortType( tr( "替换目标字符串" ), replaceTargetSubStringInputPortPtr );
-		Def_AppendInputPortType( tr( "替换次数" ), replaceCountInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "替换原始字符串" ), replaceSourceSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "替换目标字符串" ), replaceTargetSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "替换次数" ), replaceCountInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = '\0';
 		return true;
 	};

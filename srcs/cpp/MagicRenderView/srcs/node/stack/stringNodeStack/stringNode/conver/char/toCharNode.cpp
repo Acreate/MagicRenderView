@@ -9,8 +9,10 @@
 ToCharNode::ToCharNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToCharNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "字符" ), charOutputPortPtr, outVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符" ), charOutputPortPtr, outVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

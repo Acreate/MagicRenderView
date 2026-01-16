@@ -6,9 +6,11 @@
 
 bool GotoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
-		Def_AppendInputPortType( tr( "跳转" ), pointInputPort );
-		Def_AppendInputPortType( tr( "跳到定点" ), toPointInputPort );
+
+		if( nodeToolsPtr->appendInputPortType( this, tr( "跳转" ), pointInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "跳到定点" ), toPointInputPort ) == false )
+			return false;
 		return true;
 	};
 	return JumpNode::initEx( parent );

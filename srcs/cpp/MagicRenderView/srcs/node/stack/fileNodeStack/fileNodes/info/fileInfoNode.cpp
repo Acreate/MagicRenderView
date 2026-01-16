@@ -27,18 +27,32 @@ FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name 
 }
 bool FileInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "文件路径" ), filePtahInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "绝对路径" ), filePtahOutputPortPtr, outFilePtahPtr );
-		Def_AppendBindVarOutputPortType( tr( "目录路径" ), dirNameOutputPortPtr, outDirNamePtr );
-		Def_AppendBindVarOutputPortType( tr( "基本名称" ), baseNameOutputPortPtr, outBaseNamePtr );
-		Def_AppendBindVarOutputPortType( tr( "作者" ), authorNameOutputPortPtr, outAuthorNamePtr );
-		Def_AppendBindVarOutputPortType( tr( "创建时间" ), createTimeOutputPortPtr, outCreateTimePtr );
-		Def_AppendBindVarOutputPortType( tr( "最后阅读" ), lastReadTimeOutputPortPtr, outLastReadTimePtr );
-		Def_AppendBindVarOutputPortType( tr( "最后时间" ), lastChangeTimeOutputPortPtr, outLastChangeTimePtr );
-		Def_AppendBindVarOutputPortType( tr( "大小" ), fileSizeOutputPortPtr, outFileSizePtr );
-		Def_AppendBindVarOutputPortType( tr( "只读" ), isOnlyReadOutputPortPtr, outIsOnlyReadPtr );
-		Def_AppendBindVarOutputPortType( tr( "存在" ), isExisOutputPortPtr, outIsExisPtr );
-		Def_AppendBindVarOutputPortType( tr( "是否为文件" ), isFileOutputPortPtr, outisFilePtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "绝对路径" ), filePtahOutputPortPtr, outFilePtahPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "绝对路径" ), filePtahOutputPortPtr, outFilePtahPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "目录路径" ), dirNameOutputPortPtr, outDirNamePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "基本名称" ), baseNameOutputPortPtr, outBaseNamePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "作者" ), authorNameOutputPortPtr, outAuthorNamePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "创建时间" ), createTimeOutputPortPtr, outCreateTimePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "最后阅读" ), lastReadTimeOutputPortPtr, outLastReadTimePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "最后时间" ), lastChangeTimeOutputPortPtr, outLastChangeTimePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "大小" ), fileSizeOutputPortPtr, outFileSizePtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "只读" ), isOnlyReadOutputPortPtr, outIsOnlyReadPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "存在" ), isExisOutputPortPtr, outIsExisPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "是否为文件" ), isFileOutputPortPtr, outisFilePtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

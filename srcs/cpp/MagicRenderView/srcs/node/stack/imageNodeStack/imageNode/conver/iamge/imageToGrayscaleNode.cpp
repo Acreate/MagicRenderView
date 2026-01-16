@@ -2,15 +2,23 @@
 
 #include <director/varDirector.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <enums/nodeEnum.h>
+#include <node/nodeTools/nodeTools.h>
+
+#include "../../../../../port/inputPort/dynamicTypeInputPort.h"
+#include "../../../../../port/outputPort/dynamicTypeOutputPort.h"
 
 ImageToGrayscaleNode::ImageToGrayscaleNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outImagePtr = nullptr;
 }
 bool ImageToGrayscaleNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendDynamicInputPortType( QImage, NodeEnum::PortType::Unity, tr( "图像" ), imageInputPortPtr );
-		Def_AppendDynamicBindVarOutputPortType( QImage, NodeEnum::PortType::Unity, tr( "图像" ), imageOutputPortPtr, outImagePtr );
+		
+		if( nodeToolsPtr->appendDynamicInputPortType< QImage >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageInputPortPtr ) == false )
+			return false;
+		
+		if( nodeToolsPtr->appendDynamicOutputPortType< >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageOutputPortPtr, outImagePtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

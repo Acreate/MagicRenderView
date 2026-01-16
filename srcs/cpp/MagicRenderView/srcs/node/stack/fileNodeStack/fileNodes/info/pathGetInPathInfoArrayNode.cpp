@@ -16,10 +16,14 @@ PathGetInPathInfoArrayNode::PathGetInPathInfoArrayNode( const QString &node_name
 }
 bool PathGetInPathInfoArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "路径" ), pathInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "路径下的文件与目录" ), pathSubPathOutputPortPtr, pathSubPathOutputVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "路径下的目录" ), dirPathOutputPortPtr, dirPathOutputVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "路径下的文件" ), filePathOutputPortPtr, filePathOutputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), pathInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的文件与目录" ), pathSubPathOutputPortPtr, pathSubPathOutputVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的目录" ), dirPathOutputPortPtr, dirPathOutputVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的文件" ), filePathOutputPortPtr, filePathOutputVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

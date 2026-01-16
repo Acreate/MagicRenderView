@@ -11,8 +11,10 @@
 CharArrayConverToStringNode::CharArrayConverToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool CharArrayConverToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "字符序列" ), charVectorInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "字符串" ), stringOutputPortPtr, outVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "字符序列" ), charVectorInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符串" ), stringOutputPortPtr, outVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

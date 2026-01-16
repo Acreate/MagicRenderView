@@ -10,8 +10,9 @@ ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : Process
 }
 bool ImageCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = QImage( );
 		return true;
 	};

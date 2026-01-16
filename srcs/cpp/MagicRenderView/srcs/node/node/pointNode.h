@@ -8,9 +8,7 @@ class PointNode : public Node {
 public:
 	PointNode( const QString &node_name )
 		: Node( node_name ) { }
-	NodeEnum::NodeType getNodeType( ) const override {
-		return NodeEnum::NodeType::Point;
-	}
+	NodeEnum::NodeType getNodeType( ) const override;
 };
 
 #endif // POINTNODE_H_H_HEAD__FILE__

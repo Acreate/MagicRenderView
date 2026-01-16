@@ -8,8 +8,10 @@
 bool MakeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		Def_AppendOutputPortType( tr( "定点标记" ), nextNode );
-		Def_AppendOutputPortType( tr( "跳转定点" ), toPointOutputPortPtr );
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "定点标记" ), nextNode ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "跳转定点" ), toPointOutputPortPtr ) == false )
+			return false;
 		return true;
 	};
 	return PointNode::initEx( parent );

@@ -10,9 +10,12 @@ BinMulNode::BinMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 }
 bool BinMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "二进制" ), firstInputPort );
-		Def_AppendInputPortType( tr( "二进制" ), secondInputPort );
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制" ), firstInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制" ), secondInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return true;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

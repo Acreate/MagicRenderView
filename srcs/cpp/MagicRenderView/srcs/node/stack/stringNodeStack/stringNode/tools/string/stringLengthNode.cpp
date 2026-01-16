@@ -11,8 +11,10 @@ StringLengthNode::StringLengthNode( const QString &node_name ) : ProcessNode( no
 }
 bool StringLengthNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), stringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "长度" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "长度" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = -1;
 		return true;
 	};

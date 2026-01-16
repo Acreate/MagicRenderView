@@ -10,7 +10,8 @@ CharCreateUnityNode::CharCreateUnityNode( const QString &node_name ) : ProcessNo
 }
 bool CharCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendBindVarOutputPortType( tr( "结果" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = '\0';
 		return true;
 	};

@@ -8,9 +8,7 @@ class JumpNode : public Node {
 public:
 	JumpNode( const QString &node_name )
 		: Node( node_name ) { }
-	NodeEnum::NodeType getNodeType( ) const override {
-		return NodeEnum::NodeType::Jump;
-	}
+	NodeEnum::NodeType getNodeType( ) const override;
 };
 
 #endif // JUMPNODE_H_H_HEAD__FILE__

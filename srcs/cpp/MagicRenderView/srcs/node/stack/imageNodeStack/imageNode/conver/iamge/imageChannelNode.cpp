@@ -17,11 +17,16 @@ ImageChannelNode::ImageChannelNode( const QString &node_name ) : ProcessNode( no
 }
 bool ImageChannelNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "图像" ), imageInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "红色" ), redOutputPort, redOutVectorVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "绿色" ), greenOutputPort, greenOutVectorVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "蓝色" ), blueOutputPort, blueOutVectorVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "透明" ), alphaOutputPort, alphaOutVectorVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "图像" ), imageInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "红色" ), redOutputPort, redOutVectorVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "绿色" ), greenOutputPort, greenOutVectorVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "蓝色" ), blueOutputPort, blueOutVectorVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "透明" ), alphaOutputPort, alphaOutVectorVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

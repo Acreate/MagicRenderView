@@ -11,10 +11,14 @@
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		Def_AppendInputPortType( tr( "判断" ), ifResultPort );
-		Def_AppendInputPortType( tr( "传递" ), channelInputPort );
-		Def_AppendInputPortType( tr( "定位" ), pointInputPort );
-		Def_AppendOutputPortType( tr( "传递" ), channelOutputPort );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "判断" ), ifResultPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "传递" ), channelInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "定位" ), pointInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "传递" ), channelOutputPort ) == false )
+			return false;
 		return true;
 	};
 	return LogicNode::initEx( parent );

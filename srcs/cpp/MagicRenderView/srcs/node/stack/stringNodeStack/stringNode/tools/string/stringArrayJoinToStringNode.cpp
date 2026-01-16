@@ -12,9 +12,12 @@ StringArrayJoinToStringNode::StringArrayJoinToStringNode( const QString &node_na
 }
 bool StringArrayJoinToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), stringVectorInputPortPtr );
-		Def_AppendInputPortType( tr( "拼接子字符串" ), jionSubStringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "合并字符串" ), outputPortPtr, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringVectorInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "拼接子字符串" ), jionSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "合并字符串" ), outputPortPtr, outputVarPtr ) == false )
+			return false;
 		outputVarPtr->clear( );
 		return true;
 	};

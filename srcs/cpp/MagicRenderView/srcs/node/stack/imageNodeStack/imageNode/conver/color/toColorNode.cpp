@@ -10,8 +10,10 @@ ToColorNode::ToColorNode( const QString &node_name ) : ProcessNode( node_name ) 
 }
 bool ToColorNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "值" ), anyVarInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "颜色" ), colorOutputPortPtr, outVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "颜色" ), colorOutputPortPtr, outVarPtr ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );

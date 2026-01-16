@@ -11,9 +11,12 @@ StringFindSubStringNode::StringFindSubStringNode( const QString &node_name ) : P
 }
 bool StringFindSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendInputPortType( tr( "原始字符串" ), stringInputPortPtr );
-		Def_AppendInputPortType( tr( "查找字符串" ), findTargetSubStringInputPortPtr );
-		Def_AppendBindVarOutputPortType( tr( "位置" ), outputPort, outputVarPtr );
+		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "查找字符串" ), findTargetSubStringInputPortPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "位置" ), outputPort, outputVarPtr ) == false )
+			return false;
 		*outputVarPtr = -1;
 		return true;
 	};

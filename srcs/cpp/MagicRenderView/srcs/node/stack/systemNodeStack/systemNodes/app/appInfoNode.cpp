@@ -25,14 +25,22 @@ AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) 
 }
 bool AppInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		Def_AppendBindVarOutputPortType( tr( "名称" ), appNameOutputPort, appNameVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "路径" ), appPathOutputPort, appPathVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "路径分隔符" ), pathSepOutputPort, sep );
-		Def_AppendBindVarOutputPortType( tr( "启动时间" ), appStartTimeOutputPort, appStartTimeVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "编译时间" ), builderTimeOutputPort, builderTimeVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "编译工具" ), builderToolOutputPort, builderToolVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "软件版本" ), versionOutputPort, versionVarPtr );
-		Def_AppendBindVarOutputPortType( tr( "是否动态库" ), isSharedOutputPort, isShared );
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "名称" ), appNameOutputPort, appNameVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径" ), appPathOutputPort, appPathVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径分隔符" ), pathSepOutputPort, sep ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "启动时间" ), appStartTimeOutputPort, appStartTimeVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "编译时间" ), builderTimeOutputPort, builderTimeVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "编译工具" ), builderToolOutputPort, builderToolVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "软件版本" ), versionOutputPort, versionVarPtr ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "是否动态库" ), isSharedOutputPort, isShared ) == false )
+			return false;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
