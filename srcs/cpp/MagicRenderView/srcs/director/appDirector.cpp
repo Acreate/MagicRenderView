@@ -258,6 +258,8 @@ bool AppDirector::clearHirstort( ) {
 	std::vector< uint8_t > result;
 
 	strVectorVar->clear( );
+	if( path::hasFile( currentProjectAbsoluteFilePathName ) )
+		strVectorVar->emplace_back( currentProjectAbsoluteFilePathName );
 	if( varDirector.toVector( strVectorVar, result ) == false ) {
 		printerDirector->info( tr( "AppDirector::currentProjectHistory 序列化失败" ), Create_SrackInfo( ) );
 		return false;
@@ -267,7 +269,7 @@ bool AppDirector::clearHirstort( ) {
 	}
 	if( application->synchronousVarToFile( ) == false )
 		return false;
-	projectHistory.clear( );
+	projectHistory = *strVectorVar;
 	emit changeHistoryProject_Signal( this, tr( "" ) );
 	return true;
 }
