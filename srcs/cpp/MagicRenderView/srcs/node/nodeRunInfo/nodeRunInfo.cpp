@@ -453,10 +453,13 @@ bool NodeRunInfo::runNextNode( ) {
 	} while( findResultRunNode == nullptr );
 	if( runCurrentNode( findResultRunNode ) == false )
 		return false;
+	appinstancePtr->processEvents( );
 	if( overRunNode( ) == false )
 		return false;
+	appinstancePtr->processEvents( );
 	if( filterToAdviseVector( ) == false )
 		return false;
+	appinstancePtr->processEvents( );
 	overRunNodeVector.emplace_back( findResultRunNode );
 	overRunNodeArrayPtr = overRunNodeVector.data( );
 	overRunNodeArrayCount = overRunNodeVector.size( );
