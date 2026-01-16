@@ -15,15 +15,17 @@ void NormalApplicationMenu::clearResource( ) {
 	}
 }
 void NormalApplicationMenu::triggMenuActionSlot( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action ) {
-	emit this->trigg_action_signal( this, action );
+	emit this->trigg_action_signal( normal_application_menu, action );
 }
 NormalApplicationMenu::NormalApplicationMenu( ) {
+	applicationMenuStack = nullptr;
 	menuArrayPtr = nullptr;
 	menuArrayCount = 0;
 }
 bool NormalApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
 	if( application_menu_stack == nullptr )
 		return false;
+	applicationMenuStack = application_menu_stack;
 	if( TranspondTriggNormalActionMenu::init( ) == false )
 		return false;
 	return true;

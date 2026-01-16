@@ -11,6 +11,7 @@ class ApplicationMenuStack;
 class NormalApplicationMenu : public TranspondTriggNormalActionMenu {
 	Q_OBJECT;
 protected:
+	ApplicationMenuStack *applicationMenuStack;
 	std::vector< NormalApplicationMenu * > allMenu;
 	NormalApplicationMenu **menuArrayPtr;
 	size_t menuArrayCount;

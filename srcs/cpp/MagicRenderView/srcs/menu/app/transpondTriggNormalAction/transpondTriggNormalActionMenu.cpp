@@ -8,7 +8,7 @@ void TranspondTriggNormalActionMenu::clearResource( ) {
 	actionArrayPtr = nullptr;
 	actionArrayCount = 0;
 	allAction.clear( );
-	
+
 	disconnect( this, &QMenu::triggered, this, &TranspondTriggNormalActionMenu::triggAction );
 }
 void TranspondTriggNormalActionMenu::triggAction( QAction *transpond_action_ptr ) {
@@ -38,6 +38,7 @@ bool TranspondTriggNormalActionMenu::isThisNodemalAction( QAction *check_action 
 	return false;
 }
 bool TranspondTriggNormalActionMenu::init( ) {
+	disconnect( this, &QMenu::triggered, this, &TranspondTriggNormalActionMenu::triggAction );
 	clearResource( );
 	connect( this, &QMenu::triggered, this, &TranspondTriggNormalActionMenu::triggAction );
 	return true;

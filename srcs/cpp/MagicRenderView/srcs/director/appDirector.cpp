@@ -10,8 +10,6 @@
 #include "printerDirector.h"
 #include "varDirector.h"
 bool AppDirector::syncProjectToFile( ) {
-	if( currentProjectAbsoluteFilePathName.isEmpty( ) || path::hasFile( currentProjectAbsoluteFilePathName ) == false )
-		return false;
 	QFile file( currentProjectAbsoluteFilePathName );
 	if( file.open( QIODeviceBase::ReadWrite | QIODeviceBase::Truncate ) == false )
 		return false;
@@ -27,8 +25,7 @@ bool AppDirector::syncProjectToFile( ) {
 	return true;
 }
 bool AppDirector::syncFileToProject( ) {
-	QString openFilePath = currentProjectWorkPath + '/' + currentProjectName;
-	QFile file( openFilePath );
+	QFile file( currentProjectAbsoluteFilePathName );
 	if( file.open( QIODeviceBase::ReadWrite ) == false )
 		return false;
 	QByteArray byteArray = file.readAll( );
@@ -41,6 +38,7 @@ bool AppDirector::syncFileToProject( ) {
 	readCount = userCount * readCount;
 	if( nodeDirector->formUint8ArrayData( userCount, converData, readCount ) == false )
 		return false;
+	emit openProject_Signal( this, currentProjectAbsoluteFilePathName );
 	return true;
 }
 void AppDirector::saveThisDataToAppInstance( ) {
@@ -126,27 +124,33 @@ void AppDirector::loadThisDataToAppInstance( ) {
 				buffList.emplace_front( currentProjectName );
 				break;
 			}
-		projectIndex = buffList.size( );
 		if( projectIndex ) {
 			listIterator = buffList.begin( );
 			projectHistory.resize( projectIndex );
 			projectArrayPtr = projectHistory.data( );
-			for( index = 0; index < count; ++index, ++listIterator )
+			for( index = 0; index < projectIndex; ++index, ++listIterator )
 				projectArrayPtr[ index ] = *listIterator;
 		}
 	}
 }
 void AppDirector::appendProjectPath( const QString &append_project_file_path ) {
 	size_t count = projectHistory.size( );
+	QString tem;
 	QString *projectHistoryArray;
 	size_t index;
 	if( count ) {
 		projectHistoryArray = projectHistory.data( );
 		for( index = 0; index < count; ++index )
-			if( projectHistoryArray[ index ] == append_project_file_path )
+			if( projectHistoryArray[ index ] == append_project_file_path ) {
+				tem = projectHistoryArray[ 0 ];
+				projectHistoryArray[ 0 ] = append_project_file_path;
+				projectHistoryArray[ index ] = tem;
+				emit changeHistoryProject_Signal( this, append_project_file_path );
 				return;
+			}
 	}
-	projectHistory.emplace_back( append_project_file_path );
+	projectHistory.insert( projectHistory.begin( ), append_project_file_path );
+	emit changeHistoryProject_Signal( this, append_project_file_path );
 }
 AppDirector::~AppDirector( ) {
 	saveThisDataToAppInstance( );
@@ -169,6 +173,9 @@ bool AppDirector::closeAppProject( QWidget *parent ) {
 		return false;
 	currentProjectWorkPath.clear( );
 	currentProjectName.clear( );
+	auto tmp = currentProjectAbsoluteFilePathName;
+	currentProjectAbsoluteFilePathName.clear( );
+	emit closeProject_Signal( this, tmp );
 	return true;
 }
 bool AppDirector::saveAppProject( QWidget *parent ) {
@@ -192,19 +199,23 @@ bool AppDirector::saveAsAppProject( QWidget *parent ) {
 	currentProjectWorkPath = saveInfo.dir( ).absolutePath( );
 	currentProjectName = saveInfo.fileName( );
 	currentProjectAbsoluteFilePathName = saveInfo.absoluteFilePath( );
+	if( syncProjectToFile( ) == false )
+		return false;
 	appendProjectPath( currentProjectAbsoluteFilePathName );
-	return syncProjectToFile( );
+	return true;
 }
 bool AppDirector::updateAppProject( QWidget *parent ) {
 	if( syncProjectToFile( ) == false )
 		return false;
 	if( syncFileToProject( ) == false )
 		return false;
+	emit updateProject_Signal( this, currentProjectAbsoluteFilePathName );
 	return true;
 }
 bool AppDirector::reloadAppProject( QWidget *parent ) {
 	if( syncFileToProject( ) == false )
 		return false;
+	emit reloadProject_Signal( this, currentProjectAbsoluteFilePathName );
 	return true;
 }
 bool AppDirector::loadAppPorject( QWidget *parent ) {
@@ -221,4 +232,14 @@ bool AppDirector::loadAppPorject( QWidget *parent ) {
 	currentProjectAbsoluteFilePathName = saveInfo.absoluteFilePath( );
 	appendProjectPath( currentProjectAbsoluteFilePathName );
 	return syncFileToProject( );
+}
+bool AppDirector::loadAppPorject( QWidget *parent, const QString &open_file_path ) {
+	QString tmp = currentProjectAbsoluteFilePathName;
+	currentProjectAbsoluteFilePathName = open_file_path;
+	if( syncFileToProject( ) == false ) {
+		currentProjectAbsoluteFilePathName = tmp;
+		return false;
+	}
+	appendProjectPath( currentProjectAbsoluteFilePathName );
+	return true;
 }

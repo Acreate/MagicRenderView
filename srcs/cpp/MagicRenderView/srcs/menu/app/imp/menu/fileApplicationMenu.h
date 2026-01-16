@@ -3,8 +3,13 @@
 
 #include "../../normalApplicationMenu.h"
 
+class ProjectHistoryApplicationMenu;
 class FileApplicationMenu : public NormalApplicationMenu {
 	Q_OBJECT;
+protected:
+	ProjectHistoryApplicationMenu * historyApplicationMenu;
+protected:
+	void triggMenuActionSlot( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action ) override;
 public:
 	FileApplicationMenu( );
 	bool init( ApplicationMenuStack *application_menu_stack ) override;
