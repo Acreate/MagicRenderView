@@ -219,19 +219,19 @@ bool NodeTools::getInfo( OutputPort *output_port, Node *&result_input_port_node_
 	return true;
 }
 bool NodeTools::setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr ) {
-	if( output_port )
+	if( output_port == nullptr )
 		return false;
 	output_port->varDirectorPtr = var_director;
 	output_port->varPtr = var_ptr;
 	return true;
 }
 std::vector< OutputPort * > * NodeTools::getRefPort( InputPort *input_port ) {
-	if( input_port )
+	if( input_port == nullptr )
 		return nullptr;
 	return &input_port->refOutputPortVector;
 }
 bool NodeTools::setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
-	if( input_port )
+	if( input_port == nullptr )
 		return false;
 	input_port->inputPortVarDirectorPtr = var_director;
 	input_port->inputPortVarPtr = var_ptr;

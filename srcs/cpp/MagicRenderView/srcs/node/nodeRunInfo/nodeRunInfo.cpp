@@ -95,6 +95,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 	runNodeCount = beginNodeVector.size( );
 	if( runNodeCount == 0 )
 		return false;
+
 	// todo : 初始化运行列表
 	if( builderDataTime == nullptr )
 		builderDataTime = new QDateTime( );
@@ -115,6 +116,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	std::vector< std::pair< Node *, std::pair< std::vector< Node * >, std::vector< Node * > > > > erroNode;
 	std::vector< Node * > erroRefInputNode;
 	std::vector< Node * > erroRefOutputNode;
+	std::vector< Node * > erroReadNode;
 	auto builderArrayPrr = builderNodeVector.data( );
 	size_t builderIndex = 0;
 	size_t findNodeIndex = 0;
@@ -125,6 +127,10 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		erroRefInputNode.clear( );
 		erroRefInputNode.clear( );
 		builderArrayPrr[ builderIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
+		if( builderArrayPrr[ builderIndex ]->readyNodeRunData( ) == false ) {
+			erroReadNode.emplace_back( builderArrayPrr[ builderIndex ] );
+			continue;
+		}
 		refCount = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.size( );
 		if( refCount != 0 ) {
 			refArrayPtr = builderArrayPrr[ builderIndex ]->thisNodeOutputPortRefOtherNodeInputPortVector.data( );
@@ -154,33 +160,42 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 			// 输入依赖为 0，则放入开始列表
 			beginNodeVector.emplace_back( builderArrayPrr[ builderIndex ] );
 	}
-
+	findNodeIndex = erroReadNode.size( );
 	refCount = erroNode.size( );
-	if( refCount == 0 )
+	if( refCount == 0 && findNodeIndex == 0 )
 		// 没有错误信息，则返回 true
 		return true;
 	// 输出错误信息
-	auto errorMapArray = erroNode.data( );
+	std::pair< Node *, std::pair< std::vector< Node * >, std::vector< Node * > > > *errorMapArray;
 	QString nodeTypeName;
 	QStringList errorMsgList;
 	QString appendErrorMsg;
-	QString errorNodeMsgFormat( tr( "[%1] 发现错误节点->%2" ) );
-	QString errorRefInMsgFormat( tr( "\n\t缺少输入依赖 : \n\t%1" ) );
-	QString errorRefOutMsgFormat( tr( "\n\t缺少输出依赖 : \n\t%1" ) );
-	auto nodeDirector = appinstancePtr->getNodeDirector( );
-
-	for( refIndex = 0; refIndex < refCount; ++refIndex ) {
-		errorMapArray[ refIndex ].first->setNodeStyle( NodeEnum::NodeStyleType::Error );
-		nodeTypeName = errorMapArray[ refIndex ].first->toQString( );
-		appendErrorMsg = errorNodeMsgFormat.arg( refIndex ).arg( nodeTypeName );
-		builderNodeCount = errorMapArray[ refIndex ].second.first.size( );
-		if( builderNodeCount )
-			appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.first ) );
-		builderNodeCount = errorMapArray[ refIndex ].second.second.size( );
-		if( builderNodeCount )
-			appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.second ) );
-		errorMsgList.append( appendErrorMsg );
+	QString errorNodeMsgFormat;
+	QString errorRefInMsgFormat;
+	QString errorRefOutMsgFormat;
+	NodeDirector *nodeDirector;
+	nodeDirector = appinstancePtr->getNodeDirector( );
+	if( refCount ) {
+		errorMapArray = erroNode.data( );
+		errorNodeMsgFormat = tr( "[%1] 发现错误节点->%2" );
+		errorRefInMsgFormat = tr( "\n\t缺少输入依赖 : \n\t%1" );
+		errorRefOutMsgFormat = tr( "\n\t缺少输出依赖 : \n\t%1" );
+		for( refIndex = 0; refIndex < refCount; ++refIndex ) {
+			errorMapArray[ refIndex ].first->setNodeStyle( NodeEnum::NodeStyleType::Error );
+			nodeTypeName = errorMapArray[ refIndex ].first->toQString( );
+			appendErrorMsg = errorNodeMsgFormat.arg( refIndex ).arg( nodeTypeName );
+			builderNodeCount = errorMapArray[ refIndex ].second.first.size( );
+			if( builderNodeCount )
+				appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.first ) );
+			builderNodeCount = errorMapArray[ refIndex ].second.second.size( );
+			if( builderNodeCount )
+				appendErrorMsg = appendErrorMsg + errorRefInMsgFormat.arg( nodeDirector->nodeArrayToString( errorMapArray[ refIndex ].second.second ) );
+			errorMsgList.append( appendErrorMsg );
+		}
 	}
+
+	if( findNodeIndex )
+		errorMsgList.append( tr( "准备状态出现问题:\n\t%1" ).arg( nodeDirector->nodeArrayToString( erroReadNode ) ) );
 	appendErrorMsg = errorMsgList.join( "\n-----\n" );
 	auto printerDirector = appinstancePtr->getPrinterDirector( );
 	printerDirector->info( appendErrorMsg,Create_SrackInfo( ) );
