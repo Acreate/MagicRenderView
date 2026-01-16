@@ -39,14 +39,26 @@ protected:
 	TRunBodyObjPtr currentRunPtr;
 	/// @brief 编译列表
 	std::vector< TRunBodyObjPtr > builderNodeVector;
+	/// @brief 编译列表指针
+	TRunBodyObjPtr *builderNodeArrayPtr;
+	/// @brief 编译列表个数
+	size_t builderNodeArrayCount;
 	/// @brief 完成列表
 	std::vector< TRunBodyObjPtr > overRunNodeVector;
+	/// @brief 完成列表指针
+	TRunBodyObjPtr *overRunNodeArrayPtr;
+	/// @brief 完成列表个数
+	size_t overRunNodeArrayCount;
 	/// @brief 等待列表
 	std::vector< TRunBodyObjPtr > waiteRunNodeVector;
 	/// @brief 建议列表
 	std::vector< TRunBodyObjPtr > adviseNodeVector;
 	/// @brief 开始列表
 	std::vector< TRunBodyObjPtr > beginNodeVector;
+	/// @brief 起始列表指针
+	TRunBodyObjPtr *beginNodeArrayPtr;
+	/// @brief 起始列表个数
+	size_t beginNodeArrayCount;
 protected:
 	virtual void appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< TRunBodyObj * > &append_node_vector ) {
@@ -54,7 +66,14 @@ protected:
 	}
 	virtual void appendBuilderNode( TRunBodyObj *append_node_unity );
 	virtual void removeBuilderNode( TRunBodyObj *append_node_unity );
-	virtual bool isNextRunNode( Node *check_next_node );
+	/// @brief 节点是否已经运行完毕
+	/// @param check_next_node 检查节点
+	/// @return 已经实现运行，返回 true
+	virtual bool isOverRunNode( Node *check_next_node );
+	/// @brief 判定是否可以运行（根据输入端依赖是否实现运行判定）
+	/// @param check_next_node 判定节点
+	/// @return 返回 true 表示支持运行
+	virtual bool isRunNode( Node *check_next_node );
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );
