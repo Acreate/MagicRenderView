@@ -10,9 +10,8 @@ protected:
 	std::vector< NormalApplicationAction * > allAction;
 	NormalApplicationAction **actionArrayPtr;
 	size_t actionArrayCount;
-private:
-	void clearResource( );
 protected:
+	virtual void clearResource( );
 	virtual void triggAction( QAction *transpond_action_ptr );
 	virtual bool appendAction( NormalApplicationAction *append_action );
 	virtual bool isThisNodemalAction( QAction *check_action );

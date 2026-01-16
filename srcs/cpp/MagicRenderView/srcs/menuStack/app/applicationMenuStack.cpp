@@ -13,6 +13,7 @@
 #include "../../menu/app/imp/action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../../menu/app/imp/action/builder/runBuilderAction.h"
 #include "../../menu/app/imp/action/builder/stopBuilderAction.h"
+#include "../../menu/app/imp/action/dynamic/openFileDynamicAction.h"
 #include "../../menu/app/imp/action/editor/copyNodeAction.h"
 #include "../../menu/app/imp/action/editor/cutNodeAction.h"
 #include "../../menu/app/imp/action/editor/pasteNodeAction.h"
@@ -27,8 +28,10 @@
 #include "../../menu/app/imp/menu/appApplicationMenu.h"
 #include "../../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../../menu/app/imp/menu/editorApplicationMenu.h"
+#include "../../menu/app/imp/menu/fileApplicationMenu.h"
 #include "../../menu/app/imp/menu/helpApplicationMenu.h"
 #include "../../menu/app/imp/menu/projectApplicationMenu.h"
+#include "../../menu/app/imp/menu/projectHistoryApplicationMenu.h"
 #include "../../menu/app/imp/toolBar/appApplicationToolBar.h"
 #include "../../menu/app/imp/toolBar/builderApplicationToolBar.h"
 #include "../../menu/app/imp/toolBar/editorApplicationToolBar.h"
@@ -52,6 +55,7 @@
 bool ApplicationMenuStack::initActionGenerator( ) {
 
 	// 项目操作 action
+	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, OpenFileDynamicAction, tr( "自由文件" ), tr( "自由打开项目" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, OpenProjectAction, tr( "打开文件" ), tr( "打开..." ), tr( "打开项目" ), tr( "打开项目..." ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, ClearProjectAction, tr( "清理文件" ), tr( "清理项目" ) ) );
 	actionGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationAction, CloseProjectAction, tr( "关闭文件" ), tr( "关闭项目" ) ) );
@@ -76,7 +80,9 @@ bool ApplicationMenuStack::initActionGenerator( ) {
 	return true;
 }
 bool ApplicationMenuStack::initMenuGenerator( ) {
-	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, ProjectApplicationMenu, tr( "文件" ) ) );
+	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, FileApplicationMenu, tr( "文件" ) ) );
+	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, ProjectHistoryApplicationMenu, tr( "文件" ) ) );
+	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, ProjectApplicationMenu, tr( "项目" ) ) );
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, BuilderApplicationMenu, tr( "编译" ) ) );
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, AppApplicationMenu, tr( "软件" ) ) );
 	menuGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationMenu, HelpApplicationMenu, tr( "帮助" ) ) );
@@ -85,7 +91,7 @@ bool ApplicationMenuStack::initMenuGenerator( ) {
 	return true;
 }
 bool ApplicationMenuStack::initToolBarGenerator( ) {
-	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, ProjectApplicationToolBar, tr( "文件" ) ) );
+	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, ProjectApplicationToolBar, tr( "项目" ) ) );
 	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, BuilderApplicationToolBar, tr( "编译" ) ) );
 	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, AppApplicationToolBar, tr( "软件" ) ) );
 	toolBarGeneratorArray.appendGenerator( generator_type_uinty( NormalApplicationToolBar, HelpApplicationToolBar, tr( "帮助" ) ) );

@@ -16,6 +16,7 @@
 #include "../menu/app/imp/menu/appApplicationMenu.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/menu/editorApplicationMenu.h"
+#include "../menu/app/imp/menu/fileApplicationMenu.h"
 #include "../menu/app/imp/menu/helpApplicationMenu.h"
 #include "../menu/app/imp/menu/projectApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
@@ -44,11 +45,10 @@ MainWindow::MainWindow( ) : mainWidgetScrollArea( nullptr ) {
 	setCentralWidget( mainWidgetScrollArea );
 	mainWidget = mainWidgetScrollArea->getMainWidget( );
 
-	projectToolBar = nullptr;
 	builderToolBar = nullptr;
 	projectMenu = nullptr;
 	builderMenu = nullptr;
-	appMenu = nullptr;
+	fileMenu = nullptr;
 	helpMenu = nullptr;
 	editorMenu = nullptr;
 	appMenuBar = menuBar( );
@@ -66,11 +66,7 @@ bool MainWindow::init( ) {
 	printerDirector = instancePtr->getPrinterDirector( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
 	auto applicationMenuStack = instancePtr->getApplicationMenuStack( );
-	if( projectToolBar )
-		delete projectToolBar;
-	projectToolBar = applicationMenuStack->getToolBar< ProjectApplicationToolBar >( );
-	if( projectToolBar == nullptr )
-		return false;
+	
 
 	if( builderToolBar )
 		delete builderToolBar;
@@ -78,10 +74,10 @@ bool MainWindow::init( ) {
 	if( builderToolBar == nullptr )
 		return false;
 
-	if( appMenu )
-		delete appMenu;
-	appMenu = applicationMenuStack->getMenu< AppApplicationMenu >( );
-	if( appMenu == nullptr )
+	if( fileMenu )
+		delete fileMenu;
+	fileMenu = applicationMenuStack->getMenu< FileApplicationMenu >( );
+	if( fileMenu == nullptr )
 		return false;
 
 	if( projectMenu )
@@ -108,13 +104,6 @@ bool MainWindow::init( ) {
 	if( builderMenu == nullptr )
 		return false;
 
-	projectToolBar->setParent( this );
-	addToolBar( Qt::TopToolBarArea, projectToolBar );
-	projectToolBar->setFloatable( false );
-	projectToolBar->setAllowedAreas( Qt::TopToolBarArea );
-	projectToolBar->setMovable( true );
-	connect( projectToolBar, &NormalApplicationToolBar::trigg_action_signal, this, &MainWindow::triggToolbarActionSignal );
-
 	builderToolBar->setParent( this );
 	addToolBar( Qt::TopToolBarArea, builderToolBar );
 	builderToolBar->setFloatable( false );
@@ -122,8 +111,8 @@ bool MainWindow::init( ) {
 	builderToolBar->setMovable( true );
 	connect( builderToolBar, &NormalApplicationToolBar::trigg_action_signal, this, &MainWindow::triggToolbarActionSignal );
 
-	appMenuBar->addMenu( appMenu );
-	connect( appMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
+	appMenuBar->addMenu( fileMenu );
+	connect( fileMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 	appMenuBar->addMenu( projectMenu );
 	connect( projectMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 	appMenuBar->addMenu( editorMenu );
@@ -153,8 +142,8 @@ MainWindow::~MainWindow( ) {
 		delete projectMenu;
 	if( builderMenu )
 		delete builderMenu;
-	if( appMenu )
-		delete appMenu;
+	if( fileMenu )
+		delete fileMenu;
 	if( editorMenu )
 		delete editorMenu;
 	if( helpMenu )

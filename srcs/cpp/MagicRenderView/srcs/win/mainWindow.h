@@ -36,10 +36,10 @@ protected:
 	QMenuBar *appMenuBar;
 	NormalApplicationMenu *projectMenu;
 	NormalApplicationMenu *builderMenu;
-	NormalApplicationMenu *appMenu;
+	NormalApplicationMenu *fileMenu;
 	NormalApplicationMenu *editorMenu;
 	NormalApplicationMenu *helpMenu;
-	NormalApplicationToolBar *projectToolBar;
+
 	NormalApplicationToolBar *builderToolBar;
 	AboutApplicationWindow* aboutApplicationWindowPtr;
 protected:

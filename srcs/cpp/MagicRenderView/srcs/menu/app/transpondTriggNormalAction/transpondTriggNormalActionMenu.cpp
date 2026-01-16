@@ -1,12 +1,14 @@
 ﻿#include "../action/normalApplicationAction.h"
+#include "../normalApplicationMenu.h"
 #include "TranspondTriggNormalActionMenu.h"
 void TranspondTriggNormalActionMenu::clearResource( ) {
-	size_t index = 0;
-	for( ; index < actionArrayCount; ++index )
+	size_t index;
+	for( index = 0; index < actionArrayCount; ++index )
 		delete actionArrayPtr[ index ];
 	actionArrayPtr = nullptr;
 	actionArrayCount = 0;
 	allAction.clear( );
+	
 	disconnect( this, &QMenu::triggered, this, &TranspondTriggNormalActionMenu::triggAction );
 }
 void TranspondTriggNormalActionMenu::triggAction( QAction *transpond_action_ptr ) {

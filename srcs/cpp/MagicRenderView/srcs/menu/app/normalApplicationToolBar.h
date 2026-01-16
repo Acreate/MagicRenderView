@@ -5,6 +5,7 @@
 
 #include "transpondTriggNormalAction/transpondTriggNormalActionToolsBar.h"
 
+class NormalApplicationMenu;
 class ApplicationMenuStack;
 class NormalApplicationToolBar : public TranspondTriggNormalActionToolsBar {
 	Q_OBJECT;

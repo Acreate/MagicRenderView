@@ -1,4 +1,7 @@
 ﻿#include "normalApplicationToolBar.h"
+
+#include "normalApplicationMenu.h"
+
 void NormalApplicationToolBar::transpondTriggAction( NormalApplicationAction *action ) {
 	emit trigg_action_signal( this, action );
 }
@@ -10,6 +13,7 @@ bool NormalApplicationToolBar::init( ApplicationMenuStack *application_menu_stac
 		return false;
 	return true;
 }
+
 NormalApplicationToolBar::~NormalApplicationToolBar( ) {
 	emit release_signal( this );
 }
