@@ -430,7 +430,7 @@ bool NodeRunInfo::filterToAdviseVector( ) {
 	delete buff;
 	return true;
 }
-bool NodeRunInfo::runNextNode( ) {
+bool NodeRunInfo::runNextValidNode( ) {
 	Node *findResultRunNode = nullptr;
 	do {
 		if( findNextRunNode( findResultRunNode ) == false ) {
@@ -465,12 +465,17 @@ bool NodeRunInfo::runNextNode( ) {
 	overRunNodeArrayCount = overRunNodeVector.size( );
 	return true;
 }
+bool NodeRunInfo::runNextNode( ) {
+	if( isRunStop == false )
+		return false;
+	return runNextValidNode( );
+}
 bool NodeRunInfo::runResidueNode( ) {
 	isRunStop = false;
 	std::chrono::milliseconds milliseconds;
 	long long count;
 	do {
-		if( runNextNode( ) == false )
+		if( runNextValidNode( ) == false )
 			return false;
 		appinstancePtr->processEvents( );
 		if( isRunStop == true )

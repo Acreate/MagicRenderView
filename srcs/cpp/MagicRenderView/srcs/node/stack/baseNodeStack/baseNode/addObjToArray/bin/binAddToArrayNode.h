@@ -8,9 +8,9 @@ class BinVectorInputPort;
 class BinAddToArrayNode : public ProcessNode {
 	Q_OBJECT;
 private:
-	using NodeType = int64_t;
+	using NodeType = uint8_t;
 protected:
-	BinVectorInputPort* firstInputPort;
+	BinVectorInputPort *firstInputPort;
 	BinInputPort *secondInputPort;
 	BinVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;

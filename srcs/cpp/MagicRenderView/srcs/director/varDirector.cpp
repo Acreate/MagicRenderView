@@ -9,6 +9,7 @@
 #include "../type/stack/any/arrayPtr/anyPtrArrayStack.h"
 #include "../type/stack/any/pairPtr/anyPtrPairStack.h"
 #include "../type/stack/any/unity/anyPtrStack.h"
+#include "../type/stack/base/array/boolArrayStack.h"
 #include "../type/stack/base/array/float32ArrayStack.h"
 #include "../type/stack/base/array/float64ArrayStack.h"
 #include "../type/stack/base/array/int16ArrayStack.h"
@@ -19,6 +20,7 @@
 #include "../type/stack/base/array/uInt32ArrayStack.h"
 #include "../type/stack/base/array/uInt64ArrayStack.h"
 #include "../type/stack/base/array/uInt8ArrayStack.h"
+#include "../type/stack/base/unity/boolUnityStack.h"
 #include "../type/stack/base/unity/float32UnityStack.h"
 #include "../type/stack/base/unity/float64UnityStack.h"
 #include "../type/stack/base/unity/int16UnityStack.h"
@@ -62,6 +64,7 @@ bool VarDirector::init( ) {
 		stacks.clear( );
 	}
 
+	emplace_back_type( BoolUnityStack );
 	emplace_back_type( UInt8UnityStack );
 	emplace_back_type( UInt16UnityStack );
 	emplace_back_type( UInt32UnityStack );
@@ -73,6 +76,7 @@ bool VarDirector::init( ) {
 	emplace_back_type( Float32UnityStack );
 	emplace_back_type( Float64UnityStack );
 
+	emplace_back_type( BoolArrayStack );
 	emplace_back_type( UInt8ArrayStack );
 	emplace_back_type( UInt16ArrayStack );
 	emplace_back_type( UInt32ArrayStack );

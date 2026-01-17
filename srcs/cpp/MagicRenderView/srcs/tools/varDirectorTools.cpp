@@ -107,6 +107,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	if( var_director_ptr == nullptr || conver_var_ptr == nullptr )
 		return false;
 	// 单元
+	const bool *boolPtr;
 	const uint8_t *uint8Ptr;
 	const uint16_t *uint16Ptr;
 	const uint32_t *uint32Ptr;
@@ -128,6 +129,11 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	const QTime *timePtr;
 
 	const NodeTypeInfo *nodeTypeInfoPtr;
+
+	if( var_director_ptr->cast_ptr( conver_var_ptr, boolPtr ) == true ) {
+		result_string = *boolPtr ? QObject::tr( "是" ) : QObject::tr( "否" );
+		return true;
+	}
 
 	if( var_director_ptr->cast_ptr( conver_var_ptr, uint8Ptr ) == true ) {
 		result_string = QString::number( *uint8Ptr );

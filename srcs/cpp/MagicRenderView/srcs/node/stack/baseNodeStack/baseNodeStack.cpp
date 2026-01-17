@@ -4,15 +4,19 @@
 #include <QMenu>
 
 #include "baseNode/addObjToArray/bin/binAddToArrayNode.h"
+#include "baseNode/addObjToArray/bool/boolAddToArrayNode.h"
 #include "baseNode/addObjToArray/float/floatAddToArrayNode.h"
 #include "baseNode/addObjToArray/int/intAddToArrayNode.h"
 #include "baseNode/addObjToArray/uint/uIntAddToArrayNode.h"
 #include "baseNode/conver/bin/toBinNode.h"
+#include "baseNode/conver/bool/toBoolNode.h"
 #include "baseNode/conver/float/toFloatNode.h"
 #include "baseNode/conver/int/toIntNode.h"
 #include "baseNode/conver/uint/toUIntNode.h"
 #include "baseNode/create/bin/binCreateArrayNode.h"
 #include "baseNode/create/bin/binCreateUnityNode.h"
+#include "baseNode/create/bool/boolCreateArrayNode.h"
+#include "baseNode/create/bool/boolCreateUnityNode.h"
 #include "baseNode/create/float/floatCreateArrayNode.h"
 #include "baseNode/create/float/floatCreateUnityNode.h"
 #include "baseNode/create/int/intCreateArrayNode.h"
@@ -73,6 +77,11 @@ bool BaseNodeStack::init( ) {
 		return false;
 	QString name = tr( "基础节点" );
 	setObjectName( name );
+
+	Def_EmaplaceBackNode( BoolAddToArrayNode );
+	Def_EmaplaceBackNode( BoolCreateUnityNode );
+	Def_EmaplaceBackNode( BoolCreateArrayNode );
+	Def_EmaplaceBackNode( ToBoolNode );
 
 	Def_EmaplaceBackNode( FloatAddToArrayNode );
 	Def_EmaplaceBackNode( FloatCreateUnityNode );

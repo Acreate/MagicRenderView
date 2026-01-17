@@ -94,6 +94,7 @@ protected:
 	/// @brief 过滤存储列表，筛选建议列表列表存储到匹配列表
 	/// @return 成功返回 true
 	virtual bool filterToAdviseVector( );
+	bool runNextValidNode( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;

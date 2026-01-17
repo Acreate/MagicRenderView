@@ -4,6 +4,7 @@
 #include <node/nodeTools/nodeTools.h>
 #include <QLibraryInfo>
 
+#include "../../../../port/outputPort/unity/boolOutputPort.h"
 #include "../../../../port/outputPort/unity/intOutputPort.h"
 
 AppIsShredBuilderInfoNode::AppIsShredBuilderInfoNode( const QString &node_name ) : ProcessNode( node_name ) {

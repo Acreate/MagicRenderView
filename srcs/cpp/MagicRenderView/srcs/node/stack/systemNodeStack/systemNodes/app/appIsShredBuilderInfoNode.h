@@ -3,12 +3,13 @@
 
 #include <node/node/processNode.h>
 
-class IntOutputPort;
+class BoolOutputPort;
+
 class AppIsShredBuilderInfoNode : public ProcessNode {
 	Q_OBJECT;
 protected:
-	IntOutputPort *outputPortPtr;
-	int64_t *outputVarPtr;
+	BoolOutputPort *outputPortPtr;
+	bool *outputVarPtr;
 public:
 	AppIsShredBuilderInfoNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
