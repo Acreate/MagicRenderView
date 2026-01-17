@@ -472,6 +472,7 @@ bool NodeRunInfo::runNextNode( ) {
 }
 bool NodeRunInfo::runResidueNode( ) {
 	isRunStop = false;
+	emit auto_run_status_change_signal( this, isRunStop );
 	std::chrono::milliseconds milliseconds;
 	long long count;
 	do {
@@ -509,6 +510,7 @@ bool NodeRunInfo::resetRunStartNode( ) {
 }
 bool NodeRunInfo::runStopNode( ) {
 	isRunStop = true;
+	emit auto_run_status_change_signal( this, isRunStop );
 	return true;
 }
 void NodeRunInfo::clear( ) {

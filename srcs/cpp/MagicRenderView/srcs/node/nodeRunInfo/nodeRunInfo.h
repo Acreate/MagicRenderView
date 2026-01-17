@@ -125,6 +125,10 @@ Q_SIGNALS:
 	/// @param clear_obj 清理对象
 	/// @param srack_info 信号堆栈
 	void clear_signal( NodeRunInfo *clear_obj, const SrackInfo &srack_info );
+	/// @brief 当自动运行状态被改变时，发出该信号
+	/// @param change_obj 信号对象 
+	/// @param new_status 新的状态
+	void auto_run_status_change_signal( NodeRunInfo *change_obj, bool new_status );
 };
 
 #endif // NODERUNINFO_H_H_HEAD__FILE__

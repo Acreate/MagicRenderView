@@ -22,7 +22,9 @@ bool RunArgInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 bool RunArgInfoNode::readyNodeRunData( ) {
-	*outputVarPtr = Application::getInstancePtr( )->arguments( ).join( " " );
+	QList< QString > arguments = Application::getInstancePtr( )->arguments( );
+	QList< QString > runArgs( arguments.begin( ) + 1, arguments.end( ) );
+	*outputVarPtr = runArgs.join( " " );
 	return true;
 }
 bool RunArgInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
