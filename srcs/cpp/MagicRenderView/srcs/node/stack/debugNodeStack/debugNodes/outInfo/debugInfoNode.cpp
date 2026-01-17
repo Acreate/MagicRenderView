@@ -7,8 +7,12 @@
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
 
+#include "../../../../../director/nodeDirector.h"
+#include "../../../../../director/nodeInfoEditorDirector.h"
 #include "../../../../../tools/varDirectorTools.h"
+#include "../../../../nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
 #include "../../../../nodeTools/nodeTools.h"
+#include "../../editorNodeInfoWidgets/debugNodeInfoWidget/debugNodeInfoWidget.h"
 
 bool DebugInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -22,8 +26,18 @@ bool DebugInfoNode::initEx( MainWidget *parent ) {
 bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
+NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) const {
+	return new DebugNodeInfoWidget;
+}
 
 bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	NodeInfoWidget *resultNodeInfoEditorWidget;
+	if( instancePtr->getNodeInfoEditorDirector( )->getNodeInfoEditorWidget( this, resultNodeInfoEditorWidget ) == false )
+		return true;
+	if( resultNodeInfoEditorWidget->initNodeInfo( this ) == false )
+		return true;
+	resultNodeInfoEditorWidget->show( );
+
 	auto outputPorts = nodeToolsPtr->getRefPort( inputBugPort );
 	size_t count = outputPorts->size( );
 	size_t index = 0;

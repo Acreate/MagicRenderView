@@ -13,6 +13,8 @@ public:
 		: ProcessNode( node_name ) { }
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
+protected:
+	NodeInfoWidget * getNodeEditorWidget( ) const override;
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:

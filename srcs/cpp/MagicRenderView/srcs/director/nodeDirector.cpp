@@ -403,6 +403,7 @@ bool NodeDirector::popNormalNodeEditorPropertyMenu( const QPoint &pop_pos, Node 
 	normalNodeEditorPropertyMenu->popup( pop_pos );
 	return true;
 }
+
 bool NodeDirector::popNormalGenerateNodeMenu( const QPoint &pop_pos ) const {
 	if( normalGenerateNodeMenu == nullptr )
 		return false;

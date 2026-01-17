@@ -190,9 +190,10 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 	// 获取窗口
 	result_node_info_editor_widget = node_ptr->getNodeEditorWidget( );
 	if( result_node_info_editor_widget )
-		if( result_node_info_editor_widget->initNodeInfo( node_ptr ) ) {
+		if( result_node_info_editor_widget->checkNodeValid( node_ptr ) ) {
 			appendEditorWidgetPackage( result_node_info_editor_widget );
 			connect( result_node_info_editor_widget, &NodeInfoWidget::hide_signal, this, &NodeInfoEditorDirector::hide_NodeInfoWidget_signal );
+			return true;
 		} else {
 			delete result_node_info_editor_widget;
 			result_node_info_editor_widget = nullptr;
