@@ -13,7 +13,6 @@ namespace infoTool {
 	inline bool toString( const QColor &conver_color_ref, QString &result_string ) {
 		return toString( &conver_color_ref, result_string );
 	}
-	bool toString( const VarDirector *var_director_ptr, void const *conver_var_ptr, QString &result_string );
 	bool fillVectorTarget( const uint8_t *ptr, const size_t &ptr_size, std::vector< uint8_t > &result );
 	bool fillObjTarget( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, uint8_t *target_var_ptr, const size_t &target_var_count );
 	inline bool fillObjTarget( uint64_t &result_count, const void *ptr, const size_t &ptr_size, std::vector< uint8_t > &result ) {

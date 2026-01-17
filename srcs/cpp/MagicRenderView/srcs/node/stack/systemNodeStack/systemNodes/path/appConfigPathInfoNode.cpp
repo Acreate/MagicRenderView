@@ -13,11 +13,8 @@ AppConfigPathInfoNode::AppConfigPathInfoNode( const QString &node_name ) : Proce
 }
 bool AppConfigPathInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		auto nodeTypeName = getVirtualNodeTypeName( );
-		auto separatorSplitPath = pathTools::normalPathSeparatorSplitPath( nodeTypeName );
-		qint64 count = separatorSplitPath.size( );
-		if( count > 0 )
-			nodeTypeName = separatorSplitPath.last( );
+		QString nodeTypeName;
+		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
 		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
 			return false;
 		return true;

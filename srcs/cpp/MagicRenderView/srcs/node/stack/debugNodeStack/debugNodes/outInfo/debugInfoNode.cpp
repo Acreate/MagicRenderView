@@ -7,6 +7,7 @@
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
 
+#include "../../../../../tools/varDirectorTools.h"
 #include "../../../../nodeTools/nodeTools.h"
 
 bool DebugInfoNode::initEx( MainWidget *parent ) {
@@ -42,7 +43,7 @@ bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, siz
 			if( parentNodePtr ) {
 				varDirectorPtr = parentNodePtr->getVarDirector( );
 				varPtr = outputPortArrayPtr[ index ]->getVarPtr( );
-				if( infoTool::toString( varDirectorPtr, varPtr, resultString ) ) {
+				if( VarDirectorTools::toString( varDirectorPtr, varPtr, resultString ) ) {
 					resultString = tr( "[%1/%2]:%3" ).arg( parentNodePtr->getNodeTitleName( ) ).arg( outputPortArrayPtr[ index ]->getPortName( ) ).arg( resultString );
 					printerDirectorPtr->info( resultString, Create_SrackInfo( ) );
 					continue;

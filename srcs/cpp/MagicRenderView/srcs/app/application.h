@@ -43,11 +43,14 @@ protected:
 	Qt::WindowStates mainWindowState;
 protected:
 	QDateTime *appInitRunDataTime;
+	QDateTime *builderProjectDataTime;
 protected:
 	QString iniSaveFilePathName;
 	QString logSaveFilePathName;
 protected:
-
+	QString builderToolInfo;
+	QString qtVersionNumber;
+	bool qtBuilderIsShared;
 public:
 	Application( int &argc, char **argv, int i = ApplicationFlags );
 	~Application( ) override;
@@ -63,7 +66,11 @@ public:
 	virtual NodeInfoEditorDirector * getNodeInfoEditorDirector( ) const { return nodeInfoEditorDirector; }
 	virtual EditorDirector * getEditorDirector( ) const { return editorDirector; }
 	virtual BuilderDirector * getBuilderDirector( ) const { return builderDirector; }
+	virtual const QString & getBuilderToolInfo( ) const { return builderToolInfo; }
+	virtual const QString & getQtVersionNumber( ) const { return qtVersionNumber; }
+	virtual bool getQTBuilderIsShared( ) const { return qtBuilderIsShared; }
 	virtual const QDateTime * getAppInitRunDataTime( ) const { return appInitRunDataTime; }
+	virtual QDateTime * getBuilderProjectDataTime( ) const { return builderProjectDataTime; }
 	virtual const QString & getIniSaveFilePathName( ) const { return iniSaveFilePathName; }
 	virtual const QString & getLogSaveFilePathName( ) const { return logSaveFilePathName; }
 	virtual AppDirector * getAppDirector( ) const { return appDirector; }

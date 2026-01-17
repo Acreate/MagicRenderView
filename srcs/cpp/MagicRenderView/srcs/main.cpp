@@ -1,5 +1,4 @@
 ﻿#include <app/application.h>
-#include <QLibraryInfo>
 
 #include "testCode/testCodeSources.h"
 

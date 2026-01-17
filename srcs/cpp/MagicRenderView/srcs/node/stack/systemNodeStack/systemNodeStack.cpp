@@ -1,5 +1,14 @@
 ﻿#include "systemNodeStack.h"
 
+#include "systemNodes/app/appBuilderTimeNode.h"
+#include "systemNodes/app/appBuilderToolNameNode.h"
+#include "systemNodes/app/appFileBaseNameInfoBase.h"
+#include "systemNodes/app/appFilePathInfoNode.h"
+#include "systemNodes/app/appIsShredBuilderInfoNode.h"
+#include "systemNodes/app/appRunStartTimeNode.h"
+#include "systemNodes/app/appVersionInfoNode.h"
+#include "systemNodes/app/appWorkPathInfoNode.h"
+#include "systemNodes/app/runArgInfoNode.h"
 #include "systemNodes/path/appConfigPathInfoNode.h"
 #include "systemNodes/path/appDataPathInfoNode.h"
 #include "systemNodes/path/applicationsPathInfoNode.h"
@@ -55,6 +64,15 @@ bool SystemNodeStack::init( ) {
 	Def_EmaplaceBackNode( TemplatesPathInfoNode );
 	Def_EmaplaceBackNode( TempPathInfoNode );
 
+	Def_EmaplaceBackNode( AppBuilderTimeNode );
+	Def_EmaplaceBackNode( AppBuilderToolNameNode );
+	Def_EmaplaceBackNode( AppFileBaseNameInfoBase );
+	Def_EmaplaceBackNode( AppFilePathInfoNode );
+	Def_EmaplaceBackNode( AppIsShredBuilderInfoNode );
+	Def_EmaplaceBackNode( AppRunStartTimeNode );
+	Def_EmaplaceBackNode( AppVersionInfoNode );
+	Def_EmaplaceBackNode( AppWorkPathInfoNode );
+	Def_EmaplaceBackNode( RunArgInfoNode );
 	return true;
 }
 

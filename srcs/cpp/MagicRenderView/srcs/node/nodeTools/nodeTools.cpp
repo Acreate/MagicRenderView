@@ -284,7 +284,7 @@ bool NodeTools::getStaticNormalPath( Node *node_ptr, QString &resul_normal_path 
 	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
 	return true;
 }
-bool NodeTools::getVirtualNormalPathLsstName( InputPort *input_port_ptr, QString &resul_normal_path ) {
+bool NodeTools::getVirtualNormalPathLastName( InputPort *input_port_ptr, QString &resul_normal_path ) {
 	if( getVirtualNormalPath( input_port_ptr, resul_normal_path ) == false )
 		return false;
 	if( resul_normal_path.isEmpty( ) )
@@ -293,7 +293,7 @@ bool NodeTools::getVirtualNormalPathLsstName( InputPort *input_port_ptr, QString
 	resul_normal_path = list.last( );
 	return true;
 }
-bool NodeTools::getVirtualNormalPathLsstName( OutputPort *output_port_ptr, QString &resul_normal_path ) {
+bool NodeTools::getVirtualNormalPathLastName( OutputPort *output_port_ptr, QString &resul_normal_path ) {
 	if( getVirtualNormalPath( output_port_ptr, resul_normal_path ) == false )
 		return false;
 	if( resul_normal_path.isEmpty( ) )
@@ -320,7 +320,7 @@ bool NodeTools::getStaticNormalPathLsstName( OutputPort *output_port_ptr, QStrin
 	resul_normal_path = list.last( );
 	return true;
 }
-bool NodeTools::getVirtualNormalPathLsstName( Node *node_ptr, QString &resul_normal_path ) {
+bool NodeTools::getVirtualNormalPathLastName( Node *node_ptr, QString &resul_normal_path ) {
 	if( getVirtualNormalPath( node_ptr, resul_normal_path ) == false )
 		return false;
 	if( resul_normal_path.isEmpty( ) )

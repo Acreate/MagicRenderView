@@ -13,11 +13,8 @@ ConfigPathInfoNode::ConfigPathInfoNode( const QString &node_name ) : ProcessNode
 }
 bool ConfigPathInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		auto nodeTypeName = getVirtualNodeTypeName( );
-		auto separatorSplitPath = pathTools::normalPathSeparatorSplitPath( nodeTypeName );
-		qint64 count = separatorSplitPath.size( );
-		if( count > 0 )
-			nodeTypeName = separatorSplitPath.last( );
+		QString nodeTypeName;
+		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
 		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
 			return false;
 		return true;
@@ -28,7 +25,7 @@ bool ConfigPathInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 bool ConfigPathInfoNode::readyNodeRunData( ) {
-	*pathPtr = QStandardPaths::writableLocation( QStandardPaths::AppConfigLocation );
+	*pathPtr = QStandardPaths::writableLocation( QStandardPaths::ConfigLocation );
 	return true;
 }
 bool ConfigPathInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {

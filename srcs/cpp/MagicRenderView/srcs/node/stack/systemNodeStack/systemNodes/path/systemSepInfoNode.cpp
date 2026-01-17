@@ -2,6 +2,7 @@
 
 #include <node/nodeTools/nodeTools.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
+#include <QDir>
 #include <QStandardPaths>
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
@@ -13,11 +14,8 @@ SystemSepInfoNode::SystemSepInfoNode( const QString &node_name ) : ProcessNode( 
 }
 bool SystemSepInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		auto nodeTypeName = getVirtualNodeTypeName( );
-		auto separatorSplitPath = pathTools::normalPathSeparatorSplitPath( nodeTypeName );
-		qint64 count = separatorSplitPath.size( );
-		if( count > 0 )
-			nodeTypeName = separatorSplitPath.last( );
+		QString nodeTypeName;
+		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
 		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
 			return false;
 		return true;
@@ -28,7 +26,7 @@ bool SystemSepInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 bool SystemSepInfoNode::readyNodeRunData( ) {
-	*pathPtr = QStandardPaths::writableLocation( QStandardPaths::AppConfigLocation );
+	*pathPtr = QDir::separator( );
 	return true;
 }
 bool SystemSepInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {

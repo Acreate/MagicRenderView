@@ -65,11 +65,11 @@ public:
 	virtual bool getVirtualNormalPath( Node *node_ptr, QString &resul_normal_path );
 	virtual bool getStaticNormalPath( Node *node_ptr, QString &resul_normal_path );
 
-	virtual bool getVirtualNormalPathLsstName( InputPort *input_port_ptr, QString &resul_normal_path );
-	virtual bool getVirtualNormalPathLsstName( OutputPort *output_port_ptr, QString &resul_normal_path );
+	virtual bool getVirtualNormalPathLastName( InputPort *input_port_ptr, QString &resul_normal_path );
+	virtual bool getVirtualNormalPathLastName( OutputPort *output_port_ptr, QString &resul_normal_path );
 	virtual bool getStaticNormalPathLsstName( InputPort *input_port_ptr, QString &resul_normal_path );
 	virtual bool getStaticNormalPathLsstName( OutputPort *output_port_ptr, QString &resul_normal_path );
-	virtual bool getVirtualNormalPathLsstName( Node *node_ptr, QString &resul_normal_path );
+	virtual bool getVirtualNormalPathLastName( Node *node_ptr, QString &resul_normal_path );
 	virtual bool getStaticNormalPathLsstName( Node *node_ptr, QString &resul_normal_path );
 	// 重构宏
 protected:

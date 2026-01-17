@@ -10,9 +10,11 @@
 #include <director/nodeDirector.h>
 #include <director/printerDirector.h>
 #include <director/varDirector.h>
+#include <QLibraryInfo>
 
 #include <win/mainWindow.h>
 
+#include <cmake_include_to_c_cpp_header_env.h>
 #include "../director/appDirector.h"
 #include "../director/builderDirector.h"
 #include "../director/editorDirector.h"
@@ -39,6 +41,8 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 	builderDirector = new BuilderDirector;
 	nodeInfoEditorDirector = new NodeInfoEditorDirector;
 	appInitRunDataTime = new QDateTime;
+	builderProjectDataTime = new QDateTime( QDate::fromString( __DATE__, "MMM dd yyyy" ), QTime::fromString( __TIME__, "hh:mm:ss" ) );
+
 }
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
@@ -104,6 +108,10 @@ bool Application::event( QEvent *event ) {
 }
 bool Application::init( ) {
 	*appInitRunDataTime = QDateTime::currentDateTime( );
+	builderToolInfo = tr( "QT %1 (%2.%3.%4.%5)" ).arg( QT_VERSION_STR ).arg( cmake_value_CMAKE_SYSTEM ).arg( cmake_value_CMAKE_SYSTEM_PROCESSOR ).arg( Builder_Tools_MSVC ? "MSVC" : Builder_Tools_GNU ? "GNU" : Builder_Tools_Clang ? "Clang" : "null" ).arg( cmake_value_CMAKE_BUILD_TYPE );
+	auto versionNumber = QLibraryInfo::version( );
+	qtVersionNumber = tr( "%1.%2.%3" ).arg( versionNumber.majorVersion( ) ).arg( versionNumber.minorVersion( ) ).arg( versionNumber.microVersion( ) );;
+	qtBuilderIsShared = QLibraryInfo::isSharedBuild( );;
 	auto currentApplcationDirPath = applicationDirPath( );
 	auto appName = applicationName( );
 	iniSaveFilePathName = currentApplcationDirPath + "/settings/" + appName + ".status";

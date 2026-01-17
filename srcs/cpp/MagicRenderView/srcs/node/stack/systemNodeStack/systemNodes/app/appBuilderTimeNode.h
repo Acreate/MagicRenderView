@@ -3,29 +3,12 @@
 
 #include <node/node/processNode.h>
 
-class IntOutputPort;
 class DateTimeOutputPort;
-class StringOutputPort;
-class AnyVarInputPort;
 class AppBuilderTimeNode : public ProcessNode {
 	Q_OBJECT;
 protected:
-	StringOutputPort *appNameOutputPort;
-	StringOutputPort *appPathOutputPort;
-	DateTimeOutputPort *appStartTimeOutputPort;
-	DateTimeOutputPort *builderTimeOutputPort;
-	StringOutputPort *builderToolOutputPort;
-	StringOutputPort *versionOutputPort;
-	StringOutputPort *pathSepOutputPort;
-	IntOutputPort *isSharedOutputPort;
-	QString * appNameVarPtr;
-	QString * appPathVarPtr;
-	QDateTime * builderTimeVarPtr;
-	QDateTime * appStartTimeVarPtr;
-	QString * builderToolVarPtr;
-	QString * versionVarPtr;
-	QString * sep;
-	int64_t * isShared;
+	DateTimeOutputPort *outputPortPtr;
+	QDateTime *outputVarPtr;
 public:
 	AppBuilderTimeNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
@@ -34,6 +17,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "软件/软件信息" ) );
+	Def_Extend_NodeTypeName( Node::tr( "软件/编译时间" ) );
 };
 #endif // APPBUILDERTIMENODE_H_H_HEAD__FILE__
