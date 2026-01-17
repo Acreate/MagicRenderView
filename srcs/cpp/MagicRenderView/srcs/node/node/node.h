@@ -309,7 +309,7 @@ protected:
 		if( result_output_port_ptr == nullptr )
 			return false;
 		if( appendDynamicTypeOutputPort( result_output_port_ptr ) == true ) {
-			if( setPortVar( result_output_port_ptr, bind_port_var_ptr ) == true )
+			if( setVarInfo( result_output_port_ptr, bind_port_var_ptr ) == true )
 				return true;
 		}
 		releaseDynamicTypeOutputPort( result_output_port_ptr );
@@ -352,7 +352,7 @@ protected:
 			return false;
 		if( appendInputPort( resultPortPtr ) == true ) {
 			result_input_port_ptr = resultPortPtr;
-			if( setPortVar( resultPortPtr, bind_port_var_ptr ) == true )
+			if( setVarInfo( resultPortPtr, bind_port_var_ptr ) == true )
 				return true;
 		}
 		delete resultPortPtr;
@@ -374,7 +374,7 @@ protected:
 		if( result_ptr == nullptr )
 			return false;
 		if( appendDynamicTypeInputPort( result_ptr ) == true ) {
-			if( setPortVar( result_ptr, bind_port_var_ptr ) == true )
+			if( setVarInfo( result_ptr, bind_port_var_ptr ) == true )
 				return true;
 		}
 		releaseDynamicTypeInputPort( result_ptr );

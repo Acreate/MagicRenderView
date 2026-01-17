@@ -55,7 +55,7 @@ bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t cur
 		varDirector = outputPort->getVarDirector( );
 		varPtr = outputPort->getVarPtr( );
 		nodeToolsPtr->getRefPortNodeVector( channelOutputPort, adviseNextVector );
-		nodeToolsPtr->setInfo( channelOutputPort, varDirector, varPtr );
+		nodeToolsPtr->setVarInfo( channelOutputPort, varDirector, varPtr );
 	}
 	return true;
 }

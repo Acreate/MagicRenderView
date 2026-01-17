@@ -87,6 +87,14 @@ QString pathTools::pathTree::toQString( size_t index, QChar fill_char ) const {
 		result = result + '\n' + currentData[ currentIndex ]->toQString( index + 1, fill_char );
 	return result;
 }
+bool pathTools::getNormalBaseName( const QString &normal_target_path, QString &result_bse_nmae ) {
+	auto pathSeparatorSplitPath = normalPathSeparatorSplitPath( normal_target_path );
+	qsizetype count = pathSeparatorSplitPath.size( );
+	if( count == 0 )
+		return false;
+	result_bse_nmae = pathSeparatorSplitPath.last( );
+	return true;
+}
 QString pathTools::normalPathSeparatorToPath( const QString &normal_target_path ) {
 	QString result;
 	QStringList splitePath = normalPathSeparatorSplitPath( normal_target_path ), buff;

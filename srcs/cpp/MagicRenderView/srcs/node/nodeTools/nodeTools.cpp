@@ -1,6 +1,7 @@
 ﻿#include "nodeTools.h"
 
 #include "../../director/varDirector.h"
+#include "../../tools/pathTools.h"
 #include "../node/node.h"
 #include "../port/inputPort/dynamicTypeInputPort.h"
 #include "../port/inputPort/inputPort.h"
@@ -169,13 +170,13 @@ bool NodeTools::getFilterNotRefPortNodeVector( const OutputPort *output_port, st
 	result_filter_node_vector.resize( desCount );
 	return true;
 }
-bool NodeTools::setPortVar( OutputPort *output_port, void *new_par ) {
+bool NodeTools::setVarInfo( OutputPort *output_port, void *new_par ) {
 	if( output_port == nullptr )
 		return false;
 	output_port->varPtr = new_par;
 	return true;
 }
-bool NodeTools::setPortVar( DynamicTypeOutputPort *output_port, void *new_par ) {
+bool NodeTools::setVarInfo( DynamicTypeOutputPort *output_port, void *new_par ) {
 	if( output_port == nullptr )
 		return false;
 	output_port->varPtr = new_par;
@@ -208,7 +209,7 @@ bool NodeTools::setVarDirector( InputPort *input_port, VarDirector *var_director
 	input_port->inputPortVarDirectorPtr = var_director;
 	return true;
 }
-bool NodeTools::getInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
+bool NodeTools::getVarInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
 	if( output_port == nullptr )
 		return false;
 	result_input_port_node_parent = output_port->parentNode;
@@ -218,7 +219,126 @@ bool NodeTools::getInfo( OutputPort *output_port, Node *&result_input_port_node_
 	result_var_ptr = output_port->varPtr;
 	return true;
 }
-bool NodeTools::setInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr ) {
+bool NodeTools::getVarInfo( OutputPort *output_port_ptr, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	if( output_port_ptr )
+		return false;
+	result_var_director = output_port_ptr->getVarDirector( );
+	result_var_ptr = output_port_ptr->getVarPtr( );
+	return result_var_director != nullptr && result_var_ptr != nullptr;
+}
+bool NodeTools::getVarInfo( InputPort *input_port_ptr, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	if( input_port_ptr )
+		return false;
+	result_var_director = input_port_ptr->getVarDirector( );
+	result_var_ptr = input_port_ptr->getVarPtr( );
+	return result_var_director != nullptr && result_var_ptr != nullptr;
+}
+bool NodeTools::getVirtualNormalPath( InputPort *input_port_ptr, QString &resul_normal_path ) {
+	if( input_port_ptr == nullptr )
+		return false;
+	if( getVirtualNormalPath( input_port_ptr->parentNode, resul_normal_path ) == false )
+		return false;
+	resul_normal_path = resul_normal_path + "\\" + input_port_ptr->getPortName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getVirtualNormalPath( OutputPort *output_port_ptr, QString &resul_normal_path ) {
+	if( output_port_ptr == nullptr )
+		return false;
+	if( getVirtualNormalPath( output_port_ptr->parentNode, resul_normal_path ) == false )
+		return false;
+	resul_normal_path = resul_normal_path + "\\" + output_port_ptr->getPortName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getStaticNormalPath( InputPort *input_port_ptr, QString &resul_normal_path ) {
+	if( input_port_ptr == nullptr )
+		return false;
+	if( getStaticNormalPath( input_port_ptr->parentNode, resul_normal_path ) == false )
+		return false;
+	resul_normal_path = resul_normal_path + "\\" + input_port_ptr->getPortName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getStaticNormalPath( OutputPort *output_port_ptr, QString &resul_normal_path ) {
+
+	if( output_port_ptr == nullptr )
+		return false;
+	if( getStaticNormalPath( output_port_ptr->parentNode, resul_normal_path ) == false )
+		return false;
+	resul_normal_path = resul_normal_path + "\\" + output_port_ptr->getPortName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getVirtualNormalPath( Node *node_ptr, QString &resul_normal_path ) {
+	if( node_ptr == nullptr )
+		return false;
+	resul_normal_path = node_ptr->getVirtualNodeTypeName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getStaticNormalPath( Node *node_ptr, QString &resul_normal_path ) {
+	if( node_ptr == nullptr )
+		return false;
+	resul_normal_path = node_ptr->getStaticNodeTypeName( );
+	resul_normal_path = pathTools::normalPathSeparatorToPath( resul_normal_path );
+	return true;
+}
+bool NodeTools::getVirtualNormalPathLsstName( InputPort *input_port_ptr, QString &resul_normal_path ) {
+	if( getVirtualNormalPath( input_port_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::getVirtualNormalPathLsstName( OutputPort *output_port_ptr, QString &resul_normal_path ) {
+	if( getVirtualNormalPath( output_port_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::getStaticNormalPathLsstName( InputPort *input_port_ptr, QString &resul_normal_path ) {
+	if( getStaticNormalPath( input_port_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::getStaticNormalPathLsstName( OutputPort *output_port_ptr, QString &resul_normal_path ) {
+	if( getStaticNormalPath( output_port_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::getVirtualNormalPathLsstName( Node *node_ptr, QString &resul_normal_path ) {
+	if( getVirtualNormalPath( node_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::getStaticNormalPathLsstName( Node *node_ptr, QString &resul_normal_path ) {
+	if( getStaticNormalPath( node_ptr, resul_normal_path ) == false )
+		return false;
+	if( resul_normal_path.isEmpty( ) )
+		return false;
+	auto list = pathTools::normalPathSeparatorSplitPath( resul_normal_path );
+	resul_normal_path = list.last( );
+	return true;
+}
+bool NodeTools::setVarInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr ) {
 	if( output_port == nullptr )
 		return false;
 	output_port->varDirectorPtr = var_director;
@@ -230,7 +350,7 @@ std::vector< OutputPort * > * NodeTools::getRefPort( InputPort *input_port ) {
 		return nullptr;
 	return &input_port->refOutputPortVector;
 }
-bool NodeTools::setInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
+bool NodeTools::setVarInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
 	if( input_port == nullptr )
 		return false;
 	input_port->inputPortVarDirectorPtr = var_director;
@@ -245,7 +365,7 @@ bool NodeTools::bindPortVar( const QString &bind_type_name, OutputPort *bind_out
 		return false;
 	if( varDirector->create( bind_type_name, result_var_ptr ) == false )
 		return false;
-	if( setPortVar( bind_output_port, result_var_ptr ) == false ) {
+	if( setVarInfo( bind_output_port, result_var_ptr ) == false ) {
 		varDirector->release( result_var_ptr );
 		return false;
 	}
@@ -259,7 +379,7 @@ bool NodeTools::bindPortVar( const QString &bind_type_name, DynamicTypeOutputPor
 		return false;
 	if( varDirector->create( bind_type_name, result_var_ptr ) == false )
 		return false;
-	if( setPortVar( bind_output_port, result_var_ptr ) == false ) {
+	if( setVarInfo( bind_output_port, result_var_ptr ) == false ) {
 		varDirector->release( result_var_ptr );
 		return false;
 	}
@@ -290,6 +410,12 @@ bool NodeTools::createDynamicTypeInputPort( const QString &dynamic_type_input_po
 	}
 	return false;
 }
+bool NodeTools::finVarDirectorTypeName( const VarDirector *var_type_get_var_director, const QString &org_type_name, QString &result_var_director_type_name ) const {
+	return var_type_get_var_director->getTypeName( org_type_name, result_var_director_type_name );
+}
+bool NodeTools::finVarDirectorVarPtrTypeName( const VarDirector *var_type_get_var_director, const void *find_var_ptr, QString &result_var_director_type_name ) const {
+	return var_type_get_var_director->getObjPtrAtTypeName( find_var_ptr, result_var_director_type_name );
+}
 bool NodeTools::appendOutputPortType( Node *append_output_port_target_node, OutputPort *result_output_port ) {
 	return append_output_port_target_node->appendOutputPort( result_output_port );
 }
@@ -308,7 +434,7 @@ bool NodeTools::getVarDirector( InputPort *input_port, VarDirector *&result_var_
 	result_var_ptr = input_port->inputPortVarPtr;
 	return true;
 }
-bool NodeTools::getInfo( InputPort *input_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
+bool NodeTools::getVarInfo( InputPort *input_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
 
 	if( input_port == nullptr )
 		return false;
@@ -325,13 +451,13 @@ bool NodeTools::setPortMultiple( InputPort *input_port, bool multiple ) {
 	input_port->multiple = multiple;
 	return true;
 }
-bool NodeTools::setPortVar( InputPort *input_port, void *new_par ) {
+bool NodeTools::setVarInfo( InputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
 	input_port->inputPortVarPtr = new_par;
 	return true;
 }
-bool NodeTools::setPortVar( DynamicTypeInputPort *input_port, void *new_par ) {
+bool NodeTools::setVarInfo( DynamicTypeInputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
 	input_port->inputPortVarPtr = new_par;
