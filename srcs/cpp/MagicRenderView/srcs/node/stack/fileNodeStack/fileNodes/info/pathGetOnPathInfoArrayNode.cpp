@@ -4,7 +4,7 @@
 #include <tools/infoTool.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../../tools/path.h"
+#include "../../../../../tools/pathTools.h"
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../port/outputPort/array/stringVectorOutputPort.h"
@@ -50,7 +50,7 @@ bool PathGetOnPathInfoArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_d
 	QString *path;
 	if( varDirector->cast_ptr( varPtr, path ) == false )
 		return true;
-	if( path::getOnPathInfoVector( *path, *dirPathOutputVarPtr, *filePathOutputVarPtr ) == false )
+	if( pathTools::getOnPathInfoVector( *path, *dirPathOutputVarPtr, *filePathOutputVarPtr ) == false )
 		return true;
 	pathSubPathOutputVarPtr->append_range( *dirPathOutputVarPtr );
 	pathSubPathOutputVarPtr->append_range( *filePathOutputVarPtr );

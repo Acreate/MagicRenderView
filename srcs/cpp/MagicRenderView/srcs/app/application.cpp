@@ -19,8 +19,7 @@
 #include "../director/menuDirector.h"
 #include "../director/nodeInfoEditorDirector.h"
 #include "../srack/srackInfo.h"
-
-#include "../tools/path.h"
+#include "../tools/pathTools.h"
 
 Application *Application::instance = nullptr;
 Application * Application::getInstancePtr( ) {
@@ -110,9 +109,9 @@ bool Application::init( ) {
 	iniSaveFilePathName = currentApplcationDirPath + "/settings/" + appName + ".status";
 	QFileInfo filePermission( iniSaveFilePathName );
 	iniSaveFilePathName = filePermission.absoluteFilePath( );
-	if( path::createFile( iniSaveFilePathName ) == false )
+	if( pathTools::createFile( iniSaveFilePathName ) == false )
 		return false;
-	if( path::getPathHasFileInfo( iniSaveFilePathName, filePermission ) == false )
+	if( pathTools::getPathHasFileInfo( iniSaveFilePathName, filePermission ) == false )
 		return false;
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;
@@ -120,10 +119,10 @@ bool Application::init( ) {
 	logSaveFilePathName = currentApplcationDirPath + "/logs/" + appName + appInitRunDataTime->toString( tr( "!yyyy_MM_dd.log" ) );
 	filePermission.setFile( logSaveFilePathName );
 	logSaveFilePathName = filePermission.absoluteFilePath( );
-	path::removeFile( logSaveFilePathName );
-	if( path::createFile( logSaveFilePathName ) == false )
+	pathTools::removeFile( logSaveFilePathName );
+	if( pathTools::createFile( logSaveFilePathName ) == false )
 		return false;
-	if( path::getPathHasFileInfo( logSaveFilePathName, filePermission ) == false )
+	if( pathTools::getPathHasFileInfo( logSaveFilePathName, filePermission ) == false )
 		return false;
 	if( filePermission.isWritable( ) == false || filePermission.isReadable( ) == false )
 		return false;

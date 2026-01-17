@@ -11,7 +11,7 @@
 #include "../node/nodeRunInfo/nodeRunInfo.h"
 
 #include "../srack/srackInfo.h"
-#include "../tools/path.h"
+#include "../tools/pathTools.h"
 #include "nodeDirector.h"
 #include "printerDirector.h"
 MenuDirector::MenuDirector( QObject *parent ) : QObject( parent ) {
@@ -169,7 +169,7 @@ void MenuDirector::savePorjectToFile( ) {
 	QFileInfo fileInfo( openFileName );
 	QString absoluteFilePath = fileInfo.absoluteFilePath( );
 	if( fileInfo.exists( ) == false )
-		if( path::createFile( absoluteFilePath ) == false )
+		if( pathTools::createFile( absoluteFilePath ) == false )
 			return;
 	saveFileDirPath = fileInfo.dir( ).absolutePath( );
 	QFile file( absoluteFilePath );

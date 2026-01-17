@@ -11,7 +11,7 @@
 #include "../../node/stack/stringNodeStack/stringNodeStack.h"
 #include "../../node/stack/systemNodeStack/systemNodeStack.h"
 #include "../../srack/srackInfo.h"
-#include "../../tools/path.h"
+#include "../../tools/pathTools.h"
 
 void NormalGenerateNodeMenu::releaseObjResource( ) {
 
@@ -98,7 +98,7 @@ QMenu * NormalGenerateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stac
 	size_t count = node_stack_ptr->nodeGenerate.size( );
 	auto data = node_stack_ptr->nodeGenerate.data( );
 	size_t index = 0;
-	path::pathTree pathTree( nodeStackName );
+	pathTools::pathTree pathTree( nodeStackName );
 	for( ; index < count; ++index )
 		pathTree.appSubPath( data[ index ].first );
 	if( pathTree.getSubPath( ).size( ) == 0 )
@@ -110,7 +110,7 @@ QMenu * NormalGenerateNodeMenu::fromNodeGenerateCreateMenu( NodeStack *node_stac
 	delete resultMenu;
 	return nullptr;
 }
-bool NormalGenerateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &top_name, path::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count ) {
+bool NormalGenerateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &top_name, pathTools::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count ) {
 	auto pathTreeSubPath = path_tree->getSubPath( );
 	size_t subPathCount = pathTreeSubPath.size( );
 	if( subPathCount == 0 )
@@ -121,7 +121,7 @@ bool NormalGenerateNodeMenu::fromPathTreeGenerateCreateaAction( const QString &t
 	QString name;
 	size_t index;
 	QString absolutePathName;
-	std::list< path::pathTree * > subPathTree;
+	std::list< pathTools::pathTree * > subPathTree;
 	for( ; subPathIndex < subPathCount; ++subPathIndex )
 		if( pathTreeSubPathTree[ subPathIndex ]->getSubPath( ).size( ) == 0 ) {
 			name = pathTreeSubPathTree[ subPathIndex ]->getName( );

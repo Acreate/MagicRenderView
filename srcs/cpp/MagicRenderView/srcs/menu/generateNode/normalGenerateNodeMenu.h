@@ -6,7 +6,7 @@
 
 #include "../../tools/aliasType.h"
 
-namespace path {
+namespace pathTools {
 	class pathTree;
 }
 class Node;
@@ -25,7 +25,7 @@ protected:
 protected:
 	virtual void releaseObjResource( );
 	virtual QMenu * fromNodeGenerateCreateMenu( NodeStack *node_stack_ptr );
-	virtual bool fromPathTreeGenerateCreateaAction( const QString &top_name, path::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count );
+	virtual bool fromPathTreeGenerateCreateaAction( const QString &top_name, pathTools::pathTree *path_tree, QMenu *parent_menu, std::pair< QString, std::function< Node *( const QString & ) > > *node_create_stack_array_ptr, const size_t &node_create_stack_array_count );
 	virtual void appendCareateItem( QAction *create_node_item, const QString &create_node_name, const NormalGenerateNodeMenuType::TCreateNodeFunction &create_node_function );
 private Q_SLOTS:
 	void actionSlots( QAction *action );

@@ -20,7 +20,7 @@ class DrawLinkWidget;
 class DrawHighlightWidget;
 class SrackInfo;
 class DrawNodeWidget;
-namespace path {
+namespace pathTools {
 	class pathTree;
 }
 class OutputPort;

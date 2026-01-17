@@ -5,8 +5,7 @@
 #include "../../app/application.h"
 
 #include "../../director/printerDirector.h"
-#include "../../tools/path.h"
-
+#include "../../tools/pathTools.h"
 #include "../node/node.h"
 bool NodeStack::init( ) {
 	instancePtr = Application::getInstancePtr( );
@@ -15,7 +14,7 @@ bool NodeStack::init( ) {
 	return true;
 }
 bool NodeStack::appendNodeGenerateUnity( const QString &name, const std::function< Node *( const QString & ) > &generate_function ) {
-	auto normalPathSeparatorToPath = path::normalPathSeparatorToPath( name );
+	auto normalPathSeparatorToPath = pathTools::normalPathSeparatorToPath( name );
 	nodeGenerate.emplace_back( std::pair( normalPathSeparatorToPath, generate_function ) );
 	return true;
 }

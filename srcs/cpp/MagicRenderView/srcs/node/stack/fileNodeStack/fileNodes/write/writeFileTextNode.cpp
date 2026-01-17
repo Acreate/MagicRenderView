@@ -4,7 +4,7 @@
 #include <qfile.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../../tools/path.h"
+#include "../../../../../tools/pathTools.h"
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/outputPort.h"
 bool WriteFileTextNode::initEx( MainWidget *parent ) {
@@ -33,7 +33,7 @@ bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	QString *filePath;
 	if( varDirector->cast_ptr( varPtr, filePath ) == false )
 		return true;
-	if( path::createFile( *filePath ) == false )
+	if( pathTools::createFile( *filePath ) == false )
 		return true;
 
 	wirteFileRefPort = nodeToolsPtr->getRefPort( writeTextPort );

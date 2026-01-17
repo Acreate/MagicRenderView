@@ -12,7 +12,7 @@
 #include <srack/srackInfo.h>
 #include <widget/mainWidget.h>
 
-#include "../../tools/path.h"
+#include "../../tools/pathTools.h"
 #include "../nodeInfo/nodeStyleTypePen.h"
 #include "../nodeTools/nodeTools.h"
 #include "../port/inputPort/dynamicTypeInputPort.h"
@@ -552,7 +552,7 @@ bool Node::init( MainWidget *parent ) {
 	}
 
 	nodeTitleName = getVirtualNodeTypeName( );
-	nodeTitleName = path::normalPathSeparatorToPath( nodeTitleName );
+	nodeTitleName = pathTools::normalPathSeparatorToPath( nodeTitleName );
 	titileLabel->setText( nodeTitleName );
 	setParent( parent );
 	if( nodeToolsPtr )

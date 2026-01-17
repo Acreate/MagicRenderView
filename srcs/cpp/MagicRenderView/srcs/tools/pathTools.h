@@ -1,10 +1,10 @@
-﻿#ifndef PATH_H_H_HEAD__FILE__
-#define PATH_H_H_HEAD__FILE__
+﻿#ifndef PATHTOOLS_H_H_HEAD__FILE__
+#define PATHTOOLS_H_H_HEAD__FILE__
 
 #include <qstring.h>
 
 class QFileInfo;
-namespace path {
+namespace pathTools {
 	class friendPathTree;
 	class pathTree {
 		friend class friendPathTree;
@@ -75,4 +75,4 @@ namespace path {
 	bool getInPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector );
 };
 
-#endif // PATH_H_H_HEAD__FILE__
+#endif // PATHTOOLS_H_H_HEAD__FILE__

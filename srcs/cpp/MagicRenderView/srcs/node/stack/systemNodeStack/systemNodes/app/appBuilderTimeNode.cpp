@@ -1,19 +1,17 @@
-﻿#include "appInfoNode.h"
+﻿#include "appBuilderTimeNode.h"
 
 #include <app/application.h>
 #include <cmake_include_to_c_cpp_header_env.h>
 #include <director/varDirector.h>
+#include <node/nodeTools/nodeTools.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QDir>
 #include <QLibraryInfo>
 #include <QVersionNumber>
-#include <tools/infoTool.h>
 
-#include "../../../../nodeTools/nodeTools.h"
-
-AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
+AppBuilderTimeNode::AppBuilderTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	appNameVarPtr = nullptr;
 	appPathVarPtr = nullptr;
 	builderTimeVarPtr = nullptr;
@@ -23,7 +21,7 @@ AppInfoNode::AppInfoNode( const QString &node_name ) : ProcessNode( node_name ) 
 	isShared = nullptr;
 	sep = nullptr;
 }
-bool AppInfoNode::initEx( MainWidget *parent ) {
+bool AppBuilderTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "名称" ), appNameOutputPort, appNameVarPtr ) == false )
 			return false;
@@ -45,13 +43,13 @@ bool AppInfoNode::initEx( MainWidget *parent ) {
 	};
 	return ProcessNode::initEx( parent );
 }
-bool AppInfoNode::updateLayout( ) {
+bool AppBuilderTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-bool AppInfoNode::readyNodeRunData( ) {
+bool AppBuilderTimeNode::readyNodeRunData( ) {
 	return true;
 }
-bool AppInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+bool AppBuilderTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	Application *instancePtr = Application::getInstancePtr( );
 	*appNameVarPtr = instancePtr->applicationName( );
 	*appPathVarPtr = instancePtr->applicationFilePath( );

@@ -4,7 +4,7 @@
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../../tools/path.h"
+#include "../../../../../tools/pathTools.h"
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/array/binVectorInputPort.h"
 #include "../../../../port/outputPort/outputPort.h"
@@ -33,7 +33,7 @@ bool WriteFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_ti
 	QString *filePath;
 	if( varDirector->cast_ptr( varPtr, filePath ) == false )
 		return true;
-	if( path::createFile( *filePath ) == false )
+	if( pathTools::createFile( *filePath ) == false )
 		return true;
 
 	wirteFileRefPort = nodeToolsPtr->getRefPort( writeBinVectorPort );

@@ -1,0 +1,9 @@
+﻿#ifndef APPVERSIONINFONODE_H_H_HEAD__FILE__
+#define APPVERSIONINFONODE_H_H_HEAD__FILE__
+
+
+class AppVersionInfoNode {
+	
+};
+
+#endif // APPVERSIONINFONODE_H_H_HEAD__FILE__

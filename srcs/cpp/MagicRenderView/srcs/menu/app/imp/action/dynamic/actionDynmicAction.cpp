@@ -3,7 +3,6 @@
 #include <director/appDirector.h>
 #include <win/mainWindow.h>
 
-#include "../../../../../tools/path.h"
 
 bool ActionDynmicAction::init( ApplicationMenuStack *application_menu_stack ) {
 	if( NormalApplicationAction::init( application_menu_stack ) == false )

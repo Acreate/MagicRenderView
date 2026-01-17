@@ -15,7 +15,7 @@
 #include "../srack/srackInfo.h"
 #include "../tools/arrayTools.h"
 
-#include "../tools/path.h"
+#include "../tools/pathTools.h"
 
 template< typename TTestType >
 void testVarGener( const TTestType &default_var ) {
@@ -255,21 +255,21 @@ void TestCodeSources::testAppFile( ) {
 	auto instancePtr = Application::getInstancePtr( );
 	auto printerDirector = instancePtr->getPrinterDirector( );
 
-	if( path::hasDir( "." ) )
+	if( pathTools::hasDir( "." ) )
 		printerDirector->info( QObject::tr( "存在路径[.]" ), Create_SrackInfo( ) );
 	else
 		printerDirector->info( QObject::tr( "非法路径[.]" ), Create_SrackInfo( ) );
 
-	if( path::hasFile( "." ) )
+	if( pathTools::hasFile( "." ) )
 		printerDirector->info( QObject::tr( "存在文件[.]" ), Create_SrackInfo( ) );
 	else
 		printerDirector->info( QObject::tr( "非法文件[.]" ), Create_SrackInfo( ) );
-	if( path::createFile( "./45/file" ) )
+	if( pathTools::createFile( "./45/file" ) )
 		printerDirector->info( QObject::tr( "创建文件[./45/file]成功" ), Create_SrackInfo( ) );
 	else
 		printerDirector->info( QObject::tr( "创建文件[./45/file]失败" ), Create_SrackInfo( ) );
 	QFileInfo getPathInfo;
-	if( path::getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
+	if( pathTools::getPathHasFileInfo( "./4541/88", getPathInfo ) ) {
 		printerDirector->info( QObject::tr( "获取路径[./4541/88]成功" ), Create_SrackInfo( ) );
 		if( getPathInfo.isFile( ) )
 			printerDirector->info( QObject::tr( "获取路径[%1]是%2" ).arg( getPathInfo.absoluteFilePath( ) ).arg( QObject::tr( "文件" ) ), Create_SrackInfo( ) );
@@ -277,9 +277,9 @@ void TestCodeSources::testAppFile( ) {
 			printerDirector->info( QObject::tr( "获取路径[%1]是%2" ).arg( getPathInfo.absoluteFilePath( ) ).arg( QObject::tr( "目录" ) ), Create_SrackInfo( ) );
 	} else
 		printerDirector->info( QObject::tr( "获取路径[./4541/88]失败" ), Create_SrackInfo( ) );
-	printerDirector->info( path::normalPathSeparatorToPath( "/1/2//3/////4" ), Create_SrackInfo( ) );
-	printerDirector->info( path::normalPathSeparatorToPath( "1/2//3/////4" ), Create_SrackInfo( ) );
-	path::pathTree pathTree( "..../123/456" );
+	printerDirector->info( pathTools::normalPathSeparatorToPath( "/1/2//3/////4" ), Create_SrackInfo( ) );
+	printerDirector->info( pathTools::normalPathSeparatorToPath( "1/2//3/////4" ), Create_SrackInfo( ) );
+	pathTools::pathTree pathTree( "..../123/456" );
 	if( pathTree.appSubPath( "123/123/45" ) == false ) {
 		printerDirector->error( QObject::tr( "123/123/45 配置异常" ), Create_SrackInfo( ) );
 	} else

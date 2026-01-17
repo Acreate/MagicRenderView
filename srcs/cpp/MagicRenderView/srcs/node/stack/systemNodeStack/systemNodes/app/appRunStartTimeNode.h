@@ -1,0 +1,9 @@
+﻿#ifndef APPRUNSTARTTIMENODE_H_H_HEAD__FILE__
+#define APPRUNSTARTTIMENODE_H_H_HEAD__FILE__
+
+
+class AppRunStartTimeNode {
+	
+};
+
+#endif // APPRUNSTARTTIMENODE_H_H_HEAD__FILE__

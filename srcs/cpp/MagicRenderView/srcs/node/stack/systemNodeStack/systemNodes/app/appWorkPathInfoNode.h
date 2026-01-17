@@ -1,0 +1,9 @@
+﻿#ifndef APPWORKPATHINFONODE_H_H_HEAD__FILE__
+#define APPWORKPATHINFONODE_H_H_HEAD__FILE__
+
+
+class AppWorkPathInfoNode {
+	
+};
+
+#endif // APPWORKPATHINFONODE_H_H_HEAD__FILE__

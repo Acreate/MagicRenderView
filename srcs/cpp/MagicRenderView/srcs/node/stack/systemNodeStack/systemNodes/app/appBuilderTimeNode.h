@@ -1,5 +1,5 @@
-﻿#ifndef APPINFONODE_H_H_HEAD__FILE__
-#define APPINFONODE_H_H_HEAD__FILE__
+﻿#ifndef APPBUILDERTIMENODE_H_H_HEAD__FILE__
+#define APPBUILDERTIMENODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
 
@@ -7,7 +7,7 @@ class IntOutputPort;
 class DateTimeOutputPort;
 class StringOutputPort;
 class AnyVarInputPort;
-class AppInfoNode : public ProcessNode {
+class AppBuilderTimeNode : public ProcessNode {
 	Q_OBJECT;
 protected:
 	StringOutputPort *appNameOutputPort;
@@ -27,7 +27,7 @@ protected:
 	QString * sep;
 	int64_t * isShared;
 public:
-	AppInfoNode( const QString &node_name );
+	AppBuilderTimeNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
@@ -36,4 +36,4 @@ public:
 public:
 	Def_Extend_NodeTypeName( Node::tr( "软件/软件信息" ) );
 };
-#endif // APPINFONODE_H_H_HEAD__FILE__
+#endif // APPBUILDERTIMENODE_H_H_HEAD__FILE__

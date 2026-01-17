@@ -1,4 +1,4 @@
-﻿#include "path.h"
+﻿#include "pathTools.h"
 
 #include <QDir>
 
@@ -6,7 +6,7 @@
 
 #include "../app/application.h"
 
-path::pathTree::~pathTree( ) {
+pathTools::pathTree::~pathTree( ) {
 	size_t count = subPath.size( );
 	if( count == 0 )
 		return;
@@ -15,8 +15,8 @@ path::pathTree::~pathTree( ) {
 	for( ; index < count; ++index )
 		delete arrayPtr[ index ];
 }
-path::pathTree::pathTree( const QString &root_file_name ) : parentPathTree( nullptr ) {
-	auto pathSeparator = path::normalPathSeparatorSplitPath( root_file_name );
+pathTools::pathTree::pathTree( const QString &root_file_name ) : parentPathTree( nullptr ) {
+	auto pathSeparator = pathTools::normalPathSeparatorSplitPath( root_file_name );
 	qsizetype count = pathSeparator.size( );
 	if( count == 0 )
 		return;
@@ -34,7 +34,7 @@ path::pathTree::pathTree( const QString &root_file_name ) : parentPathTree( null
 		controlPathTreePtr = subTree;
 	}
 }
-void path::pathTree::getAbsolutePath( QString &result_absolute_path ) {
+void pathTools::pathTree::getAbsolutePath( QString &result_absolute_path ) {
 	result_absolute_path.clear( );
 
 	auto contrlPtr = this;
@@ -45,8 +45,8 @@ void path::pathTree::getAbsolutePath( QString &result_absolute_path ) {
 		contrlPtr = contrlPtr->parentPathTree;
 	}
 }
-bool path::pathTree::appSubPath( const QString &sub_file_path ) {
-	auto normalPathSeparator = path::normalPathSeparatorSplitPath( sub_file_path );
+bool pathTools::pathTree::appSubPath( const QString &sub_file_path ) {
+	auto normalPathSeparator = pathTools::normalPathSeparatorSplitPath( sub_file_path );
 	qsizetype count = normalPathSeparator.size( ), index = 0;
 	if( count == 0 )
 		return false;
@@ -75,7 +75,7 @@ bool path::pathTree::appSubPath( const QString &sub_file_path ) {
 	}
 	return true;
 }
-QString path::pathTree::toQString( size_t index, QChar fill_char ) const {
+QString pathTools::pathTree::toQString( size_t index, QChar fill_char ) const {
 	QString tabChar( index, fill_char );
 	QString result = tabChar + name;
 	size_t currentCount = subPath.size( );
@@ -87,7 +87,7 @@ QString path::pathTree::toQString( size_t index, QChar fill_char ) const {
 		result = result + '\n' + currentData[ currentIndex ]->toQString( index + 1, fill_char );
 	return result;
 }
-QString path::normalPathSeparatorToPath( const QString &normal_target_path ) {
+QString pathTools::normalPathSeparatorToPath( const QString &normal_target_path ) {
 	QString result;
 	QStringList splitePath = normalPathSeparatorSplitPath( normal_target_path ), buff;
 	qsizetype count = splitePath.size( ), index = 0;
@@ -112,7 +112,7 @@ QString path::normalPathSeparatorToPath( const QString &normal_target_path ) {
 	} while( true );
 	return result;
 }
-QStringList path::normalPathSeparatorSplitPath( const QString &normal_target_path ) {
+QStringList pathTools::normalPathSeparatorSplitPath( const QString &normal_target_path ) {
 	QString buffString = normal_target_path;
 	buffString.replace( "\\", "/" );
 	QStringList splitePath = buffString.split( '/' ), buff;
@@ -136,11 +136,11 @@ QStringList path::normalPathSeparatorSplitPath( const QString &normal_target_pat
 	buff.resize( buffIndex );
 	return buff;
 }
-QString path::relativeRootFilePath( const QString &file_path ) {
+QString pathTools::relativeRootFilePath( const QString &file_path ) {
 	return QDir( Cmake_Source_Dir ).relativeFilePath( file_path );
 }
 
-bool path::createFile( const QString &create_file_path_name ) {
+bool pathTools::createFile( const QString &create_file_path_name ) {
 	QFileInfo createFilePath( create_file_path_name );
 	if( createFilePath.exists( ) ) {
 		if( createFilePath.isFile( ) )
@@ -162,7 +162,7 @@ bool path::createFile( const QString &create_file_path_name ) {
 		return false;
 	return true;
 }
-bool path::removeFile( const QString &remove_file_path_name ) {
+bool pathTools::removeFile( const QString &remove_file_path_name ) {
 	QFileInfo removeFilePathInfo( remove_file_path_name );
 	if( removeFilePathInfo.exists( ) == false )
 		return true;
@@ -173,7 +173,7 @@ bool path::removeFile( const QString &remove_file_path_name ) {
 		return false;
 	return true;
 }
-bool path::createDir( const QString &create_file_path_name ) {
+bool pathTools::createDir( const QString &create_file_path_name ) {
 	QFileInfo createDirPathInfo( create_file_path_name );
 	if( createDirPathInfo.exists( ) ) {
 		if( createDirPathInfo.isDir( ) )
@@ -190,7 +190,7 @@ bool path::createDir( const QString &create_file_path_name ) {
 		return false;
 	return true;
 }
-bool path::removeDir( const QString &remove_file_path_name ) {
+bool pathTools::removeDir( const QString &remove_file_path_name ) {
 	QFileInfo removeFilePathInfo( remove_file_path_name );
 	if( removeFilePathInfo.exists( ) == false )
 		return true;
@@ -201,7 +201,7 @@ bool path::removeDir( const QString &remove_file_path_name ) {
 		return false;
 	return true;
 }
-bool path::hasFile( const QString &check_file_path_name ) {
+bool pathTools::hasFile( const QString &check_file_path_name ) {
 	QFileInfo checkFilePathInfo( check_file_path_name );
 	if( checkFilePathInfo.exists( ) == false )
 		return false;
@@ -209,7 +209,7 @@ bool path::hasFile( const QString &check_file_path_name ) {
 		return false;
 	return true;
 }
-bool path::hasDir( const QString &check_dir_path_name ) {
+bool pathTools::hasDir( const QString &check_dir_path_name ) {
 	QFileInfo checkFilePathInfo( check_dir_path_name );
 	if( checkFilePathInfo.exists( ) == false )
 		return false;
@@ -217,7 +217,7 @@ bool path::hasDir( const QString &check_dir_path_name ) {
 		return false;
 	return true;
 }
-bool path::getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &result_file_info ) {
+bool pathTools::getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &result_file_info ) {
 	result_file_info.setFile( check_dir_path_name );
 	if( result_file_info.exists( ) )
 		return true;
@@ -232,7 +232,7 @@ bool path::getPathHasFileInfo( const QString &check_dir_path_name, QFileInfo &re
 	} while( true );
 	return false;
 }
-bool path::getOnPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
+bool pathTools::getOnPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
 	QDir info( get_path );
 	if( info.exists( ) == false )
 		return false;
@@ -247,7 +247,7 @@ bool path::getOnPathInfoVector( const QString &get_path, std::vector< QString > 
 			result_dir_path_vector.emplace_back( entryInfoArray[ index ].absoluteFilePath( ) );
 	return true;
 }
-bool path::getInPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
+bool pathTools::getInPathInfoVector( const QString &get_path, std::vector< QString > &result_dir_path_vector, std::vector< QString > &result_file_path_vector ) {
 	// 遍历指向
 	std::vector< QString > *freachPtr;
 	// 子目录指向

@@ -1,0 +1,9 @@
+﻿#ifndef APPBUILDERTOOLNAMENODE_H_H_HEAD__FILE__
+#define APPBUILDERTOOLNAMENODE_H_H_HEAD__FILE__
+
+
+class AppBuilderToolNameNode {
+	
+};
+
+#endif // APPBUILDERTOOLNAMENODE_H_H_HEAD__FILE__

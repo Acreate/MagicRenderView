@@ -1,0 +1,9 @@
+﻿#ifndef APPFILEPATHINFONODE_H_H_HEAD__FILE__
+#define APPFILEPATHINFONODE_H_H_HEAD__FILE__
+
+
+class AppFilePathInfoNode {
+	
+};
+
+#endif // APPFILEPATHINFONODE_H_H_HEAD__FILE__

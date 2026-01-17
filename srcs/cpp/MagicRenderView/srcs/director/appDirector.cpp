@@ -5,7 +5,7 @@
 
 #include "../app/application.h"
 #include "../srack/srackInfo.h"
-#include "../tools/path.h"
+#include "../tools/pathTools.h"
 #include "nodeDirector.h"
 #include "printerDirector.h"
 #include "varDirector.h"
@@ -110,7 +110,7 @@ void AppDirector::loadThisDataToAppInstance( ) {
 		projectIndex = 0;
 		data = strVectorVar->data( );
 		for( index = 0; index < count; ++index )
-			if( path::hasFile( data[ index ] ) ) {
+			if( pathTools::hasFile( data[ index ] ) ) {
 				buffList.emplace_back( data[ index ] );
 				++projectIndex;
 			}
@@ -182,13 +182,13 @@ bool AppDirector::saveAppProject( QWidget *parent ) {
 	if( currentProjectAbsoluteFilePathName.isEmpty( ) )
 		return saveAsAppProject( parent );
 
-	if( path::createDir( currentProjectWorkPath ) == false )
+	if( pathTools::createDir( currentProjectWorkPath ) == false )
 		return false;
 	return syncProjectToFile( );
 }
 bool AppDirector::saveAsAppProject( QWidget *parent ) {
 	QString saveFileName;
-	if( currentProjectAbsoluteFilePathName.isEmpty( ) || path::hasFile( currentProjectAbsoluteFilePathName ) == false )
+	if( currentProjectAbsoluteFilePathName.isEmpty( ) || pathTools::hasFile( currentProjectAbsoluteFilePathName ) == false )
 		saveFileName = QFileDialog::getSaveFileName( parent, tr( "保存项目" ), QDir::currentPath( ), tr( "魔力艺术 (*.mr *.mrv *.MagucRender *.MagucRenderView)" ) );
 	else
 		saveFileName = QFileDialog::getSaveFileName( parent, tr( "保存项目" ), currentProjectAbsoluteFilePathName, tr( "魔力艺术 (*.mr *.mrv *.MagucRender *.MagucRenderView)" ) );
@@ -220,11 +220,11 @@ bool AppDirector::reloadAppProject( QWidget *parent ) {
 }
 bool AppDirector::loadAppPorject( QWidget *parent ) {
 	QString openFilePath;
-	if( currentProjectAbsoluteFilePathName.isEmpty( ) || path::hasFile( currentProjectAbsoluteFilePathName ) == false )
+	if( currentProjectAbsoluteFilePathName.isEmpty( ) || pathTools::hasFile( currentProjectAbsoluteFilePathName ) == false )
 		openFilePath = QFileDialog::getOpenFileName( parent, tr( "打开文件" ), QDir::currentPath( ), tr( "魔力艺术 (*.mr *.mrv *.MagucRender *.MagucRenderView)" ) );
 	else
 		openFilePath = QFileDialog::getOpenFileName( parent, tr( "打开文件" ), currentProjectAbsoluteFilePathName, tr( "魔力艺术 (*.mr *.mrv *.MagucRender *.MagucRenderView)" ) );
-	if( openFilePath.isEmpty( ) || path::hasFile( openFilePath ) == false )
+	if( openFilePath.isEmpty( ) || pathTools::hasFile( openFilePath ) == false )
 		return false;
 	QFileInfo saveInfo( openFilePath );
 	currentProjectWorkPath = saveInfo.dir( ).absolutePath( );
@@ -258,7 +258,7 @@ bool AppDirector::clearHirstort( ) {
 	std::vector< uint8_t > result;
 
 	strVectorVar->clear( );
-	if( path::hasFile( currentProjectAbsoluteFilePathName ) )
+	if( pathTools::hasFile( currentProjectAbsoluteFilePathName ) )
 		strVectorVar->emplace_back( currentProjectAbsoluteFilePathName );
 	if( varDirector.toVector( strVectorVar, result ) == false ) {
 		printerDirector->info( tr( "AppDirector::currentProjectHistory 序列化失败" ), Create_SrackInfo( ) );
