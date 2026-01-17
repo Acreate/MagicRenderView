@@ -5,7 +5,6 @@
 #include <qpen.h>
 #include <typeinfo>
 
-
 #include <define/nodeFrinedClass.h>
 
 /// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
@@ -44,7 +43,7 @@ class Node : public QWidget {
 	NodeFrinedClass( );
 protected:
 	/// @brief 节点工具指针对象
-	NodeTools* nodeToolsPtr;
+	NodeTools *nodeToolsPtr;
 	uint64_t generateCode;
 	/// @brief app 实例
 	Application *instancePtr;
@@ -141,9 +140,12 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
+	/// @brief NodeInfoWidget 窗口释放时，该函数会被 NodeInfoWidget 对象调用
+	/// @param release_ptr 释放的窗口对象指针
+	virtual void nodeInfoWidgetRelease( NodeInfoWidget *release_ptr );
 	/// @brief 该窗口应该被 NodeInfoEditorDirector::getNodeInfoEditorWidget 调用，并且交由 NodeInfoEditorDirector 销毁
 	/// @return 成功返回编辑窗口
-	virtual NodeInfoWidget * getNodeEditorWidget( ) const;
+	virtual NodeInfoWidget * getNodeEditorWidget( );
 public:
 	/// @brief 配置首次运行所需要的数据
 	/// @return 失败返回 false
@@ -438,7 +440,7 @@ Q_SIGNALS:
 	/// @param finish_node 完成节点
 	/// @param srack_info 堆栈信息
 	void finish_run_node_signal( Node *finish_node, const SrackInfo &srack_info );
-	
+
 };
 
 #endif // NODE_H_H_HEAD__FILE__

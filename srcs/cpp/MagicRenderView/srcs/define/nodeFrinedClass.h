@@ -18,6 +18,7 @@
 	friend class NodeTools;\
 	friend class NodeInfoEditorDirector;\
 	friend class NodeTools;\
+	friend class NodeInfoWidget;\
 	friend class PortLinkType
  
 #endif // NODEFRINEDCLASS_H_H_HEAD__FILE__

@@ -63,7 +63,11 @@ bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 	titile->setTitleText( check_node_ptr->toQString( ) );
 	return true;
 }
-Node * NodeInfoWidget::getNode( ) const { return editorNodeInfoScrollArea->getCurrentNode( ); }
+Node * NodeInfoWidget::getNode( ) const {
+	if( editorNodeInfoScrollArea == nullptr )
+		return nullptr;
+	return editorNodeInfoScrollArea->getCurrentNode( );
+}
 QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
 }

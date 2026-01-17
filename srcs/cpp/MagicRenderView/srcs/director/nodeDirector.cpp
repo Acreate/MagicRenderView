@@ -454,6 +454,7 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
+			
 			data[ index ] = nullptr;
 			break;
 		}

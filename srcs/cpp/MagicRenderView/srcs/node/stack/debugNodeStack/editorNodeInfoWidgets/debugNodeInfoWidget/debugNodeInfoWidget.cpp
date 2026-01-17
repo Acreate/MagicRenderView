@@ -1,15 +1,25 @@
 ﻿#include "debugNodeInfoWidget.h"
 
+#include "../../../../port/inputPort/inputPort.h"
+#include "../../../../port/outputPort/outputPort.h"
 #include "../../debugNodes/outInfo/debugInfoNode.h"
-DebugNodeInfoWidget::DebugNodeInfoWidget( ) { }
+#include "debugNodeEditorNodeInfoScrollArea.h"
+
+DebugNodeInfoWidget::DebugNodeInfoWidget( DebugInfoNode *debug_info_node ) : debugInfoNode( debug_info_node ) {
+	editorNodeInfoScrollArea = debugNodeEditorScrallArea = new DebugNodeEditorNodeInfoScrollArea( this );
+}
+bool DebugNodeInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const QString &msg ) {
+	return false;
+}
 bool DebugNodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
-	debugInfoNode = qobject_cast< DebugInfoNode * >( check_node_ptr );
+	if( ( void * ) debugInfoNode != ( void * ) check_node_ptr )
+		return false;
 	return debugInfoNode != nullptr;
 }
 bool DebugNodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
-	if( debugInfoNode != check_node_ptr )
-		debugInfoNode = qobject_cast< DebugInfoNode * >( check_node_ptr );
-	if( debugInfoNode == nullptr )
+	if( debugInfoNode == nullptr || ( void * ) debugInfoNode != ( void * ) check_node_ptr )
+		return false;
+	if( NodeInfoWidget::initNodeInfo( debugInfoNode ) == false )
 		return false;
 	return true;
 }

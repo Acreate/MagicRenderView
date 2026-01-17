@@ -26,17 +26,31 @@ bool DebugInfoNode::initEx( MainWidget *parent ) {
 bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) const {
-	return new DebugNodeInfoWidget;
+void DebugInfoNode::nodeInfoWidgetRelease( NodeInfoWidget *release_ptr ) {
+	if( release_ptr != debugNodeInfoWidget )
+		return;
+	debugNodeInfoWidget = nullptr;
+}
+NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) {
+	if( debugNodeInfoWidget )
+		return debugNodeInfoWidget;
+	debugNodeInfoWidget = new DebugNodeInfoWidget( this );
+	return debugNodeInfoWidget;
 }
 
 bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	NodeInfoWidget *resultNodeInfoEditorWidget;
 	if( instancePtr->getNodeInfoEditorDirector( )->getNodeInfoEditorWidget( this, resultNodeInfoEditorWidget ) == false )
 		return true;
-	if( resultNodeInfoEditorWidget->initNodeInfo( this ) == false )
+	if( debugNodeInfoWidget != resultNodeInfoEditorWidget ) {
+		resultNodeInfoEditorWidget->hide( );
 		return true;
-	resultNodeInfoEditorWidget->show( );
+	}
+	if( debugNodeInfoWidget->initNodeInfo( this ) == false ) {
+		debugNodeInfoWidget->hide( );
+		return true;
+	}
+	debugNodeInfoWidget->show( );
 
 	auto outputPorts = nodeToolsPtr->getRefPort( inputBugPort );
 	size_t count = outputPorts->size( );
@@ -58,8 +72,7 @@ bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, siz
 				varDirectorPtr = parentNodePtr->getVarDirector( );
 				varPtr = outputPortArrayPtr[ index ]->getVarPtr( );
 				if( VarDirectorTools::toString( varDirectorPtr, varPtr, resultString ) ) {
-					resultString = tr( "[%1/%2]:%3" ).arg( parentNodePtr->getNodeTitleName( ) ).arg( outputPortArrayPtr[ index ]->getPortName( ) ).arg( resultString );
-					printerDirectorPtr->info( resultString, Create_SrackInfo( ) );
+					debugNodeInfoWidget->appendPortInfoMsg( outputPortArrayPtr[ index ], resultString );
 					continue;
 				}
 				printerDirectorPtr->info( tr( "[%1/%2] 端口异常" ).arg( parentNodePtr->getNodeTitleName( ) ).arg( outputPortArrayPtr[ index ]->getPortName( ) ), Create_SrackInfo( ) );

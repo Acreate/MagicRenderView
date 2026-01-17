@@ -97,7 +97,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout(
 	mainLayout->addWidget( connectWidget );
 
 }
-NodeInfoWidget * Node::getNodeEditorWidget( ) const {
+NodeInfoWidget * Node::getNodeEditorWidget( ) {
 	return nullptr;
 }
 bool Node::bindPortInfo( ) {
@@ -560,6 +560,7 @@ bool Node::init( MainWidget *parent ) {
 	nodeToolsPtr = new NodeTools( this );
 	return true;
 }
+void Node::nodeInfoWidgetRelease( NodeInfoWidget *release_ptr ) { }
 
 InputPort * Node::getInputPort( const QString &port_name ) const {
 	size_t count = inputPortVector.size( );
