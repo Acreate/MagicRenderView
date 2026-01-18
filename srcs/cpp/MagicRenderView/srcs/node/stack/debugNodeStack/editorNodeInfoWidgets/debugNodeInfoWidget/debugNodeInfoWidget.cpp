@@ -5,8 +5,9 @@
 #include "../../debugNodes/outInfo/debugInfoNode.h"
 #include "debugNodeEditorNodeInfoScrollArea.h"
 
-DebugNodeInfoWidget::DebugNodeInfoWidget( DebugInfoNode *debug_info_node ) : debugInfoNode( debug_info_node ) {
+DebugNodeInfoWidget::DebugNodeInfoWidget( DebugInfoNode *debug_info_node ) : NodeInfoWidget( ), debugInfoNode( debug_info_node ) {
 	editorNodeInfoScrollArea = debugNodeEditorScrallArea = new DebugNodeEditorNodeInfoScrollArea( this );
+	
 }
 bool DebugNodeInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const QString &msg ) {
 	return false;

@@ -140,9 +140,6 @@ protected:
 	virtual void releaseAllRefNode( );
 protected:
 	virtual bool init( MainWidget *parent );
-	/// @brief NodeInfoWidget 窗口释放时，该函数会被 NodeInfoWidget 对象调用
-	/// @param release_ptr 释放的窗口对象指针
-	virtual void nodeInfoWidgetRelease( NodeInfoWidget *release_ptr );
 	/// @brief 该窗口应该被 NodeInfoEditorDirector::getNodeInfoEditorWidget 调用，并且交由 NodeInfoEditorDirector 销毁
 	/// @return 成功返回编辑窗口
 	virtual NodeInfoWidget * getNodeEditorWidget( );

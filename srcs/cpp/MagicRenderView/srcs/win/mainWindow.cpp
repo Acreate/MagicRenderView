@@ -188,6 +188,15 @@ bool MainWindow::calculateNodeRenderSize( ) {
 		return false;
 	return mainWidget->calculateNodeRenderSize( );
 }
+bool MainWindow::runToNode( Node *target_node ) {
+	auto &menuAction = builderMenu->getNormalMenuAction( );
+	selectNode_Slot( mainWidget, target_node );
+	if( menuAction.runToTargetNodeBuilderAction->isEnabled( ) == false )
+		return false;
+	emit mainWidget->select_node_signal( mainWidget, target_node );
+	menuAction.runToTargetNodeBuilderAction->activate( QAction::Trigger );
+	return false;
+}
 void MainWindow::mouseReleaseEvent( QMouseEvent *event ) {
 	QMainWindow::mouseReleaseEvent( event );
 }

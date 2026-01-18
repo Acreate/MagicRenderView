@@ -68,6 +68,7 @@ public:
 	virtual bool cancelNodeInfo( );
 	virtual bool deleteSelectNodeInfo( );
 	virtual bool calculateNodeRenderSize( );
+	virtual bool runToNode( Node* target_node );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

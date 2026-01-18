@@ -14,7 +14,8 @@ protected:
 	bool thisEnblen;
 protected:
 	virtual void releaTarget( Node *release_target, const SrackInfo &srack_info );
-	virtual void updateActionInfo(  );
+	virtual void createNodeRunInfoAction(  );
+	virtual void releaseNodeRunInfoAction(  );
 protected Q_SLOTS:
 	virtual void enabledChanged_Slot( bool change_enbled_flag );
 public:

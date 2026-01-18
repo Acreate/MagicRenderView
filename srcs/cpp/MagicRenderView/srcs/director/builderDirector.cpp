@@ -1,7 +1,9 @@
 ﻿#include "builderDirector.h"
 
-#include "../app/application.h"
-#include <win/mainWindow.h>
+#include <app/application.h>
+#include <director/nodeDirector.h>
+#include <node/nodeRunInfo/nodeRunInfo.h>
+#include <srack/srackInfo.h>
 
 #include "../menu/app/imp/action/builder/builderPorjectAction.h"
 #include "../menu/app/imp/action/builder/nextStepBuilderAction.h"
@@ -12,10 +14,6 @@
 #include "../menu/app/imp/action/builder/stopBuilderAction.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
-#include "../node/nodeRunInfo/nodeRunInfo.h"
-#include "../srack/srackInfo.h"
-#include "nodeDirector.h"
-#include "printerDirector.h"
 void BuilderDirector::updateBuilderActionObjInfo( ) {
 	if( nodeRunInfo == nullptr )
 		resetBuilderActionObjInfo( );
@@ -181,6 +179,7 @@ bool BuilderDirector::init( ) {
 	connect( nodeDirector, &NodeDirector::dis_connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	connect( nodeDirector, &NodeDirector::connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	connect( nodeDirector, &NodeDirector::connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
+	connect( nodeDirector, &NodeDirector::release_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	return true;
 }
 bool BuilderDirector::addMenu( BuilderApplicationMenu *builder_application_menu ) {

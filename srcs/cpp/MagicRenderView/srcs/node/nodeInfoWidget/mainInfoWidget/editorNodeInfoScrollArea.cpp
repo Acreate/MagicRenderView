@@ -15,6 +15,8 @@ EditorNodeInfoScrollArea::EditorNodeInfoScrollArea( NodeInfoWidget *parent ) : Q
 	vScrollAreaBar = this->verticalScrollBar( );
 }
 bool EditorNodeInfoScrollArea::initNode( Node *init_node ) {
+	if( parentNodeInfoWidget == nullptr )
+		return false;
 	releaseResource( );
 	currentNode = init_node;
 	return currentNode != nullptr;
