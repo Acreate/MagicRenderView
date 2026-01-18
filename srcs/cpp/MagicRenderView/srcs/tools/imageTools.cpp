@@ -115,7 +115,17 @@ bool ImageTools::imageOperation::mod( QImage &left_var, const QImage &right_var 
 		leftWidth = rightWidth;
 	if( leftHeight > rightHeight )
 		leftHeight = rightHeight;
-	return mod( left_var, right_var, leftWidth, leftHeight );
+
+	size_t widthIndex;
+	size_t heightIndex;
+	QColor copyColor;
+	for( widthIndex = 0; widthIndex < leftWidth; ++widthIndex )
+		for( heightIndex = 0; heightIndex < leftHeight; ++heightIndex ) {
+			copyColor = left_var.pixelColor( widthIndex, heightIndex );
+			colorOperation::mod( copyColor, right_var.pixelColor( widthIndex, heightIndex ) );
+			left_var.setPixelColor( widthIndex, heightIndex, copyColor );
+		}
+	return true;
 }
 bool ImageTools::imageOperation::sub( QImage &left_var, const QImage &right_var ) {
 	int leftWidth = left_var.width( );
@@ -126,7 +136,17 @@ bool ImageTools::imageOperation::sub( QImage &left_var, const QImage &right_var 
 		leftWidth = rightWidth;
 	if( leftHeight > rightHeight )
 		leftHeight = rightHeight;
-	return sub( left_var, right_var, leftWidth, leftHeight );
+	
+	size_t widthIndex;
+	size_t heightIndex;
+	QColor copyColor;
+	for( widthIndex = 0; widthIndex < leftWidth; ++widthIndex )
+		for( heightIndex = 0; heightIndex < leftHeight; ++heightIndex ) {
+			copyColor = left_var.pixelColor( widthIndex, heightIndex );
+			colorOperation::sub( copyColor, right_var.pixelColor( widthIndex, heightIndex ) );
+			left_var.setPixelColor( widthIndex, heightIndex, copyColor );
+		}
+	return true;
 }
 bool ImageTools::imageOperation::add( QImage &left_var, const QImage &right_var ) {
 	int leftWidth = left_var.width( );
@@ -137,7 +157,17 @@ bool ImageTools::imageOperation::add( QImage &left_var, const QImage &right_var 
 		leftWidth = rightWidth;
 	if( leftHeight > rightHeight )
 		leftHeight = rightHeight;
-	return add( left_var, right_var, leftWidth, leftHeight );
+	
+	size_t widthIndex;
+	size_t heightIndex;
+	QColor copyColor;
+	for( widthIndex = 0; widthIndex < leftWidth; ++widthIndex )
+		for( heightIndex = 0; heightIndex < leftHeight; ++heightIndex ) {
+			copyColor = left_var.pixelColor( widthIndex, heightIndex );
+			colorOperation::add( copyColor, right_var.pixelColor( widthIndex, heightIndex ) );
+			left_var.setPixelColor( widthIndex, heightIndex, copyColor );
+		}
+	return true;
 }
 bool ImageTools::imageOperation::div( QImage &left_var, const QImage &right_var ) {
 	int leftWidth = left_var.width( );
@@ -148,7 +178,17 @@ bool ImageTools::imageOperation::div( QImage &left_var, const QImage &right_var 
 		leftWidth = rightWidth;
 	if( leftHeight > rightHeight )
 		leftHeight = rightHeight;
-	return div( left_var, right_var, leftWidth, leftHeight );
+
+	size_t widthIndex;
+	size_t heightIndex;
+	QColor copyColor;
+	for( widthIndex = 0; widthIndex < leftWidth; ++widthIndex )
+		for( heightIndex = 0; heightIndex < leftHeight; ++heightIndex ) {
+			copyColor = left_var.pixelColor( widthIndex, heightIndex );
+			colorOperation::div( copyColor, right_var.pixelColor( widthIndex, heightIndex ) );
+			left_var.setPixelColor( widthIndex, heightIndex, copyColor );
+		}
+	return true;
 }
 bool ImageTools::imageOperation::mul( QImage &left_var, const QImage &right_var ) {
 	int leftWidth = left_var.width( );
@@ -159,7 +199,17 @@ bool ImageTools::imageOperation::mul( QImage &left_var, const QImage &right_var 
 		leftWidth = rightWidth;
 	if( leftHeight > rightHeight )
 		leftHeight = rightHeight;
-	return mul( left_var, right_var, leftWidth, leftHeight );
+	
+	size_t widthIndex;
+	size_t heightIndex;
+	QColor copyColor;
+	for( widthIndex = 0; widthIndex < leftWidth; ++widthIndex )
+		for( heightIndex = 0; heightIndex < leftHeight; ++heightIndex ) {
+			copyColor = left_var.pixelColor( widthIndex, heightIndex );
+			colorOperation::mul( copyColor, right_var.pixelColor( widthIndex, heightIndex ) );
+			left_var.setPixelColor( widthIndex, heightIndex, copyColor );
+		}
+	return true;
 }
 bool ImageTools::imageOperation::mod( QImage &left_var, const QImage &right_var, const size_t &width, const size_t &height ) {
 	size_t widthIndex = left_var.width( );

@@ -27,6 +27,4 @@ bool OutPortItemScorllWidget::clear( ) {
 }
 void OutPortItemScorllWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	//QPainter painter( this );
-	//painter.fillRect( contentsRect( ), Qt::GlobalColor::blue );
 }

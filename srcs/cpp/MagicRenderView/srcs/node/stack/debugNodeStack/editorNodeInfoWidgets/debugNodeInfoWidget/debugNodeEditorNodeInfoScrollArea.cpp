@@ -24,15 +24,8 @@ bool DebugNodeEditorNodeInfoScrollArea::initNode( Node *init_node ) {
 		return false;
 	return true;
 }
-bool DebugNodeEditorNodeInfoScrollArea::appendOutputPort( OutputPort *output_port_ptr, const QString &msg ) {
-	return debugNodeContentWidget->appendOutputPort( output_port_ptr, msg );
-}
-bool DebugNodeEditorNodeInfoScrollArea::clear( ) {
-	return debugNodeContentWidget->clear( );
-}
 void DebugNodeEditorNodeInfoScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
-	clear( );
 }
 void DebugNodeEditorNodeInfoScrollArea::resizeEvent( QResizeEvent *resize_event ) {
 	EditorNodeInfoScrollArea::resizeEvent( resize_event );

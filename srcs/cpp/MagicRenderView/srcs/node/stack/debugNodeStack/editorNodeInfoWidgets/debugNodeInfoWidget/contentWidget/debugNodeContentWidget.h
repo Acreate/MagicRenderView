@@ -17,11 +17,9 @@ public:
 	DebugNodeContentWidget( QWidget *parent, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	virtual bool init( DebugInfoNode *node );
 	virtual bool updateLayout( );
-	virtual bool appendOutputPort( OutputPort *output_port_ptr, const QString &msg );
-	virtual bool clear();
+	virtual OutPortItemScorllWidget * getOutPortItemScorllWidget( ) const { return outPortItemScorllWidget; }
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
-public:
 Q_SIGNALS:
 	void click_builder_target_signal( Node *target_node );
 };

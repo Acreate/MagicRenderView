@@ -13,8 +13,7 @@ protected:
 public:
 	DebugNodeEditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;
-	virtual bool appendOutputPort( OutputPort *output_port_ptr, const QString &msg );
-	virtual bool clear();
+	virtual DebugNodeContentWidget * getDebugNodeContentWidget( ) const { return debugNodeContentWidget; }
 protected:
 	void releaseResource( ) override;
 	void resizeEvent( QResizeEvent * ) override;
