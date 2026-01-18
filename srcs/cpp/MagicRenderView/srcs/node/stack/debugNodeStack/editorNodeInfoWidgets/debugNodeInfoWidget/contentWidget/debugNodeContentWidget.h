@@ -18,6 +18,10 @@ public:
 	virtual bool init( DebugInfoNode *node );
 	virtual bool updateLayout( );
 	virtual bool appendOutputPort( OutputPort *output_port_ptr, const QString &msg );
+	virtual bool clear();
+protected:
+	void resizeEvent( QResizeEvent *event ) override;
+public:
 Q_SIGNALS:
 	void click_builder_target_signal( Node *target_node );
 };

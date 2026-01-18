@@ -9,11 +9,14 @@
 #include "toolWidget/debugNodeConetentToolsWidget.h"
 
 DebugNodeContentWidget::DebugNodeContentWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
+	//QVBoxLayout *mainLayout = new QVBoxLayout( this );
 	tool = new DebugNodeConetentToolsWidget( this );
 	tool->move( 0, 0 );
 	outputItemScorllArea = new OutPortItemScorllArea( this );
 	outPortItemScorllWidget = outputItemScorllArea->getOutPortItemScorllWidget( );
 	connect( tool, &DebugNodeConetentToolsWidget::click_builder_target_signal, this, &DebugNodeContentWidget::click_builder_target_signal );
+	/*mainLayout->addWidget( tool, 0, Qt::AlignmentFlag::AlignTop );
+	mainLayout->addWidget( outputItemScorllArea, 0 );*/
 }
 bool DebugNodeContentWidget::init( DebugInfoNode *node ) {
 	if( node == nullptr )
@@ -33,4 +36,11 @@ bool DebugNodeContentWidget::updateLayout( ) {
 }
 bool DebugNodeContentWidget::appendOutputPort( OutputPort *output_port_ptr, const QString &msg ) {
 	return outPortItemScorllWidget->appendOutputItem( output_port_ptr, msg );
+}
+bool DebugNodeContentWidget::clear( ) {
+	return outPortItemScorllWidget->clear( );;
+}
+void DebugNodeContentWidget::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
+	updateLayout( );
 }

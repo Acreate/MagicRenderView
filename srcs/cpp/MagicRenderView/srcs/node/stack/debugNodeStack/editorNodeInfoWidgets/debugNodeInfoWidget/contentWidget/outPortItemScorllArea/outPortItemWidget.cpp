@@ -16,6 +16,7 @@ OutPortItemWidget::OutPortItemWidget( QWidget *parent, Qt::WindowFlags f ) : QWi
 	outputPortMsg = new QTextEdit( this );
 	outputPortMsg->setLineWrapMode( QTextEdit::WidgetWidth );
 	outputPortMsg->setWordWrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere );
+	outputPortMsg->setReadOnly( true );
 	mainLayout->addWidget( outputPortPtrName );
 	mainLayout->addWidget( outputPortMsg );
 }
@@ -25,11 +26,9 @@ void OutPortItemWidget::setInfo( OutputPort *output_port_ptr, const QString &msg
 }
 void OutPortItemWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	auto pen = painter.pen( );
-	pen.setWidth( 2 );
-	int widgetWidth = width( );
-	painter.drawRect( 2, 2, widgetWidth - 4, height( ) - 4 );
-	int outputHeight = outputPortPtrName->height( );
-	painter.drawLine( 0, outputHeight, widgetWidth, outputHeight );
+	//QPainter painter( this );
+	//auto pen = painter.pen( );
+	//pen.setWidth( 2 );
+	//int widgetWidth = width( );
+	//painter.drawRect( 2, 2, widgetWidth - 4, height( ) - 4 );
 }

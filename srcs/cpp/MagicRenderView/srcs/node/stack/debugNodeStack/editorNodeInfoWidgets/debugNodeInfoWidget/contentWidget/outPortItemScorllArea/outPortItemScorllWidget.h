@@ -14,6 +14,9 @@ public:
 	OutPortItemScorllWidget( QWidget *parent, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	~OutPortItemScorllWidget( ) override;
 	virtual bool appendOutputItem( OutputPort *output_port_ptr, const QString &msg );
+	virtual bool clear();
+protected:
+	void paintEvent( QPaintEvent *event ) override;
 };
 
 #endif // OUTPORTITEMSCORLLWIDGET_H_H_HEAD__FILE__

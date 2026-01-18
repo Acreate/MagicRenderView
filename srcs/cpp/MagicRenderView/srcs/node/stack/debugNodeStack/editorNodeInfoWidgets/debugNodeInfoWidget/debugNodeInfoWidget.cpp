@@ -7,10 +7,13 @@
 
 DebugNodeInfoWidget::DebugNodeInfoWidget( DebugInfoNode *debug_info_node ) : NodeInfoWidget( ), debugInfoNode( debug_info_node ) {
 	editorNodeInfoScrollArea = debugNodeEditorScrallArea = new DebugNodeEditorNodeInfoScrollArea( this );
-	
+
 }
 bool DebugNodeInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const QString &msg ) {
-	return false;
+	return debugNodeEditorScrallArea->appendOutputPort( output_port_ptr, msg );
+}
+bool DebugNodeInfoWidget::clear( ) {
+	return debugNodeEditorScrallArea->clear( );
 }
 bool DebugNodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
 	if( ( void * ) debugInfoNode != ( void * ) check_node_ptr )
