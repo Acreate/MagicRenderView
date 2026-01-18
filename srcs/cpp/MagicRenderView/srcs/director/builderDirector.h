@@ -46,6 +46,7 @@ protected Q_SLOTS:
 	/// @param new_status 新的状态
 	virtual void autoRunStatusChange_Slot( NodeRunInfo *change_obj, bool new_status );
 public:
+	BuilderDirector( );
 	~BuilderDirector( ) override;
 	virtual bool init( );
 	virtual bool addMenu( BuilderApplicationMenu *builder_application_menu );
@@ -58,6 +59,9 @@ public:
 	virtual bool runBuilderBuilderNode( );
 	virtual bool stopBuilderBuilderNode( );
 	virtual NodeRunInfo * getNodeRunInfo( ) const { return nodeRunInfo; }
+Q_SIGNALS:
+	void release_node_run_info_signal( BuilderDirector *signal_ptr, NodeRunInfo *node_run_info );
+	void create_node_run_info_signalr( BuilderDirector *signal_ptr, NodeRunInfo *node_run_info );
 };
 
 #endif // BUILDERDIRECTOR_H_H_HEAD__FILE__

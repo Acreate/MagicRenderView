@@ -6,21 +6,19 @@
 #include <QMenuBar>
 #include <QMouseEvent>
 #include <QScrollBar>
-#include <QToolBar>
 
 #include "../app/application.h"
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
 #include "../menu/app/action/normalApplicationAction.h"
-#include "../menu/app/imp/menu/appApplicationMenu.h"
+#include "../menu/app/imp/action/builder/runToTargetNodeBuilderAction.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/menu/editorApplicationMenu.h"
 #include "../menu/app/imp/menu/fileApplicationMenu.h"
 #include "../menu/app/imp/menu/helpApplicationMenu.h"
 #include "../menu/app/imp/menu/projectApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
-#include "../menu/app/imp/toolBar/projectApplicationToolBar.h"
 #include "../menu/app/normalApplicationMenu.h"
 #include "../menu/app/normalApplicationToolBar.h"
 #include "../menuStack/app/applicationMenuStack.h"
@@ -66,7 +64,6 @@ bool MainWindow::init( ) {
 	printerDirector = instancePtr->getPrinterDirector( );
 	saveFileDirPath = instancePtr->applicationDirPath( );
 	auto applicationMenuStack = instancePtr->getApplicationMenuStack( );
-	
 
 	if( builderToolBar )
 		delete builderToolBar;
@@ -122,7 +119,12 @@ bool MainWindow::init( ) {
 	appMenuBar->addMenu( helpMenu );
 	connect( helpMenu, &NormalApplicationMenu::trigg_action_signal, this, &MainWindow::triggMenuActionSignal );
 
+	connect( mainWidget, &MainWidget::select_node_signal, this, &MainWindow::selectNode_Slot );
 	return true;
+}
+void MainWindow::selectNode_Slot( MainWidget *sender_signal_ptr, Node *select_node_ptr ) {
+	builderMenu->getNormalMenuAction( ).runToTargetNodeBuilderAction->setTargetNode( select_node_ptr );
+	builderToolBar->getNormalToolBarAction( ).runToTargetNodeBuilderAction->setTargetNode( select_node_ptr );
 }
 void MainWindow::triggActionSignal( NormalApplicationAction *action ) {
 	if( action->run( this ) == false )

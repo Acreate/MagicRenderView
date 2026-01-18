@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 
+class BuilderApplicationToolBar;
+class FileApplicationMenu;
+class ProjectApplicationMenu;
+class EditorApplicationMenu;
+class HelpApplicationMenu;
 class AboutApplicationWindow;
 class NormalApplicationToolBar;
 class NormalApplicationAction;
@@ -34,18 +39,20 @@ protected:
 	PrinterDirector *printerDirector;
 	QString saveFileDirPath;
 	QMenuBar *appMenuBar;
-	NormalApplicationMenu *projectMenu;
-	NormalApplicationMenu *builderMenu;
-	NormalApplicationMenu *fileMenu;
-	NormalApplicationMenu *editorMenu;
-	NormalApplicationMenu *helpMenu;
+	ProjectApplicationMenu *projectMenu;
+	BuilderApplicationMenu *builderMenu;
+	FileApplicationMenu *fileMenu;
+	EditorApplicationMenu *editorMenu;
+	HelpApplicationMenu *helpMenu;
 
-	NormalApplicationToolBar *builderToolBar;
+	BuilderApplicationToolBar *builderToolBar;
 	AboutApplicationWindow* aboutApplicationWindowPtr;
 protected:
 	MainWindow( );
 	virtual bool init( );
+	
 protected Q_SLOTS:
+	virtual void selectNode_Slot( MainWidget *sender_signal_ptr, Node *select_node_ptr );
 	virtual void triggActionSignal( NormalApplicationAction *action );
 	virtual void triggMenuActionSignal( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action );
 	virtual void triggToolbarActionSignal( NormalApplicationToolBar *normal_application_tool_bar, NormalApplicationAction *action );

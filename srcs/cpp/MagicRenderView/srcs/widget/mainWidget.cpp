@@ -282,6 +282,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
+				emit select_node_signal( this, dragNode );
 				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::InputPort :
@@ -299,6 +300,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 			break;
 		case Qt::RightButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
+				emit select_node_signal( this, dragNode );
 				dragNode = clickInfoPtr->getClickNode( );
 				ensureVisible( dragNode );
 				nodeDirector->popNormalNodeEditorPropertyMenu( mapToGlobal( event->pos( ) ), dragNode );

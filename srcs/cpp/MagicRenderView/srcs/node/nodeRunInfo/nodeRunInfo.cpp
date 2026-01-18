@@ -33,6 +33,15 @@ NodeRunInfo::~NodeRunInfo( ) {
 		delete currentRunDataTime;
 	emit release_signal( this, Create_SrackInfo( ) );
 }
+bool NodeRunInfo::hasNode( const Node *check_node_ptr ) {
+	if( builderNodeArrayCount == 0 )
+		return false;
+	size_t index = 0;
+	for( ; index < builderNodeArrayCount; ++index )
+		if( builderNodeArrayPtr[ index ] == check_node_ptr )
+			return true;
+	return false;
+}
 void NodeRunInfo::appendBuilderNode( TRunBodyObj **append_node_array_ptr, const size_t &append_node_array_count ) {
 	auto builderNodeCount = builderNodeVector.size( );
 	size_t newSizet = append_node_array_count + builderNodeCount;
@@ -571,8 +580,11 @@ bool NodeRunInfo::runToNode( const Node *target ) {
 			emit auto_run_status_change_signal( this, isRunStop );
 			return false;
 		}
-		if( this->currentRunPtr == target )
+		if( this->currentRunPtr == target ) {
+			isRunStop = true;
+			emit auto_run_status_change_signal( this, isRunStop );
 			break;
+		}
 		appinstancePtr->processEvents( );
 		if( isRunStop == true ) {
 			emit auto_run_status_change_signal( this, isRunStop );

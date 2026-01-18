@@ -102,6 +102,7 @@ protected:
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
+	virtual bool hasNode( const Node* check_node_ptr);
 	virtual int getMsleepTime( ) const { return msleepTime; }
 	virtual void setMsleepTime( int msleep_time ) { msleepTime = msleep_time; }
 	virtual long long getWaiteNextNodeTime( ) const { return waiteNextNodeTime; }

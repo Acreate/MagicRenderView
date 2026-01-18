@@ -69,6 +69,7 @@ protected:
 	void paintEvent( QPaintEvent *event ) override;
 Q_SIGNALS:
 	void release_signal( MainWidget *release_ptr );
+	void select_node_signal( MainWidget *sender_signal_ptr, Node *select_node_ptr );
 };
 
 #endif // MAINWIDGET_H_H_HEAD__FILE__

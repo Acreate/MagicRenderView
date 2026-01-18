@@ -84,6 +84,10 @@ void BuilderDirector::resetBuilderActionObjInfo( ) {
 	count = toolBars.size( );
 	if( count )
 		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) resetBuilderToolBarActionObjInfo( toolBarArrayPtr[ index ]->normalToolBarAction );
+
+	emit release_node_run_info_signal( this, nodeRunInfo );
+	delete nodeRunInfo;
+	nodeRunInfo = nullptr;
 }
 
 void BuilderDirector::validBuilderMenuActionObjInfo( BuilderApplicationMenu::BuilderApplicationMenuActionList &builder_app_menu_action_list ) {
@@ -150,8 +154,12 @@ void BuilderDirector::autoRunStatusChange_Slot( NodeRunInfo *change_obj, bool ne
 	else
 		setRunNodeStatusAction( );
 }
+BuilderDirector::BuilderDirector( ) {
+	nodeRunInfo = nullptr;
+}
 BuilderDirector::~BuilderDirector( ) {
 	if( nodeRunInfo ) {
+		emit release_node_run_info_signal( this, nodeRunInfo );
 		delete nodeRunInfo;
 		nodeRunInfo = nullptr;
 	}
@@ -162,6 +170,10 @@ bool BuilderDirector::init( ) {
 	instancePtr = Application::getInstancePtr( );
 	mainWindow = instancePtr->getMainWindow( );
 	nodeDirector = instancePtr->getNodeDirector( );
+	if( nodeRunInfo ) {
+		emit release_node_run_info_signal( this, nodeRunInfo );
+		delete nodeRunInfo;
+	}
 	nodeRunInfo = nullptr;
 	connect( nodeDirector, &NodeDirector::finish_create_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	connect( nodeDirector, &NodeDirector::dis_connect_ref_output_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
@@ -192,15 +204,20 @@ bool BuilderDirector::runToNextFrame( ) {
 bool BuilderDirector::runToTargetNode( const Node *target_node_ptr ) {
 	if( nodeRunInfo == nullptr )
 		return false;
-	return nodeRunInfo->runToNode( target_node_ptr );
+	bool runToNode = nodeRunInfo->runToNode( target_node_ptr );
+	updateBuilderActionObjInfo( );
+	return runToNode;
 }
 bool BuilderDirector::builderNodeProject( ) {
-	if( nodeRunInfo )
+	if( nodeRunInfo ) {
+		emit release_node_run_info_signal( this, nodeRunInfo );
 		delete nodeRunInfo;
+	}
 	nodeRunInfo = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
 	updateBuilderActionObjInfo( );
 	if( nodeRunInfo == nullptr )
 		return false;
+	emit create_node_run_info_signalr( this, nodeRunInfo );
 	connect( nodeRunInfo, &NodeRunInfo::auto_run_status_change_signal, this, &BuilderDirector::
 			autoRunStatusChange_Slot );
 	return true;
