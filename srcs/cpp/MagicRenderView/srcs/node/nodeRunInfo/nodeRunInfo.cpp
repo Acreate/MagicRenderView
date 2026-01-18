@@ -13,7 +13,7 @@
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
 	// 等待1秒执行下一个节点
-	waiteNextTime = 1000;
+	waiteNextNodeTime = 10;
 	maxFrame = 60;
 	builderNodeArrayPtr = nullptr;
 	builderNodeArrayCount = 0;
@@ -21,6 +21,7 @@ NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunD
 	overRunNodeArrayCount = 0;
 	beginNodeArrayPtr = nullptr;
 	beginNodeArrayCount = 0;
+	msleepTime = 10;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	clear( );
@@ -223,7 +224,6 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	return false;
 }
 bool NodeRunInfo::isRunNode( Node *check_next_node ) {
-	Node **overNodeArrayPtr;
 	size_t overNodeIndex;
 	size_t needRunNodeIndex;
 	Node *needNode;
@@ -364,11 +364,8 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	return false;
 }
 bool NodeRunInfo::runCurrentNode( Node *run_node ) {
-	if( currentRunPtr )
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
-	currentRunPtr = run_node;
-	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
-	if( currentRunPtr->fillNodeCall( *builderDataTime, currentFrame ) == true )
+	run_node->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
+	if( run_node->fillNodeCall( *builderDataTime, currentFrame ) == true )
 		return true;
 
 	Application *instancePtr;
@@ -379,10 +376,10 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 	instancePtr = Application::getInstancePtr( );
 	printerDirector = instancePtr->getPrinterDirector( );
 	msg = tr( "运行 [%1]::fillNodeCall() 失败" );
-	nodeToString = currentRunPtr->toQString( );
+	nodeToString = run_node->toQString( );
 	msg = msg.arg( nodeToString );
 	printerDirector->info( msg, Create_SrackInfo( ) );
-	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	run_node->setNodeStyle( NodeEnum::NodeStyleType::Error );
 	return false;
 }
 bool NodeRunInfo::overRunNode( ) {
@@ -451,6 +448,9 @@ bool NodeRunInfo::runNextValidNode( ) {
 		if( currentRunPtr != findResultRunNode )
 			break;
 	} while( findResultRunNode == nullptr );
+	if( currentRunPtr )
+		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+	currentRunPtr = findResultRunNode;
 	if( runCurrentNode( findResultRunNode ) == false )
 		return false;
 	appinstancePtr->processEvents( );
@@ -468,29 +468,132 @@ bool NodeRunInfo::runNextValidNode( ) {
 bool NodeRunInfo::runNextNode( ) {
 	if( isRunStop == false )
 		return false;
-	return runNextValidNode( );
+	isRunStop = false;
+	emit auto_run_status_change_signal( this, isRunStop );
+	bool nextValidNode = runNextValidNode( );
+	isRunStop = true;
+	emit auto_run_status_change_signal( this, isRunStop );
+	return nextValidNode;
 }
 bool NodeRunInfo::runResidueNode( ) {
+	if( isRunStop == false )
+		return false;
 	isRunStop = false;
 	emit auto_run_status_change_signal( this, isRunStop );
 	std::chrono::milliseconds milliseconds;
 	long long count;
 	do {
-		if( runNextValidNode( ) == false )
+		if( runNextValidNode( ) == false ) {
+			isRunStop = true;
+			emit auto_run_status_change_signal( this, isRunStop );
 			return false;
+		}
 		appinstancePtr->processEvents( );
-		if( isRunStop == true )
+		if( isRunStop == true ) {
+			emit auto_run_status_change_signal( this, isRunStop );
 			break;
+		}
 		do {
 			appinstancePtr->processEvents( );
 			*currentRunDataTime = QDateTime::currentDateTime( );
 			milliseconds = *currentRunDataTime - *builderDataTime;
 			count = milliseconds.count( );
-			if( count > waiteNextTime )
+			if( count > waiteNextNodeTime )
 				break;
-			QThread::msleep( 10 );
+			if( msleepTime )
+				QThread::msleep( msleepTime );
 		} while( true );
 		*builderDataTime = *currentRunDataTime;
+		appinstancePtr->processEvents( );
+		if( isRunStop == true ) {
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
+	} while( true );
+	return true;
+}
+bool NodeRunInfo::runToNextFrame( ) {
+	if( isRunStop == false )
+		return false;
+	isRunStop = false;
+	emit auto_run_status_change_signal( this, isRunStop );
+	std::chrono::milliseconds milliseconds;
+	long long count;
+	auto currentFrma = this->currentFrame;
+	do {
+		if( runNextValidNode( ) == false ) {
+			isRunStop = true;
+			emit auto_run_status_change_signal( this, isRunStop );
+			return false;
+		}
+		appinstancePtr->processEvents( );
+		if( isRunStop == true ) {
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
+		if( this->currentFrame != currentFrma ) {
+			isRunStop = true;
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
+		do {
+			appinstancePtr->processEvents( );
+			*currentRunDataTime = QDateTime::currentDateTime( );
+			milliseconds = *currentRunDataTime - *builderDataTime;
+			count = milliseconds.count( );
+			if( count > waiteNextNodeTime )
+				break;
+			if( msleepTime )
+				QThread::msleep( msleepTime );
+		} while( true );
+		*builderDataTime = *currentRunDataTime;
+		appinstancePtr->processEvents( );
+		if( isRunStop == true ) {
+			isRunStop = true;
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
+	} while( true );
+	return true;
+}
+bool NodeRunInfo::runToNode( const Node *target ) {
+
+	if( isRunStop == false )
+		return false;
+	isRunStop = false;
+	emit auto_run_status_change_signal( this, isRunStop );
+	std::chrono::milliseconds milliseconds;
+	long long count;
+	do {
+		if( runNextValidNode( ) == false ) {
+			isRunStop = true;
+
+			emit auto_run_status_change_signal( this, isRunStop );
+			return false;
+		}
+		if( this->currentRunPtr == target )
+			break;
+		appinstancePtr->processEvents( );
+		if( isRunStop == true ) {
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
+		do {
+			appinstancePtr->processEvents( );
+			*currentRunDataTime = QDateTime::currentDateTime( );
+			milliseconds = *currentRunDataTime - *builderDataTime;
+			count = milliseconds.count( );
+			if( count > waiteNextNodeTime )
+				break;
+			if( msleepTime )
+				QThread::msleep( msleepTime );
+		} while( true );
+		*builderDataTime = *currentRunDataTime;
+		appinstancePtr->processEvents( );
+		if( isRunStop == true ) {
+			emit auto_run_status_change_signal( this, isRunStop );
+			break;
+		}
 	} while( true );
 	return true;
 }
@@ -506,11 +609,11 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	overRunNodeVector.clear( );
 	// 赋予开始节点到建议运行序列
 	adviseNodeVector = beginNodeVector;
+	isRunStop = true;
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
 	isRunStop = true;
-	emit auto_run_status_change_signal( this, isRunStop );
 	return true;
 }
 void NodeRunInfo::clear( ) {

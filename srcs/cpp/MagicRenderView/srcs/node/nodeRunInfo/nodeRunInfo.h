@@ -27,6 +27,8 @@ protected:
 	size_t maxFrame;
 	/// @brief 是否停止
 	bool isRunStop;
+	/// @brief 休眠时间
+	int msleepTime;
 	/// @brief 编译时间
 	QDateTime *builderDataTime;
 	/// @brief 上一个节点运行时间
@@ -34,7 +36,7 @@ protected:
 	/// @brief 当前节点运行时间
 	QDateTime *currentRunDataTime;
 	/// @brief 等待下一面
-	long long waiteNextTime;
+	long long waiteNextNodeTime;
 	/// @brief 当前对象指针
 	TRunBodyObjPtr currentRunPtr;
 	/// @brief 编译列表
@@ -94,10 +96,16 @@ protected:
 	/// @brief 过滤存储列表，筛选建议列表列表存储到匹配列表
 	/// @return 成功返回 true
 	virtual bool filterToAdviseVector( );
-	bool runNextValidNode( );
+	/// @brief 运行有效节点
+	/// @return 成功返回 true
+	virtual bool runNextValidNode( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
+	virtual int getMsleepTime( ) const { return msleepTime; }
+	virtual void setMsleepTime( int msleep_time ) { msleepTime = msleep_time; }
+	virtual long long getWaiteNextNodeTime( ) const { return waiteNextNodeTime; }
+	virtual void setWaiteNextNodeTime( long long waite_next_node_time ) { waiteNextNodeTime = waite_next_node_time; }
 	/// @brief 检查是否存在指定节点
 	/// @param check_node_ref 检查节点
 	/// @return 不存在返回 false
@@ -108,6 +116,13 @@ public:
 	/// @brief 运行剩余
 	/// @return 成功返回 true
 	virtual bool runResidueNode( );
+	/// @brief 运行到下一帧
+	/// @return 成功返回 true
+	virtual bool runToNextFrame( );
+	/// @brief 运行到指定节点
+	/// @param target 指定的节点
+	/// @return 失败返回 false
+	virtual bool runToNode( const Node *target );
 	/// @brief 重置开始
 	/// @return 成功返回 true
 	virtual bool resetRunStartNode( );

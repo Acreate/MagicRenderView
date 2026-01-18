@@ -21,15 +21,23 @@ void FileApplicationMenu::triggMenuActionSlot( NormalApplicationMenu *normal_app
 FileApplicationMenu::FileApplicationMenu( ) {
 }
 bool FileApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
-	if( NormalApplicationMenu::init( application_menu_stack ) == false )
+	if( NormalApplicationMenu::init( application_menu_stack ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( NormalApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
-	if( appendMenu( application_menu_stack->getMenu< ProjectApplicationMenu >( ) ) == false )
+	}
+	if( appendMenu( application_menu_stack->getMenu< ProjectApplicationMenu >( ) ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( ProjectApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 	historyApplicationMenu = application_menu_stack->getMenu< ProjectHistoryApplicationMenu >( );
-	if( appendMenu( historyApplicationMenu ) == false )
+	if( appendMenu( historyApplicationMenu ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( ProjectHistoryApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
-	if( appendMenu( application_menu_stack->getMenu< AppApplicationMenu >( ) ) == false )
+	}
+	if( appendMenu( application_menu_stack->getMenu< AppApplicationMenu >( ) ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( AppApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 	setInitVarNumber( tr( "文件" ) );
 	return true;
 }

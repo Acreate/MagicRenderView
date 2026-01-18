@@ -7,6 +7,8 @@
 #include "../menu/app/imp/action/builder/nextStepBuilderAction.h"
 #include "../menu/app/imp/action/builder/resetBuilderStartNodeProjectAction.h"
 #include "../menu/app/imp/action/builder/runBuilderAction.h"
+#include "../menu/app/imp/action/builder/runToNextFrmeBuilderAction.h"
+#include "../menu/app/imp/action/builder/runToTargetNodeBuilderAction.h"
 #include "../menu/app/imp/action/builder/stopBuilderAction.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
@@ -20,6 +22,57 @@ void BuilderDirector::updateBuilderActionObjInfo( ) {
 	else
 		validBuilderActionObjInfo( );
 }
+void BuilderDirector::setRunNodeStatusBuilderMenuActionObjInfo( BuilderApplicationMenu::BuilderApplicationMenuActionList &builder_app_menu_action_list ) {
+	builder_app_menu_action_list.builderPorjectAction->setEnabled( false );
+	builder_app_menu_action_list.resetBuilderStartNode->setEnabled( false );
+	builder_app_menu_action_list.nextStepBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.runBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.stopBuilderAction->setEnabled( true );
+	builder_app_menu_action_list.runToNextFrmeBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.runToTargetNodeBuilderAction->setEnabled( false );
+}
+void BuilderDirector::setRunNodeStatusBuilderToolBarActionObjInfo( BuilderApplicationToolBar::BuilderApplicationToolBarActionList &builder_app_tool_bar_action_list ) {
+	builder_app_tool_bar_action_list.builderPorjectAction->setEnabled( false );
+	builder_app_tool_bar_action_list.resetBuilderStartNode->setEnabled( false );
+	builder_app_tool_bar_action_list.nextStepBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.runBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.stopBuilderAction->setEnabled( true );
+	builder_app_tool_bar_action_list.runToNextFrmeBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.runToTargetNodeBuilderAction->setEnabled( false );
+}
+void BuilderDirector::setRunNodeStatusAction( ) {
+	size_t count;
+	size_t index;
+	BuilderApplicationMenu **menuArrayPtr;
+	BuilderApplicationToolBar **toolBarArrayPtr;
+	count = menus.size( );
+	if( count )
+		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) setRunNodeStatusBuilderMenuActionObjInfo( menuArrayPtr[ index ]->normalMenuAction );
+	count = toolBars.size( );
+	if( count )
+		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) setRunNodeStatusBuilderToolBarActionObjInfo( toolBarArrayPtr[ index ]->normalToolBarAction );
+}
+
+void BuilderDirector::resetBuilderMenuActionObjInfo( BuilderApplicationMenu::BuilderApplicationMenuActionList &builder_app_menu_action_list ) {
+	builder_app_menu_action_list.builderPorjectAction->setEnabled( true );
+	builder_app_menu_action_list.resetBuilderStartNode->setEnabled( false );
+	builder_app_menu_action_list.nextStepBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.runBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.stopBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.runToNextFrmeBuilderAction->setEnabled( false );
+	builder_app_menu_action_list.runToTargetNodeBuilderAction->setEnabled( false );
+}
+
+void BuilderDirector::resetBuilderToolBarActionObjInfo( BuilderApplicationToolBar::BuilderApplicationToolBarActionList &builder_app_tool_bar_action_list ) {
+	builder_app_tool_bar_action_list.builderPorjectAction->setEnabled( true );
+	builder_app_tool_bar_action_list.resetBuilderStartNode->setEnabled( false );
+	builder_app_tool_bar_action_list.nextStepBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.runBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.stopBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.runToNextFrmeBuilderAction->setEnabled( false );
+	builder_app_tool_bar_action_list.runToTargetNodeBuilderAction->setEnabled( false );
+}
+
 void BuilderDirector::resetBuilderActionObjInfo( ) {
 	size_t count;
 	size_t index;
@@ -27,25 +80,31 @@ void BuilderDirector::resetBuilderActionObjInfo( ) {
 	BuilderApplicationToolBar **toolBarArrayPtr;
 	count = menus.size( );
 	if( count )
-		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) {
-			auto &normalMenuAction = menuArrayPtr[ index ]->normalMenuAction;
-			normalMenuAction.builderPorjectAction->setEnabled( true );
-			normalMenuAction.resetBuilderStartNode->setEnabled( false );
-			normalMenuAction.nextStepBuilderAction->setEnabled( false );
-			normalMenuAction.runBuilderAction->setEnabled( false );
-			normalMenuAction.stopBuilderAction->setEnabled( false );
-		}
+		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) resetBuilderMenuActionObjInfo( menuArrayPtr[ index ]->normalMenuAction );
 	count = toolBars.size( );
 	if( count )
-		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) {
-			auto &normalToolBarAction = toolBarArrayPtr[ index ]->normalToolBarAction;
-			normalToolBarAction.builderPorjectAction->setEnabled( true );
-			normalToolBarAction.resetBuilderStartNode->setEnabled( false );
-			normalToolBarAction.nextStepBuilderAction->setEnabled( false );
-			normalToolBarAction.runBuilderAction->setEnabled( false );
-			normalToolBarAction.stopBuilderAction->setEnabled( false );
-		}
+		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) resetBuilderToolBarActionObjInfo( toolBarArrayPtr[ index ]->normalToolBarAction );
 }
+
+void BuilderDirector::validBuilderMenuActionObjInfo( BuilderApplicationMenu::BuilderApplicationMenuActionList &builder_app_menu_action_list ) {
+	builder_app_menu_action_list.builderPorjectAction->setEnabled( true );
+	builder_app_menu_action_list.resetBuilderStartNode->setEnabled( true );
+	builder_app_menu_action_list.nextStepBuilderAction->setEnabled( true );
+	builder_app_menu_action_list.runBuilderAction->setEnabled( true );
+	builder_app_menu_action_list.stopBuilderAction->setEnabled( true );
+	builder_app_menu_action_list.runToNextFrmeBuilderAction->setEnabled( true );
+	builder_app_menu_action_list.runToTargetNodeBuilderAction->setEnabled( true );
+}
+void BuilderDirector::validBuilderToolBarActionObjInfo( BuilderApplicationToolBar::BuilderApplicationToolBarActionList &builder_app_tool_bar_action_list ) {
+	builder_app_tool_bar_action_list.builderPorjectAction->setEnabled( true );
+	builder_app_tool_bar_action_list.resetBuilderStartNode->setEnabled( true );
+	builder_app_tool_bar_action_list.nextStepBuilderAction->setEnabled( true );
+	builder_app_tool_bar_action_list.runBuilderAction->setEnabled( true );
+	builder_app_tool_bar_action_list.stopBuilderAction->setEnabled( true );
+	builder_app_tool_bar_action_list.runToNextFrmeBuilderAction->setEnabled( true );
+	builder_app_tool_bar_action_list.runToTargetNodeBuilderAction->setEnabled( true );
+}
+
 void BuilderDirector::validBuilderActionObjInfo( ) {
 	size_t count;
 	size_t index;
@@ -53,24 +112,11 @@ void BuilderDirector::validBuilderActionObjInfo( ) {
 	BuilderApplicationToolBar **toolBarArrayPtr;
 	count = menus.size( );
 	if( count )
-		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index ) {
-			auto &normalMenuAction = menuArrayPtr[ index ]->normalMenuAction;
-			normalMenuAction.builderPorjectAction->setEnabled( true );
-			normalMenuAction.resetBuilderStartNode->setEnabled( true );
-			normalMenuAction.nextStepBuilderAction->setEnabled( true );
-			normalMenuAction.runBuilderAction->setEnabled( true );
-			normalMenuAction.stopBuilderAction->setEnabled( true );
-		}
+		for( index = 0, menuArrayPtr = menus.data( ); index < count; ++index )validBuilderMenuActionObjInfo( menuArrayPtr[ index ]->normalMenuAction );
 	count = toolBars.size( );
 	if( count )
-		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index ) {
-			auto &normalToolBarAction = toolBarArrayPtr[ index ]->normalToolBarAction;
-			normalToolBarAction.builderPorjectAction->setEnabled( true );
-			normalToolBarAction.resetBuilderStartNode->setEnabled( true );
-			normalToolBarAction.nextStepBuilderAction->setEnabled( true );
-			normalToolBarAction.runBuilderAction->setEnabled( true );
-			normalToolBarAction.stopBuilderAction->setEnabled( true );
-		}
+		for( index = 0, toolBarArrayPtr = toolBars.data( ); index < count; ++index )
+			validBuilderToolBarActionObjInfo( toolBarArrayPtr[ index ]->normalToolBarAction );
 }
 void BuilderDirector::removeMenu( NormalApplicationMenu *remove_target ) {
 	size_t count;
@@ -96,6 +142,14 @@ void BuilderDirector::removeToolBar( NormalApplicationToolBar *remove_target ) {
 				return;
 			}
 }
+void BuilderDirector::autoRunStatusChange_Slot( NodeRunInfo *change_obj, bool new_status ) {
+	if( change_obj != nodeRunInfo )
+		return;
+	if( new_status )
+		updateBuilderActionObjInfo( );
+	else
+		setRunNodeStatusAction( );
+}
 BuilderDirector::~BuilderDirector( ) {
 	if( nodeRunInfo ) {
 		delete nodeRunInfo;
@@ -114,27 +168,31 @@ bool BuilderDirector::init( ) {
 	connect( nodeDirector, &NodeDirector::connect_ref_output_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	connect( nodeDirector, &NodeDirector::dis_connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	connect( nodeDirector, &NodeDirector::connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
+	connect( nodeDirector, &NodeDirector::connect_ref_input_port_node_signal, this, &BuilderDirector::resetBuilderActionObjInfo );
 	return true;
 }
 bool BuilderDirector::addMenu( BuilderApplicationMenu *builder_application_menu ) {
-	builder_application_menu->normalMenuAction.builderPorjectAction->setEnabled( true );
-	builder_application_menu->normalMenuAction.resetBuilderStartNode->setEnabled( false );
-	builder_application_menu->normalMenuAction.nextStepBuilderAction->setEnabled( false );
-	builder_application_menu->normalMenuAction.runBuilderAction->setEnabled( false );
-	builder_application_menu->normalMenuAction.stopBuilderAction->setEnabled( false );
+
 	menus.emplace_back( builder_application_menu );
 	connect( builder_application_menu, &NormalApplicationMenu::release_signal, this, &BuilderDirector::removeMenu );
+	updateBuilderActionObjInfo( );
 	return true;
 }
 bool BuilderDirector::addToolBar( BuilderApplicationToolBar *builder_application_tool_bar ) {
-	builder_application_tool_bar->normalToolBarAction.builderPorjectAction->setEnabled( true );
-	builder_application_tool_bar->normalToolBarAction.resetBuilderStartNode->setEnabled( false );
-	builder_application_tool_bar->normalToolBarAction.nextStepBuilderAction->setEnabled( false );
-	builder_application_tool_bar->normalToolBarAction.runBuilderAction->setEnabled( false );
-	builder_application_tool_bar->normalToolBarAction.stopBuilderAction->setEnabled( false );
 	toolBars.emplace_back( builder_application_tool_bar );
 	connect( builder_application_tool_bar, &NormalApplicationToolBar::release_signal, this, &BuilderDirector::removeToolBar );
+	updateBuilderActionObjInfo( );
 	return true;
+}
+bool BuilderDirector::runToNextFrame( ) {
+	if( nodeRunInfo == nullptr )
+		return false;
+	return nodeRunInfo->runToNextFrame( );
+}
+bool BuilderDirector::runToTargetNode( const Node *target_node_ptr ) {
+	if( nodeRunInfo == nullptr )
+		return false;
+	return nodeRunInfo->runToNode( target_node_ptr );
 }
 bool BuilderDirector::builderNodeProject( ) {
 	if( nodeRunInfo )
@@ -143,6 +201,8 @@ bool BuilderDirector::builderNodeProject( ) {
 	updateBuilderActionObjInfo( );
 	if( nodeRunInfo == nullptr )
 		return false;
+	connect( nodeRunInfo, &NodeRunInfo::auto_run_status_change_signal, this, &BuilderDirector::
+			autoRunStatusChange_Slot );
 	return true;
 }
 bool BuilderDirector::resetStartNodeProject( ) {

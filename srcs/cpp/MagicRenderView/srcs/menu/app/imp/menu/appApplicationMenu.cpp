@@ -1,20 +1,28 @@
 ﻿#include "appApplicationMenu.h"
 
+#include "../../../../app/application.h"
+#include "../../../../director/printerDirector.h"
 #include "../../../../menuStack/app/applicationMenuStack.h"
-#include "../action/app/aboutAooAction.h"
+#include "../../../../srack/srackInfo.h"
 #include "../action/app/quitAppAction.h"
 #include "../action/app/resetAppAction.h"
 #include "projectApplicationMenu.h"
 AppApplicationMenu::AppApplicationMenu( ) {
 }
 bool AppApplicationMenu::init( ApplicationMenuStack *application_menu_stack ) {
-	if( NormalApplicationMenu::init( application_menu_stack ) == false )
+	if( NormalApplicationMenu::init( application_menu_stack ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( NormalApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 
-	if( appendAction( application_menu_stack->getAction< QuitAppAction >( ) ) == false )
+	if( appendAction( application_menu_stack->getAction< QuitAppAction >( ) ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( QuitAppAction::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
-	if( appendAction( application_menu_stack->getAction< ResetAppAction >( ) ) == false )
+	}
+	if( appendAction( application_menu_stack->getAction< ResetAppAction >( ) ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( ResetAppAction::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 	setInitVarNumber( tr( "软件" ) );
 	return true;
 }

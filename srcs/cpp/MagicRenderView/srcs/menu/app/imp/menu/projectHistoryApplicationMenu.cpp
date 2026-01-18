@@ -2,7 +2,9 @@
 
 #include "../../../../app/application.h"
 #include "../../../../director/appDirector.h"
+#include "../../../../director/printerDirector.h"
 #include "../../../../menuStack/app/applicationMenuStack.h"
+#include "../../../../srack/srackInfo.h"
 #include "../action/dynamic/actionDynmicAction.h"
 #include "../action/dynamic/openFileDynamicAction.h"
 
@@ -18,8 +20,10 @@ bool ProjectHistoryApplicationMenu::init( ApplicationMenuStack *application_menu
 	size_t count;
 	QString *projectHistoryArray;
 	size_t index;
-	if( NormalApplicationMenu::init( application_menu_stack ) == false )
+	if( NormalApplicationMenu::init( application_menu_stack ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( NormalApplicationMenu::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 
 	instancePtr = Application::getInstancePtr( );
 	if( instancePtr == nullptr )
@@ -34,20 +38,26 @@ bool ProjectHistoryApplicationMenu::init( ApplicationMenuStack *application_menu
 		projectHistoryArray = projectHistort.data( );
 		for( index = 0; index < count; ++index ) {
 			openFileDynamicAction = application_menu_stack->getAction< OpenFileDynamicAction >( );
-			if( appendAction( openFileDynamicAction ) == false )
+			if( appendAction( openFileDynamicAction ) == false ) {
+				Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( OpenFileDynamicAction::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 				return false;
+			}
 			openFileDynamicAction->setOpenFilePath( projectHistoryArray[ index ] );
 		}
 	} else {
 		openFileDynamicAction = application_menu_stack->getAction< OpenFileDynamicAction >( );
-		if( appendAction( openFileDynamicAction ) == false )
+		if( appendAction( openFileDynamicAction ) == false ) {
+			Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( OpenFileDynamicAction::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 			return false;
+		}
 	}
 	addSeparator( );
 
 	clearHistortAction = application_menu_stack->getAction< ActionDynmicAction >( );
-	if( appendAction( clearHistortAction ) == false )
+	if( appendAction( clearHistortAction ) == false ) {
+		Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "初始化失败[%1]" ).arg( ActionDynmicAction::staticMetaObject.className( ) ), Create_SrackInfo( ) );
 		return false;
+	}
 	clearHistortAction->setInitVarNumber( tr( "清理历史项目" ) );
 	clearHistortAction->setDynmicActionCall( [appDirector] ( MainWindow *parent ) {
 		return appDirector->clearHirstort( );
