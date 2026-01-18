@@ -30,7 +30,7 @@ protected:
 		: nodePtr( node_ptr ) { }
 public:
 	virtual std::vector< InputPort * > * getRefPort( OutputPort *output_port );
-	virtual const std::vector< InputPort * > * getRefPort( const OutputPort *output_port ) const;
+	virtual const std::vector< InputPort * > * getRefPort( const OutputPort *output_port );
 	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
 	virtual bool getFilterNotRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
@@ -53,8 +53,8 @@ public:
 	virtual bool setVarInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr );
 	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
 	virtual bool setVarDirector( InputPort *input_port, VarDirector *var_director );
-	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool getVarInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
+	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr ) const;
+	virtual bool getVarInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr ) const;
 	virtual bool getVarInfo( InputPort *input_port_ptr, VarDirector *&result_var_director, void * &result_var_ptr );
 	// 名称
 public:
@@ -133,19 +133,19 @@ protected:
 	/// @param org_type_name 原始名称
 	/// @param result_var_director_type_name 返回真实名称
 	/// @return 失败返回 false
-	virtual bool finVarDirectorTypeName( const VarDirector *var_type_get_var_director, const QString &org_type_name, QString &result_var_director_type_name ) const;
+	virtual bool finVarDirectorTypeName( const VarDirector *var_type_get_var_director, const QString &org_type_name, QString &result_var_director_type_name );
 	/// @brief 获取指针变量的真实名称
 	/// @param var_type_get_var_director 获取的管理类
 	/// @param find_var_ptr 指针变量
 	/// @param result_var_director_type_name 返回真实名称
 	/// @return 失败返回 false
-	virtual bool finVarDirectorVarPtrTypeName( const VarDirector *var_type_get_var_director, const void *find_var_ptr, QString &result_var_director_type_name ) const;
+	virtual bool finVarDirectorVarPtrTypeName( const VarDirector *var_type_get_var_director, const void *find_var_ptr, QString &result_var_director_type_name );
 	/// @brief 获取变量的真实类型名称
 	/// @param var_type_get_var_director 获取的管理类
 	/// @param org_type_name 原始名称
 	/// @param result_var_director_type_name 返回真实名称
 	/// @return 失败返回 false
-	virtual bool finVarDirectorTypeName( const VarDirector *var_type_get_var_director, const std::type_info &org_type_name, QString &result_var_director_type_name ) const {
+	virtual bool finVarDirectorTypeName( const VarDirector *var_type_get_var_director, const std::type_info &org_type_name, QString &result_var_director_type_name ) {
 		return finVarDirectorTypeName( var_type_get_var_director, org_type_name.name( ), result_var_director_type_name );
 	}
 	// 重构宏
@@ -404,10 +404,10 @@ public:
 	// 类型
 public:
 	template< typename TCreateType, typename TPortType >
-		requires requires ( TPortType *port_type, InputPort *input_port_ptr, OutputPort *output_port ) {
-			input_port_ptr = port_type || output_port = port_type;
+		requires requires ( TPortType *port_type, OutputPort *output_port ) {
+			output_port = port_type;
 		}
-	bool cast_ptr_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) const {
+	bool cast_ptr_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) {
 		VarDirector *varDirectorPtr;
 		void *varPtr;
 		if( getVarInfo( get_port, varDirectorPtr, varPtr ) == false )
@@ -427,10 +427,61 @@ public:
 		return true;
 	}
 	template< typename TCreateType, typename TPortType >
-		requires requires ( TPortType *port_type, InputPort *input_port_ptr, OutputPort *output_port ) {
-			input_port_ptr = port_type || output_port = port_type;
+		requires requires ( TPortType *port_type, OutputPort *output_port ) {
+			output_port = port_type;
 		}
-	bool cast_ptr_ref_first_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) const {
+	bool cast_ptr_ref_first_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) {
+		VarDirector *varDirectorPtr;
+		void *varPtr;
+		auto refPort = getRefPort( get_port );
+		if( refPort.size( ) == 0 )
+			return false;
+		auto firstPort = refPort.data( )[ 0 ];
+		if( getVarInfo( firstPort, varDirectorPtr, varPtr ) == false )
+			return false;
+		QString converTypeName;
+		QString name = typeid( TCreateType ).name( );
+		if( finVarDirectorTypeName( varDirectorPtr, name, converTypeName ) == false )
+			return false;
+
+		// 检查是否存在指定的类型
+		if( finVarDirectorVarPtrTypeName( varDirectorPtr, varPtr, name ) == false )
+			return false;
+		if( name != converTypeName )
+			return false;
+		// 同一类型返回转换后的类型对象指针
+		result_ptr = ( TCreateType * ) varPtr;
+		return true;
+	}
+
+	template< typename TCreateType, typename TPortType >
+		requires requires ( TPortType *port_type, InputPort *input_port_ptr ) {
+			input_port_ptr = port_type ;
+		}
+	bool cast_ptr_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) {
+		VarDirector *varDirectorPtr;
+		void *varPtr;
+		if( getVarInfo( get_port, varDirectorPtr, varPtr ) == false )
+			return false;
+		QString converTypeName;
+		QString name = typeid( TCreateType ).name( );
+		if( finVarDirectorTypeName( varDirectorPtr, name, converTypeName ) == false )
+			return false;
+
+		// 检查是否存在指定的类型
+		if( finVarDirectorVarPtrTypeName( varDirectorPtr, varPtr, name ) == false )
+			return false;
+		if( name != converTypeName )
+			return false;
+		// 同一类型返回转换后的类型对象指针
+		result_ptr = ( TCreateType * ) varPtr;
+		return true;
+	}
+	template< typename TCreateType, typename TPortType >
+		requires requires ( TPortType *port_type, InputPort *input_port_ptr ) {
+			input_port_ptr = port_type ;
+		}
+	bool cast_ptr_ref_first_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) {
 		VarDirector *varDirectorPtr;
 		void *varPtr;
 		auto refPort = getRefPort( get_port );

@@ -2,7 +2,7 @@
 #define DEBUGNODEINFOWIDGET_H_H_HEAD__FILE__
 #include <node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h>
 
-class OutPortItemScorllWidget;
+class OutPortItemScrollWidget;
 class DebugNodeEditorNodeInfoScrollArea;
 class DebugInfoNode;
 class OutputPort;
@@ -13,7 +13,7 @@ class DebugNodeInfoWidget : public NodeInfoWidget {
 protected:
 	DebugNodeEditorNodeInfoScrollArea *debugNodeEditorScrallArea;
 	DebugInfoNode *debugInfoNode;
-	OutPortItemScorllWidget *outPortItemScorllWidget;
+	OutPortItemScrollWidget *outPortItemScrollWidget;
 protected:
 	DebugNodeInfoWidget( DebugInfoNode *debug_info_node );
 	virtual bool appendPortInfoMsg( OutputPort *output_port_ptr, const QString &msg );

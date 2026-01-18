@@ -1,23 +1,24 @@
 ﻿#ifndef DEBUGNODECONTENTWIDGET_H_H_HEAD__FILE__
 #define DEBUGNODECONTENTWIDGET_H_H_HEAD__FILE__
 #include <QWidget>
+class DebugNodeContentToolsWidget;
+class OutPortItemScrollArea;
+class OutPortItemScrollWidget;
 class DebugInfoNode;
-class OutPortItemScorllWidget;
-class OutPortItemScorllArea;
 class OutputPort;
-class DebugNodeConetentToolsWidget;
+
 class Node;
 class DebugNodeContentWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	DebugNodeConetentToolsWidget *tool;
-	OutPortItemScorllArea *outputItemScorllArea;
-	OutPortItemScorllWidget *outPortItemScorllWidget;
+	DebugNodeContentToolsWidget *tool;
+	OutPortItemScrollArea *outputItemScrollArea;
+	OutPortItemScrollWidget *outPortItemScrollWidget;
 public:
 	DebugNodeContentWidget( QWidget *parent, Qt::WindowFlags f = Qt::WindowFlags( ) );
 	virtual bool init( DebugInfoNode *node );
 	virtual bool updateLayout( );
-	virtual OutPortItemScorllWidget * getOutPortItemScorllWidget( ) const { return outPortItemScorllWidget; }
+	virtual OutPortItemScrollWidget * getOutPortItemScrollWidget( ) const { return outPortItemScrollWidget; }
 protected:
 	void resizeEvent( QResizeEvent *event ) override;
 Q_SIGNALS:

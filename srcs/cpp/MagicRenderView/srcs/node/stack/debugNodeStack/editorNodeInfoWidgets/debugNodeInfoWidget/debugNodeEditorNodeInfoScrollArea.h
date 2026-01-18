@@ -1,6 +1,7 @@
 ﻿#ifndef DEBUGNODEEDITORNODEINFOSCROLLAREA_H_H_HEAD__FILE__
 #define DEBUGNODEEDITORNODEINFOSCROLLAREA_H_H_HEAD__FILE__
-#include "../../../../nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h"
+
+#include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
 class OutputPort;
 class DebugNodeContentWidget;

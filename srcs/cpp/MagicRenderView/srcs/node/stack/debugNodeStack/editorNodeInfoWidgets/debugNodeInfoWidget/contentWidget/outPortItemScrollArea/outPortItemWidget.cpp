@@ -1,12 +1,11 @@
 ﻿#include "outPortItemWidget.h"
 
+#include <node/node/node.h>
+#include <node/port/outputPort/outputPort.h>
 #include <QLabel>
 #include <QPainter>
 #include <QTextEdit>
 #include <QVBoxLayout>
-
-#include "../../../../../../node/node.h"
-#include "../../../../../../port/outputPort/outputPort.h"
 OutPortItemWidget::OutPortItemWidget( QWidget *parent, Qt::WindowFlags f ) : QWidget( parent, f ) {
 
 	outputPortPtrName = new QLabel( this );

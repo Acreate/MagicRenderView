@@ -1,8 +1,9 @@
 ﻿#include "debugNodeEditorNodeInfoScrollArea.h"
 
-#include "../../../../../app/application.h"
-#include "../../../../../win/mainWindow.h"
-#include "../../debugNodes/outInfo/debugInfoNode.h"
+#include <app/application.h>
+#include <node/stack/debugNodeStack/debugNodes/outInfo/debugInfoNode.h>
+#include <win/mainWindow.h>
+
 #include "contentWidget/debugNodeContentWidget.h"
 void DebugNodeEditorNodeInfoScrollArea::runToNode_Slot( Node *run_target ) {
 	Application *instancePtr = Application::getInstancePtr( );
