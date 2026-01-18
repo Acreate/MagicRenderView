@@ -32,6 +32,9 @@ bool DebugNodeContentWidget::updateLayout( ) {
 	outputItemScorllArea->move( 0, toolHeight );
 	maxHeiht = maxHeiht - toolHeight;
 	outputItemScorllArea->setFixedSize( maxWidth, maxHeiht );
+	auto viewport = outputItemScorllArea->viewport( );
+	maxWidth = viewport->width( );
+	outPortItemScorllWidget->setMaximumWidth( maxWidth );
 	return true;
 }
 bool DebugNodeContentWidget::appendOutputPort( OutputPort *output_port_ptr, const QString &msg ) {
@@ -43,7 +46,4 @@ bool DebugNodeContentWidget::clear( ) {
 void DebugNodeContentWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	updateLayout( );
-	auto viewport = outputItemScorllArea->viewport( );
-	int maxWidth = viewport->width( );
-	outPortItemScorllWidget->setMaximumWidth( maxWidth );
 }
