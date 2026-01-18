@@ -43,4 +43,7 @@ bool DebugNodeContentWidget::clear( ) {
 void DebugNodeContentWidget::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
 	updateLayout( );
+	auto viewport = outputItemScorllArea->viewport( );
+	int maxWidth = viewport->width( );
+	outPortItemScorllWidget->setMaximumWidth( maxWidth );
 }
