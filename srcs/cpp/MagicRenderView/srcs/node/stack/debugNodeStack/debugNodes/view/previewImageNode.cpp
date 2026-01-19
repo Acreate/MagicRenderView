@@ -23,7 +23,7 @@ bool PreviewImageNode::initEx( MainWidget *parent ) {
 bool PreviewImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-void PreviewImageNode::releaseDebugNodeInfoWidget_Slot( NodeInfoWidget *release_ptr ) {
+void PreviewImageNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	if( imagePreviewPtr != release_ptr )
 		return;
 	imagePreviewPtr = nullptr;
@@ -32,7 +32,6 @@ NodeInfoWidget * PreviewImageNode::getNodeEditorWidget( ) {
 	if( imagePreviewPtr )
 		return imagePreviewPtr;
 	imagePreviewPtr = new ImagePreviewInfoWidget( this );
-	connect( imagePreviewPtr, &ImagePreviewInfoWidget::release_signal, this, &PreviewImageNode::releaseDebugNodeInfoWidget_Slot );
 	return imagePreviewPtr;
 }
 

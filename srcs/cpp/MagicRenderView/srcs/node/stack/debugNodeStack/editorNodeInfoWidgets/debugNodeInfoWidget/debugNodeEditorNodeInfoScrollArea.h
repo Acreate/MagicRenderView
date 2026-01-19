@@ -7,15 +7,16 @@ class OutputPort;
 class DebugNodeContentWidget;
 class DebugNodeEditorNodeInfoScrollArea : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
+	friend class DebugNodeInfoWidget;
 protected:
-	DebugNodeContentWidget* debugNodeContentWidget;
+	DebugNodeContentWidget *debugNodeContentWidget;
 protected:
-	virtual void runToNode_Slot(Node* run_target);
+	virtual void runToNode_Slot( Node *run_target );
 public:
-	DebugNodeEditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;
 	virtual DebugNodeContentWidget * getDebugNodeContentWidget( ) const { return debugNodeContentWidget; }
 protected:
+	DebugNodeEditorNodeInfoScrollArea( NodeInfoWidget *parent );
 	void releaseResource( ) override;
 	void resizeEvent( QResizeEvent * ) override;
 };

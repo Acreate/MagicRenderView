@@ -10,6 +10,17 @@ ImagePreviewInfoWidget::ImagePreviewInfoWidget( PreviewImageNode *debug_info_nod
 	auto previewImageContentWidget = previewNodeEditorScrallArea->getPreviewImageContentWidget( );
 	imageOutPortItemScrollWidget = previewImageContentWidget->getImageOutPortItemScrollWidget( );
 }
+ImagePreviewInfoWidget::~ImagePreviewInfoWidget( ) {
+	if( previewNodeEditorScrallArea ) {
+		auto currentNode = previewNodeEditorScrallArea->getCurrentNode( );
+		callNodeReleaseInfoWidgetFunction( currentNode );
+		if( currentNode != previewImageNode )
+			callNodeReleaseInfoWidgetFunction( previewImageNode );
+		delete previewNodeEditorScrallArea;
+		previewNodeEditorScrallArea = nullptr;
+		editorNodeInfoScrollArea = nullptr;
+	}
+}
 bool ImagePreviewInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const QImage &image_ref_obj ) {
 	return imageOutPortItemScrollWidget->appendOutputItem( output_port_ptr, image_ref_obj );
 }

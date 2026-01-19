@@ -31,8 +31,14 @@ NodeInfoWidget::NodeInfoWidget( ) : editorNodeInfoScrollArea( nullptr ) {
 }
 NodeInfoWidget::~NodeInfoWidget( ) {
 	emit release_signal( this );
-	if( editorNodeInfoScrollArea )
+	Node *currentNode;
+	if( editorNodeInfoScrollArea ) {
+		currentNode = editorNodeInfoScrollArea->getCurrentNode( );
+		if( currentNode )
+			callNodeReleaseInfoWidgetFunction( currentNode );
 		delete editorNodeInfoScrollArea;
+		editorNodeInfoScrollArea = nullptr;
+	}
 	delete varDirector;
 }
 
@@ -70,6 +76,9 @@ Node * NodeInfoWidget::getNode( ) const {
 }
 QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
+}
+void NodeInfoWidget::callNodeReleaseInfoWidgetFunction( Node *call_node ) {
+	call_node->releaseNodeInfoWidget( this );
 }
 void NodeInfoWidget::okButtonEvent( ) {
 	hide( );

@@ -16,7 +16,7 @@ public:
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 protected:
-	virtual void releaseDebugNodeInfoWidget_Slot( NodeInfoWidget *release_ptr );
+	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	NodeInfoWidget * getNodeEditorWidget( ) override;
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;

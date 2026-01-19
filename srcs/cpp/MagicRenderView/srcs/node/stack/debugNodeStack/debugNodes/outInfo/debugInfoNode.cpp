@@ -26,16 +26,16 @@ bool DebugInfoNode::initEx( MainWidget *parent ) {
 bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
-void DebugInfoNode::releaseDebugNodeInfoWidget_Slot( NodeInfoWidget *release_ptr ) {
+void DebugInfoNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	if( debugNodeInfoWidget != release_ptr )
 		return;
 	debugNodeInfoWidget = nullptr;
 }
+
 NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) {
 	if( debugNodeInfoWidget )
 		return debugNodeInfoWidget;
 	debugNodeInfoWidget = new DebugNodeInfoWidget( this );
-	connect( debugNodeInfoWidget, &DebugNodeInfoWidget::release_signal, this, &DebugInfoNode::releaseDebugNodeInfoWidget_Slot );
 	return debugNodeInfoWidget;
 }
 

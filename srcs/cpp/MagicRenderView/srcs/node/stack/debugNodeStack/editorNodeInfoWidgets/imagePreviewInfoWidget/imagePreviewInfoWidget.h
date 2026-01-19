@@ -19,6 +19,7 @@ protected:
 	virtual bool appendPortInfoMsg( OutputPort *output_port_ptr, const QImage &image_ref_obj );
 	virtual bool clear( );
 public:
+	~ImagePreviewInfoWidget( ) override;
 	bool checkNodeValid( Node *check_node_ptr ) override;
 	bool initNodeInfo( Node *check_node_ptr ) override;
 };

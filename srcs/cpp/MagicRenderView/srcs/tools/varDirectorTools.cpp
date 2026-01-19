@@ -118,6 +118,9 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	const int32_t *int32Ptr;
 	const int64_t *int64Ptr;
 
+	const float *floatPtr;
+	const double *doublePtr;
+
 	const QChar *charPtr;
 	const QString *stringPtr;
 
@@ -168,6 +171,14 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		result_string = QString::number( *int64Ptr );
 		return true;
 	}
+	if( var_director_ptr->cast_ptr( conver_var_ptr, floatPtr ) == true ) {
+		result_string = QString::number( *floatPtr );
+		return true;
+	}
+	if( var_director_ptr->cast_ptr( conver_var_ptr, doublePtr ) == true ) {
+		result_string = QString::number( *doublePtr );
+		return true;
+	}
 
 	if( var_director_ptr->cast_ptr( conver_var_ptr, charPtr ) == true ) {
 		result_string = *charPtr;
@@ -212,6 +223,9 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	const std::vector< int16_t > *int16ArrayPtr;
 	const std::vector< int32_t > *int32ArrayPtr;
 	const std::vector< int64_t > *int64ArrayPtr;
+
+	const std::vector< float > *floatArrayPtr;
+	const std::vector< double > *doubleArrayPtr;
 
 	const std::vector< QChar > *charArrayPtr;
 	const std::vector< QString > *stringArrayPtr;
@@ -299,6 +313,26 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	if( var_director_ptr->cast_ptr( conver_var_ptr, int64ArrayPtr ) == true ) {
 		size_t count = int64ArrayPtr->size( );
 		auto dataPtr = int64ArrayPtr->data( );
+		size_t index = 0;
+		QStringList buffList;
+		for( ; index < count; ++index )
+			buffList.append( QString::number( dataPtr[ index ] ) );
+		result_string = "{" + buffList.join( "," ) + "}";
+		return true;
+	}
+	if( var_director_ptr->cast_ptr( conver_var_ptr, floatArrayPtr ) == true ) {
+		size_t count = floatArrayPtr->size( );
+		auto dataPtr = floatArrayPtr->data( );
+		size_t index = 0;
+		QStringList buffList;
+		for( ; index < count; ++index )
+			buffList.append( QString::number( dataPtr[ index ] ) );
+		result_string = "{" + buffList.join( "," ) + "}";
+		return true;
+	}
+	if( var_director_ptr->cast_ptr( conver_var_ptr, doubleArrayPtr ) == true ) {
+		size_t count = doubleArrayPtr->size( );
+		auto dataPtr = doubleArrayPtr->data( );
 		size_t index = 0;
 		QStringList buffList;
 		for( ; index < count; ++index )

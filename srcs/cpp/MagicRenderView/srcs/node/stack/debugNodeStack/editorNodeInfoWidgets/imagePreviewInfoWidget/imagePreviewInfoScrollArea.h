@@ -8,15 +8,16 @@ class ImageOutPortContentToolsWidget;
 class OutputPort;
 class ImagePreviewInfoScrollArea : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
+	friend class ImagePreviewInfoWidget;
 protected:
 	PreviewImageContentWidget *previewImageContentWidget;
 protected:
 	virtual void runToNode_Slot( Node *run_target );
 public:
-	ImagePreviewInfoScrollArea( NodeInfoWidget *parent );
 	bool initNode( Node *init_node ) override;
 	virtual PreviewImageContentWidget * getPreviewImageContentWidget( ) const { return previewImageContentWidget; }
 protected:
+	ImagePreviewInfoScrollArea( NodeInfoWidget *parent );
 	void releaseResource( ) override;
 	void resizeEvent( QResizeEvent * ) override;
 };

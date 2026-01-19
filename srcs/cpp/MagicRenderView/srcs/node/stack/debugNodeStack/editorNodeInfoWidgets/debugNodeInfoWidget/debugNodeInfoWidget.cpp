@@ -8,7 +8,6 @@
 DebugNodeInfoWidget::DebugNodeInfoWidget( DebugInfoNode *debug_info_node ) : NodeInfoWidget( ), debugInfoNode( debug_info_node ) {
 	editorNodeInfoScrollArea = debugNodeEditorScrallArea = new DebugNodeEditorNodeInfoScrollArea( this );
 	auto debugNodeContentWidget = debugNodeEditorScrallArea->getDebugNodeContentWidget( );
-
 	outPortItemScrollWidget = debugNodeContentWidget->getOutPortItemScrollWidget( );
 }
 bool DebugNodeInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const QString &msg ) {
@@ -16,6 +15,17 @@ bool DebugNodeInfoWidget::appendPortInfoMsg( OutputPort *output_port_ptr, const 
 }
 bool DebugNodeInfoWidget::clear( ) {
 	return outPortItemScrollWidget->clear( );
+}
+DebugNodeInfoWidget::~DebugNodeInfoWidget( ) {
+	if( debugNodeEditorScrallArea ) {
+		auto currentNode = debugNodeEditorScrallArea->getCurrentNode( );
+		callNodeReleaseInfoWidgetFunction( currentNode );
+		if( currentNode != debugInfoNode )
+			callNodeReleaseInfoWidgetFunction( debugInfoNode );
+		delete debugNodeEditorScrallArea;
+		debugNodeEditorScrallArea = nullptr;
+		editorNodeInfoScrollArea = nullptr;
+	}
 }
 bool DebugNodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
 	if( ( void * ) debugInfoNode != ( void * ) check_node_ptr )
