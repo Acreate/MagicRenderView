@@ -23,6 +23,13 @@ bool PreviewImageNode::initEx( MainWidget *parent ) {
 bool PreviewImageNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
+bool PreviewImageNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
+	auto imagePreviewInfoWidget = qobject_cast< ImagePreviewInfoWidget * >( release_ptr );
+	if( imagePreviewInfoWidget == nullptr )
+		return false;
+	imagePreviewPtr = imagePreviewInfoWidget;
+	return true;
+}
 void PreviewImageNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	if( imagePreviewPtr != release_ptr )
 		return;
@@ -31,8 +38,7 @@ void PreviewImageNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 NodeInfoWidget * PreviewImageNode::getNodeEditorWidget( ) {
 	if( imagePreviewPtr )
 		return imagePreviewPtr;
-	imagePreviewPtr = new ImagePreviewInfoWidget( this );
-	return imagePreviewPtr;
+	return new ImagePreviewInfoWidget( this );
 }
 
 bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {

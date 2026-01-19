@@ -16,6 +16,7 @@ public:
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 protected:
+	bool initNodeInfoWidget(NodeInfoWidget *release_ptr) override;
 	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	NodeInfoWidget * getNodeEditorWidget( ) override;
 public:

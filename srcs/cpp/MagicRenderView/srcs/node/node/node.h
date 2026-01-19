@@ -204,6 +204,9 @@ public:
 	virtual OutputPort * getOutputPort( const size_t &output_port_generate_code ) const;
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 protected:
+	/// @brief 编辑窗口初始化时被动调用该函数
+	/// @param release_ptr 释放窗口指针
+	virtual bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) { return false; }
 	/// @brief 编辑窗口释放时被动调用该函数
 	/// @param release_ptr 释放窗口指针
 	virtual void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) { }

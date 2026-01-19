@@ -64,7 +64,7 @@ bool NodeInfoWidget::checkNodeValid( Node *check_node_ptr ) {
 bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr || editorNodeInfoScrollArea == nullptr || varDirector->init( ) == false )
 		return false;
-	if( editorNodeInfoScrollArea->initNode( check_node_ptr ) == false )
+	if( editorNodeInfoScrollArea->initNode( check_node_ptr ) == false || check_node_ptr->initNodeInfoWidget( this ) == false )
 		return false;
 	titile->setTitleText( check_node_ptr->toQString( ) );
 	return true;

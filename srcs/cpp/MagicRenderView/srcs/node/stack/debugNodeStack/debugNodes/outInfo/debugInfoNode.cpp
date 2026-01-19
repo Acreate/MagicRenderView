@@ -26,6 +26,13 @@ bool DebugInfoNode::initEx( MainWidget *parent ) {
 bool DebugInfoNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
+bool DebugInfoNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
+	auto debugInfoWidget = qobject_cast< DebugNodeInfoWidget * >( release_ptr );
+	if( debugInfoWidget == nullptr )
+		return false;
+	debugNodeInfoWidget = debugInfoWidget;
+	return true;
+}
 void DebugInfoNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	if( debugNodeInfoWidget != release_ptr )
 		return;
@@ -35,8 +42,7 @@ void DebugInfoNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) {
 	if( debugNodeInfoWidget )
 		return debugNodeInfoWidget;
-	debugNodeInfoWidget = new DebugNodeInfoWidget( this );
-	return debugNodeInfoWidget;
+	return new DebugNodeInfoWidget( this );
 }
 
 bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
