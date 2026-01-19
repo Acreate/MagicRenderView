@@ -14,6 +14,7 @@
 
 #include "../srack/srackInfo.h"
 #include "../tools/arrayTools.h"
+#include "../tools/enumTools.h"
 
 #include "../tools/pathTools.h"
 
@@ -224,27 +225,27 @@ void TestCodeSources::testEnumConver( ) {
 	NodeEnum::ErrorType result_ErrorType_var;
 	NodeEnum::AdviseType result_AdviseType_var;
 	enum_string = "Other";
-	if( NodeEnum::converEnum( enum_string, result_ErrorType_var ) ) {
+	if( EnumTools::converToEnum( enum_string, result_ErrorType_var ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
 		printerDirector->error( QObject::tr( "字符串转枚举失败 [NodeEnum::ErrorType]" ), Create_SrackInfo( ) );
 
 	enum_string = "Result";
-	if( NodeEnum::converEnum( enum_string, result_AdviseType_var ) ) {
+	if( EnumTools::converToEnum( enum_string, result_AdviseType_var ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
 		printerDirector->error( QObject::tr( "字符串转枚举失败 [NodeEnum::AdviseType]" ), Create_SrackInfo( ) );
 
 	result_ErrorType_var = NodeEnum::ErrorType::Other;
 	enum_string.clear( );
-	if( NodeEnum::converQString( result_ErrorType_var, enum_string ) ) {
+	if( EnumTools::converToString( result_ErrorType_var, enum_string ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
 		printerDirector->error( QObject::tr( "枚举转字符串失败 [NodeEnum::ErrorType]" ), Create_SrackInfo( ) );
 
 	result_AdviseType_var = NodeEnum::AdviseType::Result;
 	enum_string.clear( );
-	if( NodeEnum::converQString( result_AdviseType_var, enum_string ) ) {
+	if( EnumTools::converToString( result_AdviseType_var, enum_string ) ) {
 		printerDirector->info( enum_string, Create_SrackInfo( ) );
 	} else
 		printerDirector->error( QObject::tr( "枚举转字符串失败 [NodeEnum::AdviseType]" ), Create_SrackInfo( ) );

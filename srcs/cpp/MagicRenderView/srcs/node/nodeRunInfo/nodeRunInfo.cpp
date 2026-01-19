@@ -392,7 +392,7 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 	return false;
 }
 bool NodeRunInfo::overRunNode( ) {
-	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Old_Run );
+	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
 	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime, currentFrame ) == true )
 		return true;
 	Application *instancePtr;

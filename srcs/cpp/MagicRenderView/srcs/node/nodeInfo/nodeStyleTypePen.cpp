@@ -36,27 +36,9 @@ void NodeStyleTypePen::renderPainter( QPainter &painter, const NodeEnum::NodeSty
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Old_Run :
-			painter.setPen( oldRunPen );
-			penWidth = oldRunPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
-			break;
 		case NodeEnum::NodeStyleType::Create :
 			painter.setPen( createPen );
 			penWidth = createPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Active :
-			painter.setPen( selectActivePen );
-			penWidth = selectActivePen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Old :
-			painter.setPen( selectOldPen );
-			penWidth = selectOldPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
@@ -75,18 +57,6 @@ void NodeStyleTypePen::renderPainter( QPainter &painter, const NodeEnum::NodeSty
 		case NodeEnum::NodeStyleType::Advise :
 			painter.setPen( advisPen );
 			penWidth = advisPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Output_Ref :
-			painter.setPen( selectOutputRefPen );
-			penWidth = selectOutputRefPen.width( );
-			doubleWidth = penWidth * 2;
-			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
-			break;
-		case NodeEnum::NodeStyleType::Select_Input_Ref :
-			painter.setPen( selectInputRefPen );
-			penWidth = selectInputRefPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
