@@ -5,6 +5,8 @@
 #include <qcoreevent.h>
 #include <QScrollBar>
 
+#include "../../../app/application.h"
+#include "../../../director/nodeDirector.h"
 #include "../../../director/varDirector.h"
 #include "../../node/node.h"
 #include "../bottomTool/bottomNodeInfoTool.h"
@@ -35,7 +37,7 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 	if( editorNodeInfoScrollArea ) {
 		currentNode = editorNodeInfoScrollArea->getCurrentNode( );
 		if( currentNode )
-			callNodeReleaseInfoWidgetFunction( currentNode );
+			Application::getInstancePtr( )->getNodeDirector( )->releaseBindNodeAtEditroNode( currentNode, this );
 		delete editorNodeInfoScrollArea;
 		editorNodeInfoScrollArea = nullptr;
 	}

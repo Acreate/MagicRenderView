@@ -8,6 +8,7 @@
 
 #include "../widget/mainWidget.h"
 
+class NodeInfoWidget;
 class AppDirector;
 class PortLinkType;
 class MenuDirector;
@@ -79,10 +80,25 @@ public:
 	/// @brief 初始化管理对象
 	/// @return 失败返回 false
 	virtual bool init( );
+	/// @brief 清除所有节点选择状态
+	virtual void clearAllNodeSelectType();
+	/// @brief 清除所有节点状态
+	virtual void clearAllNodeStatusType();
+	/// @brief 配置所有节点的选择状态
+	/// @param selct_type 选择状态
+	virtual void setAllNodeSelectType(const NodeEnum::NodeSelctType& selct_type);
+	/// @brief 配置所有节点的状态
+	/// @param status_type 新状态
+	virtual void setAllNodeStatusType( const NodeEnum::NodeStatusType &status_type );
 	/// @brief 使用节点名称创建节点
 	/// @param node_type_name 节点名称
 	/// @return 失败返回 nullptr
 	virtual Node * createNode( const QString &node_type_name );
+	/// @brief 解除绑定绑定窗口的就节点对象
+	/// @param node 解绑的节点
+	/// @param un_bind_target_widget 解除绑定的窗口
+	/// @return 成功返回 true
+	virtual bool releaseBindNodeAtEditroNode( Node *node, NodeInfoWidget *un_bind_target_widget );
 	/// @brief 链接端口
 	/// @param output_port 输出端口
 	/// @param input_port 输入端口

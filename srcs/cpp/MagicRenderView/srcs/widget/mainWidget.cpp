@@ -219,8 +219,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( clickPoint, *clickInfoPtr ) ) {
-				if( oldSelectNode )
-					oldSelectNode->setNodeSelctType( NodeEnum::NodeSelctType::None );
+				nodeDirector->clearAllNodeSelectType( );
 				dragNode = clickInfoPtr->getClickNode( );
 				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
@@ -286,9 +285,10 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 	switch( mouseButton ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
-				if( oldSelectNode )
-					oldSelectNode->setNodeSelctType( NodeEnum::NodeSelctType::None );
 				dragNode = clickInfoPtr->getClickNode( );
+				if( dragNode == oldSelectNode )
+					break;
+				nodeDirector->clearAllNodeSelectType( );
 				emit select_node_signal( this, dragNode );
 				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
@@ -313,8 +313,7 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::RightButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				emit select_node_signal( this, dragNode );
-				if( oldSelectNode )
-					oldSelectNode->setNodeSelctType( NodeEnum::NodeSelctType::None );
+				nodeDirector->clearAllNodeSelectType( );
 				dragNode = clickInfoPtr->getClickNode( );
 				ensureVisible( dragNode );
 				nodeDirector->popNormalNodeEditorPropertyMenu( mapToGlobal( event->pos( ) ), dragNode );

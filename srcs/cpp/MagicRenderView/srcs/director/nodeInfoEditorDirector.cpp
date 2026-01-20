@@ -116,6 +116,7 @@ NodeInfoEditorDirector::~NodeInfoEditorDirector( ) {
 	releaseNodeEditor( );
 }
 bool NodeInfoEditorDirector::init( ) {
+	releaseNodeEditor( );
 	instancePtr = Application::getInstancePtr( );
 	mainWindow = instancePtr->getMainWindow( );
 	mainWidgetScrollArea = mainWindow->getMainWidgetScrollArea( );

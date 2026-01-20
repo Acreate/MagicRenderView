@@ -50,7 +50,7 @@ public:
 protected:
 	/// @brief 调用节点的窗口释放信号
 	/// @param call_node 调用节点
-	virtual void callNodeReleaseInfoWidgetFunction(Node* call_node);
+	virtual void callNodeReleaseInfoWidgetFunction( Node *call_node );
 	/// @brief 创建节点时候发生
 	/// @param node_ref_link_info 创建的节点的引用
 	/// @param target_node_ref 引用目标

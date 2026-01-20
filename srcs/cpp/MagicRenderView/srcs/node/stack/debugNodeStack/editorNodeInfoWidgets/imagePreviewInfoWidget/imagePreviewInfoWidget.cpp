@@ -1,5 +1,7 @@
 ﻿#include "imagePreviewInfoWidget.h"
 
+#include "../../../../../app/application.h"
+#include "../../../../../director/nodeDirector.h"
 #include "../../debugNodes/view/previewImageNode.h"
 #include "contentWidget/outImagePortItemScrollArea/imageOutPortItemScrollWidget.h"
 #include "contentWidget/previewImageContentWidget.h"
@@ -12,10 +14,7 @@ ImagePreviewInfoWidget::ImagePreviewInfoWidget( PreviewImageNode *debug_info_nod
 }
 ImagePreviewInfoWidget::~ImagePreviewInfoWidget( ) {
 	if( previewNodeEditorScrallArea ) {
-		auto currentNode = previewNodeEditorScrallArea->getCurrentNode( );
-		callNodeReleaseInfoWidgetFunction( currentNode );
-		if( currentNode != previewImageNode )
-			callNodeReleaseInfoWidgetFunction( previewImageNode );
+		Application::getInstancePtr( )->getNodeDirector( )->releaseBindNodeAtEditroNode( previewImageNode, this );
 		delete previewNodeEditorScrallArea;
 		previewNodeEditorScrallArea = nullptr;
 		editorNodeInfoScrollArea = nullptr;

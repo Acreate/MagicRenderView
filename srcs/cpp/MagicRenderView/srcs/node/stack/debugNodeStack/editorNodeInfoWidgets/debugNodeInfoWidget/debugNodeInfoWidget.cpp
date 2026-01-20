@@ -1,5 +1,7 @@
 ﻿#include "debugNodeInfoWidget.h"
 
+#include "../../../../../app/application.h"
+#include "../../../../../director/nodeDirector.h"
 #include "../../debugNodes/outInfo/debugInfoNode.h"
 #include "contentWidget/debugNodeContentWidget.h"
 #include "contentWidget/outPortItemScrollArea/outPortItemScrollWidget.h"
@@ -18,10 +20,8 @@ bool DebugNodeInfoWidget::clear( ) {
 }
 DebugNodeInfoWidget::~DebugNodeInfoWidget( ) {
 	if( debugNodeEditorScrallArea ) {
-		auto currentNode = debugNodeEditorScrallArea->getCurrentNode( );
-		callNodeReleaseInfoWidgetFunction( currentNode );
-		if( currentNode != debugInfoNode )
-			callNodeReleaseInfoWidgetFunction( debugInfoNode );
+		auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
+		nodeDirector->releaseBindNodeAtEditroNode( debugInfoNode, this );
 		delete debugNodeEditorScrallArea;
 		debugNodeEditorScrallArea = nullptr;
 		editorNodeInfoScrollArea = nullptr;

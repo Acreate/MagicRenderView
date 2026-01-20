@@ -58,6 +58,32 @@ bool NodeDirector::init( ) {
 	mainWidget->update( );
 	return true;
 }
+void NodeDirector::clearAllNodeSelectType( ) {
+	setAllNodeSelectType( NodeEnum::NodeSelctType::None );
+}
+void NodeDirector::clearAllNodeStatusType( ) {
+	setAllNodeStatusType( NodeEnum::NodeStatusType::None );
+}
+void NodeDirector::setAllNodeSelectType( const NodeEnum::NodeSelctType &selct_type ) {
+	size_t count = nodeArchiveVector.size( );
+	if( count == 0 )
+		return;
+	size_t index = 0;
+	auto nodeArrayPtr = nodeArchiveVector.data( );
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ] )
+			nodeArrayPtr[ index ]->setNodeSelctType( selct_type );
+}
+void NodeDirector::setAllNodeStatusType( const NodeEnum::NodeStatusType &status_type ) {
+	size_t count = nodeArchiveVector.size( );
+	if( count == 0 )
+		return;
+	size_t index = 0;
+	auto nodeArrayPtr = nodeArchiveVector.data( );
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ] )
+			nodeArrayPtr[ index ]->setNodeStatusType( status_type );
+}
 NodeDirector::NodeDirector( QObject *parent ) : QObject( parent ), mainWindow( nullptr ), mainWidget( nullptr ) {
 	portLink = new PortLinkType;
 	normalGenerateNodeMenu = nullptr;
@@ -106,6 +132,7 @@ void NodeDirector::releaseObjResources( ) {
 	releaseNodeHistoryResources( );
 }
 void NodeDirector::releaseMenuResources( ) {
+
 	if( normalGenerateNodeMenu )
 		delete normalGenerateNodeMenu;
 	if( normalNodeEditorPropertyMenu )
@@ -160,6 +187,19 @@ Node * NodeDirector::createNode( const QString &node_type_name ) {
 	}
 
 	return createNodePtr;
+}
+bool NodeDirector::releaseBindNodeAtEditroNode( Node *node, NodeInfoWidget *un_bind_target_widget ) {
+	size_t count = nodeArchiveVector.size( );
+	if( count == 0 )
+		return false;
+	size_t index = 0;
+	auto nodeArrayPtr = nodeArchiveVector.data( );
+	for( ; index < count; ++index )
+		if( nodeArrayPtr[ index ] == node ) {
+			nodeArrayPtr[ index ]->releaseNodeInfoWidget( un_bind_target_widget );
+			return true;
+		}
+	return false;
 }
 bool NodeDirector::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
