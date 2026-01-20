@@ -1,6 +1,8 @@
 ﻿#ifndef NODEBORDERDRAW_H_H_HEAD__FILE__
 #define NODEBORDERDRAW_H_H_HEAD__FILE__
 #include <QObject>
+#include <QSize>
+#include <QPoint>
 
 class QPainter;
 namespace NodeEnum {
@@ -56,8 +58,14 @@ protected:
 	};
 	StatusTypePen *statusTypePen;
 	SelectTypePen *selectTypePen;
+	int nodeBorderAfterEffectWidth;
+	int nodeBorderAfterEffectHeight;
+	QPen *penPtr;
 protected:
-	virtual void drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, const QPoint &start_point_ref, const QSize &end_size_ref );
+	virtual void drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, const QPoint &start_point_ref, const QSize &end_size_ref ) {
+		drawRectBorder( painter_ptr, pen_ptr, start_point_ref.x( ), start_point_ref.y( ), end_size_ref.width( ), end_size_ref.height( ) );
+	}
+	virtual void drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, int x, int y, int width, int height );
 public:
 	NodeBorderDraw( NodeBorderAfterEffect *node_border_after_effect );
 	~NodeBorderDraw( ) override;

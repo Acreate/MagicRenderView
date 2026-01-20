@@ -98,7 +98,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	if( oldLayout )
 		delete oldLayout;
 	mainLayout = new QVBoxLayout( this );
-	nodeBorderWidth = 5;
+	nodeBorderWidth = 8;
 	mainLayout->setContentsMargins( nodeBorderWidth, nodeBorderWidth, nodeBorderWidth, nodeBorderWidth );
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( titileWidget );
@@ -622,5 +622,6 @@ void Node::paintEvent( QPaintEvent *event ) {
 }
 void Node::resizeEvent( QResizeEvent *event ) {
 	QWidget::resizeEvent( event );
-	nodeAfterEffect->resize( this->size( ) );
+	QSize newSizet = this->size( );
+	nodeAfterEffect->resize( newSizet );
 }
