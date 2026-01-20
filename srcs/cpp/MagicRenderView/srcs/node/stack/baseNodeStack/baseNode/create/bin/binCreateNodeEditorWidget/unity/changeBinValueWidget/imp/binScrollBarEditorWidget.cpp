@@ -8,7 +8,7 @@ void BinScrollBarEditorWidget::scrollValueChange( int value ) {
 		return;
 	valueTitile->setText( tr( "值:%1" ).arg( value, maxLen, 10, '0' ) );
 	binOr = value;
-	emit value_change_signal( value );
+	emit value_change_signal( this, value );
 }
 BinScrollBarEditorWidget::BinScrollBarEditorWidget( BinCreateUnityNodeEditorScrollArea *bin_create_unity_node_editor_scroll_area ) : ChangeBinValueWidget( bin_create_unity_node_editor_scroll_area ) {
 	maxLen = tr( "%1" ).arg( UINT8_MAX, 0, 10 ).length( );

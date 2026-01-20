@@ -25,3 +25,26 @@ void NumberVarTitleLineEdit::setTitleText( const QString &new_title_text ) {
 QString NumberVarTitleLineEdit::getTitleText( ) {
 	return titile->text( );
 }
+void NumberVarTitleLineEdit::setVarToLineEdit( const uint64_t &var ) {
+	if( numberVarLineEdit )
+		numberVarLineEdit->setVarToLineEdit( var );
+}
+void NumberVarTitleLineEdit::setVarToLineEdit( const int64_t &var ) {
+	if( numberVarLineEdit )
+		numberVarLineEdit->setVarToLineEdit( var );
+}
+QString NumberVarTitleLineEdit::getNumberValue( ) const {
+	if( numberVarLineEdit )
+		numberVarLineEdit->text( );
+	return { };
+}
+bool NumberVarTitleLineEdit::toInt64( const QString &conver_text, int64_t &result_value ) const {
+	if( numberVarLineEdit )
+		return numberVarLineEdit->toInt64( conver_text, result_value );
+	return false;
+}
+bool NumberVarTitleLineEdit::toUInt64( const QString &conver_text, uint64_t &result_value ) const {
+	if( numberVarLineEdit )
+		return numberVarLineEdit->toUInt64( conver_text, result_value );
+	return false;
+}

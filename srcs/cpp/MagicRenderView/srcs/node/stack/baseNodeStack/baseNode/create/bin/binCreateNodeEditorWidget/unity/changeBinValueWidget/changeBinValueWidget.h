@@ -12,7 +12,7 @@ public:
 	ChangeBinValueWidget( BinCreateUnityNodeEditorScrollArea *bin_create_unity_node_editor_scroll_area );
 	virtual void updateValue( uint8_t new_value ) = 0;
 Q_SIGNALS:
-	void value_change_signal( uint8_t new_value );
+	void value_change_signal( ChangeBinValueWidget *send_ptr, uint8_t new_value );
 };
 
 #endif // CHANGEBINVALUEWIDGET_H_H_HEAD__FILE__
