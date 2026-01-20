@@ -2,10 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
-#include <QRegularExpressionValidator>
-
-#include "validator/decValidator.h"
+#include <widget/lineEdit/decLineEdit.h>
 void BinDecimalEditorWidget::valueChanged_Slot( const QString &text ) {
 	bool resultOk;
 	qlonglong longLong = text.toLongLong( &resultOk, 10 );
@@ -18,14 +15,15 @@ void BinDecimalEditorWidget::valueChanged_Slot( const QString &text ) {
 	emit value_change_signal( binOr );
 }
 BinDecimalEditorWidget::BinDecimalEditorWidget( BinCreateUnityNodeEditorScrollArea *bin_create_unity_node_editor_scroll_area ) : ChangeBinValueWidget( bin_create_unity_node_editor_scroll_area ) {
-	decEditor = new QLineEdit( this );
-	decEditor->setValidator( new DecValidator( decEditor ) );
+	decEditor = new DecLineEdit( UINT8_MAX, this );
+	maxLen = decEditor->maxLength( );
+
 	title = new QLabel( tr( "十进制:" ), this );
+
 	QHBoxLayout *mainLayout = new QHBoxLayout( this );
 	mainLayout->addWidget( title );
 	mainLayout->addWidget( decEditor );
-	maxLen = tr( "%1" ).arg( UINT8_MAX, 0, 10 ).length( );
-	decEditor->setMaxLength( maxLen );
+
 	connect( decEditor, &QLineEdit::textChanged, this, &BinDecimalEditorWidget::valueChanged_Slot );
 }
 void BinDecimalEditorWidget::updateValue( uint8_t new_value ) {

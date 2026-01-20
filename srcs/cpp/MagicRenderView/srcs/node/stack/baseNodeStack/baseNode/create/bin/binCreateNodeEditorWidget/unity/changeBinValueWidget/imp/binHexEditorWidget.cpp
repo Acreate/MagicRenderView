@@ -2,10 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
-#include <QRegularExpressionValidator>
-
-#include "validator/hexValidator.h"
+#include <widget/lineEdit/hexLineEdit.h>
 void BinHexEditorWidget::valueChanged_Slot( const QString &text ) {
 	bool resultOk;
 	qlonglong longLong = text.toLongLong( &resultOk, 16 );
@@ -18,15 +15,16 @@ void BinHexEditorWidget::valueChanged_Slot( const QString &text ) {
 	emit value_change_signal( binOr );
 }
 BinHexEditorWidget::BinHexEditorWidget( BinCreateUnityNodeEditorScrollArea *bin_create_unity_node_editor_scroll_area ) : ChangeBinValueWidget( bin_create_unity_node_editor_scroll_area ) {
-	hexEditor = new QLineEdit( this );
-	hexEditor->setValidator( new HexValidator( hexEditor ) );
+	
+	hexEditor = new HexLineEdit( UINT8_MAX, this );
+	maxLen = hexEditor->maxLength( );
+	
 	title = new QLabel( tr( "十六进制:" ), this );
+	
 	QHBoxLayout *mainLayout = new QHBoxLayout( this );
 	mainLayout->addWidget( title );
 	mainLayout->addWidget( hexEditor );
 
-	maxLen = tr( "%1" ).arg( UINT8_MAX, 0, 16 ).length( );
-	hexEditor->setMaxLength( maxLen );
 	connect( hexEditor, &QLineEdit::textChanged, this, &BinHexEditorWidget::valueChanged_Slot );
 }
 void BinHexEditorWidget::updateValue( uint8_t new_value ) {

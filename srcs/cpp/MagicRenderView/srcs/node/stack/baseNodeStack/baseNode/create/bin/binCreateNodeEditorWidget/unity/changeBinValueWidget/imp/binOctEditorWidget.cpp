@@ -2,10 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
-#include <QRegularExpressionValidator>
-
-#include "validator/decValidator.h"
+#include <widget/lineEdit/octLineEdit.h>
 void BinOctEditorWidget::valueChanged_Slot( const QString &text ) {
 
 	bool resultOk;
@@ -19,14 +16,15 @@ void BinOctEditorWidget::valueChanged_Slot( const QString &text ) {
 	emit value_change_signal( binOr );
 }
 BinOctEditorWidget::BinOctEditorWidget( BinCreateUnityNodeEditorScrollArea *bin_create_unity_node_editor_scroll_area ) : ChangeBinValueWidget( bin_create_unity_node_editor_scroll_area ) {
-	maxLen = tr( "%1" ).arg( UINT8_MAX, 0, 8 ).length( );
-	octEditor = new QLineEdit( this );
-	octEditor->setValidator( new DecValidator( octEditor ) );
+	octEditor = new OctLineEdit( UINT8_MAX, this );
+	maxLen = octEditor->maxLength( );
+
 	title = new QLabel( tr( "八进制:" ), this );
+
 	QHBoxLayout *mainLayout = new QHBoxLayout( this );
 	mainLayout->addWidget( title );
 	mainLayout->addWidget( octEditor );
-	octEditor->setMaxLength( maxLen );
+
 	connect( octEditor, &QLineEdit::textChanged, this, &BinOctEditorWidget::valueChanged_Slot );
 }
 void BinOctEditorWidget::updateValue( uint8_t new_value ) {
