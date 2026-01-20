@@ -4,7 +4,7 @@
 #include <qpen.h>
 
 namespace NodeEnum {
-	enum class NodeStyleType;
+	enum class NodeStatusType;
 }
 class NodeStyleTypePen {
 	/// @brief 默认笔刷
@@ -37,7 +37,7 @@ protected:
 public:
 	NodeStyleTypePen( );
 	virtual ~NodeStyleTypePen( ) = default;
-	virtual void renderPainter( QPainter &painter, const NodeEnum::NodeStyleType &node_render_style, const qint64 &node_width, const qint64 &node_height );
+	virtual void renderPainter( QPainter &painter, const NodeEnum::NodeStatusType &node_render_style, const qint64 &node_width, const qint64 &node_height );
 };
 
 #endif // NODESTYLETYPEPEN_H_H_HEAD__FILE__

@@ -49,21 +49,32 @@ namespace NodeEnum {
 		InputPort,
 		OutputPort
 	};
-	/// @brief 节点样式
-	enum class NodeStyleType {
+	/// @brief 节点状态样式
+	enum class NodeStatusType {
+		/// @brief 无状态
 		None,
+		/// @brief 创建
 		Create,
+		/// @brief 节点正在运行
 		Current_Run,
+		/// @brief 节点警告
 		Warning,
+		/// @brief 节点错误
 		Error,
+		/// @brief 节点建议
 		Advise
 	};
-	/// @brief 节点样式
+	/// @brief 节点选择样式
 	enum class NodeSelctType {
+		/// @brief 没有选择
 		None,
+		/// @brief 当前选择
 		Select_Active,
+		/// @brief 以前选择
 		Select_Old,
+		/// @brief 选择输出
 		Select_Output_Ref,
+		/// @brief 选择输入
 		Select_Input_Ref,
 	};
 
@@ -73,7 +84,7 @@ namespace NodeEnum {
 	Q_ENUM_NS( CreateType );
 	Q_ENUM_NS( NodeType );
 	Q_ENUM_NS( NodeClickType );
-	Q_ENUM_NS( NodeStyleType );
+	Q_ENUM_NS( NodeStatusType );
 	Q_ENUM_NS( PortType );
 	Q_ENUM_NS( NodeSelctType );
 

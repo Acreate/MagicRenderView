@@ -454,7 +454,7 @@ void NodeDirector::removeRefNodeVectorAtNode( Node *remove_node ) {
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == remove_node ) {
-			
+
 			data[ index ] = nullptr;
 			break;
 		}
@@ -487,10 +487,10 @@ Node * NodeDirector::appendRefNodeVectorAtNode( const QString &append_node_name,
 	if( fromGlobal.y( ) < 0 )
 		fromGlobal.setY( 0 );
 	append_node->move( fromGlobal );
-	if( oldCreateNode )
-		oldCreateNode->setNodeStyle( NodeEnum::NodeStyleType::None );
+	if( oldCreateNode && oldCreateNode->getNodeStatusType( ) == NodeEnum::NodeStatusType::Create )
+		oldCreateNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	oldCreateNode = append_node;
-	oldCreateNode->setNodeStyle( NodeEnum::NodeStyleType::Create );
+	oldCreateNode->setNodeStatusType( NodeEnum::NodeStatusType::Create );
 	append_node->show( );
 	mainWidget->ensureVisible( append_node );
 	finishCreateNode( append_node );

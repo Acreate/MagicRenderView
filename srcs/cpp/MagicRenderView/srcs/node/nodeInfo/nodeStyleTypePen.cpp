@@ -19,42 +19,42 @@ NodeStyleTypePen::NodeStyleTypePen( ) {
 	setPenInfo( errorPen, 0xff0000, 4 );
 	setPenInfo( advisPen, 0xff9c65, 4 );
 }
-void NodeStyleTypePen::renderPainter( QPainter &painter, const NodeEnum::NodeStyleType &node_render_style, const qint64 &node_width, const qint64 &node_height ) {
+void NodeStyleTypePen::renderPainter( QPainter &painter, const NodeEnum::NodeStatusType &node_render_style, const qint64 &node_width, const qint64 &node_height ) {
 	int doubleWidth;
 	int penWidth;
 
 	switch( node_render_style ) {
-		case NodeEnum::NodeStyleType::None :
+		case NodeEnum::NodeStatusType::None :
 			painter.setPen( nonePen );
 			penWidth = nonePen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Current_Run :
+		case NodeEnum::NodeStatusType::Current_Run :
 			painter.setPen( currentRunPen );
 			penWidth = currentRunPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Create :
+		case NodeEnum::NodeStatusType::Create :
 			painter.setPen( createPen );
 			penWidth = createPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Warning :
+		case NodeEnum::NodeStatusType::Warning :
 			painter.setPen( warningPen );
 			penWidth = warningPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Error :
+		case NodeEnum::NodeStatusType::Error :
 			painter.setPen( errorPen );
 			penWidth = errorPen.width( );
 			doubleWidth = penWidth * 2;
 			painter.drawRect( penWidth, penWidth, node_width - doubleWidth, node_height - doubleWidth );
 			break;
-		case NodeEnum::NodeStyleType::Advise :
+		case NodeEnum::NodeStatusType::Advise :
 			painter.setPen( advisPen );
 			penWidth = advisPen.width( );
 			doubleWidth = penWidth * 2;

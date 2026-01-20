@@ -15,11 +15,13 @@
 /// @param _Type_Name 名称
 #define Def_Extend_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
 
+class NodeAfterEffect;
 namespace NodeEnum {
+	enum class NodeStatusType;
+	enum class NodeSelctType;
 	enum class AdviseType;
 	enum class ErrorType;
 	enum class PortType;
-	enum class NodeStyleType;
 	enum class NodeType;
 }
 class DynamicTypeOutputPort;
@@ -83,17 +85,14 @@ protected:
 	QString generateTypeName;
 	/// @brief 变量指向
 	void *varPtr;
-	/// @brief 当前风格
-	NodeEnum::NodeStyleType nodeStyle;
-	int penWidth;
-	int doubleWidth;
-	NodeStyleTypePen *nodeStyleTypePen;
 	/// @brief 初始化时候自动调用
 	std::function< bool( MainWidget * ) > initExCallFunction;
 	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
 	std::vector< Node * > thisNodeOutputPortRefOtherNodeInputPortVector;
 	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
 	std::vector< Node * > otherNodeOutputPortRefThisNodeInputPortVector;
+	/// @brief 特效组件
+	NodeAfterEffect* nodeAfterEffect;
 private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
@@ -172,7 +171,10 @@ public:
 	~Node( ) override;
 	Node( const QString &node_name );
 	virtual bool initEx( MainWidget *parent );
-
+	virtual NodeEnum::NodeSelctType getNodeSelctType( ) const;
+	virtual void setNodeSelctType( NodeEnum::NodeSelctType node_selct_type );
+	virtual NodeEnum::NodeStatusType getNodeStatusType( ) const;
+	virtual void setNodeStatusType( NodeEnum::NodeStatusType node_status_type );
 	/// @brief 获取节点输出端口所依赖的节点（输出端口所链接的节点）
 	/// @return 依赖序列
 	virtual const std::vector< Node * > & getThisNodeOutputPortRefOtherNodeInputPortVector( ) const { return thisNodeOutputPortRefOtherNodeInputPortVector; }
@@ -197,8 +199,6 @@ public:
 	virtual QString toQString( ) const;
 	virtual const QString & getGenerateTypeName( ) const { return generateTypeName; }
 	virtual void * getVarPtr( ) const { return varPtr; }
-	virtual NodeEnum::NodeStyleType getNodeStyle( ) const { return nodeStyle; }
-	virtual void setNodeStyle( NodeEnum::NodeStyleType node_style );
 	virtual int getNodeBorderWidth( ) const { return nodeBorderWidth; }
 	virtual InputPort * getInputPort( const size_t &input_port_generate_code ) const;
 	virtual OutputPort * getOutputPort( const size_t &output_port_generate_code ) const;
@@ -387,6 +387,7 @@ protected:
 	}
 protected:
 	void paintEvent( QPaintEvent *event ) override;
+	void resizeEvent( QResizeEvent *event ) override;
 public:
 	Def_Interface_NodeTypeName( Node::tr( "未实现" ) );
 	// 信号

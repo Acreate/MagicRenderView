@@ -12,11 +12,13 @@
 #include <srack/srackInfo.h>
 #include <widget/mainWidget.h>
 
-#include "../../tools/pathTools.h"
-#include "../nodeInfo/nodeStyleTypePen.h"
-#include "../nodeTools/nodeTools.h"
-#include "../port/inputPort/dynamicTypeInputPort.h"
-#include "../port/outputPort/dynamicTypeOutputPort.h"
+#include <tools/pathTools.h>
+#include <node/nodeTools/nodeTools.h>
+#include <node/port/inputPort/dynamicTypeInputPort.h>
+#include <node/port/outputPort/dynamicTypeOutputPort.h>
+
+#include "../nodeAfterEffect/borderWidget/nodeBorderAfterEffect.h"
+#include "../nodeAfterEffect/nodeAfterEffect.h"
 
 bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
@@ -38,27 +40,32 @@ Node::~Node( ) {
 	for( index = 0; index < count; ++index )
 		delete outputArrayPtr[ index ];
 	outputPortVector.clear( );
-	if( mainLayout )
-		delete mainLayout;
-	if( titileWidget )
-		delete titileWidget;
-	if( connectWidget )
-		delete connectWidget;
-
+	
+	delete titileLabel;
+	delete titileWidgetLayout;
+	delete titileWidget;
+	
+	delete outputPortWidgetLayout;
+	delete outputPortWidget;
+	
+	delete inputPortWidgetLayout;
+	delete inputPortWidget;
+	
+	delete connectWidgetLayout;
+	delete connectWidget;
+	
+	delete mainLayout;
+	
+	delete nodeAfterEffect;
+	delete nodeToolsPtr;
+	
 	if( varPtr )
 		varDirector->release( varPtr );
-	if( nodeStyleTypePen )
-		delete nodeStyleTypePen;
-	if( nodeToolsPtr )
-		delete nodeToolsPtr;
 }
-Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout( nullptr ) {
+Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	hide( );
-	nodeToolsPtr = nullptr;
 	generateCode = 0;
 	varPtr = nullptr;
-	nodeStyleTypePen = new NodeStyleTypePen;
-	nodeStyle = NodeEnum::NodeStyleType::Create;
 	// 标题布局
 	titileWidget = new QWidget( this );
 	titileWidgetLayout = new QVBoxLayout( titileWidget );
@@ -74,17 +81,18 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout(
 	connectWidgetLayout->setSpacing( nodeBorderWidth * 2 );
 	// 输入端布局
 	inputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( inputPortWidget, 0, Qt::AlignLeft | Qt::AlignTop );
 	inputPortWidgetLayout = new QVBoxLayout( inputPortWidget );
 	inputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
 	inputPortWidgetLayout->setSpacing( 0 );
+	connectWidgetLayout->addWidget( inputPortWidget, 0, Qt::AlignLeft | Qt::AlignTop );
 	// 输出端布局
 	outputPortWidget = new QWidget( connectWidget );
-	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
 	outputPortWidgetLayout = new QVBoxLayout( outputPortWidget );
 	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
 	outputPortWidgetLayout->setSpacing( 0 );
-
+	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
+	
+	
 	// 主要布局
 	auto oldLayout = layout( );
 	if( oldLayout )
@@ -95,7 +103,11 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ), mainLayout(
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( titileWidget );
 	mainLayout->addWidget( connectWidget );
-
+	// 创建特效组件
+	nodeAfterEffect = new NodeBorderAfterEffect( this );
+	nodeAfterEffect->move( 0, 0 );
+	// 创建节点工具
+	nodeToolsPtr = new NodeTools( this );
 }
 NodeInfoWidget * Node::getNodeEditorWidget( ) {
 	return nullptr;
@@ -308,10 +320,6 @@ QString Node::toQString( ) const {
 	return getVirtualNodeTypeName( ) + "(0x" + QString::number( ( uintmax_t ) this, 16 ).toUpper( ) + ", #" + QString::number( generateCode, 16 ).toUpper( ) + ")";
 }
 
-void Node::setNodeStyle( NodeEnum::NodeStyleType node_style ) {
-	nodeStyle = node_style;
-	update( );
-}
 InputPort * Node::getInputPort( const size_t &input_port_generate_code ) const {
 	size_t count = inputPortVector.size( );
 	if( count == 0 )
@@ -506,7 +514,20 @@ bool Node::initEx( MainWidget *parent ) {
 		return false;
 	if( updatePortGenerateCodes( ) == false )
 		return false;
+
 	return true;
+}
+NodeEnum::NodeSelctType Node::getNodeSelctType( ) const {
+	return nodeAfterEffect->getNodeSelctType( );
+}
+void Node::setNodeSelctType( NodeEnum::NodeSelctType node_selct_type ) {
+	nodeAfterEffect->setNodeSelctType( node_selct_type );
+}
+NodeEnum::NodeStatusType Node::getNodeStatusType( ) const {
+	return nodeAfterEffect->getNodeStatusType( );
+}
+void Node::setNodeStatusType( NodeEnum::NodeStatusType node_status_type ) {
+	nodeAfterEffect->setNodeStatusType( node_status_type );
 }
 bool Node::hasRefInputNodeRef( InputPort *input_port ) const {
 	Node *refNode = input_port->parentNode;
@@ -555,9 +576,6 @@ bool Node::init( MainWidget *parent ) {
 	nodeTitleName = pathTools::normalPathSeparatorToPath( nodeTitleName );
 	titileLabel->setText( nodeTitleName );
 	setParent( parent );
-	if( nodeToolsPtr )
-		delete nodeToolsPtr;
-	nodeToolsPtr = new NodeTools( this );
 	return true;
 }
 
@@ -584,7 +602,6 @@ OutputPort * Node::getOutputPort( const QString &port_name ) const {
 	return nullptr;
 }
 bool Node::updateLayout( ) {
-
 	size_t count = inputPortVector.size( );
 	size_t index;
 	auto inputPortArrayPtr = inputPortVector.data( );
@@ -595,12 +612,15 @@ bool Node::updateLayout( ) {
 	auto outputPortArrayPtr = outputPortVector.data( );
 	for( index = 0; index < count; ++index )
 		outputPortWidgetLayout->addWidget( outputPortArrayPtr[ index ], 0, Qt::AlignRight | Qt::AlignHCenter );
-
+	if( nodeAfterEffect->updateLayout( ) == false )
+		return false;
 	return true;
 }
 
 void Node::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	nodeStyleTypePen->renderPainter( painter, nodeStyle, width( ), height( ) );
+}
+void Node::resizeEvent( QResizeEvent *event ) {
+	QWidget::resizeEvent( event );
+	nodeAfterEffect->resize( this->size( ) );
 }

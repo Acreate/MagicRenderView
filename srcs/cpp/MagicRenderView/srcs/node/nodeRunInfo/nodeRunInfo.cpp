@@ -164,7 +164,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 	for( builderIndex = 0; builderIndex < builderNodeArrayCount; ++builderIndex ) {
 		erroRefInputNode.clear( );
 		erroRefInputNode.clear( );
-		builderNodeArrayPtr[ builderIndex ]->setNodeStyle( NodeEnum::NodeStyleType::None );
+		builderNodeArrayPtr[ builderIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
 		if( builderNodeArrayPtr[ builderIndex ]->readyNodeRunData( ) == false ) {
 			erroReadNode.emplace_back( builderNodeArrayPtr[ builderIndex ] );
 			continue;
@@ -211,7 +211,7 @@ bool NodeRunInfo::builderRunInstanceRef( ) {
 		errorRefInMsgFormat = tr( "\n\t缺少输入依赖 : \n\t%1" );
 		errorRefOutMsgFormat = tr( "\n\t缺少输出依赖 : \n\t%1" );
 		for( refIndex = 0; refIndex < refCount; ++refIndex ) {
-			errorMapArray[ refIndex ].first->setNodeStyle( NodeEnum::NodeStyleType::Error );
+			errorMapArray[ refIndex ].first->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 			nodeTypeName = errorMapArray[ refIndex ].first->toQString( );
 			appendErrorMsg = errorNodeMsgFormat.arg( refIndex ).arg( nodeTypeName );
 			builderIndex = errorMapArray[ refIndex ].second.first.size( );
@@ -373,7 +373,7 @@ bool NodeRunInfo::findNextRunNode( Node *&result_run_node ) {
 	return false;
 }
 bool NodeRunInfo::runCurrentNode( Node *run_node ) {
-	run_node->setNodeStyle( NodeEnum::NodeStyleType::Current_Run );
+	run_node->setNodeStatusType( NodeEnum::NodeStatusType::Current_Run );
 	if( run_node->fillNodeCall( *builderDataTime, currentFrame ) == true )
 		return true;
 
@@ -388,11 +388,11 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 	nodeToString = run_node->toQString( );
 	msg = msg.arg( nodeToString );
 	printerDirector->info( msg, Create_SrackInfo( ) );
-	run_node->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	run_node->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 	return false;
 }
 bool NodeRunInfo::overRunNode( ) {
-	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+	currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime, currentFrame ) == true )
 		return true;
 	Application *instancePtr;
@@ -405,7 +405,7 @@ bool NodeRunInfo::overRunNode( ) {
 	nodeToString = currentRunPtr->toQString( );
 	msg = msg.arg( nodeToString );
 	printerDirector->info( msg, Create_SrackInfo( ) );
-	currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::Error );
+	currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 	return false;
 }
 bool NodeRunInfo::filterToAdviseVector( ) {
@@ -458,7 +458,7 @@ bool NodeRunInfo::runNextValidNode( ) {
 			break;
 	} while( findResultRunNode == nullptr );
 	if( currentRunPtr )
-		currentRunPtr->setNodeStyle( NodeEnum::NodeStyleType::None );
+		currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	currentRunPtr = findResultRunNode;
 	if( runCurrentNode( findResultRunNode ) == false )
 		return false;
