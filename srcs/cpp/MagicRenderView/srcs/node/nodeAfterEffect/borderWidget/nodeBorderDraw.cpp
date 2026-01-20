@@ -72,87 +72,101 @@ void NodeBorderDraw::drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, int x
 	int penWidth = pen_ptr->width( );
 	if( penWidth == 0 )
 		return;
-	x = penWidth + x;
-	y = penWidth + y;
-	penWidth = penWidth + penWidth;
 	width = width - penWidth;
 	height = height - penWidth;
+	penWidth = penWidth / 2;
+	x = penWidth + x;
+	y = penWidth + y;
 	painter_ptr->setPen( *pen_ptr );
 	painter_ptr->drawRect( x, y, width, height );
 }
 NodeBorderDraw::NodeBorderDraw( NodeBorderAfterEffect *node_border_after_effect ) : nodeBorderAfterEffect( node_border_after_effect ) {
 	this->statusTypePen = new StatusTypePen;
 	this->selectTypePen = new SelectTypePen;
+	statusPenPtr = nullptr;
+	selectPenPtr = nullptr;
 }
 NodeBorderDraw::~NodeBorderDraw( ) {
 	delete this->statusTypePen;
 	delete this->selectTypePen;
 }
-bool NodeBorderDraw::drawSelctType( ) {
+void NodeBorderDraw::draw( ) {
 	if( nodeBorderAfterEffect == nullptr )
-		return false;
-	QPainter painter( nodeBorderAfterEffect );
-	auto nodeSelctType = nodeBorderAfterEffect->getNodeSelctType( );
-
+		return;
+	QPainter *painter;
+	selectSelectTypePen( );
+	selectStatusTypePen( );
+	if( statusPenPtr == nullptr && selectPenPtr == nullptr )
+		return;
+	painter = new QPainter( nodeBorderAfterEffect );
 	nodeBorderAfterEffectWidth = nodeBorderAfterEffect->width( );
 	nodeBorderAfterEffectHeight = nodeBorderAfterEffect->height( );
-	penPtr = nullptr;
+	if( statusPenPtr != nullptr && selectPenPtr == nullptr ) {
+		drawRectBorder( painter, statusPenPtr, 0, 0, nodeBorderAfterEffectWidth, nodeBorderAfterEffectHeight );
+	} else if( statusPenPtr == nullptr && selectPenPtr != nullptr ) {
+		drawRectBorder( painter, selectPenPtr, 0, 0, nodeBorderAfterEffectWidth, nodeBorderAfterEffectHeight );
+	} else {
+		int borderWidth;
+		int doubleBorderWidth;
+		borderWidth = statusPenPtr->width( );
+		doubleBorderWidth = borderWidth + borderWidth;
+		drawRectBorder( painter, statusPenPtr, 0, 0, nodeBorderAfterEffectWidth, nodeBorderAfterEffectHeight );
+		drawRectBorder( painter, selectPenPtr, borderWidth, borderWidth, nodeBorderAfterEffectWidth - doubleBorderWidth, nodeBorderAfterEffectHeight - doubleBorderWidth );
+	}
+	delete painter;
+}
+bool NodeBorderDraw::selectSelectTypePen( ) {
+	QPainter painter( nodeBorderAfterEffect );
+	auto nodeSelctType = nodeBorderAfterEffect->getNodeSelctType( );
 	switch( nodeSelctType ) {
 		case NodeEnum::NodeSelctType::Select_Active :
-			penPtr = selectTypePen->getSelectActivePen( );
+			selectPenPtr = selectTypePen->getSelectActivePen( );
 			break;
 		case NodeEnum::NodeSelctType::Select_Old :
-			penPtr = selectTypePen->getSelectOldPen( );
+			selectPenPtr = selectTypePen->getSelectOldPen( );
 			break;
 		case NodeEnum::NodeSelctType::Select_Output_Ref :
-			penPtr = selectTypePen->getSelectOutputRefPen( );
+			selectPenPtr = selectTypePen->getSelectOutputRefPen( );
 			break;
 		case NodeEnum::NodeSelctType::Select_Input_Ref :
-			penPtr = selectTypePen->getSelectInputRefPen( );
+			selectPenPtr = selectTypePen->getSelectInputRefPen( );
 			break;
-		// 不处理
 		case NodeEnum::NodeSelctType::None :
-			penPtr = selectTypePen->getNonePen( );
-		default :
+			selectPenPtr = selectTypePen->getNonePen( );
 			break;
+		default :
+			selectPenPtr = nullptr;
+			return false; // 未处理
 	}
-	if( penPtr == nullptr )
-		return false; // 未处理
-	drawRectBorder( &painter, penPtr, 0 + 4, 0 + 4, nodeBorderAfterEffectWidth - 8, nodeBorderAfterEffectHeight - 8 );
 	return true;
 }
-bool NodeBorderDraw::drawStatusType( ) {
+bool NodeBorderDraw::selectStatusTypePen( ) {
 	if( nodeBorderAfterEffect == nullptr )
 		return false;
 	QPainter painter( nodeBorderAfterEffect );
 	auto nodeStatusType = nodeBorderAfterEffect->getNodeStatusType( );
-	nodeBorderAfterEffectWidth = nodeBorderAfterEffect->width( );
-	nodeBorderAfterEffectHeight = nodeBorderAfterEffect->height( );
-	penPtr = nullptr;
 	switch( nodeStatusType ) {
 		case NodeEnum::NodeStatusType::Create :
-			penPtr = statusTypePen->getCreatePen( );
+			statusPenPtr = statusTypePen->getCreatePen( );
 			break;
 		case NodeEnum::NodeStatusType::Current_Run :
-			penPtr = statusTypePen->getCurrentRunPen( );
+			statusPenPtr = statusTypePen->getCurrentRunPen( );
 			break;
 		case NodeEnum::NodeStatusType::Warning :
-			penPtr = statusTypePen->getWarningPen( );
+			statusPenPtr = statusTypePen->getWarningPen( );
 			break;
 		case NodeEnum::NodeStatusType::Error :
-			penPtr = statusTypePen->getErrorPen( );
+			statusPenPtr = statusTypePen->getErrorPen( );
 			break;
 		case NodeEnum::NodeStatusType::Advise :
-			penPtr = statusTypePen->getAdvisePen( );
+			statusPenPtr = statusTypePen->getAdvisePen( );
 			break;
-		// 不处理
 		case NodeEnum::NodeStatusType::None :
-			penPtr = statusTypePen->getNonePen( );
-		default :
+			statusPenPtr = statusTypePen->getNonePen( );
 			break;
+		default :
+			statusPenPtr = nullptr;
+			return false; // 未处理
 	}
-	if( penPtr == nullptr )
-		return false; // 未处理
-	drawRectBorder( &painter, penPtr, 0, 0, nodeBorderAfterEffectWidth, nodeBorderAfterEffectHeight );
 	return true;
 }

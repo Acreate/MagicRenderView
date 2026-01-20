@@ -60,17 +60,18 @@ protected:
 	SelectTypePen *selectTypePen;
 	int nodeBorderAfterEffectWidth;
 	int nodeBorderAfterEffectHeight;
-	QPen *penPtr;
+	QPen *statusPenPtr;
+	QPen *selectPenPtr;
 protected:
-	virtual void drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, const QPoint &start_point_ref, const QSize &end_size_ref ) {
-		drawRectBorder( painter_ptr, pen_ptr, start_point_ref.x( ), start_point_ref.y( ), end_size_ref.width( ), end_size_ref.height( ) );
-	}
 	virtual void drawRectBorder( QPainter *painter_ptr, QPen *pen_ptr, int x, int y, int width, int height );
+	virtual bool selectSelectTypePen( );
+	virtual bool selectStatusTypePen( );
 public:
 	NodeBorderDraw( NodeBorderAfterEffect *node_border_after_effect );
 	~NodeBorderDraw( ) override;
-	virtual bool drawSelctType( );
-	virtual bool drawStatusType( );
+	virtual QPen * getStatusPenPtr( ) const { return statusPenPtr; }
+	virtual QPen * getSelectPenPtr( ) const { return selectPenPtr; }
+	virtual void draw( );
 };
 
 #endif // NODEBORDERDRAW_H_H_HEAD__FILE__

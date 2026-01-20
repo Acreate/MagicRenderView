@@ -15,6 +15,5 @@ bool NodeBorderAfterEffect::updateLayout( ) {
 }
 void NodeBorderAfterEffect::paintEvent( QPaintEvent *event ) {
 	NodeAfterEffect::paintEvent( event );
-	nodeBorderDraw->drawSelctType( );
-	nodeBorderDraw->drawStatusType( );
+	nodeBorderDraw->draw( );
 }
