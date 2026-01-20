@@ -1,15 +1,21 @@
 ﻿#include "binCreateUnityNodeEditorWidget.h"
 
+#include "../../../../../../../../director/varDirector.h"
 #include "../../binCreateUnityNode.h"
 #include "binCreateUnityNodeEditorScrollArea.h"
-BinCreateUnityNodeEditorWidget::BinCreateUnityNodeEditorWidget( BinCreateUnityNode *create_bin_node ) : createBinNode( create_bin_node ) {
-	binCreateUnityNodeScrollArea = new BinCreateUnityNodeEditorScrollArea( this );
+void BinCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
+	buffValue = new_value;
+}
+BinCreateUnityNodeEditorWidget::BinCreateUnityNodeEditorWidget( BinCreateUnityNode *create_bin_node, uint8_t *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
+	if( bind_var_ptr == nullptr )
+		return;
+	binCreateUnityNodeScrollArea = new BinCreateUnityNodeEditorScrollArea( this, *bind_var_ptr );
 	editorNodeInfoScrollArea = binCreateUnityNodeScrollArea;
+	connect( binCreateUnityNodeScrollArea, &BinCreateUnityNodeEditorScrollArea::value_change_signal, this, &BinCreateUnityNodeEditorWidget::valueChange );
 }
 BinCreateUnityNodeEditorWidget::~BinCreateUnityNodeEditorWidget( ) {
 	if( binCreateUnityNodeScrollArea ) {
 		callNodeReleaseInfoWidgetFunction( createBinNode );
-		delete binCreateUnityNodeScrollArea;
 		binCreateUnityNodeScrollArea = nullptr;
 	}
 }
@@ -27,5 +33,10 @@ bool BinCreateUnityNodeEditorWidget::initNodeInfo( Node *check_node_ptr ) {
 		return false;
 	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
 		return false;
+	buffValue = *bindVarPtr;
 	return true;
+}
+void BinCreateUnityNodeEditorWidget::okButtonEvent( ) {
+	NodeInfoWidget::okButtonEvent( );
+	*bindVarPtr = buffValue;
 }

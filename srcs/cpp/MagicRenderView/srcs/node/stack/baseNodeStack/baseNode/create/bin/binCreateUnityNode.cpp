@@ -8,6 +8,7 @@
 
 BinCreateUnityNode::BinCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
+	editorWidget = nullptr;
 }
 bool BinCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
@@ -23,17 +24,69 @@ bool BinCreateUnityNode::updateLayout( ) {
 		return false;
 	return true;
 }
+bool BinCreateUnityNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
+	auto nodeEditorWidget = qobject_cast< BinCreateUnityNodeEditorWidget * >( release_ptr );
+	if( nodeEditorWidget == nullptr )
+		return false;
+	editorWidget = nodeEditorWidget;
+	return true;
+}
 void BinCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
-
-	if( release_ptr == editorWidget )
+	if( release_ptr != editorWidget )
 		return;
 	editorWidget = nullptr;
 }
 NodeInfoWidget * BinCreateUnityNode::getNodeEditorWidget( ) {
 	if( editorWidget )
 		return editorWidget;
-	editorWidget = new BinCreateUnityNodeEditorWidget( this );
-	return editorWidget;
+	return new BinCreateUnityNodeEditorWidget( this, outputVarPtr );
+}
+bool BinCreateUnityNode::formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	uint8_t *uint8Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	if( varDirector.create( uint8Ptr ) == false )
+		return false;
+
+	void *converPtr;
+	converPtr = uint64Ptr;
+	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, converPtr ) == false )
+		return false;
+	auto mod = source_array_count - result_use_count;
+	if( *uint64Ptr > mod )
+		return false; // 剩余数量少于需求数量
+	auto offset = source_array_ptr + result_use_count;
+	converPtr = uint8Ptr;
+	if( varDirector.toVar( result_use_count, offset, mod, converPtr ) == false )
+		return false;
+	*outputVarPtr = *uint8Ptr;
+	result_use_count = mod - result_use_count;
+	return true;
+}
+bool BinCreateUnityNode::toUint8VectorData( std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	uint8_t *uint8Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	if( varDirector.create( uint8Ptr ) == false )
+		return false;
+	std::vector< uint8_t > buff;
+	*uint8Ptr = *outputVarPtr;
+	if( varDirector.toVector( uint8Ptr, buff ) == false )
+		return false;
+
+	*uint64Ptr = buff.size( );
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+		return false;
+	result_vector_data.append_range( buff );
+	return true;
 }
 bool BinCreateUnityNode::readyNodeRunData( ) {
 	return true;
