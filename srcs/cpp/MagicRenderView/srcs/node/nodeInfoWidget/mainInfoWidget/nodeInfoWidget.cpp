@@ -37,7 +37,7 @@ NodeInfoWidget::~NodeInfoWidget( ) {
 	if( editorNodeInfoScrollArea ) {
 		currentNode = editorNodeInfoScrollArea->getCurrentNode( );
 		if( currentNode )
-			Application::getInstancePtr( )->getNodeDirector( )->releaseBindNodeAtEditroNode( currentNode, this );
+			callNodeReleaseInfoWidgetFunction( currentNode );
 		delete editorNodeInfoScrollArea;
 		editorNodeInfoScrollArea = nullptr;
 	}
@@ -80,7 +80,7 @@ QString NodeInfoWidget::getTitleText( ) const {
 	return titile->getTitleText( );
 }
 void NodeInfoWidget::callNodeReleaseInfoWidgetFunction( Node *call_node ) {
-	call_node->releaseNodeInfoWidget( this );
+	Application::getInstancePtr( )->getNodeDirector( )->releaseBindNodeAtEditroNode( call_node, this );
 }
 void NodeInfoWidget::okButtonEvent( ) {
 	hide( );

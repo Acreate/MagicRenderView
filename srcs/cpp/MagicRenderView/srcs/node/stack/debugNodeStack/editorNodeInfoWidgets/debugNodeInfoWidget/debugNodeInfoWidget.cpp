@@ -20,8 +20,7 @@ bool DebugNodeInfoWidget::clear( ) {
 }
 DebugNodeInfoWidget::~DebugNodeInfoWidget( ) {
 	if( debugNodeEditorScrallArea ) {
-		auto nodeDirector = Application::getInstancePtr( )->getNodeDirector( );
-		nodeDirector->releaseBindNodeAtEditroNode( debugInfoNode, this );
+		callNodeReleaseInfoWidgetFunction( debugInfoNode );
 		delete debugNodeEditorScrallArea;
 		debugNodeEditorScrallArea = nullptr;
 		editorNodeInfoScrollArea = nullptr;

@@ -14,7 +14,7 @@ ImagePreviewInfoWidget::ImagePreviewInfoWidget( PreviewImageNode *debug_info_nod
 }
 ImagePreviewInfoWidget::~ImagePreviewInfoWidget( ) {
 	if( previewNodeEditorScrallArea ) {
-		Application::getInstancePtr( )->getNodeDirector( )->releaseBindNodeAtEditroNode( previewImageNode, this );
+		callNodeReleaseInfoWidgetFunction( previewImageNode );
 		delete previewNodeEditorScrallArea;
 		previewNodeEditorScrallArea = nullptr;
 		editorNodeInfoScrollArea = nullptr;

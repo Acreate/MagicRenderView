@@ -8,11 +8,7 @@ BinCreateUnityNodeEditorWidget::BinCreateUnityNodeEditorWidget( BinCreateUnityNo
 }
 BinCreateUnityNodeEditorWidget::~BinCreateUnityNodeEditorWidget( ) {
 	if( binCreateUnityNodeScrollArea ) {
-		auto currentNode = binCreateUnityNodeScrollArea->getCurrentNode( );
-		callNodeReleaseInfoWidgetFunction( currentNode );
-		if( currentNode != createBinNode )
-			callNodeReleaseInfoWidgetFunction( createBinNode );
-		
+		callNodeReleaseInfoWidgetFunction( createBinNode );
 		delete binCreateUnityNodeScrollArea;
 		binCreateUnityNodeScrollArea = nullptr;
 	}
