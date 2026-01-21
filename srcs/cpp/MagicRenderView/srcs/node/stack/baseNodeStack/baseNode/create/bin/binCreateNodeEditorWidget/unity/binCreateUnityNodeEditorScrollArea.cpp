@@ -15,22 +15,19 @@ void BinCreateUnityNodeEditorScrollArea::textChanged_Slot( NumberVarTitleLineEdi
 	uint64_t newValue;
 	if( sender_obj->toUInt64( text, newValue ) == false )
 		return;
-	currentCom = sender_obj;
 	size_t count;
 	size_t index;
 	count = compomentWidgetVector.size( );
 	NumberVarTitleLineEdit **compomentArray;
-	if( count ) {
+	if( count && currentCom == nullptr ) {
 		compomentArray = compomentWidgetVector.data( );
 		for( index = 0; index < count; ++index )
 			if( sender_obj != compomentArray[ index ] )
 				compomentArray[ index ]->setVarToLineEdit( newValue );
 
 	}
-	if( signalScroll != nullptr ) {
-		signalScroll->scrollToPoint( newValue, 0, UINT8_MAX );
-		signalScroll = nullptr;
-	}
+	currentCom = sender_obj;
+	scrollValueChangeWidget->scrollToPoint( newValue, 0, UINT8_MAX );
 	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) newValue );
 	emit value_change_signal( 0 );
 }
@@ -40,18 +37,16 @@ void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( int curren_scroll_bar
 	count = compomentWidgetVector.size( );
 	NumberVarTitleLineEdit **compomentArray;
 	double new_value = UINT8_MAX * curren_scroll_bar_point / 100;
-	if( count && currentCom == nullptr ) {
+	if( count && currentCom != nullptr ) {
 		compomentArray = compomentWidgetVector.data( );
 		for( index = 0; index < count; ++index )
 			compomentArray[ index ]->setVarToLineEdit( ( uint64_t ) new_value );
 	}
-	currentCom = nullptr;
-	signalScroll = scrollValueChangeWidget;
 	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) new_value );
 	emit value_change_signal( new_value );
 }
 BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
-	signalScroll = nullptr;
+	currentCom = nullptr;
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );

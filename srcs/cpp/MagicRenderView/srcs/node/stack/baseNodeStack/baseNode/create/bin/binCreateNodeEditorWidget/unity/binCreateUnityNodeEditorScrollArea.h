@@ -26,7 +26,6 @@ protected:
 	OctTitleLineEdit *octTitleLineEdit;
 	BinTitleLineEdit *binTitleLineEdit;
 	ScrollValueChangeWidget *scrollValueChangeWidget;
-	ScrollValueChangeWidget *signalScroll;
 	QVBoxLayout *mainLayout;
 	uint8_t currentVar;
 	std::vector< UCompomentWidget * > compomentWidgetVector;
