@@ -8,6 +8,8 @@
 
 #include "../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( IfNode, Node::tr( "控制/逻辑判定" ) );
+
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 

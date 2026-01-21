@@ -10,6 +10,8 @@
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../editorNodeInfoWidgets/imagePreviewInfoWidget/imagePreviewInfoWidget.h"
 
+Def_Entity_NodeTypeName_Function( PreviewImageNode, Node::tr( "预览/图像" ) );
+
 PreviewImageNode::PreviewImageNode( const QString &node_name ) : ProcessNode( node_name ) { imagePreviewPtr = nullptr; }
 bool PreviewImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

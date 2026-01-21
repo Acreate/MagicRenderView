@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( CharCreateUnityNode, Node::tr( "创建/单元/字符" ) );
+
 CharCreateUnityNode::CharCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

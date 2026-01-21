@@ -1,7 +1,6 @@
 ﻿#ifndef INTADDTOARRAYNODE_H_H_HEAD__FILE__
 #define INTADDTOARRAYNODE_H_H_HEAD__FILE__
 
-
 #include <node/node/processNode.h>
 class IntVectorInputPort;
 class IntInputPort;
@@ -11,7 +10,7 @@ class IntAddToArrayNode : public ProcessNode {
 private:
 	using NodeType = int64_t;
 protected:
-	IntVectorInputPort* firstInputPort;
+	IntVectorInputPort *firstInputPort;
 	IntInputPort *secondInputPort;
 	IntVectorOutputPort *outputPort;
 	std::vector< NodeType > *outputVarPtr;
@@ -23,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "序列/追加/整数序列" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // INTADDTOARRAYNODE_H_H_HEAD__FILE__

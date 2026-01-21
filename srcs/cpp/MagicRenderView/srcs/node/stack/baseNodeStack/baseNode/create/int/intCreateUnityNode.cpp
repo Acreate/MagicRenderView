@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( IntCreateUnityNode, Node::tr( "创建/单元/整数" ) );
+
 IntCreateUnityNode::IntCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

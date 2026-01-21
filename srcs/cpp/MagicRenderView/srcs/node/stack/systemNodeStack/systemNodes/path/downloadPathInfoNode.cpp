@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( DownloadPathInfoNode, Node::tr( "路径/用户下载文件目录" ) );
+
 DownloadPathInfoNode::DownloadPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

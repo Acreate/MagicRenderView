@@ -9,6 +9,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorArrayDivNode, Node::tr( "颜色/序列/除法" ) );
+
 ColorArrayDivNode::ColorArrayDivNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( FloatArraySelfMulNode, Node::tr( "自运算/序列/浮点/乘法" ) );
+
 FloatArraySelfMulNode::FloatArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

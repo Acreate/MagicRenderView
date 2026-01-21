@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( MusicPathInfoNode, Node::tr( "路径/用户音乐目录" ) );
+
 MusicPathInfoNode::MusicPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

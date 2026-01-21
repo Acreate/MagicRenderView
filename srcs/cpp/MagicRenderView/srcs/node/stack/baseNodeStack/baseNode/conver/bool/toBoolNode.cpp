@@ -8,6 +8,9 @@
 
 #include "../../../../../../tools/varDirectorTools.h"
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"
+
+Def_Entity_NodeTypeName_Function( ToBoolNode, Node::tr( "转换/单元/布尔" ) );
+
 ToBoolNode::ToBoolNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBoolNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

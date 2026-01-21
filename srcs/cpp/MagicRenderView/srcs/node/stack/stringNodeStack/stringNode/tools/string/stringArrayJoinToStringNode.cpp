@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( StringArrayJoinToStringNode, Node::tr( "工具/拼接字符串序列" ) );
+
 StringArrayJoinToStringNode::StringArrayJoinToStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

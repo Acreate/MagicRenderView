@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( IntArraySubNode, Node::tr( "运算/序列/整数/减法" ) );
+
 IntArraySubNode::IntArraySubNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

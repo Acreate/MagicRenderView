@@ -8,6 +8,9 @@
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/array/binVectorInputPort.h"
 #include "../../../../port/outputPort/outputPort.h"
+
+Def_Entity_NodeTypeName_Function( WriteFileBinDataNode, Node::tr( "写入文件/二进制" ) );
+
 bool WriteFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )

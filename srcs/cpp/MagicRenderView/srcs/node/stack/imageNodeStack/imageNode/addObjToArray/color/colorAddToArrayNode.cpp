@@ -7,17 +7,19 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorAddToArrayNode, Node::tr( "序列追加/单元/颜色" ) );
+
 ColorAddToArrayNode::ColorAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool ColorAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "颜色序列" ), firstInputPort ) == false )
-		return false;
+			return false;
 		if( nodeToolsPtr->appendInputPortType( this, tr( "颜色" ), secondInputPort ) == false )
-		return false;
+			return false;
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
-		return false;
+			return false;
 		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;

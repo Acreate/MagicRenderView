@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ToCharNode, Node::tr( "转换/单元/字符" ) );
+
 ToCharNode::ToCharNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToCharNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

@@ -9,6 +9,8 @@
 #include "../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../port/outputPort/array/stringVectorOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( PathGetInPathInfoArrayNode, Node::tr( "路径/递归获取文件与目录" ) );
+
 PathGetInPathInfoArrayNode::PathGetInPathInfoArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathSubPathOutputVarPtr = nullptr;
 	dirPathOutputVarPtr = nullptr;

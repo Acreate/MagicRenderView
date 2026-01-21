@@ -9,6 +9,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageArrayAddNode, Node::tr( "图像/序列/加法" ) );
+
 ImageArrayAddNode::ImageArrayAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

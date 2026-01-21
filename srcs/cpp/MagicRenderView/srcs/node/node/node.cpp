@@ -20,6 +20,8 @@
 #include "../nodeAfterEffect/borderWidget/nodeBorderAfterEffect.h"
 #include "../nodeAfterEffect/nodeAfterEffect.h"
 
+Def_Entity_NodeTypeName_Function( Node, Node::tr( "未实现" ) );
+
 bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	return true;
 }
@@ -40,25 +42,25 @@ Node::~Node( ) {
 	for( index = 0; index < count; ++index )
 		delete outputArrayPtr[ index ];
 	outputPortVector.clear( );
-	
+
 	delete titileLabel;
 	delete titileWidgetLayout;
 	delete titileWidget;
-	
+
 	delete outputPortWidgetLayout;
 	delete outputPortWidget;
-	
+
 	delete inputPortWidgetLayout;
 	delete inputPortWidget;
-	
+
 	delete connectWidgetLayout;
 	delete connectWidget;
-	
+
 	delete mainLayout;
-	
+
 	delete nodeAfterEffect;
 	delete nodeToolsPtr;
-	
+
 	if( varPtr )
 		varDirector->release( varPtr );
 }
@@ -91,8 +93,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	outputPortWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
 	outputPortWidgetLayout->setSpacing( 0 );
 	connectWidgetLayout->addWidget( outputPortWidget, 0, Qt::AlignRight | Qt::AlignTop );
-	
-	
+
 	// 主要布局
 	auto oldLayout = layout( );
 	if( oldLayout )

@@ -20,7 +20,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "自运算/序列/浮点/加法" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // FLOATARRAYSELFADDNODE_H_H_HEAD__FILE__

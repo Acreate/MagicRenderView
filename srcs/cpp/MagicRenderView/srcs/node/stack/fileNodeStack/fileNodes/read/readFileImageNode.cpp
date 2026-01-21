@@ -7,6 +7,9 @@
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../../../port/outputPort/unity/imageOutputPort.h"
+
+Def_Entity_NodeTypeName_Function( ReadFileImageNode, Node::tr( "读取文件/图像" ) );
+
 ReadFileImageNode::ReadFileImageNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outVarPtr = nullptr;
 }

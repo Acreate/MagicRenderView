@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( PicturesPathInfoNode, Node::tr( "路径/用户图片目录" ) );
+
 PicturesPathInfoNode::PicturesPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

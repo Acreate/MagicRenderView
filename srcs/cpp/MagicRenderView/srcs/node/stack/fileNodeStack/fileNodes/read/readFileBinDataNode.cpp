@@ -7,6 +7,9 @@
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/array/binVectorOutputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
+
+Def_Entity_NodeTypeName_Function( ReadFileBinDataNode, Node::tr( "读取文件/二进制" ) );
+
 ReadFileBinDataNode::ReadFileBinDataNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outVectorPtr = nullptr;
 }

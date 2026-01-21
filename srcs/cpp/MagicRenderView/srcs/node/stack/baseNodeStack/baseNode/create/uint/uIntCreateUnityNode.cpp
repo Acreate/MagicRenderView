@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( UIntCreateUnityNode, Node::tr( "创建/单元/无符号整数" ) );
+
 UIntCreateUnityNode::UIntCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

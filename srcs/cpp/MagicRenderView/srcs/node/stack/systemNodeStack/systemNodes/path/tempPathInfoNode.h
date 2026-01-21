@@ -3,7 +3,6 @@
 
 #include <node/node/processNode.h>
 
-
 class StringOutputPort;
 /// @brief 返回一个可用于存储临时文件的目录。
 /// 所返回的值可能是特定于某个应用程序的，也可以供该用户在其他应用程序中共享，甚至系统范围内。
@@ -21,6 +20,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "路径/存储临时文件目录" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // TEMPPATHINFONODE_H_H_HEAD__FILE__

@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( ConfigPathInfoNode, Node::tr( "路径/用户特定的配置文件目录" ) );
+
 ConfigPathInfoNode::ConfigPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

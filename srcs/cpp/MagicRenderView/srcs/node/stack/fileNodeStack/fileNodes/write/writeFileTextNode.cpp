@@ -7,6 +7,9 @@
 #include "../../../../../tools/pathTools.h"
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/outputPort.h"
+
+Def_Entity_NodeTypeName_Function( WriteFileTextNode, Node::tr( "写入文件/字符串" ) );
+
 bool WriteFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )

@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageCreateUnityNode, Node::tr( "创建/单元/图像" ) );
+
 ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

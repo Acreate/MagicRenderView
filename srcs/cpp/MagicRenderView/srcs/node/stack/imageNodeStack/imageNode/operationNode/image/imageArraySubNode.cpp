@@ -9,6 +9,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageArraySubNode, Node::tr( "图像/序列/减法" ) );
+
 ImageArraySubNode::ImageArraySubNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

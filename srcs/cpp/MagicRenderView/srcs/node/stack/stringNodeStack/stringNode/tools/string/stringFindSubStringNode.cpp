@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( StringFindSubStringNode, Node::tr( "工具/在起始位置开始查找子字符串" ) );
+
 StringFindSubStringNode::StringFindSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

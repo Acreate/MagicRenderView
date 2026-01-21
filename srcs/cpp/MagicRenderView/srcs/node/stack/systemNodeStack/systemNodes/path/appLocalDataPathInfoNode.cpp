@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( AppLocalDataPathInfoNode, Node::tr( "路径/本地设置路径" ) );
+
 AppLocalDataPathInfoNode::AppLocalDataPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

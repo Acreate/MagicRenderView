@@ -6,6 +6,8 @@
 
 #include "binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorWidget.h"
 
+Def_Entity_NodeTypeName_Function( BinCreateUnityNode, Node::tr("创建/单元/二进制" ) );
+
 BinCreateUnityNode::BinCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 	editorWidget = nullptr;

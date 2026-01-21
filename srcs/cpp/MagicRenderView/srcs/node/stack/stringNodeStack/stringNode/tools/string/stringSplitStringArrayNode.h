@@ -10,9 +10,9 @@ private:
 	using NodeType = QString;
 protected:
 	StringInputPort *stringInputPortPtr;
-	StringInputPort* splitSubStringInputPortPtr;
+	StringInputPort *splitSubStringInputPortPtr;
 	StringVectorOutputPort *outputPort;
-	std::vector<NodeType> *outputVarPtr;
+	std::vector< NodeType > *outputVarPtr;
 public:
 	StringSplitStringArrayNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
@@ -21,6 +21,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "工具/使用子字符串进行切分" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // STRINGSPLITSTRINGARRAYNODE_H_H_HEAD__FILE__

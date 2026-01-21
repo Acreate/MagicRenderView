@@ -5,6 +5,9 @@
 #include <node/port/outputPort/unity/binOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( BinDivNode, Node::tr( "运算/单元/二进制/除法" ) );
+
 BinDivNode::BinDivNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

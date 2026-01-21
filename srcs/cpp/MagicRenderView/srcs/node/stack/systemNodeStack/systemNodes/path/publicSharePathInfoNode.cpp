@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( PublicSharePathInfoNode, Node::tr( "路径/用户特定的公开共享目录" ) );
+
 PublicSharePathInfoNode::PublicSharePathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

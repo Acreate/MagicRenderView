@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( RunArgInfoNode, Node::tr( "软件/软件运行参数" ) );
+
 RunArgInfoNode::RunArgInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

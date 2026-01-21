@@ -9,7 +9,7 @@ class MakeNode : public PointNode {
 	Q_OBJECT;
 protected:
 	PointOutputPort *nextNode;
-	ToPointOutputPort* toPointOutputPortPtr;
+	ToPointOutputPort *toPointOutputPortPtr;
 public:
 	MakeNode( const QString &node_name )
 		: PointNode( node_name ) { }
@@ -18,9 +18,9 @@ public:
 public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
-	bool fillOutputPortCall( std::vector<Node *> &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
+	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "控制/记录位置" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // MAKENODE_H_H_HEAD__FILE__

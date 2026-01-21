@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ToImageNode, Node::tr( "转换/单元/图像" ) );
+
 ToImageNode::ToImageNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

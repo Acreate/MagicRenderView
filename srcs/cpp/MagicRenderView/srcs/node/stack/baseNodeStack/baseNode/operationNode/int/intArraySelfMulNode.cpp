@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( IntArraySelfMulNode, Node::tr( "自运算/序列/整数/乘法" ) );
+
 IntArraySelfMulNode::IntArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

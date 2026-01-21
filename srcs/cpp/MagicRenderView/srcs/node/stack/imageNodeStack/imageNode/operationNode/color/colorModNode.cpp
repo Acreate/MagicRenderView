@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorModNode, Node::tr( "颜色/单元/求余" ) );
+
 ColorModNode::ColorModNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

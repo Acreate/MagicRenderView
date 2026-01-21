@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( IntArrayAddNode, Node::tr( "运算/序列/整数/加法" ) );
+
 IntArrayAddNode::IntArrayAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

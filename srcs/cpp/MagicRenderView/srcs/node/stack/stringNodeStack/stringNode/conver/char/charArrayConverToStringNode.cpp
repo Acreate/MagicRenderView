@@ -8,6 +8,8 @@
 #include "../../../../../port/inputPort/array/charVectorInputPort.h"
 #include "../../../../../port/outputPort/unity/stringOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( CharArrayConverToStringNode, Node::tr( "转换/序列/字符序列到字符串" ) );
+
 CharArrayConverToStringNode::CharArrayConverToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool CharArrayConverToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

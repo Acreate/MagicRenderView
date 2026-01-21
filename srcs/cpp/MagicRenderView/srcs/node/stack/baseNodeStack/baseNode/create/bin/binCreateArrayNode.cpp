@@ -4,6 +4,10 @@
 #include <node/port/outputPort/array/binVectorOutputPort.h>
 #include <node/nodeTools/nodeTools.h>
 
+
+Def_Entity_NodeTypeName_Function( BinCreateArrayNode, Node::tr( "创建/序列/二进制序列" ) );
+
+
 BinCreateArrayNode::BinCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

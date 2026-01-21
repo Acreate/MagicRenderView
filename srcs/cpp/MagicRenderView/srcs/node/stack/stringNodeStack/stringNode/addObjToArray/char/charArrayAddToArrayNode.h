@@ -1,7 +1,6 @@
 ﻿#ifndef CHARARRAYADDTOARRAYNODE_H_H_HEAD__FILE__
 #define CHARARRAYADDTOARRAYNODE_H_H_HEAD__FILE__
 
-
 #include <node/node/processNode.h>
 class CharVectorInputPort;
 class CharVectorOutputPort;
@@ -23,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "序列追加/序列/字符序列追加到字符串序列" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // CHARARRAYADDTOARRAYNODE_H_H_HEAD__FILE__

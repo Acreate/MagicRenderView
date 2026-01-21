@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageAddToArrayNode, Node::tr( "序列追加/单元/图像" ) );
+
 ImageAddToArrayNode::ImageAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

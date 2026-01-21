@@ -9,6 +9,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageChannelNode, Node::tr( "转换/切分/多通道" ) );
+
 ImageChannelNode::ImageChannelNode( const QString &node_name ) : ProcessNode( node_name ) {
 	redOutVectorVarPtr = nullptr;
 	greenOutVectorVarPtr = nullptr;

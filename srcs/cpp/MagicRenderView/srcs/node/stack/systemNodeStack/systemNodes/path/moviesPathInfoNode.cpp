@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( MoviesPathInfoNode, Node::tr( "路径/用户电影和视频的目录" ) );
+
 MoviesPathInfoNode::MoviesPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

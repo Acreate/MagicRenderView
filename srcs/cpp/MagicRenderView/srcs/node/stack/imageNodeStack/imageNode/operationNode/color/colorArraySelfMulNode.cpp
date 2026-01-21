@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorArraySelfMulNode, Node::tr( "自运算/颜色/乘法" ) );
+
 ColorArraySelfMulNode::ColorArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

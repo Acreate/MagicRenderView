@@ -6,6 +6,9 @@
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( IntAddToArrayNode, Node::tr( "追加/整数序列" ) );
+
 IntAddToArrayNode::IntAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

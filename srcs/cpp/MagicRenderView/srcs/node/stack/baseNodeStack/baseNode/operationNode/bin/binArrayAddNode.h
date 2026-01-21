@@ -22,7 +22,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "运算/序列/二进制/加法" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // BINARRAYADDNODE_H_H_HEAD__FILE__

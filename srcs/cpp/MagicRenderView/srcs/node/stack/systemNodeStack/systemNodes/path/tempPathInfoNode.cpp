@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( TempPathInfoNode, Node::tr( "路径/存储临时文件目录" ) );
+
 TempPathInfoNode::TempPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

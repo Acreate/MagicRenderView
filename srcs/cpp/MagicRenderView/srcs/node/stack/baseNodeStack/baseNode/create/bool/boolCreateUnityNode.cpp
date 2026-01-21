@@ -6,6 +6,8 @@
 
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( BoolCreateUnityNode, Node::tr("创建/单元/布尔" ) );
+
 BoolCreateUnityNode::BoolCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

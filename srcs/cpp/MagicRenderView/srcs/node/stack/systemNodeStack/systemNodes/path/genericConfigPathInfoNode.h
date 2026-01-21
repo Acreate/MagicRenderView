@@ -1,9 +1,7 @@
 ﻿#ifndef GENERICCONFIGPATHINFONODE_H_H_HEAD__FILE__
 #define GENERICCONFIGPATHINFONODE_H_H_HEAD__FILE__
 
-
 #include <node/node/processNode.h>
-
 
 class StringOutputPort;
 /// @brief 返回一个自录位置，用于存放多个应用程序之间共享的用户特定配置文件。
@@ -21,6 +19,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "路径/应用程序共享配置目录" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // GENERICCONFIGPATHINFONODE_H_H_HEAD__FILE__

@@ -1,7 +1,6 @@
 ﻿#ifndef CHARCREATEARRAYNODE_H_H_HEAD__FILE__
 #define CHARCREATEARRAYNODE_H_H_HEAD__FILE__
 
-
 #include <node/node/processNode.h>
 class CharVectorOutputPort;
 class CharCreateArrayNode : public ProcessNode {
@@ -19,6 +18,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "创建/序列/字符序列" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // CHARCREATEARRAYNODE_H_H_HEAD__FILE__

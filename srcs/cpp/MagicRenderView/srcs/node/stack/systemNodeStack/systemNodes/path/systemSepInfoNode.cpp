@@ -9,6 +9,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( SystemSepInfoNode, Node::tr( "路径/系统路径分隔符" ) );
+
 SystemSepInfoNode::SystemSepInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

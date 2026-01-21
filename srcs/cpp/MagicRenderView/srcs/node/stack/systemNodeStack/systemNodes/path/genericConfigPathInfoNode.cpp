@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( GenericConfigPathInfoNode, Node::tr( "路径/应用程序共享配置目录" ) );
+
 GenericConfigPathInfoNode::GenericConfigPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

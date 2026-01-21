@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( StringArrayAddToArrayNode, Node::tr( "序列追加/序列/字符串序列追加到字符串序列" ) );
+
 StringArrayAddToArrayNode::StringArrayAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

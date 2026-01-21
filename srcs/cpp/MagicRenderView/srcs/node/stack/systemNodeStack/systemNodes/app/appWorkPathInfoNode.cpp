@@ -6,6 +6,8 @@
 #include <QDir>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( AppWorkPathInfoNode, Node::tr( "软件/当前工作目录" ) );
+
 AppWorkPathInfoNode::AppWorkPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

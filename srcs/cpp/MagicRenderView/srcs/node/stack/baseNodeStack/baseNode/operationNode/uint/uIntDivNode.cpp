@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( UIntDivNode, Node::tr( "运算/单元/无符号整数/除法" ) );
+
 UIntDivNode::UIntDivNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( FloatArrayDivNode, Node::tr( "运算/序列/浮点/除法" ) );
+
 FloatArrayDivNode::FloatArrayDivNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

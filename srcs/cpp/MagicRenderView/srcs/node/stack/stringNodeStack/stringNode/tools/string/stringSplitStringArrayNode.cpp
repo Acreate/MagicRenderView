@@ -7,6 +7,8 @@
 #include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/outputPort/array/stringVectorOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( StringSplitStringArrayNode, Node::tr( "工具/使用子字符串进行切分" ) );
+
 StringSplitStringArrayNode::StringSplitStringArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

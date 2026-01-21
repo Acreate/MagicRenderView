@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( AppFileBaseNameInfoBase, Node::tr( "软件/软件基本名称" ) );
+
 AppFileBaseNameInfoBase::AppFileBaseNameInfoBase( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

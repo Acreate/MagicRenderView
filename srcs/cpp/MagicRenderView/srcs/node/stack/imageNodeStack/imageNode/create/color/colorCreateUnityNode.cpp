@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorCreateUnityNode, Node::tr( "创建/单元/颜色" ) );
+
 ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

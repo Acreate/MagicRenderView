@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ColorCreateArrayNode, Node::tr( "创建/序列/颜色" ) );
+
 ColorCreateArrayNode::ColorCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

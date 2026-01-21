@@ -26,6 +26,6 @@ public:
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/切分/多通道" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // IMAGECHANNELNODE_H_H_HEAD__FILE__

@@ -9,6 +9,8 @@
 #include "../../../../port/inputPort/unity/imageInputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( ImageInfoNode, Node::tr( "图像/图像信息" ) );
+
 ImageInfoNode::ImageInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	width = nullptr;
 	height = nullptr;

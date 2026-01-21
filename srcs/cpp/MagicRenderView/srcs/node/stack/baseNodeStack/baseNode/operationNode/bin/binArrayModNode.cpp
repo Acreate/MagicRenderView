@@ -8,6 +8,9 @@
 #include "../../../../../../tools/baseOperationTools.h"
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( BinArrayModNode, Node::tr( "运算/序列/二进制/求余" ) );
+
 BinArrayModNode::BinArrayModNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

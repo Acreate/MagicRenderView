@@ -6,7 +6,7 @@
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
 
-#include "../../../../../tools/pathTools.h"
+Def_Entity_NodeTypeName_Function( DocumentsPathInfoNode, Node::tr( "路径/用户文档文件目录" ) );
 
 DocumentsPathInfoNode::DocumentsPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;

@@ -7,6 +7,8 @@
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
+Def_Entity_NodeTypeName_Function( StringInsertSubStringNode, Node::tr( "工具/在指定位置插入子字符串" ) );
+
 StringInsertSubStringNode::StringInsertSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

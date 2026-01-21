@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( FontsPathInfoNode, Node::tr( "路径/用户字体目录" ) );
+
 FontsPathInfoNode::FontsPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( CachePathInfoNode, Node::tr( "路径/用户特定的非关键缓存数据目录" ) );
+
 CachePathInfoNode::CachePathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

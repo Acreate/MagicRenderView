@@ -23,7 +23,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "工具/在指定位置开始删除所有子字符串" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // STRINGREMOVESUBSTRINGNODE_H_H_HEAD__FILE__

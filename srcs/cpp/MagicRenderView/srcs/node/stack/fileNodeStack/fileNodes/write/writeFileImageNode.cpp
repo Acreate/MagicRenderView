@@ -9,6 +9,9 @@
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/unity/imageInputPort.h"
 #include "../../../../port/outputPort/outputPort.h"
+
+Def_Entity_NodeTypeName_Function( WriteFileImageNode, Node::tr( "写入文件/图像" ) );
+
 bool WriteFileImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )

@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageArraySelfMulNode, Node::tr( "自运算/图像/乘法" ) );
+
 ImageArraySelfMulNode::ImageArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

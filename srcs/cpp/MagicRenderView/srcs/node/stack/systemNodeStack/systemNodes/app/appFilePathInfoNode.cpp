@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( AppFilePathInfoNode, Node::tr( "软件/软件路径" ) );
+
 AppFilePathInfoNode::AppFilePathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

@@ -5,6 +5,8 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
+Def_Entity_NodeTypeName_Function( ToIntNode, Node::tr( "转换/单元/整数" ) );
+
 ToIntNode::ToIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToIntNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

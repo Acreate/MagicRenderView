@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( RuntimePathInfoNode, Node::tr( "路径/写入运行时通信文件目录" ) );
+
 RuntimePathInfoNode::RuntimePathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

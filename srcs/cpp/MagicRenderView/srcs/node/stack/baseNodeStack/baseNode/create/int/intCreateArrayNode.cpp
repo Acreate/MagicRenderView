@@ -4,6 +4,9 @@
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( IntCreateArrayNode, Node::tr( "创建/序列/整数序列" ) );
+
 IntCreateArrayNode::IntCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

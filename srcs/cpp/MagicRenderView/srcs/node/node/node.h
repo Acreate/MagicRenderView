@@ -9,11 +9,11 @@
 
 /// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
 /// @param _Type_Name 名称
-#define Def_Interface_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; } virtual QString getVirtualNodeTypeName( ) const { return _Type_Name; }
+#define Def_Interface_NodeTypeName(  ) public: static QString getStaticNodeTypeName( ); virtual QString getVirtualNodeTypeName( ) const 
 
-/// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
-/// @param _Type_Name 名称
-#define Def_Extend_NodeTypeName( _Type_Name ) public: static QString getStaticNodeTypeName( ) { return _Type_Name; }  QString getVirtualNodeTypeName( ) const override { return _Type_Name; }
+#define Def_Extern_NodeTypeName_Function(  ) public: static QString getStaticNodeTypeName( ) ; QString getVirtualNodeTypeName( ) const override
+
+#define Def_Entity_NodeTypeName_Function( _Entity_Class , _Type_Name )  QString _Entity_Class::getStaticNodeTypeName( ) {return _Type_Name;} QString _Entity_Class::getVirtualNodeTypeName( ) const {return _Type_Name;}
 
 class NodeAfterEffect;
 namespace NodeEnum {
@@ -92,7 +92,7 @@ protected:
 	/// @brief 依赖该节点输入端的所有节点（输入端所链接的节点）
 	std::vector< Node * > otherNodeOutputPortRefThisNodeInputPortVector;
 	/// @brief 特效组件
-	NodeAfterEffect* nodeAfterEffect;
+	NodeAfterEffect *nodeAfterEffect;
 private:
 	/// @brief 链接信号
 	/// @param input_port 输入端口
@@ -389,7 +389,7 @@ protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 public:
-	Def_Interface_NodeTypeName( Node::tr( "未实现" ) );
+	Def_Interface_NodeTypeName(  );
 	// 信号
 Q_SIGNALS:
 	/// @brief 释放对象产生信号

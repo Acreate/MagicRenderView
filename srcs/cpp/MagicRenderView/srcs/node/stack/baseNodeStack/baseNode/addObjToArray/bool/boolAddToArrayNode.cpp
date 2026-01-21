@@ -6,6 +6,8 @@
 #include "../../../../../port/inputPort/array/boolVectorInputPort.h"
 #include "../../../../../port/inputPort/unity/boolInputPort.h"
 #include "../../../../../port/outputPort/array/boolVectorOutputPort.h"
+
+Def_Entity_NodeTypeName_Function( BoolAddToArrayNode,  Node::tr( "追加/布尔序列" ) );
 BoolAddToArrayNode::BoolAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

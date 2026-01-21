@@ -22,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "序列追加/单元/图像" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // IMAGEADDTOARRAYNODE_H_H_HEAD__FILE__

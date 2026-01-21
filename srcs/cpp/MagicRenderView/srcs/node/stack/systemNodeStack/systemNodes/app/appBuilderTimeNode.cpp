@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( AppBuilderTimeNode, Node::tr( "软件/编译时间" ) );
+
 AppBuilderTimeNode::AppBuilderTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

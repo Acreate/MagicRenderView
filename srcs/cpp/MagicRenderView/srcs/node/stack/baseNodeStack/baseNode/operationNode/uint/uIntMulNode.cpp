@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( UIntMulNode, Node::tr( "运算/单元/无符号整数/乘法" ) );
+
 UIntMulNode::UIntMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -8,6 +8,8 @@
 
 #include "../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( SplitDataTimeNode, Node::tr( "日期时间/切分日期与时间" ) );
+
 SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outDatePtr = nullptr;
 	outTimePtr = nullptr;

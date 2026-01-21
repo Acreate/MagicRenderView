@@ -12,6 +12,8 @@
 #include <qfileinfo.h>
 #include <tools/infoTool.h>
 
+Def_Entity_NodeTypeName_Function( FileInfoNode, Node::tr( "信息/路径信息" ) );
+
 FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outFilePtahPtr = nullptr;
 	outDirNamePtr = nullptr;

@@ -6,6 +6,9 @@
 #include <node/port/outputPort/array/binVectorOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( BinArrayMulNode, Node::tr( "运算/序列/二进制/乘法" ) );
+
 BinArrayMulNode::BinArrayMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

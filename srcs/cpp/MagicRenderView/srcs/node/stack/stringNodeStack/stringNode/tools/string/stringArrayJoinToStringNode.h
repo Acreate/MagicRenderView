@@ -14,7 +14,7 @@ private:
 protected:
 	StringVectorInputPort *stringVectorInputPortPtr;
 	StringInputPort *jionSubStringInputPortPtr;
-	StringOutputPort* outputPortPtr;
+	StringOutputPort *outputPortPtr;
 	NodeType *outputVarPtr;
 public:
 	StringArrayJoinToStringNode( const QString &node_name );
@@ -24,7 +24,7 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "工具/拼接字符串序列" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // STRINGARRAYJOINTOSTRINGNODE_H_H_HEAD__FILE__

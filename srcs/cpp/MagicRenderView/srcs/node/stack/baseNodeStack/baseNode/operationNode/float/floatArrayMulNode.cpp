@@ -7,12 +7,14 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( FloatArrayMulNode, Node::tr( "运算/序列/浮点/乘法" ) );
+
 FloatArrayMulNode::FloatArrayMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool FloatArrayMulNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		
+
 		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点序列" ), firstInputPort ) == false )
 			return false;
 		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点" ), secondInputPort ) == false )
@@ -42,7 +44,7 @@ bool FloatArrayMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts =nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )

@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageCreateArrayNode, Node::tr( "创建/序列/图像" ) );
+
 ImageCreateArrayNode::ImageCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

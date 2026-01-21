@@ -8,6 +8,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( ImageArraySelfAddNode, Node::tr( "自运算/图像/加法" ) );
+
 ImageArraySelfAddNode::ImageArraySelfAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

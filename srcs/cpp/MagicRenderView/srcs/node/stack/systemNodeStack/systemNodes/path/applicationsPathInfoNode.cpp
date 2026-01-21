@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( ApplicationsPathInfoNode, Node::tr( "路径/用户应用程序的目录" ) );
+
 ApplicationsPathInfoNode::ApplicationsPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

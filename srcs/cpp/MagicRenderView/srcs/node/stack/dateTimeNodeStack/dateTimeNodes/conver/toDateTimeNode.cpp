@@ -10,6 +10,8 @@
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( ToDateTimeNode, Node::tr( "转换/单元/日期时间" ) );
+
 ToDateTimeNode::ToDateTimeNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToDateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

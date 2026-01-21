@@ -7,6 +7,8 @@
 
 #include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( AppRunStartTimeNode, Node::tr( "软件/起始运行时间" ) );
+
 AppRunStartTimeNode::AppRunStartTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

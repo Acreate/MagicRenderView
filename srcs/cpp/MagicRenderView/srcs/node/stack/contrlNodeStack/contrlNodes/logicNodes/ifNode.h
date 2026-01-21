@@ -9,7 +9,7 @@ class AnyVarInputPort;
 class IfNode : public LogicNode {
 	Q_OBJECT;
 protected:
-	PointInputPort * pointInputPort;
+	PointInputPort *pointInputPort;
 	AnyVarInputPort *ifResultPort;
 	AnyVarInputPort *channelInputPort;
 	AnyVarOutputPort *channelOutputPort;
@@ -24,7 +24,7 @@ public:
 	bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector, size_t current_frame ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 	bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
-	Def_Extend_NodeTypeName( Node::tr( "控制/逻辑判定" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 
 #endif // IFNODE_H_H_HEAD__FILE__

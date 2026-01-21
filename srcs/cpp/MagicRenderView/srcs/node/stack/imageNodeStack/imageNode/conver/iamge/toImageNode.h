@@ -18,6 +18,6 @@ public:
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "转换/单元/图像" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // TOIMAGENODE_H_H_HEAD__FILE__

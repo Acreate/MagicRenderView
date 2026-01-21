@@ -5,6 +5,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( UIntCreateArrayNode, Node::tr( "创建/序列/无符号整数序列" ) );
+
 UIntCreateArrayNode::UIntCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

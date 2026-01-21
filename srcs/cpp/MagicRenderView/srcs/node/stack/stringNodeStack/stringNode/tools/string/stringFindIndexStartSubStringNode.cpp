@@ -8,6 +8,8 @@
 #include "../../../../../port/inputPort/unity/intInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
+Def_Entity_NodeTypeName_Function( StringFindIndexStartSubStringNode, Node::tr( "工具/在指定位置开始查找子字符串" ) );
+
 StringFindIndexStartSubStringNode::StringFindIndexStartSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

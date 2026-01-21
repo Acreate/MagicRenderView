@@ -6,6 +6,9 @@
 #include <node/port/inputPort/array/binVectorInputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( BinArraySelfMulNode, Node::tr( "自运算/序列/二进制/乘法" ) );
+
 BinArraySelfMulNode::BinArraySelfMulNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }
@@ -38,7 +41,7 @@ bool BinArraySelfMulNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts =  nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

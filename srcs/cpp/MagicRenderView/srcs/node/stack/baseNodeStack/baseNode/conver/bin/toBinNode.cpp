@@ -5,6 +5,9 @@
 #include <node/port/outputPort/unity/binOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( ToBinNode, Node::tr( "转换/单元/二进制" ) );
+
 ToBinNode::ToBinNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBinNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {

@@ -6,6 +6,9 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
+
+Def_Entity_NodeTypeName_Function( FloatAddToArrayNode, Node::tr( "追加/浮点序列" ) );
+
 FloatAddToArrayNode::FloatAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

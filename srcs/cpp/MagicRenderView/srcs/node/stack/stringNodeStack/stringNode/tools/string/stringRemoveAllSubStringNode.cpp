@@ -6,6 +6,8 @@
 #include "../../../../../nodeTools/nodeTools.h"
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 
+Def_Entity_NodeTypeName_Function( StringRemoveAllSubStringNode, Node::tr( "工具/删除所有子字符串" ) );
+
 StringRemoveAllSubStringNode::StringRemoveAllSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( StringReplaceAllSubStringNode, Node::tr( "工具/替换所有子字符串" ) );
+
 StringReplaceAllSubStringNode::StringReplaceAllSubStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

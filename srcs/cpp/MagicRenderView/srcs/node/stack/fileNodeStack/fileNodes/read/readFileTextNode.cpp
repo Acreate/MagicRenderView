@@ -6,6 +6,9 @@
 #include "../../../../../director/varDirector.h"
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/outputPort/unity/stringOutputPort.h"
+
+Def_Entity_NodeTypeName_Function( ReadFileTextNode, Node::tr( "读取文件/字符串" ) );
+
 ReadFileTextNode::ReadFileTextNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outTextPtr = nullptr;
 }

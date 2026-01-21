@@ -4,6 +4,8 @@
 #include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
 #include "../../../../port/inputPort/toPoint/toPointInputPort.h"
 
+Def_Entity_NodeTypeName_Function( GotoNode, Node::tr( "控制/跳转" ) );
+
 bool GotoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 

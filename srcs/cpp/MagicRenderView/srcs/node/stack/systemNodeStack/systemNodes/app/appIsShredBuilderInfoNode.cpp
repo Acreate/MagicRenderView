@@ -7,6 +7,8 @@
 #include "../../../../port/outputPort/unity/boolOutputPort.h"
 #include "../../../../port/outputPort/unity/intOutputPort.h"
 
+Def_Entity_NodeTypeName_Function( AppIsShredBuilderInfoNode, Node::tr( "软件/是否使用qt共享库" ) );
+
 AppIsShredBuilderInfoNode::AppIsShredBuilderInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }

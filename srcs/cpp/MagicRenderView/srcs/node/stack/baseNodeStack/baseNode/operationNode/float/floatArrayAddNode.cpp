@@ -7,6 +7,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( FloatArrayAddNode, Node::tr( "运算/序列/浮点/加法" ) );
+
 FloatArrayAddNode::FloatArrayAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

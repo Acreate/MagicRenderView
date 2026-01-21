@@ -6,6 +6,8 @@
 #include <srack/srackInfo.h>
 #include <tools/infoTool.h>
 
+Def_Entity_NodeTypeName_Function( TemplatesPathInfoNode, Node::tr( "路径/用户特定模板文件目录" ) );
+
 TemplatesPathInfoNode::TemplatesPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

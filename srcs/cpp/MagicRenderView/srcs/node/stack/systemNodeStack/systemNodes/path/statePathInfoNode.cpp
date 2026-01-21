@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( StatePathInfoNode, Node::tr( "路径/用户特定程序状态数据文件目录" ) );
+
 StatePathInfoNode::StatePathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

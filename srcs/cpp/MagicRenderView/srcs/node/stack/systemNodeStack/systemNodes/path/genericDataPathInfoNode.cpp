@@ -8,6 +8,8 @@
 
 #include "../../../../../tools/pathTools.h"
 
+Def_Entity_NodeTypeName_Function( GenericDataPathInfoNode, Node::tr( "路径/跨应用共享持久数据目录" ) );
+
 GenericDataPathInfoNode::GenericDataPathInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
 	pathPtr = nullptr;
 }

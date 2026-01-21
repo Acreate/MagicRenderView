@@ -1,7 +1,6 @@
 ﻿#ifndef MUSICPATHINFONODE_H_H_HEAD__FILE__
 #define MUSICPATHINFONODE_H_H_HEAD__FILE__
 
-
 #include <node/node/processNode.h>
 
 class StringOutputPort;
@@ -21,6 +20,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "路径/用户音乐目录" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // MUSICPATHINFONODE_H_H_HEAD__FILE__

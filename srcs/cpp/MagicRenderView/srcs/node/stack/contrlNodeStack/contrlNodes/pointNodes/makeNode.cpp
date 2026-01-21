@@ -5,6 +5,8 @@
 
 #include "../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( MakeNode, Node::tr( "控制/记录位置" ) );
+
 bool MakeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 

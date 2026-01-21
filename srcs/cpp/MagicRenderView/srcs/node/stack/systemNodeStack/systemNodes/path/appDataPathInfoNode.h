@@ -3,7 +3,6 @@
 
 #include <node/node/processNode.h>
 
-
 class StringOutputPort;
 /// @brief 返回一个可用于存储持久性应用程序数据的目录位置。
 /// 这是一个应用程序特定的目录。
@@ -23,6 +22,6 @@ public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:
-	Def_Extend_NodeTypeName( Node::tr( "路径/持久性应用程序数据的目录" ) );
+	Def_Extern_NodeTypeName_Function( );
 };
 #endif // APPDATAPATHINFONODE_H_H_HEAD__FILE__

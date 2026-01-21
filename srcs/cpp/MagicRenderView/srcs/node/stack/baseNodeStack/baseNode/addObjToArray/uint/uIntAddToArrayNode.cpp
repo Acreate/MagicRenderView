@@ -6,6 +6,8 @@
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 #include <node/nodeTools/nodeTools.h>
 
+Def_Entity_NodeTypeName_Function( UIntAddToArrayNode, Node::tr( "追加/无符号整数序列" ) );
+
 UIntAddToArrayNode::UIntAddToArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

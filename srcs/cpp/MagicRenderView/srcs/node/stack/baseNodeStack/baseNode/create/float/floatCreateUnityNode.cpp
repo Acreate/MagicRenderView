@@ -4,6 +4,8 @@
 #include <node/port/outputPort/unity/floatOutputPort.h>
 #include <node/nodeTools/nodeTools.h>
 
+Def_Entity_NodeTypeName_Function( FloatCreateUnityNode, Node::tr( "创建/单元/浮点" ) );
+
 FloatCreateUnityNode::FloatCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

@@ -6,6 +6,8 @@
 
 #include "../../../../../nodeTools/nodeTools.h"
 
+Def_Entity_NodeTypeName_Function( StringAppendToLastStringNode, Node::tr( "工具/字符串末尾追加子字符串" ) );
+
 StringAppendToLastStringNode::StringAppendToLastStringNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

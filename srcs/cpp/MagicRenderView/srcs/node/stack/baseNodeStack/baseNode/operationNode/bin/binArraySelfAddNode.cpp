@@ -7,6 +7,8 @@
 
 #include <node/nodeTools/nodeTools.h>
 
+Def_Entity_NodeTypeName_Function( BinArraySelfAddNode, Node::tr( "自运算/序列/二进制/加法" ) );
+
 BinArraySelfAddNode::BinArraySelfAddNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

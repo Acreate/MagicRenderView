@@ -5,6 +5,9 @@
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
 #include "../../../../../nodeTools/nodeTools.h"
+
+Def_Entity_NodeTypeName_Function( ToColorNode, Node::tr( "转换/单元/颜色" ) );
+
 ToColorNode::ToColorNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outVarPtr = nullptr;
 }

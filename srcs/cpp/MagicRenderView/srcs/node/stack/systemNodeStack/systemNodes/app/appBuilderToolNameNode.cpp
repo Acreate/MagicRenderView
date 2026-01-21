@@ -5,6 +5,8 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QLibraryInfo>
 
+Def_Entity_NodeTypeName_Function( AppBuilderToolNameNode, Node::tr( "软件/编译工具名称" ) );
+
 AppBuilderToolNameNode::AppBuilderToolNameNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputPortPtr = nullptr;
 }
