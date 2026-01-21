@@ -8,7 +8,8 @@
 #include <widget/intTypeLineEdit/titleLineEdit/octTitleLineEdit.h>
 
 #include <widget/intTypeLineEdit/lineEdit/numberVarLineEdit.h>
-#include "changeBinValueWidget/imp/binScrollBarEditorWidget.h"
+
+#include "../../../../../../../../widget/intTypeLineEdit/scrollValueChangeWidget/scrollValueChangeWidget.h"
 
 void BinCreateUnityNodeEditorScrollArea::textChanged_Slot( NumberVarTitleLineEdit *sender_obj, NumberVarLineEdit *edite_event, const QString &text ) {
 	uint64_t newValue;
@@ -26,30 +27,12 @@ void BinCreateUnityNodeEditorScrollArea::textChanged_Slot( NumberVarTitleLineEdi
 				compomentArray[ index ]->setVarToLineEdit( newValue );
 
 	}
-
-	ChangeBinValueWidget **changeBinValueWidgetArray;
-	count = changeBinValueVector.size( );
-	if( count && currentChange == nullptr ) {
-		changeBinValueWidgetArray = changeBinValueVector.data( );
-		for( index = 0; index < count; ++index )
-			changeBinValueWidgetArray[ index ]->updateValue( newValue );
-
-	}
-	currentChange = nullptr;
+	scrollValueChangeWidget->updateValue( newValue );
 	emit value_change_signal( 0 );
 }
-void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( ChangeBinValueWidget *send_ptr, uint8_t new_value ) {
-	currentChange = send_ptr;
-	size_t count = changeBinValueVector.size( );
+void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( ScrollValueChangeWidget *send_ptr, uint8_t new_value ) {
+	size_t count;
 	size_t index;
-	ChangeBinValueWidget **changeBinValueWidgetArray;
-	if( count ) {
-		changeBinValueWidgetArray = changeBinValueVector.data( );
-		for( index = 0; index < count; ++index )
-			if( changeBinValueWidgetArray[ index ] != send_ptr )
-				changeBinValueWidgetArray[ index ]->updateValue( new_value );
-
-	}
 	count = compomentWidgetVector.size( );
 	NumberVarTitleLineEdit **compomentArray;
 	if( count && currentCom == nullptr ) {
@@ -61,13 +44,21 @@ void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( ChangeBinValueWidget 
 	emit value_change_signal( new_value );
 }
 BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
-	mainLayout = new QVBoxLayout( this );
 
-	binScrollBarEditorWidget = addWigetToWidget< BinScrollBarEditorWidget >( this );
-	decTitleLineEdit = addWigetToWidget< DecTitleLineEdit >( tr( "十进制:" ), UINT8_MAX, true, this );
-	hexTitleLineEdit = addWigetToWidget< HexTitleLineEdit >( tr( "十六进制:" ), UINT8_MAX, true, this );
-	octTitleLineEdit = addWigetToWidget< OctTitleLineEdit >( tr( "八进制:" ), UINT8_MAX, true, this );
-	binTitleLineEdit = addWigetToWidget< BinTitleLineEdit >( tr( "二进制:" ), UINT8_MAX, true, this );
+	mainWidget = new QWidget( this );
+	setWidget( mainWidget );
+	mainLayout = new QVBoxLayout( mainWidget );
+
+	scrollValueChangeWidget = new ScrollValueChangeWidget( 0,UINT8_MAX, mainWidget );
+
+	scrollValueChangeWidget->updateValue( currentVar );
+	mainLayout->addWidget( scrollValueChangeWidget );
+	connect( scrollValueChangeWidget, &ScrollValueChangeWidget::value_change_signal, this, &BinCreateUnityNodeEditorScrollArea::valueChange_Slot );
+
+	decTitleLineEdit = addWigetToWidget< DecTitleLineEdit >( tr( "十进制:" ), UINT8_MAX, true, mainWidget );
+	hexTitleLineEdit = addWigetToWidget< HexTitleLineEdit >( tr( "十六进制:" ), UINT8_MAX, true, mainWidget );
+	octTitleLineEdit = addWigetToWidget< OctTitleLineEdit >( tr( "八进制:" ), UINT8_MAX, true, mainWidget );
+	binTitleLineEdit = addWigetToWidget< BinTitleLineEdit >( tr( "二进制:" ), UINT8_MAX, true, mainWidget );
 
 }
 void BinCreateUnityNodeEditorScrollArea::releaseResource( ) {
@@ -82,15 +73,7 @@ bool BinCreateUnityNodeEditorScrollArea::appendCompoment( UCompomentWidget *appe
 	connect( append_widget, &UCompomentWidget::text_changed_signal, this, &BinCreateUnityNodeEditorScrollArea::textChanged_Slot );
 	return true;
 }
-bool BinCreateUnityNodeEditorScrollArea::appendCompoment( ChangeBinValueWidget *append_widget ) {
-	if( append_widget == nullptr )
-		return false;
-	append_widget->updateValue( currentVar );
-	mainLayout->addWidget( append_widget );
-	changeBinValueVector.emplace_back( append_widget );
-	connect( append_widget, &ChangeBinValueWidget::value_change_signal, this, &BinCreateUnityNodeEditorScrollArea::valueChange_Slot );
-	return true;
-}
+
 bool BinCreateUnityNodeEditorScrollArea::initNode( Node *init_node ) {
 	if( EditorNodeInfoScrollArea::initNode( init_node ) == false )
 		return false;
@@ -98,21 +81,16 @@ bool BinCreateUnityNodeEditorScrollArea::initNode( Node *init_node ) {
 }
 BinCreateUnityNodeEditorScrollArea::~BinCreateUnityNodeEditorScrollArea( ) {
 	delete mainLayout;
-	size_t count = changeBinValueVector.size( );
+	size_t count;
 	size_t index;
-	ChangeBinValueWidget **changeBinValueWidgetArray;
-	if( count ) {
-		changeBinValueWidgetArray = changeBinValueVector.data( );
-		for( index = 0; index < count; ++index )
-			delete changeBinValueWidgetArray[ index ];
-		changeBinValueVector.clear( );
-	}
+	delete scrollValueChangeWidget;
+
 	count = compomentWidgetVector.size( );
 	NumberVarTitleLineEdit **compomentArray;
 	if( count ) {
 		compomentArray = compomentWidgetVector.data( );
 		for( index = 0; index < count; ++index )
 			delete compomentArray[ index ];
-		changeBinValueVector.clear( );
+		compomentWidgetVector.clear( );
 	}
 }

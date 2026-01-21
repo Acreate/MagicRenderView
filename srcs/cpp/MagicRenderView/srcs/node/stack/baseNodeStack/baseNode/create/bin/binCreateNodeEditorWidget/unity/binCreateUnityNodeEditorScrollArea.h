@@ -2,6 +2,7 @@
 #define BINCREATEUNITYNODEEDITORSCROLLAREA_H_H_HEAD__FILE__
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class ScrollValueChangeWidget;
 class DecTitleLineEdit;
 class OctTitleLineEdit;
 class HexTitleLineEdit;
@@ -24,22 +25,20 @@ protected:
 	HexTitleLineEdit *hexTitleLineEdit;
 	OctTitleLineEdit *octTitleLineEdit;
 	BinTitleLineEdit *binTitleLineEdit;
-	BinScrollBarEditorWidget *binScrollBarEditorWidget;
+	ScrollValueChangeWidget *scrollValueChangeWidget;
 	QVBoxLayout *mainLayout;
 	uint8_t currentVar;
 	std::vector< UCompomentWidget * > compomentWidgetVector;
-	std::vector< ChangeBinValueWidget * > changeBinValueVector;
-	ChangeBinValueWidget* currentChange;
-	UCompomentWidget* currentCom;
+	UCompomentWidget *currentCom;
+	QWidget* mainWidget;
 protected Q_SLOTS:
 	void textChanged_Slot( NumberVarTitleLineEdit *sender_obj, NumberVarLineEdit *edite_event, const QString &text );
-	void valueChange_Slot( ChangeBinValueWidget *send_ptr, uint8_t new_value );
+	void valueChange_Slot( ScrollValueChangeWidget *send_ptr, uint8_t new_value );
 protected:
 	BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var );
 	void releaseResource( ) override;
 protected:
 	virtual bool appendCompoment( UCompomentWidget *append_widget );
-	virtual bool appendCompoment( ChangeBinValueWidget *append_widget );
 public:
 	bool initNode( Node *init_node ) override;
 	~BinCreateUnityNodeEditorScrollArea( ) override;
@@ -57,17 +56,7 @@ protected:
 		delete result;
 		return nullptr;
 	}
-	template< typename TCreateComponemtWidget, typename ...Args >
-		requires requires ( ChangeBinValueWidget *change_ptr, TCreateComponemtWidget *imp_type_widget ) {
-			change_ptr = imp_type_widget;
-		}
-	TCreateComponemtWidget * addWigetToWidget( Args ...args ) {
-		auto result = new TCreateComponemtWidget( args ... );
-		if( appendCompoment( result ) == true )
-			return result;
-		delete result;
-		return nullptr;
-	}
+
 };
 
 #endif // BINCREATEUNITYNODEEDITORSCROLLAREA_H_H_HEAD__FILE__
