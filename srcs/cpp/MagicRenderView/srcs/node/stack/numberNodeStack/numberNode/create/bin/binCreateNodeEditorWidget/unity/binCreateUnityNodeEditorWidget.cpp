@@ -1,8 +1,8 @@
 ﻿#include "binCreateUnityNodeEditorWidget.h"
 
 #include <director/varDirector.h>
-#include <node/stack/baseNodeStack/baseNode/create/bin/binCreateUnityNode.h>
-#include <node/stack/baseNodeStack/baseNode/create/bin/binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorScrollArea.h>
+#include <node/stack/numberNodeStack/numberNode/create/bin/binCreateUnityNode.h>
+#include <node/stack/numberNodeStack/numberNode/create/bin/binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorScrollArea.h>
 #include <QLineEdit>
 void BinCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
 	buffValue = new_value;

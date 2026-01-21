@@ -2,12 +2,12 @@
 
 #include "../../app/application.h"
 #include "../../director/printerDirector.h"
-#include "../../node/stack/baseNodeStack/baseNodeStack.h"
 #include "../../node/stack/contrlNodeStack/contrlNodeStack.h"
 #include "../../node/stack/dateTimeNodeStack/dateTimeNodeStack.h"
 #include "../../node/stack/debugNodeStack/debugNodeStack.h"
 #include "../../node/stack/fileNodeStack/fileNodeStack.h"
 #include "../../node/stack/imageNodeStack/imageNodeStack.h"
+#include "../../node/stack/numberNodeStack/numberNodeStack.h"
 #include "../../node/stack/stringNodeStack/stringNodeStack.h"
 #include "../../node/stack/systemNodeStack/systemNodeStack.h"
 #include "../../srack/srackInfo.h"
@@ -43,7 +43,7 @@ bool NormalGenerateNodeMenu::initNormalGenerateNodeMenu( ) {
 	releaseObjResource( );
 	// 这里加入节点窗口创建函数
 	appendCreateSubMenuAtNodeStack< DebugNodeStack >( );
-	appendCreateSubMenuAtNodeStack< BaseNodeStack >( );
+	appendCreateSubMenuAtNodeStack< NumberNodeStack >( );
 	appendCreateSubMenuAtNodeStack< ContrlNodeStack >( );
 	appendCreateSubMenuAtNodeStack< DateTimeNodeStack >( );
 	appendCreateSubMenuAtNodeStack< FileNodeStack >( );

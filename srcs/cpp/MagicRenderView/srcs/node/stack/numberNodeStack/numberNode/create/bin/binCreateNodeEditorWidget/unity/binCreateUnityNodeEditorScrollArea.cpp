@@ -11,7 +11,7 @@
 void BinCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget *append_ptr ) {
 	mainLayout->addWidget( append_ptr );
 	lineFinishedEditorVector.emplace_back( append_ptr );
-	connect( append_ptr, &ValidatorWidget::overEditorFinish_Signal, this, &BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot );
+	connect( append_ptr, &ValidatorWidget::currentEditing_Signal, this, &BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot );
 }
 void BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
 	bool isOk;
@@ -24,7 +24,8 @@ void BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget 
 
 	for( index = 0; index < count; ++index )
 		if( sender_ptr != lineEditArray[ index ] )
-			lineEditArray[ index ]->setDecValue( dec_txt );
+			if( lineEditArray[ index ]->isValidatorWidgetFocus( ) == false )
+				lineEditArray[ index ]->setDecValue( dec_txt );
 	emit editingFinished_Signal( longLong );
 }
 BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
