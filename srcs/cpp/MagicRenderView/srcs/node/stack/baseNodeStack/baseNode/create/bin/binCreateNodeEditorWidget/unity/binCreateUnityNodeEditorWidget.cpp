@@ -1,8 +1,8 @@
 ﻿#include "binCreateUnityNodeEditorWidget.h"
 
-#include "../../../../../../../../director/varDirector.h"
-#include "../../binCreateUnityNode.h"
-#include "binCreateUnityNodeEditorScrollArea.h"
+#include <director/varDirector.h>
+#include <node/stack/baseNodeStack/baseNode/create/bin/binCreateUnityNode.h>
+#include <node/stack/baseNodeStack/baseNode/create/bin/binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorScrollArea.h>
 void BinCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
 	buffValue = new_value;
 }
@@ -11,7 +11,7 @@ BinCreateUnityNodeEditorWidget::BinCreateUnityNodeEditorWidget( BinCreateUnityNo
 		return;
 	binCreateUnityNodeScrollArea = new BinCreateUnityNodeEditorScrollArea( this, *bind_var_ptr );
 	editorNodeInfoScrollArea = binCreateUnityNodeScrollArea;
-	connect( binCreateUnityNodeScrollArea, &BinCreateUnityNodeEditorScrollArea::value_change_signal, this, &BinCreateUnityNodeEditorWidget::valueChange );
+	connect( binCreateUnityNodeScrollArea, &BinCreateUnityNodeEditorScrollArea::editingFinished_Signal, this, &BinCreateUnityNodeEditorWidget::valueChange );
 }
 BinCreateUnityNodeEditorWidget::~BinCreateUnityNodeEditorWidget( ) {
 	if( binCreateUnityNodeScrollArea ) {
