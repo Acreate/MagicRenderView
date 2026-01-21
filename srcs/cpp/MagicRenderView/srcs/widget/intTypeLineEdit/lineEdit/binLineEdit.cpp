@@ -1,21 +1,6 @@
 ﻿#include "binLineEdit.h"
 #include <validator/binValidator.h>
-BinLineEdit::BinLineEdit( uint64_t value, QWidget *parent ) : NumberVarLineEdit( value, parent ) {
-	BinValidator *binValidator = new BinValidator( value, this );
-	base = 2;
-	setValidator( binValidator );
-	qint64 maxLen = binValidator->getMaxLen( );
-	setMaxLength( maxLen );
-}
-bool BinLineEdit::toInt64( const QString &conver_text, int64_t &result_value ) const {
-
-	bool isOk;
-	result_value = conver_text.toLongLong( &isOk, base );
-	return isOk;
-}
-bool BinLineEdit::toUInt64( const QString &conver_text, uint64_t &result_value ) const {
-
-	bool isOk;
-	result_value = conver_text.toLongLong( &isOk, base );
-	return isOk;
+BinLineEdit::BinLineEdit( uint64_t max_value, bool is_un_sign, QWidget *parent ) : NumberVarLineEdit( parent ) {
+	validator = new BinValidator( max_value, is_un_sign, this );
+	setValidator( validator );
 }

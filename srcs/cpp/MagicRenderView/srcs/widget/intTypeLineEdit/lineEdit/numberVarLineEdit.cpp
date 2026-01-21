@@ -1,26 +1,56 @@
 ﻿#include "numberVarLineEdit.h"
 
-NumberVarLineEdit::NumberVarLineEdit( uint64_t value, QWidget *parent ) : QLineEdit( parent ) {
-	setMaxLength( 0 );
+#include <validator/validator.h>
+
+#include "../../../app/application.h"
+#include "../../../director/printerDirector.h"
+#include "../../../srack/srackInfo.h"
+
+NumberVarLineEdit::NumberVarLineEdit( QWidget *parent ) : QLineEdit( parent ), validator( nullptr ) {
 	connect( this, &QLineEdit::textChanged, this, &NumberVarLineEdit::changedText_Slot );
 }
+NumberVarLineEdit::~NumberVarLineEdit( ) {
+	setValidator( nullptr );
+	delete validator;
+}
+bool NumberVarLineEdit::toInt64( const QString &conver_text, int64_t &result_value ) const {
+	if( validator == nullptr )
+		return false;
+	result_value = validator->getInt64Var( );
+	return true;
+}
+bool NumberVarLineEdit::toUInt64( const QString &conver_text, uint64_t &result_value ) const {
+	if( validator == nullptr )
+		return false;
+	result_value = validator->getUInt64Var( );
+	return true;
+}
 void NumberVarLineEdit::setVarToLineEdit( const uint64_t &var ) {
-	uint64_t org;
+	if( validator == nullptr )
+		return;
 	QString newText;
-	if( toUInt64( text( ), org ) )
-		if( org == var )
-			return;
-	newText = tr( "%1" ).arg( var, maxLength( ), base, '0' );
+	if( validator->varToString( var, newText ) == false )
+		return;
+	uint64_t orgValue;
+	QString converText = text( );
+	if( validator->toUInt64( converText, orgValue ) == false )
+		return;
+	Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "%1(%2,%3)(%4,%5)" ).arg( metaObject( )->className( ) ).arg( converText ).arg( orgValue ).arg( newText ).arg( var ), Create_SrackInfo( ) );
 	setText( newText );
 }
 void NumberVarLineEdit::setVarToLineEdit( const int64_t &var ) {
-	int64_t org;
+	if( validator == nullptr )
+		return;
 	QString newText;
-	if( toInt64( text( ), org ) )
-		if( org == var )
-			return;
-	newText = tr( "%1" ).arg( var, maxLength( ), base, '0' );
+	if( validator->varToString( var, newText ) == false )
+		return;
 	setText( newText );
+}
+
+int NumberVarLineEdit::getBase( ) const {
+	if( validator )
+		return validator->getBinSystem( );
+	return 0;
 }
 void NumberVarLineEdit::changedText_Slot( const QString &text ) {
 	emit text_changed_signal( this, text );

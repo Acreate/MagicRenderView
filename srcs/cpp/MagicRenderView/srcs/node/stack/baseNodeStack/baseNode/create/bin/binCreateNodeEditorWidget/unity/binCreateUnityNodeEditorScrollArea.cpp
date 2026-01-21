@@ -64,10 +64,10 @@ BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfo
 	mainLayout = new QVBoxLayout( this );
 
 	binScrollBarEditorWidget = addWigetToWidget< BinScrollBarEditorWidget >( this );
-	decTitleLineEdit = addWigetToWidget< DecTitleLineEdit >( tr( "十进制:" ), UINT8_MAX, this );
-	hexTitleLineEdit = addWigetToWidget< HexTitleLineEdit >( tr( "十六进制:" ), UINT8_MAX, this );
-	octTitleLineEdit = addWigetToWidget< OctTitleLineEdit >( tr( "八进制:" ), UINT8_MAX, this );
-	binTitleLineEdit = addWigetToWidget< BinTitleLineEdit >( tr( "二进制:" ), UINT8_MAX, this );
+	decTitleLineEdit = addWigetToWidget< DecTitleLineEdit >( tr( "十进制:" ), UINT8_MAX, true, this );
+	hexTitleLineEdit = addWigetToWidget< HexTitleLineEdit >( tr( "十六进制:" ), UINT8_MAX, true, this );
+	octTitleLineEdit = addWigetToWidget< OctTitleLineEdit >( tr( "八进制:" ), UINT8_MAX, true, this );
+	binTitleLineEdit = addWigetToWidget< BinTitleLineEdit >( tr( "二进制:" ), UINT8_MAX, true, this );
 
 }
 void BinCreateUnityNodeEditorScrollArea::releaseResource( ) {

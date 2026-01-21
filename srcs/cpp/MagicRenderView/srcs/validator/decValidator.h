@@ -5,11 +5,8 @@
 class DecValidator : public Validator {
 	Q_OBJECT;
 public:
-	DecValidator( uint64_t value, QObject *parent )
-		: Validator(  parent ) {
-		setMaxValue( value );
-	}
-	void setMaxValue( uint64_t value ) override;
+	DecValidator( uint64_t max_value, bool is_un_sign, QObject *parent )
+		: Validator( max_value, 10, is_un_sign, parent ) { }
 	bool checkCharValidator( QChar &check_char ) const override;
 };
 #endif // DECVALIDATOR_H_H_HEAD__FILE__
