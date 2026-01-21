@@ -28,23 +28,18 @@ bool NumberVarLineEdit::toUInt64( const QString &conver_text, uint64_t &result_v
 void NumberVarLineEdit::setVarToLineEdit( const uint64_t &var ) {
 	if( validator == nullptr )
 		return;
-	QString newText;
-	if( validator->varToString( var, newText ) == false )
+	QString resultValue;
+	if( validator->varToString( var, resultValue ) == false )
 		return;
-	uint64_t orgValue;
-	QString converText = text( );
-	if( validator->toUInt64( converText, orgValue ) == false )
-		return;
-	Application::getInstancePtr( )->getPrinterDirector( )->info( tr( "%1(%2,%3)(%4,%5)" ).arg( metaObject( )->className( ) ).arg( converText ).arg( orgValue ).arg( newText ).arg( var ), Create_SrackInfo( ) );
-	setText( newText );
+	setText( resultValue );
 }
 void NumberVarLineEdit::setVarToLineEdit( const int64_t &var ) {
 	if( validator == nullptr )
 		return;
-	QString newText;
-	if( validator->varToString( var, newText ) == false )
+	QString resultValue;
+	if( validator->varToString( var, resultValue ) == false )
 		return;
-	setText( newText );
+	setText( resultValue );
 }
 
 int NumberVarLineEdit::getBase( ) const {

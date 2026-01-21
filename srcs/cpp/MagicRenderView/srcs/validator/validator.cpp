@@ -44,6 +44,8 @@ bool Validator::toUInt64( const QString &conver_text, uint64_t &result_uint64_va
 	result_uint64_value = conver_text.toULongLong( &result, binSystem );
 	if( result == false )
 		result_uint64_value = 0;
+	if( result_uint64_value > maxValue )
+		result_uint64_value = maxValue;
 	return result;
 }
 bool Validator::toInt64( const QString &conver_text, int64_t &result_uint64_value ) const {
@@ -51,19 +53,25 @@ bool Validator::toInt64( const QString &conver_text, int64_t &result_uint64_valu
 	result_uint64_value = conver_text.toLongLong( &result, binSystem );
 	if( result == false )
 		result_uint64_value = 0;
+	auto absVar = std::abs( result_uint64_value );
+	if( absVar > maxValue )
+		absVar = maxValue;
+	if( result_uint64_value < 0 )
+		result_uint64_value = -absVar;
 	return result;
 }
 bool Validator::varToString( const int64_t &var, QString &result_conver_string ) {
 	uint64_t abs;
 	if( var < 0 ) {
 		abs = std::abs( var );
-		result_conver_string = tr( "-%1" ).arg( abs, maxLen, binSystem, '0' );
+		result_conver_string = tr( "-%1" ).arg( abs, 0, binSystem );
+		return true;
 	}
-	result_conver_string = tr( "%1" ).arg( var, maxLen, binSystem, '0' );
+	result_conver_string = tr( "%1" ).arg( var, 0, binSystem );
 	return true;
 }
 bool Validator::varToString( const uint64_t &var, QString &result_conver_string ) {
-	result_conver_string = tr( "%1" ).arg( var, maxLen, binSystem, '0' );
+	result_conver_string = tr( "%1" ).arg( var, 0, binSystem );
 	return true;
 }
 bool Validator::checkCharSignValidator( QChar &check_char ) const {
@@ -89,55 +97,24 @@ bool Validator::chenckAllInput( QChar *input, qsizetype check_len, qsizetype &re
 	return true;
 }
 QValidator::State Validator::validate( QString &input, int &pos ) const {
-
-	qsizetype index;
 	qsizetype buffIndex;
-	qsizetype len;
-	len = pos;
-	QChar *data = input.data( );
-	if( chenckAllInput( data, len, buffIndex ) == true ) {
+	QChar *data;
+	qsizetype length = input.length( );
+	data = input.data( );
+	if( pos > maxLen ) {
+		if( isUnSign == false ) {
+			if( checkCharSignValidator( data[ 0 ] ) == false )
+				return Invalid;
+		} else
+			return Invalid;
+	}
+	if( chenckAllInput( data, length, buffIndex ) == true ) {
 		// 输入正确，校验类型转换
 		if( isUnSign )
 			toUInt64( input, value->uint64Value );
 		else
 			toInt64( input, value->int64Value );
-		normalInput( input, pos );
-		normalInputLen( input, pos );
 		return Acceptable;
 	}
-	QChar *buff;
-	len = input.size( );
-	buff = new QChar[ len ];
-	buffIndex = 0;
-	if( isUnSign == false ) {
-		index = 0;
-		if( checkCharSignValidator( input[ index ] ) == true ) {
-			buff[ buffIndex ] = data[ index ];
-			++buffIndex;
-		}
-		++index;
-		for( ; index < len; ++index )
-			if( checkCharValidator( input[ len ] ) == false )
-				continue;
-			else {
-				buff[ buffIndex ] = data[ index ];
-				++buffIndex;
-			}
-	} else
-		for( index = 0; index < len; ++index )
-			if( checkCharValidator( data[ index ] ) == false )
-				continue;
-			else {
-				buff[ buffIndex ] = data[ index ];
-				++buffIndex;
-			}
-	input = QString( buff, buffIndex );
-	delete [] buff;// 输入正确，校验类型转换
-	if( isUnSign )
-		toUInt64( input, value->uint64Value );
-	else
-		toInt64( input, value->int64Value );
-	normalInput( input, pos );
-	normalInputLen( input, pos );
-	return Acceptable;
+	return Invalid;
 }
