@@ -27,14 +27,16 @@ void BinCreateUnityNodeEditorScrollArea::textChanged_Slot( NumberVarTitleLineEdi
 				compomentArray[ index ]->setVarToLineEdit( newValue );
 
 	}
-	scrollValueChangeWidget->updateValue( newValue );
+	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) newValue );
+	scrollValueChangeWidget->scrollToPoint( newValue, 0, UINT8_MAX );
 	emit value_change_signal( 0 );
 }
-void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( ScrollValueChangeWidget *send_ptr, uint8_t new_value ) {
+void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( int curren_scroll_bar_point ) {
 	size_t count;
 	size_t index;
 	count = compomentWidgetVector.size( );
 	NumberVarTitleLineEdit **compomentArray;
+	double new_value = UINT8_MAX * curren_scroll_bar_point / 100;
 	if( count && currentCom == nullptr ) {
 		compomentArray = compomentWidgetVector.data( );
 		for( index = 0; index < count; ++index )
@@ -49,9 +51,11 @@ BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfo
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
 
-	scrollValueChangeWidget = new ScrollValueChangeWidget( 0,UINT8_MAX, mainWidget );
+	scrollValueChangeWidget = new ScrollValueChangeWidget( mainWidget );
 
-	scrollValueChangeWidget->updateValue( currentVar );
+	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) currentVar );
+	scrollValueChangeWidget->scrollToPoint( currentVar, 0, UINT8_MAX );
+
 	mainLayout->addWidget( scrollValueChangeWidget );
 	connect( scrollValueChangeWidget, &ScrollValueChangeWidget::value_change_signal, this, &BinCreateUnityNodeEditorScrollArea::valueChange_Slot );
 

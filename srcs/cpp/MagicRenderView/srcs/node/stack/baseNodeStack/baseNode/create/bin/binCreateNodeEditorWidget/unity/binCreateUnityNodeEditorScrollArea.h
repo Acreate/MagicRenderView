@@ -30,10 +30,10 @@ protected:
 	uint8_t currentVar;
 	std::vector< UCompomentWidget * > compomentWidgetVector;
 	UCompomentWidget *currentCom;
-	QWidget* mainWidget;
+	QWidget *mainWidget;
 protected Q_SLOTS:
 	void textChanged_Slot( NumberVarTitleLineEdit *sender_obj, NumberVarLineEdit *edite_event, const QString &text );
-	void valueChange_Slot( ScrollValueChangeWidget *send_ptr, uint8_t new_value );
+	void valueChange_Slot( int curren_scroll_bar_point );
 protected:
 	BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var );
 	void releaseResource( ) override;

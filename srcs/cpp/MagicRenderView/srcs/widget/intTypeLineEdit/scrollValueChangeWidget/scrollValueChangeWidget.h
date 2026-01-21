@@ -11,20 +11,20 @@ class QHBoxLayout;
 class ScrollValueChangeWidget : public QWidget {
 	Q_OBJECT;
 protected:
+
+protected:
 	QScrollBar *scrollBar;
 	QLabel *scrollBarTitile;
 	QLabel *valueTitile;
 	QVBoxLayout *mainLayout;
 	QWidget *scrollWidget;
 	QHBoxLayout *scrollWidgetLayout;
-	qsizetype maxLen;
-	uint8_t binOr;
-protected:
-	virtual void scrollValueChange( int value );
 public:
-	ScrollValueChangeWidget( int64_t min_value, size_t max_value, QWidget *parent );
-	virtual void updateValue( uint8_t new_value );
+	ScrollValueChangeWidget( QWidget *parent );
+	virtual void scrollToPoint( double value, double min_var, double max_var );
+	virtual void scrollToTitleValue( uint64_t value );
+	virtual void scrollToTitleValue( int64_t value );
 Q_SIGNALS:
-	void value_change_signal( ScrollValueChangeWidget *send_ptr, uint8_t new_value );
+	void value_change_signal( int curren_scroll_bar_point );
 };
 #endif // SCROLLVALUECHANGEWIDGET_H_H_HEAD__FILE__

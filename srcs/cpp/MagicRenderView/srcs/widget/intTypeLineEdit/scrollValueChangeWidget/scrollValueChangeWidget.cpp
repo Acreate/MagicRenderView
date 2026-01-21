@@ -3,22 +3,21 @@
 #include <QLabel>
 #include <QScrollBar>
 #include <QVBoxLayout>
-void ScrollValueChangeWidget::scrollValueChange( int value ) {
-	if( binOr == value )
-		return;
-	valueTitile->setText( tr( "值:%1" ).arg( value, maxLen, 10, '0' ) );
-	binOr = value;
-	emit value_change_signal( this, value );
+
+void ScrollValueChangeWidget::scrollToTitleValue( uint64_t value ) {
+	valueTitile->setText( tr( "值:%1" ).arg( value ) );
 }
-ScrollValueChangeWidget::ScrollValueChangeWidget( int64_t min_value, size_t max_value, QWidget *parent ) {
-	maxLen = tr( "%1" ).arg( max_value, 0, 10 ).length( );
+void ScrollValueChangeWidget::scrollToTitleValue( int64_t value ) {
+	valueTitile->setText( tr( "值:%1" ).arg( value ) );
+}
+ScrollValueChangeWidget::ScrollValueChangeWidget( QWidget *parent ) : QWidget( parent ) {
 
 	scrollWidget = new QWidget( this );
 	scrollWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
 	scrollWidgetLayout = new QHBoxLayout( scrollWidget );
 	scrollBar = new QScrollBar( Qt::Horizontal, scrollWidget );
-	scrollBar->setMaximum( max_value );
-	scrollBar->setMinimum( min_value );
+	scrollBar->setMaximum( 100 );
+	scrollBar->setMinimum( 0 );
 	scrollBar->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
 	scrollBarTitile = new QLabel( tr( "滑动改变值" ), scrollWidget );
 	scrollWidgetLayout->setContentsMargins( 0, 0, 0, 0 );
@@ -26,16 +25,19 @@ ScrollValueChangeWidget::ScrollValueChangeWidget( int64_t min_value, size_t max_
 	scrollWidgetLayout->addWidget( scrollBarTitile );
 	scrollWidgetLayout->addWidget( scrollBar );
 
-	valueTitile = new QLabel( tr( "值:%1" ).arg( 0, maxLen, 10, '0' ), this );
+	valueTitile = new QLabel( tr( "值:%1" ).arg( 0 ), this );
 	mainLayout = new QVBoxLayout( this );
 	mainLayout->setContentsMargins( 0, 0, 0, 0 );
 	mainLayout->setSpacing( 0 );
 	mainLayout->addWidget( valueTitile );
 	mainLayout->addWidget( scrollWidget );
 
-	connect( scrollBar, &QScrollBar::valueChanged, this, &ScrollValueChangeWidget::scrollValueChange );
+	connect( scrollBar, &QScrollBar::valueChanged, this, &ScrollValueChangeWidget::value_change_signal );
 }
-void ScrollValueChangeWidget::updateValue( uint8_t new_value ) {
-	scrollBar->setValue( new_value );
-	valueTitile->setText( tr( "值:%1" ).arg( new_value, maxLen, 10, '0' ) );
+void ScrollValueChangeWidget::scrollToPoint( double value, double min_var, double max_var ) {
+	value = value - min_var;
+	max_var = max_var - min_var;
+	min_var = 100 / max_var;
+	value = value * min_var;
+	scrollBar->setValue( value );
 }
