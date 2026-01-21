@@ -27,8 +27,11 @@ void BinCreateUnityNodeEditorScrollArea::textChanged_Slot( NumberVarTitleLineEdi
 				compomentArray[ index ]->setVarToLineEdit( newValue );
 
 	}
+	if( signalScroll != nullptr ) {
+		signalScroll->scrollToPoint( newValue, 0, UINT8_MAX );
+		signalScroll = nullptr;
+	}
 	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) newValue );
-	scrollValueChangeWidget->scrollToPoint( newValue, 0, UINT8_MAX );
 	emit value_change_signal( 0 );
 }
 void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( int curren_scroll_bar_point ) {
@@ -43,10 +46,12 @@ void BinCreateUnityNodeEditorScrollArea::valueChange_Slot( int curren_scroll_bar
 			compomentArray[ index ]->setVarToLineEdit( ( uint64_t ) new_value );
 	}
 	currentCom = nullptr;
+	signalScroll = scrollValueChangeWidget;
+	scrollValueChangeWidget->scrollToTitleValue( ( int64_t ) new_value );
 	emit value_change_signal( new_value );
 }
 BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
-
+	signalScroll = nullptr;
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );

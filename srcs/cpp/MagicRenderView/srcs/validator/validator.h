@@ -35,8 +35,8 @@ public:
 	virtual int64_t getInt64Var( ) const { return value->int64Value; }
 	virtual bool getUnSignStatus( ) const { return isUnSign; }
 	virtual uint64_t getMaxLen( ) const { return maxLen; }
-	virtual bool varToString( const int64_t &var, QString &result_conver_string );
-	virtual bool varToString( const uint64_t &var, QString &result_conver_string );
+	virtual bool varToString( const int64_t &var, QString &result_conver_string ) const;
+	virtual bool varToString( const uint64_t &var, QString &result_conver_string ) const;
 	/// @brief 检查值，该函数决定是否进行数据重置
 	/// @param check_char 值符号
 	/// @return 失败返回 false，并且由 validate 进行重置

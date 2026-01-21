@@ -60,7 +60,7 @@ bool Validator::toInt64( const QString &conver_text, int64_t &result_uint64_valu
 		result_uint64_value = -absVar;
 	return result;
 }
-bool Validator::varToString( const int64_t &var, QString &result_conver_string ) {
+bool Validator::varToString( const int64_t &var, QString &result_conver_string ) const {
 	uint64_t abs;
 	if( var < 0 ) {
 		abs = std::abs( var );
@@ -70,7 +70,7 @@ bool Validator::varToString( const int64_t &var, QString &result_conver_string )
 	result_conver_string = tr( "%1" ).arg( var, 0, binSystem );
 	return true;
 }
-bool Validator::varToString( const uint64_t &var, QString &result_conver_string ) {
+bool Validator::varToString( const uint64_t &var, QString &result_conver_string ) const {
 	result_conver_string = tr( "%1" ).arg( var, 0, binSystem );
 	return true;
 }
@@ -101,7 +101,7 @@ QValidator::State Validator::validate( QString &input, int &pos ) const {
 	QChar *data;
 	qsizetype length = input.length( );
 	data = input.data( );
-	if( pos > maxLen ) {
+	if( length > maxLen ) {
 		if( isUnSign == false ) {
 			if( checkCharSignValidator( data[ 0 ] ) == false )
 				return Invalid;
@@ -110,10 +110,13 @@ QValidator::State Validator::validate( QString &input, int &pos ) const {
 	}
 	if( chenckAllInput( data, length, buffIndex ) == true ) {
 		// 输入正确，校验类型转换
-		if( isUnSign )
+		if( isUnSign ) {
 			toUInt64( input, value->uint64Value );
-		else
+			varToString( value->uint64Value, input );
+		} else {
 			toInt64( input, value->int64Value );
+			varToString( value->int64Value, input );
+		}
 		return Acceptable;
 	}
 	return Invalid;

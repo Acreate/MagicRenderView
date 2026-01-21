@@ -7,7 +7,7 @@
 #include "../../../srack/srackInfo.h"
 
 NumberVarLineEdit::NumberVarLineEdit( QWidget *parent ) : QLineEdit( parent ), validator( nullptr ) {
-	connect( this, &QLineEdit::textChanged, this, &NumberVarLineEdit::changedText_Slot );
+	connect( this, &QLineEdit::textEdited, this, &NumberVarLineEdit::changedText_Slot );
 }
 NumberVarLineEdit::~NumberVarLineEdit( ) {
 	setValidator( nullptr );
