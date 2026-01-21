@@ -3,6 +3,7 @@
 #include <director/varDirector.h>
 #include <node/stack/baseNodeStack/baseNode/create/bin/binCreateUnityNode.h>
 #include <node/stack/baseNodeStack/baseNode/create/bin/binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorScrollArea.h>
+#include <QLineEdit>
 void BinCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
 	buffValue = new_value;
 }
@@ -34,6 +35,7 @@ bool BinCreateUnityNodeEditorWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
 		return false;
 	buffValue = *bindVarPtr;
+	binCreateUnityNodeScrollArea->setCurrentVar( buffValue );
 	return true;
 }
 void BinCreateUnityNodeEditorWidget::okButtonEvent( ) {

@@ -2,22 +2,29 @@
 #define BINCREATEUNITYNODEEDITORSCROLLAREA_H_H_HEAD__FILE__
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
-class QLineEdit;
+class ValidatorWidget;
+class QVBoxLayout;
 class BinCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 	friend class BinCreateUnityNodeEditorWidget;
 protected:
 	uint8_t currentVar;
 	QWidget *mainWidget;
-	QLineEdit *lineEdit;
+	QVBoxLayout *mainLayout;
+	std::vector< ValidatorWidget * > lineFinishedEditorVector;
+protected:
+	virtual void appendValidatorWidget( ValidatorWidget *append_ptr );
 protected Q_SLOTS:
-	void editingFinished_Slot( );
+	void overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt );
 protected:
 	BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var );
 	void releaseResource( ) override;
 public:
 	bool initNode( Node *init_node ) override;
 	~BinCreateUnityNodeEditorScrollArea( ) override;
+	virtual uint8_t getCurrentVar( ) const { return currentVar; }
+	virtual void setCurrentVar( uint8_t current_var );
+
 Q_SIGNALS:
 	void editingFinished_Signal( uint8_t var );
 };
