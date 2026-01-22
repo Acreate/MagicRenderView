@@ -1,6 +1,5 @@
-﻿#ifndef UINT8DECVALIDATORWIDGET_H_H_HEAD__FILE__
+#ifndef UINT8DECVALIDATORWIDGET_H_H_HEAD__FILE__
 #define UINT8DECVALIDATORWIDGET_H_H_HEAD__FILE__
-
 
 #include "../validatorWidget.h"
 

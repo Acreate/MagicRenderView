@@ -1,4 +1,4 @@
-﻿#ifndef VALIDATORWIDGET_H_H_HEAD__FILE__
+#ifndef VALIDATORWIDGET_H_H_HEAD__FILE__
 #define VALIDATORWIDGET_H_H_HEAD__FILE__
 #include <QWidget>
 
@@ -12,7 +12,6 @@ protected:
 	QLabel *titleLabel;
 	Validator *validator;
 	bool validatorWidgetFocus;
-protected:
 	virtual void editingFinished_Slot( );
 	virtual void currentEditing_Slot( const QString &txt );
 public:

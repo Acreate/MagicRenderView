@@ -1,4 +1,4 @@
-﻿#include "validatorWidget.h"
+#include "validatorWidget.h"
 
 #include <qcoreevent.h>
 #include <QHBoxLayout>
@@ -31,7 +31,7 @@ void ValidatorWidget::currentEditing_Slot( const QString &txt ) {
 }
 ValidatorWidget::ValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) {
 	validatorWidgetFocus = false;
-	lineEdit = new QLineEdit( 0, this );
+	lineEdit = new QLineEdit( nullptr, this );
 	lineEdit->installEventFilter( this );
 	titleLabel = new QLabel( title, this );
 	auto mainLayout = new QHBoxLayout( this );

@@ -40,7 +40,7 @@ QString AboutApplicationWidget::getSoftwareProtocolInfo( ) {
 	softInfo += tr( "<h3 style='color:#2980b9;margin:0;padding:0;'>📄 软件编译&运行协议信息</h3><hr/>" );
 	softInfo += tr( "<p><b>软件版本：</b>%1</p>" ).arg( tr( "V0.0.1" ) );
 
-	QDateTime compileDateTime = QDateTime(
+	auto compileDateTime = QDateTime(
 		QDate::fromString( __DATE__, tr( "MMM dd yyyy" ) ),
 		QTime::fromString( __TIME__, tr( "hh:mm:ss" ) )
 		);

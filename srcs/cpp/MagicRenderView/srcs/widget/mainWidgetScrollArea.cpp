@@ -45,7 +45,6 @@ void MainWidgetScrollArea::scrollToTargetPos( QWidget *reference_widget, const Q
 	auto windowRightBottomPos = reference_widget->mapFromGlobal( globalRightBottomPos );
 	if( windowRightBottomPos.x( ) > bottomRight.x( ) || windowRightBottomPos.y( ) > bottomRight.y( ) ) {
 		ensureVisible( right_bottom_pos.x( ), right_bottom_pos.y( ), 10, 10 );
-		return;
 	}
 }
 void MainWidgetScrollArea::scrollToTargetPos( QWidget *reference_widget, const QPoint &left_top_pos, const QSize &right_boom_size ) {

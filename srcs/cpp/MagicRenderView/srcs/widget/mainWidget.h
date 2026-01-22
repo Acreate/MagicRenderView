@@ -21,7 +21,6 @@ protected:
 	NodeDirector *nodeDirector;
 	PrinterDirector *printerDirector;
 	/// @brief 可获取成员变量
-protected:
 	MainWindow *mainWindow;
 	MainWidgetScrollArea *mainWidgetScrollArea;
 	NodeClickInfo *clickInfoPtr;
@@ -35,7 +34,6 @@ protected:
 	QPoint startPoint;
 	QPoint endPoint;
 	bool isDrawLine;
-protected:
 	virtual void removeNodeObj( Node *remove_node );
 	virtual void appendNodeObj( Node *append_node );
 	virtual void raiseNode( Node *raise_node );
@@ -52,7 +50,6 @@ public:
 	virtual bool getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo &result_node_click_info );
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
 	/// @brief 快捷功能
-public:
 	virtual bool copySelectNodeInfo( );
 	virtual bool pastePointNodeInfo( );
 	virtual bool cutSelectNodeInfo( );

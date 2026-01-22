@@ -8,7 +8,7 @@ class AboutApplicationScrollArea : public QScrollArea {
 	Q_OBJECT;
 protected:
 	AboutApplicationWidget *aboutApplicationWidgetPtr;
-	AboutApplicationWindow* aboutApplicationWindowPtr;
+	AboutApplicationWindow *aboutApplicationWindowPtr;
 public:
 	AboutApplicationScrollArea( AboutApplicationWindow *about_application_window_ptr );
 };

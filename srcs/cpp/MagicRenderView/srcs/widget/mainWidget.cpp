@@ -24,7 +24,7 @@
 
 #include "../win/mainWindow.h"
 
-MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), selectInputPort( nullptr ), selectOutputPort( nullptr ), dragNode( nullptr ), oldSelectNode( nullptr ) {
+MainWidget::MainWidget( MainWidgetScrollArea *parent, const Qt::WindowFlags &f ) : QWidget( parent, f ), mainWidgetScrollArea( parent ), oldSelectNode( nullptr ), dragNode( nullptr ), selectInputPort( nullptr ), selectOutputPort( nullptr ) {
 	clickInfoPtr = new NodeClickInfo( NodeEnum::NodeClickType::None, nullptr, nullptr, nullptr );
 	oldClickTime = new QDateTime;
 	isDrawLine = false;
@@ -35,13 +35,12 @@ MainWidget::~MainWidget( ) {
 	if( count != 0 ) {
 		size_t index = 0;
 		auto nodeArrayPtr = nodeVector.data( );
-		for( ; index < count; ++index )
+		for( ; index < count; ++index ) {
 			if( nodeArrayPtr[ index ] == nullptr )
 				break;
-			else {
-				nodeArrayPtr[ index ]->hide( );
-				nodeArrayPtr[ index ]->setParent( nullptr );
-			}
+			nodeArrayPtr[ index ]->hide( );
+			nodeArrayPtr[ index ]->setParent( nullptr );
+		}
 		nodeVector.clear( );
 	}
 	delete clickInfoPtr;
@@ -53,15 +52,16 @@ bool MainWidget::getPointNodeClickInfo( const QPoint &click_point, NodeClickInfo
 		return false;
 	size_t index = 0;
 	auto nodeArrayPtr = nodeVector.data( );
-	for( ; index < count; ++index )
+	for( ; index < count; ++index ) {
 		if( nodeArrayPtr[ index ] == nullptr )
 			return false;
-		else if( nodeArrayPtr[ index ]->geometry( ).contains( click_point ) == true ) {
+		if( nodeArrayPtr[ index ]->geometry( ).contains( click_point ) == true ) {
 			auto mapFromParent = nodeArrayPtr[ index ]->mapFromParent( click_point );
 			if( nodeArrayPtr[ index ]->getPointInfo( mapFromParent, result_node_click_info ) == false )
 				return false;
 			return true;
 		}
+	}
 	return false;
 }
 void MainWidget::removeNodeObj( Node *remove_node ) {
@@ -72,11 +72,11 @@ void MainWidget::removeNodeObj( Node *remove_node ) {
 		for( ; index < count; ++index )
 			if( nodeArrayPtr[ index ] == remove_node ) {
 				++index;
-				for( ; index < count; ++index )
+				for( ; index < count; ++index ) {
 					if( nodeArrayPtr[ index ] == nullptr )
 						break;
-					else
-						nodeArrayPtr[ index - 1 ] = nodeArrayPtr[ index ];
+					nodeArrayPtr[ index - 1 ] = nodeArrayPtr[ index ];
+				}
 				nodeArrayPtr[ index - 1 ] = nullptr;
 				return;
 			}
@@ -217,7 +217,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 	Qt::MouseButton mouseButton = event->button( );
 	auto clickPoint = event->pos( );
 	switch( mouseButton ) {
-		case Qt::LeftButton :
+		case Qt::LeftButton : {
 			if( getPointNodeClickInfo( clickPoint, *clickInfoPtr ) ) {
 				nodeDirector->clearAllNodeSelectType( );
 				dragNode = clickInfoPtr->getClickNode( );
@@ -254,10 +254,10 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						break;
 				}
 				break;
-			} else {
-				oldSelectNode = dragNode = nullptr;
-				break;
 			}
+			oldSelectNode = dragNode = nullptr;
+			break;
+		}
 		case Qt::MiddleButton :
 			break;
 	}
