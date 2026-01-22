@@ -9,18 +9,23 @@
 void ValidatorWidget::editingFinished_Slot( ) {
 	if( sender( ) != lineEdit )
 		return;
+	QString decString;
+
+	QString txt;
 	if( validator == nullptr )
 		return;
-	QString decString;
-	if( validator->validatorStringToDecString( lineEdit->text( ), decString ) == false )
+	txt = lineEdit->text( );
+	if( validator->validatorStringToDecString( txt, decString ) == false )
 		return;
 	emit overEditorFinish_Signal( this, decString );
 }
 void ValidatorWidget::currentEditing_Slot( const QString &txt ) {
 	if( validator == nullptr )
 		return;
-	QString decString;
-	if( validator->validatorStringToDecString( lineEdit->text( ), decString ) == false )
+	QString decString = "0";
+	if( txt.isEmpty( ) )
+		lineEdit->setText( decString );
+	else if( validator->validatorStringToDecString( txt, decString ) == false )
 		return;
 	emit currentEditing_Signal( this, decString );
 }
@@ -76,9 +81,11 @@ bool ValidatorWidget::eventFilter( QObject *watched, QEvent *event ) {
 	switch( type ) {
 		case QEvent::FocusIn :
 			validatorWidgetFocus = true;
+			emit currentEditingFocusIn_Signal( this );
 			break;
 		case QEvent::FocusOut :
 			validatorWidgetFocus = false;
+			emit currentEditingFocusOut_Signal( this );
 			break;
 	}
 	return eventFilter;

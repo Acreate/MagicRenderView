@@ -12,6 +12,8 @@ void BinCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget 
 	mainLayout->addWidget( append_ptr );
 	lineFinishedEditorVector.emplace_back( append_ptr );
 	connect( append_ptr, &ValidatorWidget::currentEditing_Signal, this, &BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot );
+	connect( append_ptr, &ValidatorWidget::currentEditingFocusIn_Signal, this, &BinCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot );
+	connect( append_ptr, &ValidatorWidget::currentEditingFocusOut_Signal, this, &BinCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot );
 }
 void BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
 	bool isOk;
@@ -24,9 +26,16 @@ void BinCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget 
 
 	for( index = 0; index < count; ++index )
 		if( sender_ptr != lineEditArray[ index ] )
-			if( lineEditArray[ index ]->isValidatorWidgetFocus( ) == false )
+			if( lineEditArray[ index ] != currentEditorValidator )
 				lineEditArray[ index ]->setDecValue( dec_txt );
 	emit editingFinished_Signal( longLong );
+}
+void BinCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr ) {
+	currentEditorValidator = sender_ptr;
+}
+void BinCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot( ValidatorWidget *sender_ptr ) {
+	if( sender_ptr == currentEditorValidator )
+		currentEditorValidator = nullptr;
 }
 BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
 	mainWidget = new QWidget( this );

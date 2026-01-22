@@ -21,6 +21,10 @@ bool Validator::decStringToValidatorString( const QString &normal_dec_text, QStr
 	qulonglong uLongLong;
 	qlonglong longLong;
 	double doubleVar;
+	if( normal_dec_text.isEmpty( ) ) {
+		result_normal_validator_var_txt = '0';
+		return true;
+	}
 	uLongLong = normal_dec_text.toULongLong( &isOK );
 	if( isOK ) {
 		result_normal_validator_var_txt = QString( "%1" ).arg( uLongLong, 0, binSystem );
@@ -41,9 +45,12 @@ bool Validator::decStringToValidatorString( const QString &normal_dec_text, QStr
 }
 bool Validator::validatorStringToDecString( const QString &normal_validator_var_txt, QString &result_normal_dec_text ) {
 	bool isOK;
-	ulong uLong = normal_validator_var_txt.toULong( &isOK, binSystem );
-	if( isOK == false )
-		return false;
+	ulong uLong = 0;
+	if( normal_validator_var_txt.isEmpty( ) == false ) {
+		uLong = normal_validator_var_txt.toULong( &isOK, binSystem );
+		if( isOK == false )
+			return false;
+	}
 	result_normal_dec_text = QString::number( uLong );
 	return true;
 }

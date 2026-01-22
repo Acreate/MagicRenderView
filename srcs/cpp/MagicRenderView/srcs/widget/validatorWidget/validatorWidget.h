@@ -27,6 +27,8 @@ protected:
 Q_SIGNALS:
 	void overEditorFinish_Signal( ValidatorWidget *sender_ptr, const QString &dec_txt );
 	void currentEditing_Signal( ValidatorWidget *sender_ptr, const QString &dec_txt );
+	void currentEditingFocusIn_Signal( ValidatorWidget *sender_ptr );
+	void currentEditingFocusOut_Signal( ValidatorWidget *sender_ptr );
 };
 
 #endif // VALIDATORWIDGET_H_H_HEAD__FILE__

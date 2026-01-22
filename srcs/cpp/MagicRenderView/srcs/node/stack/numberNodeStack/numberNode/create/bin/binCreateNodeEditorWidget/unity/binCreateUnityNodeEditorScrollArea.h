@@ -11,11 +11,14 @@ protected:
 	uint8_t currentVar;
 	QWidget *mainWidget;
 	QVBoxLayout *mainLayout;
+	ValidatorWidget* currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
 protected:
 	virtual void appendValidatorWidget( ValidatorWidget *append_ptr );
 protected Q_SLOTS:
 	void overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt );
+	void currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr );
+	void currentEditingFocusOut_Slot( ValidatorWidget *sender_ptr );
 protected:
 	BinCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var );
 	void releaseResource( ) override;
