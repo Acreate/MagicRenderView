@@ -3,6 +3,7 @@
 
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class DoubleValueValidatorWidget;
 class ValidatorWidget;
 class QVBoxLayout;
 class FloatCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
@@ -12,8 +13,9 @@ protected:
 	double currentVar;
 	QWidget *mainWidget;
 	QVBoxLayout *mainLayout;
-	ValidatorWidget* currentEditorValidator;
+	ValidatorWidget *currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
+	DoubleValueValidatorWidget *doubleValueValidatorWidget;
 protected:
 	virtual void appendValidatorWidget( ValidatorWidget *append_ptr );
 protected Q_SLOTS:

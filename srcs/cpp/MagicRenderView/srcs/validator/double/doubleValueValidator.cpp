@@ -21,7 +21,28 @@ bool DoubleValueValidator::decStringToValidatorString( const QString &normal_dec
 	return false;
 }
 QValidator::State DoubleValueValidator::validate( QString &in_put, int &in_pos ) const {
-	bool isOK;
+	bool isOK = false;
+	qsizetype count = in_put.size( );
+	if( count == 0 )
+		return Acceptable;
+	auto data = in_put.data( );
+	qsizetype index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] == 'e' || data[ index ] == 'E' ) {
+			isOK = true;
+			++index;
+			if( index == count )
+				return Acceptable; // 如果末尾是 e，则返回字符串成立
+			if( data[ index ] != '-' )
+				return Invalid;
+			++index;
+			if( index == count )
+				return Acceptable; // 如果末尾是 e，则返回字符串成立
+			for( ; index < count; ++index )
+				if( data[ index ] < '0' || data[ index ] > '9' )
+					return Invalid; // 如果存在一次 e，则判断后续是否为非数字，如果非数字，则字符串不合格
+			break;
+		}
 	in_put.toDouble( &isOK );
 	if( isOK == false )
 		return Invalid;

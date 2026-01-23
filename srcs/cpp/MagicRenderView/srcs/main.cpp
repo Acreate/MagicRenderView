@@ -1,4 +1,4 @@
-﻿#include <app/application.h>
+#include <app/application.h>
 #include "testCode/testCodeSources.h"
 
 int main( int argc, char *argv[ ] ) {

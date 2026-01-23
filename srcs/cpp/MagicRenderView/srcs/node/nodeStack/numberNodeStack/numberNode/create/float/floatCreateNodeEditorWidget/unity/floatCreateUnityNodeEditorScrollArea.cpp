@@ -14,18 +14,16 @@ void FloatCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidge
 }
 void FloatCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
 	bool isOk;
-	qlonglong longLong = dec_txt.toULongLong( &isOk );
+	double converValue = dec_txt.toDouble( &isOk );
 	if( isOk == false )
 		return; // 转换失败
 	size_t count = lineFinishedEditorVector.size( );
 	auto lineEditArray = lineFinishedEditorVector.data( );
 	size_t index;
-
 	for( index = 0; index < count; ++index )
-		if( sender_ptr != lineEditArray[ index ] )
-			if( lineEditArray[ index ] != currentEditorValidator )
-				lineEditArray[ index ]->setDecValue( dec_txt );
-	emit editingFinished_Signal( longLong );
+		if( sender_ptr != lineEditArray[ index ] && lineEditArray[ index ] != currentEditorValidator )
+			lineEditArray[ index ]->setDecValue( dec_txt );
+	emit editingFinished_Signal( converValue );
 }
 void FloatCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr ) {
 	currentEditorValidator = sender_ptr;
@@ -39,7 +37,9 @@ FloatCreateUnityNodeEditorScrollArea::FloatCreateUnityNodeEditorScrollArea( Node
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
 	auto number = QString::number( currentVar );
-	appendValidatorWidget( new DoubleValueValidatorWidget( tr( "浮点:" ), number, this ) );
+
+	doubleValueValidatorWidget = new DoubleValueValidatorWidget( tr( "浮点:" ), number, this );
+	appendValidatorWidget( doubleValueValidatorWidget );
 }
 void FloatCreateUnityNodeEditorScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
