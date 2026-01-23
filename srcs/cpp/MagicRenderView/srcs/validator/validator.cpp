@@ -11,3 +11,6 @@ Validator::Validator( uint64_t max_value, uint64_t min_value, uint64_t bin_syste
 }
 Validator::~Validator( ) {
 }
+void Validator::fixup( QString &result_change_text ) const {
+	QValidator::fixup( result_change_text );
+}

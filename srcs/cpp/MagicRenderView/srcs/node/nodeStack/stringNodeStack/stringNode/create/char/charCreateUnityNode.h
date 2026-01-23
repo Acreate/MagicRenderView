@@ -1,7 +1,8 @@
-﻿#ifndef CHARCREATEUNITYNODE_H_H_HEAD__FILE__
+#ifndef CHARCREATEUNITYNODE_H_H_HEAD__FILE__
 #define CHARCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+class CharCreateUnityNodeEditorWidget;
 class CharOutputPort;
 class CharCreateUnityNode : public ProcessNode {
 	Q_OBJECT;
@@ -10,6 +11,11 @@ private:
 protected:
 	CharOutputPort *outputPort;
 	NodeType *outputVarPtr;
+	CharCreateUnityNodeEditorWidget *editorWidget;
+protected:
+	bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
+	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
+	NodeInfoWidget * getNodeEditorWidget( ) override;
 public:
 	CharCreateUnityNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
@@ -20,4 +26,5 @@ public:
 public:
 	Def_Extern_NodeTypeName_Function( );
 };
+
 #endif // CHARCREATEUNITYNODE_H_H_HEAD__FILE__

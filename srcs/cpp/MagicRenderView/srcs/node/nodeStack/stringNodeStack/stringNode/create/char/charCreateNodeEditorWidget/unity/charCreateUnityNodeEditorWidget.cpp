@@ -4,11 +4,12 @@
 #include <node/nodeStack/numberNodeStack/numberNode/create/bin/binCreateUnityNode.h>
 #include <QLineEdit>
 
+#include "../../charCreateUnityNode.h"
 #include "charCreateUnityNodeEditorScrollArea.h"
-void CharCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
+void CharCreateUnityNodeEditorWidget::valueChange( QChar new_value ) {
 	buffValue = new_value;
 }
-CharCreateUnityNodeEditorWidget::CharCreateUnityNodeEditorWidget( BinCreateUnityNode *create_bin_node, uint8_t *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
+CharCreateUnityNodeEditorWidget::CharCreateUnityNodeEditorWidget( CharCreateUnityNode *create_bin_node, QChar *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
 	if( bind_var_ptr == nullptr )
 		return;
 	binCreateUnityNodeScrollArea = new CharCreateUnityNodeEditorScrollArea( this, *bind_var_ptr );

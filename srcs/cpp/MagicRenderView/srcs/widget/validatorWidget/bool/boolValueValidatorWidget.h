@@ -17,7 +17,7 @@ protected Q_SLOTS:
 protected:
 	QObject * getBindEditorObjPtr( ) const override;
 	bool getValidatorWidgetText( QString &result_text ) const override;
-	bool setValidatorWidgetText( QString &result_text ) override;
+	bool setValidatorWidgetText( const QString &result_text ) override;
 public:
 	BoolValueValidatorWidget( const QString &title, bool bool_value, QWidget *parent );
 	virtual bool setBoolValue(bool set_new_bool_var);

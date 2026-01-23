@@ -3,20 +3,19 @@
 
 #include <node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h>
 
+class StringCreateUnityNode;
 class StringCreateUnityNodeEditorScrollArea;
-class BinCreateUnityNodeEditorScrollArea;
-class BinCreateUnityNode;
 class StringCreateUnityNodeEditorWidget : public NodeInfoWidget {
 	Q_OBJECT;
 protected:
-	BinCreateUnityNode *createBinNode;
+	StringCreateUnityNode *createBinNode;
 	StringCreateUnityNodeEditorScrollArea *binCreateUnityNodeScrollArea;
-	uint8_t *bindVarPtr;
-	uint8_t buffValue;
+	QString *bindVarPtr;
+	QString buffValue;
 protected:
-	virtual void valueChange( uint8_t new_value );
+	virtual void valueChange( QString new_value );
 public:
-	StringCreateUnityNodeEditorWidget( BinCreateUnityNode *create_bin_node, uint8_t *bind_var_ptr );
+	StringCreateUnityNodeEditorWidget( StringCreateUnityNode *create_bin_node, QString *bind_var_ptr );
 	~StringCreateUnityNodeEditorWidget( ) override;
 	bool checkNodeValid( Node *check_node_ptr ) override;
 	bool initNodeInfo( Node *check_node_ptr ) override;

@@ -29,7 +29,7 @@ bool BoolValueValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = trueText;
 	return true;
 }
-bool BoolValueValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool BoolValueValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	if( trueText == result_text ) {
 		boolComboBox->setCurrentIndex( 1 );
 		return true;

@@ -13,7 +13,7 @@ bool DoubleValueValidatorWidget::getValidatorWidgetText( QString &result_text ) 
 	result_text = editorWidget->text( );
 	return true;
 }
-bool DoubleValueValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool DoubleValueValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	editorWidget->setText( result_text );
 	return true;
 }

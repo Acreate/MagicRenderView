@@ -25,7 +25,7 @@ bool Uint8OctValidatorWidget::getValidatorWidgetText( QString &result_text ) con
 	result_text = editorWidget->text( );
 	return true;
 }
-bool Uint8OctValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool Uint8OctValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );

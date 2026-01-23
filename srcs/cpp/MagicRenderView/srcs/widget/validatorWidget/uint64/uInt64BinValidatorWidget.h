@@ -11,7 +11,7 @@ protected:
 protected:
 	QObject * getBindEditorObjPtr( ) const override;
 	bool getValidatorWidgetText( QString &result_text ) const override;
-	bool setValidatorWidgetText( QString &result_text ) override;
+	bool setValidatorWidgetText( const QString &result_text ) override;
 public:
 	UInt64BinValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent );
 };

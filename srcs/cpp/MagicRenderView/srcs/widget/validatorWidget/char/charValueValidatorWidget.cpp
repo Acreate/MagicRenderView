@@ -26,7 +26,7 @@ bool CharValueValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = editorWidget->text( );
 	return true;
 }
-bool CharValueValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool CharValueValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );

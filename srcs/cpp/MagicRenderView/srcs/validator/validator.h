@@ -15,5 +15,6 @@ public:
 	~Validator( ) override;
 	virtual bool decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt ) = 0;
 	virtual bool validatorStringToDecString( const QString &normal_validator_var_txt, QString &result_normal_dec_text ) = 0;
+	void fixup( QString & result_change_text) const override;
 };
 #endif // VALIDATOR_H_H_HEAD__FILE__

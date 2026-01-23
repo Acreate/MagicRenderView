@@ -25,7 +25,7 @@ bool UInt64OctValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = editorWidget->text( );
 	return true;
 }
-bool UInt64OctValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool UInt64OctValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );

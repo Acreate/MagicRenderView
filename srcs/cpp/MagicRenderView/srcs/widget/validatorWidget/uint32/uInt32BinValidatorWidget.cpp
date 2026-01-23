@@ -26,7 +26,7 @@ bool UInt32BinValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = editorWidget->text( );
 	return true;
 }
-bool UInt32BinValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool UInt32BinValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );

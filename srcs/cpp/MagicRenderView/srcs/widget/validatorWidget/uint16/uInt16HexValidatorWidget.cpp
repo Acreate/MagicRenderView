@@ -26,7 +26,7 @@ bool UInt16HexValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = editorWidget->text( );
 	return true;
 }
-bool UInt16HexValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool UInt16HexValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );

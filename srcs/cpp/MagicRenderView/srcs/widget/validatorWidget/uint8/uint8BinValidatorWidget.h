@@ -12,7 +12,7 @@ public:
 protected:
 	QObject * getBindEditorObjPtr( ) const override;
 	bool getValidatorWidgetText( QString &result_text ) const override;
-	bool setValidatorWidgetText( QString &result_text ) override;
+	bool setValidatorWidgetText( const QString &result_text ) override;
 };
 
 #endif // UINT8BINVALIDATORWIDGET_H_H_HEAD__FILE__

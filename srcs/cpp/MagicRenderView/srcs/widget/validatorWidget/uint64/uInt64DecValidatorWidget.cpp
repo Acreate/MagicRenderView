@@ -25,7 +25,7 @@ bool UInt64DecValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	result_text = editorWidget->text( );
 	return true;
 }
-bool UInt64DecValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+bool UInt64DecValidatorWidget::setValidatorWidgetText( const QString &result_text ) {
 	//if( validator == nullptr )
 	//	return false;
 	//int index = result_text.length( );
