@@ -19,8 +19,10 @@ void ValidatorWidget::editingFinished_Slot( ) {
 void ValidatorWidget::currentEditing_Slot( const QString &txt ) {
 	if( validator == nullptr )
 		return;
-	QString decString = "0";
-	if( txt.isEmpty( ) == false && validator->validatorStringToDecString( txt, decString ) == false )
+	QString decString;
+	if( txt.isEmpty( ) )
+		decString = "0";
+	else if( validator->validatorStringToDecString( txt, decString ) == false )
 		return;
 	emit currentEditing_Signal( this, decString );
 }
