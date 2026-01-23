@@ -1,9 +1,10 @@
-﻿#ifndef UINT64OCTVALIDATOR_H_H_HEAD__FILE__
+#ifndef UINT64OCTVALIDATOR_H_H_HEAD__FILE__
 #define UINT64OCTVALIDATOR_H_H_HEAD__FILE__
 
-#include "../validator.h"
+#include <validator/unSignedValidator.h>
 
-class UInt64OctValidator : public Validator {
+
+class UInt64OctValidator : public UnSignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

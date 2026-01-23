@@ -13,8 +13,7 @@ protected:
 public:
 	Validator( uint64_t max_value, uint64_t min_value, uint64_t bin_system, QObject *parent );
 	~Validator( ) override;
-	State validate( QString &in_put, int &in_pos ) const override;
-	virtual bool decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt );
-	virtual bool validatorStringToDecString( const QString &normal_validator_var_txt, QString &result_normal_dec_text );
+	virtual bool decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt ) = 0;
+	virtual bool validatorStringToDecString( const QString &normal_validator_var_txt, QString &result_normal_dec_text ) = 0;
 };
 #endif // VALIDATOR_H_H_HEAD__FILE__

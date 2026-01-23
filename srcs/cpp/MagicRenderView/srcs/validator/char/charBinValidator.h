@@ -1,8 +1,10 @@
-﻿#ifndef CHARBINVALIDATOR_H_H_HEAD__FILE__
+#ifndef CHARBINVALIDATOR_H_H_HEAD__FILE__
 #define CHARBINVALIDATOR_H_H_HEAD__FILE__
+#include <validator/signedValidator.h>
+
 #include "../validator.h"
 
-class CharBinValidator : public Validator {
+class CharBinValidator : public SignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

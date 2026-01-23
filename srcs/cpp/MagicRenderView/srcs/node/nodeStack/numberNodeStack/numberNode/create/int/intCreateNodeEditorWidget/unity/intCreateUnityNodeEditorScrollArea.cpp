@@ -3,10 +3,10 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <widget/validatorWidget/uint8/uint8BinValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8DecValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8HexValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8OctValidatorWidget.h>
+#include <widget/validatorWidget/int64/int64DecValidatorWidget.h>
+#include <widget/validatorWidget/uint64/uInt64BinValidatorWidget.h>
+#include <widget/validatorWidget/uint64/uInt64HexValidatorWidget.h>
+#include <widget/validatorWidget/uint64/uInt64OctValidatorWidget.h>
 
 void IntCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget *append_ptr ) {
 	mainLayout->addWidget( append_ptr );
@@ -17,18 +17,26 @@ void IntCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget 
 }
 void IntCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
 	bool isOk;
-	qlonglong longLong = dec_txt.toULongLong( &isOk );
-	if( isOk == false )
-		return; // 转换失败
-	size_t count = lineFinishedEditorVector.size( );
-	auto lineEditArray = lineFinishedEditorVector.data( );
+	size_t count;
+	ValidatorWidget **lineEditArray;
 	size_t index;
+	Type64Bin type64BinVar;
+	QString converToDec;
 
-	for( index = 0; index < count; ++index )
-		if( sender_ptr != lineEditArray[ index ] )
-			if( lineEditArray[ index ] != currentEditorValidator )
-				lineEditArray[ index ]->setDecValue( dec_txt );
-	emit editingFinished_Signal( longLong );
+	type64BinVar.ulongLong = dec_txt.toULongLong( &isOk );
+	if( isOk == true ) {
+		count = lineFinishedEditorVector.size( );
+		lineEditArray = lineFinishedEditorVector.data( );
+		for( index = 0; index < count; ++index )
+			if( sender_ptr != lineEditArray[ index ] )
+				if( lineEditArray[ index ] != currentEditorValidator )
+					lineEditArray[ index ]->setDecValue( dec_txt );
+		if( currentEditorValidator != int64DecValidatorWidget && sender_ptr != int64DecValidatorWidget ) {
+			converToDec = QString::number( type64BinVar.longLong );
+			int64DecValidatorWidget->setDecValue( converToDec );
+		}
+		emit editingFinished_Signal( type64BinVar.longLong );
+	}
 }
 void IntCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr ) {
 	currentEditorValidator = sender_ptr;
@@ -37,15 +45,39 @@ void IntCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot( ValidatorW
 	if( sender_ptr == currentEditorValidator )
 		currentEditorValidator = nullptr;
 }
-IntCreateUnityNodeEditorScrollArea::IntCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
+void IntCreateUnityNodeEditorScrollArea::intOverEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
+	bool isOk;
+	size_t count;
+	ValidatorWidget **lineEditArray;
+	size_t index;
+	Type64Bin type64BinVar;
+	type64BinVar.longLong = dec_txt.toLongLong( &isOk );
+	if( isOk == true ) {
+		count = lineFinishedEditorVector.size( );
+		lineEditArray = lineFinishedEditorVector.data( );
+		for( index = 0; index < count; ++index )  // 处理无符号
+			lineEditArray[ index ]->setDecValue( dec_txt );
+		emit editingFinished_Signal( type64BinVar.longLong );
+	}
+}
+IntCreateUnityNodeEditorScrollArea::IntCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, int64_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
 	auto number = QString::number( currentVar );
-	appendValidatorWidget( new Uint8DecValidatorWidget( tr( "十进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8HexValidatorWidget( tr( "十六进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8OctValidatorWidget( tr( "八进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8BinValidatorWidget( tr( "二进制:" ), number, this ) );
+
+	// 特殊的节点
+
+	int64DecValidatorWidget = new Int64DecValidatorWidget( tr( "十进制:" ), number, this );
+	mainLayout->addWidget( int64DecValidatorWidget );
+	lineFinishedEditorVector.emplace_back( int64DecValidatorWidget );
+	connect( int64DecValidatorWidget, &ValidatorWidget::currentEditing_Signal, this, &IntCreateUnityNodeEditorScrollArea::intOverEditorFinish_Slot );
+	connect( int64DecValidatorWidget, &ValidatorWidget::currentEditingFocusIn_Signal, this, &IntCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot );
+	connect( int64DecValidatorWidget, &ValidatorWidget::currentEditingFocusOut_Signal, this, &IntCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot );
+
+	appendValidatorWidget( new UInt64HexValidatorWidget( tr( "十六进制:" ), number, this ) );
+	appendValidatorWidget( new UInt64OctValidatorWidget( tr( "八进制:" ), number, this ) );
+	appendValidatorWidget( new UInt64BinValidatorWidget( tr( "二进制:" ), number, this ) );
 }
 void IntCreateUnityNodeEditorScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
@@ -59,7 +91,7 @@ bool IntCreateUnityNodeEditorScrollArea::initNode( Node *init_node ) {
 IntCreateUnityNodeEditorScrollArea::~IntCreateUnityNodeEditorScrollArea( ) {
 
 }
-void IntCreateUnityNodeEditorScrollArea::setCurrentVar( uint8_t current_var ) {
+void IntCreateUnityNodeEditorScrollArea::setCurrentVar( int64_t current_var ) {
 	currentVar = current_var;
 	size_t count = lineFinishedEditorVector.size( );
 	auto lineEditArray = lineFinishedEditorVector.data( );

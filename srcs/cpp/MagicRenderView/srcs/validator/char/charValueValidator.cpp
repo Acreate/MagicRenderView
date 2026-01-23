@@ -1,5 +1,5 @@
 #include "charValueValidator.h"
-CharValueValidator::CharValueValidator( QObject *parent ) : Validator( UINT16_MAX, 0, 10, parent ) {
+CharValueValidator::CharValueValidator( QObject *parent ) : SignedValidator( UINT16_MAX, 0, 10, parent ) {
 }
 CharValueValidator::~CharValueValidator( ) {
 

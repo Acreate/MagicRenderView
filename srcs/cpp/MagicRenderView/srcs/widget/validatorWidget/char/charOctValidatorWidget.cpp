@@ -27,6 +27,11 @@ bool CharOctValidatorWidget::getValidatorWidgetText( QString &result_text ) cons
 	return true;
 }
 bool CharOctValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+	//if( validator == nullptr )
+	//	return false;
+	//int index = result_text.length( );
+	//if( validator->validate( result_text, index ) == QValidator::Invalid )
+	//	return false;
 	editorWidget->setText( result_text );
 	return true;
 }

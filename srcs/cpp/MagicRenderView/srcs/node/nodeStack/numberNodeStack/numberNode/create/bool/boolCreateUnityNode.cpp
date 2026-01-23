@@ -9,7 +9,7 @@
 Def_Entity_NodeTypeName_Function( BoolCreateUnityNode, Node::tr("创建/单元/布尔" ) );
 
 BoolCreateUnityNode::BoolCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
-	boolCreateUnityNodeEditor = nullptr;
+	editorWidget = nullptr;
 	outputVarPtr = nullptr;
 }
 bool BoolCreateUnityNode::initEx( MainWidget *parent ) {
@@ -27,20 +27,20 @@ bool BoolCreateUnityNode::updateLayout( ) {
 	return true;
 }
 bool BoolCreateUnityNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
-	auto converPtr = qobject_cast< BoolCreateUnityNodeEditorWidget * >( release_ptr );
+	auto converPtr = qobject_cast< decltype(editorWidget) >( release_ptr );
 	if( converPtr == nullptr )
 		return false;
-	boolCreateUnityNodeEditor = converPtr;
+	editorWidget = converPtr;
 	return true;
 }
 void BoolCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
-	if( release_ptr == boolCreateUnityNodeEditor )
+	if( release_ptr != editorWidget )
 		return;
-	boolCreateUnityNodeEditor = nullptr;
+	editorWidget = nullptr;
 }
 NodeInfoWidget * BoolCreateUnityNode::getNodeEditorWidget( ) {
-	if( boolCreateUnityNodeEditor )
-		return boolCreateUnityNodeEditor;
+	if( editorWidget )
+		return editorWidget;
 
 	return new BoolCreateUnityNodeEditorWidget( this, outputVarPtr );
 }

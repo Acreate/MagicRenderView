@@ -1,9 +1,9 @@
-﻿#ifndef INT64DECVALIDATOR_H_H_HEAD__FILE__
+#ifndef INT64DECVALIDATOR_H_H_HEAD__FILE__
 #define INT64DECVALIDATOR_H_H_HEAD__FILE__
 
-#include "../validator.h"
+#include <validator/signedValidator.h>
 
-class Int64DecValidator : public Validator {
+class Int64DecValidator : public SignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

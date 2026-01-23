@@ -1,11 +1,9 @@
-﻿#ifndef UINT8DECVALIDATOR_H_H_HEAD__FILE__
+#ifndef UINT8DECVALIDATOR_H_H_HEAD__FILE__
 #define UINT8DECVALIDATOR_H_H_HEAD__FILE__
 
-#include <QValidator>
+#include <validator/unSignedValidator.h>
 
-#include "../validator.h"
-
-class Uint8DecValidator : public Validator {
+class Uint8DecValidator : public UnSignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

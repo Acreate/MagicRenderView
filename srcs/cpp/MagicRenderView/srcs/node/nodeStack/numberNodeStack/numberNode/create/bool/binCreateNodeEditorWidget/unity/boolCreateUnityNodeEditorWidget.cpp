@@ -18,7 +18,9 @@ BoolCreateUnityNodeEditorWidget::BoolCreateUnityNodeEditorWidget( BoolCreateUnit
 BoolCreateUnityNodeEditorWidget::~BoolCreateUnityNodeEditorWidget( ) {
 	if( boolCreateUnityNodeEditorScrollArea ) {
 		callNodeReleaseInfoWidgetFunction( createBoolNode );
+		delete boolCreateUnityNodeEditorScrollArea;
 		boolCreateUnityNodeEditorScrollArea = nullptr;
+		editorNodeInfoScrollArea = nullptr;
 	}
 }
 bool BoolCreateUnityNodeEditorWidget::checkNodeValid( Node *check_node_ptr ) {

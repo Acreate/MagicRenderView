@@ -1,9 +1,11 @@
-﻿#ifndef CHARVALUEVALIDATOR_H_H_HEAD__FILE__
+#ifndef CHARVALUEVALIDATOR_H_H_HEAD__FILE__
 #define CHARVALUEVALIDATOR_H_H_HEAD__FILE__
+
+#include <validator/signedValidator.h>
 
 #include "../validator.h"
 
-class CharValueValidator : public Validator {
+class CharValueValidator : public SignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

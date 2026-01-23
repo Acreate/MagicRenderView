@@ -3,10 +3,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <widget/validatorWidget/uint8/uint8BinValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8DecValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8HexValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8OctValidatorWidget.h>
+#include <widget/validatorWidget/double/doubleValueValidatorWidget.h>
 
 void FloatCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget *append_ptr ) {
 	mainLayout->addWidget( append_ptr );
@@ -37,15 +34,12 @@ void FloatCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot( Validato
 	if( sender_ptr == currentEditorValidator )
 		currentEditorValidator = nullptr;
 }
-FloatCreateUnityNodeEditorScrollArea::FloatCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
+FloatCreateUnityNodeEditorScrollArea::FloatCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, double current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
 	auto number = QString::number( currentVar );
-	appendValidatorWidget( new Uint8DecValidatorWidget( tr( "十进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8HexValidatorWidget( tr( "十六进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8OctValidatorWidget( tr( "八进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8BinValidatorWidget( tr( "二进制:" ), number, this ) );
+	appendValidatorWidget( new DoubleValueValidatorWidget( tr( "浮点:" ), number, this ) );
 }
 void FloatCreateUnityNodeEditorScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
@@ -59,7 +53,7 @@ bool FloatCreateUnityNodeEditorScrollArea::initNode( Node *init_node ) {
 FloatCreateUnityNodeEditorScrollArea::~FloatCreateUnityNodeEditorScrollArea( ) {
 
 }
-void FloatCreateUnityNodeEditorScrollArea::setCurrentVar( uint8_t current_var ) {
+void FloatCreateUnityNodeEditorScrollArea::setCurrentVar( double current_var ) {
 	currentVar = current_var;
 	size_t count = lineFinishedEditorVector.size( );
 	auto lineEditArray = lineFinishedEditorVector.data( );

@@ -27,7 +27,7 @@ void ValidatorWidget::currentEditing_Slot( const QString &txt ) {
 	emit currentEditing_Signal( this, decString );
 }
 
-ValidatorWidget::ValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) {
+ValidatorWidget::ValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) : validator( nullptr ) {
 	validatorWidgetFocus = false;
 }
 bool ValidatorWidget::decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt ) {

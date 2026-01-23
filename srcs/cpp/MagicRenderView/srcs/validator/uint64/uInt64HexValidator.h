@@ -1,9 +1,9 @@
-﻿#ifndef UINT64HEXVALIDATOR_H_H_HEAD__FILE__
+#ifndef UINT64HEXVALIDATOR_H_H_HEAD__FILE__
 #define UINT64HEXVALIDATOR_H_H_HEAD__FILE__
 
-#include "../validator.h"
+#include <validator/unSignedValidator.h>
 
-class UInt64HexValidator : public Validator {
+class UInt64HexValidator : public UnSignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

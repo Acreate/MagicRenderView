@@ -17,7 +17,9 @@ BinCreateUnityNodeEditorWidget::BinCreateUnityNodeEditorWidget( BinCreateUnityNo
 BinCreateUnityNodeEditorWidget::~BinCreateUnityNodeEditorWidget( ) {
 	if( binCreateUnityNodeScrollArea ) {
 		callNodeReleaseInfoWidgetFunction( createBinNode );
+		delete binCreateUnityNodeScrollArea;
 		binCreateUnityNodeScrollArea = nullptr;
+		editorNodeInfoScrollArea = nullptr;
 	}
 }
 bool BinCreateUnityNodeEditorWidget::checkNodeValid( Node *check_node_ptr ) {

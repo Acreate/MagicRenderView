@@ -11,7 +11,7 @@ private:
 protected:
 	BoolOutputPort *outputPort;
 	NodeType *outputVarPtr;
-	BoolCreateUnityNodeEditorWidget* boolCreateUnityNodeEditor;
+	BoolCreateUnityNodeEditorWidget* editorWidget;
 public:
 	BoolCreateUnityNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

@@ -9,7 +9,7 @@ class FloatCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
 	Q_OBJECT;
 	friend class FloatCreateUnityNodeEditorWidget;
 protected:
-	uint8_t currentVar;
+	double currentVar;
 	QWidget *mainWidget;
 	QVBoxLayout *mainLayout;
 	ValidatorWidget* currentEditorValidator;
@@ -21,15 +21,15 @@ protected Q_SLOTS:
 	void currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr );
 	void currentEditingFocusOut_Slot( ValidatorWidget *sender_ptr );
 protected:
-	FloatCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, uint8_t current_var );
+	FloatCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, double current_var );
 	void releaseResource( ) override;
 public:
 	bool initNode( Node *init_node ) override;
 	~FloatCreateUnityNodeEditorScrollArea( ) override;
-	virtual uint8_t getCurrentVar( ) const { return currentVar; }
-	virtual void setCurrentVar( uint8_t current_var );
+	virtual double getCurrentVar( ) const { return currentVar; }
+	virtual void setCurrentVar( double current_var );
 
 Q_SIGNALS:
-	void editingFinished_Signal( uint8_t var );
+	void editingFinished_Signal( double var );
 };
 #endif // FLOATCREATEUNITYNODEEDITORSCROLLAREA_H_H_HEAD__FILE__

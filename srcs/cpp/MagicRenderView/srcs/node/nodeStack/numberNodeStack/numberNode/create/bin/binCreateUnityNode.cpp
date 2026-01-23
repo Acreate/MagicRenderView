@@ -1,4 +1,4 @@
-﻿#include "binCreateUnityNode.h"
+#include "binCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/nodeTools/nodeTools.h>
@@ -27,7 +27,7 @@ bool BinCreateUnityNode::updateLayout( ) {
 	return true;
 }
 bool BinCreateUnityNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
-	auto nodeEditorWidget = qobject_cast< BinCreateUnityNodeEditorWidget * >( release_ptr );
+	auto nodeEditorWidget = qobject_cast< decltype(editorWidget) >( release_ptr );
 	if( nodeEditorWidget == nullptr )
 		return false;
 	editorWidget = nodeEditorWidget;

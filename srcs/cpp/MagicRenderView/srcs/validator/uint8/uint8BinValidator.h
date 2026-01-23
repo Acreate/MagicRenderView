@@ -1,12 +1,9 @@
-﻿#ifndef UINT8BINVALIDATOR_H_H_HEAD__FILE__
+#ifndef UINT8BINVALIDATOR_H_H_HEAD__FILE__
 #define UINT8BINVALIDATOR_H_H_HEAD__FILE__
 
+#include <validator/unSignedValidator.h>
 
-#include <QValidator>
-
-#include "../validator.h"
-
-class Uint8BinValidator : public Validator {
+class Uint8BinValidator : public UnSignedValidator {
 	Q_OBJECT;
 protected:
 	uint64_t maxLen;

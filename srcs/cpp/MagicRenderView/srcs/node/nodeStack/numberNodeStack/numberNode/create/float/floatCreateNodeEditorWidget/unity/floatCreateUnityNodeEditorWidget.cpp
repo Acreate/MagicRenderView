@@ -1,16 +1,14 @@
 #include "floatCreateUnityNodeEditorWidget.h"
 
-
 #include <director/varDirector.h>
-#include <node/nodeStack/numberNodeStack/numberNode/create/bin/binCreateUnityNode.h>
-#include <node/nodeStack/numberNodeStack/numberNode/create/bin/binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorScrollArea.h>
 #include <QLineEdit>
 
+#include "../../floatCreateUnityNode.h"
 #include "floatCreateUnityNodeEditorScrollArea.h"
-void FloatCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
+void FloatCreateUnityNodeEditorWidget::valueChange( double new_value ) {
 	buffValue = new_value;
 }
-FloatCreateUnityNodeEditorWidget::FloatCreateUnityNodeEditorWidget( BinCreateUnityNode *create_bin_node, uint8_t *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
+FloatCreateUnityNodeEditorWidget::FloatCreateUnityNodeEditorWidget( FloatCreateUnityNode *create_bin_node, double *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
 	if( bind_var_ptr == nullptr )
 		return;
 	binCreateUnityNodeScrollArea = new FloatCreateUnityNodeEditorScrollArea( this, *bind_var_ptr );

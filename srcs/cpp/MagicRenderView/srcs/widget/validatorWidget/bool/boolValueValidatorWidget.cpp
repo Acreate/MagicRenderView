@@ -17,6 +17,14 @@ bool BoolValueValidatorWidget::getValidatorWidgetText( QString &result_text ) co
 	return true;
 }
 bool BoolValueValidatorWidget::setValidatorWidgetText( QString &result_text ) {
+	if( trueText == result_text ) {
+		boolComboBox->setCurrentIndex( 1 );
+		return true;
+	}
+	if( falseText == result_text ) {
+		boolComboBox->setCurrentIndex( 0 );
+		return true;
+	}
 	return false;
 }
 BoolValueValidatorWidget::BoolValueValidatorWidget( const QString &title, bool bool_value, QWidget *parent ) : ValidatorWidget( title, 0, parent ) {
@@ -29,7 +37,7 @@ BoolValueValidatorWidget::BoolValueValidatorWidget( const QString &title, bool b
 	setBoolValue( bool_value );
 	mainLayout->addWidget( this->title );
 	mainLayout->addWidget( this->boolComboBox );
-	
+
 }
 bool BoolValueValidatorWidget::setBoolValue( bool set_new_bool_var ) {
 	if( set_new_bool_var )
