@@ -1,8 +1,8 @@
-﻿#include "nodeDirector.h"
+#include "nodeDirector.h"
 #include <QMenu>
 #include <QPainter>
 
-#include <node/stack/nodeStack.h>
+#include <node/nodeStack/nodeStack.h>
 #include <QLabel>
 
 #include "printerDirector.h"

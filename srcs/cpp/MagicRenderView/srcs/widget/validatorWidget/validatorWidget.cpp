@@ -1,20 +1,17 @@
 #include "validatorWidget.h"
-
-#include <qcoreevent.h>
+#include <qevent.h>
 #include <QHBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
 
-#include "../../validator/validator.h"
+#include <validator/validator.h>
 void ValidatorWidget::editingFinished_Slot( ) {
-	if( sender( ) != lineEdit )
+	if( sender( ) != this->getBindEditorObjPtr( ) )
 		return;
 	QString decString;
-
 	QString txt;
 	if( validator == nullptr )
 		return;
-	txt = lineEdit->text( );
+	if( this->getValidatorWidgetText( txt ) == false )
+		return;
 	if( validator->validatorStringToDecString( txt, decString ) == false )
 		return;
 	emit overEditorFinish_Signal( this, decString );
@@ -23,23 +20,13 @@ void ValidatorWidget::currentEditing_Slot( const QString &txt ) {
 	if( validator == nullptr )
 		return;
 	QString decString = "0";
-	if( txt.isEmpty( ) )
-		lineEdit->setText( decString );
-	else if( validator->validatorStringToDecString( txt, decString ) == false )
+	if( txt.isEmpty( ) == false && validator->validatorStringToDecString( txt, decString ) == false )
 		return;
 	emit currentEditing_Signal( this, decString );
 }
+
 ValidatorWidget::ValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) {
 	validatorWidgetFocus = false;
-	lineEdit = new QLineEdit( nullptr, this );
-	lineEdit->installEventFilter( this );
-	titleLabel = new QLabel( title, this );
-	auto mainLayout = new QHBoxLayout( this );
-	mainLayout->addWidget( titleLabel );
-	mainLayout->addWidget( lineEdit );
-
-	connect( lineEdit, &QLineEdit::editingFinished, this, &ValidatorWidget::editingFinished_Slot );
-	connect( lineEdit, &QLineEdit::textEdited, this, &ValidatorWidget::currentEditing_Slot );
 }
 bool ValidatorWidget::decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt ) {
 	if( validator == nullptr )
@@ -57,23 +44,23 @@ bool ValidatorWidget::setDecValue( const QString &normal_dec_text ) {
 	QString resultVar;
 	if( validator->decStringToValidatorString( normal_dec_text, resultVar ) == false )
 		return false;
-	QString text = lineEdit->text( );
+	QString text;
+	if( this->getValidatorWidgetText( text ) == false )
+		return false;
 	if( text == resultVar )
 		return true;
-	lineEdit->setText( resultVar );
-	return true;
+	return this->setValidatorWidgetText( resultVar );
 }
 bool ValidatorWidget::getDecValue( QString &result_normal_dec_text ) {
-	if( validator == nullptr )
+
+	QString txt;
+	if( this->getValidatorWidgetText( txt ) == false )
 		return false;
-	QString txt = lineEdit->text( );
 	if( txt.isEmpty( ) ) {
 		result_normal_dec_text = '0';
 		return true;
 	}
-	if( validator->validatorStringToDecString( txt, result_normal_dec_text ) == false )
-		return false;
-	return true;
+	return validator->validatorStringToDecString( txt, result_normal_dec_text );
 }
 bool ValidatorWidget::eventFilter( QObject *watched, QEvent *event ) {
 	bool eventFilter = QWidget::eventFilter( watched, event );

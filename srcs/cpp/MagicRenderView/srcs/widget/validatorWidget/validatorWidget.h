@@ -8,12 +8,15 @@ class QLineEdit;
 class ValidatorWidget : public QWidget {
 	Q_OBJECT;
 protected:
-	QLineEdit *lineEdit;
-	QLabel *titleLabel;
 	Validator *validator;
 	bool validatorWidgetFocus;
+protected Q_SLOTS:
 	virtual void editingFinished_Slot( );
 	virtual void currentEditing_Slot( const QString &txt );
+protected:
+	virtual QObject * getBindEditorObjPtr( ) const = 0;
+	virtual bool getValidatorWidgetText( QString &result_text ) const = 0;
+	virtual bool setValidatorWidgetText( QString &result_text ) = 0;
 public:
 	ValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent );
 	virtual bool decStringToValidatorString( const QString &normal_dec_text, QString &result_normal_validator_var_txt );

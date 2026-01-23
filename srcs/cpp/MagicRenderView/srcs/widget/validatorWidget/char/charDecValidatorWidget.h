@@ -5,6 +5,13 @@
 
 class CharDecValidatorWidget : public ValidatorWidget {
 	Q_OBJECT;
+protected:
+	QLabel *title;
+	QLineEdit *editorWidget;
+protected:
+	QObject * getBindEditorObjPtr( ) const override;
+	bool getValidatorWidgetText( QString &result_text ) const override;
+	bool setValidatorWidgetText( QString &result_text ) override;
 public:
 	CharDecValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent );
 };
