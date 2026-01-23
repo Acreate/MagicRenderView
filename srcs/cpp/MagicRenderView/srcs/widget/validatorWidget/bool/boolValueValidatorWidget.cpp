@@ -5,6 +5,19 @@
 #include <QComboBox>
 #include <QLabel>
 
+void BoolValueValidatorWidget::currentIndexChanged_Slot( int index ) {
+	auto currentIndexTxt = boolComboBox->itemText( index );
+	if( currentIndexTxt == trueText || currentIndexTxt == falseText ) {
+		emit overEditorFinish_Signal( this, currentIndexTxt );
+		emit currentEditing_Signal( this, currentIndexTxt );
+	}
+}
+void BoolValueValidatorWidget::currentTextChanged_Slot( const QString &new_text ) {
+	if( new_text == trueText || new_text == falseText ) {
+		emit overEditorFinish_Signal( this, new_text );
+		emit currentEditing_Signal( this, new_text );
+	}
+}
 QObject * BoolValueValidatorWidget::getBindEditorObjPtr( ) const {
 	return boolComboBox;
 }
@@ -37,6 +50,9 @@ BoolValueValidatorWidget::BoolValueValidatorWidget( const QString &title, bool b
 	setBoolValue( bool_value );
 	mainLayout->addWidget( this->title );
 	mainLayout->addWidget( this->boolComboBox );
+	connect( boolComboBox, &QComboBox::currentTextChanged, this, &BoolValueValidatorWidget::currentTextChanged_Slot );
+	connect( boolComboBox, &QComboBox::currentIndexChanged, this, &BoolValueValidatorWidget::currentIndexChanged_Slot );
+	boolComboBox->installEventFilter( this );
 
 }
 bool BoolValueValidatorWidget::setBoolValue( bool set_new_bool_var ) {

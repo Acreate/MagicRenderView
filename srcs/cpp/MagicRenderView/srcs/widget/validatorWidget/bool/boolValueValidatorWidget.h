@@ -11,6 +11,9 @@ protected:
 	QComboBox *boolComboBox;
 	QString trueText;
 	QString falseText;
+protected Q_SLOTS:
+    void currentIndexChanged_Slot(int index);
+    void currentTextChanged_Slot(const QString &new_text);
 protected:
 	QObject * getBindEditorObjPtr( ) const override;
 	bool getValidatorWidgetText( QString &result_text ) const override;

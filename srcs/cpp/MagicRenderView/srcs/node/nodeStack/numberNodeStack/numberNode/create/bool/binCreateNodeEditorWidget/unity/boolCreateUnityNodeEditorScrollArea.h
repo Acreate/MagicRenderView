@@ -3,6 +3,7 @@
 
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class BoolValueValidatorWidget;
 class ValidatorWidget;
 class QVBoxLayout;
 class BoolCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
@@ -14,6 +15,7 @@ protected:
 	QVBoxLayout *mainLayout;
 	ValidatorWidget *currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
+	BoolValueValidatorWidget *boolValueValidatorWidget;
 protected:
 	virtual void appendValidatorWidget( ValidatorWidget *append_ptr );
 protected Q_SLOTS:
@@ -26,10 +28,10 @@ protected:
 public:
 	bool initNode( Node *init_node ) override;
 	~BoolCreateUnityNodeEditorScrollArea( ) override;
-	virtual uint8_t getCurrentVar( ) const { return currentVar; }
-	virtual void setCurrentVar( uint8_t current_var );
+	virtual bool getCurrentVar( ) const { return currentVar; }
+	virtual void setCurrentVar( bool current_var );
 
 Q_SIGNALS:
-	void editingFinished_Signal( uint8_t var );
+	void editingFinished_Signal( bool var );
 };
 #endif // BOOLCREATEUNITYNODEEDITORSCROLLAREA_H_H_HEAD__FILE__

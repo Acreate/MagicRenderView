@@ -5,7 +5,7 @@
 
 #include "../../boolCreateUnityNode.h"
 #include "boolCreateUnityNodeEditorScrollArea.h"
-void BoolCreateUnityNodeEditorWidget::valueChange( uint8_t new_value ) {
+void BoolCreateUnityNodeEditorWidget::valueChange( bool new_value ) {
 	buffValue = new_value;
 }
 BoolCreateUnityNodeEditorWidget::BoolCreateUnityNodeEditorWidget( BoolCreateUnityNode *create_bin_node, bool *bind_var_ptr ) : createBoolNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {

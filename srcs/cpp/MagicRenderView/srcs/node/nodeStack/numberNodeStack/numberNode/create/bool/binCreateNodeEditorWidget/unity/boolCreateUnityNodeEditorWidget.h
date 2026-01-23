@@ -13,7 +13,7 @@ protected:
 	bool *bindVarPtr;
 	bool buffValue;
 protected:
-	virtual void valueChange( uint8_t new_value );
+	virtual void valueChange( bool new_value );
 public:
 	BoolCreateUnityNodeEditorWidget( BoolCreateUnityNode *create_bin_node, bool *bind_var_ptr );
 	~BoolCreateUnityNodeEditorWidget( ) override;

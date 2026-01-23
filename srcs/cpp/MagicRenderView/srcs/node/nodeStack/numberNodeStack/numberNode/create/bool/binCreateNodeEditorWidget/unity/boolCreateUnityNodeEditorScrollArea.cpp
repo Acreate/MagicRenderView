@@ -13,19 +13,9 @@ void BoolCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget
 	connect( append_ptr, &ValidatorWidget::currentEditingFocusOut_Signal, this, &BoolCreateUnityNodeEditorScrollArea::currentEditingFocusOut_Slot );
 }
 void BoolCreateUnityNodeEditorScrollArea::overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt ) {
-	bool isOk;
-	qlonglong longLong = dec_txt.toULongLong( &isOk );
-	if( isOk == false )
-		return; // 转换失败
-	size_t count = lineFinishedEditorVector.size( );
-	auto lineEditArray = lineFinishedEditorVector.data( );
-	size_t index;
-
-	for( index = 0; index < count; ++index )
-		if( sender_ptr != lineEditArray[ index ] )
-			if( lineEditArray[ index ] != currentEditorValidator )
-				lineEditArray[ index ]->setDecValue( dec_txt );
-	emit editingFinished_Signal( longLong );
+	if( boolValueValidatorWidget->getBoolValue( currentVar ) == false )
+		return;
+	emit editingFinished_Signal( currentVar ? 1 : 0 );
 }
 void BoolCreateUnityNodeEditorScrollArea::currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr ) {
 	currentEditorValidator = sender_ptr;
@@ -38,7 +28,9 @@ BoolCreateUnityNodeEditorScrollArea::BoolCreateUnityNodeEditorScrollArea( NodeIn
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
-	appendValidatorWidget( new BoolValueValidatorWidget( tr( "布尔:" ), false, this ) );
+
+	boolValueValidatorWidget = new BoolValueValidatorWidget( tr( "布尔:" ), false, this );
+	appendValidatorWidget( boolValueValidatorWidget );
 }
 void BoolCreateUnityNodeEditorScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );
@@ -52,12 +44,6 @@ bool BoolCreateUnityNodeEditorScrollArea::initNode( Node *init_node ) {
 BoolCreateUnityNodeEditorScrollArea::~BoolCreateUnityNodeEditorScrollArea( ) {
 
 }
-void BoolCreateUnityNodeEditorScrollArea::setCurrentVar( uint8_t current_var ) {
-	currentVar = current_var;
-	size_t count = lineFinishedEditorVector.size( );
-	auto lineEditArray = lineFinishedEditorVector.data( );
-	size_t index;
-	QString decValue = QString::number( current_var );
-	for( index = 0; index < count; ++index )
-		lineEditArray[ index ]->setDecValue( decValue );
+void BoolCreateUnityNodeEditorScrollArea::setCurrentVar( bool current_var ) {
+	boolValueValidatorWidget->setBoolValue( current_var );
 }
