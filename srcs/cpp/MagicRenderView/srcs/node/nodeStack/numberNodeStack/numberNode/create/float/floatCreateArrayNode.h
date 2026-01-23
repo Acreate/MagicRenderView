@@ -1,0 +1,23 @@
+﻿#ifndef FLOATCREATEARRAYNODE_H_H_HEAD__FILE__
+#define FLOATCREATEARRAYNODE_H_H_HEAD__FILE__
+
+#include <node/node/processNode.h>
+class FloatVectorOutputPort;
+class FloatCreateArrayNode : public ProcessNode {
+	Q_OBJECT;
+private:
+	using NodeType = double;
+protected:
+	FloatVectorOutputPort *outputPort;
+	std::vector< NodeType > *outputVarPtr;
+public:
+	FloatCreateArrayNode( const QString &node_name );
+	bool initEx( MainWidget *parent ) override;
+	bool updateLayout( ) override;
+public:
+	bool readyNodeRunData( ) override;
+	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
+public:
+	Def_Extern_NodeTypeName_Function( );
+};
+#endif // FLOATCREATEARRAYNODE_H_H_HEAD__FILE__

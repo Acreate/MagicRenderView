@@ -1,0 +1,13 @@
+﻿#ifndef PROJECTAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
+#define PROJECTAPPLICATIONTOOLBAR_H_H_HEAD__FILE__
+
+#include "../../normalApplicationToolBar.h"
+
+class ProjectApplicationToolBar : public NormalApplicationToolBar {
+	Q_OBJECT;
+public:
+	ProjectApplicationToolBar( );
+	bool init( ApplicationMenuStack *application_menu_stack ) override;
+};
+
+#endif // PROJECTAPPLICATIONTOOLBAR_H_H_HEAD__FILE__

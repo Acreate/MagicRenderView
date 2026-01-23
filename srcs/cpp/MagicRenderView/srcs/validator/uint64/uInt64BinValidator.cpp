@@ -1,0 +1,7 @@
+#include "uInt64BinValidator.h"
+
+UInt64BinValidator::UInt64BinValidator( QObject *parent ) : UnSignedValidator( UINT64_MAX, 0, 2, parent ) {
+}
+UInt64BinValidator::~UInt64BinValidator( ) {
+
+}

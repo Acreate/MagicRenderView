@@ -1,0 +1,73 @@
+﻿#include "uIntArraySubNode.h"
+
+#include <director/varDirector.h>
+#include <node/port/inputPort/array/uIntVectorInputPort.h>
+#include <node/port/inputPort/unity/uIntInputPort.h>
+#include <node/port/outputPort/array/uIntVectorOutputPort.h>
+
+#include "../../../../../nodeTools/nodeTools.h"
+
+Def_Entity_NodeTypeName_Function( UIntArraySubNode, Node::tr( "运算/序列/无符号整数序列/减法" ) );
+
+UIntArraySubNode::UIntArraySubNode( const QString &node_name ) : ProcessNode( node_name ) {
+	outputVarPtr = nullptr;
+}
+bool UIntArraySubNode::initEx( MainWidget *parent ) {
+	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
+		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数序列" ), firstInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数" ), secondInputPort ) == false )
+			return false;
+		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+			return false;
+		return true;
+	};
+	return ProcessNode::initEx( parent );
+
+}
+bool UIntArraySubNode::updateLayout( ) {
+	if( ProcessNode::updateLayout( ) == false )
+		return false;
+	return true;
+}
+bool UIntArraySubNode::readyNodeRunData( ) {
+	return true;
+}
+bool UIntArraySubNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	OutputPort *const*outputPortArray;
+	size_t count;
+	size_t index;
+	std::vector< NodeType > *converInt;
+	NodeType *secondConverPtr;
+	void *portVarPtr;
+	Node *parentNode;
+	VarDirector *varDirector;
+	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	outputVarPtr->clear( );
+	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	outputPortArray = outputPorts->data( );
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	varDirector = outputPortArray[ 0 ]->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
+		return true;
+	*outputVarPtr = *converInt;
+	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
+	outputPortArray = outputPorts->data( );
+	count = outputPorts->size( );
+	if( count == 0 )
+		return true;
+	portVarPtr = outputPortArray[ 0 ]->getVarPtr( );
+	parentNode = outputPortArray[ 0 ]->getParentNode( );
+	varDirector = parentNode->getVarDirector( );
+	if( varDirector->cast_ptr( portVarPtr, secondConverPtr ) == false )
+		return true;
+	if( *secondConverPtr == 0 )
+		return true;
+	count = outputVarPtr->size( );
+	auto outputArrayPtr = outputVarPtr->data( );
+	for( index = 0; index < count; index += 1 )
+		outputArrayPtr[ index ] = outputArrayPtr[ index ] - *secondConverPtr;
+	return true;
+}

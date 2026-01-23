@@ -1,0 +1,13 @@
+﻿#ifndef PROJECTAPPLICATIONMENU_H_H_HEAD__FILE__
+#define PROJECTAPPLICATIONMENU_H_H_HEAD__FILE__
+
+#include "../../normalApplicationMenu.h"
+
+class ProjectApplicationMenu : public NormalApplicationMenu {
+	Q_OBJECT;
+public:
+	ProjectApplicationMenu( );
+	bool init( ApplicationMenuStack *application_menu_stack ) override;
+};
+
+#endif // PROJECTAPPLICATIONMENU_H_H_HEAD__FILE__
