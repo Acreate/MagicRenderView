@@ -3,6 +3,7 @@
 
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class CharValueValidatorWidget;
 class ValidatorWidget;
 class QVBoxLayout;
 class CharCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
@@ -14,14 +15,16 @@ protected:
 	QVBoxLayout *mainLayout;
 	ValidatorWidget *currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
+	CharValueValidatorWidget *charValueValidatorWidget;
 protected:
 	virtual void appendValidatorWidget( ValidatorWidget *append_ptr );
 protected Q_SLOTS:
 	void overEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt );
+	void overCharEditorFinish_Slot( ValidatorWidget *sender_ptr, const QString &dec_txt );
 	void currentEditingFocusIn_Slot( ValidatorWidget *sender_ptr );
 	void currentEditingFocusOut_Slot( ValidatorWidget *sender_ptr );
 protected:
-	CharCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, QChar current_var );
+	CharCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, const QChar &current_var );
 	void releaseResource( ) override;
 public:
 	bool initNode( Node *init_node ) override;

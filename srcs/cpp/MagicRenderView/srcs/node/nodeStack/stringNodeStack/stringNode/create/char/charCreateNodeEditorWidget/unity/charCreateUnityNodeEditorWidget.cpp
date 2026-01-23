@@ -8,6 +8,7 @@
 #include "charCreateUnityNodeEditorScrollArea.h"
 void CharCreateUnityNodeEditorWidget::valueChange( QChar new_value ) {
 	buffValue = new_value;
+	qDebug( ) << buffValue;
 }
 CharCreateUnityNodeEditorWidget::CharCreateUnityNodeEditorWidget( CharCreateUnityNode *create_bin_node, QChar *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
 	if( bind_var_ptr == nullptr )
