@@ -1,4 +1,4 @@
-﻿#include "application.h"
+#include "application.h"
 
 #include <QDir>
 #include <QMetaEnum>
@@ -15,6 +15,8 @@
 #include <win/mainWindow.h>
 
 #include <cmake_include_to_c_cpp_header_env.h>
+#include <director/renderImageDirector.h>
+
 #include "../director/appDirector.h"
 #include "../director/builderDirector.h"
 #include "../director/editorDirector.h"
@@ -31,6 +33,7 @@ Application * Application::getInstancePtr( ) {
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	Application::instance = this;
 	printerDirector = new PrinterDirector;
+	renderImageDirector = new RenderImageDirector;
 	varDirector = new VarDirector;
 	iniDirector = new IniDirector;
 	nodeDirector = new NodeDirector;
@@ -47,6 +50,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
 		printerDirector->error( tr( "窗口状态保存异常" ), Create_SrackInfo( ) );
+	delete renderImageDirector;
 	delete nodeInfoEditorDirector;
 	delete builderDirector;
 	delete menuDirector;
@@ -136,6 +140,8 @@ bool Application::init( ) {
 		return false;
 
 	if( printerDirector->init( ) == false )
+		return false;
+	if( renderImageDirector->init( ) == false )
 		return false;
 	if( varDirector->init( ) == false )
 		return false;

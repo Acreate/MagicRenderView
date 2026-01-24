@@ -1,8 +1,9 @@
-﻿#ifndef APPLICATION_H_H_HEAD__FILE__
+#ifndef APPLICATION_H_H_HEAD__FILE__
 #define APPLICATION_H_H_HEAD__FILE__
 
 #include <QApplication>
 
+class RenderImageDirector;
 class NodeInfoEditorDirector;
 class EditorDirector;
 class BuilderDirector;
@@ -24,6 +25,7 @@ public:
 	static Application * getInstancePtr( );
 protected:
 	NodeDirector *nodeDirector;
+	RenderImageDirector *renderImageDirector;
 	PrinterDirector *printerDirector;
 	VarDirector *varDirector;
 	IniDirector *iniDirector;
@@ -64,6 +66,7 @@ public:
 	virtual bool init( );
 	virtual ApplicationMenuStack * getApplicationMenuStack( ) const { return applicationMenuStack; }
 	virtual NodeInfoEditorDirector * getNodeInfoEditorDirector( ) const { return nodeInfoEditorDirector; }
+	virtual RenderImageDirector * getRenderImageDirector( ) const { return renderImageDirector; }
 	virtual EditorDirector * getEditorDirector( ) const { return editorDirector; }
 	virtual BuilderDirector * getBuilderDirector( ) const { return builderDirector; }
 	virtual const QString & getBuilderToolInfo( ) const { return builderToolInfo; }
