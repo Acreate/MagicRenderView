@@ -3,9 +3,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <validator/uint8/uint8BinValidator.h>
+#include <validator/uint8/uInt8BinValidator.h>
 UInt8BinValidatorWidget::UInt8BinValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) : ValidatorWidget( title, dec_value, parent ) {
-	validator = new Uint8BinValidator( this );
+	validator = new UInt8BinValidator( this );
 	editorWidget = new QLineEdit( this );
 	this->title = new QLabel( title, this );
 	editorWidget->installEventFilter( this );

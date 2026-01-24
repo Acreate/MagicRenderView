@@ -4,10 +4,10 @@
 #include <QLabel>
 #include <QLineEdit>
 
-#include <validator/uint8/uint8DecValidator.h>
+#include <validator/uint8/uInt8DecValidator.h>
 
 UInt8DecValidatorWidget::UInt8DecValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) : ValidatorWidget( title, dec_value, parent ) {
-	validator = new Uint8DecValidator( this );
+	validator = new UInt8DecValidator( this );
 	editorWidget = new QLineEdit( this );
 	this->title = new QLabel( title, this );
 	editorWidget->installEventFilter( this );

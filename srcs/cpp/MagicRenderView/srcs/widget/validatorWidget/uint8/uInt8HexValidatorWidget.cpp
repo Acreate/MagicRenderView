@@ -4,9 +4,9 @@
 #include <QLabel>
 #include <QLineEdit>
 
-#include <validator/uint8/uint8HexValidator.h>
+#include <validator/uint8/uInt8HexValidator.h>
 UInt8HexValidatorWidget::UInt8HexValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) : ValidatorWidget( title, dec_value, parent ) {
-	validator = new Uint8HexValidator( this );
+	validator = new UInt8HexValidator( this );
 	editorWidget = new QLineEdit( this );
 	this->title = new QLabel( title, this );
 	editorWidget->installEventFilter( this );

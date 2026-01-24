@@ -3,10 +3,10 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include <widget/validatorWidget/uint8/uint8BinValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8DecValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8HexValidatorWidget.h>
-#include <widget/validatorWidget/uint8/uint8OctValidatorWidget.h>
+#include <widget/validatorWidget/uint8/uInt8BinValidatorWidget.h>
+#include <widget/validatorWidget/uint8/uInt8DecValidatorWidget.h>
+#include <widget/validatorWidget/uint8/uInt8HexValidatorWidget.h>
+#include <widget/validatorWidget/uint8/uInt8OctValidatorWidget.h>
 
 void BinCreateUnityNodeEditorScrollArea::appendValidatorWidget( ValidatorWidget *append_ptr ) {
 	mainLayout->addWidget( append_ptr );
@@ -41,10 +41,10 @@ BinCreateUnityNodeEditorScrollArea::BinCreateUnityNodeEditorScrollArea( NodeInfo
 	setWidget( mainWidget );
 	mainLayout = new QVBoxLayout( mainWidget );
 	auto number = QString::number( currentVar );
-	appendValidatorWidget( new Uint8DecValidatorWidget( tr( "十进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8HexValidatorWidget( tr( "十六进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8OctValidatorWidget( tr( "八进制:" ), number, this ) );
-	appendValidatorWidget( new Uint8BinValidatorWidget( tr( "二进制:" ), number, this ) );
+	appendValidatorWidget( new UInt8DecValidatorWidget( tr( "十进制:" ), number, this ) );
+	appendValidatorWidget( new UInt8HexValidatorWidget( tr( "十六进制:" ), number, this ) );
+	appendValidatorWidget( new UInt8OctValidatorWidget( tr( "八进制:" ), number, this ) );
+	appendValidatorWidget( new UInt8BinValidatorWidget( tr( "二进制:" ), number, this ) );
 }
 void BinCreateUnityNodeEditorScrollArea::releaseResource( ) {
 	EditorNodeInfoScrollArea::releaseResource( );

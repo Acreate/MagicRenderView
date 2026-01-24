@@ -4,9 +4,9 @@
 #include <QLabel>
 #include <QLineEdit>
 
-#include <validator/uint8/uint8OctValidator.h>
+#include <validator/uint8/uInt8OctValidator.h>
 UInt8OctValidatorWidget::UInt8OctValidatorWidget( const QString &title, const QString &dec_value, QWidget *parent ) : ValidatorWidget( title, dec_value, parent ) {
-	validator = new Uint8OctValidator( this );
+	validator = new UInt8OctValidator( this );
 	editorWidget = new QLineEdit( this );
 	this->title = new QLabel( title, this );
 	editorWidget->installEventFilter( this );
