@@ -1,6 +1,6 @@
-﻿#include "anyPtrArrayStack.h"
+#include "anyPtrArrayStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 #include <director/varDirector.h>
 #include <tools/infoTool.h>
 

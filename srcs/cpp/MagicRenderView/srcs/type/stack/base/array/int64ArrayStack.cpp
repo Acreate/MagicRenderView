@@ -1,6 +1,6 @@
-﻿#include "int64ArrayStack.h"
+#include "int64ArrayStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 
 #include <tools/infoTool.h>
 

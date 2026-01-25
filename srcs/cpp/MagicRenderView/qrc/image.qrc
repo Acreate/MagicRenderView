@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>imageIco/color_picking.png</file>
+    </qresource>
+</RCC>

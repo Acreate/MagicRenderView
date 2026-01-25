@@ -1,6 +1,6 @@
-﻿#include "colorUnityStack.h"
+#include "colorUnityStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 #include <tools/infoTool.h>
 #include <director/varDirector.h>
 #include <QColor>

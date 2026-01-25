@@ -1,6 +1,6 @@
-﻿#include "float32ArrayStack.h"
+#include "float32ArrayStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 #include <tools/infoTool.h>
 
 #include "../../../../director/varDirector.h"

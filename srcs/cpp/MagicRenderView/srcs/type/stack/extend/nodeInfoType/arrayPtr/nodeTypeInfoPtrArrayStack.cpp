@@ -1,6 +1,6 @@
-﻿#include "nodeTypeInfoPtrArrayStack.h"
+#include "nodeTypeInfoPtrArrayStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 #include <director/varDirector.h>
 #include <tools/infoTool.h>
 

@@ -1,4 +1,4 @@
-﻿cmake_minimum_required( VERSION 3.16 )
+cmake_minimum_required( VERSION 3.16 )
 
 set( prject_name MagicRenderView )
 message( "============ ${prject_name}" )
@@ -19,6 +19,7 @@ list( APPEND image_sources
     "${CMAKE_CURRENT_LIST_DIR}/qrc/font.qrc"
     "${CMAKE_CURRENT_LIST_DIR}/qrc/nodeItemIcon.qrc"
     "${CMAKE_CURRENT_LIST_DIR}/qrc/png.qrc"
+    "${CMAKE_CURRENT_LIST_DIR}/qrc/image.qrc"
 )
 qt_add_resources(
     resource_qrc

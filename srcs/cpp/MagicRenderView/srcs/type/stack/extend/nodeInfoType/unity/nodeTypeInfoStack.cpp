@@ -1,6 +1,6 @@
-﻿#include "nodeTypeInfoStack.h"
+#include "nodeTypeInfoStack.h"
 
-#include <define/macro.h>
+#include <define/stackTypeMacro.h>
 #include <director/varDirector.h>
 #include <node/nodeType/nodeTypeInfo.h>
 #include <node/portType/portTypeInfo.h>
