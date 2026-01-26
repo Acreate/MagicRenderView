@@ -1,0 +1,9 @@
+#ifndef SCROLLALPHAWIDGET_H_H_HEAD__FILE__
+#define SCROLLALPHAWIDGET_H_H_HEAD__FILE__
+
+
+class ScrollAlphaWidget {
+	
+};
+
+#endif // SCROLLALPHAWIDGET_H_H_HEAD__FILE__

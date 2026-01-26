@@ -91,6 +91,7 @@ public:
 	virtual bool widgetMoveTargetDispyer( QWidget *move_widget, const size_t &displyer_index ) const;
 	virtual bool widgetMoveTargetDispyer( const size_t &displyer_index ) const;
 	virtual bool widgetAllMoveTargetDispyer( const size_t &displyer_index ) const;
+	virtual bool runTest( );
 };
 
 #endif // APPLICATION_H_H_HEAD__FILE__

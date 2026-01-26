@@ -361,3 +361,6 @@ bool Application::widgetAllMoveTargetDispyer( const size_t &displyer_index ) con
 		widgetArrayPtr[ index ]->move( offsetX - widgetArrayPtr[ index ]->width( ) / 2, offsetY - widgetArrayPtr[ index ]->height( ) / 2 );
 	return true;
 }
+bool Application::runTest( ) {
+	return true;
+}
