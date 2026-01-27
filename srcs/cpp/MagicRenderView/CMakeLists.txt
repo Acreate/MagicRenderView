@@ -6,14 +6,13 @@ message( "name = " ${prject_name} ) # # 当前文件名配置为项目名称
 project( ${prject_name} VERSION 0.1 )
 message( "============ ${CURRENT_FOLDER}" )
 
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+set( CMAKE_AUTOMOC ON )
+set( CMAKE_AUTOUIC ON )
+set( CMAKE_AUTORCC ON )
 
 get_path_sources( project_src_file PATHS "${CMAKE_CURRENT_LIST_DIR}/srcs" LANGUAGES CXX C )
 
-list( APPEND image_sources 
+list( APPEND image_sources
     "${CMAKE_CURRENT_LIST_DIR}/qrc/resource.qrc"
     "${CMAKE_CURRENT_LIST_DIR}/qrc/actionIcon.qrc"
     "${CMAKE_CURRENT_LIST_DIR}/qrc/font.qrc"
@@ -23,10 +22,10 @@ list( APPEND image_sources
 )
 qt_add_resources(
     resource_qrc
-	${image_sources} 
+    ${image_sources}
 )
 
-list( APPEND project_src_file ${image_sources} ${resource_qrc}  )
+list( APPEND project_src_file ${image_sources} ${resource_qrc} )
 
 set( app_run_bin "${Project_Run_Bin_Path}/${prject_name}" )
 set( app_static_lib_bin "${Project_Run_Static_Lib_Path}/${prject_name}" )
@@ -41,7 +40,7 @@ if( ${QT_VERSION_MAJOR} GREATER_EQUAL 6 )
     set_target_bin_out_path_property( "${prject_name}" "${app_run_bin}" )
     set_target_static_lib_out_path_property( "${prject_name}" "${app_static_lib_bin}" )
     set_target_pdb_out_path_property( "${prject_name}" "${app_pdb_bin}" )
-
+    enable_target_PDB_propertie( "${prject_name}" )
 else()
     if( ANDROID )
         add_library( ${prject_name} SHARED
@@ -79,8 +78,8 @@ qt_generate_deploy_cmake_script_inatll_job( scrpt_path_ "${prject_name}" )
 set( cmake_definitions_env_out "${CMAKE_CURRENT_LIST_DIR}/auto_generate_files/macro/" )
 configure_temp_files( ${cmake_definitions_env_out} "${prject_name}" )
 
-if(MINGW)
-   ## target_compile_options( "${prject_name}" PRIVATE "-rdynamic" )
+if( MINGW )
+    # # target_compile_options( "${prject_name}" PRIVATE "-rdynamic" )
 endif()
 
 if( MSVC )

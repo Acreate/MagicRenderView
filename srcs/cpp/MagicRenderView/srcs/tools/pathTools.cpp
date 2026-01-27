@@ -94,15 +94,13 @@ QString pathTools::pathTree::toQString( size_t index, QChar fill_char ) const {
 bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file_owner ) {
 	// 先检查文件是否存在
 	QFileInfo fileInfo( get_file_path );
-	if( !fileInfo.exists( ) ) {
-		qWarning( ) << "文件不存在:" << get_file_path;
+	if( !fileInfo.exists( ) )
 		return false;
-	}
+	result_file_owner = fileInfo.absoluteFilePath( );
 	auto instancePtr = Application::getInstancePtr( );
-	auto printerDirector = instancePtr->getPrinterDirector( );
 	QProcess process;
+	QStringList standarOutputSplit;
 	QProcessEnvironment environment = QProcessEnvironment::systemEnvironment( );
-
 	bool processOver = true;
 #ifdef Q_OS_WIN
 	// Windows平台
@@ -110,16 +108,16 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 		processOver = false;
 	} );
 	QObject::connect( &process, &QProcess::readyRead, [&]( ) {
-		result_file_owner.clear( );
-		auto resultFileOwner = QString::fromLocal8Bit( process.readAllStandardOutput( ).data( ) );
-		auto standarOutputSplit = resultFileOwner.split( "\n" );
+		result_file_owner = QString::fromLocal8Bit( process.readAllStandardOutput( ).data( ) );
+
+		standarOutputSplit = result_file_owner.split( "\n" );
 		qsizetype outCount = standarOutputSplit.size( );
 		QString *outArray;
 		QStringList subSplit;
 		qsizetype subCount, index, subIndex;
 		QString *data;
 		QFileInfo info( get_file_path );
-		resultFileOwner = info.fileName( );
+		result_file_owner = info.fileName( );
 		if( outCount ) {
 			outArray = standarOutputSplit.data( );
 			for( index = 0; index < outCount; ++index ) {
@@ -132,7 +130,7 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 					data[ subIndex ] = data[ subIndex ].trimmed( );
 					if( data[ subIndex ].isEmpty( ) )
 						continue;
-					if( data[ subIndex ] == resultFileOwner ) {
+					if( data[ subIndex ] == result_file_owner ) {
 						--subIndex;
 						for( ; subIndex != 0; --subIndex )
 							if( data[ subIndex ].isEmpty( ) == false ) {
@@ -153,7 +151,9 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 	environment.insert( "path", pathValue );
 	process.setProcessEnvironment( environment );
 	process.setProcessChannelMode( QProcess::MergedChannels );
-	process.start( "cmd.exe", { "/c", "dir", "/q", result_file_owner } );
+	result_file_owner = QObject::tr( "\"%1\"" ).arg( result_file_owner ).replace( "/", "\\" );
+	standarOutputSplit = { "/c", "d:", "&&", "dir", "/q", result_file_owner };
+	process.start( "cmd.exe", standarOutputSplit );
 
 	while( processOver == false )
 		instancePtr->processEvents( );

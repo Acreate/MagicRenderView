@@ -53,6 +53,7 @@ bool FileAuthorNameNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	QFileInfo fileInfo( *path );
 	if( fileInfo.exists( ) == false )
 		return true;
-	pathTools::getFileOwner( fileInfo.absoluteFilePath( ), *outAuthorNamePtr );
+	//uint ownerId = fileInfo.ownerId( );
+	//*outAuthorNamePtr = ownerId;
 	return true;
 }

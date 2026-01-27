@@ -1,4 +1,4 @@
-﻿#include "stringNodeStack.h"
+#include "stringNodeStack.h"
 
 #include "stringNode/addObjToArray/char/charAddToArrayNode.h"
 #include "stringNode/addObjToArray/char/charArrayAddToArrayNode.h"
@@ -29,18 +29,18 @@ bool StringNodeStack::init( ) {
 		return false;
 	QString name = tr( "字符串节点" );
 	setObjectName( name );
+	Def_EmaplaceBackNode( CharCreateUnityNode );
+	Def_EmaplaceBackNode( CharCreateArrayNode );
 	Def_EmaplaceBackNode( CharAddToArrayNode );
 	Def_EmaplaceBackNode( CharArrayAddToArrayNode );
 	Def_EmaplaceBackNode( ToCharNode );
-	Def_EmaplaceBackNode( CharCreateArrayNode );
-	Def_EmaplaceBackNode( CharCreateUnityNode );
 	Def_EmaplaceBackNode( CharArrayConverToStringNode );
 
+	Def_EmaplaceBackNode( StringCreateUnityNode );
+	Def_EmaplaceBackNode( StringCreateArrayNode );
 	Def_EmaplaceBackNode( StringAddToArrayNode );
 	Def_EmaplaceBackNode( StringArrayAddToArrayNode );
 	Def_EmaplaceBackNode( ToStringNode );
-	Def_EmaplaceBackNode( StringCreateArrayNode );
-	Def_EmaplaceBackNode( StringCreateUnityNode );
 	Def_EmaplaceBackNode( StringConverToCharArrayNode );
 
 	Def_EmaplaceBackNode( StringAppendToLastStringNode );
