@@ -102,14 +102,16 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 	QStringList standarOutputSplit;
 	QProcessEnvironment environment = QProcessEnvironment::systemEnvironment( );
 	bool processOver = true;
+	bool findtOwner = false;
 #ifdef Q_OS_WIN
 	// Windows平台
 	QObject::connect( &process, &QProcess::started, [&]( ) {
 		processOver = false;
 	} );
 	QObject::connect( &process, &QProcess::readyRead, [&]( ) {
+		if( findtOwner == true )
+			return;
 		result_file_owner = QString::fromLocal8Bit( process.readAllStandardOutput( ).data( ) );
-
 		standarOutputSplit = result_file_owner.split( "\n" );
 		qsizetype outCount = standarOutputSplit.size( );
 		QString *outArray;
@@ -135,6 +137,7 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 						for( ; subIndex != 0; --subIndex )
 							if( data[ subIndex ].isEmpty( ) == false ) {
 								result_file_owner = data[ subIndex ];
+								findtOwner = true;
 								break;
 							}
 						return; // 匹配到了
@@ -151,17 +154,24 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 	environment.insert( "path", pathValue );
 	process.setProcessEnvironment( environment );
 	process.setProcessChannelMode( QProcess::MergedChannels );
-	result_file_owner = QObject::tr( "\"%1\"" ).arg( result_file_owner ).replace( "/", "\\" );
-	standarOutputSplit = { "/c", "d:", "&&", "dir", "/q", result_file_owner };
+
+	standarOutputSplit.clear( );
+	standarOutputSplit.append( "/c" );
+	standarOutputSplit.append( result_file_owner.mid( 0, 2 ) );
+	standarOutputSplit.append( "&&" );
+	standarOutputSplit.append( "dir" );
+	standarOutputSplit.append( "/q" );
+	result_file_owner = fileInfo.absoluteDir( ).absolutePath( );
+	result_file_owner = result_file_owner.mid( 3 );
+	result_file_owner = QObject::tr( "\"%1\"" ).arg( result_file_owner ).toLocal8Bit( );
+	standarOutputSplit.append( result_file_owner );
 	process.start( "cmd.exe", standarOutputSplit );
 
 	while( processOver == false )
 		instancePtr->processEvents( );
 	if( process.exitCode( ) != 0 )
 		return false;
-	if( result_file_owner.isEmpty( ) )
-		return false;
-	return true;
+	return findtOwner;
 
 #elif defined(Q_OS_LINUX)
 	// Linux平台：读取扩展属性（需要安装attr库）

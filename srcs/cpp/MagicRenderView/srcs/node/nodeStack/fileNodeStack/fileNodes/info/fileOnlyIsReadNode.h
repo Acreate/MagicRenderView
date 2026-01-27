@@ -12,7 +12,7 @@ protected:
 
 	BoolOutputPort *isOnlyReadOutputPortPtr;
 
-	int64_t *outIsOnlyReadPtr;
+	bool *outIsOnlyReadPtr;
 public:
 	FileOnlyIsReadNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

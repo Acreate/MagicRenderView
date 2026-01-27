@@ -50,10 +50,9 @@ bool FileAuthorNameNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	QString *path;
 	if( varDirector->cast_ptr( varPtr, path ) == false )
 		return true;
-	QFileInfo fileInfo( *path );
-	if( fileInfo.exists( ) == false )
+	if( pathTools::getFileOwner( *path, *outAuthorNamePtr ) == false ) {
+		outAuthorNamePtr->clear( );
 		return true;
-	//uint ownerId = fileInfo.ownerId( );
-	//*outAuthorNamePtr = ownerId;
+	}
 	return true;
 }
