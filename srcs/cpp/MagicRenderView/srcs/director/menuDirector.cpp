@@ -1,4 +1,4 @@
-﻿#include "menuDirector.h"
+#include "menuDirector.h"
 
 #include <QFileDialog>
 #include <QShortcut>
@@ -12,6 +12,7 @@
 
 #include "../srack/srackInfo.h"
 #include "../tools/pathTools.h"
+#include "appDirector.h"
 #include "nodeDirector.h"
 #include "printerDirector.h"
 MenuDirector::MenuDirector( QObject *parent ) : QObject( parent ) {
@@ -68,7 +69,7 @@ bool MenuDirector::init( ) {
 	for( ; index < count; ++index )
 		delete actionArrayPtr[ index ];
 	actionVector.clear( );
-	
+
 	if( nodeRunBuilderObj )
 		nodeRunBuilderObj = nodeDirector->freeCurrentAllNodeAtNodeRunInfo( nodeRunBuilderObj );
 	if( nodeRunBuilderObj != nullptr ) {
@@ -210,7 +211,10 @@ void MenuDirector::loadPorjectAtFile( ) {
 		printerDirector->info( tr( "路径[%1]文件读取异常，数据无法进行还原节点" ).arg( openFileName ), Create_SrackInfo( ) );
 		return;
 	}
-
+	/*auto appDirector = instancePtr->getAppDirector( );
+	appDirector->currentProjectWorkPath = fileInfo.dir( ).absolutePath( );
+	appDirector->currentProjectName = fileInfo.fileName( );
+	appDirector->currentProjectAbsoluteFilePathName = fileInfo.absoluteFilePath( );*/
 }
 
 void MenuDirector::node_run_info_clear_slot( NodeDirector *signal_obj_ptr, const SrackInfo &srack_info, NodeRunInfo *clear_obj, const SrackInfo &org_srack_info ) {

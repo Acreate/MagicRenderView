@@ -1,4 +1,4 @@
-﻿#include "appDirector.h"
+#include "appDirector.h"
 
 #include <qfile.h>
 #include <QFileDialog>
@@ -152,6 +152,9 @@ void AppDirector::appendProjectPath( const QString &append_project_file_path ) {
 	projectHistory.insert( projectHistory.begin( ), append_project_file_path );
 	emit changeHistoryProject_Signal( this, append_project_file_path );
 }
+//void AppDirector::setCurrentPathInfo( const QString &current_path_info ) {
+//	
+//}
 AppDirector::~AppDirector( ) {
 	saveThisDataToAppInstance( );
 }
@@ -234,12 +237,15 @@ bool AppDirector::loadAppPorject( QWidget *parent ) {
 	return syncFileToProject( );
 }
 bool AppDirector::loadAppPorject( QWidget *parent, const QString &open_file_path ) {
+	QFileInfo saveInfo( open_file_path );
 	QString tmp = currentProjectAbsoluteFilePathName;
-	currentProjectAbsoluteFilePathName = open_file_path;
+	currentProjectAbsoluteFilePathName = saveInfo.absoluteFilePath( );
 	if( syncFileToProject( ) == false ) {
 		currentProjectAbsoluteFilePathName = tmp;
 		return false;
 	}
+	currentProjectWorkPath = saveInfo.dir( ).absolutePath( );
+	currentProjectName = saveInfo.fileName( );
 	appendProjectPath( currentProjectAbsoluteFilePathName );
 	return true;
 }

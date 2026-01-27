@@ -6,6 +6,50 @@
 #include <QImage>
 
 using t_current_unity_type = QImage;
+
+namespace infoTool {
+	template<>
+	inline bool fillTypeVarAtVector< QImage >( const void *ptr, std::vector< uint8_t > &result ) {
+		QImage *imagePtr = ( QImage * ) ptr;
+		std::vector< uint8_t > buff;
+
+		QByteArray ba;
+		QBuffer buffer( &ba );
+		buffer.open( QIODevice::WriteOnly );
+		imagePtr->save( &buffer, "PNG" );
+
+		auto data = ba.constData( );
+		auto converVar = ba.size( );
+		if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+			return false;
+		if( converVar == 0 )
+			return true;
+		if( fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
+			return false;
+		result.append_range( buff );
+		return true;
+	}
+	template<>
+	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QImage *target_var_ptr ) {
+		result_count = *( uint64_t * ) source_ptr;
+		size_t sizeTypeCount = sizeof( uint64_t );
+
+		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+			result_count = sizeTypeCount;
+			return true;
+		}
+		size_t mod = source_count - sizeTypeCount;
+		if( mod < result_count )
+			return false;
+		auto offset = source_ptr + sizeTypeCount;
+		QByteArray ba( ( const char * ) offset, result_count );
+		target_var_ptr->loadFromData( ba );
+		result_count = result_count + sizeTypeCount;
+		return result_count;
+	}
+
+}
+
 ImageUnityStack::~ImageUnityStack( ) {
 
 }

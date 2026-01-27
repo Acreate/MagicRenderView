@@ -16,6 +16,8 @@ protected:
 	ValidatorWidget *currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
 	QColorDialog *colorDialog;
+protected Q_SLOTS:
+	void colorDialogFinished_Slot( QColor var );
 protected:
 	ColorCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, QColor current_var );
 	void releaseResource( ) override;

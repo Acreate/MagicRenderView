@@ -8,11 +8,18 @@
 #include <QMouseEvent>
 #include <QPainter>
 
+void ColorCreateUnityNodeEditorScrollArea::colorDialogFinished_Slot( QColor var ) {
+	currentVar = var;
+	repaint( );
+	emit editingFinished_Signal( var );
+}
 ColorCreateUnityNodeEditorScrollArea::ColorCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, QColor current_var ) : EditorNodeInfoScrollArea( parent ), currentVar( current_var ) {
 	mainWidget = new QWidget( this );
 	setWidget( mainWidget );
 	mainWidget->installEventFilter( this );
-	colorDialog = new QColorDialog( );
+	colorDialog = new QColorDialog( this );
+	colorDialog->setWindowTitle( tr( "选择颜色" ) );
+	connect( colorDialog, &QColorDialog::currentColorChanged, this, &ColorCreateUnityNodeEditorScrollArea::colorDialogFinished_Slot );
 }
 ColorCreateUnityNodeEditorScrollArea::~ColorCreateUnityNodeEditorScrollArea( ) {
 	delete colorDialog;
@@ -40,10 +47,10 @@ bool ColorCreateUnityNodeEditorScrollArea::eventFilter( QObject *watched, QEvent
 				return false;
 			switch( mouseEvent->button( ) ) {
 				case Qt::LeftButton :
-					colorDialog->move( this->mapToGlobal( this->frameGeometry( ).center( ) ) );
-					currentVar = colorDialog->getColor( currentVar, this, tr( "选择颜色" ), QColorDialog::ShowAlphaChannel );
-					repaint( );
-					emit editingFinished_Signal( currentVar );
+					colorDialog->setCurrentColor( currentVar );
+					colorDialog->move( this->mapToGlobal( QPoint( 0, 0 ) ) );
+					colorDialog->show( );
+					colorDialog->raise( );
 					break;
 			}
 			return true;

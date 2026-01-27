@@ -1,4 +1,4 @@
-﻿#ifndef APPDIRECTOR_H_H_HEAD__FILE__
+#ifndef APPDIRECTOR_H_H_HEAD__FILE__
 #define APPDIRECTOR_H_H_HEAD__FILE__
 
 #include <QObject>
@@ -8,6 +8,7 @@ class PrinterDirector;
 class NodeDirector;
 class AppDirector : public QObject {
 	Q_OBJECT;
+	//friend class MenuDirector;
 protected:
 	Application *application;
 	PrinterDirector *printerDirector;
@@ -23,6 +24,7 @@ protected:
 	virtual void saveThisDataToAppInstance( );
 	virtual void loadThisDataToAppInstance( );
 	virtual void appendProjectPath( const QString &append_project_file_path );
+	//virtual void setCurrentPathInfo( const QString &current_path_info );
 public:
 	~AppDirector( ) override;
 	virtual bool init( );
@@ -67,7 +69,7 @@ public:
 	virtual bool loadAppPorject( QWidget *parent, const QString &open_file_path );
 	/// @brief 清理历史项目
 	/// @return 成功返回 true
-	virtual bool clearHirstort();
+	virtual bool clearHirstort( );
 Q_SIGNALS:
 	void changeHistoryProject_Signal( AppDirector *signal_obj_ptr, const QString &open_file_path );
 	void openProject_Signal( AppDirector *signal_obj_ptr, const QString &open_file_path );
