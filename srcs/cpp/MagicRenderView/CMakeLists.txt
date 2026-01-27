@@ -32,15 +32,15 @@ set( app_static_lib_bin "${Project_Run_Static_Lib_Path}/${prject_name}" )
 set( app_pdb_bin "${Project_Run_Pbd_Path}/${prject_name}" )
 
 if( ${QT_VERSION_MAJOR} GREATER_EQUAL 6 )
-    cancel_target_PDB_propertie( "${prject_name}" )
+    # cancel_target_PDB_propertie( "${prject_name}" )
     qt_add_executable( ${prject_name}
         MANUAL_FINALIZATION
         ${project_src_file}
     )
-
     set_target_bin_out_path_property( "${prject_name}" "${app_run_bin}" )
     set_target_static_lib_out_path_property( "${prject_name}" "${app_static_lib_bin}" )
     set_target_pdb_out_path_property( "${prject_name}" "${app_pdb_bin}" )
+    target_obj_PDB_propertie( "${prject_name}" )
 else()
     if( ANDROID )
         add_library( ${prject_name} SHARED
