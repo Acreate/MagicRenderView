@@ -1,4 +1,4 @@
-﻿#ifndef PATHTOOLS_H_H_HEAD__FILE__
+#ifndef PATHTOOLS_H_H_HEAD__FILE__
 #define PATHTOOLS_H_H_HEAD__FILE__
 
 #include <qstring.h>
@@ -20,12 +20,12 @@ namespace pathTools {
 		virtual bool appSubPath( const QString &sub_file_path );
 		virtual QString toQString( size_t index = 0, QChar fill_char = '\t' ) const;
 	};
-
+	bool getFileOwner( const QString &get_file_path, QString &result_file_owner );
 	/// @brief 获取标准化后的基本名称
 	/// @param normal_target_path 路径
 	/// @param result_bse_nmae 返回的基本名称
 	/// @return 失败返回 false
-	bool getNormalBaseName( const QString &normal_target_path ,QString& result_bse_nmae);
+	bool getNormalBaseName( const QString &normal_target_path, QString &result_bse_nmae );
 	/// @brief 标准化路径符，使用 / 替换 \\ ，去除重复的路径符
 	/// @param normal_target_path 变化的路径
 	/// @return 标准化后的路径

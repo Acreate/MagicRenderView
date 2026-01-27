@@ -1,4 +1,4 @@
-﻿#ifndef PRINTERDIRECTOR_H_H_HEAD__FILE__
+#ifndef PRINTERDIRECTOR_H_H_HEAD__FILE__
 #define PRINTERDIRECTOR_H_H_HEAD__FILE__
 
 
@@ -23,6 +23,7 @@ public:
 	virtual bool writeLogFileText( const QString &msg ) const;
 	virtual bool init( );
 	virtual void info( const QString &msg, const SrackInfo &srack_info ) const;
+	virtual void std( const QString &msg ) const;
 	virtual void error( const QString &msg, const SrackInfo &srack_info ) const {
 		info( msg, srack_info );
 	}

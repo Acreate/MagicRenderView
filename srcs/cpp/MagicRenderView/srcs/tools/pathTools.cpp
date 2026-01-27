@@ -1,8 +1,11 @@
-﻿#include "pathTools.h"
+#include "pathTools.h"
 
 #include <QDir>
+#include <QProcess>
 
-#include "../../auto_generate_files/macro/cmake_to_c_cpp_header_env.h"
+#include <cmake_to_c_cpp_header_env.h>
+#include <director/printerDirector.h>
+#include <srack/srackInfo.h>
 
 #include "../app/application.h"
 
@@ -86,6 +89,101 @@ QString pathTools::pathTree::toQString( size_t index, QChar fill_char ) const {
 	for( ; currentIndex < currentCount; ++currentIndex )
 		result = result + '\n' + currentData[ currentIndex ]->toQString( index + 1, fill_char );
 	return result;
+}
+
+bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file_owner ) {
+	// 先检查文件是否存在
+	QFileInfo fileInfo( get_file_path );
+	if( !fileInfo.exists( ) ) {
+		qWarning( ) << "文件不存在:" << get_file_path;
+		return false;
+	}
+	auto instancePtr = Application::getInstancePtr( );
+	auto printerDirector = instancePtr->getPrinterDirector( );
+	QProcess process;
+	QProcessEnvironment environment = QProcessEnvironment::systemEnvironment( );
+
+	bool processOver = true;
+#ifdef Q_OS_WIN
+	// Windows平台
+	QObject::connect( &process, &QProcess::started, [&]( ) {
+		processOver = false;
+	} );
+	QObject::connect( &process, &QProcess::readyRead, [&]( ) {
+		result_file_owner.clear( );
+		auto resultFileOwner = QString::fromLocal8Bit( process.readAllStandardOutput( ).data( ) );
+		auto standarOutputSplit = resultFileOwner.split( "\n" );
+		qsizetype outCount = standarOutputSplit.size( );
+		QString *outArray;
+		QStringList subSplit;
+		qsizetype subCount, index, subIndex;
+		QString *data;
+		QFileInfo info( get_file_path );
+		resultFileOwner = info.fileName( );
+		if( outCount ) {
+			outArray = standarOutputSplit.data( );
+			for( index = 0; index < outCount; ++index ) {
+				subSplit = outArray[ index ].split( " " );
+				subCount = subSplit.size( );
+				if( subCount == 0 )
+					continue;
+				data = subSplit.data( );
+				for( subIndex = 0; subIndex < subCount; ++subIndex ) {
+					data[ subIndex ] = data[ subIndex ].trimmed( );
+					if( data[ subIndex ].isEmpty( ) )
+						continue;
+					if( data[ subIndex ] == resultFileOwner ) {
+						--subIndex;
+						for( ; subIndex != 0; --subIndex )
+							if( data[ subIndex ].isEmpty( ) == false ) {
+								result_file_owner = data[ subIndex ];
+								break;
+							}
+						return; // 匹配到了
+					}
+				}
+			}
+		}
+	} );
+	QObject::connect( &process, &QProcess::finished, [&] ( int exitCode, QProcess::ExitStatus exitStatus ) {
+		processOver = true;
+	} );
+	auto pathValue = environment.value( "path" );
+	pathValue.append( ";" ).append( QDir::currentPath( ) );
+	environment.insert( "path", pathValue );
+	process.setProcessEnvironment( environment );
+	process.setProcessChannelMode( QProcess::MergedChannels );
+	process.start( "cmd.exe", { "/c", "dir", "/q", result_file_owner } );
+
+	while( processOver == false )
+		instancePtr->processEvents( );
+	if( process.exitCode( ) != 0 )
+		return false;
+	if( result_file_owner.isEmpty( ) )
+		return false;
+	return true;
+
+#elif defined(Q_OS_LINUX)
+	// Linux平台：读取扩展属性（需要安装attr库）
+	process.start( "getfattr", QStringList( ) << "-n" << "user.author" << "--only-values" << get_file_path );
+	process.waitForFinished( );
+	result_file_owner = process.readAllStandardOutput( ).trimmed( );
+	if( result_file_owner.isEmpty( ) )
+		return false;
+	return true;
+
+#elif defined(Q_OS_MACOS)
+	// macOS平台：使用mdls命令读取元数据
+	process.start( "mdls", QStringList( ) << "-name" << "kMDItemAuthors" << "-raw" << get_file_path );
+	process.waitForFinished( );
+
+	QString author = process.readAllStandardOutput( ).trimmed( );
+	if( author.isEmpty( ) )
+		return false;
+	return true;
+#else
+	return false;
+#endif
 }
 bool pathTools::getNormalBaseName( const QString &normal_target_path, QString &result_bse_nmae ) {
 	auto pathSeparatorSplitPath = normalPathSeparatorSplitPath( normal_target_path );

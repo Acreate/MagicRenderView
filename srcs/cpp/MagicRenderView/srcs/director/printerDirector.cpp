@@ -1,4 +1,4 @@
-﻿#include "printerDirector.h"
+#include "printerDirector.h"
 
 // #include <stacktrace>
 #include <app/application.h>
@@ -31,6 +31,14 @@ void PrinterDirector::info( const QString &msg, const SrackInfo &srack_info ) co
 	QString logOutString = qstringBuff.join( "\n" );
 	qDebug( ) << logOutString.toStdString( ).c_str( );
 	writeLogFileText( logOutString );
+}
+void PrinterDirector::std( const QString &msg ) const {
+	QStringList qstringBuff;
+	QDateTime dateTime = QDateTime::currentDateTime( );
+	QString sourceFrom( "(%1):%2" );
+	sourceFrom = sourceFrom.arg( dateTime.toString( "yyyy-MM-dd hh:mm:ss.z" ) ).arg( msg );
+	qDebug( ) << sourceFrom.toStdString( ).c_str( );
+	writeLogFileText( sourceFrom );
 }
 
 void PrinterDirector::info( const QString &msg, const QStringList args, const SrackInfo &srack_info ) const {

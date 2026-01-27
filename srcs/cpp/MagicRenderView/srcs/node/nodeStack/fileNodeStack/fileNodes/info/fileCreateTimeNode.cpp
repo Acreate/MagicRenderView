@@ -1,4 +1,4 @@
-﻿#include "fileInfoNode.h"
+#include "fileCreateTimeNode.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
@@ -12,9 +12,9 @@
 #include <qfileinfo.h>
 #include <tools/infoTool.h>
 
-Def_Entity_NodeTypeName_Function( FileInfoNode, Node::tr( "信息/路径信息" ) );
+Def_Entity_NodeTypeName_Function( FileCreateTimeNode, Node::tr( "文件信息/创建时间" ) );
 
-FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name ) {
+FileCreateTimeNode::FileCreateTimeNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outFilePtahPtr = nullptr;
 	outDirNamePtr = nullptr;
 	outBaseNamePtr = nullptr;
@@ -27,7 +27,7 @@ FileInfoNode::FileInfoNode( const QString &node_name ) : ProcessNode( node_name 
 	outLastReadTimePtr = nullptr;
 	outisFilePtr = nullptr;
 }
-bool FileInfoNode::initEx( MainWidget *parent ) {
+bool FileCreateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
 			return false;
@@ -59,11 +59,11 @@ bool FileInfoNode::initEx( MainWidget *parent ) {
 	};
 	return ProcessNode::initEx( parent );
 }
-bool FileInfoNode::updateLayout( ) {
+bool FileCreateTimeNode::updateLayout( ) {
 	return ProcessNode::updateLayout( );
 }
 
-bool FileInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+bool FileCreateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	auto outputPorts = nodeToolsPtr->getRefPort( filePtahInputPortPtr );
 	if( outputPorts->size( ) == 0 )
 		return true;

@@ -1,5 +1,5 @@
-﻿#ifndef FILEINFONODE_H_H_HEAD__FILE__
-#define FILEINFONODE_H_H_HEAD__FILE__
+#ifndef FILECREATETIMENODE_H_H_HEAD__FILE__
+#define FILECREATETIMENODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
 
@@ -9,7 +9,7 @@ class StringOutputPort;
 class DateTimeOutputPort;
 class StringInputPort;
 class AnyVarInputPort;
-class FileInfoNode : public ProcessNode {
+class FileCreateTimeNode : public ProcessNode {
 	Q_OBJECT;
 protected:
 	StringInputPort *filePtahInputPortPtr;
@@ -37,7 +37,7 @@ protected:
 	int64_t *outIsExisPtr;
 	int64_t *outisFilePtr;
 public:
-	FileInfoNode( const QString &node_name );
+	FileCreateTimeNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;
 	bool updateLayout( ) override;
 public:
@@ -45,4 +45,4 @@ public:
 public:
 	Def_Extern_NodeTypeName_Function( );
 };
-#endif // FILEINFONODE_H_H_HEAD__FILE__
+#endif // FILECREATETIMENODE_H_H_HEAD__FILE__

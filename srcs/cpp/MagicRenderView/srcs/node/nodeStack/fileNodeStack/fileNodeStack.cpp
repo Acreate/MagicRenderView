@@ -1,6 +1,16 @@
-﻿#include "fileNodeStack.h"
+#include "fileNodeStack.h"
 
-#include "fileNodes/info/fileInfoNode.h"
+#include "fileNodes/info/fileAbsoluteDirPathNode.h"
+#include "fileNodes/info/fileAbsoluteNamePathNode.h"
+#include "fileNodes/info/fileAuthorNameNode.h"
+#include "fileNodes/info/fileBaseNameNode.h"
+#include "fileNodes/info/fileCreateTimeNode.h"
+#include "fileNodes/info/fileDirNameNode.h"
+#include "fileNodes/info/fileIsFileNode.h"
+#include "fileNodes/info/fileLastChangeTimeNode.h"
+#include "fileNodes/info/fileLastReadTimeNode.h"
+#include "fileNodes/info/fileOnlyIsReadNode.h"
+#include "fileNodes/info/fileSizeNode.h"
 #include "fileNodes/info/pathGetInPathInfoArrayNode.h"
 #include "fileNodes/info/pathGetOnPathInfoArrayNode.h"
 #include "fileNodes/read/readFileBinDataNode.h"
@@ -21,9 +31,21 @@ bool FileNodeStack::init( ) {
 	Def_EmaplaceBackNode( WriteFileBinDataNode );
 	Def_EmaplaceBackNode( WriteFileImageNode );
 	Def_EmaplaceBackNode( WriteFileTextNode );
-	Def_EmaplaceBackNode( FileInfoNode );
 	Def_EmaplaceBackNode( PathGetOnPathInfoArrayNode );
 	Def_EmaplaceBackNode( PathGetInPathInfoArrayNode );
+
+	Def_EmaplaceBackNode( FileBaseNameNode );
+	Def_EmaplaceBackNode( FileDirNameNode );
+	Def_EmaplaceBackNode( FileAbsoluteNamePathNode );
+	Def_EmaplaceBackNode( FileAbsoluteDirPathNode );
+	Def_EmaplaceBackNode( FileCreateTimeNode );
+	Def_EmaplaceBackNode( FileLastChangeTimeNode );
+	Def_EmaplaceBackNode( FileLastReadTimeNode );
+	Def_EmaplaceBackNode( FileAuthorNameNode );
+	Def_EmaplaceBackNode( FileOnlyIsReadNode );
+	Def_EmaplaceBackNode( FileIsFileNode );
+	Def_EmaplaceBackNode( FileSizeNode );
+
 	return true;
 }
 
