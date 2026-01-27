@@ -1,4 +1,4 @@
-﻿#ifndef NORMALGENERATENODEMENU_H_H_HEAD__FILE__
+#ifndef NORMALGENERATENODEMENU_H_H_HEAD__FILE__
 #define NORMALGENERATENODEMENU_H_H_HEAD__FILE__
 
 #include <QMenu>
@@ -37,6 +37,7 @@ protected:
 	/// @return 节点
 	virtual Node * getCreateResultNode( const QString &node_name );
 public:
+	virtual const std::vector< NormalGenerateNodeMenuType::TCreateUintyType > & getCreateVector( ) const { return createVector; }
 	~NormalGenerateNodeMenu( ) override;
 public Q_SLOTS:
 	/// @brief 根据节点名称创建节点

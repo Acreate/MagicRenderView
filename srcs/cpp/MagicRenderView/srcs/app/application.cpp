@@ -16,6 +16,7 @@
 
 #include <cmake_include_to_c_cpp_header_env.h>
 #include <director/renderImageDirector.h>
+#include <director/testDirector.h>
 
 #include "../director/appDirector.h"
 #include "../director/builderDirector.h"
@@ -32,6 +33,7 @@ Application * Application::getInstancePtr( ) {
 
 Application::Application( int &argc, char **argv, int i ) : QApplication( argc, argv, i ) {
 	Application::instance = this;
+	testDirector = new TestDirector;
 	printerDirector = new PrinterDirector;
 	renderImageDirector = new RenderImageDirector;
 	varDirector = new VarDirector;
@@ -50,6 +52,7 @@ Application::Application( int &argc, char **argv, int i ) : QApplication( argc, 
 Application::~Application( ) {
 	if( synchronousWindowInfoToVar( ) == false )
 		printerDirector->error( tr( "窗口状态保存异常" ), Create_SrackInfo( ) );
+	delete testDirector;
 	delete renderImageDirector;
 	delete nodeInfoEditorDirector;
 	delete builderDirector;
@@ -362,5 +365,7 @@ bool Application::widgetAllMoveTargetDispyer( const size_t &displyer_index ) con
 	return true;
 }
 bool Application::runTest( ) {
+	if( testDirector->testAllNodeCreate( ) == false )
+		return false;
 	return true;
 }

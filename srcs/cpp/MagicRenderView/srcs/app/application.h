@@ -3,6 +3,7 @@
 
 #include <QApplication>
 
+class TestDirector;
 class RenderImageDirector;
 class NodeInfoEditorDirector;
 class EditorDirector;
@@ -33,6 +34,7 @@ protected:
 	AppDirector *appDirector;
 	BuilderDirector *builderDirector;
 	EditorDirector *editorDirector;
+	TestDirector *testDirector;
 	NodeInfoEditorDirector *nodeInfoEditorDirector;
 protected:
 	MainWindow *mainWindow;
@@ -82,6 +84,7 @@ public:
 	virtual VarDirector * getVarDirector( ) const { return varDirector; }
 	virtual MenuDirector * getMenuDirector( ) const { return menuDirector; }
 	virtual MainWindow * getMainWindow( ) const { return mainWindow; }
+	virtual TestDirector * getTestDirector( ) const { return testDirector; }
 	virtual bool setVar( const QString &var_key, const std::vector< uint8_t > &var_value ) const;
 	virtual bool getVar( const QString &result_var_key, std::vector< uint8_t > &result_var_value ) const;
 	virtual bool removeVar( const QString &result_var_key ) const;

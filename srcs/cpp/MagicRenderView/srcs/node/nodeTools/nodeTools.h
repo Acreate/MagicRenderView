@@ -1,4 +1,4 @@
-﻿#ifndef NODETOOLS_H_H_HEAD__FILE__
+#ifndef NODETOOLS_H_H_HEAD__FILE__
 #define NODETOOLS_H_H_HEAD__FILE__
 #include <typeinfo>
 #include <vector>
@@ -172,18 +172,16 @@ public:
 		result_bind_output_port = new TCreateOutputPort( out_put_port_name );
 		if( result_bind_output_port == nullptr )
 			return false;
+		// 追加
 		if( appendOutputPortType( append_output_port_target_node, result_bind_output_port ) == false ) {
 			delete result_bind_output_port;
 			result_bind_output_port = nullptr;
 			return false;
 		}
-
+		// 绑定
 		void *converPtr;
-		if( bindPortVar( typeid( TCreateType ).name( ), result_bind_output_port, converPtr ) == false ) {
-			delete result_bind_output_port;
-			result_bind_output_port = nullptr;
+		if( bindPortVar( typeid( TCreateType ).name( ), result_bind_output_port, converPtr ) == false )
 			return false;
-		}
 		result_var_ptr = ( TCreateType * ) converPtr;
 		return true;
 	}
@@ -279,14 +277,10 @@ public:
 			result_bind_output_port = nullptr;
 			return false;
 		}
-
 		void *converPtr;
 		typeName = typeid( TCreateType ).name( );
-		if( bindPortVar( typeName, result_bind_output_port, converPtr ) == false ) {
-			delete result_bind_output_port;
-			result_bind_output_port = nullptr;
+		if( bindPortVar( typeName, result_bind_output_port, converPtr ) == false )
 			return false;
-		}
 		result_var_ptr = ( TCreateType * ) converPtr;
 		return true;
 	}
@@ -370,11 +364,8 @@ public:
 
 		void *converPtr;
 		typeName = typeid( TCreateType ).name( );
-		if( bindPortVar( typeName, result_bind_output_port, converPtr ) == false ) {
-			delete ( TCreateOutputPort * ) result_bind_output_port;
-			result_bind_output_port = nullptr;
+		if( bindPortVar( typeName, result_bind_output_port, converPtr ) == false )
 			return false;
-		}
 		result_var_ptr = ( TCreateType * ) converPtr;
 		return true;
 	}

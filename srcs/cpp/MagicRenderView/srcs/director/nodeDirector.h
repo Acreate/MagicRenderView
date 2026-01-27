@@ -1,4 +1,4 @@
-﻿#ifndef NODEDIRECTOR_H_H_HEAD__FILE__
+#ifndef NODEDIRECTOR_H_H_HEAD__FILE__
 #define NODEDIRECTOR_H_H_HEAD__FILE__
 
 #include <enums/nodeEnum.h>
@@ -77,16 +77,20 @@ protected:
 public:
 	NodeDirector( QObject *parent = nullptr );
 	~NodeDirector( ) override;
+	/// @brief 获取创建节点序列调用
+	/// @param  result_node_create_vector 返回的序列
+	/// @return 失败返回 false
+	virtual bool getCreateNodeVector( std::vector< NormalGenerateNodeMenuType::TCreateUintyType > &result_node_create_vector ) const;
 	/// @brief 初始化管理对象
 	/// @return 失败返回 false
 	virtual bool init( );
 	/// @brief 清除所有节点选择状态
-	virtual void clearAllNodeSelectType();
+	virtual void clearAllNodeSelectType( );
 	/// @brief 清除所有节点状态
-	virtual void clearAllNodeStatusType();
+	virtual void clearAllNodeStatusType( );
 	/// @brief 配置所有节点的选择状态
 	/// @param selct_type 选择状态
-	virtual void setAllNodeSelectType(const NodeEnum::NodeSelctType& selct_type);
+	virtual void setAllNodeSelectType( const NodeEnum::NodeSelctType &selct_type );
 	/// @brief 配置所有节点的状态
 	/// @param status_type 新状态
 	virtual void setAllNodeStatusType( const NodeEnum::NodeStatusType &status_type );

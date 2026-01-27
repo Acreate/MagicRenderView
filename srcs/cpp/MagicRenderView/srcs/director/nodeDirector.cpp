@@ -166,6 +166,12 @@ NodeDirector::~NodeDirector( ) {
 	if( portLink )
 		delete portLink;
 }
+bool NodeDirector::getCreateNodeVector( std::vector< NormalGenerateNodeMenuType::TCreateUintyType > &result_node_create_vector ) const {
+	if( normalGenerateNodeMenu == nullptr )
+		return false;
+	result_node_create_vector = normalGenerateNodeMenu->getCreateVector( );
+	return result_node_create_vector.size( ) != 0;
+}
 Node * NodeDirector::createNode( const QString &node_type_name ) {
 
 	if( node_type_name.isEmpty( ) ) {
@@ -431,10 +437,6 @@ Node * NodeDirector::getNode( const uint64_t &node_generator_code ) const {
 	auto nodeArrayPtr = nodeArchiveVector.data( );
 	if( nodeArrayPtr[ node_generator_code - 1 ] && nodeArrayPtr[ node_generator_code - 1 ]->generateCode == node_generator_code )
 		return nodeArrayPtr[ node_generator_code - 1 ];
-	//size_t index = 0;
-	//for( ; index < count; ++index )
-	//	if( nodeArrayPtr[ index ] != nullptr && nodeArrayPtr[ index ]->generateCode == node_generator_code )
-	//		return nodeArrayPtr[ index ];
 	return nullptr;
 }
 bool NodeDirector::popNormalNodeEditorPropertyMenu( const QPoint &pop_pos, Node *node_target ) const {

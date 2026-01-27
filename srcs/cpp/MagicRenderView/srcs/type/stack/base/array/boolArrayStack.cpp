@@ -11,7 +11,7 @@ BoolArrayStack::~BoolArrayStack( ) {
 bool BoolArrayStack::init( VarDirector *var_director ) {
 	if( InfoStack::init( var_director ) == false )
 		return false;
-	Stack_Type_Name( , std::vector<float>, tr("vector<float>"), tr("float[]"), tr( "floatArray"), tr("vector<double32>"), tr("double32[]"), tr ("double32Array"), tr("vector<float32>"), tr("float32[]"), tr("float32Array") );
+	Stack_Type_Name( , std::vector<bool>, tr("vector<bool>"), tr("bool[]"), tr( "boolArray"), tr("vector<bool>") );
 	return true;
 }
 BoolArrayStack::BoolArrayStack( ) {

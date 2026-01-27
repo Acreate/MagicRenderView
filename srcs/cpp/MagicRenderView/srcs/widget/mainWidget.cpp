@@ -1,6 +1,4 @@
-﻿#include "mainWidget.h"
-
-#include <QMenu>
+#include "mainWidget.h"
 #include <QClipboard>
 #include <QResizeEvent>
 #include <qdatetime.h>
@@ -12,7 +10,6 @@
 
 #include "../director/nodeDirector.h"
 #include "../director/printerDirector.h"
-#include "../menu/edit/normalNodeEditorPropertyMenu.h"
 #include "../menu/generateNode/normalGenerateNodeMenu.h"
 
 #include "../node/node/node.h"
@@ -318,14 +315,6 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 				ensureVisible( dragNode );
 				nodeDirector->popNormalNodeEditorPropertyMenu( mapToGlobal( event->pos( ) ), dragNode );
 				dragNode->setNodeSelctType( NodeEnum::NodeSelctType::Select_Active );
-				/*switch( clickInfoPtr->getClickType( ) ) {
-					case NodeEnum::NodeClickType::None :
-					case NodeEnum::NodeClickType::Titile :
-					case NodeEnum::NodeClickType::InputPort :
-					case NodeEnum::NodeClickType::OutputPort :
-						
-						break;
-				}*/
 			} else {
 				nodeDirector->popNormalGenerateNodeMenu( mapToGlobal( event->pos( ) ) );
 			}
@@ -344,8 +333,17 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 }
 void MainWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
-	QPainter painter( this );
-	if( isDrawLine == true )
-		painter.drawLine( startPoint, endPoint );
-	nodeDirector->drawLinkLines( painter );
+	QPainter *painter = nullptr;
+	if( isDrawLine == true ) {
+		painter = new QPainter( this );
+		painter->drawLine( startPoint, endPoint );
+	} else if( dragNode ) {
+		// 拖拽
+	} else {
+		painter = new QPainter( this );
+		qDebug( ) << __func__;
+		nodeDirector->drawLinkLines( *painter );
+	}
+	if( painter )
+		delete painter;
 }
