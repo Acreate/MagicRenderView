@@ -1,6 +1,6 @@
 #ifndef IMAGECREATEUNITYNODEEDITORWIDGET_H_H_HEAD__FILE__
 #define IMAGECREATEUNITYNODEEDITORWIDGET_H_H_HEAD__FILE__
-
+#include <QImage>
 #include <node/nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h>
 
 class ImageCreateUnityNode;
@@ -19,7 +19,6 @@ public:
 	~ImageCreateUnityNodeEditorWidget( ) override;
 	bool checkNodeValid( Node *check_node_ptr ) override;
 	bool initNodeInfo( Node *check_node_ptr ) override;
-	
 protected:
 	void okButtonEvent( ) override;
 };

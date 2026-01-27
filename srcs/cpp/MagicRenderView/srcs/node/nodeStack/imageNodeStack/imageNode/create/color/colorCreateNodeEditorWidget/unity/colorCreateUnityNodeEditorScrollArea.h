@@ -3,6 +3,8 @@
 
 #include <node/nodeInfoWidget/mainInfoWidget/editorNodeInfoScrollArea.h>
 
+class QColorDialog;
+class QLabel;
 class ValidatorWidget;
 class QVBoxLayout;
 class ColorCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
@@ -11,12 +13,14 @@ class ColorCreateUnityNodeEditorScrollArea : public EditorNodeInfoScrollArea {
 protected:
 	QColor currentVar;
 	QWidget *mainWidget;
-	QVBoxLayout *mainLayout;
 	ValidatorWidget *currentEditorValidator;
 	std::vector< ValidatorWidget * > lineFinishedEditorVector;
+	QColorDialog *colorDialog;
 protected:
 	ColorCreateUnityNodeEditorScrollArea( NodeInfoWidget *parent, QColor current_var );
 	void releaseResource( ) override;
+	bool eventFilter( QObject *watched, QEvent *event ) override;
+	bool event(QEvent *event) override;
 public:
 	bool initNode( Node *init_node ) override;
 	~ColorCreateUnityNodeEditorScrollArea( ) override;

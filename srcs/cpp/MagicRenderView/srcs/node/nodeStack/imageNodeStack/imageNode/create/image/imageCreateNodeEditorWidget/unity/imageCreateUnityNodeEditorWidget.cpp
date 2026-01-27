@@ -6,7 +6,7 @@
 #include "../../imageCreateUnityNode.h"
 #include "imageCreateUnityNodeEditorScrollArea.h"
 void ImageCreateUnityNodeEditorWidget::valueChange( QImage new_value ) {
-	buffValue = new_value;
+	buffValue = new_value.copy( );
 }
 ImageCreateUnityNodeEditorWidget::ImageCreateUnityNodeEditorWidget( ImageCreateUnityNode *create_bin_node, QImage *bind_var_ptr ) : createBinNode( create_bin_node ), bindVarPtr( bind_var_ptr ) {
 	if( bind_var_ptr == nullptr )
@@ -37,11 +37,11 @@ bool ImageCreateUnityNodeEditorWidget::initNodeInfo( Node *check_node_ptr ) {
 		return false;
 	if( NodeInfoWidget::initNodeInfo( check_node_ptr ) == false )
 		return false;
-	buffValue = *bindVarPtr;
+	buffValue = bindVarPtr->copy( );
 	imageCreateUnityNodeEditorScrollArea->setCurrentVar( buffValue );
 	return true;
 }
 void ImageCreateUnityNodeEditorWidget::okButtonEvent( ) {
 	NodeInfoWidget::okButtonEvent( );
-	*bindVarPtr = buffValue;
+	*bindVarPtr = buffValue.copy( );
 }

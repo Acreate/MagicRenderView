@@ -23,11 +23,12 @@ bool ColorCreateUnityNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 void ColorCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	if( release_ptr != editorWidget )
 		return;
-	
+
 	editorWidget = nullptr;
 }
 ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
+	editorWidget = nullptr;
 }
 bool ColorCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
