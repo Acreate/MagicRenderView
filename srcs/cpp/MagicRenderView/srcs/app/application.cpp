@@ -69,8 +69,9 @@ Application::~Application( ) {
 	delete appInitRunDataTime;
 }
 bool Application::notify( QObject *object, QEvent *event ) {
+	bool notify;
+	notify = QApplication::notify( object, event );
 	if( object == mainWindow ) {
-		bool notify = QApplication::notify( object, event );
 		auto type = event->type( );
 		QWindowStateChangeEvent *windowStateChangeEvent;
 		QResizeEvent *resizeEvent;
@@ -84,7 +85,6 @@ bool Application::notify( QObject *object, QEvent *event ) {
 				}
 				break;
 			case QEvent::Move :
-
 				moveEvent = static_cast< QMoveEvent * >( event );
 				if( moveEvent ) {
 					mainWindowBuffPoint = moveEvent->oldPos( );
@@ -105,9 +105,9 @@ bool Application::notify( QObject *object, QEvent *event ) {
 
 		}
 
-		return notify;
 	}
-	return QApplication::notify( object, event );
+
+	return notify;
 }
 
 bool Application::event( QEvent *event ) {
@@ -365,7 +365,8 @@ bool Application::widgetAllMoveTargetDispyer( const size_t &displyer_index ) con
 	return true;
 }
 bool Application::runTest( ) {
-	if( testDirector->testAllNodeCreate( ) == false )
-		return false;
+	// todo : 窗口自渲染到缓存可以解决多个节点造成的卡顿问题
+	//if( testDirector->testAllNodeCreate( ) == false )
+	//	return false;
 	return true;
 }
