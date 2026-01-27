@@ -45,7 +45,7 @@ void UIntCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * UIntCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * UIntCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 	return new UIntCreateUnityNodeEditorWidget( this, outputVarPtr );

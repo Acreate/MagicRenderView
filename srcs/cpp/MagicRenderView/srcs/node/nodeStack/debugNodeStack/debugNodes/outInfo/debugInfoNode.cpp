@@ -1,4 +1,4 @@
-﻿#include "debugInfoNode.h"
+#include "debugInfoNode.h"
 
 #include <app/application.h>
 #include <director/printerDirector.h>
@@ -41,7 +41,7 @@ void DebugInfoNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 	debugNodeInfoWidget = nullptr;
 }
 
-NodeInfoWidget * DebugInfoNode::getNodeEditorWidget( ) {
+NodeInfoWidget * DebugInfoNode::getNodeInfoWidget( ) {
 	if( debugNodeInfoWidget )
 		return debugNodeInfoWidget;
 	return new DebugNodeInfoWidget( this );

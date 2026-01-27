@@ -1,4 +1,4 @@
-﻿#ifndef DEBUGINFONODE_H_H_HEAD__FILE__
+#ifndef DEBUGINFONODE_H_H_HEAD__FILE__
 #define DEBUGINFONODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
@@ -18,7 +18,7 @@ public:
 protected:
 	bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
-	NodeInfoWidget * getNodeEditorWidget( ) override;
+	NodeInfoWidget * getNodeInfoWidget( ) override;
 public:
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;
 public:

@@ -44,7 +44,7 @@ void CharCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * CharCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * CharCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 	return new CharCreateUnityNodeEditorWidget( this, outputVarPtr );

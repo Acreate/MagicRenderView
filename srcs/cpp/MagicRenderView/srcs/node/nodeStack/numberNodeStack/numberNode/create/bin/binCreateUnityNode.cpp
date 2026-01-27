@@ -38,7 +38,7 @@ void BinCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * BinCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * BinCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 	return new BinCreateUnityNodeEditorWidget( this, outputVarPtr );

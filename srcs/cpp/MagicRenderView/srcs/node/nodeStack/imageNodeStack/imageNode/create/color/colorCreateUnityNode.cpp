@@ -1,12 +1,31 @@
-﻿#include "colorCreateUnityNode.h"
+#include "colorCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
 #include "../../../../../nodeTools/nodeTools.h"
+#include "colorCreateNodeEditorWidget/unity/colorCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( ColorCreateUnityNode, Node::tr( "创建/单元/颜色" ) );
 
+NodeInfoWidget * ColorCreateUnityNode::getNodeInfoWidget( ) {
+	if( editorWidget )
+		return editorWidget;
+	return new ColorCreateUnityNodeEditorWidget( this, outputVarPtr );
+}
+bool ColorCreateUnityNode::initNodeInfoWidget( NodeInfoWidget *release_ptr ) {
+	auto nodeEditorWidget = qobject_cast< decltype(editorWidget) >( release_ptr );
+	if( nodeEditorWidget == nullptr )
+		return false;
+	editorWidget = nodeEditorWidget;
+	return true;
+}
+void ColorCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
+	if( release_ptr != editorWidget )
+		return;
+	
+	editorWidget = nullptr;
+}
 ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
 	outputVarPtr = nullptr;
 }

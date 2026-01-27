@@ -44,7 +44,7 @@ void StringCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr )
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * StringCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * StringCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 	return new StringCreateUnityNodeEditorWidget( this, outputVarPtr );

@@ -38,7 +38,7 @@ void BoolCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * BoolCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * BoolCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 

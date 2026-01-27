@@ -15,7 +15,7 @@ protected:
 protected:
 	bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
-	NodeInfoWidget * getNodeEditorWidget( ) override;
+	NodeInfoWidget * getNodeInfoWidget( ) override;
 public:
 	StringCreateUnityNode( const QString &node_name );
 	bool initEx( MainWidget *parent ) override;

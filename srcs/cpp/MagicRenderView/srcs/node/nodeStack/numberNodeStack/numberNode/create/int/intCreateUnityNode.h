@@ -19,7 +19,7 @@ public:
 protected:
 	bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
-	NodeInfoWidget * getNodeEditorWidget( ) override;
+	NodeInfoWidget * getNodeInfoWidget( ) override;
 public:
 	bool readyNodeRunData( ) override;
 	bool fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) override;

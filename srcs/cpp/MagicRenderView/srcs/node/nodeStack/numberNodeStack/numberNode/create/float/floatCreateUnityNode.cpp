@@ -45,7 +45,7 @@ void FloatCreateUnityNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) 
 		return;
 	editorWidget = nullptr;
 }
-NodeInfoWidget * FloatCreateUnityNode::getNodeEditorWidget( ) {
+NodeInfoWidget * FloatCreateUnityNode::getNodeInfoWidget( ) {
 	if( editorWidget )
 		return editorWidget;
 	return new FloatCreateUnityNodeEditorWidget( this, outputVarPtr );

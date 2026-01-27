@@ -1,4 +1,4 @@
-﻿#include "previewImageNode.h"
+#include "previewImageNode.h"
 
 #include <app/application.h>
 #include <tools/infoTool.h>
@@ -37,7 +37,7 @@ void PreviewImageNode::releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) {
 		return;
 	imagePreviewPtr = nullptr;
 }
-NodeInfoWidget * PreviewImageNode::getNodeEditorWidget( ) {
+NodeInfoWidget * PreviewImageNode::getNodeInfoWidget( ) {
 	if( imagePreviewPtr )
 		return imagePreviewPtr;
 	return new ImagePreviewInfoWidget( this );

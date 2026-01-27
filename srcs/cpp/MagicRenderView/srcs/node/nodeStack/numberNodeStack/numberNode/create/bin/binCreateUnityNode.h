@@ -1,4 +1,4 @@
-﻿#ifndef BINCREATEUNITYNODE__H_H_HEAD__FILE__
+#ifndef BINCREATEUNITYNODE__H_H_HEAD__FILE__
 #define BINCREATEUNITYNODE__H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
@@ -20,7 +20,7 @@ public:
 protected:
 	bool initNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
 	void releaseNodeInfoWidget( NodeInfoWidget *release_ptr ) override;
-	NodeInfoWidget * getNodeEditorWidget( ) override;
+	NodeInfoWidget * getNodeInfoWidget( ) override;
 public:
 	bool formUint8ArrayData( size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) override;
 	bool toUint8VectorData( std::vector< uint8_t > &result_vector_data ) override;

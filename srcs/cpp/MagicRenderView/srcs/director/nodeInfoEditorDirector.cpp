@@ -1,4 +1,4 @@
-﻿#include "nodeInfoEditorDirector.h"
+#include "nodeInfoEditorDirector.h"
 
 #include <QScrollBar>
 
@@ -189,7 +189,7 @@ bool NodeInfoEditorDirector::getNodeInfoEditorWidget( Node *node_ptr, NodeInfoWi
 			return true;
 		}
 	// 获取窗口
-	result_node_info_editor_widget = node_ptr->getNodeEditorWidget( );
+	result_node_info_editor_widget = node_ptr->getNodeInfoWidget( );
 	if( result_node_info_editor_widget )
 		if( result_node_info_editor_widget->checkNodeValid( node_ptr ) ) {
 			appendEditorWidgetPackage( result_node_info_editor_widget );

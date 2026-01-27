@@ -1,4 +1,4 @@
-﻿#include "node.h"
+#include "node.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
@@ -110,7 +110,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	// 创建节点工具
 	nodeToolsPtr = new NodeTools( this );
 }
-NodeInfoWidget * Node::getNodeEditorWidget( ) {
+NodeInfoWidget * Node::getNodeInfoWidget( ) {
 	return nullptr;
 }
 bool Node::bindPortInfo( ) {

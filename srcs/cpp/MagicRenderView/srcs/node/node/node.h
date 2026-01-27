@@ -1,4 +1,4 @@
-﻿#ifndef NODE_H_H_HEAD__FILE__
+#ifndef NODE_H_H_HEAD__FILE__
 #define NODE_H_H_HEAD__FILE__
 
 #include <QWidget>
@@ -141,7 +141,7 @@ protected:
 	virtual bool init( MainWidget *parent );
 	/// @brief 该窗口应该被 NodeInfoEditorDirector::getNodeInfoEditorWidget 调用，并且交由 NodeInfoEditorDirector 销毁
 	/// @return 成功返回编辑窗口
-	virtual NodeInfoWidget * getNodeEditorWidget( );
+	virtual NodeInfoWidget * getNodeInfoWidget( );
 public:
 	/// @brief 配置首次运行所需要的数据
 	/// @return 失败返回 false
