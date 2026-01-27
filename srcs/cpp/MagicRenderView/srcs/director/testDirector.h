@@ -10,6 +10,7 @@ protected:
 	/// @brief 测试全局节点的创建
 	/// @return 成功返回 true
 	virtual bool testAllNodeCreate( );
+	
 public:
 	~TestDirector( ) override { }
 };

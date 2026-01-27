@@ -365,8 +365,13 @@ bool Application::widgetAllMoveTargetDispyer( const size_t &displyer_index ) con
 	return true;
 }
 bool Application::runTest( ) {
-	// todo : 窗口自渲染到缓存可以解决多个节点造成的卡顿问题
+	// todo : 窗口自渲染到缓存可以解决多个节点造成的卡顿问题(RenderImageDirector::renderWidget)
 	//if( testDirector->testAllNodeCreate( ) == false )
+	//	return false;
+	//QImage buff;
+	//renderImageDirector->renderWidget( mainWindow, buff );
+	//bool save = buff.save( "存档.png", "png" );
+	//if( save == false )
 	//	return false;
 	return true;
 }

@@ -341,7 +341,6 @@ void MainWidget::paintEvent( QPaintEvent *event ) {
 		// 拖拽
 	} else {
 		painter = new QPainter( this );
-		qDebug( ) << __func__;
 		nodeDirector->drawLinkLines( *painter );
 	}
 	if( painter )

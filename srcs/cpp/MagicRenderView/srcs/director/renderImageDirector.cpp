@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QFontMetrics>
 #include <QPainter>
+#include <QWidget>
 RenderImageDirector::RenderImageDirector( ) {
 	font = new QFont( );
 }
@@ -59,4 +60,14 @@ const QFont & RenderImageDirector::getFont( ) const {
 
 void RenderImageDirector::setFont( const QFont &font ) {
 	*this->font = font;
+}
+bool RenderImageDirector::renderWidget( QWidget *render_target_widget, QImage &resul_render_target ) {
+	if( render_target_widget == nullptr )
+		return false;
+	resul_render_target = QImage( render_target_widget->size( ), QImage::Format_RGBA8888 );
+	QPainter imageTargetPainter( &resul_render_target );
+	render_target_widget->render( &imageTargetPainter );
+	if( resul_render_target.isNull( ) )
+		return false;
+	return true;
 }

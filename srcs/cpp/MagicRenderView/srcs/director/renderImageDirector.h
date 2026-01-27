@@ -19,6 +19,7 @@ public:
 	virtual bool renderText( const QString &render_target_text, const QColor &draw_text_color, QImage &result_render_target );
 	virtual const QFont & getFont( ) const;
 	virtual void setFont( const QFont &font );
+	virtual bool renderWidget( QWidget *render_target_widget, QImage &resul_render_target );
 };
 
 #endif // RENDERIMAGEDIRECTOR_H_H_HEAD__FILE__
