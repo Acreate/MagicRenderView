@@ -373,8 +373,8 @@ bool Application::runTest( ) {
 	//bool save = buff.save( "存档.png", "png" );
 	//if( save == false )
 	//	return false;
-	QString owner;
-	if( pathTools::getFileOwner( applicationFilePath( ), owner ) == true )
-		printerDirector->info( owner, Create_SrackInfo( ) );
+	//QString owner;
+	//if( pathTools::getFileOwner( applicationFilePath( ), owner ) == true )
+	//	printerDirector->info( owner, Create_SrackInfo( ) );
 	return true;
 }

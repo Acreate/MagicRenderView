@@ -97,65 +97,18 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 	if( !fileInfo.exists( ) )
 		return false;
 	result_file_owner = fileInfo.absoluteFilePath( );
-	auto instancePtr = Application::getInstancePtr( );
 	QProcess process;
 	QStringList standarOutputSplit;
 	QProcessEnvironment environment = QProcessEnvironment::systemEnvironment( );
-	bool processOver = true;
-	bool findtOwner = false;
 #ifdef Q_OS_WIN
 	// Windows平台
-	QObject::connect( &process, &QProcess::started, [&]( ) {
-		processOver = false;
-	} );
-	QObject::connect( &process, &QProcess::readyRead, [&]( ) {
-		if( findtOwner == true )
-			return;
-		result_file_owner = QString::fromLocal8Bit( process.readAllStandardOutput( ).data( ) );
-		standarOutputSplit = result_file_owner.split( "\n" );
-		qsizetype outCount = standarOutputSplit.size( );
-		QString *outArray;
-		QStringList subSplit;
-		qsizetype subCount, index, subIndex;
-		QString *data;
-		QFileInfo info( get_file_path );
-		result_file_owner = info.fileName( );
-		if( outCount ) {
-			outArray = standarOutputSplit.data( );
-			for( index = 0; index < outCount; ++index ) {
-				subSplit = outArray[ index ].split( " " );
-				subCount = subSplit.size( );
-				if( subCount == 0 )
-					continue;
-				data = subSplit.data( );
-				for( subIndex = 0; subIndex < subCount; ++subIndex ) {
-					data[ subIndex ] = data[ subIndex ].trimmed( );
-					if( data[ subIndex ].isEmpty( ) )
-						continue;
-					if( data[ subIndex ] == result_file_owner ) {
-						--subIndex;
-						for( ; subIndex != 0; --subIndex )
-							if( data[ subIndex ].isEmpty( ) == false ) {
-								result_file_owner = data[ subIndex ];
-								findtOwner = true;
-								break;
-							}
-						return; // 匹配到了
-					}
-				}
-			}
-		}
-	} );
-	QObject::connect( &process, &QProcess::finished, [&] ( int exitCode, QProcess::ExitStatus exitStatus ) {
-		processOver = true;
-	} );
+
 	auto pathValue = environment.value( "path" );
 	pathValue.append( ";" ).append( QDir::currentPath( ) );
 	environment.insert( "path", pathValue );
 	process.setProcessEnvironment( environment );
 	process.setProcessChannelMode( QProcess::MergedChannels );
 
-	standarOutputSplit.clear( );
 	standarOutputSplit.append( "/c" );
 	standarOutputSplit.append( result_file_owner.mid( 0, 2 ) );
 	standarOutputSplit.append( "&&" );
@@ -167,11 +120,42 @@ bool pathTools::getFileOwner( const QString &get_file_path, QString &result_file
 	standarOutputSplit.append( result_file_owner );
 	process.start( "cmd.exe", standarOutputSplit );
 
-	while( processOver == false )
-		instancePtr->processEvents( );
-	if( process.exitCode( ) != 0 )
+	process.waitForFinished( );
+
+	result_file_owner = process.readAllStandardOutput( ).trimmed( );
+	if( result_file_owner.isEmpty( ) )
 		return false;
-	return findtOwner;
+	standarOutputSplit = result_file_owner.split( "\n" );
+	qsizetype outCount = standarOutputSplit.size( );
+	if( outCount == 0 )
+		return false;
+	QString *outArray;
+	QStringList subSplit;
+	qsizetype subCount, index, subIndex;
+	QString *data;
+	result_file_owner = fileInfo.fileName( );
+	outArray = standarOutputSplit.data( );
+	for( index = 0; index < outCount; ++index ) {
+		subSplit = outArray[ index ].split( " " );
+		subCount = subSplit.size( );
+		if( subCount == 0 )
+			continue;
+		data = subSplit.data( );
+		for( subIndex = 0; subIndex < subCount; ++subIndex ) {
+			data[ subIndex ] = data[ subIndex ].trimmed( );
+			if( data[ subIndex ].isEmpty( ) )
+				continue;
+			if( data[ subIndex ] == result_file_owner ) {
+				--subIndex;
+				for( ; subIndex != 0; --subIndex )
+					if( data[ subIndex ].isEmpty( ) == false ) {
+						result_file_owner = data[ subIndex ];
+						return true; // 匹配到了
+					}
+			}
+		}
+	}
+	return false;
 
 #elif defined(Q_OS_LINUX)
 	// Linux平台：读取扩展属性（需要安装attr库）
