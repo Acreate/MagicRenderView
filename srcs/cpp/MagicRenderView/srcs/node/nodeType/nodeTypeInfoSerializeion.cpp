@@ -1,4 +1,4 @@
-﻿#include "nodeTypeInfoSerializeion.h"
+#include "nodeTypeInfoSerializeion.h"
 
 #include "../../app/application.h"
 #include "../../director/printerDirector.h"
@@ -18,10 +18,15 @@ void NodeTypeInfoSerializeion::clearNodeVector( ) {
 	nodeObjPtr.clear( );
 }
 bool NodeTypeInfoSerializeion::appendNodePtr( Node *append_node_ptr ) {
+	uint64_t compGenerateCode;
+	size_t index;
 	if( nodeObjPtrArrayCount != 0 ) {
-		auto compGenerateCode = append_node_ptr->generateCode;
-		for( size_t index = 0; index < nodeObjPtrArrayCount; ++index )
-			if( append_node_ptr == nodeObjPtrArrayPtr[ index ] ) {
+		compGenerateCode = append_node_ptr->generateCode;
+		index = 0;
+		for( ; index < nodeObjPtrArrayCount; ++index )
+			if( nodeObjPtrArrayPtr[ index ] == nullptr )
+				continue;
+			else if( append_node_ptr == nodeObjPtrArrayPtr[ index ] ) {
 				Application::getInstancePtr( )->getPrinterDirector( )->info( QObject::tr( "重复添加的节点[%1]" ).arg( append_node_ptr->toQString( ) ), Create_SrackInfo( ) );
 				return false; // 存在已知对象
 			} else if( compGenerateCode == nodeObjPtrArrayPtr[ index ]->generateCode ) {

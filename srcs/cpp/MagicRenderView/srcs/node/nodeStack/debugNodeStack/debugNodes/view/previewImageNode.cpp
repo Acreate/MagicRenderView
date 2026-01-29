@@ -56,7 +56,7 @@ bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 		return true;
 	}
 	imagePreviewPtr->show( );
-
+	imagePreviewPtr->clear( );
 	auto outputPorts = nodeToolsPtr->getRefPort( imageInputPortPtr );
 	size_t count = outputPorts->size( );
 	if( count == 0 )

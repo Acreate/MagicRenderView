@@ -7,49 +7,43 @@
 
 using t_current_unity_type = QImage;
 
-namespace infoTool {
-	template<>
-	inline bool fillTypeVarAtVector< QImage >( const void *ptr, std::vector< uint8_t > &result ) {
-		QImage *imagePtr = ( QImage * ) ptr;
-		std::vector< uint8_t > buff;
+inline bool fillTypeVarAtVector( const void *ptr, std::vector< uint8_t > &result ) {
+	QImage *imagePtr = ( QImage * ) ptr;
+	std::vector< uint8_t > buff;
 
-		QByteArray ba;
-		QBuffer buffer( &ba );
-		buffer.open( QIODevice::WriteOnly );
-		imagePtr->save( &buffer, "PNG" );
+	QByteArray ba;
+	QBuffer buffer( &ba );
+	buffer.open( QIODevice::WriteOnly );
+	imagePtr->save( &buffer, "PNG" );
 
-		auto data = ba.constData( );
-		auto converVar = ba.size( );
-		if( fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
-			return false;
-		if( converVar == 0 )
-			return true;
-		if( fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
-			return false;
-		result.append_range( buff );
+	auto data = ba.constData( );
+	auto converVar = ba.size( );
+	if( infoTool::fillTypeVarAtVector< uint64_t >( &converVar, result ) == false )
+		return false;
+	if( converVar == 0 )
+		return true;
+	if( infoTool::fillVectorTarget( ( uint8_t * ) data, converVar, buff ) == false )
+		return false;
+	result.append_range( buff );
+	return true;
+}
+inline bool fillTypeVectorAtVar( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QImage *target_var_ptr ) {
+	result_count = *( uint64_t * ) source_ptr;
+	size_t sizeTypeCount = sizeof( uint64_t );
+
+	if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
+		result_count = sizeTypeCount;
 		return true;
 	}
-	template<>
-	inline bool fillTypeVectorAtVar< QImage >( uint64_t &result_count, const uint8_t *source_ptr, const size_t &source_count, QImage *target_var_ptr ) {
-		result_count = *( uint64_t * ) source_ptr;
-		size_t sizeTypeCount = sizeof( uint64_t );
-
-		if( result_count == 0 ) {// 字符串为空时，直接返回长度匹配大小
-			result_count = sizeTypeCount;
-			return true;
-		}
-		size_t mod = source_count - sizeTypeCount;
-		if( mod < result_count )
-			return false;
-		auto offset = source_ptr + sizeTypeCount;
-		QByteArray ba( ( const char * ) offset, result_count );
-		target_var_ptr->loadFromData( ba );
-		result_count = result_count + sizeTypeCount;
-		return result_count;
-	}
-
+	size_t mod = source_count - sizeTypeCount;
+	if( mod < result_count )
+		return false;
+	auto offset = source_ptr + sizeTypeCount;
+	QByteArray ba( ( const char * ) offset, result_count );
+	target_var_ptr->loadFromData( ba );
+	result_count = result_count + sizeTypeCount;
+	return result_count;
 }
-
 ImageUnityStack::~ImageUnityStack( ) {
 
 }
@@ -64,7 +58,7 @@ ImageUnityStack::ImageUnityStack( ) {
 
 bool ImageUnityStack::toObj( uint64_t &result_count, const uint8_t *obj_start_ptr, const size_t &obj_memory_size, void *&result_obj_ptr ) {
 	t_current_unity_type buffVar;
-	if( infoTool::fillTypeVectorAtVar< t_current_unity_type >( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
+	if( fillTypeVectorAtVar( result_count, obj_start_ptr, obj_memory_size, &buffVar ) == false )
 		return false;
 	if( hasVarPtr( result_obj_ptr ) == false ) {
 		t_current_unity_type *sourcePtr = nullptr;
@@ -83,7 +77,7 @@ TypeEnum::Type ImageUnityStack::getType( ) {
 	return TypeEnum::Type::Unity;
 }
 bool ImageUnityStack::toVectorData( void *obj_start_ptr, std::vector< uint8_t > &result_data ) {
-	if( infoTool::fillTypeVarAtVector< t_current_unity_type >( obj_start_ptr, result_data ) == false )
+	if( fillTypeVarAtVector( obj_start_ptr, result_data ) == false )
 		return false;
 	return true;
 }

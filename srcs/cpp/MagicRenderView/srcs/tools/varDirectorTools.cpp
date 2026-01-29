@@ -1,4 +1,4 @@
-﻿#include "varDirectorTools.h"
+#include "varDirectorTools.h"
 
 #include <QColor>
 #include <QDateTime>
@@ -425,4 +425,40 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 	}
 
 	return false;
+}
+bool VarDirectorTools::formUint8ArrayData( VarDirector *varDirectorPtr, void *&var_ptr, size_t &result_use_count, const uint8_t *source_array_ptr, const size_t &source_array_count ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	void *converPtr = uint64Ptr;
+	if( varDirector.toVar( result_use_count, source_array_ptr, source_array_count, converPtr ) == false )
+		return false;
+	auto mod = source_array_count - result_use_count;
+	if( mod < *uint64Ptr )
+		return false;
+	auto offset = source_array_ptr + result_use_count;
+	if( varDirectorPtr->toVar( result_use_count, offset, mod, var_ptr ) == false )
+		return false;
+	result_use_count = offset + result_use_count - source_array_ptr;
+	return true;
+}
+
+bool VarDirectorTools::toUint8VectorData( VarDirector *varDirectorPtr, void *&var_ptr, std::vector< uint8_t > &result_vector_data ) {
+	VarDirector varDirector;
+	if( varDirector.init( ) == false )
+		return false;
+	uint64_t *uint64Ptr = nullptr;
+	if( varDirector.create( uint64Ptr ) == false )
+		return false;
+	std::vector< uint8_t > buff;
+	if( varDirectorPtr->toVector( var_ptr, buff ) == false )
+		return false;
+	*uint64Ptr = buff.size( );
+	if( varDirector.toVector( uint64Ptr, result_vector_data ) == false )
+		return false;
+	result_vector_data.append_range( buff );
+	return true;
 }
