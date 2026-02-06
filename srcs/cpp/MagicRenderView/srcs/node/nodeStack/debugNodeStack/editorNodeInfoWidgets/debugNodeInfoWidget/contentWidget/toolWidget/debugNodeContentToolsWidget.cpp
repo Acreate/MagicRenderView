@@ -1,10 +1,11 @@
-﻿#include "debugNodeContentToolsWidget.h"
+#include "debugNodeContentToolsWidget.h"
 
 #include <app/application.h>
 #include <director/builderDirector.h>
 #include <node/node/node.h>
 #include <qpushbutton.h>
 #include <QVBoxLayout>
+
 void DebugNodeContentToolsWidget::RunBtnClick( ) {
 	if( targetNode )
 		emit click_builder_target_signal( targetNode );

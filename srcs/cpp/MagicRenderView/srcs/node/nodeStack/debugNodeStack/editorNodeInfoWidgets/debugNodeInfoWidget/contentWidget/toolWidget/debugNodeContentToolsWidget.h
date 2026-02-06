@@ -1,9 +1,10 @@
-﻿#ifndef DEBUGNODECONTENTTOOLSWIDGET_H_H_HEAD__FILE__
+#ifndef DEBUGNODECONTENTTOOLSWIDGET_H_H_HEAD__FILE__
 #define DEBUGNODECONTENTTOOLSWIDGET_H_H_HEAD__FILE__
 
 
 #include <QWidget>
 
+class SrackInfo;
 class BuilderDirector;
 class QVBoxLayout;
 class QPushButton;

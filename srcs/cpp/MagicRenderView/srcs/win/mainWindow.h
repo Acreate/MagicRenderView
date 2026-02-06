@@ -1,4 +1,4 @@
-﻿#ifndef MAINWINDOW_H_H_HEAD__FILE__
+#ifndef MAINWINDOW_H_H_HEAD__FILE__
 #define MAINWINDOW_H_H_HEAD__FILE__
 
 #include <QMainWindow>
@@ -46,21 +46,21 @@ protected:
 	HelpApplicationMenu *helpMenu;
 
 	BuilderApplicationToolBar *builderToolBar;
-	AboutApplicationWindow* aboutApplicationWindowPtr;
+	AboutApplicationWindow *aboutApplicationWindowPtr;
 protected:
 	MainWindow( );
 	virtual bool init( );
-	
 protected Q_SLOTS:
 	virtual void selectNode_Slot( MainWidget *sender_signal_ptr, Node *select_node_ptr );
 	virtual void triggActionSignal( NormalApplicationAction *action );
 	virtual void triggMenuActionSignal( NormalApplicationMenu *normal_application_menu, NormalApplicationAction *action );
 	virtual void triggToolbarActionSignal( NormalApplicationToolBar *normal_application_tool_bar, NormalApplicationAction *action );
+	virtual void select_node_Signal( MainWidget *sender_signal_ptr, Node *select_node_ptr );
 public:
 	~MainWindow( ) override;
 	virtual MainWidgetScrollArea * getMainWidgetScrollArea( ) const { return mainWidgetScrollArea; }
 	virtual MainWidget * getMainWidget( ) const { return mainWidget; }
-	virtual bool popAboutApplicationWindow();
+	virtual bool popAboutApplicationWindow( );
 public:
 	virtual bool copySelectNodeInfo( );
 	virtual bool pastePointNodeInfo( );
@@ -68,7 +68,7 @@ public:
 	virtual bool cancelNodeInfo( );
 	virtual bool deleteSelectNodeInfo( );
 	virtual bool calculateNodeRenderSize( );
-	virtual bool runToNode( Node* target_node );
+	virtual bool runToNode( Node *target_node );
 protected:
 	void mouseReleaseEvent( QMouseEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;

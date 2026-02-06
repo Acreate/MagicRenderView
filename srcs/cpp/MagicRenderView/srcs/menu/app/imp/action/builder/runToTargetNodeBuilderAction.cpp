@@ -1,4 +1,4 @@
-﻿#include "runToTargetNodeBuilderAction.h"
+#include "runToTargetNodeBuilderAction.h"
 
 #include "../../../../../director/builderDirector.h"
 #include "../../../../../node/node/node.h"
@@ -8,6 +8,7 @@ void RunToTargetNodeBuilderAction::releaTarget( Node *release_target, const Srac
 	if( release_target == targetNode )
 		targetNode = nullptr;
 	disconnect( release_target, &Node::release_node_signal, this, &RunToTargetNodeBuilderAction::releaTarget );
+	this->trigger( );
 }
 void RunToTargetNodeBuilderAction::createNodeRunInfoAction( ) {
 	NodeRunInfo *nodeRunInfo = builderDirector->getNodeRunInfo( );
@@ -26,7 +27,7 @@ void RunToTargetNodeBuilderAction::releaseNodeRunInfoAction( ) {
 	setText( tr( "未匹配节点" ) );
 }
 void RunToTargetNodeBuilderAction::enabledChanged_Slot( bool change_enbled_flag ) {
-	if( change_enbled_flag == false ) {
+	if( change_enbled_flag == false && targetNode == nullptr ) {
 		thisEnblen = false;
 		targetNode = nullptr;
 		setText( tr( "未匹配节点" ) );

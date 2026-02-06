@@ -1,4 +1,4 @@
-﻿#ifndef NODEINFOEDITORDIRECTOR_H_H_HEAD__FILE__
+#ifndef NODEINFOEDITORDIRECTOR_H_H_HEAD__FILE__
 #define NODEINFOEDITORDIRECTOR_H_H_HEAD__FILE__
 
 #include <QObject>
@@ -38,6 +38,8 @@ public:
 	/// @brief 释放所有节点
 	virtual void releaseNodeEditor( );
 protected:
+	virtual void deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget );
+	virtual void removeEditorWidgetPackage( NodeInfoWidget *node_info_widget );
 	virtual void appendEditorWidgetPackage( NodeInfoWidget *node_info_widget );
 	virtual bool appendCreateWidget( MTKey key, const MTCreateFunction &create_function );
 	virtual bool checkCreateWidget( Node *node_ptr, NodeInfoWidget *create_widget );

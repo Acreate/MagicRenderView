@@ -1,10 +1,11 @@
-﻿#ifndef NODEINFOWIDGET_H_H_HEAD__FILE__
+#ifndef NODEINFOWIDGET_H_H_HEAD__FILE__
 #define NODEINFOWIDGET_H_H_HEAD__FILE__
 
 #include <QScrollArea>
 
 #include "../../../enums/widgetEnum.h"
 
+class SrackInfo;
 class QMenuBar;
 class MainWidgetScrollArea;
 class VarDirector;
@@ -67,6 +68,11 @@ protected:
 protected:
 	bool event( QEvent * ) override;
 	void paintEvent( QPaintEvent *event ) override;
+protected Q_SLOTS:
+	/// @brief 释放对象产生信号
+	/// @param release_node 释放对象指针
+	/// @param srack_info 信号行
+	virtual void releaseNode_Slot( Node *release_node, const SrackInfo &srack_info );
 Q_SIGNALS:
 	void release_signal( NodeInfoWidget *release_ptr );
 	void hide_signal( NodeInfoWidget *hide_ptr );

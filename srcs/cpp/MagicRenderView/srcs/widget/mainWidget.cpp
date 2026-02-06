@@ -234,6 +234,7 @@ void MainWidget::mousePressEvent( QMouseEvent *event ) {
 						offsetPoint = dragNode->mapFromParent( clickPoint );
 						oldSelectNode = dragNode;
 						dragNode->setNodeSelctType( NodeEnum::NodeSelctType::Select_Active );
+						emit select_node_signal( this, dragNode );
 						break;
 					}
 					case NodeEnum::NodeClickType::InputPort :

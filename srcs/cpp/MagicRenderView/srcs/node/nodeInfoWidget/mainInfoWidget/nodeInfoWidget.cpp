@@ -1,4 +1,4 @@
-﻿#include "nodeInfoWidget.h"
+#include "nodeInfoWidget.h"
 
 #include <QPainter>
 #include <QMenuBar>
@@ -69,6 +69,7 @@ bool NodeInfoWidget::initNodeInfo( Node *check_node_ptr ) {
 	if( editorNodeInfoScrollArea->initNode( check_node_ptr ) == false || check_node_ptr->initNodeInfoWidget( this ) == false )
 		return false;
 	titile->setTitleText( check_node_ptr->toQString( ) );
+	connect( check_node_ptr, &Node::release_node_signal, this, &NodeInfoWidget::releaseNode_Slot );
 	return true;
 }
 Node * NodeInfoWidget::getNode( ) const {
@@ -109,4 +110,8 @@ void NodeInfoWidget::paintEvent( QPaintEvent *event ) {
 	QWidget::paintEvent( event );
 	QPainter painter( this );
 	painter.fillRect( contentsRect( ), Qt::GlobalColor::white );
+}
+void NodeInfoWidget::releaseNode_Slot( Node *release_node, const SrackInfo &srack_info ) {
+	hide( );
+	deleteLater( );
 }

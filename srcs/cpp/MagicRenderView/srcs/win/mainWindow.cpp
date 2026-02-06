@@ -1,4 +1,4 @@
-﻿#include "mainWindow.h"
+#include "mainWindow.h"
 
 #include <QShortcut>
 #include <QMessageBox>
@@ -138,6 +138,14 @@ void MainWindow::triggToolbarActionSignal( NormalApplicationToolBar *normal_appl
 	if( action->run( this ) == false )
 		printerDirector->info( tr( "NormalApplicationToolBar [%1] , NormalApplicationAction [%2] 执行异常" ).arg( normal_application_tool_bar->windowTitle( ) ).arg( action->text( ) ),Create_SrackInfo( ) );
 }
+void MainWindow::select_node_Signal( MainWidget *sender_signal_ptr, Node *select_node_ptr ) {
+	if( builderMenu == nullptr )
+		return;
+	auto &menuAction = builderMenu->getNormalMenuAction( );
+	if( menuAction.runToTargetNodeBuilderAction->isEnabled( ) == false )
+		return;
+	selectNode_Slot( mainWidget, select_node_ptr );
+}
 MainWindow::~MainWindow( ) {
 	emit release_signal( this );
 	if( projectMenu )
@@ -193,7 +201,6 @@ bool MainWindow::runToNode( Node *target_node ) {
 	selectNode_Slot( mainWidget, target_node );
 	if( menuAction.runToTargetNodeBuilderAction->isEnabled( ) == false )
 		return false;
-	emit mainWidget->select_node_signal( mainWidget, target_node );
 	menuAction.runToTargetNodeBuilderAction->activate( QAction::Trigger );
 	return false;
 }

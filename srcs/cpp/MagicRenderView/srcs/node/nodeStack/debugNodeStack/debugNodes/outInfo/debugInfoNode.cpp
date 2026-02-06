@@ -1,6 +1,7 @@
 #include "debugInfoNode.h"
 
 #include <app/application.h>
+#include <define/castMacro.h>
 #include <director/printerDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -51,7 +52,9 @@ bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, siz
 	NodeInfoWidget *resultNodeInfoEditorWidget;
 	if( instancePtr->getNodeInfoEditorDirector( )->getNodeInfoEditorWidget( this, resultNodeInfoEditorWidget ) == false )
 		return true;
-	if( debugNodeInfoWidget != resultNodeInfoEditorWidget ) {
+	if( debugNodeInfoWidget == nullptr )
+		QObject_Cast( debugNodeInfoWidget, resultNodeInfoEditorWidget );
+	if( debugNodeInfoWidget == nullptr || debugNodeInfoWidget != resultNodeInfoEditorWidget ) {
 		resultNodeInfoEditorWidget->hide( );
 		return true;
 	}

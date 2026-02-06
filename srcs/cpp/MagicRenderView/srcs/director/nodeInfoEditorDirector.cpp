@@ -36,6 +36,7 @@ bool NodeInfoEditorDirector::checkCreateWidget( Node *node_ptr, NodeInfoWidget *
 }
 void NodeInfoEditorDirector::hide_NodeInfoWidget_signal( NodeInfoWidget *hide_ptr ) {
 	//clearNodeEditorResources( );
+	deleteEditorWidgetPackage( hide_ptr );
 }
 NodeInfoEditorDirector::NodeInfoEditorDirector( ) { }
 void NodeInfoEditorDirector::clearNodeEditorResources( ) {
@@ -111,6 +112,27 @@ void NodeInfoEditorDirector::releaseNodeEditor( ) {
 	for( index = 0; index < destArrayPtrIndex; ++index )
 		delete destArrayPtr[ index ];
 	delete copyVector;
+}
+void NodeInfoEditorDirector::deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
+	auto count = editorWidgetPackage.size( );
+	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	size_t index;
+	for( index = 0; index < count; ++index )
+		if( nodeInfoWidgetArrayPtr[ index ] == node_info_widget ) {
+			nodeInfoWidgetArrayPtr[ index ] = nullptr;
+			delete node_info_widget;
+			return;
+		}
+}
+void NodeInfoEditorDirector::removeEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
+	auto count = editorWidgetPackage.size( );
+	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
+	size_t index;
+	for( index = 0; index < count; ++index )
+		if( nodeInfoWidgetArrayPtr[ index ] == node_info_widget ) {
+			nodeInfoWidgetArrayPtr[ index ] = nullptr;
+			return;
+		}
 }
 NodeInfoEditorDirector::~NodeInfoEditorDirector( ) {
 	releaseNodeEditor( );

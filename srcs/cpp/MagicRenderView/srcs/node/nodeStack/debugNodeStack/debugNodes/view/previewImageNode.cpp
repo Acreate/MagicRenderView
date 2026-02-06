@@ -1,6 +1,7 @@
 #include "previewImageNode.h"
 
 #include <app/application.h>
+#include <define/castMacro.h>
 #include <tools/infoTool.h>
 
 #include <node/port/inputPort/unity/imageInputPort.h>
@@ -47,7 +48,9 @@ bool PreviewImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 	NodeInfoWidget *resultNodeInfoEditorWidget;
 	if( instancePtr->getNodeInfoEditorDirector( )->getNodeInfoEditorWidget( this, resultNodeInfoEditorWidget ) == false )
 		return true;
-	if( imagePreviewPtr != resultNodeInfoEditorWidget ) {
+	if( imagePreviewPtr == nullptr )
+		QObject_Cast( imagePreviewPtr, resultNodeInfoEditorWidget );
+	if( imagePreviewPtr == nullptr || imagePreviewPtr != resultNodeInfoEditorWidget ) {
 		resultNodeInfoEditorWidget->hide( );
 		return true;
 	}
