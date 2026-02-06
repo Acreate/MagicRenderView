@@ -336,7 +336,7 @@ bool pathTools::getOnPathInfoVector( const QString &get_path, std::vector< QStri
 	QDir info( get_path );
 	if( info.exists( ) == false )
 		return false;
-	auto entryInfoList = info.entryInfoList( QDir::NoDotAndDotDot );
+	auto entryInfoList = info.entryInfoList( QDir::AllEntries | QDir::NoDotAndDotDot );
 	qsizetype count = entryInfoList.size( );
 	auto entryInfoArray = entryInfoList.data( );
 	size_t index = 0;
