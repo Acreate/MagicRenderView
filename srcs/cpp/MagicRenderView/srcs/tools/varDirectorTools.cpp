@@ -102,7 +102,9 @@ bool VarDirectorTools::isTrue( const VarDirector *varDirectorPtr, const void *va
 
 	return true;
 }
-
+inline QString jionDebugQStringList( const QStringList &jion_string_list ) {
+	return "{\n\t" + jion_string_list.join( "\n\t" ) + "\n}";
+}
 bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void *conver_var_ptr, QString &result_string ) {
 	if( var_director_ptr == nullptr || conver_var_ptr == nullptr )
 		return false;
@@ -246,7 +248,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = "{\t" + buffList.join( ",\n\t" ) + "}";
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, uint16ArrayPtr ) == true ) {
@@ -256,7 +258,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, uint32ArrayPtr ) == true ) {
@@ -266,7 +268,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, uint64ArrayPtr ) == true ) {
@@ -276,7 +278,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 
@@ -287,7 +289,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, int16ArrayPtr ) == true ) {
@@ -297,7 +299,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, int32ArrayPtr ) == true ) {
@@ -307,7 +309,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, int64ArrayPtr ) == true ) {
@@ -317,7 +319,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, floatArrayPtr ) == true ) {
@@ -327,7 +329,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, doubleArrayPtr ) == true ) {
@@ -337,7 +339,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( QString::number( dataPtr[ index ] ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 
@@ -348,7 +350,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ] );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, stringArrayPtr ) == true ) {
@@ -358,7 +360,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ] );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, colorArrayPtr ) == true ) {
@@ -369,7 +371,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		for( ; index < count; ++index )
 			if( infoTool::toString( dataPtr[ index ], result_string ) )
 				buffList.append( result_string );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, imageArrayPtr ) == true ) {
@@ -380,7 +382,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		for( ; index < count; ++index )
 			if( ImageTools::conver::imageToBase64( dataPtr[ index ], result_string ) )
 				buffList.append( result_string );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, nodeTypeInfoArrayPtr ) == true ) {
@@ -390,7 +392,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ]->toString( ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, dateTimeArrayPtr ) == true ) {
@@ -400,7 +402,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ]->toString( "yyyy年MM月dd日.hh时mm分ss秒 z" ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, dateArrayPtr ) == true ) {
@@ -410,7 +412,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ]->toString( "yyyy年MM月dd日" ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 	if( var_director_ptr->cast_ptr( conver_var_ptr, timeArrayPtr ) == true ) {
@@ -420,7 +422,7 @@ bool VarDirectorTools::toString( const VarDirector *var_director_ptr, const void
 		QStringList buffList;
 		for( ; index < count; ++index )
 			buffList.append( dataPtr[ index ]->toString( "hh时mm分ss秒 z" ) );
-		result_string = "{" + buffList.join( "," ) + "}";
+		result_string = jionDebugQStringList( buffList );
 		return true;
 	}
 
