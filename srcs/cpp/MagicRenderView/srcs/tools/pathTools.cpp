@@ -381,6 +381,8 @@ bool pathTools::getInPathInfoVector( const QString &get_path, std::vector< QStri
 				result_dir_path_vector.append_range( dirPathVector );
 				result_file_path_vector.append_range( filePathVector );
 				subContrlPtr->append_range( dirPathVector );
+				dirPathVector.clear( );
+				filePathVector.clear( );
 			}
 		count = subContrlPtr->size( );
 		if( count == 0 )
@@ -394,6 +396,5 @@ bool pathTools::getInPathInfoVector( const QString &get_path, std::vector< QStri
 		// 清理子目录存储
 		subContrlPtr->clear( );
 	} while( true );
-
-	return false;
+	return true;
 }
