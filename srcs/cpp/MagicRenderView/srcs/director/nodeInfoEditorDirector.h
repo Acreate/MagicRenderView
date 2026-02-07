@@ -14,6 +14,7 @@ class MainWindow;
 class MainWidgetScrollArea;
 class NodeInfoEditorDirector : public QObject {
 	Q_OBJECT;
+	friend class NodeInfoWidgetFriendd;
 protected:
 	Application *instancePtr;
 	MainWidget *mainWidget;
@@ -38,8 +39,8 @@ public:
 	/// @brief 释放所有节点
 	virtual void releaseNodeEditor( );
 protected:
-	virtual void deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget );
-	virtual void removeEditorWidgetPackage( NodeInfoWidget *node_info_widget );
+	virtual bool deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget );
+	virtual bool removeEditorWidgetPackage( NodeInfoWidget *node_info_widget );
 	virtual void appendEditorWidgetPackage( NodeInfoWidget *node_info_widget );
 	virtual bool appendCreateWidget( MTKey key, const MTCreateFunction &create_function );
 	virtual bool checkCreateWidget( Node *node_ptr, NodeInfoWidget *create_widget );
@@ -59,4 +60,8 @@ protected:
 	}
 };
 
+class NodeInfoWidgetFriendd {
+	friend class NodeInfoWidget;
+	static bool deleteWidget( NodeInfoWidget *target, NodeInfoEditorDirector *target_management );
+};
 #endif // NODEINFOEDITORDIRECTOR_H_H_HEAD__FILE__

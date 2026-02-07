@@ -1,5 +1,6 @@
 #include "nodeInfoWidget.h"
 
+#include <director/nodeInfoEditorDirector.h>
 #include <QPainter>
 #include <QMenuBar>
 #include <qcoreevent.h>
@@ -113,5 +114,5 @@ void NodeInfoWidget::paintEvent( QPaintEvent *event ) {
 }
 void NodeInfoWidget::releaseNode_Slot( Node *release_node, const SrackInfo &srack_info ) {
 	hide( );
-	deleteLater( );
+	NodeInfoWidgetFriendd::deleteWidget( this, Application::getInstancePtr( )->getNodeInfoEditorDirector( ) );
 }

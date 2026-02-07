@@ -36,7 +36,12 @@ bool NodeInfoEditorDirector::checkCreateWidget( Node *node_ptr, NodeInfoWidget *
 }
 void NodeInfoEditorDirector::hide_NodeInfoWidget_signal( NodeInfoWidget *hide_ptr ) {
 	//clearNodeEditorResources( );
-	deleteEditorWidgetPackage( hide_ptr );
+	//deleteEditorWidgetPackage( hide_ptr );
+}
+bool NodeInfoWidgetFriendd::deleteWidget( NodeInfoWidget *target, NodeInfoEditorDirector *target_management ) {
+	if( target_management == nullptr )
+		return false;
+	return target_management->deleteEditorWidgetPackage( target );
 }
 NodeInfoEditorDirector::NodeInfoEditorDirector( ) { }
 void NodeInfoEditorDirector::clearNodeEditorResources( ) {
@@ -113,7 +118,7 @@ void NodeInfoEditorDirector::releaseNodeEditor( ) {
 		delete destArrayPtr[ index ];
 	delete copyVector;
 }
-void NodeInfoEditorDirector::deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
+bool NodeInfoEditorDirector::deleteEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
 	auto count = editorWidgetPackage.size( );
 	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
 	size_t index;
@@ -121,18 +126,20 @@ void NodeInfoEditorDirector::deleteEditorWidgetPackage( NodeInfoWidget *node_inf
 		if( nodeInfoWidgetArrayPtr[ index ] == node_info_widget ) {
 			nodeInfoWidgetArrayPtr[ index ] = nullptr;
 			delete node_info_widget;
-			return;
+			return false;
 		}
+	return true;
 }
-void NodeInfoEditorDirector::removeEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
+bool NodeInfoEditorDirector::removeEditorWidgetPackage( NodeInfoWidget *node_info_widget ) {
 	auto count = editorWidgetPackage.size( );
 	auto nodeInfoWidgetArrayPtr = editorWidgetPackage.data( );
 	size_t index;
 	for( index = 0; index < count; ++index )
 		if( nodeInfoWidgetArrayPtr[ index ] == node_info_widget ) {
 			nodeInfoWidgetArrayPtr[ index ] = nullptr;
-			return;
+			return false;
 		}
+	return true;
 }
 NodeInfoEditorDirector::~NodeInfoEditorDirector( ) {
 	releaseNodeEditor( );
