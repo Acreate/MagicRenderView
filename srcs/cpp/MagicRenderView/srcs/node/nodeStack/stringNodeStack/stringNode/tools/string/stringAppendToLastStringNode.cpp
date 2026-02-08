@@ -1,4 +1,4 @@
-﻿#include "stringAppendToLastStringNode.h"
+#include "stringAppendToLastStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -33,30 +33,12 @@ bool StringAppendToLastStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringAppendToLastStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto refPorNode = nodeToolsPtr->getRefPort( stringInputPortPtr );
-	size_t count = refPorNode->size( );
-	if( count == 0 )
-		return true;
-	auto outputPort = refPorNode->data( )[ 0 ];
-	auto varDirector = outputPort->getVarDirector( );
-	if( varDirector == nullptr )
-		return true;
-	auto varPtr = outputPort->getVarPtr( );
+	outputVarPtr->clear( );
 	QString *orgString;
-	if( varDirector->cast_ptr( varPtr, orgString ) == false )
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
 		return true;
 	*outputVarPtr = *orgString;
-	refPorNode = nodeToolsPtr->getRefPort( appendLastSubStringInputPortPtr );
-	count = refPorNode->size( );
-	if( count == 0 )
-		return true;
-	outputPort = refPorNode->data( )[ 0 ];
-	varDirector = outputPort->getVarDirector( );
-	if( varDirector == nullptr )
-		return true;
-	varPtr = outputPort->getVarPtr( );
-
-	if( varDirector->cast_ptr( varPtr, orgString ) == false )
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( appendLastSubStringInputPortPtr, orgString ) == false )
 		return true;
 	outputVarPtr->append( *orgString );
 	return true;

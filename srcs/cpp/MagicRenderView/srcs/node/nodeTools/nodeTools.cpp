@@ -1,4 +1,4 @@
-﻿#include "nodeTools.h"
+#include "nodeTools.h"
 
 #include "../../director/varDirector.h"
 #include "../../tools/pathTools.h"
@@ -17,6 +17,50 @@ const std::vector< InputPort * > * NodeTools::getRefPort( const OutputPort *outp
 	if( output_port == nullptr )
 		return nullptr;
 	return &( output_port->refInputPortVector );
+}
+bool NodeTools::getRefPortFrist( OutputPort *output_port, InputPort *&result_input_port, VarDirector *&result_var_director ) {
+	if( output_port->refInputPortVector.size( ) == 0 )
+		return false;
+	result_input_port = output_port->refInputPortVector.data( )[ 0 ];
+	if( result_input_port == nullptr )
+		return false;
+	result_var_director = result_input_port->getVarDirector( );
+	if( result_var_director == nullptr )
+		return false;
+	return true;
+}
+bool NodeTools::getRefPortFrist( const OutputPort *output_port, InputPort *&result_input_port, VarDirector *&result_var_director ) {
+	if( output_port->refInputPortVector.size( ) == 0 )
+		return false;
+	result_input_port = output_port->refInputPortVector.data( )[ 0 ];
+	if( result_input_port == nullptr )
+		return false;
+	result_var_director = result_input_port->getVarDirector( );
+	if( result_var_director == nullptr )
+		return false;
+	return true;
+}
+bool NodeTools::getRefPortFrist( InputPort *input_port, OutputPort *&result_output_port, VarDirector *&result_var_director ) {
+	if( input_port->refOutputPortVector.size( ) == 0 )
+		return false;
+	result_output_port = input_port->refOutputPortVector.data( )[ 0 ];
+	if( result_output_port == nullptr )
+		return false;
+	result_var_director = result_output_port->getVarDirector( );
+	if( result_var_director == nullptr )
+		return false;
+	return true;
+}
+bool NodeTools::getRefPortFrist( const InputPort *input_port, OutputPort *&result_output_port, VarDirector *&result_var_director ) {
+	if( input_port->refOutputPortVector.size( ) == 0 )
+		return false;
+	result_output_port = input_port->refOutputPortVector.data( )[ 0 ];
+	if( result_output_port == nullptr )
+		return false;
+	result_var_director = result_output_port->getVarDirector( );
+	if( result_var_director == nullptr )
+		return false;
+	return true;
 }
 const std::vector< OutputPort * > * NodeTools::getRefPort( const InputPort *input_port ) {
 	if( input_port == nullptr )
@@ -415,6 +459,87 @@ bool NodeTools::finVarDirectorTypeName( const VarDirector *var_type_get_var_dire
 }
 bool NodeTools::finVarDirectorVarPtrTypeName( const VarDirector *var_type_get_var_director, const void *find_var_ptr, QString &result_var_director_type_name ) {
 	return var_type_get_var_director->getObjPtrAtTypeName( find_var_ptr, result_var_director_type_name );
+}
+bool NodeTools::getRefPortFristVar( OutputPort *output_port, const QString &type_name, void *&result_input_port_var ) {
+	InputPort *resultPtr;
+	VarDirector *resultVarDirector;
+	if( getRefPortFrist( output_port, resultPtr, resultVarDirector ) == false )
+		return false;
+	result_input_port_var = resultPtr->getVarPtr( );
+	QString converTypeName;
+	// 检查是否存在指定的类型
+	if( resultVarDirector->getObjPtrAtTypeName( result_input_port_var, converTypeName ) == false )
+		return false;
+	QString targetTypeName;
+	// 获取转换的目标匹配类型名称
+	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
+		return false;
+	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+	if( targetTypeName != converTypeName )
+		return false;
+	// 同一类型返回转换后的类型对象指针
+	return true;
+}
+bool NodeTools::getRefPortFristVar( const OutputPort *output_port, const QString &type_name, void *&result_input_port_var ) {
+	InputPort *resultPtr;
+	VarDirector *resultVarDirector;
+	if( getRefPortFrist( output_port, resultPtr, resultVarDirector ) == false )
+		return false;
+	result_input_port_var = resultPtr->getVarPtr( );
+	QString converTypeName;
+	// 检查是否存在指定的类型
+	if( resultVarDirector->getObjPtrAtTypeName( result_input_port_var, converTypeName ) == false )
+		return false;
+	QString targetTypeName;
+	// 获取转换的目标匹配类型名称
+	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
+		return false;
+	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+	if( targetTypeName != converTypeName )
+		return false;
+	// 同一类型返回转换后的类型对象指针
+	return true;
+}
+bool NodeTools::getRefPortFristVar( InputPort *input_port, const QString &type_name, void *&result_output_port_var ) {
+	OutputPort *resultPtr;
+	VarDirector *resultVarDirector;
+	if( getRefPortFrist( input_port, resultPtr, resultVarDirector ) == false )
+		return false;
+	result_output_port_var = resultPtr->getVarPtr( );
+	QString converTypeName;
+	// 检查是否存在指定的类型
+	if( resultVarDirector->getObjPtrAtTypeName( result_output_port_var, converTypeName ) == false )
+		return false;
+	QString targetTypeName;
+	// 获取转换的目标匹配类型名称
+	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
+		return false;
+	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+	if( targetTypeName != converTypeName )
+		return false;
+	// 同一类型返回转换后的类型对象指针
+	return true;
+}
+bool NodeTools::getRefPortFristVar( const InputPort *input_port, const QString &type_name, void *&result_output_port_var ) {
+
+	OutputPort *resultPtr;
+	VarDirector *resultVarDirector;
+	if( getRefPortFrist( input_port, resultPtr, resultVarDirector ) == false )
+		return false;
+	result_output_port_var = resultPtr->getVarPtr( );
+	QString converTypeName;
+	// 检查是否存在指定的类型
+	if( resultVarDirector->getObjPtrAtTypeName( result_output_port_var, converTypeName ) == false )
+		return false;
+	QString targetTypeName;
+	// 获取转换的目标匹配类型名称
+	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
+		return false;
+	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
+	if( targetTypeName != converTypeName )
+		return false;
+	// 同一类型返回转换后的类型对象指针
+	return true;
 }
 bool NodeTools::appendOutputPortType( Node *append_output_port_target_node, OutputPort *result_output_port ) {
 	return append_output_port_target_node->appendOutputPort( result_output_port );

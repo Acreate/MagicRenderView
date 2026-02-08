@@ -1,4 +1,4 @@
-﻿#include "stringArrayJoinToStringNode.h"
+#include "stringArrayJoinToStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/stringVectorInputPort.h>
@@ -34,37 +34,26 @@ bool StringArrayJoinToStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringArrayJoinToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( stringVectorInputPortPtr );
-	auto count = outputPorts->size( );
-	if( count == 0 )
-		return true;
-	auto outputPort = outputPorts->data( )[ 0 ];
-	auto varDirector = outputPort->getVarDirector( );
-	if( varDirector == nullptr )
-		return true;
-	auto varPtr = outputPort->getVarPtr( );
+
+	QString *stringArrayPtr;
 	std::vector< QString > *stringList;
-	if( varDirector->cast_ptr( varPtr, stringList ) == false )
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringVectorInputPortPtr, stringList ) == false )
 		return true;
-	count = stringList->size( );
-	if( count == 0 )
+	size_t count = stringList->size( );
+	size_t index;
+	if( count < 2 ) { // 过短
+		if( count == 0 )
+			return true;
+		*outputVarPtr = stringList->data( )[ 0 ];
+		return true;
+	}
+
+	QString *joinString;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( jionSubStringInputPortPtr, joinString ) == false )
 		return true;
 	count -= 1;
-	if( count == 0 )
-		return true;
-	outputPorts = nodeToolsPtr->getRefPort( jionSubStringInputPortPtr );
-	size_t index = outputPorts->size( );
-	if( index == 0 )
-		return true;
-	outputPort = outputPorts->data( )[ 0 ];
-	varDirector = outputPort->getVarDirector( );
-	if( varDirector == nullptr )
-		return true;
-	varPtr = outputPort->getVarPtr( );
-	QString *joinString;
-	if( varDirector->cast_ptr( varPtr, joinString ) == false )
-		return true;
-	auto stringArrayPtr = stringList->data( );
+	stringArrayPtr = stringList->data( );
+	*outputVarPtr = stringArrayPtr[ 0 ];
 	for( index = 0; index < count; ++index )
 		*outputVarPtr += stringArrayPtr[ index ] + *joinString;
 	*outputVarPtr += stringArrayPtr[ index ];
