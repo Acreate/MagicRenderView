@@ -1,4 +1,4 @@
-﻿#include "pathGetOnPathInfoArrayNode.h"
+#include "pathGetOnPathInfoArrayNode.h"
 
 #include <app/application.h>
 #include <tools/infoTool.h>

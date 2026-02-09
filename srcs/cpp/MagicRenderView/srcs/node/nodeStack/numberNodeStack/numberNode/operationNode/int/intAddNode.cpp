@@ -1,4 +1,4 @@
-﻿#include "intAddNode.h"
+#include "intAddNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/intInputPort.h>

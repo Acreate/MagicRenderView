@@ -1,4 +1,4 @@
-﻿#include "ifNode.h"
+#include "ifNode.h"
 
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/inputPort/point/pointInputPort.h>

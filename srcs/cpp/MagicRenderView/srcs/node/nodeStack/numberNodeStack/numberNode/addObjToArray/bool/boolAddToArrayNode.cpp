@@ -1,4 +1,4 @@
-﻿#include "boolAddToArrayNode.h"
+#include "boolAddToArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/nodeTools/nodeTools.h>

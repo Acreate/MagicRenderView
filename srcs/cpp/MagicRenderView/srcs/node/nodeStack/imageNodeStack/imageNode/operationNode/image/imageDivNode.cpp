@@ -1,4 +1,4 @@
-﻿#include "imageDivNode.h"
+#include "imageDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/imageInputPort.h>

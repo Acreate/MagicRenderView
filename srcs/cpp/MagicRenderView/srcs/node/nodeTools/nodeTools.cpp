@@ -232,15 +232,6 @@ bool NodeTools::setPortMultiple( OutputPort *output_port, bool multiple ) {
 	output_port->multiple = multiple;
 	return true;
 }
-bool NodeTools::getVarDirector( OutputPort *output_port, VarDirector *&result_var_director, void *&result_var_ptr ) {
-	if( output_port == nullptr )
-		return false;
-	result_var_director = output_port->getVarDirector( );
-	if( result_var_director == nullptr )
-		return false;
-	result_var_ptr = output_port->varPtr;
-	return true;
-}
 bool NodeTools::setVarDirector( OutputPort *output_port, VarDirector *var_director ) {
 	if( output_port == nullptr )
 		return false;
@@ -250,33 +241,10 @@ bool NodeTools::setVarDirector( OutputPort *output_port, VarDirector *var_direct
 bool NodeTools::setVarDirector( InputPort *input_port, VarDirector *var_director ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->inputPortVarDirectorPtr = var_director;
+	input_port->varDirectorPtr = var_director;
 	return true;
 }
-bool NodeTools::getVarInfo( OutputPort *output_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) {
-	if( output_port == nullptr )
-		return false;
-	result_input_port_node_parent = output_port->parentNode;
-	if( result_input_port_node_parent == nullptr )
-		return false;
-	result_var_director = result_input_port_node_parent->varDirector;
-	result_var_ptr = output_port->varPtr;
-	return true;
-}
-bool NodeTools::getVarInfo( OutputPort *output_port_ptr, VarDirector *&result_var_director, void *&result_var_ptr ) {
-	if( output_port_ptr )
-		return false;
-	result_var_director = output_port_ptr->getVarDirector( );
-	result_var_ptr = output_port_ptr->getVarPtr( );
-	return result_var_director != nullptr && result_var_ptr != nullptr;
-}
-bool NodeTools::getVarInfo( InputPort *input_port_ptr, VarDirector *&result_var_director, void *&result_var_ptr ) {
-	if( input_port_ptr )
-		return false;
-	result_var_director = input_port_ptr->getVarDirector( );
-	result_var_ptr = input_port_ptr->getVarPtr( );
-	return result_var_director != nullptr && result_var_ptr != nullptr;
-}
+
 bool NodeTools::getVirtualNormalPath( InputPort *input_port_ptr, QString &resul_normal_path ) {
 	if( input_port_ptr == nullptr )
 		return false;
@@ -397,8 +365,8 @@ std::vector< OutputPort * > * NodeTools::getRefPort( InputPort *input_port ) {
 bool NodeTools::setVarInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->inputPortVarDirectorPtr = var_director;
-	input_port->inputPortVarPtr = var_ptr;
+	input_port->varDirectorPtr = var_director;
+	input_port->varPtr = var_ptr;
 	return true;
 }
 bool NodeTools::bindPortVar( const QString &bind_type_name, OutputPort *bind_output_port, void *&result_var_ptr ) {
@@ -550,24 +518,14 @@ bool NodeTools::appendInputPortType( Node *append_input_port_target_node, Dynami
 bool NodeTools::appendOutputPortType( Node *append_output_port_target_node, DynamicTypeOutputPort *result_output_port ) {
 	return append_output_port_target_node->appendOutputPort( result_output_port );
 }
-bool NodeTools::getVarDirector( InputPort *input_port, VarDirector *&result_var_director, void *&result_var_ptr ) const {
-	if( input_port == nullptr )
+
+bool NodeTools::getVarInfo( const NodePort *input_port_ptr, VarDirector *&result_var_director, void *&result_var_ptr ) {
+	if( input_port_ptr == nullptr )
 		return false;
-	result_var_director = input_port->getVarDirector( );
+	result_var_director = input_port_ptr->getVarDirector( );
 	if( result_var_director == nullptr )
 		return false;
-	result_var_ptr = input_port->inputPortVarPtr;
-	return true;
-}
-bool NodeTools::getVarInfo( InputPort *input_port, Node *&result_input_port_node_parent, VarDirector *&result_var_director, void *&result_var_ptr ) const {
-
-	if( input_port == nullptr )
-		return false;
-	result_input_port_node_parent = input_port->parentNode;
-	if( result_input_port_node_parent == nullptr )
-		return false;
-	result_var_director = result_input_port_node_parent->varDirector;
-	result_var_ptr = input_port->inputPortVarPtr;
+	result_var_ptr = input_port_ptr->getVarPtr( );
 	return true;
 }
 bool NodeTools::setPortMultiple( InputPort *input_port, bool multiple ) {
@@ -579,13 +537,13 @@ bool NodeTools::setPortMultiple( InputPort *input_port, bool multiple ) {
 bool NodeTools::setVarInfo( InputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->inputPortVarPtr = new_par;
+	input_port->varPtr = new_par;
 	return true;
 }
 bool NodeTools::setVarInfo( DynamicTypeInputPort *input_port, void *new_par ) {
 	if( input_port == nullptr )
 		return false;
-	input_port->inputPortVarPtr = new_par;
+	input_port->varPtr = new_par;
 	return true;
 }
 bool NodeTools::getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type ) {

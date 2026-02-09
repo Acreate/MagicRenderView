@@ -1,12 +1,9 @@
-﻿#ifndef INPUTPORT_H_H_HEAD__FILE__
+#ifndef INPUTPORT_H_H_HEAD__FILE__
 #define INPUTPORT_H_H_HEAD__FILE__
 
-#include <QObject>
-#include <QWidget>
-
-#include <enums/nodeEnum.h>
-
 #include <define/portFrinedClass.h>
+
+#include "../nodePort.h"
 
 class SrackInfo;
 class QHBoxLayout;
@@ -17,19 +14,12 @@ class OutputPort;
 class NodePortLinkInfo;
 class Node;
 class NodeRunInfo;
-class InputPort : public QWidget {
+class InputPort : public NodePort {
 	Q_OBJECT;
 private:
 	InputPortFrinedClass( );
 protected:
 	std::vector< OutputPort * > refOutputPortVector;
-	void *inputPortVarPtr;
-	bool multiple;
-	VarDirector *inputPortVarDirectorPtr;
-protected:
-	QString portName;
-	QString varTypeName;
-	uint64_t generateCode;
 protected:
 	QLabel *ico;
 	QLabel *showTitle;
@@ -48,17 +38,9 @@ protected:
 public:
 	InputPort( const QString &name );
 	~InputPort( ) override;
-	virtual bool init( Node *parent );
-	virtual NodeEnum::PortType getPortType( ) const =0;
-	virtual const QString & getPortName( ) const { return portName; }
-	virtual const QString & getVarTypeName( ) const { return varTypeName; }
-	virtual QPoint getLinkPoint( ) const;
-	virtual Node * getParentNode( ) const { return parentNode; }
-	virtual uint64_t getGenerateCode( ) const { return generateCode; }
-	virtual bool isMultiple( ) { return multiple; }
+	bool init( Node *parent ) override;
+	QPoint getLinkPoint( ) const override;
 	virtual bool hasOutputPortRef( const OutputPort *output_port_ptr ) const;
-	virtual void * getVarPtr( ) const { return inputPortVarPtr; }
-	virtual VarDirector * getVarDirector( ) const;
 protected:
 	void paintEvent( QPaintEvent *event ) override;
 	bool event( QEvent *event ) override;

@@ -1,4 +1,4 @@
-﻿#include "writeFileTextNode.h"
+#include "writeFileTextNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfile.h>

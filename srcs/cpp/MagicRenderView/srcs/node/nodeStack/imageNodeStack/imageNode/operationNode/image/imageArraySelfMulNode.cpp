@@ -1,4 +1,4 @@
-﻿#include "imageArraySelfMulNode.h"
+#include "imageArraySelfMulNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/imageVectorInputPort.h>

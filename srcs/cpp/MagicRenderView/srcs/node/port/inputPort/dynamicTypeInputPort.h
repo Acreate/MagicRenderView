@@ -1,8 +1,11 @@
-﻿#ifndef DYNAMICTYPEINPUTPORT_H_H_HEAD__FILE__
+#ifndef DYNAMICTYPEINPUTPORT_H_H_HEAD__FILE__
 #define DYNAMICTYPEINPUTPORT_H_H_HEAD__FILE__
 
 #include "inputPort.h"
 
+namespace NodeEnum {
+	enum class PortType;
+}
 class DynamicTypeInputPort : public InputPort {
 	Q_OBJECT;
 private:

@@ -1,4 +1,4 @@
-﻿#include "uIntArrayDivNode.h"
+#include "uIntArrayDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/uIntVectorInputPort.h>

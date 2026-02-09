@@ -1,4 +1,4 @@
-﻿#include "splitDataTimeNode.h"
+#include "splitDataTimeNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/dateTimeInputPort.h>
@@ -31,17 +31,8 @@ bool SplitDataTimeNode::updateLayout( ) {
 }
 
 bool SplitDataTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( dateTimeInputPortPtr );
-	size_t count = outputPorts->size( );
-	if( count == 0 )
-		return true;
-	auto outputPort = outputPorts->data( )[ 0 ];
-	auto varDirector = outputPort->getVarDirector( );
-	if( varDirector == nullptr )
-		return true;
-	auto varPtr = outputPort->getVarPtr( );
 	QDateTime *converDateTimePtr;
-	if( varDirector->cast_ptr( varPtr, converDateTimePtr ) == false )
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( dateTimeInputPortPtr, converDateTimePtr ) == false )
 		return true;
 	*outDatePtr = converDateTimePtr->date( );
 	*outTimePtr = converDateTimePtr->time( );

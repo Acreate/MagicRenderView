@@ -1,4 +1,4 @@
-﻿#include "colorAddNode.h"
+#include "colorAddNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/colorInputPort.h>

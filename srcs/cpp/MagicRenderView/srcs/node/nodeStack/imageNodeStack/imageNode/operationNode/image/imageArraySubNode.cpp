@@ -1,4 +1,4 @@
-﻿#include "imageArraySubNode.h"
+#include "imageArraySubNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/imageInputPort.h>

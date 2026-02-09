@@ -1,4 +1,4 @@
-﻿#include "floatDivNode.h"
+#include "floatDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/floatInputPort.h>

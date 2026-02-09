@@ -1,4 +1,4 @@
-﻿#include "floatArrayModNode.h"
+#include "floatArrayModNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/floatVectorInputPort.h>

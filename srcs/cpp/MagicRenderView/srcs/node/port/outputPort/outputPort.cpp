@@ -1,4 +1,4 @@
-﻿#include "outputPort.h"
+#include "outputPort.h"
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -72,7 +72,8 @@ bool OutputPort::releasePortInfo( ) {
 		return varDirector->release( varPtr );
 	return false;
 }
-OutputPort::OutputPort( const QString &name ) : portName( name ) {
+OutputPort::OutputPort( const QString &name ) {
+	portName = name;
 	generateCode = 0;
 	multiple = true;
 	varDirectorPtr = nullptr;
@@ -112,13 +113,6 @@ QPoint OutputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
 }
 
-VarDirector * OutputPort::getVarDirector( ) const {
-	if( varDirectorPtr )
-		return varDirectorPtr;
-	if( parentNode )
-		return parentNode->getVarDirector( );
-	return nullptr;
-}
 void OutputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );
 }

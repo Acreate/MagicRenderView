@@ -1,4 +1,4 @@
-﻿#include "intArrayModNode.h"
+#include "intArrayModNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/intInputPort.h>

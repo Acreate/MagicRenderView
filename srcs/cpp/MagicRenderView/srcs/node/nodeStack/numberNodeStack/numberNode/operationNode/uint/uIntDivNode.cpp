@@ -1,4 +1,4 @@
-﻿#include "uIntDivNode.h"
+#include "uIntDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/uIntInputPort.h>

@@ -1,4 +1,4 @@
-﻿#include "binAddToArrayNode.h"
+#include "binAddToArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/binVectorOutputPort.h>
@@ -6,7 +6,6 @@
 #include <node/port/inputPort/unity/binInputPort.h>
 
 #include <node/nodeTools/nodeTools.h>
-
 
 Def_Entity_NodeTypeName_Function( BinAddToArrayNode, Node::tr( "追加/二进制序列" ) );
 

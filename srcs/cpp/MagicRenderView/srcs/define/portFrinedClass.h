@@ -1,6 +1,24 @@
-﻿#ifndef PORTFRINEDCLASS_H_H_HEAD__FILE__
+#ifndef PORTFRINEDCLASS_H_H_HEAD__FILE__
 #define PORTFRINEDCLASS_H_H_HEAD__FILE__
 
+#define Declaration_Class_Name() \
+	class VarDirector; \
+	class Node; \
+	class NodeRefLinkInfo; \
+	class NodePortLinkInfo; \
+	class NodePortLinkActionPair; \
+	class InputportLinkOutputPortInfo; \
+	class NodeDirector; \
+	class NodeStack; \
+	class NodeRefLinkInfoTools; \
+	class NodeBuilderTools; \
+	class NodeRunInfo; \
+	class NormalNodeEditorPropertyMenu; \
+	class NodeTypeInfoSerializeion; \
+	class NodeTypeInfo; \
+	class PortTypeInfo; \
+	class NodeTools; \
+	class PortLinkType
 
 #define ConjugatePortFrinedClass( ) \
 	friend class Node; \
@@ -27,5 +45,8 @@
 #define OutputPortFrinedClass( ) \
 	ConjugatePortFrinedClass( ); \
 	friend class InputPort
+
+#define NodePortFrinedClass( ) \
+	ConjugatePortFrinedClass( );
 
 #endif // PORTFRINEDCLASS_H_H_HEAD__FILE__

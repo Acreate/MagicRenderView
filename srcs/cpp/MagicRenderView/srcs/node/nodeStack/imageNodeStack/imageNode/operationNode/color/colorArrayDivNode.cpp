@@ -1,4 +1,4 @@
-﻿#include "colorArrayDivNode.h"
+#include "colorArrayDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/colorInputPort.h>

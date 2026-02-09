@@ -1,4 +1,4 @@
-﻿#include "imageModNode.h"
+#include "imageModNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/imageInputPort.h>

@@ -1,4 +1,4 @@
-﻿#include "intDivNode.h"
+#include "intDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/intInputPort.h>

@@ -1,4 +1,4 @@
-﻿#include "colorAddToArrayNode.h"
+#include "colorAddToArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/colorVectorInputPort.h>

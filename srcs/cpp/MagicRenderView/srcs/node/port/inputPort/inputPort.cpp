@@ -1,4 +1,4 @@
-﻿#include "inputPort.h"
+#include "inputPort.h"
 
 #include <QHBoxLayout>
 
@@ -48,10 +48,10 @@ void InputPort::clearOutputPortRef( ) {
 		emit dis_connect_input_port_signal( this, outputPort );
 		outputPort->eraseInputPortRef( this );
 	}
-	if( inputPortVarPtr ) {
+	if( varPtr ) {
 		varDirector = parentNode->getVarDirector( );
 		if( varDirector )
-			varDirector->release( inputPortVarPtr );
+			varDirector->release( varPtr );
 	}
 }
 bool InputPort::bindPortInfo( ) {
@@ -73,11 +73,12 @@ bool InputPort::releasePortInfo( ) {
 	//return false;
 	return true;
 }
-InputPort::InputPort( const QString &name ) : portName( name ) {
+InputPort::InputPort( const QString &name ) {
+	portName = name;
 	generateCode = 0;
 	multiple = false;
-	inputPortVarPtr = nullptr;
-	inputPortVarDirectorPtr = nullptr;
+	varPtr = nullptr;
+	varDirectorPtr = nullptr;
 	ico = new QLabel( this );
 	QImage image( ":/nodeitemIco/info_node.png" );
 	ico->setPixmap( QPixmap::fromImage( image ) );
@@ -116,13 +117,6 @@ bool InputPort::hasOutputPortRef( const OutputPort *output_port_ptr ) const {
 
 QPoint InputPort::getLinkPoint( ) const {
 	return ico->mapToGlobal( ico->contentsRect( ).center( ) );
-}
-VarDirector * InputPort::getVarDirector( ) const {
-	if( inputPortVarDirectorPtr )
-		return inputPortVarDirectorPtr;
-	if( parentNode )
-		return parentNode->getVarDirector( );
-	return nullptr;
 }
 void InputPort::paintEvent( QPaintEvent *event ) {
 	//QWidget::paintEvent( event );

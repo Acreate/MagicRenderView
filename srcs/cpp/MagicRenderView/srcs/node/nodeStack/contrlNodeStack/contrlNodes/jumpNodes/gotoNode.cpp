@@ -1,4 +1,6 @@
-﻿#include "gotoNode.h"
+#include "gotoNode.h"
+
+#include <enums/nodeEnum.h>
 
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/anyVar/anyVarInputPort.h"

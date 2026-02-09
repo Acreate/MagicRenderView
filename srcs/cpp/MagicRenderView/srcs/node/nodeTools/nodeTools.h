@@ -9,6 +9,7 @@
 // NodeTools::appendDynamicOutputPortType<>
 // #include <node/port/outputPort/dynamicTypeOutputPort.h>
 
+class NodePort;
 class DynamicTypeInputPort;
 class DynamicTypeOutputPort;
 class VarDirector;
@@ -40,10 +41,7 @@ public:
 	virtual bool setVarInfo( DynamicTypeOutputPort *output_port, void *new_par );
 	virtual bool setVarInfo( OutputPort *output_port, VarDirector *var_director, void *var_ptr );
 	virtual bool setPortMultiple( OutputPort *output_port, bool multiple );
-	virtual bool getVarDirector( OutputPort *output_port, VarDirector * &result_var_director, void *&result_var_ptr );
 	virtual bool setVarDirector( OutputPort *output_port, VarDirector *var_director );
-	virtual bool getVarInfo( OutputPort *output_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr );
-	virtual bool getVarInfo( OutputPort *output_port_ptr, VarDirector *&result_var_director, void * &result_var_ptr );
 
 	virtual std::vector< OutputPort * > * getRefPort( InputPort *input_port );
 	virtual const std::vector< OutputPort * > * getRefPort( const InputPort *input_port );
@@ -58,9 +56,8 @@ public:
 	virtual bool setVarInfo( InputPort *input_port, VarDirector *var_director, void *var_ptr );
 	virtual bool setPortMultiple( InputPort *input_port, bool multiple );
 	virtual bool setVarDirector( InputPort *input_port, VarDirector *var_director );
-	virtual bool getVarDirector( InputPort *input_port, VarDirector * &result_var_director, void *&result_var_ptr ) const;
-	virtual bool getVarInfo( InputPort *input_port, Node * &result_input_port_node_parent, VarDirector * &result_var_director, void *&result_var_ptr ) const;
-	virtual bool getVarInfo( InputPort *input_port_ptr, VarDirector *&result_var_director, void * &result_var_ptr );
+
+	virtual bool getVarInfo( const NodePort *input_port_ptr, VarDirector *&result_var_director, void * &result_var_ptr );
 	// 名称
 public:
 	virtual bool getVirtualNormalPath( InputPort *input_port_ptr, QString &resul_normal_path );
@@ -427,15 +424,11 @@ public:
 public:
 	/// @brief 获取端口类型变量
 	/// @tparam TCreateType 获取变量类型
-	/// @tparam TPortType 获取端口类型
 	/// @param get_port 获取的端口对象
 	/// @param result_ptr 返回的类型变量指针
 	/// @return 成功返回 true
-	template< typename TCreateType, typename TPortType >
-		requires requires ( TPortType *port_type, OutputPort *output_port ) {
-			output_port = port_type;
-		}
-	bool cast_ptr_port_var_ptr( TPortType *get_port, TCreateType * &result_ptr ) {
+	template< typename TCreateType >
+	bool cast_ptr_port_var_ptr( const NodePort *get_port, TCreateType * &result_ptr ) {
 		VarDirector *varDirectorPtr;
 		void *varPtr;
 		if( getVarInfo( get_port, varDirectorPtr, varPtr ) == false )
@@ -460,15 +453,15 @@ public:
 	/// @param output_port 获取的类型变量连接的端口
 	/// @param result_input_port_var 返回变量引用指针
 	/// @return 失败返回 false
-	template< typename TResultType >
-	bool cast_ptr_ref_first_port_var_ptr( OutputPort *output_port, TResultType *&result_input_port_var ) {
-		void *resultPtr;
-		QString typeName = typeid( TResultType ).name( );
-		if( getRefPortFristVar( output_port, typeName, resultPtr ) == false )
-			return false;
-		result_input_port_var = ( TResultType * ) resultPtr;
-		return true;
-	}
+	//template< typename TResultType >
+	//bool cast_ptr_ref_first_port_var_ptr( OutputPort *output_port, TResultType *&result_input_port_var ) {
+	//	void *resultPtr;
+	//	QString typeName = typeid( TResultType ).name( );
+	//	if( getRefPortFristVar( output_port, typeName, resultPtr ) == false )
+	//		return false;
+	//	result_input_port_var = ( TResultType * ) resultPtr;
+	//	return true;
+	//}
 	/// @brief 获取端口引用的首个类型变量引用
 	/// @tparam TResultType 返回对象的类型
 	/// @param output_port 获取的类型变量连接的端口
@@ -488,15 +481,15 @@ public:
 	/// @param input_port 获取的类型变量连接的端口
 	/// @param result_output_port_var 返回变量引用指针
 	/// @return 失败返回 false
-	template< typename TResultType >
-	bool cast_ptr_ref_first_port_var_ptr( InputPort *input_port, TResultType *&result_output_port_var ) {
-		void *resultPtr;
-		QString typeName = typeid( TResultType ).name( );
-		if( getRefPortFristVar( input_port, typeName, resultPtr ) == false )
-			return false;
-		result_output_port_var = ( TResultType * ) resultPtr;
-		return true;
-	}
+	//template< typename TResultType >
+	//bool cast_ptr_ref_first_port_var_ptr( InputPort *input_port, TResultType *&result_output_port_var ) {
+	//	void *resultPtr;
+	//	QString typeName = typeid( TResultType ).name( );
+	//	if( getRefPortFristVar( input_port, typeName, resultPtr ) == false )
+	//		return false;
+	//	result_output_port_var = ( TResultType * ) resultPtr;
+	//	return true;
+	//}
 	/// @brief 获取端口引用的首个类型变量引用
 	/// @tparam TResultType 返回对象的类型
 	/// @param input_port 获取的类型变量连接的端口

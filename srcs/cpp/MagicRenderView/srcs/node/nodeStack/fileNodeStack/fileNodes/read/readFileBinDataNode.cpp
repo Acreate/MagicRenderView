@@ -1,4 +1,4 @@
-﻿#include "readFileBinDataNode.h"
+#include "readFileBinDataNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfileinfo.h>
