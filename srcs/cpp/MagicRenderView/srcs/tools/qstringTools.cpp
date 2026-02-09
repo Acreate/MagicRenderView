@@ -5,10 +5,18 @@ void QStringTools::replace( const QString &org_string, const QString &find_repla
 	std::vector< size_t > indexVector;
 	// 原始字符串长度
 	size_t orgStringLength = org_string.size( );
+	if( orgStringLength == 0 ) {
+		result_over_string.clear( );
+		return;
+	}
 	// 原始字符串数据
 	const QChar *orgStringDataArray = org_string.data( );
 	// 查找字符串长度
 	qsizetype findStringLen = find_replace_string.length( );
+	if( findStringLen == 0 ) {
+		result_over_string = org_string;
+		return;
+	}
 	// 查找字符串数据
 	auto findStringDataArray = find_replace_string.data( );
 	// 遍历下标
@@ -80,6 +88,11 @@ void QStringTools::replace( const QString &org_string, const QString &find_repla
 	}
 	// 原始字符串长度
 	size_t orgStringLength = org_string.size( );
+	if( orgStringLength == 0 ) {
+		if( &result_over_string != &org_string )
+			result_over_string.clear( );
+		return;
+	}
 	if( orgStringLength <= replace_count ) {
 		QStringTools::replace( org_string, find_replace_string, full_replace_string, result_over_string );
 		return;
@@ -90,6 +103,11 @@ void QStringTools::replace( const QString &org_string, const QString &find_repla
 	const QChar *orgStringDataArray = org_string.data( );
 	// 查找字符串长度
 	qsizetype findStringLen = find_replace_string.length( );
+	if( findStringLen == 0 ) {
+		if( &result_over_string != &org_string )
+			result_over_string = org_string;
+		return;
+	}
 	// 查找字符串数据
 	auto findStringDataArray = find_replace_string.data( );
 	// 遍历下标
