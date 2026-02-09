@@ -17,6 +17,7 @@
 #include <cmake_include_to_c_cpp_header_env.h>
 #include <director/renderImageDirector.h>
 #include <director/testDirector.h>
+#include <tools/qstringTools.h>
 
 #include "../director/appDirector.h"
 #include "../director/builderDirector.h"
@@ -373,5 +374,9 @@ bool Application::runTest( ) {
 	//bool save = buff.save( "存档.png", "png" );
 	//if( save == false )
 	//	return false;
+	QString buff1;
+	QString buff2;
+	QStringTools::replace( "888888888888", "888", "123", buff1 );
+	QStringTools::replace( "888888888888", "8", "1", 5, buff2 );
 	return true;
 }

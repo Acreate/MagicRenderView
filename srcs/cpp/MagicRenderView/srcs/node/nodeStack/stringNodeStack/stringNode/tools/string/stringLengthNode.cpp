@@ -1,4 +1,4 @@
-﻿#include "stringLengthNode.h"
+#include "stringLengthNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
@@ -17,7 +17,6 @@ bool StringLengthNode::initEx( MainWidget *parent ) {
 			return false;
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "长度" ), outputPort, outputVarPtr ) == false )
 			return false;
-		*outputVarPtr = -1;
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -31,5 +30,10 @@ bool StringLengthNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringLengthNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	*outputVarPtr = -1;
+	QString *orgString;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+		return true;
+	*outputVarPtr = orgString->length( );
 	return true;
 }

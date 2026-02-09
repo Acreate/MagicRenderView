@@ -1,4 +1,4 @@
-﻿#include "stringSplitStringArrayNode.h"
+#include "stringSplitStringArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -20,7 +20,6 @@ bool StringSplitStringArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		outputVarPtr->clear( );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -34,5 +33,21 @@ bool StringSplitStringArrayNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringSplitStringArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	outputVarPtr->clear( );
+	QString *orgString, *splitString;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+		return true;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( splitSubStringInputPortPtr, splitString ) == false )
+		return true;
+	QStringList stringList = orgString->split( *splitString );
+	qsizetype count = stringList.size( );
+	if( count == 0 )
+		return true;
+	outputVarPtr->resize( count );
+	auto fullTargetArray = outputVarPtr->data( );
+	auto copyTargetArray = stringList.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		fullTargetArray[ index ] = copyTargetArray[ index ];
 	return true;
 }

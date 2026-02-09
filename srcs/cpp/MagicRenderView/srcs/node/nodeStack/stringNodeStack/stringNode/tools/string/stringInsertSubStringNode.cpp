@@ -1,4 +1,4 @@
-﻿#include "stringInsertSubStringNode.h"
+#include "stringInsertSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -23,7 +23,6 @@ bool StringInsertSubStringNode::initEx( MainWidget *parent ) {
 			return false;
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		*outputVarPtr = '\0';
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -37,5 +36,17 @@ bool StringInsertSubStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringInsertSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	outputVarPtr->clear( );
+	QString *orgString, *insertString;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+		return true;
+
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( insertStringInputPortPtr, insertString ) == false )
+		return true;
+	uint64_t *insterIndex;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( insertIndexInputPortPtr, insterIndex ) == false )
+		return true;
+	*outputVarPtr = *orgString;
+	outputVarPtr->insert( *insterIndex, *insertString );
 	return true;
 }

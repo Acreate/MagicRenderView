@@ -1,4 +1,4 @@
-﻿#include "stringRemoveAllSubStringNode.h"
+#include "stringRemoveAllSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -33,5 +33,24 @@ bool StringRemoveAllSubStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringRemoveAllSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	outputVarPtr->clear( );
+	QString *orgString, *removeTargetString;
+	qint64 length;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( orgStringInputPortPtr, orgString ) == false )
+		return true;
+	length = orgString->length( );
+	if( length == 0 )
+		return true;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( removeSubStringInputPortPtr, removeTargetString ) == false )
+		return true;
+	*outputVarPtr = *orgString;
+	qsizetype lastIndexOf;
+	length = removeTargetString->length( );
+	while( length ) {
+		lastIndexOf = outputVarPtr->lastIndexOf( *removeTargetString );
+		if( lastIndexOf == -1 )
+			break;
+		outputVarPtr->remove( lastIndexOf, length );
+	}
 	return true;
 }
