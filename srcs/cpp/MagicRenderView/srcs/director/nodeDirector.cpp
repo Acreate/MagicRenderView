@@ -333,7 +333,9 @@ bool NodeDirector::toUint8VectorData( std::vector< uint8_t > &result_vector_data
 	size_t count = nodeArchiveVector.size( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( nodeTypeInfoSerializeion.appendNodePtr( node[ index ] ) == false ) {
+		if( node[ index ] == nullptr )
+			continue;
+		else if( nodeTypeInfoSerializeion.appendNodePtr( node[ index ] ) == false ) {
 			printerDirector->info( tr( "节点[%1]添加序列失败" ).arg( node[ index ]->toQString( ) ), Create_SrackInfo( ) );
 			return false;
 		}

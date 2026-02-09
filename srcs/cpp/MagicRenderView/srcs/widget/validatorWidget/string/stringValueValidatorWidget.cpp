@@ -30,7 +30,6 @@ bool StringValueValidatorWidget::eventFilter( QObject *watched, QEvent *event ) 
 	switch( type ) {
 		case QEvent::FocusIn :
 			emit this->currentEditingFocusIn_Signal( this );
-			return true;
 			break;
 		case QEvent::FocusOut :
 
@@ -38,7 +37,6 @@ bool StringValueValidatorWidget::eventFilter( QObject *watched, QEvent *event ) 
 			emit this->overEditorFinish_Signal( this, decTxt );
 			decTxt.clear( );
 			emit this->currentEditingFocusOut_Signal( this );
-			return true;
 			break;
 	}
 	return false;

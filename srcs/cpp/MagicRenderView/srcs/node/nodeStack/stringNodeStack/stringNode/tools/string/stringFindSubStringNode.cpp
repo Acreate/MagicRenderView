@@ -1,4 +1,4 @@
-﻿#include "stringFindSubStringNode.h"
+#include "stringFindSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
@@ -33,5 +33,13 @@ bool StringFindSubStringNode::readyNodeRunData( ) {
 	return true;
 }
 bool StringFindSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	QString *orgString;
+	*outputVarPtr = -1;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+		return true;
+	QString *findString;
+	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( findTargetSubStringInputPortPtr, findString ) == false )
+		return true;
+	*outputVarPtr = orgString->indexOf( *findString );
 	return true;
 }

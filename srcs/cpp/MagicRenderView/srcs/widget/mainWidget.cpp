@@ -284,11 +284,10 @@ void MainWidget::mouseReleaseEvent( QMouseEvent *event ) {
 		case Qt::LeftButton :
 			if( getPointNodeClickInfo( event->pos( ), *clickInfoPtr ) ) {
 				dragNode = clickInfoPtr->getClickNode( );
-				if( dragNode == oldSelectNode )
-					break;
+				if( dragNode != oldSelectNode )
+					ensureVisible( dragNode );
 				nodeDirector->clearAllNodeSelectType( );
 				emit select_node_signal( this, dragNode );
-				ensureVisible( dragNode );
 				switch( clickInfoPtr->getClickType( ) ) {
 					case NodeEnum::NodeClickType::Titile :
 						dragNode->setNodeSelctType( NodeEnum::NodeSelctType::Select_Active );
