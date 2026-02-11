@@ -1,4 +1,4 @@
-#include "nodeTools.h"
+﻿#include "nodeTools.h"
 
 #include "../../director/varDirector.h"
 #include "../../tools/pathTools.h"
@@ -18,21 +18,21 @@ const std::vector< InputPort * > * NodeTools::getRefPort( const OutputPort *outp
 		return nullptr;
 	return &( output_port->refInputPortVector );
 }
-bool NodeTools::getRefPortFrist( OutputPort *output_port, InputPort *&result_input_port, VarDirector *&result_var_director ) {
-	if( output_port->refInputPortVector.size( ) == 0 )
-		return false;
-	result_input_port = output_port->refInputPortVector.data( )[ 0 ];
-	if( result_input_port == nullptr )
-		return false;
-	result_var_director = result_input_port->getVarDirector( );
-	if( result_var_director == nullptr )
-		return false;
-	return true;
-}
 bool NodeTools::getRefPortFrist( const OutputPort *output_port, InputPort *&result_input_port, VarDirector *&result_var_director ) {
-	if( output_port->refInputPortVector.size( ) == 0 )
+	size_t refInputPortCount = output_port->refInputPortVector.size( );
+	if( refInputPortCount == 0 )
 		return false;
-	result_input_port = output_port->refInputPortVector.data( )[ 0 ];
+	size_t index = 0;
+
+	auto inputPort = output_port->refInputPortVector.data( );
+	for( ; index < refInputPortCount; ++index ) {
+		result_input_port = inputPort[ 0 ];
+		if( result_input_port == nullptr )
+			continue;
+		if( result_input_port->getPortType( ) != NodeEnum::PortType::Point )
+			break;
+		result_input_port = nullptr;
+	}
 	if( result_input_port == nullptr )
 		return false;
 	result_var_director = result_input_port->getVarDirector( );
@@ -40,21 +40,22 @@ bool NodeTools::getRefPortFrist( const OutputPort *output_port, InputPort *&resu
 		return false;
 	return true;
 }
-bool NodeTools::getRefPortFrist( InputPort *input_port, OutputPort *&result_output_port, VarDirector *&result_var_director ) {
-	if( input_port->refOutputPortVector.size( ) == 0 )
-		return false;
-	result_output_port = input_port->refOutputPortVector.data( )[ 0 ];
-	if( result_output_port == nullptr )
-		return false;
-	result_var_director = result_output_port->getVarDirector( );
-	if( result_var_director == nullptr )
-		return false;
-	return true;
-}
+
 bool NodeTools::getRefPortFrist( const InputPort *input_port, OutputPort *&result_output_port, VarDirector *&result_var_director ) {
-	if( input_port->refOutputPortVector.size( ) == 0 )
+	size_t refInputPortCount = input_port->refOutputPortVector.size( );
+	if( refInputPortCount == 0 )
 		return false;
-	result_output_port = input_port->refOutputPortVector.data( )[ 0 ];
+	size_t index = 0;
+
+	auto inputPort = input_port->refOutputPortVector.data( );
+	for( ; index < refInputPortCount; ++index ) {
+		result_output_port = inputPort[ 0 ];
+		if( result_output_port == nullptr )
+			continue;
+		if( result_output_port->getPortType( ) != NodeEnum::PortType::Point )
+			break;
+		result_output_port = nullptr;
+	}
 	if( result_output_port == nullptr )
 		return false;
 	result_var_director = result_output_port->getVarDirector( );

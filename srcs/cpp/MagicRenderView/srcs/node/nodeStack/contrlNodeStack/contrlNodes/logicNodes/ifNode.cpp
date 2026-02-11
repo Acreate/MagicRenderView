@@ -1,4 +1,4 @@
-#include "ifNode.h"
+﻿#include "ifNode.h"
 
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/inputPort/point/pointInputPort.h>
@@ -16,8 +16,6 @@ bool IfNode::initEx( MainWidget *parent ) {
 		if( nodeToolsPtr->appendInputPortType( this, tr( "判断" ), ifResultPort ) == false )
 			return false;
 		if( nodeToolsPtr->appendInputPortType( this, tr( "传递" ), channelInputPort ) == false )
-			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "定位" ), pointInputPort ) == false )
 			return false;
 		if( nodeToolsPtr->appendOutputPortType( this, tr( "传递" ), channelOutputPort ) == false )
 			return false;

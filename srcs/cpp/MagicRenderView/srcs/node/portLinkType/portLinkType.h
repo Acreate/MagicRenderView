@@ -3,6 +3,9 @@
 
 #include <QString>
 
+namespace NodeEnum {
+	enum class PortType;
+}
 class InputPort;
 class OutputPort;
 class Application;
@@ -27,9 +30,11 @@ public:
 	virtual bool linkPort( OutputPort *output_port, InputPort *input_port );
 	/// @brief 匹配两个端口，该操作不影响端口引用
 	/// @param output_port 输出端口
+	/// @param output_port_type 输出端类型
 	/// @param input_port 输入端口
+	/// @param input_port_type 输入端类型
 	/// @return 匹配成功返回 true
-	virtual bool linkPortTypeComp( OutputPort *output_port, InputPort *input_port );
+	virtual bool linkPortTypeComp( OutputPort *output_port, const NodeEnum::PortType &output_port_type, InputPort *input_port, const NodeEnum::PortType &input_port_type );
 };
 
 #endif // PORTLINKTYPE_H_H_HEAD__FILE__

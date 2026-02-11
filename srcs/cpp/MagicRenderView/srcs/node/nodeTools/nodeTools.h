@@ -1,4 +1,4 @@
-#ifndef NODETOOLS_H_H_HEAD__FILE__
+﻿#ifndef NODETOOLS_H_H_HEAD__FILE__
 #define NODETOOLS_H_H_HEAD__FILE__
 #include <typeinfo>
 #include <vector>
@@ -32,7 +32,6 @@ protected:
 public:
 	virtual std::vector< InputPort * > * getRefPort( OutputPort *output_port );
 	virtual const std::vector< InputPort * > * getRefPort( const OutputPort *output_port );
-	virtual bool getRefPortFrist( OutputPort *output_port, InputPort *&result_input_port, VarDirector * &result_var_director );
 	virtual bool getRefPortFrist( const OutputPort *output_port, InputPort *&result_input_port, VarDirector * &result_var_director );
 	virtual bool getRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const OutputPort *output_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );
@@ -46,7 +45,6 @@ public:
 	virtual std::vector< OutputPort * > * getRefPort( InputPort *input_port );
 	virtual const std::vector< OutputPort * > * getRefPort( const InputPort *input_port );
 
-	virtual bool getRefPortFrist( InputPort *input_port, OutputPort *&result_output_port, VarDirector * &result_var_director );
 	virtual bool getRefPortFrist( const InputPort *input_port, OutputPort *&result_output_port, VarDirector * &result_var_director );
 	virtual bool getRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector );
 	virtual bool getFilterRefPortNodeVector( const InputPort *input_port, std::vector< Node * > &result_filter_node_vector, NodeEnum::NodeType node_type );

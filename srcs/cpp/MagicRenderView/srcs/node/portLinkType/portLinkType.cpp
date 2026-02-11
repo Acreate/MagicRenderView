@@ -16,30 +16,35 @@ bool PortLinkType::init( Application *application, NodeDirector *node_director, 
 bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
 		return true;
-	// 端口类型是否匹配
-	if( linkPortTypeComp( output_port, input_port ) == false )
-		return false;
-	// 不允许多输入通道，则清空旧的输出端应用
-	if( input_port->isMultiple( ) == false )
-		input_port->clearOutputPortRef( );
-	// 不允许多输出通道，则清空旧的输入端引用
-	if( output_port->isMultiple( ) == false )
-		output_port->clearInputPortRef( );
+
+	auto inputPortType = input_port->getPortType( );
+	auto outputPortType = output_port->getPortType( );
+	switch( outputPortType ) {
+		case NodeEnum::PortType::Point :
+			break;
+		default :
+			// 端口类型是否匹配
+			if( linkPortTypeComp( output_port, outputPortType, input_port, inputPortType ) == false )
+				return false;// 不允许多输入通道，则清空旧的输出端应用
+			if( input_port->isMultiple( ) == false )
+				input_port->clearOutputPortRef( );
+			// 不允许多输出通道，则清空旧的输入端引用
+			if( output_port->isMultiple( ) == false )
+				output_port->clearInputPortRef( );
+	}
+
 	input_port->emplaceBackOutputPortRef( output_port );
 	return true;
 }
-bool PortLinkType::linkPortTypeComp( OutputPort *output_port, InputPort *input_port ) {
-	auto inputPortType = input_port->getPortType( );
-	auto outputPortType = output_port->getPortType( );
-
-	if( outputPortType == NodeEnum::PortType::AnyVar )
-		if( inputPortType == NodeEnum::PortType::Unity || inputPortType == NodeEnum::PortType::Array )
+bool PortLinkType::linkPortTypeComp( OutputPort *output_port, const NodeEnum::PortType &output_port_type, InputPort *input_port, const NodeEnum::PortType &input_port_type ) {
+	if( output_port_type == NodeEnum::PortType::AnyVar )
+		if( input_port_type == NodeEnum::PortType::Unity || input_port_type == NodeEnum::PortType::Array )
 			return true;
-	if( inputPortType == NodeEnum::PortType::AnyVar )
-		if( outputPortType == NodeEnum::PortType::Unity || outputPortType == NodeEnum::PortType::Array )
+	if( input_port_type == NodeEnum::PortType::AnyVar )
+		if( output_port_type == NodeEnum::PortType::Unity || output_port_type == NodeEnum::PortType::Array )
 			return true;
 
-	if( outputPortType != inputPortType )
+	if( output_port_type != input_port_type )
 		return false; // 端口不匹配，返回 false
 
 	QString outputPortTypeName = output_port->getVarTypeName( );
