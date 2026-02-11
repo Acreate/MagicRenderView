@@ -154,19 +154,8 @@ protected:
 	/// @param type_name 获取的类型名称
 	/// @param result_input_port_var 返回的类型指针
 	/// @return 类型不匹配返回 false
-	bool getRefPortFristVar( OutputPort *output_port, const QString &type_name, void *&result_input_port_var );
-	/// @brief 获取第一个元素的值指针
-	/// @param output_port 获取值的所在输出的端口
-	/// @param type_name 获取的类型名称
-	/// @param result_input_port_var 返回的类型指针
-	/// @return 类型不匹配返回 false
 	bool getRefPortFristVar( const OutputPort *output_port, const QString &type_name, void *&result_input_port_var );
-	/// @brief 获取第一个元素的值指针
-	/// @param input_port 获取值的所在输出的端口
-	/// @param type_name 获取的类型名称
-	/// @param result_output_port_var 返回的类型指针
-	/// @return 类型不匹配返回 false
-	bool getRefPortFristVar( InputPort *input_port, const QString &type_name, void *&result_output_port_var );
+	
 	/// @brief 获取第一个元素的值指针
 	/// @param input_port 获取值的所在输出的端口
 	/// @param type_name 获取的类型名称
@@ -446,20 +435,7 @@ public:
 		return true;
 	}
 
-	/// @brief 获取端口引用的首个类型变量引用
-	/// @tparam TResultType 返回对象的类型
-	/// @param output_port 获取的类型变量连接的端口
-	/// @param result_input_port_var 返回变量引用指针
-	/// @return 失败返回 false
-	//template< typename TResultType >
-	//bool cast_ptr_ref_first_port_var_ptr( OutputPort *output_port, TResultType *&result_input_port_var ) {
-	//	void *resultPtr;
-	//	QString typeName = typeid( TResultType ).name( );
-	//	if( getRefPortFristVar( output_port, typeName, resultPtr ) == false )
-	//		return false;
-	//	result_input_port_var = ( TResultType * ) resultPtr;
-	//	return true;
-	//}
+	
 	/// @brief 获取端口引用的首个类型变量引用
 	/// @tparam TResultType 返回对象的类型
 	/// @param output_port 获取的类型变量连接的端口
@@ -474,20 +450,6 @@ public:
 		result_input_port_var = ( TResultType * ) resultPtr;
 		return true;
 	}
-	/// @brief 获取端口引用的首个类型变量引用
-	/// @tparam TResultType 返回对象的类型
-	/// @param input_port 获取的类型变量连接的端口
-	/// @param result_output_port_var 返回变量引用指针
-	/// @return 失败返回 false
-	//template< typename TResultType >
-	//bool cast_ptr_ref_first_port_var_ptr( InputPort *input_port, TResultType *&result_output_port_var ) {
-	//	void *resultPtr;
-	//	QString typeName = typeid( TResultType ).name( );
-	//	if( getRefPortFristVar( input_port, typeName, resultPtr ) == false )
-	//		return false;
-	//	result_output_port_var = ( TResultType * ) resultPtr;
-	//	return true;
-	//}
 	/// @brief 获取端口引用的首个类型变量引用
 	/// @tparam TResultType 返回对象的类型
 	/// @param input_port 获取的类型变量连接的端口

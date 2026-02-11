@@ -392,7 +392,7 @@ bool NodeRunInfo::runCurrentNode( Node *run_node ) {
 	return false;
 }
 bool NodeRunInfo::overRunNode( ) {
-	currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	//currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	if( currentRunPtr->fillOutputPortCall( adviseNodeVector, *builderDataTime, currentFrame ) == true )
 		return true;
 	Application *instancePtr;
@@ -616,7 +616,11 @@ bool NodeRunInfo::resetRunStartNode( ) {
 		return false;
 	// todo : 重置数据
 	currentFrame = 0;
-	currentRunPtr = nullptr;
+	if( currentRunPtr ) {
+		currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
+		currentRunPtr = nullptr;
+	}
+
 	// 清除已运行列表
 	overRunNodeVector.clear( );
 	// 赋予开始节点到建议运行序列
@@ -633,7 +637,10 @@ void NodeRunInfo::clear( ) {
 	beginNodeVector.clear( );
 	adviseNodeVector.clear( );
 	overRunNodeVector.clear( );
-	currentRunPtr = nullptr;
+	if( currentRunPtr ) {
+		currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
+		currentRunPtr = nullptr;
+	}
 	currentFrame = 0;
 	builderNodeArrayPtr = nullptr;
 	builderNodeArrayCount = 0;

@@ -429,26 +429,6 @@ bool NodeTools::finVarDirectorTypeName( const VarDirector *var_type_get_var_dire
 bool NodeTools::finVarDirectorVarPtrTypeName( const VarDirector *var_type_get_var_director, const void *find_var_ptr, QString &result_var_director_type_name ) {
 	return var_type_get_var_director->getObjPtrAtTypeName( find_var_ptr, result_var_director_type_name );
 }
-bool NodeTools::getRefPortFristVar( OutputPort *output_port, const QString &type_name, void *&result_input_port_var ) {
-	InputPort *resultPtr;
-	VarDirector *resultVarDirector;
-	if( getRefPortFrist( output_port, resultPtr, resultVarDirector ) == false )
-		return false;
-	result_input_port_var = resultPtr->getVarPtr( );
-	QString converTypeName;
-	// 检查是否存在指定的类型
-	if( resultVarDirector->getObjPtrAtTypeName( result_input_port_var, converTypeName ) == false )
-		return false;
-	QString targetTypeName;
-	// 获取转换的目标匹配类型名称
-	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
-		return false;
-	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
-	if( targetTypeName != converTypeName )
-		return false;
-	// 同一类型返回转换后的类型对象指针
-	return true;
-}
 bool NodeTools::getRefPortFristVar( const OutputPort *output_port, const QString &type_name, void *&result_input_port_var ) {
 	InputPort *resultPtr;
 	VarDirector *resultVarDirector;
@@ -458,26 +438,6 @@ bool NodeTools::getRefPortFristVar( const OutputPort *output_port, const QString
 	QString converTypeName;
 	// 检查是否存在指定的类型
 	if( resultVarDirector->getObjPtrAtTypeName( result_input_port_var, converTypeName ) == false )
-		return false;
-	QString targetTypeName;
-	// 获取转换的目标匹配类型名称
-	if( resultVarDirector->getTypeName( type_name, targetTypeName ) == false )
-		return false;
-	// 如果目标类型名称与当前类型名称不相等，则不是同一类型
-	if( targetTypeName != converTypeName )
-		return false;
-	// 同一类型返回转换后的类型对象指针
-	return true;
-}
-bool NodeTools::getRefPortFristVar( InputPort *input_port, const QString &type_name, void *&result_output_port_var ) {
-	OutputPort *resultPtr;
-	VarDirector *resultVarDirector;
-	if( getRefPortFrist( input_port, resultPtr, resultVarDirector ) == false )
-		return false;
-	result_output_port_var = resultPtr->getVarPtr( );
-	QString converTypeName;
-	// 检查是否存在指定的类型
-	if( resultVarDirector->getObjPtrAtTypeName( result_output_port_var, converTypeName ) == false )
 		return false;
 	QString targetTypeName;
 	// 获取转换的目标匹配类型名称
