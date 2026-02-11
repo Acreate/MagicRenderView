@@ -1,4 +1,4 @@
-#ifndef NODEPORT_H_H_HEAD__FILE__
+﻿#ifndef NODEPORT_H_H_HEAD__FILE__
 #define NODEPORT_H_H_HEAD__FILE__
 #include <QWidget>
 #include <define/portFrinedClass.h>
@@ -10,14 +10,15 @@ class NodePort : public QWidget {
 	Q_OBJECT;
 	NodePortFrinedClass( );
 protected:
+	Node *parentNode;
+	VarDirector *varDirectorPtr;
 	void *varPtr;
 	bool multiple;
-	VarDirector *varDirectorPtr;
 	QString portName;
 	QString varTypeName;
 	uint64_t generateCode;
-	Node *parentNode;
 public:
+	NodePort( );
 	virtual void * getVarPtr( ) const { return varPtr; }
 	virtual bool isMultiple( ) const { return multiple; }
 	virtual VarDirector * getVarDirector( ) const;

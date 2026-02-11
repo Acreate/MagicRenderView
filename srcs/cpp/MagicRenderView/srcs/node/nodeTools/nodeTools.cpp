@@ -202,7 +202,9 @@ bool NodeTools::getFilterNotRefPortNodeVector( const OutputPort *output_port, st
 	for( ; refInputPortIndex < refInputPortCount; refInputPortIndex += 1 )
 		if( refInputPortArray[ refInputPortIndex ] == nullptr )
 			continue;
-		else if( current = refInputPortArray[ refInputPortIndex ]->getParentNode( ), current->getNodeType( ) != node_type ) {
+		else if( current = refInputPortArray[ refInputPortIndex ]->getParentNode( ), current == nullptr )
+			continue;
+		else if( current->getNodeType( ) != node_type ) {
 			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
 				if( destArray[ desIndex ] == current )
 					break;
@@ -210,7 +212,6 @@ bool NodeTools::getFilterNotRefPortNodeVector( const OutputPort *output_port, st
 				continue;
 			destArray[ desCount ] = current;
 			desCount += 1;
-
 		}
 	result_filter_node_vector.resize( desCount );
 	return true;
@@ -566,7 +567,9 @@ bool NodeTools::getFilterNotRefPortNodeVector( const InputPort *input_port, std:
 	for( ; refOutputPortIndex < refOutputPortCount; refOutputPortIndex += 1 )
 		if( refOutputPortArray[ refOutputPortIndex ] == nullptr )
 			continue;
-		else if( current = refOutputPortArray[ refOutputPortIndex ]->getParentNode( ), current->getNodeType( ) != node_type ) {
+		else if( current = refOutputPortArray[ refOutputPortIndex ]->getParentNode( ), current == nullptr )
+			continue;
+		else if( current->getNodeType( ) != node_type ) {
 			for( desIndex = 0; desIndex < desCount; desIndex += 1 )
 				if( destArray[ desIndex ] == current )
 					break;
@@ -574,7 +577,6 @@ bool NodeTools::getFilterNotRefPortNodeVector( const InputPort *input_port, std:
 				continue;
 			destArray[ desCount ] = current;
 			desCount += 1;
-
 		}
 	result_filter_node_vector.resize( desCount );
 	return true;
