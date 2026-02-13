@@ -497,11 +497,6 @@ bool NodeRunInfo::runResidueNode( ) {
 			emit auto_run_status_change_signal( this, isRunStop );
 			return false;
 		}
-		appinstancePtr->processEvents( );
-		if( isRunStop == true ) {
-			emit auto_run_status_change_signal( this, isRunStop );
-			break;
-		}
 		do {
 			appinstancePtr->processEvents( );
 			*currentRunDataTime = QDateTime::currentDateTime( );
@@ -585,11 +580,6 @@ bool NodeRunInfo::runToNode( const Node *target ) {
 			emit auto_run_status_change_signal( this, isRunStop );
 			break;
 		}
-		appinstancePtr->processEvents( );
-		if( isRunStop == true ) {
-			emit auto_run_status_change_signal( this, isRunStop );
-			break;
-		}
 		do {
 			appinstancePtr->processEvents( );
 			*currentRunDataTime = QDateTime::currentDateTime( );
@@ -614,13 +604,11 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	size_t count = beginNodeVector.size( );
 	if( count == 0 )
 		return false;
-	// todo : 重置数据
 	currentFrame = 0;
 	if( currentRunPtr ) {
 		currentRunPtr->setNodeStatusType( NodeEnum::NodeStatusType::None );
 		currentRunPtr = nullptr;
 	}
-
 	// 清除已运行列表
 	overRunNodeVector.clear( );
 	// 赋予开始节点到建议运行序列
