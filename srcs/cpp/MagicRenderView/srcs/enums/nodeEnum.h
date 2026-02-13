@@ -31,6 +31,7 @@ namespace NodeEnum {
 	enum class NodeType {
 		Point,
 		Jump,
+		Foreach,
 		Logic,
 		Process
 	};

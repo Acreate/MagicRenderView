@@ -1,9 +1,6 @@
 ﻿#include "portLinkType.h"
 
 #include "../../director/varDirector.h"
-
-#include "../node/node.h"
-
 #include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"
 bool PortLinkType::init( Application *application, NodeDirector *node_director, VarDirector *var_director, AppDirector *app_director ) {
@@ -19,20 +16,11 @@ bool PortLinkType::init( Application *application, NodeDirector *node_director, 
 bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	if( output_port->hasInputPortRef( input_port ) )
 		return true;
-	OutputPort **outputData;
-	size_t index;
-	size_t count;
-	size_t inputRefIndex;
-	size_t inputRefCount;
-	InputPort **inputRefData;
+
 	auto inputPortType = input_port->getPortType( );
 	auto outputPortType = output_port->getPortType( );
-	switch( inputPortType ) {
+	switch( outputPortType ) {
 		case NodeEnum::PortType::Point :
-			count = output_port->parentNode->outputPortVector.size( );
-			outputData = output_port->parentNode->outputPortVector.data( );
-			for( index = 0; index < count; ++index )
-				outputData[ index ]->clearInputPortRef( );
 			break;
 		default :
 			// 端口类型是否匹配
@@ -43,23 +31,6 @@ bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 			// 不允许多输出通道，则清空旧的输入端引用
 			if( output_port->isMultiple( ) == false )
 				output_port->clearInputPortRef( );
-			else { // 检测是否存在 Point 
-				count = output_port->parentNode->outputPortVector.size( );
-				outputData = output_port->parentNode->outputPortVector.data( );
-				for( index = 0; index < count; ++index ) {
-					inputRefCount = outputData[ index ]->refInputPortVector.size( );
-					inputRefData = outputData[ index ]->refInputPortVector.data( );
-					for( inputRefIndex = 0; inputRefIndex < inputRefCount; ++inputRefIndex ) {
-						outputPortType = inputRefData[ index ]->getPortType( );
-						if( outputPortType == NodeEnum::PortType::Point ) {
-							output_port->clearInputPortRef( );
-							break;
-						}
-					}
-					if( inputRefIndex < inputRefCount )
-						break;
-				}
-			}
 	}
 
 	input_port->emplaceBackOutputPortRef( output_port );
