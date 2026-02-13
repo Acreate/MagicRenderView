@@ -9,7 +9,7 @@ class ToPointInputPort;
 class GotoNode : public JumpNode {
 	Q_OBJECT;
 protected:
-	AnyVarInputPort *pointInputPort;
+	PointInputPort *pointInputPort;
 	ToPointInputPort *toPointInputPort;
 public:
 	GotoNode( const QString &node_name )

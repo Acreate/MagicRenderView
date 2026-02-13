@@ -1,9 +1,10 @@
-#include "gotoNode.h"
+﻿#include "gotoNode.h"
 
 #include <enums/nodeEnum.h>
 
 #include "../../../../nodeTools/nodeTools.h"
 #include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
+#include "../../../../port/inputPort/point/pointInputPort.h"
 #include "../../../../port/inputPort/toPoint/toPointInputPort.h"
 
 Def_Entity_NodeTypeName_Function( GotoNode, Node::tr( "控制/跳转" ) );
