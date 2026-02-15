@@ -14,6 +14,6 @@ bool CreateNodeRunLink::builder( ) {
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
 	return false;
 }
-bool CreateNodeRunLink::getNextRunNode( Node *&result_next_node_ptr ) {
+bool CreateNodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
 	return false;
 }

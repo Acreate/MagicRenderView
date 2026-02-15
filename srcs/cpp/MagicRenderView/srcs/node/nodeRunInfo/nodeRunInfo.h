@@ -30,16 +30,14 @@ protected:
 	bool runStop;
 	/// @brief 是否准备完成
 	bool ready;
-	/// @brief 休眠时间
-	qint64 msleepTime;
+	/// @brief 下一个节点事件
+	qint64 nextRunNodeTime;
 	/// @brief 编译时间
 	QDateTime *builderDataTime;
 	/// @brief 上一个节点运行时间
 	QDateTime *brforeRunDataTime;
 	/// @brief 当前节点运行时间
 	QDateTime *currentRunDataTime;
-	/// @brief 等待下一面
-	long long waiteNextNodeTime;
 	/// @brief 当前执行节点
 	Node *currentNode;
 	/// @brief 以前的节点
@@ -75,10 +73,8 @@ public:
 	~NodeRunInfo( ) override;
 	virtual bool isReady( ) const { return ready; }
 	virtual bool hasBuilderNode( const Node *check_node_ptr );
-	virtual int getMsleepTime( ) const { return msleepTime; }
-	virtual void setMsleepTime( int msleep_time ) { msleepTime = msleep_time; }
-	virtual long long getWaiteNextNodeTime( ) const { return waiteNextNodeTime; }
-	virtual void setWaiteNextNodeTime( long long waite_next_node_time ) { waiteNextNodeTime = waite_next_node_time; }
+	virtual int getMsleepTime( ) const { return nextRunNodeTime; }
+	virtual void setMsleepTime( int msleep_time ) { nextRunNodeTime = msleep_time; }
 	/// @brief 运行下一个
 	/// @return 成功返回 true
 	virtual bool runNextNode( );

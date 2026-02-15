@@ -20,20 +20,26 @@
 #include "nodeRunLink/nodeRunLink.h"
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
-	// 等待1秒执行下一个节点
-	waiteNextNodeTime = 10;
+	builderDataTime = new QDateTime;
+	brforeRunDataTime = new QDateTime;
+	currentRunDataTime = new QDateTime;
 	maxFrame = 60;
-	msleepTime = 10;
+	nextRunNodeTime = 10;
 }
 NodeRunInfo::~NodeRunInfo( ) {
-	clear( );
-	if( builderDataTime )
-		delete builderDataTime;
-	if( brforeRunDataTime )
-		delete brforeRunDataTime;
-	if( currentRunDataTime )
-		delete currentRunDataTime;
 	emit release_signal( this, Create_SrackInfo( ) );
+	size_t count = nodeRunLinkVector.size( );
+	size_t index;
+	NodeRunLink **nodeRunLinkData;
+	if( count ) {
+		nodeRunLinkData = nodeRunLinkVector.data( );
+		index = 0;
+		for( ; index < count; ++index )
+			delete nodeRunLinkData[ index ];
+	}
+	delete builderDataTime;
+	delete brforeRunDataTime;
+	delete currentRunDataTime;
 }
 bool NodeRunInfo::hasBuilderNode( const Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr )
@@ -113,8 +119,9 @@ bool NodeRunInfo::builderRunInstance( ) {
 					delete createNodeRunLink;
 					// 输出异常
 					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
-				} else
-					pointStack.emplace_back( createNodeRunLink );
+					break;
+				}
+				pointStack.emplace_back( createNodeRunLink );
 				break;
 			case NodeEnum::NodeType::Create :
 				createNodeRunLink = new CreateNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
@@ -122,8 +129,9 @@ bool NodeRunInfo::builderRunInstance( ) {
 					delete createNodeRunLink;
 					// 输出异常
 					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
-				} else
-					createStack.emplace_back( createNodeRunLink );
+					break;
+				}
+				createStack.emplace_back( createNodeRunLink );
 				break;
 
 			case NodeEnum::NodeType::Function :
@@ -132,8 +140,9 @@ bool NodeRunInfo::builderRunInstance( ) {
 					delete createNodeRunLink;
 					// 输出异常
 					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
-				} else
-					callStack.emplace_back( createNodeRunLink );
+					break;
+				}
+				callStack.emplace_back( createNodeRunLink );
 				break;
 
 		}
@@ -159,6 +168,8 @@ bool NodeRunInfo::runNextNode( ) {
 		if( nextNodeRunLink->runRunNode( nextRunPtr, *currentRunDataTime, currentFrame ) == false ) {
 			oldNode = currentNode;
 			currentNode = nextRunPtr;
+			auto &adviseNodeVector = nextNodeRunLink->getAdviseNodeVector( );
+			// todo : 判定下一个节点
 		} else {
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( nextRunPtr->toQString( ) ), Create_SrackInfo( ) );
 		}
@@ -191,7 +202,7 @@ bool NodeRunInfo::runToNextFrame( ) {
 			appinstancePtr->processEvents( );
 			nextTime = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
 			sep = nextTime - currentTime;
-			if( sep > msleepTime )
+			if( sep > nextRunNodeTime )
 				break;
 		} while( true );
 
@@ -212,7 +223,7 @@ bool NodeRunInfo::runToNode( const Node *target ) {
 			appinstancePtr->processEvents( );
 			nextTime = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
 			sep = nextTime - currentTime;
-			if( sep > msleepTime )
+			if( sep > nextRunNodeTime )
 				break;
 		} while( true );
 		currentTime = nextTime;

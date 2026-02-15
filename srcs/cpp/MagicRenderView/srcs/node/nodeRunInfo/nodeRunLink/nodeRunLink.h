@@ -15,9 +15,10 @@ protected:
 	/// @return 失败返回 false
 	virtual bool builder( ) = 0;
 	/// @brief 获取下一个运行节点
+	/// @param over_run_node_vector 运行完毕列表
 	/// @param result_next_node_ptr 下一个运行节点
 	/// @return 失败返回 false
-	virtual bool getNextRunNode( Node *&result_next_node_ptr ) = 0;
+	virtual bool getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) = 0;
 	/// @brief 运行节点
 	/// @param run_node_ptr 运行的节点
 	/// @param run_time 运行时间
