@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class PrinterDirector;
 class NodeRunLink;
 class QDateTime;
 class Application;
@@ -19,14 +20,18 @@ class NodeRunInfo : public QObject {
 protected:
 	/// @brief 应用实例
 	Application *appinstancePtr;
+	/// @brief 输出对象
+	PrinterDirector *printerDirector;
 	/// @brief 当前帧
 	size_t currentFrame;
 	/// @brief 最大帧
 	size_t maxFrame;
 	/// @brief 是否停止
-	bool isRunStop;
+	bool runStop;
+	/// @brief 是否准备完成
+	bool ready;
 	/// @brief 休眠时间
-	int msleepTime;
+	qint64 msleepTime;
 	/// @brief 编译时间
 	QDateTime *builderDataTime;
 	/// @brief 上一个节点运行时间
@@ -35,7 +40,10 @@ protected:
 	QDateTime *currentRunDataTime;
 	/// @brief 等待下一面
 	long long waiteNextNodeTime;
-
+	/// @brief 当前执行节点
+	Node *currentNode;
+	/// @brief 以前的节点
+	Node *oldNode;
 	/// @brief 编译列表
 	std::vector< Node * > builderNodeVector;
 	/// @brief 链接列表
@@ -43,7 +51,7 @@ protected:
 	/// @brief 调用栈
 	std::list< NodeRunLink * > callStack;
 	/// @brief 进程栈
-	std::list< NodeRunLink * > processStack;
+	std::list< NodeRunLink * > createStack;
 	/// @brief 定点栈
 	std::list< NodeRunLink * > pointStack;
 protected:
@@ -56,9 +64,16 @@ protected:
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );
+	/// @brief 重置数据
+	virtual void resetData( );
+	/// @brief 获取下一个节点对象指针
+	/// @param result_next_node_ptr 返回的下一个节点
+	/// @return 失败返回 null
+	virtual bool getNextNodeRunLinkPtr( NodeRunLink * &result_next_node_ptr );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
+	virtual bool isReady( ) const { return ready; }
 	virtual bool hasBuilderNode( const Node *check_node_ptr );
 	virtual int getMsleepTime( ) const { return msleepTime; }
 	virtual void setMsleepTime( int msleep_time ) { msleepTime = msleep_time; }
@@ -98,6 +113,12 @@ Q_SIGNALS:
 	/// @param change_obj 信号对象 
 	/// @param new_status 新的状态
 	void auto_run_status_change_signal( NodeRunInfo *change_obj, bool new_status );
+	/// @brief 开始编译
+	/// @param change_obj 编译对象
+	void start_builder_signal( NodeRunInfo *change_obj );
+	/// @brief 编译结束
+	/// @param change_obj 编译对象
+	void end_builder_signal( NodeRunInfo *change_obj );
 };
 
 #endif // NODERUNINFO_H_H_HEAD__FILE__

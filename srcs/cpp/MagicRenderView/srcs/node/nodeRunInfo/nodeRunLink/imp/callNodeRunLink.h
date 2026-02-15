@@ -8,6 +8,8 @@ class CallNodeRunLink : public NodeRunLink {
 protected:
 	CallNodeRunLink( Node *const init_node_ptr )
 		: NodeRunLink( init_node_ptr ) { }
+	bool builder( ) override;
+	bool getNextRunNode( Node *&result_next_node_ptr ) override;
 };
 
 #endif // CALLNODERUNLINK_H_H_HEAD__FILE__

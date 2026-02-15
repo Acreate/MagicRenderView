@@ -5,7 +5,6 @@
 class NodeRunLink;
 class Node;
 class NodeRunLinkData : public QObject {
-	friend class NodeRunLink;
 protected:
 	/// @brief 保存已经运行的节点
 	std::vector< Node * > overRunNodeVector;
@@ -37,7 +36,6 @@ protected:
 	/// @brief 获取建议节点序列
 	/// @return 建议节点序列
 	virtual const std::vector< Node * > & getAdviseNodeVector( ) const;
-public:
 	/// @brief 是否可用对象
 	/// @return 不可用返回 false
 	virtual bool isReady( ) const;

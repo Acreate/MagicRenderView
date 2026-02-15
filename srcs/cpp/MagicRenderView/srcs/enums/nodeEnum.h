@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-
 namespace NodeEnum {
 	/// @brief 错误类型
 	enum class ErrorType {
@@ -29,8 +28,10 @@ namespace NodeEnum {
 	};
 	/// @brief 节点类型
 	enum class NodeType {
-		Point,
 		Create,
+		Call,
+		Function,
+		Point,
 		Jump,
 		Foreach,
 		Logic,

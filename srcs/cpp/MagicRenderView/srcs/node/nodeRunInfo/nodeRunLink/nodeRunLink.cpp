@@ -11,3 +11,33 @@ bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, siz
 		return false;
 	return currentNode->fillNodeCall( run_time, run_frame );
 }
+bool NodeRunLink::adviseRunNode( const Node *const node ) const {
+	return NodeRunLinkData::adviseRunNode( node );
+}
+const std::vector< Node * > & NodeRunLink::getAdviseNodeVector( ) const {
+	return NodeRunLinkData::getAdviseNodeVector( );
+}
+Node * NodeRunLink::getBeforeNode( ) const {
+	return NodeRunLinkData::getBeforeNode( );
+}
+Node * NodeRunLink::getCurrentNode( ) const {
+	return NodeRunLinkData::getCurrentNode( );
+}
+const std::vector< Node * > & NodeRunLink::getLinkNodeVector( ) const {
+	return NodeRunLinkData::getLinkNodeVector( );
+}
+const std::vector< Node * > & NodeRunLink::getOverRunNodeVector( ) const {
+	return NodeRunLinkData::getOverRunNodeVector( );
+}
+Node * NodeRunLink::getStartNode( ) const {
+	return NodeRunLinkData::getStartNode( );
+}
+bool NodeRunLink::isOver( ) const {
+	return NodeRunLinkData::isOver( );
+}
+bool NodeRunLink::isReady( ) const {
+	return NodeRunLinkData::isReady( );
+}
+bool NodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
+	return NodeRunLinkData::linkHasNode( check_node_ptr );
+}

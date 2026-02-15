@@ -24,6 +24,16 @@ protected:
 	/// @param run_frame 运行帧
 	/// @return 成功返回 true
 	virtual bool runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame );
+	bool adviseRunNode( const Node *const node ) const override;
+	const std::vector< Node * > & getAdviseNodeVector( ) const override;
+	Node * getBeforeNode( ) const override;
+	Node * getCurrentNode( ) const override;
+	const std::vector< Node * > & getLinkNodeVector( ) const override;
+	const std::vector< Node * > & getOverRunNodeVector( ) const override;
+	Node * getStartNode( ) const override;
+	bool isOver( ) const override;
+	bool isReady( ) const override;
+	bool linkHasNode( const Node *const check_node_ptr ) const override;
 };
 
 #endif // NODERUNLINK_H_H_HEAD__FILE__
