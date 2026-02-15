@@ -1,15 +1,14 @@
-#ifndef NODE_H_H_HEAD__FILE__
+﻿#ifndef NODE_H_H_HEAD__FILE__
 #define NODE_H_H_HEAD__FILE__
 
 #include <QWidget>
-#include <qpen.h>
 #include <typeinfo>
-
+#include <QString>
 #include <define/nodeFrinedClass.h>
 
 /// @brief 标记节点名称（建议使用：[功能]/[类型]/[动作]）
 /// @param _Type_Name 名称
-#define Def_Interface_NodeTypeName(  ) public: static QString getStaticNodeTypeName( ); virtual QString getVirtualNodeTypeName( ) const 
+#define Def_Interface_NodeTypeName(  ) public: static QString getStaticNodeTypeName( ); virtual QString getVirtualNodeTypeName( ) const
 
 #define Def_Extern_NodeTypeName_Function(  ) public: static QString getStaticNodeTypeName( ) ; QString getVirtualNodeTypeName( ) const override
 
@@ -389,7 +388,7 @@ protected:
 	void paintEvent( QPaintEvent *event ) override;
 	void resizeEvent( QResizeEvent *event ) override;
 public:
-	Def_Interface_NodeTypeName(  );
+	Def_Interface_NodeTypeName( );
 	// 信号
 Q_SIGNALS:
 	/// @brief 释放对象产生信号

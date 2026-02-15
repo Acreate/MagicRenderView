@@ -1,4 +1,4 @@
-#include "intCreateUnityNode.h"
+﻿#include "intCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
@@ -8,7 +8,7 @@
 
 Def_Entity_NodeTypeName_Function( IntCreateUnityNode, Node::tr( "创建/单元/整数" ) );
 
-IntCreateUnityNode::IntCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+IntCreateUnityNode::IntCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 	editorWidget = nullptr;
 }
@@ -19,10 +19,10 @@ bool IntCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = '\0';
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool IntCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

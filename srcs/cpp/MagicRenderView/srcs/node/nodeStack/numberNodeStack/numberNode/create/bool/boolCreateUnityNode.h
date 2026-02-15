@@ -1,10 +1,12 @@
-#ifndef BOOLCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef BOOLCREATEUNITYNODE_H_H_HEAD__FILE__
 #define BOOLCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class BoolCreateUnityNodeEditorWidget;
 class BoolOutputPort;
-class BoolCreateUnityNode : public ProcessNode {
+class BoolCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = bool;

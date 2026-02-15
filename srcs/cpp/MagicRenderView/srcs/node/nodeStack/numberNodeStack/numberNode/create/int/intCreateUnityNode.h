@@ -1,10 +1,12 @@
-#ifndef INTCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef INTCREATEUNITYNODE_H_H_HEAD__FILE__
 #define INTCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class IntCreateUnityNodeEditorWidget;
 class IntOutputPort;
-class IntCreateUnityNode : public ProcessNode {
+class IntCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;

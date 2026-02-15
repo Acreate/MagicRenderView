@@ -1,10 +1,12 @@
-#ifndef STRINGCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef STRINGCREATEUNITYNODE_H_H_HEAD__FILE__
 #define STRINGCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class StringCreateUnityNodeEditorWidget;
 class StringOutputPort;
-class StringCreateUnityNode : public ProcessNode {
+class StringCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = QString;

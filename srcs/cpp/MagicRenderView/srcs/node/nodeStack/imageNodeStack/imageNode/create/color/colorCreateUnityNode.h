@@ -1,10 +1,12 @@
-#ifndef COLORCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef COLORCREATEUNITYNODE_H_H_HEAD__FILE__
 #define COLORCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class ColorCreateUnityNodeEditorWidget;
 class ColorOutputPort;
-class ColorCreateUnityNode : public ProcessNode {
+class ColorCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = QColor;

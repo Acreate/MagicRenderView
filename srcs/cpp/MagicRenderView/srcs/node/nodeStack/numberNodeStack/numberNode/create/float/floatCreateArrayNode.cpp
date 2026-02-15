@@ -6,7 +6,7 @@
 
 Def_Entity_NodeTypeName_Function( FloatCreateArrayNode, Node::tr( "创建/序列/浮点序列" ) );
 
-FloatCreateArrayNode::FloatCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+FloatCreateArrayNode::FloatCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool FloatCreateArrayNode::initEx( MainWidget *parent ) {
@@ -15,10 +15,10 @@ bool FloatCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool FloatCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

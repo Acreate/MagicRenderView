@@ -1,11 +1,13 @@
-#ifndef BINCREATEUNITYNODE__H_H_HEAD__FILE__
+﻿#ifndef BINCREATEUNITYNODE__H_H_HEAD__FILE__
 #define BINCREATEUNITYNODE__H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
 
+#include "../../../../../node/createNode.h"
+
 class BinCreateUnityNodeEditorWidget;
 class BinOutputPort;
-class BinCreateUnityNode : public ProcessNode {
+class BinCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = uint8_t;

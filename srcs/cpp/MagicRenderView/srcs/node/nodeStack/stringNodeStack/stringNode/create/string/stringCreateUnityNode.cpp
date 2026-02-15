@@ -1,4 +1,4 @@
-#include "stringCreateUnityNode.h"
+﻿#include "stringCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
@@ -8,7 +8,7 @@
 
 Def_Entity_NodeTypeName_Function( StringCreateUnityNode, Node::tr( "创建/单元/字符串" ) );
 
-StringCreateUnityNode::StringCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+StringCreateUnityNode::StringCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 	editorWidget = nullptr;
 }
@@ -19,10 +19,10 @@ bool StringCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = '\0';
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool StringCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

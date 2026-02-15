@@ -1,10 +1,12 @@
-#ifndef FLOATCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef FLOATCREATEUNITYNODE_H_H_HEAD__FILE__
 #define FLOATCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class FloatCreateUnityNodeEditorWidget;
 class FloatOutputPort;
-class FloatCreateUnityNode : public ProcessNode {
+class FloatCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = double;

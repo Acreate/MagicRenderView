@@ -1,4 +1,4 @@
-#include "colorCreateUnityNode.h"
+﻿#include "colorCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
@@ -62,7 +62,7 @@ bool ColorCreateUnityNode::toUint8VectorData( std::vector< uint8_t > &result_vec
 	result_vector_data.append_range( buff );
 	return true;
 }
-ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 	editorWidget = nullptr;
 }
@@ -73,10 +73,10 @@ bool ColorCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = QColor( 0, 0, 0, 255 );
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool ColorCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

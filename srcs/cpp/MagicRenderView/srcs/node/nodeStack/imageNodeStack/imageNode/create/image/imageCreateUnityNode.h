@@ -1,10 +1,12 @@
-#ifndef IMAGECREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef IMAGECREATEUNITYNODE_H_H_HEAD__FILE__
 #define IMAGECREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class ImageCreateUnityNodeEditorWidget;
 class ImageOutputPort;
-class ImageCreateUnityNode : public ProcessNode {
+class ImageCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = QImage;

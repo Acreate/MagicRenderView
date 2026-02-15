@@ -7,7 +7,7 @@
 
 Def_Entity_NodeTypeName_Function( ImageCreateArrayNode, Node::tr( "创建/序列/图像" ) );
 
-ImageCreateArrayNode::ImageCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+ImageCreateArrayNode::ImageCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool ImageCreateArrayNode::initEx( MainWidget *parent ) {
@@ -16,10 +16,10 @@ bool ImageCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool ImageCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

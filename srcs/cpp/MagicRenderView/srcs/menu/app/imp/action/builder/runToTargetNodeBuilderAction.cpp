@@ -1,4 +1,4 @@
-#include "runToTargetNodeBuilderAction.h"
+﻿#include "runToTargetNodeBuilderAction.h"
 
 #include "../../../../../director/builderDirector.h"
 #include "../../../../../node/node/node.h"
@@ -14,7 +14,7 @@ void RunToTargetNodeBuilderAction::createNodeRunInfoAction( ) {
 	NodeRunInfo *nodeRunInfo = builderDirector->getNodeRunInfo( );
 	// 1.如果功能编译状态是失效，那么重置它的效果为失效
 	// 2.如果目标不存在编译链当中，那么重置它的效果为失效
-	if( nodeRunInfo == nullptr || nodeRunInfo->hasNode( targetNode ) == false ) {
+	if( nodeRunInfo == nullptr || nodeRunInfo->hasBuilderNode( targetNode ) == false ) {
 		setEnabled( false );
 		return;
 	}

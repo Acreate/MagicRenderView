@@ -2,8 +2,10 @@
 #define IMAGECREATEARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class ImageVectorOutputPort;
-class ImageCreateArrayNode : public ProcessNode {
+class ImageCreateArrayNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = QImage;

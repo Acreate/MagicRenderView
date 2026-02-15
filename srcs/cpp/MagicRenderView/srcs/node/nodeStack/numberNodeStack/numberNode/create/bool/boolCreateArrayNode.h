@@ -3,8 +3,10 @@
 
 #include <node/node/processNode.h>
 
+#include "../../../../../node/createNode.h"
+
 class BoolVectorOutputPort;
-class BoolCreateArrayNode : public ProcessNode {
+class BoolCreateArrayNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = bool;

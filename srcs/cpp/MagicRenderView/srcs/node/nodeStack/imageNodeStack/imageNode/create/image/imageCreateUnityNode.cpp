@@ -1,4 +1,4 @@
-#include "imageCreateUnityNode.h"
+﻿#include "imageCreateUnityNode.h"
 
 #include <define/castMacro.h>
 #include <director/varDirector.h>
@@ -11,7 +11,7 @@
 
 Def_Entity_NodeTypeName_Function( ImageCreateUnityNode, Node::tr( "创建/单元/图像" ) );
 
-ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 	editorWidget = nullptr;
 }
@@ -23,10 +23,10 @@ bool ImageCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = QImage( );
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool ImageCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

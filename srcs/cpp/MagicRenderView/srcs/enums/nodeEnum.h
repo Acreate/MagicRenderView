@@ -30,6 +30,7 @@ namespace NodeEnum {
 	/// @brief 节点类型
 	enum class NodeType {
 		Point,
+		Create,
 		Jump,
 		Foreach,
 		Logic,

@@ -3,8 +3,10 @@
 
 #include <node/node/processNode.h>
 
+#include "../../../../../node/createNode.h"
+
 class BinVectorOutputPort;
-class BinCreateArrayNode : public ProcessNode {
+class BinCreateArrayNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = uint8_t;

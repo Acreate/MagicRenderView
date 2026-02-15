@@ -2,8 +2,10 @@
 #define FLOATCREATEARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class FloatVectorOutputPort;
-class FloatCreateArrayNode : public ProcessNode {
+class FloatCreateArrayNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = double;

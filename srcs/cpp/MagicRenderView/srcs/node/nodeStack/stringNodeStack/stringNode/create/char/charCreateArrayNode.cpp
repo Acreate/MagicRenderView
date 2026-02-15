@@ -7,7 +7,7 @@
 
 Def_Entity_NodeTypeName_Function( CharCreateArrayNode, Node::tr( "创建/序列/字符序列" ) );
 
-CharCreateArrayNode::CharCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+CharCreateArrayNode::CharCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool CharCreateArrayNode::initEx( MainWidget *parent ) {
@@ -16,10 +16,10 @@ bool CharCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool CharCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

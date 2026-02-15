@@ -2,8 +2,10 @@
 #define INTCREATEARRAYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class IntVectorOutputPort;
-class IntCreateArrayNode : public ProcessNode {
+class IntCreateArrayNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = int64_t;

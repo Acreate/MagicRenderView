@@ -1,4 +1,4 @@
-#include "floatCreateUnityNode.h"
+﻿#include "floatCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
@@ -8,7 +8,7 @@
 
 Def_Entity_NodeTypeName_Function( FloatCreateUnityNode, Node::tr( "创建/单元/浮点" ) );
 
-FloatCreateUnityNode::FloatCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+FloatCreateUnityNode::FloatCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	editorWidget = nullptr;
 	outputVarPtr = nullptr;
 }
@@ -19,10 +19,10 @@ bool FloatCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = '\0';
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool FloatCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

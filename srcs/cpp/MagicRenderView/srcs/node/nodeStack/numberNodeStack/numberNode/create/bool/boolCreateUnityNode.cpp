@@ -1,4 +1,4 @@
-#include "boolCreateUnityNode.h"
+﻿#include "boolCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/nodeTools/nodeTools.h>
@@ -8,7 +8,7 @@
 
 Def_Entity_NodeTypeName_Function( BoolCreateUnityNode, Node::tr("创建/单元/布尔" ) );
 
-BoolCreateUnityNode::BoolCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+BoolCreateUnityNode::BoolCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	editorWidget = nullptr;
 	outputVarPtr = nullptr;
 }
@@ -19,10 +19,10 @@ bool BoolCreateUnityNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool BoolCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

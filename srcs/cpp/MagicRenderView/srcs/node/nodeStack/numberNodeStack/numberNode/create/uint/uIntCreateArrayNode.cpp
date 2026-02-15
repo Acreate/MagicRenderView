@@ -7,7 +7,7 @@
 
 Def_Entity_NodeTypeName_Function( UIntCreateArrayNode, Node::tr( "创建/序列/无符号整数序列" ) );
 
-UIntCreateArrayNode::UIntCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+UIntCreateArrayNode::UIntCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool UIntCreateArrayNode::initEx( MainWidget *parent ) {
@@ -16,10 +16,10 @@ bool UIntCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool UIntCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

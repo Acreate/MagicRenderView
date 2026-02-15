@@ -11,7 +11,6 @@ protected:
 	bool builder( ) override;
 	bool linkHasNode( const Node *const check_node_ptr ) const override;
 	bool getNextRunNode( Node *&result_next_node_ptr ) override;
-	bool getCurrentRunNode( Node *&result_current_node_ptr ) override;
 };
 
 #endif // CREATENODERUNLINK_H_H_HEAD__FILE__

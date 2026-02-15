@@ -4,11 +4,9 @@
 #include <node/port/outputPort/array/binVectorOutputPort.h>
 #include <node/nodeTools/nodeTools.h>
 
-
 Def_Entity_NodeTypeName_Function( BinCreateArrayNode, Node::tr( "创建/序列/二进制序列" ) );
 
-
-BinCreateArrayNode::BinCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+BinCreateArrayNode::BinCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool BinCreateArrayNode::initEx( MainWidget *parent ) {
@@ -18,10 +16,10 @@ bool BinCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool BinCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

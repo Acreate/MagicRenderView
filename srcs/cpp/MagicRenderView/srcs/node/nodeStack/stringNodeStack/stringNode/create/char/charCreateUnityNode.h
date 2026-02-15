@@ -1,10 +1,12 @@
-#ifndef CHARCREATEUNITYNODE_H_H_HEAD__FILE__
+﻿#ifndef CHARCREATEUNITYNODE_H_H_HEAD__FILE__
 #define CHARCREATEUNITYNODE_H_H_HEAD__FILE__
 
 #include <node/node/processNode.h>
+
+#include "../../../../../node/createNode.h"
 class CharCreateUnityNodeEditorWidget;
 class CharOutputPort;
-class CharCreateUnityNode : public ProcessNode {
+class CharCreateUnityNode : public CreateNode {
 	Q_OBJECT;
 private:
 	using NodeType = QChar;

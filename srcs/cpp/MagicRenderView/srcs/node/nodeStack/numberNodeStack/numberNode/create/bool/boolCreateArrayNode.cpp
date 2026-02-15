@@ -6,7 +6,7 @@
 
 Def_Entity_NodeTypeName_Function( BoolCreateArrayNode, Node::tr( "创建/序列/布尔序列" ) );
 
-BoolCreateArrayNode::BoolCreateArrayNode( const QString &node_name ) : ProcessNode( node_name ) {
+BoolCreateArrayNode::BoolCreateArrayNode( const QString &node_name ) : CreateNode( node_name ) {
 	outputVarPtr = nullptr;
 }
 bool BoolCreateArrayNode::initEx( MainWidget *parent ) {
@@ -16,10 +16,10 @@ bool BoolCreateArrayNode::initEx( MainWidget *parent ) {
 			return false;
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool BoolCreateArrayNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

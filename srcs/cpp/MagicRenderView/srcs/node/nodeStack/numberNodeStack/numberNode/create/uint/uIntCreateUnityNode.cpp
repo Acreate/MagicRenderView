@@ -1,4 +1,4 @@
-#include "uIntCreateUnityNode.h"
+﻿#include "uIntCreateUnityNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/uIntOutputPort.h>
@@ -8,7 +8,7 @@
 
 Def_Entity_NodeTypeName_Function( UIntCreateUnityNode, Node::tr( "创建/单元/无符号整数" ) );
 
-UIntCreateUnityNode::UIntCreateUnityNode( const QString &node_name ) : ProcessNode( node_name ) {
+UIntCreateUnityNode::UIntCreateUnityNode( const QString &node_name ) : CreateNode( node_name ) {
 	editorWidget = nullptr;
 	outputVarPtr = nullptr;
 }
@@ -19,10 +19,10 @@ bool UIntCreateUnityNode::initEx( MainWidget *parent ) {
 		*outputVarPtr = '\0';
 		return true;
 	};
-	return ProcessNode::initEx( parent );
+	return CreateNode::initEx( parent );
 }
 bool UIntCreateUnityNode::updateLayout( ) {
-	if( ProcessNode::updateLayout( ) == false )
+	if( CreateNode::updateLayout( ) == false )
 		return false;
 	return true;
 }

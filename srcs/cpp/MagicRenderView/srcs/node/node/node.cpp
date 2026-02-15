@@ -1,4 +1,4 @@
-#include "node.h"
+﻿#include "node.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
@@ -28,6 +28,7 @@ bool Node::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t curre
 Node::~Node( ) {
 
 	emit release_node_signal( this, Create_SrackInfo( ) );
+
 	releaseAllRefNode( );
 
 	size_t count = inputPortVector.size( );
