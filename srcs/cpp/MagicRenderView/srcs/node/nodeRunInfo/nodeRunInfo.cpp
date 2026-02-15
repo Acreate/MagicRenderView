@@ -3,15 +3,13 @@
 #include <qdatetime.h>
 #include <QThread>
 
-#include "nodeRunLink.h"
-
 #include "../../app/application.h"
-#include "../../director/nodeDirector.h"
-#include "../../director/printerDirector.h"
 #include "../../srack/srackInfo.h"
 #include "../../tools/arrayTools.h"
 #include "../../tools/vectorTools.h"
 #include "../node/node.h"
+
+#include "nodeRunLink/nodeRunLink.h"
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
 	// 等待1秒执行下一个节点

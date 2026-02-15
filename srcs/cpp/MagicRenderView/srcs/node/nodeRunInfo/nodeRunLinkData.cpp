@@ -1,36 +1,29 @@
-﻿#include "nodeRunLink.h"
+﻿#include "nodeRunLinkData.h"
 
 #include "../../enums/nodeEnum.h"
 
 #include "../node/node.h"
+NodeRunLinkData::NodeRunLinkData( Node *init_node_ptr ) {
+	startNode = nullptr;
+	currentNode = nullptr;
+	beforeNode = init_node_ptr;
+	over = false;
+	ready = false;
+}
+bool NodeRunLinkData::isReady( ) const {
+	return ready;
+}
+bool NodeRunLinkData::isOver( ) const {
+	return over;
+}
+Node * NodeRunLinkData::getStartNode( ) const { return startNode; }
+Node * NodeRunLinkData::getCurrentNode( ) const { return currentNode; }
+Node * NodeRunLinkData::getBeforeNode( ) const { return beforeNode; }
+const std::vector<Node *> & NodeRunLinkData::getOverRunNodeVector( ) const { return overRunNodeVector; }
+const std::vector<Node *> & NodeRunLinkData::getLinkNodeVector( ) const { return linkNodeVector; }
+const std::vector<Node *> & NodeRunLinkData::getAdviseNodeVector( ) const { return adviseNodeVector; }
 
-#include "nodeRunLinkData/nodeRunLinkData.h"
-
-NodeRunLink::~NodeRunLink( ) {
-	delete nodeRunLinkDataPtr;
-}
-NodeRunLinkData * NodeRunLink::getNodeRunLinkDataPtr( ) const {
-	return nodeRunLinkDataPtr;
-}
-NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
-	nodeRunLinkDataPtr = new NodeRunLinkData( init_node_ptr );
-}
-bool NodeRunLink::isReady( ) const {
-	return nodeRunLinkDataPtr->ready;
-}
-bool NodeRunLink::isOver( ) const {
-	return nodeRunLinkDataPtr->over;
-}
-Node * NodeRunLink::getStartNode( ) const {
-	return nodeRunLinkDataPtr->startNode;
-}
-Node * NodeRunLink::getCurrentNode( ) const {
-	return nodeRunLinkDataPtr->currentNode;
-}
-Node * NodeRunLink::getBeforeNode( ) const {
-	return nodeRunLinkDataPtr->beforeNode;
-}
-bool NodeRunLink::adviseRunNode( const Node *const node ) const {
+bool NodeRunLinkData::adviseRunNode( const Node *const node ) const {
 	Node **refNodeData;
 	size_t overCount;
 	Node *const*overNodeData;
@@ -49,8 +42,8 @@ bool NodeRunLink::adviseRunNode( const Node *const node ) const {
 	refNodeCount = refNodeVector.size( );
 	if( refNodeCount ) {
 		refNodeData = refNodeVector.data( );
-		overCount = nodeRunLinkDataPtr->overRunNodeVector.size( );
-		overNodeData = nodeRunLinkDataPtr->overRunNodeVector.data( );
+		overCount = overRunNodeVector.size( );
+		overNodeData = overRunNodeVector.data( );
 		for( refNodeIndex = 0; refNodeIndex < refNodeCount; ++refNodeIndex ) {
 			nodeType = refNodeData[ refNodeIndex ]->getNodeType( );
 			if( nodeType == NodeEnum::NodeType::Point )
@@ -67,11 +60,11 @@ bool NodeRunLink::adviseRunNode( const Node *const node ) const {
 	return true;
 }
 
-bool NodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
-	size_t count = nodeRunLinkDataPtr->linkNodeVector.size( );
+bool NodeRunLinkData::linkHasNode( const Node *const check_node_ptr ) const {
+	size_t count = linkNodeVector.size( );
 	if( count == 0 )
 		return false;
-	auto data = nodeRunLinkDataPtr->linkNodeVector.data( );
+	auto data = linkNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
 		if( data[ index ] == check_node_ptr )
