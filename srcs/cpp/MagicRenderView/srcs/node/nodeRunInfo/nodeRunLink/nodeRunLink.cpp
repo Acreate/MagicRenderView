@@ -29,8 +29,11 @@ const std::vector< Node * > & NodeRunLink::getLinkNodeVector( ) const {
 const std::vector< Node * > & NodeRunLink::getOverRunNodeVector( ) const {
 	return NodeRunLinkData::getOverRunNodeVector( );
 }
-Node * NodeRunLink::getStartNode( ) const {
-	return NodeRunLinkData::getStartNode( );
+const std::vector< Node * > & NodeRunLink::getStartNodeVector( ) const {
+	return NodeRunLinkData::getStartNodeVector( );
+}
+bool NodeRunLink::linkHasStartNode( const Node *const check_start_node_ptr ) const {
+	return NodeRunLinkData::linkHasStartNode( check_start_node_ptr );
 }
 bool NodeRunLink::isOver( ) const {
 	return NodeRunLinkData::isOver( );

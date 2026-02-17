@@ -147,19 +147,19 @@ public:
 	virtual bool readyNodeRunData( ) { return true; }
 	/// @brief 填充输入端口
 	/// @param ndoe_run_start_data_time
-	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
 	/// @param current_frame
+	/// @param result_need_run_ref_node_vector 先于该节点运行的节点列表
 	/// @return 失败返回 false
-	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, std::vector< Node * > &result_need_run_ref_node_vector, size_t current_frame ) {
+	virtual bool fillInputPortCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame, std::vector< Node * > &result_need_run_ref_node_vector ) {
 		result_need_run_ref_node_vector = otherNodeOutputPortRefThisNodeInputPortVector;
 		return true;
 	}
 	/// @brief 填充输出端口
-	/// @param result_next_run_advise_node_vector 建议后运行节点列表
 	/// @param ndoe_run_start_data_time
 	/// @param current_frame
+	/// @param result_next_run_advise_node_vector 建议后运行节点列表
 	/// @return 失败返回 false
-	virtual bool fillOutputPortCall( std::vector< Node * > &result_next_run_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
+	virtual bool fillOutputPortCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame, std::vector< Node * > &result_next_run_advise_node_vector ) {
 		result_next_run_advise_node_vector = thisNodeOutputPortRefOtherNodeInputPortVector;
 		return true;
 	}

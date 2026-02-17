@@ -44,14 +44,20 @@ protected:
 	Node *oldNode;
 	/// @brief 编译列表
 	std::vector< Node * > builderNodeVector;
+	/// @brief 编译链接当中的创建节点序列
+	std::vector< NodeRunLink * > createVector;
+	/// @brief 编译链接当中的点节点序列
+	std::vector< NodeRunLink * > pointVector;
+	/// @brief 编译链接当中的函数节点序列
+	std::vector< NodeRunLink * > functionVector;
 	/// @brief 链接列表
 	std::vector< NodeRunLink * > nodeRunLinkVector;
 	/// @brief 调用栈
-	std::list< NodeRunLink * > callStack;
+	std::vector< NodeRunLink * > functionStack;
 	/// @brief 进程栈
-	std::list< NodeRunLink * > createStack;
+	std::vector< NodeRunLink * > createStack;
 	/// @brief 定点栈
-	std::list< NodeRunLink * > pointStack;
+	std::vector< NodeRunLink * > pointStack;
 protected:
 	virtual void appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< Node * > &append_node_vector ) {
@@ -68,6 +74,15 @@ protected:
 	/// @param result_next_node_ptr 返回的下一个节点
 	/// @return 失败返回 null
 	virtual bool getNextNodeRunLinkPtr( NodeRunLink * &result_next_node_ptr );
+	/// @brief 更新下一个节点堆栈信息
+	/// @param update_next_node_ptr 更新的节点链接信息
+	/// @return 失败返回 false
+	virtual bool updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr );
+	/// @brief 检查序列是否存在匹配的起始节点
+	/// @param check_vector 检查的序列
+	/// @param check_node 起始节点
+	/// @return 不存在返回 false
+	virtual bool stackHasStartNode( const std::vector< NodeRunLink * > &check_vector, Node *check_node ) const;
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
@@ -115,6 +130,15 @@ Q_SIGNALS:
 	/// @brief 编译结束
 	/// @param change_obj 编译对象
 	void end_builder_signal( NodeRunInfo *change_obj );
+	/// @brief 编译完成信号
+	/// @param builder_link 完成对象
+	void builder_finish_signal( NodeRunLink *builder_link );
+	/// @brief 编译警告信号
+	/// @param builder_link 警告对象
+	void builder_warning_signal( NodeRunLink *builder_link );
+	/// @brief 编译错误信号
+	/// @param builder_link 错误对象
+	void builder_error_signal( NodeRunLink *builder_link );
 };
 
 #endif // NODERUNINFO_H_H_HEAD__FILE__

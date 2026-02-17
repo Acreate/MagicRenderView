@@ -31,7 +31,8 @@ protected:
 	Node * getCurrentNode( ) const override;
 	const std::vector< Node * > & getLinkNodeVector( ) const override;
 	const std::vector< Node * > & getOverRunNodeVector( ) const override;
-	Node * getStartNode( ) const override;
+	const std::vector<Node *> & getStartNodeVector( ) const override;
+	bool linkHasStartNode( const Node * const check_start_node_ptr ) const override;
 	bool isOver( ) const override;
 	bool isReady( ) const override;
 	bool linkHasNode( const Node *const check_node_ptr ) const override;

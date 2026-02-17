@@ -114,44 +114,58 @@ bool NodeRunInfo::builderRunInstance( ) {
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		switch( builderNodeArrayPtr[ builderNodeIndex ]->getNodeType( ) ) {
 			case NodeEnum::NodeType::Point :
+				if( stackHasStartNode( pointVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
+					break;
 				createNodeRunLink = new PointNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
+					emit builder_error_signal( createNodeRunLink );
 					delete createNodeRunLink;
-					// 输出异常
-					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
 					break;
 				}
-				pointStack.emplace_back( createNodeRunLink );
+				pointVector.emplace_back( createNodeRunLink );
+				emit builder_finish_signal( createNodeRunLink );
 				break;
 			case NodeEnum::NodeType::Create :
+				if( stackHasStartNode( createVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
+					break;
 				createNodeRunLink = new CreateNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
+					emit builder_error_signal( createNodeRunLink );
 					delete createNodeRunLink;
-					// 输出异常
-					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
 					break;
 				}
-				createStack.emplace_back( createNodeRunLink );
+				createVector.emplace_back( createNodeRunLink );
+				emit builder_finish_signal( createNodeRunLink );
 				break;
 
 			case NodeEnum::NodeType::Function :
+				if( stackHasStartNode( functionVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
+					break;
 				createNodeRunLink = new CallNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
+					emit builder_error_signal( createNodeRunLink );
 					delete createNodeRunLink;
-					// 输出异常
-					printerDirector->info( tr( "[%1] 初始化 [%2] 异常" ).arg( createNodeRunLink->metaObject( )->className( ) ).arg( builderNodeArrayPtr[ builderNodeIndex ]->toQString( ) ), Create_SrackInfo( ) );
 					break;
 				}
-				callStack.emplace_back( createNodeRunLink );
+				functionVector.emplace_back( createNodeRunLink );
+				emit builder_finish_signal( createNodeRunLink );
 				break;
 
 		}
 	runStop = true;
-	ready = createStack.size( ) > 0;
-	if( ready == false )
+	builderNodeCount = createVector.size( );
+	ready = builderNodeCount > 0;
+	if( ready ) {
+		// 放入存储
+		nodeRunLinkVector.append_range( createVector );
+		nodeRunLinkVector.append_range( functionVector );
+		nodeRunLinkVector.append_range( pointVector );
+		// 初始化
+		functionStack = std::vector( createVector.begin( ), createVector.end( ) );
+	} else
 		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
 	emit end_builder_signal( this );
-	return true;
+	return ready;
 }
 
 bool NodeRunInfo::runNextNode( ) {
@@ -168,8 +182,40 @@ bool NodeRunInfo::runNextNode( ) {
 		if( nextNodeRunLink->runRunNode( nextRunPtr, *currentRunDataTime, currentFrame ) == false ) {
 			oldNode = currentNode;
 			currentNode = nextRunPtr;
-			auto &adviseNodeVector = nextNodeRunLink->getAdviseNodeVector( );
-			// todo : 判定下一个节点
+			std::vector< Node * > result;
+			if( nextNodeRunLink->getNodeRunAdviseNodeVector( nextRunPtr, result, *currentRunDataTime, currentFrame ) ) {
+				// todo : 判定下一个节点
+				size_t count = result.size( );
+				auto data = result.data( );
+				size_t index = 0;
+				for( ; index < count; ++index ) {
+					auto nodeType = data[ index ]->getNodeType( );
+					switch( nodeType ) {
+						case NodeEnum::NodeType::Function : {
+							size_t vectorCount = functionVector.size( );
+							auto vectorData = functionVector.data( );
+							size_t vectorIndex = 0;
+							for( ; vectorIndex < vectorCount; ++vectorIndex )
+								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
+									functionStack.emplace_back( vectorData[ vectorIndex ] );
+									break;
+								}
+							break;
+						}
+						case NodeEnum::NodeType::Point : {
+							size_t vectorCount = pointVector.size( );
+							auto vectorData = pointVector.data( );
+							size_t vectorIndex = 0;
+							for( ; vectorIndex < vectorCount; ++vectorIndex )
+								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
+									pointStack.emplace_back( vectorData[ vectorIndex ] );
+									break;
+								}
+							break;
+						}
+					}
+				}
+			}
 		} else {
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( nextRunPtr->toQString( ) ), Create_SrackInfo( ) );
 		}
@@ -234,23 +280,26 @@ bool NodeRunInfo::resetRunStartNode( ) {
 
 	if( runStop == false || ready == false )
 		return false;
-	std::vector< NodeRunLink * >::iterator iterator;
-	std::vector< NodeRunLink * >::iterator end;
-	NodeRunLink *nodeRunLink;
-
-	iterator = nodeRunLinkVector.begin( );
-	end = nodeRunLinkVector.end( );
-	for( ; iterator != end; ++iterator ) {
-		nodeRunLink = *iterator;
-		if( nodeRunLink->builder( ) )
-			printerDirector->info( tr( "[%1] 重置失败" ).arg( nodeRunLink->metaObject( )->className( ) ), Create_SrackInfo( ) );
+	size_t count = nodeRunLinkVector.size( );
+	if( count == 0 ) {
+		ready = false;
+		return false;
 	}
 	pointStack.clear( );
-	callStack.clear( );
+	functionStack.clear( );
 	createStack.clear( );
+	auto data = nodeRunLinkVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->builder( ) == false ) {
+			printerDirector->info( tr( "[%1] 重置失败" ).arg( data[ index ]->metaObject( )->className( ) ), Create_SrackInfo( ) );
+			ready = false;
+			return false;
+		}
 	*currentRunDataTime = QDateTime::currentDateTime( );
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
+	functionStack = std::vector( createVector.begin( ), createVector.end( ) );
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
@@ -263,9 +312,15 @@ void NodeRunInfo::resetData( ) {
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
 	builderNodeVector.clear( );
+
 	createStack.clear( );
 	pointStack.clear( );
-	pointStack.clear( );
+	functionStack.clear( );
+
+	createVector.clear( );
+	pointVector.clear( );
+	functionVector.clear( );
+
 	size_t count = nodeRunLinkVector.size( );
 	size_t index;
 	NodeRunLink **nodeRunLinkData;
@@ -278,6 +333,20 @@ void NodeRunInfo::resetData( ) {
 	}
 }
 bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr ) {
+	return false;
+}
+bool NodeRunInfo::updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr ) {
+	if( update_next_node_ptr->isOver( ) == false )
+		return true;
+	return true;
+}
+bool NodeRunInfo::stackHasStartNode( const std::vector< NodeRunLink * > &check_vector, Node *check_node ) const {
+	size_t count = check_vector.size( );
+	auto data = check_vector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->linkHasStartNode( check_node ) == true )
+			return true;
 	return false;
 }
 void NodeRunInfo::clear( ) {
