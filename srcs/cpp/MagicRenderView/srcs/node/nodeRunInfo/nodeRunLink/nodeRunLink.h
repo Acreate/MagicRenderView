@@ -36,6 +36,7 @@ protected:
 	bool isOver( ) const override;
 	bool isReady( ) const override;
 	bool linkHasNode( const Node *const check_node_ptr ) const override;
+	bool linkHasEndNode( const Node *const check_node_ptr ) const override;
 };
 
 #endif // NODERUNLINK_H_H_HEAD__FILE__

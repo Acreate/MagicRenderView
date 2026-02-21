@@ -150,7 +150,6 @@ bool NodeRunInfo::builderRunInstance( ) {
 				functionVector.emplace_back( createNodeRunLink );
 				emit builder_finish_signal( createNodeRunLink );
 				break;
-
 		}
 	runStop = true;
 	builderNodeCount = createVector.size( );
@@ -161,7 +160,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 		nodeRunLinkVector.append_range( functionVector );
 		nodeRunLinkVector.append_range( pointVector );
 		// 初始化
-		functionStack = std::vector( createVector.begin( ), createVector.end( ) );
+		functionStack = UATemStackType< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
 	} else
 		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
 	emit end_builder_signal( this );
@@ -184,28 +183,79 @@ bool NodeRunInfo::runNextNode( ) {
 			currentNode = nextRunPtr;
 			std::vector< Node * > result;
 			if( nextNodeRunLink->getNodeRunAdviseNodeVector( nextRunPtr, result, *currentRunDataTime, currentFrame ) ) {
+				size_t count;
+				Node **data;
+				size_t index;
+				size_t vectorCount;
+				NodeRunLink **vectorData;
+				size_t vectorIndex;
+				NodeEnum::NodeType nodeType;
+				UATemStackType< NodeRunLink * >::iterator iterator;
+				UATemStackType< NodeRunLink * >::iterator end;
+				// 删除堆栈中的信息
+
+				if( nextNodeRunLink->isOver( ) ) {
+					// 函数堆栈吗?
+					vectorCount = functionVector.size( );
+					vectorData = functionVector.data( );
+					vectorIndex = 0;
+					for( ; vectorIndex < vectorCount; ++vectorIndex )
+						if( vectorData[ vectorIndex ]->linkHasEndNode( nextRunPtr ) ) {
+							iterator = functionStack.begin( );
+							end = functionStack.end( );
+							for( ; iterator != end; ++iterator )
+								if( *iterator == vectorData[ vectorIndex ] ) {
+									// 删除堆栈序列
+									functionStack.erase( iterator );
+									// 重新编译
+									vectorData[ vectorIndex ]->builder( );
+									break;
+								}
+							break;
+						}
+					if( vectorIndex == vectorCount ) {
+						// 点堆栈吗?
+						vectorCount = pointVector.size( );
+						vectorData = pointVector.data( );
+						vectorIndex = 0;
+						for( ; vectorIndex < vectorCount; ++vectorIndex )
+							if( vectorData[ vectorIndex ]->linkHasEndNode( nextRunPtr ) ) {
+								iterator = pointStack.begin( );
+								end = pointStack.end( );
+								for( ; iterator != end; ++iterator )
+									if( *iterator == vectorData[ vectorIndex ] ) {
+										// 删除堆栈调用
+										pointStack.erase( iterator );
+										// 重新编译
+										vectorData[ vectorIndex ]->builder( );
+										break;
+									}
+								break;
+							}
+					}
+				}
 				// todo : 判定下一个节点
-				size_t count = result.size( );
-				auto data = result.data( );
-				size_t index = 0;
+				count = result.size( );
+				data = result.data( );
+				index = 0;
 				for( ; index < count; ++index ) {
-					auto nodeType = data[ index ]->getNodeType( );
+					nodeType = data[ index ]->getNodeType( );
 					switch( nodeType ) {
 						case NodeEnum::NodeType::Function : {
-							size_t vectorCount = functionVector.size( );
-							auto vectorData = functionVector.data( );
-							size_t vectorIndex = 0;
+							vectorCount = functionVector.size( );
+							vectorData = functionVector.data( );
+							vectorIndex = 0;
 							for( ; vectorIndex < vectorCount; ++vectorIndex )
 								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
-									functionStack.emplace_back( vectorData[ vectorIndex ] );
+									functionStack.emplace_front( vectorData[ vectorIndex ] );
 									break;
 								}
 							break;
 						}
 						case NodeEnum::NodeType::Point : {
-							size_t vectorCount = pointVector.size( );
-							auto vectorData = pointVector.data( );
-							size_t vectorIndex = 0;
+							vectorCount = pointVector.size( );
+							vectorData = pointVector.data( );
+							vectorIndex = 0;
 							for( ; vectorIndex < vectorCount; ++vectorIndex )
 								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
 									pointStack.emplace_back( vectorData[ vectorIndex ] );
@@ -299,7 +349,7 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	*currentRunDataTime = QDateTime::currentDateTime( );
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
-	functionStack = std::vector( createVector.begin( ), createVector.end( ) );
+	functionStack = UATemStackType< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {

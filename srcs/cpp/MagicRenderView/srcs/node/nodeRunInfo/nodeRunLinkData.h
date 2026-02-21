@@ -77,6 +77,10 @@ protected:
 	/// @param check_start_node_ptr 检查的起始节点
 	/// @return 不存在返回 false
 	virtual bool linkHasStartNode( const Node *const check_start_node_ptr ) const;
+	/// @brief 链接中是否存在匹配的结束节点
+	/// @param check_node_ptr 检查解决点
+	/// @return 存在返回 true
+	virtual bool linkHasEndNode( const Node *const check_node_ptr ) const;
 };
 
 #endif // NODERUNLINKDATA_H_H_HEAD__FILE__

@@ -96,3 +96,12 @@ bool NodeRunLinkData::linkHasStartNode( const Node *const check_start_node_ptr )
 			return true;
 	return false;
 }
+bool NodeRunLinkData::linkHasEndNode( const Node *const check_node_ptr ) const {
+	size_t count = startNodeVector.size( );
+	if( count == 0 )
+		return false;
+	auto data = startNodeVector.data( );
+	if( data[ count - 1 ] == check_node_ptr )
+		return true;
+	return false;
+}

@@ -17,6 +17,8 @@ class SrackInfo;
 class NodeRunInfo : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
+	template<typename TUnityType>
+	using  UATemStackType = std::list<TUnityType>;
 protected:
 	/// @brief 应用实例
 	Application *appinstancePtr;
@@ -53,11 +55,11 @@ protected:
 	/// @brief 链接列表
 	std::vector< NodeRunLink * > nodeRunLinkVector;
 	/// @brief 调用栈
-	std::vector< NodeRunLink * > functionStack;
+	UATemStackType< NodeRunLink * > functionStack;
 	/// @brief 进程栈
-	std::vector< NodeRunLink * > createStack;
+	UATemStackType< NodeRunLink * > createStack;
 	/// @brief 定点栈
-	std::vector< NodeRunLink * > pointStack;
+	UATemStackType< NodeRunLink * > pointStack;
 protected:
 	virtual void appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< Node * > &append_node_vector ) {
