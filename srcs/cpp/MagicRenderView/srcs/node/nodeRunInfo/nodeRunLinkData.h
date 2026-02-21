@@ -4,7 +4,11 @@
 #include <vector>
 class NodeRunLink;
 class Node;
-class NodeRunLinkData : public QObject {
+class NodeRunLinkData {
+public:
+	virtual ~NodeRunLinkData( ) = default;
+private:
+	friend class NodeRunLink;
 protected:
 	/// @brief 保存已经运行的节点
 	std::vector< Node * > overRunNodeVector;

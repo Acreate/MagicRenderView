@@ -6,7 +6,7 @@
 CreateNodeRunLink::CreateNodeRunLink( Node *const init_node_ptr ) : NodeRunLink( init_node_ptr ) { }
 
 bool CreateNodeRunLink::builder( ) {
-	if( beforeNode->getNodeType( ) != NodeEnum::NodeType::Create )
+	if( getBeforeNode( )->getNodeType( ) != NodeEnum::NodeType::Create )
 		return false;
 	return false;
 }
