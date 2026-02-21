@@ -52,6 +52,7 @@ namespace NodeEnum {
 		InputPort,
 		OutputPort
 	};
+
 	/// @brief 节点状态样式
 	enum class NodeStatusType {
 		/// @brief 无状态

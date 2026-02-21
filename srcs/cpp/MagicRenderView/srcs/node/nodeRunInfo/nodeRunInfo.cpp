@@ -7,6 +7,7 @@
 
 #include "../../director/printerDirector.h"
 
+#include "../../enums/builderEnum.h"
 #include "../../enums/nodeEnum.h"
 
 #include "../../srack/srackInfo.h"
@@ -102,10 +103,10 @@ bool NodeRunInfo::builderRunInstance( ) {
 	appinstancePtr = Application::getInstancePtr( );
 	if( appinstancePtr == nullptr )
 		return false;
-	auto printerDirector = appinstancePtr->getPrinterDirector( );
+	printerDirector = appinstancePtr->getPrinterDirector( );
 	if( printerDirector == nullptr )
 		return false;
-	resetData( );
+	resetBilderData( );
 
 	size_t builderNodeIndex;
 	size_t builderNodeCount = builderNodeVector.size( );
@@ -118,7 +119,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 					break;
 				createNodeRunLink = new PointNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink );
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
 					delete createNodeRunLink;
 					break;
 				}
@@ -130,7 +131,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 					break;
 				createNodeRunLink = new CreateNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink );
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
 					delete createNodeRunLink;
 					break;
 				}
@@ -143,7 +144,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 					break;
 				createNodeRunLink = new CallNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink );
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
 					delete createNodeRunLink;
 					break;
 				}
@@ -161,8 +162,10 @@ bool NodeRunInfo::builderRunInstance( ) {
 		nodeRunLinkVector.append_range( pointVector );
 		// 初始化
 		functionStack = UATemStackType< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
-	} else
+	} else {
 		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
+		emit builder_error_signal( nullptr, BuilderEnum::BuilderErrorType::None, nullptr );
+	}
 	emit end_builder_signal( this );
 	return ready;
 }
@@ -195,7 +198,7 @@ bool NodeRunInfo::runNextNode( ) {
 				// 删除堆栈中的信息
 
 				if( nextNodeRunLink->isOver( ) ) {
-					// 函数堆栈吗?
+					// call 堆栈吗?
 					vectorCount = functionVector.size( );
 					vectorData = functionVector.data( );
 					vectorIndex = 0;
@@ -214,7 +217,7 @@ bool NodeRunInfo::runNextNode( ) {
 							break;
 						}
 					if( vectorIndex == vectorCount ) {
-						// 点堆栈吗?
+						// point 堆栈吗?
 						vectorCount = pointVector.size( );
 						vectorData = pointVector.data( );
 						vectorIndex = 0;
@@ -230,6 +233,18 @@ bool NodeRunInfo::runNextNode( ) {
 										vectorData[ vectorIndex ]->builder( );
 										break;
 									}
+								break;
+							}
+					}
+					if( vectorIndex == vectorCount ) {
+						// create 堆栈吗?
+						iterator = createStack.begin( );
+						end = createStack.end( );
+						for( ; iterator != end; ++iterator )
+							if( *iterator == vectorData[ vectorIndex ] ) {
+								// 删除堆栈调用
+								createStack.erase( iterator );
+								// 不需要重新编译
 								break;
 							}
 					}
@@ -357,11 +372,15 @@ bool NodeRunInfo::runStopNode( ) {
 	return true;
 }
 void NodeRunInfo::resetData( ) {
+
+	builderNodeVector.clear( );
+	resetBilderData( );
+}
+void NodeRunInfo::resetBilderData( ) {
 	ready = false;
 	*currentRunDataTime = QDateTime::currentDateTime( );
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
-	builderNodeVector.clear( );
 
 	createStack.clear( );
 	pointStack.clear( );
@@ -383,6 +402,21 @@ void NodeRunInfo::resetData( ) {
 	}
 }
 bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr ) {
+	// call 是否存在
+	if( functionStack.size( ) > 0 ) {
+		result_next_node_ptr = *functionStack.begin( );
+		return true;
+	}
+	// create 是否存在
+	if( createStack.size( ) > 0 ) {
+		result_next_node_ptr = *createStack.begin( );
+		return true;
+	}
+	// if 是否存在
+	if( pointStack.size( ) > 0 ) {
+		result_next_node_ptr = *pointStack.begin( );
+		return true;
+	}
 	return false;
 }
 bool NodeRunInfo::updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr ) {

@@ -6,14 +6,18 @@
 CreateNodeRunLink::CreateNodeRunLink( Node *const init_node_ptr ) : NodeRunLink( init_node_ptr ) { }
 
 bool CreateNodeRunLink::builder( ) {
-	if( getBeforeNode( )->getNodeType( ) != NodeEnum::NodeType::Create )
+	Node *beforeNode = getBeforeNode( );
+	if( beforeNode == nullptr )
 		return false;
-	return false;
+	if( beforeNode->getNodeType( ) != NodeEnum::NodeType::Create )
+		return false;
+	return true;
 }
-
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
-	return false;
+	return NodeRunLink::linkHasNode( check_node_ptr );
 }
 bool CreateNodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
-	return false;
+	if( isOver( ) )
+		return false;
+	return true;
 }

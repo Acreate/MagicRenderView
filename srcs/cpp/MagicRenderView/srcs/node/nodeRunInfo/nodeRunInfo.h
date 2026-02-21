@@ -11,14 +11,18 @@ namespace NodeEnum {
 	enum class ErrorType;
 	enum class AdviseType;
 }
+namespace BuilderEnum {
+	enum class BuilderWarningType;
+	enum class BuilderErrorType;
+}
 class Node;
 class NodeDirector;
 class SrackInfo;
 class NodeRunInfo : public QObject {
 	Q_OBJECT;
 	friend class NodeDirector;
-	template<typename TUnityType>
-	using  UATemStackType = std::list<TUnityType>;
+	template< typename TUnityType >
+	using UATemStackType = std::list< TUnityType >;
 protected:
 	/// @brief 应用实例
 	Application *appinstancePtr;
@@ -72,6 +76,8 @@ protected:
 	virtual bool builderRunInstance( );
 	/// @brief 重置数据
 	virtual void resetData( );
+	/// @brief 重置编译数据
+	virtual void resetBilderData( );
 	/// @brief 获取下一个节点对象指针
 	/// @param result_next_node_ptr 返回的下一个节点
 	/// @return 失败返回 null
@@ -137,10 +143,14 @@ Q_SIGNALS:
 	void builder_finish_signal( NodeRunLink *builder_link );
 	/// @brief 编译警告信号
 	/// @param builder_link 警告对象
-	void builder_warning_signal( NodeRunLink *builder_link );
+	/// @param warning_code 警告类型
+	/// @param warning_node_ptr 警告产生对象
+	void builder_warning_signal( NodeRunLink *builder_link, const BuilderEnum::BuilderWarningType &warning_code, const Node *const warning_node_ptr );
 	/// @brief 编译错误信号
 	/// @param builder_link 错误对象
-	void builder_error_signal( NodeRunLink *builder_link );
+	/// @param error_code 错误类型
+	/// @param error_node_ptr 错误产生对象
+	void builder_error_signal( NodeRunLink *builder_link, const BuilderEnum::BuilderErrorType &error_code, const Node *const error_node_ptr );
 };
 
 #endif // NODERUNINFO_H_H_HEAD__FILE__

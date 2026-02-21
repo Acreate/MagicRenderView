@@ -6,7 +6,7 @@
 NodeRunLinkData::NodeRunLinkData( Node *init_node_ptr ) {
 	startNodeVector.emplace_back( init_node_ptr );
 	currentNode = nullptr;
-	beforeNode = nullptr;
+	beforeNode = init_node_ptr;
 	over = false;
 	ready = false;
 }
