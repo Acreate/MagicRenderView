@@ -186,100 +186,10 @@ bool NodeRunInfo::runNextNode( ) {
 			currentNode = nextRunPtr;
 			std::vector< Node * > result;
 			if( nextNodeRunLink->getNodeRunAdviseNodeVector( nextRunPtr, result, *currentRunDataTime, currentFrame ) ) {
-				size_t count;
-				Node **data;
-				size_t index;
-				size_t vectorCount;
-				NodeRunLink **vectorData;
-				size_t vectorIndex;
-				NodeEnum::NodeType nodeType;
-				UATemStackType< NodeRunLink * >::iterator iterator;
-				UATemStackType< NodeRunLink * >::iterator end;
 				// 删除堆栈中的信息
-
-				if( nextNodeRunLink->isOver( ) ) {
-					// call 堆栈吗?
-					vectorCount = functionVector.size( );
-					vectorData = functionVector.data( );
-					vectorIndex = 0;
-					for( ; vectorIndex < vectorCount; ++vectorIndex )
-						if( vectorData[ vectorIndex ]->linkHasEndNode( nextRunPtr ) ) {
-							iterator = functionStack.begin( );
-							end = functionStack.end( );
-							for( ; iterator != end; ++iterator )
-								if( *iterator == vectorData[ vectorIndex ] ) {
-									// 删除堆栈序列
-									functionStack.erase( iterator );
-									// 重新编译
-									vectorData[ vectorIndex ]->builder( );
-									break;
-								}
-							break;
-						}
-					if( vectorIndex == vectorCount ) {
-						// point 堆栈吗?
-						vectorCount = pointVector.size( );
-						vectorData = pointVector.data( );
-						vectorIndex = 0;
-						for( ; vectorIndex < vectorCount; ++vectorIndex )
-							if( vectorData[ vectorIndex ]->linkHasEndNode( nextRunPtr ) ) {
-								iterator = pointStack.begin( );
-								end = pointStack.end( );
-								for( ; iterator != end; ++iterator )
-									if( *iterator == vectorData[ vectorIndex ] ) {
-										// 删除堆栈调用
-										pointStack.erase( iterator );
-										// 重新编译
-										vectorData[ vectorIndex ]->builder( );
-										break;
-									}
-								break;
-							}
-					}
-					if( vectorIndex == vectorCount ) {
-						// create 堆栈吗?
-						iterator = createStack.begin( );
-						end = createStack.end( );
-						for( ; iterator != end; ++iterator )
-							if( *iterator == vectorData[ vectorIndex ] ) {
-								// 删除堆栈调用
-								createStack.erase( iterator );
-								// 不需要重新编译
-								break;
-							}
-					}
-				}
-				// todo : 判定下一个节点
-				count = result.size( );
-				data = result.data( );
-				index = 0;
-				for( ; index < count; ++index ) {
-					nodeType = data[ index ]->getNodeType( );
-					switch( nodeType ) {
-						case NodeEnum::NodeType::Function : {
-							vectorCount = functionVector.size( );
-							vectorData = functionVector.data( );
-							vectorIndex = 0;
-							for( ; vectorIndex < vectorCount; ++vectorIndex )
-								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
-									functionStack.emplace_front( vectorData[ vectorIndex ] );
-									break;
-								}
-							break;
-						}
-						case NodeEnum::NodeType::Point : {
-							vectorCount = pointVector.size( );
-							vectorData = pointVector.data( );
-							vectorIndex = 0;
-							for( ; vectorIndex < vectorCount; ++vectorIndex )
-								if( vectorData[ vectorIndex ]->linkHasStartNode( data[ index ] ) ) {
-									pointStack.emplace_back( vectorData[ vectorIndex ] );
-									break;
-								}
-							break;
-						}
-					}
-				}
+				if( nextNodeRunLink->isOver( ) )
+					removeNodeRunLinkTarget( currentNode, nextNodeRunLink->getBeforeNode( )->getNodeType( ) );
+				insertNodeRunLinkTarget( result );
 			}
 		} else {
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( nextRunPtr->toQString( ) ), Create_SrackInfo( ) );
@@ -432,6 +342,248 @@ bool NodeRunInfo::stackHasStartNode( const std::vector< NodeRunLink * > &check_v
 		if( data[ index ]->linkHasStartNode( check_node ) == true )
 			return true;
 	return false;
+}
+bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link ) {
+
+	size_t vectorCount;
+	NodeRunLink **vectorData;
+	size_t vectorIndex;
+	UATemStackType< NodeRunLink * >::iterator iterator;
+	UATemStackType< NodeRunLink * >::iterator end;
+	// call 堆栈吗?
+	vectorCount = functionVector.size( );
+	vectorData = functionVector.data( );
+	vectorIndex = 0;
+	for( ; vectorIndex < vectorCount; ++vectorIndex )
+		if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+			iterator = functionStack.begin( );
+			end = functionStack.end( );
+			for( ; iterator != end; ++iterator )
+				if( *iterator == vectorData[ vectorIndex ] ) {
+					// 删除堆栈序列
+					functionStack.erase( iterator );
+					return true;
+				}
+			break;
+		}
+	if( vectorIndex == vectorCount ) {
+		// point 堆栈吗?
+		vectorCount = pointVector.size( );
+		vectorData = pointVector.data( );
+		vectorIndex = 0;
+		for( ; vectorIndex < vectorCount; ++vectorIndex )
+			if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+				iterator = pointStack.begin( );
+				end = pointStack.end( );
+				for( ; iterator != end; ++iterator )
+					if( *iterator == vectorData[ vectorIndex ] ) {
+						// 删除堆栈调用
+						pointStack.erase( iterator );
+						return true;
+					}
+				break;
+			}
+	}
+	if( vectorIndex == vectorCount ) {
+		// create 堆栈吗?
+		vectorCount = createVector.size( );
+		vectorData = createVector.data( );
+		vectorIndex = 0;
+		for( ; vectorIndex < vectorCount; ++vectorIndex )
+			if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+				iterator = createStack.begin( );
+				end = createStack.end( );
+				for( ; iterator != end; ++iterator )
+					if( *iterator == vectorData[ vectorIndex ] ) {
+						// 删除堆栈调用
+						createStack.erase( iterator );
+						return true;
+					}
+			}
+	}
+	return false;
+}
+bool NodeRunInfo::insertNodeRunLinkTarget( const Node *const target_run_link ) {
+	size_t vectorCount;
+	NodeRunLink **vectorData;
+	size_t vectorIndex;
+	NodeEnum::NodeType nodeType;
+	nodeType = target_run_link->getNodeType( );
+	switch( nodeType ) {
+		case NodeEnum::NodeType::Function : {
+			vectorCount = functionVector.size( );
+			vectorData = functionVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ]->linkHasStartNode( target_run_link ) ) {
+					if( vectorData[ vectorIndex ]->isOver( ) )
+						rebuilderOverNodeRunLinkTarget( vectorData[ vectorIndex ] );
+					functionStack.emplace_front( vectorData[ vectorIndex ] );
+					break;
+				}
+			return true;
+			break;
+		}
+		case NodeEnum::NodeType::Point : {
+			vectorCount = pointVector.size( );
+			vectorData = pointVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ]->linkHasStartNode( target_run_link ) ) {
+					if( vectorData[ vectorIndex ]->isOver( ) )
+						rebuilderOverNodeRunLinkTarget( vectorData[ vectorIndex ] );
+					pointStack.emplace_back( vectorData[ vectorIndex ] );
+					break;
+				}
+			return true;
+			break;
+		}
+	}
+
+	printerDirector->info( tr( "[ %1 ]节点匹配异常" ).arg( target_run_link->toQString( ) ),Create_SrackInfo( ) );
+	return false;
+}
+bool NodeRunInfo::insertNodeRunLinkTarget( const std::vector< Node * > &target_run_link_vector ) {
+	size_t count;
+	const Node *const *data;
+	size_t index;
+	count = target_run_link_vector.size( );
+	data = target_run_link_vector.data( );
+	index = 0;
+	for( ; index < count; ++index )
+		if( insertNodeRunLinkTarget( data[ index ] ) == false )
+			return false;
+
+	return true;
+}
+bool NodeRunInfo::rebuilderOverNodeRunLinkTarget( NodeRunLink *rebuilder_target ) {
+	NodeEnum::NodeType nodeType;
+	size_t vectorCount;
+	NodeRunLink **vectorData;
+	size_t vectorIndex;
+	Node *currentNode = rebuilder_target->getCurrentNode( );
+	nodeType = currentNode->getNodeType( );
+	switch( nodeType ) {
+		case NodeEnum::NodeType::Call :
+		case NodeEnum::NodeType::Function :
+			vectorCount = functionVector.size( );
+			vectorData = functionVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ] == rebuilder_target ) {
+					if( rebuilder_target->builder( ) == false )
+						break;
+					filterOverNodeRunLinkVector( rebuilder_target->getLinkNodeVector( ) );
+					return true;
+				}
+			break;
+		case NodeEnum::NodeType::Point :
+		case NodeEnum::NodeType::Jump :
+			vectorCount = pointVector.size( );
+			vectorData = pointVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ] == rebuilder_target ) {
+					if( rebuilder_target->builder( ) == false )
+						break;
+					filterOverNodeRunLinkVector( rebuilder_target->getLinkNodeVector( ) );
+					return true;
+				}
+			break;
+	}
+	printerDirector->info( tr( "[%1] 编译失败" ).arg( currentNode->toQString( ) ),Create_SrackInfo( ) );
+	return false;
+}
+bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::NodeType node_type ) {
+	size_t vectorCount;
+	NodeRunLink **vectorData;
+	size_t vectorIndex;
+	UATemStackType< NodeRunLink * >::iterator iterator;
+	UATemStackType< NodeRunLink * >::iterator end;
+	switch( node_type ) {
+		case NodeEnum::NodeType::Call : // call 堆栈吗?
+		case NodeEnum::NodeType::Function :
+			vectorCount = functionVector.size( );
+			vectorData = functionVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+					iterator = functionStack.begin( );
+					end = functionStack.end( );
+					for( ; iterator != end; ++iterator )
+						if( *iterator == vectorData[ vectorIndex ] ) {
+							// 删除堆栈序列
+							functionStack.erase( iterator );
+							return true;
+						}
+					break;
+				}
+			break;
+		case NodeEnum::NodeType::Point :
+		case NodeEnum::NodeType::Jump :
+			// point 堆栈吗?
+			vectorCount = pointVector.size( );
+			vectorData = pointVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+					iterator = pointStack.begin( );
+					end = pointStack.end( );
+					for( ; iterator != end; ++iterator )
+						if( *iterator == vectorData[ vectorIndex ] ) {
+							// 删除堆栈调用
+							pointStack.erase( iterator );
+							return true;
+						}
+					break;
+				}
+			break;
+		case NodeEnum::NodeType::Foreach :
+			break;
+		case NodeEnum::NodeType::Logic :
+			break;
+		case NodeEnum::NodeType::Process :// create 堆栈吗?
+		case NodeEnum::NodeType::Create :
+			vectorCount = createVector.size( );
+			vectorData = createVector.data( );
+			vectorIndex = 0;
+			for( ; vectorIndex < vectorCount; ++vectorIndex )
+				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
+					iterator = createStack.begin( );
+					end = createStack.end( );
+					for( ; iterator != end; ++iterator )
+						if( *iterator == vectorData[ vectorIndex ] ) {
+							// 删除堆栈调用
+							createStack.erase( iterator );
+							return true;
+						}
+				}
+			break;
+	}
+
+	return false;
+}
+size_t NodeRunInfo::filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector ) {
+	std::vector< Node * > overBuff;
+	size_t overCount = runOverNodeVector.size( );
+	auto overData = runOverNodeVector.data( );
+	size_t overIndex;
+
+	size_t filterCount = filter_over_node_run_link_vector.size( );
+	auto filterData = filter_over_node_run_link_vector.data( );
+	size_t filterIndex;
+
+	for( overIndex = 0; overIndex < overCount; ++overIndex )
+		for( filterIndex = 0; filterIndex < filterCount; ++filterIndex ) {
+			if( filterData[ filterIndex ] == overData[ overIndex ] )
+				break;
+			if( filterIndex != filterCount )
+				continue;
+			overBuff.emplace_back( overData[ overIndex ] );
+		}
+	runOverNodeVector = overBuff;
+	filterCount = overBuff.size( );
+	return overCount - filterCount;
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );

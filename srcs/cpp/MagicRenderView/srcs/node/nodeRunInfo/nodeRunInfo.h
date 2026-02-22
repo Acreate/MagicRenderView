@@ -8,6 +8,7 @@ class NodeRunLink;
 class QDateTime;
 class Application;
 namespace NodeEnum {
+	enum class NodeType;
 	enum class ErrorType;
 	enum class AdviseType;
 }
@@ -50,6 +51,8 @@ protected:
 	Node *oldNode;
 	/// @brief 编译列表
 	std::vector< Node * > builderNodeVector;
+	/// @brief 已经调用完毕的列表
+	std::vector< Node * > runOverNodeVector;
 	/// @brief 编译链接当中的创建节点序列
 	std::vector< NodeRunLink * > createVector;
 	/// @brief 编译链接当中的点节点序列
@@ -91,6 +94,31 @@ protected:
 	/// @param check_node 起始节点
 	/// @return 不存在返回 false
 	virtual bool stackHasStartNode( const std::vector< NodeRunLink * > &check_vector, Node *check_node ) const;
+	/// @brief 在调用堆栈中移除目标
+	/// @param target_run_link 移除的目标
+	/// @return 失败返回 false
+	virtual bool removeNodeRunLinkTarget( Node *target_run_link );
+	/// @brief 插入节点到调用堆栈当中
+	/// @param target_run_link 插入目标
+	/// @return 失败返回 false
+	virtual bool insertNodeRunLinkTarget( const Node *target_run_link );
+	/// @brief 插入目标序列节点到调用堆栈当中
+	/// @param target_run_link_vector 插入目标序列
+	/// @return 失败返回 false
+	virtual bool insertNodeRunLinkTarget( const std::vector< Node * > &target_run_link_vector );
+	/// @brief 重新编译目标
+	/// @param rebuilder_target 重新编译对象
+	/// @return 失败返回 false
+	virtual bool rebuilderOverNodeRunLinkTarget( NodeRunLink *rebuilder_target );
+	/// @brief 在调用堆栈中移除目标
+	/// @param target_run_link 移除的目标
+	/// @param node_type 节点类型
+	/// @return 失败返回 false
+	virtual bool removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::NodeType node_type );
+	/// @brief 从完成过滤列表当中过滤节点列表
+	/// @param filter_over_node_run_link_vector 过滤列表
+	/// @return 返回过滤个数
+	virtual size_t filterOverNodeRunLinkVector( const std::vector<Node *> &filter_over_node_run_link_vector );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
