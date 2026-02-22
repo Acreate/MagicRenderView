@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/charOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/array/charVectorInputPort.h"
 #include "../../../../../port/outputPort/unity/stringOutputPort.h"
 
@@ -13,9 +13,9 @@ Def_Entity_NodeTypeName_Function( CharArrayConverToStringNode, Node::tr( "转换
 CharArrayConverToStringNode::CharArrayConverToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool CharArrayConverToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "字符序列" ), charVectorInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "字符序列" ), charVectorInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符串" ), stringOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "字符串" ), stringOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -27,7 +27,7 @@ bool CharArrayConverToStringNode::updateLayout( ) {
 
 bool CharArrayConverToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( charVectorInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( charVectorInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

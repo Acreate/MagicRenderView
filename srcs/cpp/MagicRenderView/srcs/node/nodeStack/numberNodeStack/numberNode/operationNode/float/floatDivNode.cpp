@@ -1,10 +1,10 @@
-#include "floatDivNode.h"
+﻿#include "floatDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( FloatDivNode, Node::tr( "运算/单元/浮点/除法" ) );
 
@@ -13,11 +13,11 @@ FloatDivNode::FloatDivNode( const QString &node_name ) : ProcessNode( node_name 
 }
 bool FloatDivNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "浮点" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "浮点" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -40,7 +40,7 @@ bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size
 	NodeType *converInt;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -50,7 +50,7 @@ bool FloatDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
+	outputPorts = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

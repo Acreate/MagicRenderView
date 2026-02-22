@@ -1,9 +1,9 @@
-#include "stringInsertSubStringNode.h"
+﻿#include "stringInsertSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
@@ -15,13 +15,13 @@ StringInsertSubStringNode::StringInsertSubStringNode( const QString &node_name )
 bool StringInsertSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "插入字符串" ), insertStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "插入字符串" ), insertStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "插入位置" ), insertIndexInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "插入位置" ), insertIndexInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -38,13 +38,13 @@ bool StringInsertSubStringNode::readyNodeRunData( ) {
 bool StringInsertSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	QString *orgString, *insertString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
 		return true;
 
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( insertStringInputPortPtr, insertString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( insertStringInputPortPtr, insertString ) == false )
 		return true;
 	uint64_t *insterIndex;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( insertIndexInputPortPtr, insterIndex ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( insertIndexInputPortPtr, insterIndex ) == false )
 		return true;
 	*outputVarPtr = *orgString;
 	outputVarPtr->insert( *insterIndex, *insertString );

@@ -1,10 +1,10 @@
-#include "stringFindIndexStartSubStringNode.h"
+﻿#include "stringFindIndexStartSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/unity/intInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
@@ -15,13 +15,13 @@ StringFindIndexStartSubStringNode::StringFindIndexStartSubStringNode( const QStr
 }
 bool StringFindIndexStartSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "查找字符串" ), findTargetSubStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "查找字符串" ), findTargetSubStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "开始位置" ), findStrtIndexInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "开始位置" ), findStrtIndexInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "位置" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "位置" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = -1;
 		return true;
@@ -39,13 +39,13 @@ bool StringFindIndexStartSubStringNode::readyNodeRunData( ) {
 bool StringFindIndexStartSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	QString *orgString;
 	*outputVarPtr = -1;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
 		return true;
 	QString *findString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( findTargetSubStringInputPortPtr, findString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( findTargetSubStringInputPortPtr, findString ) == false )
 		return true;
 	uint64_t *stratIndex;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( findStrtIndexInputPortPtr, stratIndex ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( findStrtIndexInputPortPtr, stratIndex ) == false )
 		return true;
 	*outputVarPtr = orgString->indexOf( *findString, *stratIndex );
 	return true;

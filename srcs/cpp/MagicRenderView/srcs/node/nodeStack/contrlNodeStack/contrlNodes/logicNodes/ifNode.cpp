@@ -6,18 +6,18 @@
 
 #include <tools/varDirectorTools.h>
 
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( IfNode, Node::tr( "控制/逻辑判定" ) );
 
 bool IfNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendInputPortType( this, tr( "判断" ), ifResultPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "判断" ), ifResultPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "传递" ), channelInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "传递" ), channelInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "传递" ), channelOutputPort ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "传递" ), channelOutputPort ) == false )
 			return false;
 		return true;
 	};
@@ -33,13 +33,13 @@ bool IfNode::readyNodeRunData( ) {
 	return true;
 }
 bool IfNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame, std::vector< Node * > &result_need_run_ref_node_vector ) {
-	bool resultBool = nodeToolsPtr->getRefPortNodeVector( ifResultPort, result_need_run_ref_node_vector );
+	bool resultBool = nodeComponentControlPtr->getRefPortNodeVector( ifResultPort, result_need_run_ref_node_vector );
 	return resultBool;
 }
 bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	adviseNextVector.clear( );
-	auto outputPorts = nodeToolsPtr->getRefPort( ifResultPort );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( ifResultPort );
 	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;
@@ -47,15 +47,15 @@ bool IfNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t cur
 	auto varDirector = outputPort->getVarDirector( );
 	auto varPtr = outputPort->getVarPtr( );
 	if( VarDirectorTools::isTrue( varDirector, varPtr ) ) {
-		outputPorts = nodeToolsPtr->getRefPort( channelInputPort );
+		outputPorts = nodeComponentControlPtr->getRefPort( channelInputPort );
 		count = outputPorts->size( );
 		if( count == 0 )
 			return true;
 		outputPort = outputPorts->data( )[ 0 ];
 		varDirector = outputPort->getVarDirector( );
 		varPtr = outputPort->getVarPtr( );
-		nodeToolsPtr->getRefPortNodeVector( channelOutputPort, adviseNextVector );
-		nodeToolsPtr->setVarInfo( channelOutputPort, varDirector, varPtr );
+		nodeComponentControlPtr->getRefPortNodeVector( channelOutputPort, adviseNextVector );
+		nodeComponentControlPtr->setVarInfo( channelOutputPort, varDirector, varPtr );
 	}
 	return true;
 }

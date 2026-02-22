@@ -1,12 +1,13 @@
-﻿#ifndef NODETOOLS_H_H_HEAD__FILE__
-#define NODETOOLS_H_H_HEAD__FILE__
+﻿#ifndef NODECOMPONENTCONTROL_H_H_HEAD__FILE__
+#define NODECOMPONENTCONTROL_H_H_HEAD__FILE__
+
 #include <typeinfo>
 #include <vector>
 #include <QString>
 // 在调用对应模版成员好时候，使用对应的头文件
-// NodeTools::appendDynamicInputPortType<>
+// NodeComponentControl::appendDynamicInputPortType<>
 // #include <node/port/inputPort/dynamicTypeInputPort.h>
-// NodeTools::appendDynamicOutputPortType<>
+// NodeComponentControl::appendDynamicOutputPortType<>
 // #include <node/port/outputPort/dynamicTypeOutputPort.h>
 
 class NodePort;
@@ -20,14 +21,14 @@ namespace NodeEnum {
 class Node;
 class OutputPort;
 class InputPort;
-class NodeTools {
+class NodeComponentControl {
 	friend class Node;
 public:
-	virtual ~NodeTools( ) = default;
+	virtual ~NodeComponentControl( ) = default;
 protected:
 	Node *nodePtr;
 protected:
-	NodeTools( Node *node_ptr )
+	NodeComponentControl( Node *node_ptr )
 		: nodePtr( node_ptr ) { }
 public:
 	virtual std::vector< InputPort * > * getRefPort( OutputPort *output_port );
@@ -466,4 +467,4 @@ public:
 	}
 };
 
-#endif // NODETOOLS_H_H_HEAD__FILE__
+#endif // NODECOMPONENTCONTROL_H_H_HEAD__FILE__

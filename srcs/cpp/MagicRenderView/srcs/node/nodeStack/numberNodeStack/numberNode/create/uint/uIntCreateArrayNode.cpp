@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( UIntCreateArrayNode, Node::tr( "创建/序列/无符号整数序列" ) );
 
@@ -12,7 +12,7 @@ UIntCreateArrayNode::UIntCreateArrayNode( const QString &node_name ) : CreateNod
 }
 bool UIntCreateArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

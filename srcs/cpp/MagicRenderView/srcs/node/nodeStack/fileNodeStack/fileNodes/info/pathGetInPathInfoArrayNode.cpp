@@ -1,11 +1,11 @@
-#include "pathGetInPathInfoArrayNode.h"
+﻿#include "pathGetInPathInfoArrayNode.h"
 
 #include <app/application.h>
 #include <tools/infoTool.h>
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../../tools/pathTools.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../port/outputPort/array/stringVectorOutputPort.h"
 
@@ -18,13 +18,13 @@ PathGetInPathInfoArrayNode::PathGetInPathInfoArrayNode( const QString &node_name
 }
 bool PathGetInPathInfoArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), pathInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), pathInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的文件与目录" ), pathSubPathOutputPortPtr, pathSubPathOutputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "路径下的文件与目录" ), pathSubPathOutputPortPtr, pathSubPathOutputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的目录" ), dirPathOutputPortPtr, dirPathOutputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "路径下的目录" ), dirPathOutputPortPtr, dirPathOutputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "路径下的文件" ), filePathOutputPortPtr, filePathOutputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "路径下的文件" ), filePathOutputPortPtr, filePathOutputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -38,7 +38,7 @@ bool PathGetInPathInfoArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_d
 	dirPathOutputVarPtr->clear( );
 	filePathOutputVarPtr->clear( );
 	pathSubPathOutputVarPtr->clear( );
-	auto outputPorts = nodeToolsPtr->getRefPort( pathInputPortPtr );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( pathInputPortPtr );
 	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;

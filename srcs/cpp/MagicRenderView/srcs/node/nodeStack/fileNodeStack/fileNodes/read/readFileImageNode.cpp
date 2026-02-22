@@ -1,10 +1,10 @@
-#include "readFileImageNode.h"
+﻿#include "readFileImageNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../../../port/outputPort/unity/imageOutputPort.h"
 
@@ -15,9 +15,9 @@ ReadFileImageNode::ReadFileImageNode( const QString &node_name ) : ProcessNode( 
 }
 bool ReadFileImageNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), filePathPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), filePathPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "图像" ), imageOutputPort, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "图像" ), imageOutputPort, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -29,7 +29,7 @@ bool ReadFileImageNode::updateLayout( ) {
 
 bool ReadFileImageNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
-	auto outputPorts = nodeToolsPtr->getRefPort( filePathPort );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePathPort );
 	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;

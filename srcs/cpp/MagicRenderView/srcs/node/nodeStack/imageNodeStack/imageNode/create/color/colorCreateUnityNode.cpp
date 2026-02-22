@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "colorCreateNodeEditorWidget/unity/colorCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( ColorCreateUnityNode, Node::tr( "创建/单元/颜色" ) );
@@ -68,7 +68,7 @@ ColorCreateUnityNode::ColorCreateUnityNode( const QString &node_name ) : CreateN
 }
 bool ColorCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = QColor( 0, 0, 0, 255 );
 		return true;

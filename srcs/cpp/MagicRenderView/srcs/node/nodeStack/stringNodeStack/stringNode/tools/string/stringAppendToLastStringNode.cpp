@@ -1,10 +1,10 @@
-#include "stringAppendToLastStringNode.h"
+﻿#include "stringAppendToLastStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( StringAppendToLastStringNode, Node::tr( "工具/字符串末尾追加子字符串" ) );
 
@@ -13,11 +13,11 @@ StringAppendToLastStringNode::StringAppendToLastStringNode( const QString &node_
 }
 bool StringAppendToLastStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "追加字符串" ), appendLastSubStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "追加字符串" ), appendLastSubStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;
@@ -35,10 +35,10 @@ bool StringAppendToLastStringNode::readyNodeRunData( ) {
 bool StringAppendToLastStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	QString *orgString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
 		return true;
 	*outputVarPtr = *orgString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( appendLastSubStringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( appendLastSubStringInputPortPtr, orgString ) == false )
 		return true;
 	outputVarPtr->append( *orgString );
 	return true;

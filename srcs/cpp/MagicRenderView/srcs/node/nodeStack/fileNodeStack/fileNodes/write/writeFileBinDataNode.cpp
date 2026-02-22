@@ -1,11 +1,11 @@
-#include "writeFileBinDataNode.h"
+﻿#include "writeFileBinDataNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../../tools/pathTools.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/inputPort/array/binVectorInputPort.h"
 #include "../../../../port/outputPort/outputPort.h"
 
@@ -13,9 +13,9 @@ Def_Entity_NodeTypeName_Function( WriteFileBinDataNode, Node::tr( "写入文件/
 
 bool WriteFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "写入内容" ), writeBinVectorPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "写入内容" ), writeBinVectorPort ) == false )
 			return false;
 		return true;
 	};
@@ -26,7 +26,7 @@ bool WriteFileBinDataNode::updateLayout( ) {
 }
 
 bool WriteFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto wirteFileRefPort = nodeToolsPtr->getRefPort( writeFilePathPort );
+	auto wirteFileRefPort = nodeComponentControlPtr->getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort->size( );
 	if( count == 0 )
 		return true;
@@ -39,7 +39,7 @@ bool WriteFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_ti
 	if( pathTools::createFile( *filePath ) == false )
 		return true;
 
-	wirteFileRefPort = nodeToolsPtr->getRefPort( writeBinVectorPort );
+	wirteFileRefPort = nodeComponentControlPtr->getRefPort( writeBinVectorPort );
 	count = wirteFileRefPort->size( );
 	if( count == 0 )
 		return true;

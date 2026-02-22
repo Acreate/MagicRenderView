@@ -1,7 +1,7 @@
 ﻿#include "appBuilderTimeNode.h"
 
 #include <app/application.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <QLibraryInfo>
 
@@ -14,8 +14,8 @@ bool AppBuilderTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		QString nodeTypeName;
 
-		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
-		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, outputPortPtr, outputVarPtr ) == false )
+		nodeComponentControlPtr->getVirtualNormalPathLastName( this, nodeTypeName );
+		if( nodeComponentControlPtr->appendOutputPortType( this, nodeTypeName, outputPortPtr, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

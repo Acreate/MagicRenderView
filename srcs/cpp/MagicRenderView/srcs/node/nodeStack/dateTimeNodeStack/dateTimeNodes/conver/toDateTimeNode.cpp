@@ -7,7 +7,7 @@
 
 #include <tools/imageTools.h>
 
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( ToDateTimeNode, Node::tr( "转换/单元/日期时间" ) );
@@ -15,9 +15,9 @@ Def_Entity_NodeTypeName_Function( ToDateTimeNode, Node::tr( "转换/单元/日�
 ToDateTimeNode::ToDateTimeNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToDateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "时间" ), dateTimeOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "时间" ), dateTimeOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -29,7 +29,7 @@ bool ToDateTimeNode::updateLayout( ) {
 
 bool ToDateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = QDateTime::fromMSecsSinceEpoch( 0 );
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

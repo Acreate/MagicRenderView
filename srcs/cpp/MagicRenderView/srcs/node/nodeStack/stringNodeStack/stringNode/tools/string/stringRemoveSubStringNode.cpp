@@ -1,9 +1,9 @@
-#include "stringRemoveSubStringNode.h"
+﻿#include "stringRemoveSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
@@ -15,13 +15,13 @@ StringRemoveSubStringNode::StringRemoveSubStringNode( const QString &node_name )
 bool StringRemoveSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "删除字符串" ), removeSubStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "删除字符串" ), removeSubStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "删除次数" ), removeCountInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "删除次数" ), removeCountInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;
@@ -39,7 +39,7 @@ bool StringRemoveSubStringNode::readyNodeRunData( ) {
 bool StringRemoveSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	QString *orgString, *removeTargetString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( orgStringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( orgStringInputPortPtr, orgString ) == false )
 		return true;
 	qint64 length;
 	length = orgString->length( );
@@ -47,11 +47,11 @@ bool StringRemoveSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start_da
 		return true;
 	*outputVarPtr = *orgString;
 	uint64_t *removeCount;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( removeCountInputPortPtr, removeCount ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( removeCountInputPortPtr, removeCount ) == false )
 		return true;
 	if( *removeCount == 0 )
 		return true;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( removeSubStringInputPortPtr, removeTargetString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( removeSubStringInputPortPtr, removeTargetString ) == false )
 		return true;
 	length = removeTargetString->length( );
 	if( length == 0 )

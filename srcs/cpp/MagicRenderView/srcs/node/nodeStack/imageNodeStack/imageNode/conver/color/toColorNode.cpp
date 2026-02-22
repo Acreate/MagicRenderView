@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ToColorNode, Node::tr( "转换/单元/颜色" ) );
 
@@ -13,9 +13,9 @@ ToColorNode::ToColorNode( const QString &node_name ) : ProcessNode( node_name ) 
 }
 bool ToColorNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "颜色" ), colorOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "颜色" ), colorOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -28,7 +28,7 @@ bool ToColorNode::updateLayout( ) {
 bool ToColorNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	outVarPtr->setRgb( 0, 0, 0, 0 );
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

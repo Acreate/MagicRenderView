@@ -1,10 +1,10 @@
-#include "stringSplitStringArrayNode.h"
+﻿#include "stringSplitStringArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/outputPort/array/stringVectorOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( StringSplitStringArrayNode, Node::tr( "工具/使用子字符串进行切分" ) );
@@ -14,11 +14,11 @@ StringSplitStringArrayNode::StringSplitStringArrayNode( const QString &node_name
 }
 bool StringSplitStringArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), stringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "切分符串" ), splitSubStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "切分符串" ), splitSubStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -35,9 +35,9 @@ bool StringSplitStringArrayNode::readyNodeRunData( ) {
 bool StringSplitStringArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outputVarPtr->clear( );
 	QString *orgString, *splitString;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( stringInputPortPtr, orgString ) == false )
 		return true;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( splitSubStringInputPortPtr, splitString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( splitSubStringInputPortPtr, splitString ) == false )
 		return true;
 	QStringList stringList = orgString->split( *splitString );
 	qsizetype count = stringList.size( );

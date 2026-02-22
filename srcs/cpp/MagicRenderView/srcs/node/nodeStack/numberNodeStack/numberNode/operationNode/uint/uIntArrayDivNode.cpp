@@ -1,11 +1,11 @@
-#include "uIntArrayDivNode.h"
+﻿#include "uIntArrayDivNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/uIntVectorInputPort.h>
 #include <node/port/inputPort/unity/uIntInputPort.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( UIntArrayDivNode, Node::tr( "运算/序列/无符号整数序列/除法" ) );
 
@@ -14,11 +14,11 @@ UIntArrayDivNode::UIntArrayDivNode( const QString &node_name ) : ProcessNode( no
 }
 bool UIntArrayDivNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "无符号整数" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "无符号整数" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "无符号整数" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -42,7 +42,7 @@ bool UIntArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 	void *portVarPtr;
 	Node *parentNode;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeComponentControlPtr->getRefPort( firstInputPort );
 	outputVarPtr->clear( );
 	count = outputPorts->size( );
 	if( count == 0 )
@@ -53,7 +53,7 @@ bool UIntArrayDivNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, 
 	if( varDirector->cast_ptr( portVarPtr, converInt ) == false )
 		return true;
 	*outputVarPtr = *converInt;
-	outputPorts = nodeToolsPtr->getRefPort( secondInputPort );
+	outputPorts = nodeComponentControlPtr->getRefPort( secondInputPort );
 	outputPortArray = outputPorts->data( );
 	count = outputPorts->size( );
 	if( count == 0 )

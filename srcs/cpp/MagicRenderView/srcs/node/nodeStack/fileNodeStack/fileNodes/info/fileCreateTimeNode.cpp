@@ -1,8 +1,8 @@
-#include "fileCreateTimeNode.h"
+﻿#include "fileCreateTimeNode.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
@@ -18,9 +18,9 @@ FileCreateTimeNode::FileCreateTimeNode( const QString &node_name ) : ProcessNode
 }
 bool FileCreateTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "创建时间" ), createTimeOutputPortPtr, outCreateTimePtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "创建时间" ), createTimeOutputPortPtr, outCreateTimePtr ) == false )
 			return false;
 		return true;
 	};
@@ -31,7 +31,7 @@ bool FileCreateTimeNode::updateLayout( ) {
 }
 
 bool FileCreateTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( filePtahInputPortPtr );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePtahInputPortPtr );
 	if( outputPorts->size( ) == 0 )
 		return true;
 	auto outputPort = outputPorts->data( )[ 0 ];

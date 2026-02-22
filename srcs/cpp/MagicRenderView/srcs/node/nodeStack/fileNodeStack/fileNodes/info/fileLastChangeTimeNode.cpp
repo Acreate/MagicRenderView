@@ -1,8 +1,8 @@
-#include "fileLastChangeTimeNode.h"
+﻿#include "fileLastChangeTimeNode.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <QDir>
@@ -16,10 +16,10 @@ FileLastChangeTimeNode::FileLastChangeTimeNode( const QString &node_name ) : Pro
 }
 bool FileLastChangeTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
 			return false;
 
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "最后更改时间" ), lastChangeTimeOutputPortPtr, outLastChangeTimePtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "最后更改时间" ), lastChangeTimeOutputPortPtr, outLastChangeTimePtr ) == false )
 			return false;
 		return true;
 	};
@@ -30,7 +30,7 @@ bool FileLastChangeTimeNode::updateLayout( ) {
 }
 
 bool FileLastChangeTimeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( filePtahInputPortPtr );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePtahInputPortPtr );
 	if( outputPorts->size( ) == 0 )
 		return true;
 	auto outputPort = outputPorts->data( )[ 0 ];

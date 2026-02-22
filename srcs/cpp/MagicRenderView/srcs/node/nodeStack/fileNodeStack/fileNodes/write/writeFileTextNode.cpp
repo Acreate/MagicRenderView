@@ -1,20 +1,20 @@
-#include "writeFileTextNode.h"
+﻿#include "writeFileTextNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfile.h>
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../../tools/pathTools.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/outputPort/outputPort.h"
 
 Def_Entity_NodeTypeName_Function( WriteFileTextNode, Node::tr( "写入文件/字符串" ) );
 
 bool WriteFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), writeFilePathPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "写入内容" ), writeTextPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "写入内容" ), writeTextPort ) == false )
 			return false;
 		return true;
 	};
@@ -25,7 +25,7 @@ bool WriteFileTextNode::updateLayout( ) {
 }
 
 bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto wirteFileRefPort = nodeToolsPtr->getRefPort( writeFilePathPort );
+	auto wirteFileRefPort = nodeComponentControlPtr->getRefPort( writeFilePathPort );
 	size_t count = wirteFileRefPort->size( );
 	if( count == 0 )
 		return true;
@@ -39,7 +39,7 @@ bool WriteFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	if( pathTools::createFile( *filePath ) == false )
 		return true;
 
-	wirteFileRefPort = nodeToolsPtr->getRefPort( writeTextPort );
+	wirteFileRefPort = nodeComponentControlPtr->getRefPort( writeTextPort );
 	count = wirteFileRefPort->size( );
 	if( count == 0 )
 		return true;

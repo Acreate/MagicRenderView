@@ -1,8 +1,8 @@
-#include "fileBaseNameNode.h"
+﻿#include "fileBaseNameNode.h"
 
 #include <app/application.h>
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
@@ -19,9 +19,9 @@ FileBaseNameNode::FileBaseNameNode( const QString &node_name ) : ProcessNode( no
 }
 bool FileBaseNameNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "文件路径" ), filePtahInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "基本名称" ), baseNameOutputPortPtr, outBaseNamePtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "基本名称" ), baseNameOutputPortPtr, outBaseNamePtr ) == false )
 			return false;
 		return true;
 	};
@@ -32,7 +32,7 @@ bool FileBaseNameNode::updateLayout( ) {
 }
 
 bool FileBaseNameNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( filePtahInputPortPtr );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePtahInputPortPtr );
 	if( outputPorts->size( ) == 0 )
 		return true;
 	auto outputPort = outputPorts->data( )[ 0 ];

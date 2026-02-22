@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/floatInputPort.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( FloatAddToArrayNode, Node::tr( "追加/浮点序列" ) );
 
@@ -14,13 +14,13 @@ FloatAddToArrayNode::FloatAddToArrayNode( const QString &node_name ) : ProcessNo
 }
 bool FloatAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "浮点序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "浮点" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "浮点" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "浮点" ), outputPort, outputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
+		if( nodeComponentControlPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -43,7 +43,7 @@ bool FloatAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	auto refPort = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;
@@ -57,7 +57,7 @@ bool FloatAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 		return true;
 	*outputVarPtr = *conver;
 
-	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	refPort = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;

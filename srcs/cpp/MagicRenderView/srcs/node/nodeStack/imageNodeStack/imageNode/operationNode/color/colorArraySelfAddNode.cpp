@@ -1,4 +1,4 @@
-#include "colorArraySelfAddNode.h"
+﻿#include "colorArraySelfAddNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/colorVectorInputPort.h>
@@ -6,7 +6,7 @@
 
 #include <tools/imageTools.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ColorArraySelfAddNode, Node::tr( "自运算/颜色/加法" ) );
 
@@ -15,9 +15,9 @@ ColorArraySelfAddNode::ColorArraySelfAddNode( const QString &node_name ) : Proce
 }
 bool ColorArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "颜色序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "颜色序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -38,7 +38,7 @@ bool ColorArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

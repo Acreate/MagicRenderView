@@ -15,6 +15,10 @@
 #include "../../tools/vectorTools.h"
 #include "../node/node.h"
 
+#include <node/nodeTools/nodeComponentControl.h>
+
+#include "../../tools/nodeTools.h"
+
 #include "nodeRunLink/imp/callNodeRunLink.h"
 #include "nodeRunLink/imp/createNodeRunLink.h"
 #include "nodeRunLink/imp/pointNodeRunLink.h"
@@ -177,27 +181,22 @@ bool NodeRunInfo::runNextNode( ) {
 	runStop = false;
 	emit auto_run_status_change_signal( this, runStop );
 	NodeRunLink *nextNodeRunLink;
-	Node *nextRunPtr;
-	bool findNextNodePtr = getNextNodeRunLinkPtr( nextNodeRunLink );
+	bool findNextNodePtr = getNextNodeRunLinkPtr( nextNodeRunLink, buffNode );
 	if( findNextNodePtr == true ) {
-		nextRunPtr = nextNodeRunLink->getCurrentNode( );
-		if( nextNodeRunLink->runRunNode( nextRunPtr, *currentRunDataTime, currentFrame ) == false ) {
-			oldNode = currentNode;
-			currentNode = nextRunPtr;
+		oldNode = currentNode;
+		currentNode = buffNode;
+		if( nextNodeRunLink->runRunNode( buffNode, *currentRunDataTime, currentFrame ) ) {
 			std::vector< Node * > result;
-			if( nextNodeRunLink->getNodeRunAdviseNodeVector( nextRunPtr, result, *currentRunDataTime, currentFrame ) ) {
+			if( nextNodeRunLink->getNodeRunAdviseNodeVector( buffNode, result, *currentRunDataTime, currentFrame ) ) {
 				// 删除堆栈中的信息
 				if( nextNodeRunLink->isOver( ) )
 					removeNodeRunLinkTarget( currentNode, nextNodeRunLink->getBeforeNode( )->getNodeType( ) );
 				insertNodeRunLinkTarget( result );
 			}
-		} else {
-			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( nextRunPtr->toQString( ) ), Create_SrackInfo( ) );
-		}
-	} else {
-		auto printerDirector = appinstancePtr->getPrinterDirector( );
+		} else
+			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
+	} else
 		printerDirector->info( tr( "找不到匹配的下一个节点链接信息" ), Create_SrackInfo( ) );
-	}
 	runStop = true;
 	emit auto_run_status_change_signal( this, runStop );
 	return findNextNodePtr;
@@ -311,20 +310,32 @@ void NodeRunInfo::resetBilderData( ) {
 		nodeRunLinkVector.clear( );
 	}
 }
-bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr ) {
+bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *result_node_ptr ) {
 	// call 是否存在
-	if( functionStack.size( ) > 0 ) {
-		result_next_node_ptr = *functionStack.begin( );
+	for( auto &checkTarget : functionStack ) {
+		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
+			continue;
+		if( result_node_ptr == nullptr )
+			continue;
+		result_next_node_ptr = checkTarget;
 		return true;
 	}
 	// create 是否存在
-	if( createStack.size( ) > 0 ) {
-		result_next_node_ptr = *createStack.begin( );
+	for( auto &checkTarget : createStack ) {
+		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
+			continue;
+		if( result_node_ptr == nullptr )
+			continue;
+		result_next_node_ptr = checkTarget;
 		return true;
 	}
 	// if 是否存在
-	if( pointStack.size( ) > 0 ) {
-		result_next_node_ptr = *pointStack.begin( );
+	for( auto &checkTarget : pointStack ) {
+		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
+			continue;
+		if( result_node_ptr == nullptr )
+			continue;
+		result_next_node_ptr = checkTarget;
 		return true;
 	}
 	return false;
@@ -564,26 +575,9 @@ bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::Node
 	return false;
 }
 size_t NodeRunInfo::filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector ) {
-	std::vector< Node * > overBuff;
-	size_t overCount = runOverNodeVector.size( );
-	auto overData = runOverNodeVector.data( );
-	size_t overIndex;
-
-	size_t filterCount = filter_over_node_run_link_vector.size( );
-	auto filterData = filter_over_node_run_link_vector.data( );
-	size_t filterIndex;
-
-	for( overIndex = 0; overIndex < overCount; ++overIndex )
-		for( filterIndex = 0; filterIndex < filterCount; ++filterIndex ) {
-			if( filterData[ filterIndex ] == overData[ overIndex ] )
-				break;
-			if( filterIndex != filterCount )
-				continue;
-			overBuff.emplace_back( overData[ overIndex ] );
-		}
-	runOverNodeVector = overBuff;
-	filterCount = overBuff.size( );
-	return overCount - filterCount;
+	size_t orgCount = runOverNodeVector.size( );
+	runOverNodeVector = NodeTools::filterNodeVector( runOverNodeVector, filter_over_node_run_link_vector );
+	return orgCount - runOverNodeVector.size( );
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );

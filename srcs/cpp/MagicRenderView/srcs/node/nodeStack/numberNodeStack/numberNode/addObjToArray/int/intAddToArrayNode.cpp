@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( IntAddToArrayNode, Node::tr( "追加/整数序列" ) );
 
@@ -14,13 +14,13 @@ IntAddToArrayNode::IntAddToArrayNode( const QString &node_name ) : ProcessNode( 
 }
 bool IntAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "整数序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "整数序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "整数" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "整数" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
+		if( nodeComponentControlPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -43,7 +43,7 @@ bool IntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	auto refPort = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;
@@ -57,7 +57,7 @@ bool IntAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time,
 		return true;
 	*outputVarPtr = *conver;
 
-	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	refPort = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;

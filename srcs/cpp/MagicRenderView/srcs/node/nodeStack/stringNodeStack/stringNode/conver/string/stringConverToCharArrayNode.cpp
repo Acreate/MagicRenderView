@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/outputPort/array/charVectorOutputPort.h"
 
@@ -12,9 +12,9 @@ StringConverToCharArrayNode::StringConverToCharArrayNode( const QString &node_na
 bool StringConverToCharArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), stringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), stringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符" ), charVectorOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "字符" ), charVectorOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -26,7 +26,7 @@ bool StringConverToCharArrayNode::updateLayout( ) {
 
 bool StringConverToCharArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( stringInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( stringInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

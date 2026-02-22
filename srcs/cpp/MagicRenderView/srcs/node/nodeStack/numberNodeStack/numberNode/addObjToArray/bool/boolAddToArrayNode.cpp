@@ -1,7 +1,7 @@
-#include "boolAddToArrayNode.h"
+﻿#include "boolAddToArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 #include "../../../../../port/inputPort/array/boolVectorInputPort.h"
 #include "../../../../../port/inputPort/unity/boolInputPort.h"
@@ -13,13 +13,13 @@ BoolAddToArrayNode::BoolAddToArrayNode( const QString &node_name ) : ProcessNode
 }
 bool BoolAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "二进制序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "二进制" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "二进制" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
+		if( nodeComponentControlPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -42,7 +42,7 @@ bool BoolAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	auto refPort = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;
@@ -56,7 +56,7 @@ bool BoolAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time
 		return true;
 	*outputVarPtr = *conver;
 
-	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	refPort = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;

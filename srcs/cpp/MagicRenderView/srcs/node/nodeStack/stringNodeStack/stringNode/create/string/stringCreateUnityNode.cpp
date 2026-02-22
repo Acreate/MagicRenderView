@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "stringCreateNodeEditorWidget/unity/stringCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( StringCreateUnityNode, Node::tr( "创建/单元/字符串" ) );
@@ -14,7 +14,7 @@ StringCreateUnityNode::StringCreateUnityNode( const QString &node_name ) : Creat
 }
 bool StringCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;

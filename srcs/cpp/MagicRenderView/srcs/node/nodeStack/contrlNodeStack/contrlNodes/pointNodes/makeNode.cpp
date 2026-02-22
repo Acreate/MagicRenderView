@@ -3,16 +3,16 @@
 #include <node/port/outputPort/point/pointOutputPort.h>
 #include <node/port/outputPort/toPoint/toPointOutputPort.h>
 
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( MakeNode, Node::tr( "控制/记录位置" ) );
 
 bool MakeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "定点标记" ), nextNode ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "定点标记" ), nextNode ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "跳转定点" ), toPointOutputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "跳转定点" ), toPointOutputPortPtr ) == false )
 			return false;
 		return true;
 	};
@@ -31,5 +31,5 @@ bool MakeNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t c
 	return true;
 }
 bool MakeNode::fillOutputPortCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame, std::vector< Node * > &result_next_run_advise_node_vector ) {
-	return nodeToolsPtr->getFilterNotRefPortNodeVector( nextNode, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
+	return nodeComponentControlPtr->getFilterNotRefPortNodeVector( nextNode, result_next_run_advise_node_vector, NodeEnum::NodeType::Point );
 }

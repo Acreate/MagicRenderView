@@ -1,7 +1,7 @@
 ﻿#include "boolCreateArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/outputPort/array/boolVectorOutputPort.h>
 
 Def_Entity_NodeTypeName_Function( BoolCreateArrayNode, Node::tr( "创建/序列/布尔序列" ) );
@@ -12,7 +12,7 @@ BoolCreateArrayNode::BoolCreateArrayNode( const QString &node_name ) : CreateNod
 bool BoolCreateArrayNode::initEx( MainWidget *parent ) {
 
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

@@ -6,7 +6,7 @@
 #include <node/port/outputPort/unity/imageOutputPort.h>
 #include <tools/varDirectorTools.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "imageCreateNodeEditorWidget/unity/imageCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( ImageCreateUnityNode, Node::tr( "创建/单元/图像" ) );
@@ -18,7 +18,7 @@ ImageCreateUnityNode::ImageCreateUnityNode( const QString &node_name ) : CreateN
 bool ImageCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = QImage( );
 		return true;

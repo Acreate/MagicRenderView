@@ -1,10 +1,10 @@
-#include "readFileTextNode.h"
+﻿#include "readFileTextNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/outputPort/unity/stringOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( ReadFileTextNode, Node::tr( "读取文件/字符串" ) );
@@ -14,9 +14,9 @@ ReadFileTextNode::ReadFileTextNode( const QString &node_name ) : ProcessNode( no
 }
 bool ReadFileTextNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), filePathInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), filePathInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "文本" ), outTextPort, outTextPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "文本" ), outTextPort, outTextPtr ) == false )
 			return false;
 		return true;
 	};
@@ -27,7 +27,7 @@ bool ReadFileTextNode::updateLayout( ) {
 }
 
 bool ReadFileTextNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
-	auto outputPorts = nodeToolsPtr->getRefPort( filePathInputPort );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePathInputPort );
 	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;

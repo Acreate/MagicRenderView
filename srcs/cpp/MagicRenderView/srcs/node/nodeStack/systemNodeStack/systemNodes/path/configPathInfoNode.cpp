@@ -1,6 +1,6 @@
 ﻿#include "configPathInfoNode.h"
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QStandardPaths>
 #include <srack/srackInfo.h>
@@ -16,8 +16,8 @@ ConfigPathInfoNode::ConfigPathInfoNode( const QString &node_name ) : ProcessNode
 bool ConfigPathInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		QString nodeTypeName;
-		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
-		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
+		nodeComponentControlPtr->getVirtualNormalPathLastName( this, nodeTypeName );
+		if( nodeComponentControlPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
 			return false;
 		return true;
 	};

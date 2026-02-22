@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 #include "floatCreateNodeEditorWidget/unity/floatCreateUnityNodeEditorWidget.h"
 
@@ -14,7 +14,7 @@ FloatCreateUnityNode::FloatCreateUnityNode( const QString &node_name ) : CreateN
 }
 bool FloatCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;

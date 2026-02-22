@@ -1,6 +1,6 @@
 ﻿#include "toUIntNode.h"
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <director/varDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/uIntOutputPort.h>
@@ -10,9 +10,9 @@ Def_Entity_NodeTypeName_Function( ToUIntNode, Node::tr( "转换/单元/无符号
 ToUIntNode::ToUIntNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToUIntNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "无符号整数" ), uIntOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "无符号整数" ), uIntOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -25,7 +25,7 @@ bool ToUIntNode::updateLayout( ) {
 bool ToUIntNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 
 	*outVarPtr = 0;
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

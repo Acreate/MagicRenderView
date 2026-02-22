@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 #include "../../../../../../tools/varDirectorTools.h"
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"
@@ -14,9 +14,9 @@ Def_Entity_NodeTypeName_Function( ToBoolNode, Node::tr( "转换/单元/布尔" )
 ToBoolNode::ToBoolNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBoolNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "逻辑" ), binOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "逻辑" ), binOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -28,7 +28,7 @@ bool ToBoolNode::updateLayout( ) {
 
 bool ToBoolNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = false;
-	auto outputPorts = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	if( outputPorts->size( ) == 0 )
 		return true;
 	auto outputPort = outputPorts->data( )[ 0 ];

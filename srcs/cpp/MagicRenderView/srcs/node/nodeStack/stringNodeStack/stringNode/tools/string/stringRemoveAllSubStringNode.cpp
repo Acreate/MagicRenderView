@@ -1,9 +1,9 @@
-#include "stringRemoveAllSubStringNode.h"
+﻿#include "stringRemoveAllSubStringNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 
 Def_Entity_NodeTypeName_Function( StringRemoveAllSubStringNode, Node::tr( "工具/删除所有子字符串" ) );
@@ -13,11 +13,11 @@ StringRemoveAllSubStringNode::StringRemoveAllSubStringNode( const QString &node_
 }
 bool StringRemoveAllSubStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "原始字符串" ), orgStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "删除匹配" ), removeSubStringInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "删除匹配" ), removeSubStringInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;
@@ -36,12 +36,12 @@ bool StringRemoveAllSubStringNode::fillNodeCall( const QDateTime &ndoe_run_start
 	outputVarPtr->clear( );
 	QString *orgString, *removeTargetString;
 	qint64 length;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( orgStringInputPortPtr, orgString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( orgStringInputPortPtr, orgString ) == false )
 		return true;
 	length = orgString->length( );
 	if( length == 0 )
 		return true;
-	if( nodeToolsPtr->cast_ptr_ref_first_port_var_ptr( removeSubStringInputPortPtr, removeTargetString ) == false )
+	if( nodeComponentControlPtr->cast_ptr_ref_first_port_var_ptr( removeSubStringInputPortPtr, removeTargetString ) == false )
 		return true;
 	*outputVarPtr = *orgString;
 	qsizetype lastIndexOf;

@@ -1,10 +1,10 @@
-#include "readFileBinDataNode.h"
+﻿#include "readFileBinDataNode.h"
 
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/outputPort/array/binVectorOutputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
 
@@ -15,9 +15,9 @@ ReadFileBinDataNode::ReadFileBinDataNode( const QString &node_name ) : ProcessNo
 }
 bool ReadFileBinDataNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "路径" ), filePathInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "路径" ), filePathInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "二进制" ), this->outBinVectorPort, outVectorPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "二进制" ), this->outBinVectorPort, outVectorPtr ) == false )
 			return false;
 		return true;
 	};
@@ -29,7 +29,7 @@ bool ReadFileBinDataNode::updateLayout( ) {
 
 bool ReadFileBinDataNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVectorPtr->clear( );
-	auto outputPorts = nodeToolsPtr->getRefPort( filePathInputPort );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( filePathInputPort );
 	size_t count = outputPorts->size( );
 	if( count == 0 )
 		return true;

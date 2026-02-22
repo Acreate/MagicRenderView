@@ -1,11 +1,11 @@
-#include "imageAddToArrayNode.h"
+﻿#include "imageAddToArrayNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/imageVectorInputPort.h>
 #include <node/port/inputPort/unity/imageInputPort.h>
 #include <node/port/outputPort/array/imageVectorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ImageAddToArrayNode, Node::tr( "序列追加/单元/图像" ) );
 
@@ -14,13 +14,13 @@ ImageAddToArrayNode::ImageAddToArrayNode( const QString &node_name ) : ProcessNo
 }
 bool ImageAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "图像序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "图像序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "图像" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "图像" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
+		if( nodeComponentControlPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -43,7 +43,7 @@ bool ImageAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	auto refPort = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;
@@ -57,7 +57,7 @@ bool ImageAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data_tim
 		return true;
 	*outputVarPtr = *conver;
 
-	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	refPort = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;

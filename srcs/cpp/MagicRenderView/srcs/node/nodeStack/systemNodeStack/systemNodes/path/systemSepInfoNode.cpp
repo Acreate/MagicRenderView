@@ -1,6 +1,6 @@
 ﻿#include "systemSepInfoNode.h"
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QDir>
 #include <QStandardPaths>
@@ -17,8 +17,8 @@ SystemSepInfoNode::SystemSepInfoNode( const QString &node_name ) : ProcessNode( 
 bool SystemSepInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		QString nodeTypeName;
-		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
-		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
+		nodeComponentControlPtr->getVirtualNormalPathLastName( this, nodeTypeName );
+		if( nodeComponentControlPtr->appendOutputPortType( this, nodeTypeName, pathOutputPortPtr, pathPtr ) == false )
 			return false;
 		return true;
 	};

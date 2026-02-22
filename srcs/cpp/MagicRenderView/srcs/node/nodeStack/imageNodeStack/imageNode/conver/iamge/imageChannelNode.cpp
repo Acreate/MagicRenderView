@@ -7,7 +7,7 @@
 #include <node/port/inputPort/unity/imageInputPort.h>
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ImageChannelNode, Node::tr( "转换/切分/多通道" ) );
 
@@ -19,15 +19,15 @@ ImageChannelNode::ImageChannelNode( const QString &node_name ) : ProcessNode( no
 }
 bool ImageChannelNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "图像" ), imageInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "图像" ), imageInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "红色" ), redOutputPort, redOutVectorVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "红色" ), redOutputPort, redOutVectorVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "绿色" ), greenOutputPort, greenOutVectorVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "绿色" ), greenOutputPort, greenOutVectorVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "蓝色" ), blueOutputPort, blueOutVectorVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "蓝色" ), blueOutputPort, blueOutVectorVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "透明" ), alphaOutputPort, alphaOutVectorVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "透明" ), alphaOutputPort, alphaOutVectorVarPtr ) == false )
 			return false;
 		return true;
 	};

@@ -1,7 +1,7 @@
 ﻿#include "binCreateUnityNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
 #include "binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorWidget.h"
@@ -14,7 +14,7 @@ BinCreateUnityNode::BinCreateUnityNode( const QString &node_name ) : CreateNode(
 }
 bool BinCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		*outputVarPtr = '\0';
 		return true;

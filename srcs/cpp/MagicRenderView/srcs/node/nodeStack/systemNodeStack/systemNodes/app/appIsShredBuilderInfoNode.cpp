@@ -1,7 +1,7 @@
 ﻿#include "appIsShredBuilderInfoNode.h"
 
 #include <app/application.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <QLibraryInfo>
 
 #include "../../../../port/outputPort/unity/boolOutputPort.h"
@@ -15,8 +15,8 @@ AppIsShredBuilderInfoNode::AppIsShredBuilderInfoNode( const QString &node_name )
 bool AppIsShredBuilderInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 		QString nodeTypeName;
-		nodeToolsPtr->getVirtualNormalPathLastName( this, nodeTypeName );
-		if( nodeToolsPtr->appendOutputPortType( this, nodeTypeName, outputPortPtr, outputVarPtr ) == false )
+		nodeComponentControlPtr->getVirtualNormalPathLastName( this, nodeTypeName );
+		if( nodeComponentControlPtr->appendOutputPortType( this, nodeTypeName, outputPortPtr, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

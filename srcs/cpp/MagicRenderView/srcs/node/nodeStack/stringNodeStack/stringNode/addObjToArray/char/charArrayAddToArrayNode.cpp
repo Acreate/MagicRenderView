@@ -5,7 +5,7 @@
 #include <node/port/outputPort/array/charVectorOutputPort.h>
 #include <node/port/inputPort/array/charVectorInputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( CharArrayAddToArrayNode, Node::tr( "序列追加/序列/字符序列追加到字符串序列" ) );
 
@@ -14,13 +14,13 @@ CharArrayAddToArrayNode::CharArrayAddToArrayNode( const QString &node_name ) : P
 }
 bool CharArrayAddToArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "字符序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "字符序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendInputPortType( this, tr( "字符序列" ), secondInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "字符序列" ), secondInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
-		if( nodeToolsPtr->setPortMultiple( secondInputPort, true ) == false )
+		if( nodeComponentControlPtr->setPortMultiple( secondInputPort, true ) == false )
 			return false;
 		return true;
 	};
@@ -43,7 +43,7 @@ bool CharArrayAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data
 	std::vector< NodeType > *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	auto refPort = nodeToolsPtr->getRefPort( firstInputPort );
+	auto refPort = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;
@@ -57,7 +57,7 @@ bool CharArrayAddToArrayNode::fillNodeCall( const QDateTime &ndoe_run_start_data
 		return true;
 	*outputVarPtr = *conver;
 
-	refPort = nodeToolsPtr->getRefPort( secondInputPort );
+	refPort = nodeComponentControlPtr->getRefPort( secondInputPort );
 	count = refPort->size( );
 	if( count == 0 )
 		return true;

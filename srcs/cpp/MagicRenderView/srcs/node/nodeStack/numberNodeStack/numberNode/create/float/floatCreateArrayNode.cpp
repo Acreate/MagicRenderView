@@ -1,6 +1,6 @@
 ﻿#include "floatCreateArrayNode.h"
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 
@@ -11,7 +11,7 @@ FloatCreateArrayNode::FloatCreateArrayNode( const QString &node_name ) : CreateN
 }
 bool FloatCreateArrayNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

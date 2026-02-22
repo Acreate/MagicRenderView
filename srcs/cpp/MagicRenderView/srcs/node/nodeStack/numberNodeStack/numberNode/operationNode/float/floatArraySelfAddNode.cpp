@@ -6,7 +6,7 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( FloatArraySelfAddNode, Node::tr( "自运算/序列/浮点/加法" ) );
 
@@ -15,9 +15,9 @@ FloatArraySelfAddNode::FloatArraySelfAddNode( const QString &node_name ) : Proce
 }
 bool FloatArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "浮点序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "浮点序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -38,7 +38,7 @@ bool FloatArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

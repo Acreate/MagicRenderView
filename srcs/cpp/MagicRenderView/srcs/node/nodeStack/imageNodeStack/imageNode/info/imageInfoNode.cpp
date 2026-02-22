@@ -5,7 +5,7 @@
 #include <srack/srackInfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../../../port/inputPort/unity/imageInputPort.h"
 #include "../../../../port/outputPort/unity/uIntOutputPort.h"
 
@@ -18,13 +18,13 @@ ImageInfoNode::ImageInfoNode( const QString &node_name ) : ProcessNode( node_nam
 }
 bool ImageInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "图像" ), imageInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "图像" ), imageInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "宽度" ), widthOutputPortPtr, width ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "宽度" ), widthOutputPortPtr, width ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "长度" ), heightOutputPortPtr, height ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "长度" ), heightOutputPortPtr, height ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "格式" ), fromatOutputPortPtr, fromat ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "格式" ), fromatOutputPortPtr, fromat ) == false )
 			return false;
 		return true;
 	};

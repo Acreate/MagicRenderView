@@ -1,4 +1,4 @@
-#include "imageArraySelfAddNode.h"
+﻿#include "imageArraySelfAddNode.h"
 
 #include <director/varDirector.h>
 #include <node/port/inputPort/array/imageVectorInputPort.h>
@@ -6,7 +6,7 @@
 
 #include <tools/imageTools.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ImageArraySelfAddNode, Node::tr( "自运算/图像/加法" ) );
 
@@ -15,9 +15,9 @@ ImageArraySelfAddNode::ImageArraySelfAddNode( const QString &node_name ) : Proce
 }
 bool ImageArraySelfAddNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "图像序列" ), firstInputPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "图像序列" ), firstInputPort ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -44,7 +44,7 @@ bool ImageArraySelfAddNode::fillNodeCall( const QDateTime &ndoe_run_start_data_t
 	NodeType *secondConverPtr;
 	void *portVarPtr;
 	VarDirector *varDirector;
-	const std::vector< OutputPort * > *outputPorts = nodeToolsPtr->getRefPort( firstInputPort );
+	const std::vector< OutputPort * > *outputPorts = nodeComponentControlPtr->getRefPort( firstInputPort );
 	count = outputPorts->size( );
 	if( count == 0 )
 		return true;

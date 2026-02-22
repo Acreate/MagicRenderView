@@ -15,9 +15,8 @@
 	friend class NodeTypeInfoSerializeion;\
 	friend class NodeTypeInfo;\
 	friend class PortTypeInfo;\
-	friend class NodeTools;\
 	friend class NodeInfoEditorDirector;\
-	friend class NodeTools;\
+	friend class NodeComponentControl;\
 	friend class NodeRunLink;\
 	friend class NodeInfoWidget;\
 	friend class PortLinkType

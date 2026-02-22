@@ -45,6 +45,8 @@ protected:
 	QDateTime *brforeRunDataTime;
 	/// @brief 当前节点运行时间
 	QDateTime *currentRunDataTime;
+	/// @brief 临时使用节点指针
+	Node *buffNode;
 	/// @brief 当前执行节点
 	Node *currentNode;
 	/// @brief 以前的节点
@@ -83,8 +85,9 @@ protected:
 	virtual void resetBilderData( );
 	/// @brief 获取下一个节点对象指针
 	/// @param result_next_node_ptr 返回的下一个节点
+	/// @param result_node_ptr
 	/// @return 失败返回 null
-	virtual bool getNextNodeRunLinkPtr( NodeRunLink * &result_next_node_ptr );
+	virtual bool getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *result_node_ptr );
 	/// @brief 更新下一个节点堆栈信息
 	/// @param update_next_node_ptr 更新的节点链接信息
 	/// @return 失败返回 false

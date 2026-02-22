@@ -4,16 +4,16 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ToBinNode, Node::tr( "转换/单元/二进制" ) );
 
 ToBinNode::ToBinNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToBinNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "二进制" ), binOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "二进制" ), binOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -25,7 +25,7 @@ bool ToBinNode::updateLayout( ) {
 
 bool ToBinNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	*outVarPtr = 0;
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

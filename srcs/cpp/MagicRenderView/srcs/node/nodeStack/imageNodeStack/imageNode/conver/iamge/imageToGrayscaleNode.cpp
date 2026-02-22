@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 
 #include <enums/nodeEnum.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 #include "../../../../../port/inputPort/dynamicTypeInputPort.h"
 #include "../../../../../port/outputPort/dynamicTypeOutputPort.h"
@@ -16,10 +16,10 @@ ImageToGrayscaleNode::ImageToGrayscaleNode( const QString &node_name ) : Process
 bool ImageToGrayscaleNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendDynamicInputPortType< QImage >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendDynamicInputPortType< QImage >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageInputPortPtr ) == false )
 			return false;
 
-		if( nodeToolsPtr->appendDynamicOutputPortType< >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageOutputPortPtr, outImagePtr ) == false )
+		if( nodeComponentControlPtr->appendDynamicOutputPortType< >( this, NodeEnum::PortType::Unity, tr( "图像" ), imageOutputPortPtr, outImagePtr ) == false )
 			return false;
 		return true;
 	};

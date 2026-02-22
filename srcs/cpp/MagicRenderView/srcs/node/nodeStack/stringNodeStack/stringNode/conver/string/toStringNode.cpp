@@ -7,16 +7,16 @@
 
 #include <tools/imageTools.h>
 
-#include "../../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 
 Def_Entity_NodeTypeName_Function( ToStringNode, Node::tr( "转换/单元/字符串" ) );
 
 ToStringNode::ToStringNode( const QString &node_name ) : ProcessNode( node_name ) { outVarPtr = nullptr; }
 bool ToStringNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "值" ), anyVarInputPortPtr ) == false )
 			return false;
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "字符串" ), stringOutputPortPtr, outVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "字符串" ), stringOutputPortPtr, outVarPtr ) == false )
 			return false;
 		return true;
 	};
@@ -28,7 +28,7 @@ bool ToStringNode::updateLayout( ) {
 
 bool ToStringNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {
 	outVarPtr->clear( );
-	auto outputPortsPtr = nodeToolsPtr->getRefPort( anyVarInputPortPtr );
+	auto outputPortsPtr = nodeComponentControlPtr->getRefPort( anyVarInputPortPtr );
 	size_t count = outputPortsPtr->size( );
 	if( count == 0 )
 		return true;

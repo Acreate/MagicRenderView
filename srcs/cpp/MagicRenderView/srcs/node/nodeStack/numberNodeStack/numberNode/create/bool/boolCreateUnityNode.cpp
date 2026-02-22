@@ -1,7 +1,7 @@
 ﻿#include "boolCreateUnityNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/nodeComponentControl.h>
 
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"
 #include "binCreateNodeEditorWidget/unity/boolCreateUnityNodeEditorWidget.h"
@@ -15,7 +15,7 @@ BoolCreateUnityNode::BoolCreateUnityNode( const QString &node_name ) : CreateNod
 bool BoolCreateUnityNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
 
-		if( nodeToolsPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
+		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "结果" ), outputPort, outputVarPtr ) == false )
 			return false;
 		return true;
 	};

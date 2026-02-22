@@ -13,7 +13,7 @@
 #include <widget/mainWidget.h>
 
 #include <tools/pathTools.h>
-#include <node/nodeTools/nodeTools.h>
+#include <node/nodeTools/NodeComponentControl.h>
 #include <node/port/inputPort/dynamicTypeInputPort.h>
 #include <node/port/outputPort/dynamicTypeOutputPort.h>
 
@@ -60,7 +60,7 @@ Node::~Node( ) {
 	delete mainLayout;
 
 	delete nodeAfterEffect;
-	delete nodeToolsPtr;
+	delete nodeComponentControlPtr;
 
 	if( varPtr )
 		varDirector->release( varPtr );
@@ -109,7 +109,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	nodeAfterEffect = new NodeBorderAfterEffect( this );
 	nodeAfterEffect->move( 0, 0 );
 	// 创建节点工具
-	nodeToolsPtr = new NodeTools( this );
+	nodeComponentControlPtr = new NodeComponentControl( this );
 }
 NodeInfoWidget * Node::getNodeInfoWidget( ) {
 	return nullptr;

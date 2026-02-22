@@ -1,4 +1,4 @@
-#include "debugInfoNode.h"
+﻿#include "debugInfoNode.h"
 
 #include <app/application.h>
 #include <define/castMacro.h>
@@ -12,16 +12,16 @@
 #include "../../../../../director/nodeInfoEditorDirector.h"
 #include "../../../../../tools/varDirectorTools.h"
 #include "../../../../nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
-#include "../../../../nodeTools/nodeTools.h"
+#include <node/nodeTools/nodeComponentControl.h>
 #include "../../editorNodeInfoWidgets/debugNodeInfoWidget/debugNodeInfoWidget.h"
 
 Def_Entity_NodeTypeName_Function( DebugInfoNode, Node::tr( "输出/值" ) );
 
 bool DebugInfoNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
-		if( nodeToolsPtr->appendInputPortType( this, tr( "输出" ), inputBugPort ) == false )
+		if( nodeComponentControlPtr->appendInputPortType( this, tr( "输出" ), inputBugPort ) == false )
 			return false;
-		nodeToolsPtr->setPortMultiple( inputBugPort, true );
+		nodeComponentControlPtr->setPortMultiple( inputBugPort, true );
 		return true;
 	};
 	return ProcessNode::initEx( parent );
@@ -64,7 +64,7 @@ bool DebugInfoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, siz
 	}
 	debugNodeInfoWidget->show( );
 
-	auto outputPorts = nodeToolsPtr->getRefPort( inputBugPort );
+	auto outputPorts = nodeComponentControlPtr->getRefPort( inputBugPort );
 	size_t count = outputPorts->size( );
 	size_t index = 0;
 	OutputPort **outputPortArrayPtr;
