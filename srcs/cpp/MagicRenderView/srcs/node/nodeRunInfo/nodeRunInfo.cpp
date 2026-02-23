@@ -576,7 +576,9 @@ bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::Node
 }
 size_t NodeRunInfo::filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector ) {
 	size_t orgCount = runOverNodeVector.size( );
-	runOverNodeVector = NodeTools::filterNodeVector( runOverNodeVector, filter_over_node_run_link_vector );
+	std::vector< Node * > result;
+	VectorTools::filterRepeat( runOverNodeVector, filter_over_node_run_link_vector, result );
+	runOverNodeVector = result;
 	return orgCount - runOverNodeVector.size( );
 }
 void NodeRunInfo::clear( ) {

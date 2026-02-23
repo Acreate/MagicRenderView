@@ -1,25 +1,52 @@
 ﻿#include "nodeTools.h"
+
+#include "arrayTools.h"
+
+#include "../node/node/node.h"
 bool NodeTools::getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	return false;
 }
 bool NodeTools::getNodeInputRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
-	return false;
+	auto nodes = get_node_target->getOtherNodeOutputPortRefThisNodeInputPortVector( );
+	size_t count = nodes.size( );
+	auto data = nodes.data( );
+	size_t index;
+	size_t emplaceStartIndex = result_ref_node_vector.size( );
+	size_t emplaceNewSize = emplaceStartIndex + count;
+	size_t findIndex;
+	result_ref_node_vector.resize( emplaceNewSize );
+	size_t setIndex = emplaceStartIndex;
+	auto emplaceData = result_ref_node_vector.data( );
+	for( findIndex = 0, index = 0; index < count; ++index, findIndex = 0 )
+		if( ArrayTools::findIndex( emplaceData, setIndex, data[ index ], findIndex ) == false ) {
+			emplaceData[ emplaceStartIndex ] = data[ index ];
+			++setIndex;
+		}
+	result_ref_node_vector.resize( setIndex );
+	for( index = 0; index < count; ++index )
+		if( getNodeInputRef( data[ index ], result_ref_node_vector ) == false )
+			return false;
+	return true;
 }
 bool NodeTools::getNodeOutputRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
-	return false;
-}
-std::vector< Node * > NodeTools::filterNodeVector( const std::vector< Node * > &src_vector, const std::vector< Node * > &target_vector ) {
-	std::vector< Node * > result;
-	size_t count = target_vector.size( );
-	auto data = target_vector.data( );
+	auto nodes = get_node_target->getThisNodeOutputPortRefOtherNodeInputPortVector( );
+	size_t count = nodes.size( );
+	auto data = nodes.data( );
 	size_t index;
-	for( auto &item : src_vector ) {
-		for( index = 0; index < count; ++index )
-			if( item == data[ index ] )
-				break;
-		if( index != count )
-			continue;
-		result.emplace_back( item );
-	}
-	return result;
+	size_t emplaceStartIndex = result_ref_node_vector.size( );
+	size_t emplaceNewSize = emplaceStartIndex + count;
+	size_t findIndex;
+	result_ref_node_vector.resize( emplaceNewSize );
+	size_t setIndex = emplaceStartIndex;
+	auto emplaceData = result_ref_node_vector.data( );
+	for( findIndex = 0, index = 0; index < count; ++index, findIndex = 0 )
+		if( ArrayTools::findIndex( emplaceData, setIndex, data[ index ], findIndex ) == false ) {
+			emplaceData[ emplaceStartIndex ] = data[ index ];
+			++setIndex;
+		}
+	result_ref_node_vector.resize( setIndex );
+	for( index = 0; index < count; ++index )
+		if( getNodeOutputRef( data[ index ], result_ref_node_vector ) == false )
+			return false;
+	return true;
 }

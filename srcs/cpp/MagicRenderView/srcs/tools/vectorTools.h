@@ -174,6 +174,35 @@ namespace VectorTools {
 
 		return true;
 	}
+	/// @brief 去除序列当中重复元素
+	/// @tparam TVectorUnityType 
+	/// @param org_target 原始目标
+	/// @param remove_target 过滤目标
+	/// @param result_std_vector 返回序列
+	template< typename TVectorUnityType >
+	bool filterRepeat( const std::vector< TVectorUnityType > &org_target, const std::vector< TVectorUnityType > &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
+		if( &org_target == &remove_target )
+			return true;
+		size_t count = org_target.size( );
+		if( count == 0 )
+			return true;
+		count = remove_target.size( );
+		if( count == 0 ) {
+			result_std_vector.append_range( org_target );
+			return true;
+		}
+		auto data = remove_target.data( );
+		size_t index;
+		for( auto &item : org_target ) {
+			for( index = 0; index < count; ++index )
+				if( item == data[ index ] )
+					break;
+			if( index != count )
+				continue;
+			result_std_vector.emplace_back( item );
+		}
+		return true;
+	}
 }
 
 #endif // VECTORTOOLS_H_H_HEAD__FILE__
