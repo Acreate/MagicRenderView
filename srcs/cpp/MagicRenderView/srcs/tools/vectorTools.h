@@ -181,15 +181,14 @@ namespace VectorTools {
 	/// @param result_std_vector 返回序列
 	template< typename TVectorUnityType >
 	bool removeTarget( const std::vector< TVectorUnityType > &org_target, const std::vector< TVectorUnityType > &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
-		auto leftPtr = &org_target;
-		auto rightPtr = &result_std_vector;
-		if( leftPtr == rightPtr )
+		auto orgPtr = &org_target;
+		auto resultPtr = &result_std_vector;
+		if( orgPtr == resultPtr )
 			return false;
-		rightPtr = &remove_target;
-		if( leftPtr == rightPtr )
+		auto removePtr = &remove_target;
+		if( orgPtr == removePtr )
 			return true;
-		leftPtr = &org_target;
-		if( leftPtr == rightPtr )
+		if( removePtr == resultPtr )
 			return false;
 		size_t orgTargetCount = org_target.size( );
 		if( orgTargetCount == 0 )
@@ -202,7 +201,7 @@ namespace VectorTools {
 		auto data = remove_target.data( );
 		size_t index;
 		auto oldSize = result_std_vector.size( );
-		size_t newSize = oldSize + count;
+		size_t newSize = oldSize + orgTargetCount;
 		result_std_vector.resize( newSize );
 		index = newSize;
 		newSize = oldSize;
@@ -222,6 +221,42 @@ namespace VectorTools {
 		}
 		result_std_vector.resize( newSize );
 		return newSize - oldSize;
+	}
+
+	/// @brief 去除序列当中指定元素
+	/// @tparam TVectorUnityType 
+	/// @param org_target 原始目标
+	/// @param remove_target 过滤目标
+	/// @param result_std_vector 返回序列
+	template< typename TVectorUnityType >
+	bool removeTarget( const std::vector< TVectorUnityType > &org_target, const TVectorUnityType &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
+		auto orgPtr = &org_target;
+		auto resultPtr = &result_std_vector;
+		if( orgPtr == resultPtr )
+			return false;
+		auto removePtr = &remove_target;
+		if( orgPtr == removePtr )
+			return true;
+		if( removePtr == resultPtr )
+			return false;
+		size_t orgTargetCount = org_target.size( );
+		if( orgTargetCount == 0 )
+			return true;
+
+		size_t index = result_std_vector.size( );
+		size_t newSize = orgTargetCount + index;
+		result_std_vector.resize( newSize );
+		auto resultData = result_std_vector.data( );
+
+		auto orgTargetData = org_target.data( );
+		size_t orgTargetIndex;
+		for( orgTargetIndex = 0; orgTargetIndex < orgTargetCount; ++orgTargetIndex )
+			if( orgTargetData[ orgTargetIndex ] != remove_target ) {
+				resultData[ index ] = orgTargetData[ orgTargetIndex ];
+				++index;
+			}
+		result_std_vector.resize( index );
+		return index != newSize;
 	}
 }
 
