@@ -180,28 +180,48 @@ namespace VectorTools {
 	/// @param remove_target 过滤目标
 	/// @param result_std_vector 返回序列
 	template< typename TVectorUnityType >
-	bool filterRepeat( const std::vector< TVectorUnityType > &org_target, const std::vector< TVectorUnityType > &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
-		if( &org_target == &remove_target )
+	bool removeTarget( const std::vector< TVectorUnityType > &org_target, const std::vector< TVectorUnityType > &remove_target, std::vector< TVectorUnityType > &result_std_vector ) {
+		auto leftPtr = &org_target;
+		auto rightPtr = &result_std_vector;
+		if( leftPtr == rightPtr )
+			return false;
+		rightPtr = &remove_target;
+		if( leftPtr == rightPtr )
 			return true;
-		size_t count = org_target.size( );
-		if( count == 0 )
+		leftPtr = &org_target;
+		if( leftPtr == rightPtr )
+			return false;
+		size_t orgTargetCount = org_target.size( );
+		if( orgTargetCount == 0 )
 			return true;
-		count = remove_target.size( );
+		size_t count = remove_target.size( );
 		if( count == 0 ) {
 			result_std_vector.append_range( org_target );
 			return true;
 		}
 		auto data = remove_target.data( );
 		size_t index;
-		for( auto &item : org_target ) {
+		auto oldSize = result_std_vector.size( );
+		size_t newSize = oldSize + count;
+		result_std_vector.resize( newSize );
+		index = newSize;
+		newSize = oldSize;
+		oldSize = index;
+		auto resultData = result_std_vector.data( );
+		auto orgTargetData = org_target.data( );
+		size_t orgTargetIndex = 0;
+		for( ; orgTargetIndex < orgTargetCount; ++orgTargetIndex ) {
+			auto &item = orgTargetData[ orgTargetIndex ];
 			for( index = 0; index < count; ++index )
 				if( item == data[ index ] )
 					break;
 			if( index != count )
 				continue;
-			result_std_vector.emplace_back( item );
+			resultData[ newSize ] = item;
+			++newSize;
 		}
-		return true;
+		result_std_vector.resize( newSize );
+		return newSize - oldSize;
 	}
 }
 
