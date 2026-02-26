@@ -16,8 +16,17 @@ std::vector< Node * > & NodeRunLinkTools::Get::getOverRunNodeVector( ) const {
 std::vector< Node * > & NodeRunLinkTools::Get::getStartNodeVector( ) const {
 	return nodeRunLinkData->startNodeVector;
 }
+bool NodeRunLinkTools::Get::getNodeRef( std::vector< Node * > &result_ref_node_vector ) {
+	return NodeRunLinkTools::getNodeRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
+}
+bool NodeRunLinkTools::Get::getNodeInputInForRef( std::vector< Node * > &result_ref_node_vector ) {
+	return NodeRunLinkTools::getNodeInputInForRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
+}
+bool NodeRunLinkTools::Get::getNodeOutputInForRef( std::vector< Node * > &result_ref_node_vector ) {
+	return NodeRunLinkTools::getNodeOutputInForRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
+}
 
-bool NodeRunLinkTools::Get::getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
+bool NodeRunLinkTools::getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
 		return false;
 	std::list< Node * > topJobStack;
@@ -60,7 +69,7 @@ bool NodeRunLinkTools::Get::getNodeRef( Node *get_node_target, std::vector< Node
 	} while( true );
 	return true;
 }
-bool NodeRunLinkTools::Get::getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
+bool NodeRunLinkTools::getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
 		return false;
 	std::list< Node * > topJobStack;
@@ -96,7 +105,7 @@ bool NodeRunLinkTools::Get::getNodeInputInForRef( Node *get_node_target, std::ve
 	} while( true );
 	return true;
 }
-bool NodeRunLinkTools::Get::getNodeOutputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
+bool NodeRunLinkTools::getNodeOutputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
 		return false;
 	std::list< Node * > topJobStack;

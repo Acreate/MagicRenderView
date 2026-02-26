@@ -14,21 +14,20 @@ bool CreateNodeRunLink::builder( ) {
 	Node *beforeNode = getBeforeNode( );
 	if( beforeNode == nullptr )
 		return false;
-	if( beforeNode->getNodeType( ) != NodeEnum::NodeType::Create )
+	NodeEnum::NodeType targetNodeType = NodeEnum::NodeType::Create;
+	if( beforeNode->getNodeType( ) != targetNodeType )
 		return false;
 
 	auto &resultRefNodeVector = get->getLinkNodeVector( );
-	if( get->getNodeRef( beforeNode, resultRefNodeVector ) == false ) {
-		resultRefNodeVector.clear( );
+	if( get->getNodeRef( resultRefNodeVector ) == false )
 		return false;
-	}
 	auto &startNodeVector = get->getStartNodeVector( );
 	startNodeVector.clear( );
 	size_t count = resultRefNodeVector.size( );
 	auto data = resultRefNodeVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( data[ index ] && data[ index ]->getNodeType( ) == NodeEnum::NodeType::Create )
+		if( data[ index ] && data[ index ]->getNodeType( ) == targetNodeType )
 			startNodeVector.emplace_back( data[ index ] );
 	return true;
 }

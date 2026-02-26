@@ -17,7 +17,7 @@
 
 #include "../../director/nodeDirector.h"
 
-#include "nodeRunLink/imp/callNodeRunLink.h"
+#include "nodeRunLink/imp/functionNodeRunLink.h"
 #include "nodeRunLink/imp/createNodeRunLink.h"
 #include "nodeRunLink/imp/pointNodeRunLink.h"
 #include "nodeRunLink/nodeRunLink.h"
@@ -139,17 +139,12 @@ bool NodeRunInfo::builderRunInstance( ) {
 				}
 				createVector.emplace_back( createNodeRunLink );
 				emit builder_finish_signal( createNodeRunLink );
-			{
-				auto nodes = createNodeRunLink->getLinkNodeVector( );
-				auto nodeArrayToString = appinstancePtr->getNodeDirector( )->nodeArrayToString( nodes );
-				printerDirector->info( nodeArrayToString, Create_SrackInfo( ) );
-			}
 				break;
 
 			case NodeEnum::NodeType::Function :
 				if( stackHasStartNode( functionVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
 					break;
-				createNodeRunLink = new CallNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
+				createNodeRunLink = new FunctionNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 				if( createNodeRunLink->builder( ) == false ) {
 					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
 					delete createNodeRunLink;

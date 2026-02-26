@@ -16,27 +16,40 @@ namespace NodeRunLinkTools {
 		virtual std::vector< Node * > & getStartNodeVector( ) const;
 
 		/// @brief 递归获取节点的所有依赖
-		/// @param get_node_target 获取节点
 		/// @param result_ref_node_vector 依赖列表
 		/// @return 失败返回 false
-		virtual bool getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
+		virtual bool getNodeRef( std::vector< Node * > &result_ref_node_vector );
 
 		/// @brief 递归获取节点的所有输入依赖
-		/// @param get_node_target 获取节点
 		/// @param result_ref_node_vector 依赖列表
 		/// @return 失败返回 false
-		virtual bool getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
+		virtual bool getNodeInputInForRef( std::vector< Node * > &result_ref_node_vector );
 		/// @brief 递归获取节点的所有输出依赖
-		/// @param get_node_target 获取节点
 		/// @param result_ref_node_vector 依赖列表
 		/// @return 失败返回 false
-		virtual bool getNodeOutputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
+		virtual bool getNodeOutputInForRef( std::vector< Node * > &result_ref_node_vector );
 	private:
 		NodeRunLinkData *nodeRunLinkData;
 		Get( NodeRunLinkData *const node_run_link_data )
 			: nodeRunLinkData( node_run_link_data ) { }
 	};
 
+	/// @brief 递归获取节点的所有依赖
+	/// @param get_node_target 获取节点
+	/// @param result_ref_node_vector 依赖列表
+	/// @return 失败返回 false
+	bool getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
+
+	/// @brief 递归获取节点的所有输入依赖
+	/// @param get_node_target 获取节点
+	/// @param result_ref_node_vector 依赖列表
+	/// @return 失败返回 false
+	bool getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
+	/// @brief 递归获取节点的所有输出依赖
+	/// @param get_node_target 获取节点
+	/// @param result_ref_node_vector 依赖列表
+	/// @return 失败返回 false
+	bool getNodeOutputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector );
 }
 
 #endif // NODERUNLINKTOOLS_H_H_HEAD__FILE__

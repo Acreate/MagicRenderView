@@ -1,15 +1,16 @@
-﻿#include "pointNodeRunLink.h"
+﻿#include "functionNodeRunLink.h"
 
 #include "../../../../enums/nodeEnum.h"
 
 #include "../../../../tools/NodeRunLinkTools.h"
 
 #include "../../../node/node.h"
-bool PointNodeRunLink::builder( ) {
+bool FunctionNodeRunLink::builder( ) {
+
 	Node *beforeNode = getBeforeNode( );
 	if( beforeNode == nullptr )
 		return false;
-	NodeEnum::NodeType targetNodeType = NodeEnum::NodeType::Point;
+	NodeEnum::NodeType targetNodeType = NodeEnum::NodeType::Function;
 	if( beforeNode->getNodeType( ) != targetNodeType )
 		return false;
 
@@ -26,7 +27,7 @@ bool PointNodeRunLink::builder( ) {
 			startNodeVector.emplace_back( data[ index ] );
 	return true;
 }
-bool PointNodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
+bool FunctionNodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
 	if( isOver( ) )
 		return false;
 	return true;
