@@ -1,4 +1,4 @@
-#include "nodeDirector.h"
+﻿#include "nodeDirector.h"
 #include <QMenu>
 #include <QPainter>
 
@@ -597,10 +597,13 @@ bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 	size_t count = nodeArchiveVector.size( );
 	auto nodeArrayPtr = nodeArchiveVector.data( );
 	uint64_t maxCode = 0;
+
+	uint64_t buffCode;
 	size_t index = 0;
 	for( ; index < count; ++index )
-		if( maxCode < nodeArrayPtr[ index ]->generateCode )
-			maxCode = nodeArrayPtr[ index ]->generateCode;
+		if( nodeArrayPtr[ index ] )
+			if( maxCode < nodeArrayPtr[ index ]->generateCode )
+				maxCode = nodeArrayPtr[ index ]->generateCode;
 	if( maxGenerator < maxCode ) {
 		// 最大生成号
 		error_msg = tr( "超出可控数量" );
@@ -608,8 +611,12 @@ bool NodeDirector::sortArchiveCode( QString &error_msg ) {
 	}
 	decltype(nodeArchiveVector) buff( maxCode, nullptr );
 	auto destArrayPtr = buff.data( );
-	for( index = 0; index < maxCode; ++index )
-		destArrayPtr[ nodeArrayPtr[ index ]->generateCode - 1 ] = nodeArrayPtr[ index ];
+	for( index = 0; index < count; ++index )
+		if( nodeArrayPtr[ index ] ) {
+			buffCode = nodeArrayPtr[ index ]->generateCode;
+			buffCode -= 1;
+			destArrayPtr[ buffCode ] = nodeArrayPtr[ index ];
+		}
 	nodeArchiveVector = buff;
 	return true;
 }

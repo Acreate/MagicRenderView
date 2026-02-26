@@ -17,10 +17,19 @@ bool CreateNodeRunLink::builder( ) {
 	if( beforeNode->getNodeType( ) != NodeEnum::NodeType::Create )
 		return false;
 
-	if( get->getNodeRef( beforeNode, get->getLinkNodeVector( ) ) == false ) {
-		get->getLinkNodeVector( ).clear( );
+	auto &resultRefNodeVector = get->getLinkNodeVector( );
+	if( get->getNodeRef( beforeNode, resultRefNodeVector ) == false ) {
+		resultRefNodeVector.clear( );
 		return false;
 	}
+	auto &startNodeVector = get->getStartNodeVector( );
+	startNodeVector.clear( );
+	size_t count = resultRefNodeVector.size( );
+	auto data = resultRefNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ] && data[ index ]->getNodeType( ) == NodeEnum::NodeType::Create )
+			startNodeVector.emplace_back( data[ index ] );
 	return true;
 }
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {

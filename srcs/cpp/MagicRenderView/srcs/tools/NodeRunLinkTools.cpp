@@ -40,14 +40,14 @@ bool NodeRunLinkTools::Get::getNodeRef( Node *get_node_target, std::vector< Node
 			appendCount = thisOutRefNode.size( );
 			appendData = thisOutRefNode.data( );
 			for( findResult = appendIndex = 0; appendIndex < appendCount; ++appendIndex, findResult = 0 )
-				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == true )
+				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == false )
 					topJobStack.emplace_front( appendData[ appendIndex ] );
 			// 输入依赖
 			auto &thisInRefNode = get_node_target->getOtherNodeOutputPortRefThisNodeInputPortVector( );
 			appendCount = thisInRefNode.size( );
 			appendData = thisInRefNode.data( );
 			for( findResult = appendIndex = 0; appendIndex < appendCount; ++appendIndex, findResult = 0 )
-				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == true )
+				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == false )
 					topJobStack.emplace_front( appendData[ appendIndex ] );
 		}
 		if( topJobStack.empty( ) )
@@ -83,7 +83,7 @@ bool NodeRunLinkTools::Get::getNodeInputInForRef( Node *get_node_target, std::ve
 			appendCount = thisInRefNode.size( );
 			appendData = thisInRefNode.data( );
 			for( findResult = appendIndex = 0; appendIndex < appendCount; ++appendIndex, findResult = 0 )
-				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == true )
+				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == false )
 					topJobStack.emplace_front( appendData[ appendIndex ] );
 		}
 		if( topJobStack.empty( ) )
@@ -119,7 +119,7 @@ bool NodeRunLinkTools::Get::getNodeOutputInForRef( Node *get_node_target, std::v
 			appendCount = thisOutRefNode.size( );
 			appendData = thisOutRefNode.data( );
 			for( findResult = appendIndex = 0; appendIndex < appendCount; ++appendIndex, findResult = 0 )
-				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == true )
+				if( ArrayTools::findIndex( resuktData, resultCount, appendData[ appendIndex ], findResult ) == false )
 					topJobStack.emplace_front( appendData[ appendIndex ] );
 		}
 		if( topJobStack.empty( ) )
