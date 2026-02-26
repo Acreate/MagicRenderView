@@ -3,7 +3,7 @@
 #include <node/port/outputPort/point/pointOutputPort.h>
 #include <node/port/outputPort/toPoint/toPointOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( MakeNode, Node::tr( "控制/记录位置" ) );
 

@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/uIntOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "uintCreateNodeEditorWidget/unity/uIntCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( UIntCreateUnityNode, Node::tr( "创建/单元/无符号整数" ) );

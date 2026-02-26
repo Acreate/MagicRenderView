@@ -1,7 +1,7 @@
 ﻿#include "appBuilderTimeNode.h"
 
 #include <app/application.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <node/port/outputPort/unity/dateTimeOutputPort.h>
 #include <QLibraryInfo>
 

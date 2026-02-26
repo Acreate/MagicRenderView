@@ -7,7 +7,7 @@
 
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ColorArrayDivNode, Node::tr( "颜色/序列/除法" ) );
 

@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/stringVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( StringCreateArrayNode, Node::tr( "创建/序列/字符串序列" ) );
 

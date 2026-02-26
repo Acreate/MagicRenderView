@@ -7,7 +7,7 @@
 
 #include <tools/baseOperationTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IntArrayModNode, Node::tr( "运算/序列/整数/求余" ) );
 

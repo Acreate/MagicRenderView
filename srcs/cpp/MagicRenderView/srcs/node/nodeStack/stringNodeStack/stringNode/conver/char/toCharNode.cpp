@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/charOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ToCharNode, Node::tr( "转换/单元/字符" ) );
 

@@ -7,7 +7,7 @@
 #include <node/port/inputPort/unity/imageInputPort.h>
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ImageChannelNode, Node::tr( "转换/切分/多通道" ) );
 

@@ -2,6 +2,11 @@
 
 #include <enums/nodeEnum.h>
 
+#include "../../nodeRunLinkData.h"
+
+#include "../../../../tools/NodeRunLinkTools.h"
+#include "../../../../tools/nodeTools.h"
+
 #include "../../../node/node.h"
 CreateNodeRunLink::CreateNodeRunLink( Node *const init_node_ptr ) : NodeRunLink( init_node_ptr ) { }
 
@@ -11,6 +16,11 @@ bool CreateNodeRunLink::builder( ) {
 		return false;
 	if( beforeNode->getNodeType( ) != NodeEnum::NodeType::Create )
 		return false;
+
+	if( get->getNodeRef( beforeNode, get->getLinkNodeVector( ) ) == false ) {
+		get->getLinkNodeVector( ).clear( );
+		return false;
+	}
 	return true;
 }
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {

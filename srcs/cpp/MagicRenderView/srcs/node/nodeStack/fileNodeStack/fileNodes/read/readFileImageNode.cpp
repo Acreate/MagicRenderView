@@ -4,7 +4,7 @@
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../../../port/outputPort/unity/imageOutputPort.h"
 

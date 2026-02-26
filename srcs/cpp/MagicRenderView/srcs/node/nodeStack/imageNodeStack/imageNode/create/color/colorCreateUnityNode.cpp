@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/colorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "colorCreateNodeEditorWidget/unity/colorCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( ColorCreateUnityNode, Node::tr( "创建/单元/颜色" ) );

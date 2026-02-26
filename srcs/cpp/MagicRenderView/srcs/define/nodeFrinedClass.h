@@ -1,6 +1,7 @@
 ﻿#ifndef NODEFRINEDCLASS_H_H_HEAD__FILE__
 #define NODEFRINEDCLASS_H_H_HEAD__FILE__
-
+namespace NodeRunLinkTools{ class Get;}
+namespace NodeTools{ class NodeComponentControl;}
 #define NodeFrinedClass() \
 	friend class InputportLinkOutputPortInfo; \
 	friend class NodeDirector;\
@@ -19,6 +20,8 @@
 	friend class NodeComponentControl;\
 	friend class NodeRunLink;\
 	friend class NodeInfoWidget;\
+	friend class NodeRunLinkTools::Get;\
+	friend class NodeTools::NodeComponentControl;\
 	friend class PortLinkType
  
 #endif // NODEFRINEDCLASS_H_H_HEAD__FILE__

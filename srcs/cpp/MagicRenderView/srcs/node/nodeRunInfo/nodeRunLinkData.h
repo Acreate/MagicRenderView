@@ -2,13 +2,19 @@
 #define NODERUNLINKDATA_H_H_HEAD__FILE__
 #include <QObject>
 #include <vector>
+
+namespace NodeRunLinkTools {
+	class Get;
+}
 class NodeRunLink;
 class Node;
+
 class NodeRunLinkData {
 public:
 	virtual ~NodeRunLinkData( ) = default;
 private:
 	friend class NodeRunLink;
+	friend class NodeRunLinkTools::Get;
 protected:
 	/// @brief 保存已经运行的节点
 	std::vector< Node * > overRunNodeVector;

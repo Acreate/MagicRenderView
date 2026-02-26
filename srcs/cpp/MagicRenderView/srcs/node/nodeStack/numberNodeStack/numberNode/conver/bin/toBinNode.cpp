@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ToBinNode, Node::tr( "转换/单元/二进制" ) );
 

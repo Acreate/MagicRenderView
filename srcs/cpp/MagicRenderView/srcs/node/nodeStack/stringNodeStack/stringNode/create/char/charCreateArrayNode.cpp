@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/charVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( CharCreateArrayNode, Node::tr( "创建/序列/字符序列" ) );
 

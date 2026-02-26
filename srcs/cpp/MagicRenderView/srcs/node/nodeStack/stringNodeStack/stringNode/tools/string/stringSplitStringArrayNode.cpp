@@ -4,7 +4,7 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/outputPort/array/stringVectorOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( StringSplitStringArrayNode, Node::tr( "工具/使用子字符串进行切分" ) );

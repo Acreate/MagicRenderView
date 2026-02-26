@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( StringArrayJoinToStringNode, Node::tr( "工具/拼接字符串序列" ) );
 

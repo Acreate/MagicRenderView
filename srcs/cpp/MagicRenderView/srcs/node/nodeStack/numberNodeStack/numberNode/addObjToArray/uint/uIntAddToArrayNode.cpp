@@ -4,7 +4,7 @@
 #include <node/port/inputPort/array/uIntVectorInputPort.h>
 #include <node/port/inputPort/unity/uIntInputPort.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( UIntAddToArrayNode, Node::tr( "追加/无符号整数序列" ) );
 

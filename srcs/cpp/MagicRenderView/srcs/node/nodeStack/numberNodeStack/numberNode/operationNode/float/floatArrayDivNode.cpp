@@ -5,7 +5,7 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/inputPort/unity/floatInputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatArrayDivNode, Node::tr( "运算/序列/浮点/除法" ) );
 

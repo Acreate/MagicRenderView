@@ -1,6 +1,6 @@
 ﻿#include "templatesPathInfoNode.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QStandardPaths>
 #include <srack/srackInfo.h>

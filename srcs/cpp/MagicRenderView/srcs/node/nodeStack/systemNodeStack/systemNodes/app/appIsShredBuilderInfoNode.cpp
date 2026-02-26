@@ -1,7 +1,7 @@
 ﻿#include "appIsShredBuilderInfoNode.h"
 
 #include <app/application.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <QLibraryInfo>
 
 #include "../../../../port/outputPort/unity/boolOutputPort.h"

@@ -1,7 +1,7 @@
 ﻿#include "boolCreateArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <node/port/outputPort/array/boolVectorOutputPort.h>
 
 Def_Entity_NodeTypeName_Function( BoolCreateArrayNode, Node::tr( "创建/序列/布尔序列" ) );

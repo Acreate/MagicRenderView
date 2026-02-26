@@ -5,7 +5,7 @@
 #include <node/port/inputPort/array/intVectorInputPort.h>
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IntArraySubNode, Node::tr( "运算/序列/整数/减法" ) );
 

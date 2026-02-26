@@ -6,7 +6,7 @@
 
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ColorArraySelfAddNode, Node::tr( "自运算/颜色/加法" ) );
 

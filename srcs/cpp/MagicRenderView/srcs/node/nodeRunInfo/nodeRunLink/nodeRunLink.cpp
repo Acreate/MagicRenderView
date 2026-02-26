@@ -2,13 +2,17 @@
 
 #include "../nodeRunLinkData.h"
 
+#include "../../../tools/NodeRunLinkTools.h"
+
 #include "../../node/node.h"
 
 NodeRunLink::~NodeRunLink( ) {
+	delete get;
 	delete nodeRunLinkData;
 }
 NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
 	nodeRunLinkData = new NodeRunLinkData( init_node_ptr );
+	get = new NodeRunLinkTools::Get( nodeRunLinkData );
 }
 bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame ) {
 	if( nodeRunLinkData->currentNode != run_node_ptr )

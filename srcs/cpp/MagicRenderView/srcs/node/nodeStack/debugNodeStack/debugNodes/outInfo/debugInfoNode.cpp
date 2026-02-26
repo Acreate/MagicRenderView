@@ -12,7 +12,7 @@
 #include "../../../../../director/nodeInfoEditorDirector.h"
 #include "../../../../../tools/varDirectorTools.h"
 #include "../../../../nodeInfoWidget/mainInfoWidget/nodeInfoWidget.h"
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../editorNodeInfoWidgets/debugNodeInfoWidget/debugNodeInfoWidget.h"
 
 Def_Entity_NodeTypeName_Function( DebugInfoNode, Node::tr( "输出/值" ) );

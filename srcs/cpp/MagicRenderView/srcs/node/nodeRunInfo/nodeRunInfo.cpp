@@ -15,9 +15,7 @@
 #include "../../tools/vectorTools.h"
 #include "../node/node.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
-
-#include "../../tools/nodeTools.h"
+#include "../../director/nodeDirector.h"
 
 #include "nodeRunLink/imp/callNodeRunLink.h"
 #include "nodeRunLink/imp/createNodeRunLink.h"
@@ -141,6 +139,11 @@ bool NodeRunInfo::builderRunInstance( ) {
 				}
 				createVector.emplace_back( createNodeRunLink );
 				emit builder_finish_signal( createNodeRunLink );
+			{
+				auto nodes = createNodeRunLink->getLinkNodeVector( );
+				auto nodeArrayToString = appinstancePtr->getNodeDirector( )->nodeArrayToString( nodes );
+				printerDirector->info( nodeArrayToString, Create_SrackInfo( ) );
+			}
 				break;
 
 			case NodeEnum::NodeType::Function :

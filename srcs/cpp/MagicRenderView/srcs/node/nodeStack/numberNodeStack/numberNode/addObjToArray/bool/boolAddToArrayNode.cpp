@@ -1,7 +1,7 @@
 ﻿#include "boolAddToArrayNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 #include "../../../../../port/inputPort/array/boolVectorInputPort.h"
 #include "../../../../../port/inputPort/unity/boolInputPort.h"

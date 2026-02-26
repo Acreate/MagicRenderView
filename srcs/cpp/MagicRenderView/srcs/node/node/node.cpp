@@ -1,21 +1,27 @@
 ﻿#include "node.h"
 
-#include <app/application.h>
-#include <director/varDirector.h>
-#include <node/nodeInfo/nodeClickInfo.h>
-#include <node/port/inputPort/inputPort.h>
-#include <node/port/outputPort/outputPort.h>
 #include <QLabel>
 #include <QPainter>
 #include <QTimer>
 #include <QVBoxLayout>
+
+#include <app/application.h>
+
+#include <director/varDirector.h>
+
+#include <node/nodeInfo/nodeClickInfo.h>
+#include <node/port/inputPort/dynamicTypeInputPort.h>
+#include <node/port/inputPort/inputPort.h>
+#include <node/port/outputPort/dynamicTypeOutputPort.h>
+#include <node/port/outputPort/outputPort.h>
+
 #include <srack/srackInfo.h>
-#include <widget/mainWidget.h>
 
 #include <tools/pathTools.h>
-#include <node/nodeTools/NodeComponentControl.h>
-#include <node/port/inputPort/dynamicTypeInputPort.h>
-#include <node/port/outputPort/dynamicTypeOutputPort.h>
+
+#include <widget/mainWidget.h>
+
+#include <tools/nodeTools.h>
 
 #include "../nodeAfterEffect/borderWidget/nodeBorderAfterEffect.h"
 #include "../nodeAfterEffect/nodeAfterEffect.h"
@@ -109,7 +115,7 @@ Node::Node( const QString &node_name ) : nodeTitleName( node_name ) {
 	nodeAfterEffect = new NodeBorderAfterEffect( this );
 	nodeAfterEffect->move( 0, 0 );
 	// 创建节点工具
-	nodeComponentControlPtr = new NodeComponentControl( this );
+	nodeComponentControlPtr = new NodeTools::NodeComponentControl( this );
 }
 NodeInfoWidget * Node::getNodeInfoWidget( ) {
 	return nullptr;

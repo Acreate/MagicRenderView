@@ -5,7 +5,7 @@
 #include <node/port/outputPort/unity/floatOutputPort.h>
 #include <tools/baseOperationTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatModNode, Node::tr( "运算/单元/浮点/求余" ) );
 

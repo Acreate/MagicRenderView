@@ -4,7 +4,7 @@
 #include <qfileinfo.h>
 
 #include "../../../../../director/varDirector.h"
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../port/outputPort/unity/stringOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( ReadFileTextNode, Node::tr( "读取文件/字符串" ) );

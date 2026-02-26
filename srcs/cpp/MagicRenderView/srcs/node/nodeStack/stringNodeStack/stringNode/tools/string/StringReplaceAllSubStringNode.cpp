@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <tools/qstringTools.h>
 
 Def_Entity_NodeTypeName_Function( StringReplaceAllSubStringNode, Node::tr( "工具/替换所有子字符串" ) );

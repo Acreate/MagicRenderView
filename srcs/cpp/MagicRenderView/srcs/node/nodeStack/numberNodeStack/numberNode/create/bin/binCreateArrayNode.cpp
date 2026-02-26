@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/binVectorOutputPort.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( BinCreateArrayNode, Node::tr( "创建/序列/二进制序列" ) );
 

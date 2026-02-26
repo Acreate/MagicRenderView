@@ -5,6 +5,9 @@
 class NodeRunLinkData;
 class NodeRunInfo;
 class Node;
+namespace NodeRunLinkTools {
+	class Get;
+}
 class NodeRunLink : public QObject {
 	Q_OBJECT;
 	friend class NodeRunInfo;
@@ -12,6 +15,7 @@ public:
 	~NodeRunLink( ) override;
 protected:
 	NodeRunLinkData *nodeRunLinkData;
+	NodeRunLinkTools::Get *get;
 protected:
 	NodeRunLink( Node *const init_node_ptr );
 	/// @brief 链接节点
@@ -36,9 +40,9 @@ protected:
 	/// @return 失败返回 false
 	virtual bool getNodeRunAdviseNodeVector( Node *get_advise_node_ptr, std::vector< Node * > &result_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const;
 	virtual bool adviseRunNode( const Node *const node ) const;
-	virtual const std::vector< Node * > & getAdviseNodeVector( ) const;
 	virtual Node * getBeforeNode( ) const;
 	virtual Node * getCurrentNode( ) const;
+	virtual const std::vector< Node * > & getAdviseNodeVector( ) const;
 	virtual const std::vector< Node * > & getLinkNodeVector( ) const;
 	virtual const std::vector< Node * > & getOverRunNodeVector( ) const;
 	virtual const std::vector< Node * > & getStartNodeVector( ) const;

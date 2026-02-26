@@ -6,7 +6,7 @@
 #include <node/port/outputPort/unity/imageOutputPort.h>
 #include <tools/varDirectorTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "imageCreateNodeEditorWidget/unity/imageCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( ImageCreateUnityNode, Node::tr( "创建/单元/图像" ) );

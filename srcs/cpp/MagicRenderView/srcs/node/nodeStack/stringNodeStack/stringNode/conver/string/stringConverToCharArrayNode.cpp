@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/outputPort/array/charVectorOutputPort.h"
 

@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/inputPort/unity/stringInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 

@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IntMulNode, Node::tr( "运算/单元/整数/乘法" ) );
 

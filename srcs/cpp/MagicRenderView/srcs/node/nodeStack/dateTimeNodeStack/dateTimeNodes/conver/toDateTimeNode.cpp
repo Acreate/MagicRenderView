@@ -7,7 +7,7 @@
 
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../port/outputPort/unity/dateTimeOutputPort.h"
 
 Def_Entity_NodeTypeName_Function( ToDateTimeNode, Node::tr( "转换/单元/日期时间" ) );

@@ -4,7 +4,7 @@
 #include <node/port/inputPort/array/uIntVectorInputPort.h>
 #include <node/port/outputPort/unity/uIntOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( UIntArraySelfMulNode, Node::tr( "自运算/序列/无符号整数/乘法" ) );
 

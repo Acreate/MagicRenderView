@@ -5,7 +5,7 @@
 #include <node/port/outputPort/unity/binOutputPort.h>
 #include <node/port/inputPort/array/binVectorInputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( BinArraySelfAddNode, Node::tr( "自运算/序列/二进制/加法" ) );
 

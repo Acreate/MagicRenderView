@@ -5,7 +5,7 @@
 #include <node/port/outputPort/unity/uIntOutputPort.h>
 #include <tools/baseOperationTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( UIntModNode, Node::tr( "运算/单元/无符号整数/求余" ) );
 

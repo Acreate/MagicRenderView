@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/charOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "charCreateNodeEditorWidget/unity/charCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( CharCreateUnityNode, Node::tr( "创建/单元/字符" ) );

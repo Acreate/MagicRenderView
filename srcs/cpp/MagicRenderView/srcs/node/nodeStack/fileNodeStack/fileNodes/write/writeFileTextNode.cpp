@@ -5,7 +5,7 @@
 
 #include "../../../../../director/varDirector.h"
 #include "../../../../../tools/pathTools.h"
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../port/outputPort/outputPort.h"
 
 Def_Entity_NodeTypeName_Function( WriteFileTextNode, Node::tr( "写入文件/字符串" ) );

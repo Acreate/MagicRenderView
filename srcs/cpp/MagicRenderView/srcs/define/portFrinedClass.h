@@ -1,6 +1,8 @@
 ﻿#ifndef PORTFRINEDCLASS_H_H_HEAD__FILE__
 #define PORTFRINEDCLASS_H_H_HEAD__FILE__
-
+namespace NodeTools {
+	class NodeComponentControl;
+}
 #define Declaration_Class_Name() \
 	class VarDirector; \
 	class Node; \
@@ -17,7 +19,7 @@
 	class NodeTypeInfoSerializeion; \
 	class NodeTypeInfo; \
 	class PortTypeInfo; \
-	class NodeComponentControl; \
+	class NodeTools::NodeComponentControl; \
 	class PortLinkType
 
 #define ConjugatePortFrinedClass( ) \
@@ -35,7 +37,7 @@
 	friend class NodeTypeInfoSerializeion; \
 	friend class NodeTypeInfo; \
 	friend class PortTypeInfo; \
-	friend class NodeComponentControl; \
+	friend class NodeTools::NodeComponentControl; \
 	friend class PortLinkType
 
 #define InputPortFrinedClass( ) \

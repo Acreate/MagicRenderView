@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/intInputPort.h>
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IntAddToArrayNode, Node::tr( "追加/整数序列" ) );
 

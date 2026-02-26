@@ -4,7 +4,7 @@
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <node/port/inputPort/unity/stringInputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( StringAppendToLastStringNode, Node::tr( "工具/字符串末尾追加子字符串" ) );
 

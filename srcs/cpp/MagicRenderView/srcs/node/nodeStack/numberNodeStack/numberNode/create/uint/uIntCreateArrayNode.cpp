@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/uIntVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( UIntCreateArrayNode, Node::tr( "创建/序列/无符号整数序列" ) );
 

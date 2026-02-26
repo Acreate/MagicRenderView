@@ -1,7 +1,7 @@
 ﻿#include "binCreateUnityNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
 #include "binCreateNodeEditorWidget/unity/binCreateUnityNodeEditorWidget.h"

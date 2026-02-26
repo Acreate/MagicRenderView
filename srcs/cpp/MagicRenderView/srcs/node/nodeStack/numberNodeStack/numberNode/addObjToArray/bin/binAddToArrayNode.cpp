@@ -5,7 +5,7 @@
 #include <node/port/inputPort/array/binVectorInputPort.h>
 #include <node/port/inputPort/unity/binInputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( BinAddToArrayNode, Node::tr( "追加/二进制序列" ) );
 

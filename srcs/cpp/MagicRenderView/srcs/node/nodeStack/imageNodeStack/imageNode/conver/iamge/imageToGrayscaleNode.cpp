@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 
 #include <enums/nodeEnum.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 #include "../../../../../port/inputPort/dynamicTypeInputPort.h"
 #include "../../../../../port/outputPort/dynamicTypeOutputPort.h"

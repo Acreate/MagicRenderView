@@ -6,7 +6,7 @@
 
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ToImageNode, Node::tr( "转换/单元/图像" ) );
 

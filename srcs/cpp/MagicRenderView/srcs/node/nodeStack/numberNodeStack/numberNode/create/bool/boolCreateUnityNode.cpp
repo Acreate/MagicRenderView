@@ -1,7 +1,7 @@
 ﻿#include "boolCreateUnityNode.h"
 
 #include <director/varDirector.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"
 #include "binCreateNodeEditorWidget/unity/boolCreateUnityNodeEditorWidget.h"

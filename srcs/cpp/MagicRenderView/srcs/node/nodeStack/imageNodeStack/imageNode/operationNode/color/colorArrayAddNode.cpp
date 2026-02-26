@@ -6,7 +6,7 @@
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ColorArrayAddNode, Node::tr( "颜色/序列/加法" ) );
 

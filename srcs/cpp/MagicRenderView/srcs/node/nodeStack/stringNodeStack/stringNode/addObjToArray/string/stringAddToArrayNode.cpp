@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/array/stringVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( StringAddToArrayNode, Node::tr( "序列追加/单元/字符串追加到字符串序列" ) );
 

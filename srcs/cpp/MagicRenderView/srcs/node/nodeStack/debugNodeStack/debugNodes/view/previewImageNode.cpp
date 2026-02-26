@@ -7,7 +7,7 @@
 #include <node/port/inputPort/unity/imageInputPort.h>
 
 #include "../../../../../director/nodeInfoEditorDirector.h"
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../port/outputPort/outputPort.h"
 #include "../../editorNodeInfoWidgets/imagePreviewInfoWidget/imagePreviewInfoWidget.h"
 

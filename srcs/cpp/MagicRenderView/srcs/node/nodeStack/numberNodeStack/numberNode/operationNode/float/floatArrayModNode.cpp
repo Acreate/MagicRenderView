@@ -7,7 +7,7 @@
 
 #include <tools/baseOperationTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatArrayModNode, Node::tr( "运算/序列/浮点/求余" ) );
 

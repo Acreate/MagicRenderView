@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/floatInputPort.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatMulNode, Node::tr( "运算/单元/浮点/乘法" ) );
 

@@ -5,7 +5,7 @@
 #include <node/port/outputPort/array/intVectorOutputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IntArraySelfAddNode, Node::tr( "自运算/序列/整数/加法" ) );
 

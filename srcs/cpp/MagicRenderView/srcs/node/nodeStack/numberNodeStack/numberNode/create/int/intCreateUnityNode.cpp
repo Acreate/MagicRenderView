@@ -3,7 +3,7 @@
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "intCreateNodeEditorWidget/unity/intCreateUnityNodeEditorWidget.h"
 
 Def_Entity_NodeTypeName_Function( IntCreateUnityNode, Node::tr( "创建/单元/整数" ) );

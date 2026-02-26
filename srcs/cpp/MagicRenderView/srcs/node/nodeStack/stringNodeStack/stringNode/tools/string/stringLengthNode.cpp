@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( StringLengthNode, Node::tr( "工具/返回字符串长度" ) );
 

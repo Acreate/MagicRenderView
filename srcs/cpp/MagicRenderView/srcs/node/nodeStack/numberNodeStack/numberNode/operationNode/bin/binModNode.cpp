@@ -6,7 +6,7 @@
 
 #include "../../../../../../tools/baseOperationTools.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( BinModNode, Node::tr( "运算/单元/二进制/求余" ) );
 

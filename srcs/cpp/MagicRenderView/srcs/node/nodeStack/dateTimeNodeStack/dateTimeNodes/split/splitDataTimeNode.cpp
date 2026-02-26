@@ -6,7 +6,7 @@
 #include <node/port/outputPort/unity/timeOutputPort.h>
 #include <tools/infoTool.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( SplitDataTimeNode, Node::tr( "日期时间/切分日期与时间" ) );
 
@@ -16,6 +16,7 @@ SplitDataTimeNode::SplitDataTimeNode( const QString &node_name ) : ProcessNode( 
 }
 bool SplitDataTimeNode::initEx( MainWidget *parent ) {
 	initExCallFunction = [this] ( MainWidget *draw_node_widget ) {
+		
 		if( nodeComponentControlPtr->appendInputPortType( this, tr( "日期时间" ), dateTimeInputPortPtr ) == false )
 			return false;
 		if( nodeComponentControlPtr->appendOutputPortType( this, tr( "日期" ), dateOutputPortPtr, outDatePtr ) == false )

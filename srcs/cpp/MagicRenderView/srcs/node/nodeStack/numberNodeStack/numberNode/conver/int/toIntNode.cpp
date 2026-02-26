@@ -1,6 +1,6 @@
 ﻿#include "toIntNode.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <director/varDirector.h>
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>

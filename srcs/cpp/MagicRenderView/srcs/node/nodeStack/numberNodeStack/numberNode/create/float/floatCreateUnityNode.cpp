@@ -2,7 +2,7 @@
 
 #include <director/varDirector.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 #include "floatCreateNodeEditorWidget/unity/floatCreateUnityNodeEditorWidget.h"
 

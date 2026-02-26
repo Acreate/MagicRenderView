@@ -6,7 +6,9 @@
 
 #include <tools/varDirectorTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+
+
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( IfNode, Node::tr( "控制/逻辑判定" ) );
 

@@ -4,7 +4,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <node/port/outputPort/unity/intOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/inputPort/unity/intInputPort.h"
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 

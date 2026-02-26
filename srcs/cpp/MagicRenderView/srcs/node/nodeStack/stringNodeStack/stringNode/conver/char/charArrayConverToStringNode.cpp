@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/charOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/inputPort/array/charVectorInputPort.h"
 #include "../../../../../port/outputPort/unity/stringOutputPort.h"
 

@@ -44,7 +44,7 @@ class Node : public QWidget {
 	NodeFrinedClass( );
 protected:
 	/// @brief 节点工具指针对象
-	NodeComponentControl *nodeComponentControlPtr;
+	NodeTools::NodeComponentControl *nodeComponentControlPtr;
 	uint64_t generateCode;
 	/// @brief app 实例
 	Application *instancePtr;

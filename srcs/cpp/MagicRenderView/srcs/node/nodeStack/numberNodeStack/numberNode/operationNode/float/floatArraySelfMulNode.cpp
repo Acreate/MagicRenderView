@@ -6,7 +6,7 @@
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 #include <node/port/outputPort/unity/floatOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatArraySelfMulNode, Node::tr( "自运算/序列/浮点/乘法" ) );
 

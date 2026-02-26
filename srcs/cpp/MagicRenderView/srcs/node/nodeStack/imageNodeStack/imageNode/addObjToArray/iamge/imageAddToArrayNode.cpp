@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/imageInputPort.h>
 #include <node/port/outputPort/array/imageVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ImageAddToArrayNode, Node::tr( "序列追加/单元/图像" ) );
 

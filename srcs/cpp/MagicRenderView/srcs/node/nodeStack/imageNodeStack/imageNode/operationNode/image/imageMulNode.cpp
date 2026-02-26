@@ -5,7 +5,7 @@
 #include <node/port/outputPort/unity/imageOutputPort.h>
 #include <tools/imageTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ImageMulNode, Node::tr( "图像/单元/乘法" ) );
 

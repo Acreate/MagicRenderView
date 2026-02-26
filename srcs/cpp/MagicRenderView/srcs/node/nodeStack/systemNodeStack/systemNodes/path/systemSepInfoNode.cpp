@@ -1,6 +1,6 @@
 ﻿#include "systemSepInfoNode.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <node/port/outputPort/unity/stringOutputPort.h>
 #include <QDir>
 #include <QStandardPaths>

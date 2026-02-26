@@ -1,6 +1,6 @@
 ﻿#include "floatCreateArrayNode.h"
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include <director/varDirector.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 

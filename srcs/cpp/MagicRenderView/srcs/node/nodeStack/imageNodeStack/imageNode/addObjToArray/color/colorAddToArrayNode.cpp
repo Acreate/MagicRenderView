@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/colorInputPort.h>
 #include <node/port/outputPort/array/colorVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( ColorAddToArrayNode, Node::tr( "序列追加/单元/颜色" ) );
 

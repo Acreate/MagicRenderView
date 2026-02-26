@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/floatInputPort.h>
 #include <node/port/outputPort/array/floatVectorOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 Def_Entity_NodeTypeName_Function( FloatAddToArrayNode, Node::tr( "追加/浮点序列" ) );
 

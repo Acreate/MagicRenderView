@@ -4,7 +4,7 @@
 #include <node/port/inputPort/anyVar/anyVarInputPort.h>
 #include <node/port/outputPort/unity/binOutputPort.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 
 #include "../../../../../../tools/varDirectorTools.h"
 #include "../../../../../port/outputPort/unity/boolOutputPort.h"

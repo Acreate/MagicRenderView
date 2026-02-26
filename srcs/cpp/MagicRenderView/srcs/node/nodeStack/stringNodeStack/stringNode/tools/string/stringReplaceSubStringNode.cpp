@@ -5,7 +5,7 @@
 #include <node/port/inputPort/unity/stringInputPort.h>
 #include <tools/qstringTools.h>
 
-#include <node/nodeTools/nodeComponentControl.h>
+#include <tools/nodeTools.h>
 #include "../../../../../port/inputPort/unity/uIntInputPort.h"
 
 Def_Entity_NodeTypeName_Function( StringReplaceSubStringNode, Node::tr( "工具/在指定位置替换所有子字符串" ) );
