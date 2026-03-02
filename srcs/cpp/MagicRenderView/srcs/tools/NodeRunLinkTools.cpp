@@ -69,6 +69,31 @@ bool NodeRunLinkTools::getNodeRef( Node *get_node_target, std::vector< Node * > 
 	} while( true );
 	return true;
 }
+bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
+	std::vector< Node * > begin;
+	size_t count;
+	count = ref_sort_node_vector.size( );
+	if( count == 0 )
+		return false;
+	auto data = ref_sort_node_vector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		if( data[ index ]->getOtherNodeOutputPortRefThisNodeInputPortVector( ).size( ) == 0 )
+			begin.emplace_back( data[ index ] );
+	if( begin.size( ) == 0 )
+		return false;
+	return sortNodeRef( begin, ref_sort_node_vector, result_ref_node_vector );
+}
+bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
+	size_t count;
+	count = ref_begin_sort_node_vector.size( );
+	if( count == 0 )
+		return false;
+	size_t refSortCount = ref_sort_node_vector.size( );
+	result_ref_node_vector.resize( refSortCount );
+	// todo:排序
+	return false;
+}
 bool NodeRunLinkTools::getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
 		return false;

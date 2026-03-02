@@ -3,6 +3,7 @@
 #include "../nodeRunLinkData.h"
 
 #include "../../../tools/NodeRunLinkTools.h"
+#include "../../../tools/arrayTools.h"
 
 #include "../../node/node.h"
 
@@ -59,11 +60,44 @@ bool NodeRunLink::isOver( ) const {
 	return nodeRunLinkData->over;
 }
 bool NodeRunLink::isReady( ) const {
-	return nodeRunLinkData->isReady( );
+	return nodeRunLinkData->ready;
 }
 bool NodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
 	return nodeRunLinkData->linkHasNode( check_node_ptr );
 }
 bool NodeRunLink::linkHasEndNode( const Node *const check_node_ptr ) const {
 	return nodeRunLinkData->linkHasNode( check_node_ptr );
+}
+bool NodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
+	size_t startCount = nodeRunLinkData->startNodeVector.size( );
+	if( startCount == 0 )
+		return false;
+	size_t refCount = reference_sort_vector.size( );
+	if( refCount == 0 )
+		return false;
+	auto sortData = nodeRunLinkData->startNodeVector.data( );
+
+	std::vector< Node * > *buff;
+	buff = new std::vector< Node * >( startCount );
+	auto refData = reference_sort_vector.data( );
+
+	auto buffData = buff->data( );
+	size_t buffIndex = 0;
+
+	size_t startIndex;
+	size_t refIndex;
+
+	for( startIndex = 0, refIndex = 0; refIndex < refCount; ++refIndex, startIndex = 0 )
+		if( ArrayTools::findIndex( sortData, startCount, refData[ refIndex ], startIndex ) == true ) {
+			if( buffIndex == startCount ) {
+				delete buff;
+				return false;
+			}
+			buffData[ buffIndex ] = refData[ refIndex ];
+			++buffIndex;
+		}
+	for( refIndex = 0; refIndex < startCount; ++refIndex )
+		sortData[ refIndex ] = buffData[ refIndex ];
+	delete buff;
+	return true;
 }

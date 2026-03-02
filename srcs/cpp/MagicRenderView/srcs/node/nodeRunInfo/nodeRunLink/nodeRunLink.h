@@ -51,6 +51,7 @@ protected:
 	virtual bool isReady( ) const;
 	virtual bool linkHasNode( const Node *const check_node_ptr ) const;
 	virtual bool linkHasEndNode( const Node *const check_node_ptr ) const;
+	virtual bool sortBilderList( const std::vector< Node * > &reference_sort_vector );
 };
 
 #endif // NODERUNLINK_H_H_HEAD__FILE__

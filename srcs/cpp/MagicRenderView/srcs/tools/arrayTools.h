@@ -20,6 +20,37 @@ namespace ArrayTools {
 				return true;
 		return false;
 	}
+
+	/// @brief 检测原始序列是否包含目标序列
+	/// @tparam TVectorUnityType 
+	/// @param left_array 原始序列
+	/// @param left_count 原始序列大小
+	/// @param right_array 被包含序列
+	/// @param right_count 被包含序列大小
+	/// @param result_not_find_index 未被包含的第一个元素下标
+	/// @return 目标序列单一元素不存在原始序列时，返回 false
+	template< typename TVectorUnityType >
+	bool hasIndex( const TVectorUnityType *left_array, const size_t &left_count, const TVectorUnityType *right_array, const size_t &right_count, size_t &result_not_find_index ) {
+		if( left_array == nullptr )
+			return false;
+		if( right_array == nullptr )
+			return true;
+		if( right_count == 0 )
+			return true;
+		if( left_count == 0 )
+			return false;
+
+		size_t leftIndex;
+		for( result_not_find_index = 0; result_not_find_index < right_count; ++result_not_find_index ) {
+			for( leftIndex = 0; leftIndex < left_count; ++leftIndex )
+				if( left_array[ leftIndex ] == right_array[ result_not_find_index ] )
+					break;
+			if( leftIndex != left_count )
+				continue;
+			return false;
+		}
+		return true;
+	}
 	/// @brief 数组进行 nullptr 排序，会把 nullptr 排序到末尾，其他元素不变
 	/// @tparam TVectorUnityType 
 	/// @param sort_target 排序目标

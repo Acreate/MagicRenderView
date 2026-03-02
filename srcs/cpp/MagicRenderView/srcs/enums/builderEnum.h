@@ -2,13 +2,14 @@
 #define BUILDERENUM_H_H_HEAD__FILE__
 #include <qobject.h>
 
-
 namespace BuilderEnum {
 
 	/// @brief 编译错误
 	enum class BuilderErrorType {
 		None,
+		BuilderSortError,
 		NodeBuilderError,
+		NodeBuilderSortError,
 		MissingRefInput,
 		MissingRefOutput
 	};

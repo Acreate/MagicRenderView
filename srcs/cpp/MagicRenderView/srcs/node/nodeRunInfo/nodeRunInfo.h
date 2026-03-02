@@ -53,6 +53,10 @@ protected:
 	Node *oldNode;
 	/// @brief 编译列表
 	std::vector< Node * > builderNodeVector;
+	/// @brief 编译时的起始节点列表
+	std::vector< Node * > builderBeginList;
+	/// @brief 编译节点的排序参考列表
+	std::vector< Node * > builderReferenceSortVector;
 	/// @brief 已经调用完毕的列表
 	std::vector< Node * > runOverNodeVector;
 	/// @brief 编译链接当中的创建节点序列
@@ -121,7 +125,14 @@ protected:
 	/// @brief 从完成过滤列表当中过滤节点列表
 	/// @param filter_over_node_run_link_vector 过滤列表
 	/// @return 返回过滤个数
-	virtual size_t filterOverNodeRunLinkVector( const std::vector<Node *> &filter_over_node_run_link_vector );
+	virtual size_t filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector );
+	/// @brief 追加一个开始节点
+	/// @param begin_node 追加节点
+	/// @return 失败返回 false
+	virtual bool appendBeginNode( Node *begin_node );
+	/// @brief 从起始节点获取信息，并且生成排序参考列表
+	/// @return 失败返回 false
+	virtual bool sortFromBuilderNode( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;

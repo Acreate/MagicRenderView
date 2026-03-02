@@ -21,14 +21,6 @@ bool CreateNodeRunLink::builder( ) {
 	auto &resultRefNodeVector = get->getLinkNodeVector( );
 	if( get->getNodeRef( resultRefNodeVector ) == false )
 		return false;
-	auto &startNodeVector = get->getStartNodeVector( );
-	startNodeVector.clear( );
-	size_t count = resultRefNodeVector.size( );
-	auto data = resultRefNodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ] && data[ index ]->getNodeType( ) == targetNodeType )
-			startNodeVector.emplace_back( data[ index ] );
 	return true;
 }
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {

@@ -22,6 +22,35 @@ namespace VectorTools {
 				return true;
 		return false;
 	}
+
+	/// @brief 检测原始序列是否包含目标序列
+	/// @tparam TVectorUnityType 
+	/// @param find_source_vector 原始序列
+	/// @param find_target 被包含序列
+	/// @param result_not_find_index 未被包含的第一个元素下标
+	/// @return 目标序列单一元素不存在原始序列时，返回 false
+	template< typename TVectorUnityType >
+	bool hasIndex( const std::vector< TVectorUnityType > &find_source_vector, const std::vector< TVectorUnityType > &find_target, size_t &result_not_find_index ) {
+		auto leftCount = find_source_vector.size( );
+		auto rightCount = find_target.size( );
+		if( rightCount == 0 )
+			return true;
+		if( leftCount == 0 )
+			return false;
+
+		auto leftData = find_source_vector.data( );
+		auto rightData = find_source_vector.data( );
+		size_t leftIndex;
+		for( result_not_find_index = 0; result_not_find_index < rightCount; ++result_not_find_index ) {
+			for( leftIndex = 0; leftIndex < leftCount; ++leftIndex )
+				if( leftData[ leftIndex ] == rightData[ result_not_find_index ] )
+					break;
+			if( leftIndex != leftCount )
+				continue;
+			return false;
+		}
+		return true;
+	}
 	/// @brief 比较两个序列，优先比较大小，
 	/// @tparam TVectorUnityType 
 	/// @param left_vector 

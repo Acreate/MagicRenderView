@@ -17,6 +17,8 @@
 
 #include "../../director/nodeDirector.h"
 
+#include "../../tools/NodeRunLinkTools.h"
+
 #include "nodeRunLink/imp/functionNodeRunLink.h"
 #include "nodeRunLink/imp/createNodeRunLink.h"
 #include "nodeRunLink/imp/pointNodeRunLink.h"
@@ -61,7 +63,8 @@ void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t 
 	builderNodeVector.resize( newSizet );
 	auto builderNodeArrayPtr = builderNodeVector.data( );
 	size_t builderNodeIndex;
-	for( size_t index = 0; index < append_node_array_count; index += 1 )
+	size_t index;
+	for( index = 0; index < append_node_array_count; index += 1 )
 		if( append_node_array_ptr[ index ] != nullptr ) {
 			for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 				if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_array_ptr[ index ] )
@@ -73,6 +76,9 @@ void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t 
 		}
 	if( newSizet != builderNodeCount )
 		builderNodeVector.resize( builderNodeCount );
+	builderNodeArrayPtr = builderNodeVector.data( );
+	for( index = 0; index < builderNodeCount; index += 1 )
+		appendBeginNode( builderNodeArrayPtr[ index ] );
 }
 void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
@@ -84,6 +90,7 @@ void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity )
 			return;
 	builderNodeVector.emplace_back( append_node_unity );
+	appendBeginNode( append_node_unity );
 }
 void NodeRunInfo::removeBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
@@ -108,20 +115,35 @@ bool NodeRunInfo::builderRunInstance( ) {
 	printerDirector = appinstancePtr->getPrinterDirector( );
 	if( printerDirector == nullptr )
 		return false;
+	BuilderEnum::BuilderErrorType errorType = BuilderEnum::BuilderErrorType::BuilderSortError;
 	resetBilderData( );
-
+	if( sortFromBuilderNode( ) == false ) {
+		printerDirector->info( tr( "编译节点排序参考失败" ), Create_SrackInfo( ) );
+		emit builder_error_signal( nullptr, errorType, nullptr );
+		resetBilderData( );
+		return false;
+	}
 	size_t builderNodeIndex;
 	size_t builderNodeCount = builderNodeVector.size( );
 	auto builderNodeArrayPtr = builderNodeVector.data( );
 	NodeRunLink *createNodeRunLink;
+	errorType = BuilderEnum::BuilderErrorType::None;
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		switch( builderNodeArrayPtr[ builderNodeIndex ]->getNodeType( ) ) {
 			case NodeEnum::NodeType::Point :
 				if( stackHasStartNode( pointVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
 					break;
 				createNodeRunLink = new PointNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
-				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
+
+				if( createNodeRunLink->builder( ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
+
+				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
+
+				if( errorType != BuilderEnum::BuilderErrorType::None ) {
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
+					errorType = BuilderEnum::BuilderErrorType::None;
 					delete createNodeRunLink;
 					break;
 				}
@@ -132,8 +154,16 @@ bool NodeRunInfo::builderRunInstance( ) {
 				if( stackHasStartNode( createVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
 					break;
 				createNodeRunLink = new CreateNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
-				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
+
+				if( createNodeRunLink->builder( ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
+
+				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
+
+				if( errorType != BuilderEnum::BuilderErrorType::None ) {
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
+					errorType = BuilderEnum::BuilderErrorType::None;
 					delete createNodeRunLink;
 					break;
 				}
@@ -145,8 +175,16 @@ bool NodeRunInfo::builderRunInstance( ) {
 				if( stackHasStartNode( functionVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
 					break;
 				createNodeRunLink = new FunctionNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
-				if( createNodeRunLink->builder( ) == false ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderError, builderNodeArrayPtr[ builderNodeIndex ] );
+
+				if( createNodeRunLink->builder( ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
+
+				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
+					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
+
+				if( errorType != BuilderEnum::BuilderErrorType::None ) {
+					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
+					errorType = BuilderEnum::BuilderErrorType::None;
 					delete createNodeRunLink;
 					break;
 				}
@@ -296,6 +334,9 @@ void NodeRunInfo::resetBilderData( ) {
 	createVector.clear( );
 	pointVector.clear( );
 	functionVector.clear( );
+
+	builderReferenceSortVector.clear( );
+	builderBeginList.clear( );
 
 	size_t count = nodeRunLinkVector.size( );
 	size_t index;
@@ -578,6 +619,31 @@ size_t NodeRunInfo::filterOverNodeRunLinkVector( const std::vector< Node * > &fi
 	VectorTools::removeTarget( runOverNodeVector, filter_over_node_run_link_vector, result );
 	runOverNodeVector = result;
 	return orgCount - runOverNodeVector.size( );
+}
+
+bool NodeRunInfo::appendBeginNode( Node *begin_node ) {
+	if( begin_node->otherNodeOutputPortRefThisNodeInputPortVector.size( ) != 0 )
+		return false;
+	size_t index = 0;
+	if( VectorTools::findIndex( builderBeginList, begin_node, index ) == true )
+		return false;
+	builderBeginList.emplace_back( begin_node );
+	return true;
+}
+
+bool NodeRunInfo::sortFromBuilderNode( ) {
+
+	size_t count = builderBeginList.size( );
+	if( count == 0 )
+		return false;
+	size_t index;
+
+	std::vector< Node * > getRefNodeVector;
+	auto data = builderBeginList.data( );
+	for( index = 0; index < count; ++index ) // 获取依赖
+		if( NodeRunLinkTools::getNodeRef( data[ index ], getRefNodeVector ) == false )
+			return false;
+	return NodeRunLinkTools::sortNodeRef( builderBeginList, getRefNodeVector, builderReferenceSortVector );
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
