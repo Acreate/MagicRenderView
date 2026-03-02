@@ -1,9 +1,18 @@
 ﻿#include "NodeRunLinkTools.h"
 
 #include "arrayTools.h"
+#include "vectorTools.h"
 
 #include "../node/node/node.h"
 #include "../node/nodeRunInfo/nodeRunLinkData.h"
+/// @brief 内联工具，不提供外部使用
+namespace inlineTools {
+	inline bool sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
+		// todo:排序
+		return false;
+	}
+}
+
 std::vector< Node * > & NodeRunLinkTools::Get::getAdviseNodeVector( ) const {
 	return nodeRunLinkData->adviseNodeVector;
 }
@@ -82,17 +91,13 @@ bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_sort_node_v
 			begin.emplace_back( data[ index ] );
 	if( begin.size( ) == 0 )
 		return false;
-	return sortNodeRef( begin, ref_sort_node_vector, result_ref_node_vector );
+	return inlineTools::sortNodeRef( begin, ref_sort_node_vector, result_ref_node_vector );
 }
 bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
-	size_t count;
-	count = ref_begin_sort_node_vector.size( );
-	if( count == 0 )
+	size_t resultIndex;
+	if( VectorTools::hasIndex( ref_begin_sort_node_vector, ref_sort_node_vector, resultIndex ) == false )
 		return false;
-	size_t refSortCount = ref_sort_node_vector.size( );
-	result_ref_node_vector.resize( refSortCount );
-	// todo:排序
-	return false;
+	return inlineTools::sortNodeRef( ref_begin_sort_node_vector, ref_sort_node_vector, result_ref_node_vector );
 }
 bool NodeRunLinkTools::getNodeInputInForRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
