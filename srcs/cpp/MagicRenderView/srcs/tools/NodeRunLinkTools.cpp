@@ -9,7 +9,55 @@
 namespace inlineTools {
 	inline bool sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
 		// todo:排序
-		return false;
+		std::vector< Node * > buff;
+		size_t beginCount = ref_begin_sort_node_vector.size( );
+		auto beginData = ref_begin_sort_node_vector.data( );
+		size_t refSortCount = ref_sort_node_vector.size( );
+		auto sortData = ref_sort_node_vector.data( );
+		result_ref_node_vector.resize( refSortCount, nullptr );
+		auto resultData = result_ref_node_vector.data( );
+		size_t copyIndex;
+		for( copyIndex = 0; copyIndex < beginCount; ++copyIndex )
+			if( sortData[ copyIndex ] )
+				resultData[ copyIndex ] = beginData[ copyIndex ];
+
+		size_t findResultIndex;
+		buff.resize( refSortCount );
+		auto buffData = buff.data( );
+		for( findResultIndex = 0, copyIndex = 0; copyIndex < refSortCount; ++copyIndex, findResultIndex = 0 )
+			if( ArrayTools::findIndex( resultData, beginCount, sortData[ copyIndex ], findResultIndex ) == false )
+				buffData[ copyIndex ] = sortData[ copyIndex ];
+			else
+				buffData[ copyIndex ] = nullptr;
+		size_t checkCount;
+		Node *const*checkData;
+		size_t oldCount;
+		do {
+			ArrayTools::sortNullptr( buffData, refSortCount );
+			for( copyIndex = 0; copyIndex < refSortCount; ++copyIndex )
+				if( buffData[ copyIndex ] == nullptr )
+					break;
+			refSortCount = copyIndex; // 重置大小
+
+			if( refSortCount == 0 )
+				break;
+			oldCount = beginCount;
+			for( findResultIndex = 0, copyIndex = 0; copyIndex < refSortCount; ++copyIndex, findResultIndex = 0 )
+				if( ArrayTools::findIndex( resultData, beginCount, buffData[ copyIndex ], findResultIndex ) == false ) {
+					auto &nodes = buffData[ copyIndex ]->getOtherNodeOutputPortRefThisNodeInputPortVector( );
+					checkCount = nodes.size( );
+					checkData = nodes.data( );
+					if( ArrayTools::hasIndex( resultData, beginCount, checkData, checkCount, findResultIndex ) == false )
+						continue;
+					resultData[ beginCount ] = buffData[ copyIndex ];
+					buffData[ copyIndex ] = nullptr;
+					beginCount += 1;
+				}
+			if( beginCount == oldCount )
+				return false; // 没有改变大小
+		} while( true );
+
+		return true;
 	}
 }
 
