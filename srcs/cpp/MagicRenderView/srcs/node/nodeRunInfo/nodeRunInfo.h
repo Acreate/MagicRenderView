@@ -29,6 +29,8 @@ protected:
 	Application *appinstancePtr;
 	/// @brief 输出对象
 	PrinterDirector *printerDirector;
+	/// @brief 节点管理对象
+	NodeDirector *nodeDirectorPtr;
 	/// @brief 当前帧
 	size_t currentFrame;
 	/// @brief 最大帧

@@ -32,7 +32,10 @@ namespace inlineTools {
 		size_t checkCount;
 		Node *const*checkData;
 		size_t oldCount;
+		size_t maxCount = refSortCount;
 		do {
+			if( beginCount == maxCount )
+				break; // 结束
 			ArrayTools::sortNullptr( buffData, refSortCount );
 			for( copyIndex = 0; copyIndex < refSortCount; ++copyIndex )
 				if( buffData[ copyIndex ] == nullptr )
@@ -40,15 +43,15 @@ namespace inlineTools {
 			refSortCount = copyIndex; // 重置大小
 
 			if( refSortCount == 0 )
-				break;
-			oldCount = beginCount;
+				break; // 不需要填充
+			oldCount = beginCount; // 记录旧的大小
 			for( findResultIndex = 0, copyIndex = 0; copyIndex < refSortCount; ++copyIndex, findResultIndex = 0 )
 				if( ArrayTools::findIndex( resultData, beginCount, buffData[ copyIndex ], findResultIndex ) == false ) {
-					auto &nodes = buffData[ copyIndex ]->getOtherNodeOutputPortRefThisNodeInputPortVector( );
+					auto &nodes = buffData[ copyIndex ]->getOtherNodeOutputPortRefThisNodeInputPortVector( ); // 获取被包含目标序列
 					checkCount = nodes.size( );
 					checkData = nodes.data( );
 					if( ArrayTools::hasIndex( resultData, beginCount, checkData, checkCount, findResultIndex ) == false )
-						continue;
+						continue; // 返回序列当中不完全包含目标
 					resultData[ beginCount ] = buffData[ copyIndex ];
 					buffData[ copyIndex ] = nullptr;
 					beginCount += 1;
@@ -56,7 +59,6 @@ namespace inlineTools {
 			if( beginCount == oldCount )
 				return false; // 没有改变大小
 		} while( true );
-
 		return true;
 	}
 }
@@ -143,7 +145,7 @@ bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_sort_node_v
 }
 bool NodeRunLinkTools::sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
 	size_t resultIndex;
-	if( VectorTools::hasIndex( ref_begin_sort_node_vector, ref_sort_node_vector, resultIndex ) == false )
+	if( VectorTools::hasIndex( ref_sort_node_vector, ref_begin_sort_node_vector, resultIndex ) == false )
 		return false;
 	return inlineTools::sortNodeRef( ref_begin_sort_node_vector, ref_sort_node_vector, result_ref_node_vector );
 }

@@ -115,6 +115,9 @@ bool NodeRunInfo::builderRunInstance( ) {
 	printerDirector = appinstancePtr->getPrinterDirector( );
 	if( printerDirector == nullptr )
 		return false;
+	nodeDirectorPtr = appinstancePtr->getNodeDirector( );
+	if( printerDirector == nullptr )
+		return false;
 	BuilderEnum::BuilderErrorType errorType = BuilderEnum::BuilderErrorType::BuilderSortError;
 	resetBilderData( );
 	if( sortFromBuilderNode( ) == false ) {
@@ -123,6 +126,10 @@ bool NodeRunInfo::builderRunInstance( ) {
 		resetBilderData( );
 		return false;
 	}
+	// 输出排序
+	auto nodeArrayToString = nodeDirectorPtr->nodeArrayToString( builderReferenceSortVector );
+	printerDirector->info( nodeArrayToString, Create_SrackInfo( ) );
+	
 	size_t builderNodeIndex;
 	size_t builderNodeCount = builderNodeVector.size( );
 	auto builderNodeArrayPtr = builderNodeVector.data( );
@@ -336,7 +343,7 @@ void NodeRunInfo::resetBilderData( ) {
 	functionVector.clear( );
 
 	builderReferenceSortVector.clear( );
-	builderBeginList.clear( );
+	//builderBeginList.clear( );
 
 	size_t count = nodeRunLinkVector.size( );
 	size_t index;
@@ -647,5 +654,6 @@ bool NodeRunInfo::sortFromBuilderNode( ) {
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
+	builderBeginList.clear(  );
 	resetData( );
 }

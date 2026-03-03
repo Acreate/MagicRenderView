@@ -69,13 +69,13 @@ bool NodeRunLink::linkHasEndNode( const Node *const check_node_ptr ) const {
 	return nodeRunLinkData->linkHasNode( check_node_ptr );
 }
 bool NodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
-	size_t startCount = nodeRunLinkData->startNodeVector.size( );
+	size_t startCount = nodeRunLinkData->linkNodeVector.size( );
 	if( startCount == 0 )
 		return false;
 	size_t refCount = reference_sort_vector.size( );
 	if( refCount == 0 )
 		return false;
-	auto sortData = nodeRunLinkData->startNodeVector.data( );
+	auto sortData = nodeRunLinkData->linkNodeVector.data( );
 
 	std::vector< Node * > *buff;
 	buff = new std::vector< Node * >( startCount );

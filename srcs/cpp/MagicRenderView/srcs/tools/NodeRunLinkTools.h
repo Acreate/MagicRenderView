@@ -9,10 +9,17 @@ namespace NodeRunLinkTools {
 		friend class NodeRunLink;
 	public:
 		virtual ~Get( ) = default;
-
+		/// @brief 获取建议列表引用
+		/// @return 建议列表引用
 		virtual std::vector< Node * > & getAdviseNodeVector( ) const;
+		/// @brief 获取关联列表引用
+		/// @return 关联列表引用
 		virtual std::vector< Node * > & getLinkNodeVector( ) const;
+		/// @brief 获取运行完成列表引用
+		/// @return 运行完成引用
 		virtual std::vector< Node * > & getOverRunNodeVector( ) const;
+		/// @brief 获取起始节点列表引用
+		/// @return 起始列表引用
 		virtual std::vector< Node * > & getStartNodeVector( ) const;
 
 		/// @brief 递归获取节点的所有依赖
