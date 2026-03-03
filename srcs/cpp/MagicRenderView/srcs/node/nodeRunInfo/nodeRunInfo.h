@@ -1,7 +1,8 @@
 ﻿#ifndef NODERUNINFO_H_H_HEAD__FILE__
 #define NODERUNINFO_H_H_HEAD__FILE__
 
-#include <QObject>
+
+#include "nodeRunInfoData.h"
 
 class PrinterDirector;
 class NodeRunLink;
@@ -19,11 +20,9 @@ namespace BuilderEnum {
 class Node;
 class NodeDirector;
 class SrackInfo;
-class NodeRunInfo : public QObject {
+class NodeRunInfo : public NodeRunInfoData {
 	Q_OBJECT;
 	friend class NodeDirector;
-	template< typename TUnityType >
-	using UATemStackType = std::list< TUnityType >;
 protected:
 	/// @brief 应用实例
 	Application *appinstancePtr;
@@ -31,50 +30,8 @@ protected:
 	PrinterDirector *printerDirector;
 	/// @brief 节点管理对象
 	NodeDirector *nodeDirectorPtr;
-	/// @brief 当前帧
-	size_t currentFrame;
-	/// @brief 最大帧
-	size_t maxFrame;
-	/// @brief 是否停止
-	bool runStop;
-	/// @brief 是否准备完成
-	bool ready;
-	/// @brief 下一个节点事件
-	qint64 nextRunNodeTime;
-	/// @brief 编译时间
-	QDateTime *builderDataTime;
-	/// @brief 上一个节点运行时间
-	QDateTime *brforeRunDataTime;
-	/// @brief 当前节点运行时间
-	QDateTime *currentRunDataTime;
-	/// @brief 临时使用节点指针
-	Node *buffNode;
-	/// @brief 当前执行节点
-	Node *currentNode;
-	/// @brief 以前的节点
-	Node *oldNode;
-	/// @brief 编译列表
-	std::vector< Node * > builderNodeVector;
-	/// @brief 编译时的起始节点列表
-	std::vector< Node * > builderBeginList;
-	/// @brief 编译节点的排序参考列表
-	std::vector< Node * > builderReferenceSortVector;
-	/// @brief 已经调用完毕的列表
-	std::vector< Node * > runOverNodeVector;
-	/// @brief 编译链接当中的创建节点序列
-	std::vector< NodeRunLink * > createVector;
-	/// @brief 编译链接当中的点节点序列
-	std::vector< NodeRunLink * > pointVector;
-	/// @brief 编译链接当中的函数节点序列
-	std::vector< NodeRunLink * > functionVector;
-	/// @brief 链接列表
-	std::vector< NodeRunLink * > nodeRunLinkVector;
-	/// @brief 调用栈
-	UATemStackType< NodeRunLink * > functionStack;
-	/// @brief 进程栈
-	UATemStackType< NodeRunLink * > createStack;
-	/// @brief 定点栈
-	UATemStackType< NodeRunLink * > pointStack;
+	/// @brief 镜像
+	NodeRunInfoData *image;
 protected:
 	virtual void appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count );
 	virtual void appendBuilderNode( std::vector< Node * > &append_node_vector ) {
@@ -138,7 +95,6 @@ protected:
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;
-	virtual bool isReady( ) const { return ready; }
 	virtual bool hasBuilderNode( const Node *check_node_ptr );
 	virtual int getMsleepTime( ) const { return nextRunNodeTime; }
 	virtual void setMsleepTime( int msleep_time ) { nextRunNodeTime = msleep_time; }

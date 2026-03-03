@@ -24,12 +24,13 @@
 #include "nodeRunLink/imp/pointNodeRunLink.h"
 #include "nodeRunLink/nodeRunLink.h"
 
-NodeRunInfo::NodeRunInfo( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
+NodeRunInfo::NodeRunInfo( ) : NodeRunInfoData( ) {
 	builderDataTime = new QDateTime;
 	brforeRunDataTime = new QDateTime;
 	currentRunDataTime = new QDateTime;
 	maxFrame = 60;
 	nextRunNodeTime = 10;
+	image = new NodeRunInfoData;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
@@ -45,6 +46,7 @@ NodeRunInfo::~NodeRunInfo( ) {
 	delete builderDataTime;
 	delete brforeRunDataTime;
 	delete currentRunDataTime;
+	delete image;
 }
 bool NodeRunInfo::hasBuilderNode( const Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr )
@@ -127,9 +129,9 @@ bool NodeRunInfo::builderRunInstance( ) {
 		return false;
 	}
 	// 输出排序
-	auto nodeArrayToString = nodeDirectorPtr->nodeArrayToString( builderReferenceSortVector );
+	/*auto nodeArrayToString = nodeDirectorPtr->nodeArrayToString( builderReferenceSortVector );
 	printerDirector->info( nodeArrayToString, Create_SrackInfo( ) );
-	
+	*/
 	size_t builderNodeIndex;
 	size_t builderNodeCount = builderNodeVector.size( );
 	auto builderNodeArrayPtr = builderNodeVector.data( );
@@ -208,7 +210,8 @@ bool NodeRunInfo::builderRunInstance( ) {
 		nodeRunLinkVector.append_range( functionVector );
 		nodeRunLinkVector.append_range( pointVector );
 		// 初始化
-		functionStack = UATemStackType< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
+		functionStack = std::list< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
+		image->copyTargetToThis( this );
 	} else {
 		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
 		emit builder_error_signal( nullptr, BuilderEnum::BuilderErrorType::None, nullptr );
@@ -316,7 +319,7 @@ bool NodeRunInfo::resetRunStartNode( ) {
 	*currentRunDataTime = QDateTime::currentDateTime( );
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
-	functionStack = UATemStackType< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
+	functionStack = std::list< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
@@ -405,8 +408,8 @@ bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link ) {
 	size_t vectorCount;
 	NodeRunLink **vectorData;
 	size_t vectorIndex;
-	UATemStackType< NodeRunLink * >::iterator iterator;
-	UATemStackType< NodeRunLink * >::iterator end;
+	std::list< NodeRunLink * >::iterator iterator;
+	std::list< NodeRunLink * >::iterator end;
 	// call 堆栈吗?
 	vectorCount = functionVector.size( );
 	vectorData = functionVector.data( );
@@ -555,8 +558,8 @@ bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::Node
 	size_t vectorCount;
 	NodeRunLink **vectorData;
 	size_t vectorIndex;
-	UATemStackType< NodeRunLink * >::iterator iterator;
-	UATemStackType< NodeRunLink * >::iterator end;
+	std::list< NodeRunLink * >::iterator iterator;
+	std::list< NodeRunLink * >::iterator end;
 	switch( node_type ) {
 		case NodeEnum::NodeType::Call : // call 堆栈吗?
 		case NodeEnum::NodeType::Function :
@@ -654,6 +657,6 @@ bool NodeRunInfo::sortFromBuilderNode( ) {
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
-	builderBeginList.clear(  );
+	builderBeginList.clear( );
 	resetData( );
 }
