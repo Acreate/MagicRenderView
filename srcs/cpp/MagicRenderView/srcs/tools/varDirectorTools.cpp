@@ -1,4 +1,4 @@
-#include "varDirectorTools.h"
+﻿#include "varDirectorTools.h"
 
 #include <QColor>
 #include <QDateTime>
@@ -100,7 +100,7 @@ bool VarDirectorTools::isTrue( const VarDirector *varDirectorPtr, const void *va
 	if( varDirectorPtr->cast_ptr( var_ptr, timePtr ) )
 		return timePtr->msecsSinceStartOfDay( ) - 0;
 
-	return true;
+	return false;
 }
 inline QString jionDebugQStringList( const QStringList &jion_string_list ) {
 	return "{\n\t" + jion_string_list.join( "\n\t" ) + "\n}";
