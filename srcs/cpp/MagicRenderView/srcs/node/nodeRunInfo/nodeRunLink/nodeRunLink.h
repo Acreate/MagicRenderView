@@ -32,17 +32,10 @@ protected:
 	/// @param run_frame 运行帧
 	/// @return 成功返回 true
 	virtual bool runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame );
-	/// @brief 获取节点的建议列表
-	/// @param get_advise_node_ptr 获取的节点
-	/// @param result_advise_node_vector 建议运行列表
-	/// @param ndoe_run_start_data_time 当前运行时间
-	/// @param current_frame 当前帧
-	/// @return 失败返回 false
-	virtual bool getNodeRunAdviseNodeVector( Node *get_advise_node_ptr, std::vector< Node * > &result_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const;
 	virtual bool adviseRunNode( const Node *const node ) const;
 	virtual Node * getBeforeNode( ) const;
 	virtual Node * getCurrentNode( ) const;
-	virtual const std::vector< Node * > & getAdviseNodeVector( ) const;
+	virtual const std::list< Node * > & getAdviseNodeVector( ) const;
 	virtual const std::vector< Node * > & getLinkNodeVector( ) const;
 	virtual const std::vector< Node * > & getOverRunNodeVector( ) const;
 	virtual const std::vector< Node * > & getStartNodeVector( ) const;

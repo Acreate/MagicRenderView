@@ -10,6 +10,7 @@ protected:
 	CreateNodeRunLink( Node *const init_node_ptr );
 	bool builder( ) override;
 	bool linkHasNode( const Node *const check_node_ptr ) const override;
+	bool sortBilderList( const std::vector<Node *> &reference_sort_vector ) override;
 };
 
 #endif // CREATENODERUNLINK_H_H_HEAD__FILE__

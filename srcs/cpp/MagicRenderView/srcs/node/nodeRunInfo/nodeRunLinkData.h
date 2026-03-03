@@ -21,7 +21,7 @@ protected:
 	/// @brief 节点链表
 	std::vector< Node * > linkNodeVector;
 	/// @brief 建议列表
-	std::vector< Node * > adviseNodeVector;
+	std::list< Node * > adviseNodeVector;
 	/// @brief 开始节点
 	std::vector< Node * > startNodeVector;
 	/// @brief 当前的节点
@@ -45,7 +45,7 @@ protected:
 	virtual const std::vector< Node * > & getLinkNodeVector( ) const;
 	/// @brief 获取建议节点序列
 	/// @return 建议节点序列
-	virtual const std::vector< Node * > & getAdviseNodeVector( ) const;
+	virtual const std::list<Node *> & getAdviseNodeVector( ) const;
 	/// @brief 获取起始节点列表
 	/// @return 起始节点列表
 	virtual const std::vector< Node * > & getStartNodeVector( ) const;
@@ -56,13 +56,6 @@ protected:
 	/// @param current_frame 当前帧
 	/// @return 失败返回 false
 	virtual bool getNodeRunRefNodeVector( Node *get_ref_node_ptr, std::vector< Node * > &result_ref_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const;
-	/// @brief 获取节点的建议列表
-	/// @param get_advise_node_ptr 获取的节点
-	/// @param result_advise_node_vector 建议运行列表
-	/// @param ndoe_run_start_data_time 当前运行时间
-	/// @param current_frame 当前帧
-	/// @return 失败返回 false
-	virtual bool getNodeRunAdviseNodeVector( Node *get_advise_node_ptr, std::vector< Node * > &result_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const;
 	/// @brief 是否可用对象
 	/// @return 不可用返回 false
 	virtual bool isReady( ) const;

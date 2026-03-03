@@ -63,7 +63,7 @@ namespace inlineTools {
 	}
 }
 
-std::vector< Node * > & NodeRunLinkTools::Get::getAdviseNodeVector( ) const {
+std::list<Node *> & NodeRunLinkTools::Get::getAdviseNodeVector( ) const {
 	return nodeRunLinkData->adviseNodeVector;
 }
 std::vector< Node * > & NodeRunLinkTools::Get::getLinkNodeVector( ) const {

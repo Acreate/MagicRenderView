@@ -1,5 +1,7 @@
 ﻿#include "nodeRunInfoData.h"
-NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) { }
+NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
+	oldNode = currentNode = nullptr;
+}
 bool NodeRunInfoData::copyTargetToThis( const NodeRunInfoData *const other ) {
 	if( this == nullptr || other == nullptr )
 		return false;

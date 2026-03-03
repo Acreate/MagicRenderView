@@ -23,7 +23,7 @@ const std::vector< Node * > & NodeRunLinkData::getOverRunNodeVector( ) const {
 const std::vector< Node * > & NodeRunLinkData::getLinkNodeVector( ) const {
 	return linkNodeVector;
 }
-const std::vector< Node * > & NodeRunLinkData::getAdviseNodeVector( ) const {
+const std::list<Node *> & NodeRunLinkData::getAdviseNodeVector( ) const {
 	return adviseNodeVector;
 }
 const std::vector< Node * > & NodeRunLinkData::getStartNodeVector( ) const {
@@ -32,9 +32,7 @@ const std::vector< Node * > & NodeRunLinkData::getStartNodeVector( ) const {
 bool NodeRunLinkData::getNodeRunRefNodeVector( Node *get_ref_node_ptr, std::vector< Node * > &result_ref_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const {
 	return get_ref_node_ptr->fillInputPortCall( ndoe_run_start_data_time, current_frame, result_ref_node_vector );
 }
-bool NodeRunLinkData::getNodeRunAdviseNodeVector( Node *get_advise_node_ptr, std::vector< Node * > &result_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const {
-	return get_advise_node_ptr->fillOutputPortCall( ndoe_run_start_data_time, current_frame, result_advise_node_vector );
-}
+
 
 bool NodeRunLinkData::adviseRunNode( const Node *const node ) const {
 	Node **refNodeData;

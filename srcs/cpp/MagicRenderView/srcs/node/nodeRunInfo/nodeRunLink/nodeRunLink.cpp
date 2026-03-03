@@ -4,6 +4,7 @@
 
 #include "../../../tools/NodeRunLinkTools.h"
 #include "../../../tools/arrayTools.h"
+#include "../../../tools/vectorTools.h"
 
 #include "../../node/node.h"
 
@@ -19,83 +20,93 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 	if( nodeRunLinkData->over )
 		return false;
 	size_t overCount;
-	size_t linkCount;
-	size_t linkIndex;
+	size_t beginCount;
+	size_t beginIndex;
 	size_t overIndex;
-	Node **data;
+	Node **beginData;
 	Node *const*overData;
 
-	linkCount = nodeRunLinkData->linkNodeVector.size( );
-	if( linkCount == 0 )
-		return false;
-	data = nodeRunLinkData->linkNodeVector.data( );
+	// 完整调用开始节点
+	beginCount = nodeRunLinkData->startNodeVector.size( );
+	if( beginCount == 0 )
+		return false; // 不存在开始
+	beginData = nodeRunLinkData->startNodeVector.data( );
+	// 如果未开始
 	if( nodeRunLinkData->currentNode == nullptr ) {
-		result_next_node_ptr = data[ 0 ];
+		nodeRunLinkData->currentNode = result_next_node_ptr = beginData[ 0 ];
 		return true;
 	}
-	overCount = over_run_node_vector.size( );
+	for( beginIndex = 0; beginIndex < beginCount; ++beginIndex )
+		if( nodeRunLinkData->currentNode == beginData[ beginIndex ] ) {
+			++beginIndex;
+			if( beginIndex == beginCount )
+				break; // 末尾，跳出
+			nodeRunLinkData->currentNode = result_next_node_ptr = beginData[ beginIndex ];
+			return true;
+		}
+	// 检查当前节点是否在完成列表但空中
+	overCount = nodeRunLinkData->overRunNodeVector.size( );
 	if( overCount ) {
-		overData = over_run_node_vector.data( );
-		while( overCount ) {
-			for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
-				if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
-					++linkIndex;
-					if( linkIndex == linkCount ) {
-						nodeRunLinkData->over = true;
-						return false;
-					}
-					break;
-				}
-			if( linkIndex == linkCount )
+		overData = nodeRunLinkData->overRunNodeVector.data( );
+		for( overIndex = 0; overIndex < overCount; ++overIndex )
+			if( overData[ overIndex ] == nodeRunLinkData->currentNode )
+				break;
+
+		if( overIndex == overCount ) {
+			overCount = over_run_node_vector.size( );
+			if( overCount == 0 )
 				return false;
-			result_next_node_ptr = data[ linkIndex ];
+			overData = over_run_node_vector.data( );
 
 			for( overIndex = 0; overIndex < overCount; ++overIndex )
-				if( overData[ overIndex ] == result_next_node_ptr )
+				if( overData[ overIndex ] == nodeRunLinkData->currentNode )
 					break;
-			if( overIndex != overCount )
-				result_next_node_ptr = nullptr; // 在完成列表当中匹配到节点
-
-			if( result_next_node_ptr )
-				break; // 找到属于他的指针
+			if( overIndex == overCount )
+				return false; // 不在匹配当中
 		}
-	} else {
-		for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
-			if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
-				++linkIndex;
-				if( linkIndex == linkCount ) {
-					nodeRunLinkData->over = true;
-					return false;
-				}
-				break;
-			}
-		if( linkIndex == linkCount )
-			return false;
-		result_next_node_ptr = data[ linkIndex ];
 	}
-	return true;
+
+	auto &adviseNodeVector = get->getAdviseNodeVector( );
+	auto iterator = adviseNodeVector.begin( );
+	auto end = adviseNodeVector.end( );
+	for( ; iterator != end; ++iterator ) {
+		Node *node = *iterator;
+		auto &refThisNodeInputPortVector = node->getOtherNodeOutputPortRefThisNodeInputPortVector( );
+		size_t refCount = refThisNodeInputPortVector.size( );
+		auto refData = refThisNodeInputPortVector.data( );
+		size_t findIndex;
+		if( ArrayTools::hasIndex( overData, overCount, refData, refCount, findIndex ) == false )
+			continue;
+		nodeRunLinkData->currentNode = result_next_node_ptr = node;
+		adviseNodeVector.erase( iterator );
+		return true;
+	}
+	return false;
 }
 bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame ) {
 	if( nodeRunLinkData->currentNode != run_node_ptr )
 		return false;
-	size_t count;
-	Node **data;
+
 	bool fillNodeCall = nodeRunLinkData->currentNode->fillNodeCall( run_time, run_frame );
 	if( fillNodeCall == true ) {
-		count = nodeRunLinkData->linkNodeVector.size( );
-		data = nodeRunLinkData->linkNodeVector.data( );
-		if( data[ count - 1 ] == run_node_ptr )
+		size_t find = 0;
+		if( VectorTools::findIndex( nodeRunLinkData->overRunNodeVector, nodeRunLinkData->currentNode, find ) == false )
+			nodeRunLinkData->overRunNodeVector.emplace_back( nodeRunLinkData->currentNode );
+		std::vector< Node * > nextRunAdviseNodeVector;
+		if( nodeRunLinkData->currentNode->fillOutputPortCall( run_time, run_frame, nextRunAdviseNodeVector ) )
+			nodeRunLinkData->adviseNodeVector.append_range( nextRunAdviseNodeVector );
+		find = nodeRunLinkData->adviseNodeVector.size( );
+		if( find == 0 )
 			nodeRunLinkData->over = true;
+
 	}
 	return fillNodeCall;
 }
-bool NodeRunLink::getNodeRunAdviseNodeVector( Node *get_advise_node_ptr, std::vector< Node * > &result_advise_node_vector, const QDateTime &ndoe_run_start_data_time, size_t current_frame ) const {
-	return nodeRunLinkData->getNodeRunAdviseNodeVector( get_advise_node_ptr, result_advise_node_vector, ndoe_run_start_data_time, current_frame );
-}
+
 bool NodeRunLink::adviseRunNode( const Node *const node ) const {
 	return nodeRunLinkData->adviseRunNode( node );
 }
-const std::vector< Node * > & NodeRunLink::getAdviseNodeVector( ) const {
+const std::list< Node * > & NodeRunLink::getAdviseNodeVector( ) const {
 	return nodeRunLinkData->adviseNodeVector;
 }
 Node * NodeRunLink::getBeforeNode( ) const {
@@ -159,5 +170,7 @@ bool NodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_ve
 	for( refIndex = 0; refIndex < startCount; ++refIndex )
 		sortData[ refIndex ] = buffData[ refIndex ];
 	delete buff;
+	nodeRunLinkData->overRunNodeVector.clear( );
+	nodeRunLinkData->startNodeVector.clear( );
 	return true;
 }

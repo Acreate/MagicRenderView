@@ -10,5 +10,6 @@ protected:
 	FunctionNodeRunLink( Node *const init_node_ptr )
 		: NodeRunLink( init_node_ptr ) { }
 	bool builder( ) override;
+	bool sortBilderList( const std::vector<Node *> &reference_sort_vector ) override;
 };
 #endif // FUNCTIONNODERUNLINK_H_H_HEAD__FILE__

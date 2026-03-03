@@ -231,16 +231,14 @@ bool NodeRunInfo::runNextNode( ) {
 	if( findNextNodePtr == true ) {
 		oldNode = currentNode;
 		currentNode = buffNode;
+		if( oldNode )
+			oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
 		if( nextNodeRunLink->runRunNode( buffNode, *currentRunDataTime, currentFrame ) ) {
-			std::vector< Node * > result;
-			if( nextNodeRunLink->getNodeRunAdviseNodeVector( buffNode, result, *currentRunDataTime, currentFrame ) ) {
-				// 删除堆栈中的信息
-				if( nextNodeRunLink->isOver( ) )
-					removeNodeRunLinkTarget( currentNode, nextNodeRunLink->getBeforeNode( )->getNodeType( ) );
-				insertNodeRunLinkTarget( result );
-			}
-		} else
+			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Current_Run );
+		} else {
+			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
+		}
 	} else
 		printerDirector->info( tr( "找不到匹配的下一个节点链接信息" ), Create_SrackInfo( ) );
 	runStop = true;
@@ -334,6 +332,10 @@ void NodeRunInfo::resetData( ) {
 void NodeRunInfo::resetBilderData( ) {
 	ready = false;
 	*currentRunDataTime = QDateTime::currentDateTime( );
+	if( oldNode )
+		oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	if( currentNode )
+		currentNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	oldNode = currentNode = nullptr;
 	currentFrame = 0;
 

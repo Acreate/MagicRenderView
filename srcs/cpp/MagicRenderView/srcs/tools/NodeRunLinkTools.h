@@ -1,5 +1,6 @@
 ﻿#ifndef NODERUNLINKTOOLS_H_H_HEAD__FILE__
 #define NODERUNLINKTOOLS_H_H_HEAD__FILE__
+#include <list>
 #include <vector>
 
 class NodeRunLinkData;
@@ -11,7 +12,7 @@ namespace NodeRunLinkTools {
 		virtual ~Get( ) = default;
 		/// @brief 获取建议列表引用
 		/// @return 建议列表引用
-		virtual std::vector< Node * > & getAdviseNodeVector( ) const;
+		virtual std::list<Node *> & getAdviseNodeVector( ) const;
 		/// @brief 获取关联列表引用
 		/// @return 关联列表引用
 		virtual std::vector< Node * > & getLinkNodeVector( ) const;
