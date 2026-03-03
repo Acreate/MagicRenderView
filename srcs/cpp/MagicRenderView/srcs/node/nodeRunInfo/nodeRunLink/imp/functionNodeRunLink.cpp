@@ -20,8 +20,3 @@ bool FunctionNodeRunLink::builder( ) {
 	
 	return true;
 }
-bool FunctionNodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
-	if( isOver( ) )
-		return false;
-	return true;
-}

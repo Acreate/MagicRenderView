@@ -305,9 +305,11 @@ bool NodeRunInfo::resetRunStartNode( ) {
 		ready = false;
 		return false;
 	}
-	pointStack.clear( );
-	functionStack.clear( );
-	createStack.clear( );
+	if( this->copyTargetToThis( image ) == false ) {
+		printerDirector->info( tr( "镜像重置数据失败" ), Create_SrackInfo( ) );
+		ready = false;
+		return false;
+	}
 	auto data = nodeRunLinkVector.data( );
 	size_t index = 0;
 	for( ; index < count; ++index )
@@ -317,9 +319,7 @@ bool NodeRunInfo::resetRunStartNode( ) {
 			return false;
 		}
 	*currentRunDataTime = QDateTime::currentDateTime( );
-	oldNode = currentNode = nullptr;
-	currentFrame = 0;
-	functionStack = std::list< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
+
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
@@ -359,7 +359,7 @@ void NodeRunInfo::resetBilderData( ) {
 		nodeRunLinkVector.clear( );
 	}
 }
-bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *result_node_ptr ) {
+bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *&result_node_ptr ) {
 	// call 是否存在
 	for( auto &checkTarget : functionStack ) {
 		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )

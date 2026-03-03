@@ -50,7 +50,7 @@ protected:
 	/// @param result_next_node_ptr 返回的下一个节点
 	/// @param result_node_ptr
 	/// @return 失败返回 null
-	virtual bool getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *result_node_ptr );
+	virtual bool getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *&result_node_ptr );
 	/// @brief 更新下一个节点堆栈信息
 	/// @param update_next_node_ptr 更新的节点链接信息
 	/// @return 失败返回 false

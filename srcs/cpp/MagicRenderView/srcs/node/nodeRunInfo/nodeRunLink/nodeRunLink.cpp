@@ -15,6 +15,56 @@ NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
 	nodeRunLinkData = new NodeRunLinkData( init_node_ptr );
 	get = new NodeRunLinkTools::Get( nodeRunLinkData );
 }
+bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
+	if( isOver( ) )
+		return false;
+	size_t overCount;
+	size_t linkCount;
+	size_t linkIndex;
+	size_t overIndex;
+	Node **data;
+	Node *const*overData;
+
+	data = nodeRunLinkData->linkNodeVector.data( );
+	overData = over_run_node_vector.data( );
+	overCount = over_run_node_vector.size( );
+	linkCount = nodeRunLinkData->linkNodeVector.size( );
+	if( overCount )
+		while( overCount ) {
+			for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
+				if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
+					++linkIndex;
+					if( linkIndex == linkCount ) {
+						nodeRunLinkData->over = true;
+						return false;
+					}
+					break;
+				}
+			result_next_node_ptr = data[ linkIndex ];
+
+			for( overIndex = 0; overIndex < overCount; ++overIndex )
+				if( overData[ overIndex ] == result_next_node_ptr )
+					break;
+			if( overIndex != overCount )
+				result_next_node_ptr = nullptr; // 在完成列表当中匹配到节点
+
+			if( result_next_node_ptr )
+				break; // 找到属于他的指针
+		}
+	else {
+		for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
+			if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
+				++linkIndex;
+				if( linkIndex == linkCount ) {
+					nodeRunLinkData->over = true;
+					return false;
+				}
+				break;
+			}
+		result_next_node_ptr = data[ linkIndex ];
+	}
+	return true;
+}
 bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame ) {
 	if( nodeRunLinkData->currentNode != run_node_ptr )
 		return false;
