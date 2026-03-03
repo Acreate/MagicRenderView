@@ -16,7 +16,7 @@ NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
 	get = new NodeRunLinkTools::Get( nodeRunLinkData );
 }
 bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
-	if( isOver( ) )
+	if( nodeRunLinkData->over )
 		return false;
 	size_t overCount;
 	size_t linkCount;
@@ -25,11 +25,17 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 	Node **data;
 	Node *const*overData;
 
-	data = nodeRunLinkData->linkNodeVector.data( );
-	overData = over_run_node_vector.data( );
-	overCount = over_run_node_vector.size( );
 	linkCount = nodeRunLinkData->linkNodeVector.size( );
-	if( overCount )
+	if( linkCount == 0 )
+		return false;
+	data = nodeRunLinkData->linkNodeVector.data( );
+	if( nodeRunLinkData->currentNode == nullptr ) {
+		result_next_node_ptr = data[ 0 ];
+		return true;
+	}
+	overCount = over_run_node_vector.size( );
+	if( overCount ) {
+		overData = over_run_node_vector.data( );
 		while( overCount ) {
 			for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
 				if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
@@ -40,6 +46,8 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 					}
 					break;
 				}
+			if( linkIndex == linkCount )
+				return false;
 			result_next_node_ptr = data[ linkIndex ];
 
 			for( overIndex = 0; overIndex < overCount; ++overIndex )
@@ -51,7 +59,7 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 			if( result_next_node_ptr )
 				break; // 找到属于他的指针
 		}
-	else {
+	} else {
 		for( linkIndex = 0; linkIndex < linkCount; ++linkIndex )
 			if( nodeRunLinkData->currentNode == data[ linkIndex ] ) {
 				++linkIndex;
@@ -61,6 +69,8 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 				}
 				break;
 			}
+		if( linkIndex == linkCount )
+			return false;
 		result_next_node_ptr = data[ linkIndex ];
 	}
 	return true;
