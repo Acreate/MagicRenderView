@@ -1,7 +1,6 @@
 ﻿#ifndef NODERUNINFO_H_H_HEAD__FILE__
 #define NODERUNINFO_H_H_HEAD__FILE__
 
-
 #include "nodeRunInfoData.h"
 
 class PrinterDirector;
@@ -92,6 +91,9 @@ protected:
 	/// @brief 从起始节点获取信息，并且生成排序参考列表
 	/// @return 失败返回 false
 	virtual bool sortFromBuilderNode( );
+	/// @brief 到下一帧
+	/// @return 成功返回 true
+	virtual bool toNextFrame( );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;

@@ -128,13 +128,19 @@ bool NodeRunInfo::builderRunInstance( ) {
 		resetBilderData( );
 		return false;
 	}
-	// 输出排序
-	/*auto nodeArrayToString = nodeDirectorPtr->nodeArrayToString( builderReferenceSortVector );
-	printerDirector->info( nodeArrayToString, Create_SrackInfo( ) );
-	*/
+
 	size_t builderNodeIndex;
-	size_t builderNodeCount = builderNodeVector.size( );
-	auto builderNodeArrayPtr = builderNodeVector.data( );
+	size_t builderNodeCount;
+	Node **builderNodeArrayPtr;
+
+	builderNodeCount = builderReferenceSortVector.size( );
+	builderNodeArrayPtr = builderReferenceSortVector.data( );
+	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
+		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	}
+
+	builderNodeCount = builderNodeVector.size( );
+	builderNodeArrayPtr = builderNodeVector.data( );
 	NodeRunLink *createNodeRunLink;
 	errorType = BuilderEnum::BuilderErrorType::None;
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
@@ -221,7 +227,6 @@ bool NodeRunInfo::builderRunInstance( ) {
 }
 
 bool NodeRunInfo::runNextNode( ) {
-
 	if( ready == false || runStop == false )
 		return false;
 	runStop = false;
@@ -239,8 +244,12 @@ bool NodeRunInfo::runNextNode( ) {
 			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
 		}
-	} else
-		printerDirector->info( tr( "找不到匹配的下一个节点链接信息" ), Create_SrackInfo( ) );
+	} else {
+		findNextNodePtr = toNextFrame( );
+		if( findNextNodePtr == false ) // 无法继续。返回 false
+			printerDirector->info( tr( "帧异常:无法匹配下一帧异常" ), Create_SrackInfo( ) );
+
+	}
 	runStop = true;
 	emit auto_run_status_change_signal( this, runStop );
 	return findNextNodePtr;
@@ -347,6 +356,15 @@ void NodeRunInfo::resetBilderData( ) {
 	pointVector.clear( );
 	functionVector.clear( );
 
+	size_t builderNodeIndex;
+	size_t builderNodeCount;
+	Node **builderNodeArrayPtr;
+
+	builderNodeCount = builderReferenceSortVector.size( );
+	builderNodeArrayPtr = builderReferenceSortVector.data( );
+	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
+		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	}
 	builderReferenceSortVector.clear( );
 	//builderBeginList.clear( );
 
@@ -362,8 +380,15 @@ void NodeRunInfo::resetBilderData( ) {
 	}
 }
 bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *&result_node_ptr ) {
+
+	std::list< NodeRunLink * >::iterator iterator;
+	std::list< NodeRunLink * >::iterator end;
+	NodeRunLink *checkTarget;
 	// call 是否存在
-	for( auto &checkTarget : functionStack ) {
+	iterator = functionStack.begin( );
+	end = functionStack.end( );
+	for( ; iterator != end; ++iterator ) {
+		checkTarget = *iterator;
 		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
 			continue;
 		if( result_node_ptr == nullptr )
@@ -371,8 +396,11 @@ bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Nod
 		result_next_node_ptr = checkTarget;
 		return true;
 	}
-	// create 是否存在
-	for( auto &checkTarget : createStack ) {
+	// create 是否存在	
+	iterator = createStack.begin( );
+	end = createStack.end( );
+	for( ; iterator != end; ++iterator ) {
+		checkTarget = *iterator;
 		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
 			continue;
 		if( result_node_ptr == nullptr )
@@ -381,7 +409,10 @@ bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Nod
 		return true;
 	}
 	// if 是否存在
-	for( auto &checkTarget : pointStack ) {
+	iterator = pointStack.begin( );
+	end = pointStack.end( );
+	for( ; iterator != end; ++iterator ) {
+		checkTarget = *iterator;
 		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
 			continue;
 		if( result_node_ptr == nullptr )
@@ -389,6 +420,7 @@ bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Nod
 		result_next_node_ptr = checkTarget;
 		return true;
 	}
+
 	return false;
 }
 bool NodeRunInfo::updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr ) {
@@ -656,6 +688,16 @@ bool NodeRunInfo::sortFromBuilderNode( ) {
 		if( NodeRunLinkTools::getNodeRef( data[ index ], getRefNodeVector ) == false )
 			return false;
 	return NodeRunLinkTools::sortNodeRef( builderBeginList, getRefNodeVector, builderReferenceSortVector );
+}
+bool NodeRunInfo::toNextFrame( ) {
+	auto oldFrame = currentFrame;
+	if( this->copyTargetToThis( image ) == false )
+		return false;
+	if( currentFrame == maxFrame )
+		currentFrame = 0;
+	else
+		currentFrame = oldFrame + 1;
+	return true;
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
