@@ -16,6 +16,8 @@ bool PointNodeRunLink::builder( ) {
 	auto &resultRefNodeVector = get->getLinkNodeVector( );
 	if( get->getNodeOutputInForRef( resultRefNodeVector ) == false )
 		return false;
+	if( filterDeprecatedNode( resultRefNodeVector ) == false )
+		return false;
 	return true;
 }
 bool PointNodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {

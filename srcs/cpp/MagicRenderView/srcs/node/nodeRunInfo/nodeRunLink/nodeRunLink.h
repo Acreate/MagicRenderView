@@ -16,7 +16,7 @@ public:
 protected:
 	NodeRunLinkData *nodeRunLinkData;
 	NodeRunLinkTools::Get *get;
-	Node* currentOver;
+	Node *currentOver;
 protected:
 	NodeRunLink( Node *const init_node_ptr );
 	/// @brief 链接节点
@@ -33,6 +33,10 @@ protected:
 	/// @return 成功返回 true
 	virtual bool runRunNode( const QDateTime &run_time, size_t run_frame );
 	virtual bool adviseRunNode( const Node *const node ) const;
+	/// @brief 过滤弃用节点
+	/// @param filter_target_ref_src_vector 过滤引用序列
+	/// @return 失败返回 false
+	virtual bool filterDeprecatedNode( std::vector<Node*>& filter_target_ref_src_vector );
 	virtual Node * getBeforeNode( ) const;
 	virtual Node * getCurrentNode( ) const;
 	virtual const std::list< Node * > & getAdviseNodeVector( ) const;

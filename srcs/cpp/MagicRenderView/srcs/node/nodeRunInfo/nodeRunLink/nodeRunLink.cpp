@@ -135,6 +135,41 @@ bool NodeRunLink::runRunNode( const QDateTime &run_time, size_t run_frame ) {
 bool NodeRunLink::adviseRunNode( const Node *const node ) const {
 	return nodeRunLinkData->adviseRunNode( node );
 }
+bool NodeRunLink::filterDeprecatedNode( std::vector< Node * > &filter_target_ref_src_vector ) {
+
+	size_t count = filter_target_ref_src_vector.size( );
+	if( count == 0 )
+		return true;
+	auto data = filter_target_ref_src_vector.data( );
+	if( data == nullptr )
+		return true;
+	size_t index = 0;
+	size_t buffIndex;
+	while( index < count )
+		if( data[ index ] == nullptr ) {
+			buffIndex = index;
+			count -= 1;
+			for( ; buffIndex < count; buffIndex++ )
+				data[ buffIndex ] = data[ buffIndex + 1 ];
+		} else
+			switch( data[ index ]->getNodeType( ) ) {
+				case NodeEnum::NodeType::Call :
+				case NodeEnum::NodeType::Function :
+				case NodeEnum::NodeType::Jump :
+				case NodeEnum::NodeType::Point :
+					buffIndex = index;
+					count -= 1;
+					for( ; buffIndex < count; buffIndex++ )
+						data[ buffIndex ] = data[ buffIndex + 1 ];
+					break;
+				default :
+					++index;
+					break;
+			}
+	if( buffIndex == count )
+		filter_target_ref_src_vector.resize( count );
+	return true;
+}
 const std::list< Node * > & NodeRunLink::getAdviseNodeVector( ) const {
 	return nodeRunLinkData->adviseNodeVector;
 }

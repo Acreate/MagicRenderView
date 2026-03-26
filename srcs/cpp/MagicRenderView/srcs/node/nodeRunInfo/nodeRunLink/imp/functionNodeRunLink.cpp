@@ -18,6 +18,8 @@ bool FunctionNodeRunLink::builder( ) {
 	if( get->getNodeOutputInForRef( resultRefNodeVector ) == false )
 		return false;
 
+	if( filterDeprecatedNode( resultRefNodeVector ) == false )
+		return false;
 	return true;
 }
 bool FunctionNodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
