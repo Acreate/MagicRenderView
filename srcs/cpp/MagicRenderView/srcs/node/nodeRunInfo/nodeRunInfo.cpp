@@ -218,6 +218,10 @@ bool NodeRunInfo::builderRunInstance( ) {
 		// 初始化
 		functionStack = std::list< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
 		image->copyTargetToThis( this );
+		QString out;
+		for( auto &item : createVector )
+			out += "\n" + nodeDirectorPtr->nodeArrayToString( item->getLinkNodeVector( ) );
+		printerDirector->info( out, Create_SrackInfo( ) );
 	} else {
 		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
 		emit builder_error_signal( nullptr, BuilderEnum::BuilderErrorType::None, nullptr );
@@ -238,8 +242,77 @@ bool NodeRunInfo::runNextNode( ) {
 		currentNode = buffNode;
 		if( oldNode )
 			oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-		if( nextNodeRunLink->runRunNode( buffNode, *currentRunDataTime, currentFrame ) ) {
+		if( nextNodeRunLink->runRunNode( *currentRunDataTime, currentFrame ) ) {
 			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Current_Run );
+			// todo : 节点运行
+			std::vector< Node * > resultNextRunAdviseNodeVector;
+			if( currentNode->fillOutputPortCall( *currentRunDataTime, currentFrame, resultNextRunAdviseNodeVector ) ) {
+				std::vector< Node * > resultNeedNodeVector;
+				size_t count = resultNextRunAdviseNodeVector.size( );
+				if( count ) {
+					auto data = resultNextRunAdviseNodeVector.data( );
+					size_t index = 0;
+					size_t needCount;
+					Node **needData;
+					size_t needIndex;
+					NodeRunLink **findData;
+					size_t findCount;
+					size_t findIndex;
+					for( ; index < count; ++index )
+						switch( data[ index ]->getNodeType( ) ) {
+							case NodeEnum::NodeType::Call :
+								printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Call]" ).arg( data[ index ]->toQString( ) ), Create_SrackInfo( ) );
+								// 加入 functionStack
+								if( data[ index ]->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
+									break;
+								needCount = resultNeedNodeVector.size( );
+								if( needCount == 0 )
+									break;
+								findCount = functionVector.size( );
+								if( findCount == 0 )
+									break;
+								needData = resultNeedNodeVector.data( );
+								needIndex = 0;
+								findData = functionVector.data( );
+								for( ; needIndex < needCount; needIndex += 1 )
+									switch( needData[ needIndex ]->getNodeType( ) ) {
+										case NodeEnum::NodeType::Function :
+											for( findIndex = 0; findIndex < findCount; findIndex += 1 )
+												if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
+													functionStack.emplace_front( findData[ findIndex ] );
+													break;
+												}
+											break;
+									}
+								break;
+							case NodeEnum::NodeType::Jump :
+								printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Jump]" ).arg( data[ index ]->toQString( ) ), Create_SrackInfo( ) );
+								// 加入 pointStack
+								if( data[ index ]->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
+									break;
+								needCount = resultNeedNodeVector.size( );
+								if( needCount == 0 )
+									break;
+								findCount = pointVector.size( );
+								if( findCount == 0 )
+									break;
+								needData = resultNeedNodeVector.data( );
+								needIndex = 0;
+								findData = pointVector.data( );
+								for( ; needIndex < needCount; needIndex += 1 )
+									switch( needData[ needIndex ]->getNodeType( ) ) {
+										case NodeEnum::NodeType::Point :
+											for( findIndex = 0; findIndex < findCount; findIndex += 1 )
+												if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
+													pointStack.emplace_front( findData[ findIndex ] );
+													break;
+												}
+											break;
+									}
+								break;
+						}
+				}
+			}
 		} else {
 			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
@@ -420,7 +493,6 @@ bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Nod
 		result_next_node_ptr = checkTarget;
 		return true;
 	}
-
 	return false;
 }
 bool NodeRunInfo::updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr ) {

@@ -2,6 +2,8 @@
 
 #include "../nodeRunLinkData.h"
 
+#include "../../../enums/nodeEnum.h"
+
 #include "../../../tools/NodeRunLinkTools.h"
 #include "../../../tools/arrayTools.h"
 #include "../../../tools/vectorTools.h"
@@ -15,10 +17,15 @@ NodeRunLink::~NodeRunLink( ) {
 NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
 	nodeRunLinkData = new NodeRunLinkData( init_node_ptr );
 	get = new NodeRunLinkTools::Get( nodeRunLinkData );
+	currentOver = nullptr;
 }
 bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
 	if( nodeRunLinkData->over )
 		return false;
+	if( currentOver && currentOver != nodeRunLinkData->currentNode ) {
+		result_next_node_ptr = nodeRunLinkData->currentNode;
+		return true;
+	}
 	size_t overCount;
 	size_t beginCount;
 	size_t beginIndex;
@@ -75,7 +82,29 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 		size_t refCount = refThisNodeInputPortVector.size( );
 		auto refData = refThisNodeInputPortVector.data( );
 		size_t findIndex;
-		if( ArrayTools::hasIndex( overData, overCount, refData, refCount, findIndex ) == false )
+		for( findIndex = 0; findIndex < refCount; ++findIndex ) {
+			NodeEnum::NodeType nodeType = refData[ findIndex ]->getNodeType( );
+			if( nodeType == NodeEnum::NodeType::Point )
+				continue; // 跳转节点，不需要运行
+			overData = nodeRunLinkData->overRunNodeVector.data( );
+			for( overIndex = 0; overIndex < overCount; ++overIndex )
+				if( overData[ overIndex ] == nodeRunLinkData->currentNode )
+					break;
+			if( overIndex < overCount )
+				continue; // 已经匹配
+
+			overCount = over_run_node_vector.size( );
+			if( overCount == 0 )
+				break; // 不存在
+			overData = over_run_node_vector.data( );
+
+			for( overIndex = 0; overIndex < overCount; ++overIndex )
+				if( overData[ overIndex ] == nodeRunLinkData->currentNode )
+					break;
+			if( overIndex == overCount )
+				break; // 不存在
+		}
+		if( findIndex < refCount )
 			continue;
 		nodeRunLinkData->currentNode = result_next_node_ptr = node;
 		adviseNodeVector.erase( iterator );
@@ -83,8 +112,8 @@ bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vec
 	}
 	return false;
 }
-bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame ) {
-	if( nodeRunLinkData->currentNode != run_node_ptr )
+bool NodeRunLink::runRunNode( const QDateTime &run_time, size_t run_frame ) {
+	if( nodeRunLinkData->currentNode == nullptr )
 		return false;
 
 	bool fillNodeCall = nodeRunLinkData->currentNode->fillNodeCall( run_time, run_frame );
@@ -98,7 +127,7 @@ bool NodeRunLink::runRunNode( Node *run_node_ptr, const QDateTime &run_time, siz
 		find = nodeRunLinkData->adviseNodeVector.size( );
 		if( find == 0 )
 			nodeRunLinkData->over = true;
-
+		currentOver = nodeRunLinkData->currentNode;
 	}
 	return fillNodeCall;
 }

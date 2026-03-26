@@ -16,6 +16,7 @@ public:
 protected:
 	NodeRunLinkData *nodeRunLinkData;
 	NodeRunLinkTools::Get *get;
+	Node* currentOver;
 protected:
 	NodeRunLink( Node *const init_node_ptr );
 	/// @brief 链接节点
@@ -27,11 +28,10 @@ protected:
 	/// @return 失败返回 false
 	virtual bool getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr );
 	/// @brief 运行节点
-	/// @param run_node_ptr 运行的节点
 	/// @param run_time 运行时间
 	/// @param run_frame 运行帧
 	/// @return 成功返回 true
-	virtual bool runRunNode( Node *run_node_ptr, const QDateTime &run_time, size_t run_frame );
+	virtual bool runRunNode( const QDateTime &run_time, size_t run_frame );
 	virtual bool adviseRunNode( const Node *const node ) const;
 	virtual Node * getBeforeNode( ) const;
 	virtual Node * getCurrentNode( ) const;

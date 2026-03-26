@@ -21,6 +21,27 @@ bool CreateNodeRunLink::builder( ) {
 	auto &resultRefNodeVector = get->getLinkNodeVector( );
 	if( get->getNodeRef( resultRefNodeVector ) == false )
 		return false;
+	size_t count = resultRefNodeVector.size( );
+	auto data = resultRefNodeVector.data( );
+	size_t index = 0;
+	size_t buffIndex;
+	while( index < count )
+		switch( data[ index ]->getNodeType( ) ) {
+			case NodeEnum::NodeType::Call :
+			case NodeEnum::NodeType::Function :
+			case NodeEnum::NodeType::Jump :
+			case NodeEnum::NodeType::Point :
+				buffIndex = index;
+				count -= 1;
+				for( ; buffIndex < count; buffIndex++ )
+					data[ buffIndex ] = data[ buffIndex + 1 ];
+				break;
+			default :
+				++index;
+				break;
+		}
+	if( buffIndex == count )
+		resultRefNodeVector.resize( count );
 	return true;
 }
 bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {

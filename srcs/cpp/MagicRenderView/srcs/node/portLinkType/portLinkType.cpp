@@ -37,13 +37,25 @@ bool PortLinkType::linkPort( OutputPort *output_port, InputPort *input_port ) {
 	return true;
 }
 bool PortLinkType::linkPortTypeComp( OutputPort *output_port, const NodeEnum::PortType &output_port_type, InputPort *input_port, const NodeEnum::PortType &input_port_type ) {
-	if( output_port_type == NodeEnum::PortType::AnyVar )
-		if( input_port_type == NodeEnum::PortType::Unity || input_port_type == NodeEnum::PortType::Array )
-			return true;
-	if( input_port_type == NodeEnum::PortType::AnyVar )
-		if( output_port_type == NodeEnum::PortType::Unity || output_port_type == NodeEnum::PortType::Array )
-			return true;
-
+	switch( output_port_type ) {
+		case NodeEnum::PortType::AnyVar :
+			switch( input_port_type ) {
+				case NodeEnum::PortType::Unity :
+				case NodeEnum::PortType::Array :
+				case NodeEnum::PortType::Point :
+					return true;
+			}
+	}
+	switch( input_port_type ) {
+		case NodeEnum::PortType::Point :
+		case NodeEnum::PortType::AnyVar :
+			switch( output_port_type ) {
+				case NodeEnum::PortType::Unity :
+				case NodeEnum::PortType::Array :
+				case NodeEnum::PortType::Point :
+					return true;
+			}
+	}
 	if( output_port_type != input_port_type )
 		return false; // 端口不匹配，返回 false
 
