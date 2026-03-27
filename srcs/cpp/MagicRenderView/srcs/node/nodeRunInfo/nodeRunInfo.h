@@ -95,6 +95,18 @@ protected:
 	/// @brief 到下一帧
 	/// @return 成功返回 true
 	virtual bool toNextFrame( );
+	/// @brief 过滤节点下一个类型的执行路线
+	/// @param filter_target_node 过滤节点
+	/// @return 失败返回 false
+	virtual bool filterNodeNextTypeStack( Node *filter_target_node );
+	/// @brief 过滤目标为 CALL 类型的节点
+	/// @param call_type_node 节点
+	/// @return 失败返回 false
+	virtual bool filterNodeNextTypeCallStack( Node *call_type_node );
+	/// @brief 过滤目标为 Jump 类型的节点
+	/// @param jump_type_node 节点
+	/// @return 失败返回 false
+	virtual bool filterNodeNextTypeJumpStack( Node *jump_type_node );
 public:
 	NodeRunInfo( );
 	~NodeRunInfo( ) override;

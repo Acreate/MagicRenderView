@@ -244,75 +244,10 @@ bool NodeRunInfo::runNextNode( ) {
 			oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
 		if( nextNodeRunLink->runRunNode( *currentRunDataTime, currentFrame ) ) {
 			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Current_Run );
-			// todo : 节点运行
-			std::vector< Node * > resultNextRunAdviseNodeVector;
-			if( currentNode->fillOutputPortCall( *currentRunDataTime, currentFrame, resultNextRunAdviseNodeVector ) ) {
-				std::vector< Node * > resultNeedNodeVector;
-				size_t count = resultNextRunAdviseNodeVector.size( );
-				if( count ) {
-					auto data = resultNextRunAdviseNodeVector.data( );
-					size_t index = 0;
-					size_t needCount;
-					Node **needData;
-					size_t needIndex;
-					NodeRunLink **findData;
-					size_t findCount;
-					size_t findIndex;
-					for( ; index < count; ++index )
-						switch( data[ index ]->getNodeType( ) ) {
-							case NodeEnum::NodeType::Call :
-								printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Call]" ).arg( data[ index ]->toQString( ) ), Create_SrackInfo( ) );
-								// 加入 functionStack
-								if( data[ index ]->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
-									break;
-								needCount = resultNeedNodeVector.size( );
-								if( needCount == 0 )
-									break;
-								findCount = functionVector.size( );
-								if( findCount == 0 )
-									break;
-								needData = resultNeedNodeVector.data( );
-								needIndex = 0;
-								findData = functionVector.data( );
-								for( ; needIndex < needCount; needIndex += 1 )
-									switch( needData[ needIndex ]->getNodeType( ) ) {
-										case NodeEnum::NodeType::Function :
-											for( findIndex = 0; findIndex < findCount; findIndex += 1 )
-												if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
-													functionStack.emplace_front( findData[ findIndex ] );
-													break;
-												}
-											break;
-									}
-								break;
-							case NodeEnum::NodeType::Jump :
-								printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Jump]" ).arg( data[ index ]->toQString( ) ), Create_SrackInfo( ) );
-								// 加入 pointStack
-								if( data[ index ]->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
-									break;
-								needCount = resultNeedNodeVector.size( );
-								if( needCount == 0 )
-									break;
-								findCount = pointVector.size( );
-								if( findCount == 0 )
-									break;
-								needData = resultNeedNodeVector.data( );
-								needIndex = 0;
-								findData = pointVector.data( );
-								for( ; needIndex < needCount; needIndex += 1 )
-									switch( needData[ needIndex ]->getNodeType( ) ) {
-										case NodeEnum::NodeType::Point :
-											for( findIndex = 0; findIndex < findCount; findIndex += 1 )
-												if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
-													pointStack.emplace_front( findData[ findIndex ] );
-													break;
-												}
-											break;
-									}
-								break;
-						}
-				}
+			if( filterNodeNextTypeStack( currentNode ) == false ) {
+
 			}
+
 		} else {
 			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Error );
 			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
@@ -769,6 +704,83 @@ bool NodeRunInfo::toNextFrame( ) {
 		currentFrame = 0;
 	else
 		currentFrame = oldFrame + 1;
+	return true;
+}
+bool NodeRunInfo::filterNodeNextTypeStack( Node *filter_target_node ) {
+	std::vector< Node * > resultNextRunAdviseNodeVector;
+	if( filter_target_node->fillOutputPortCall( *currentRunDataTime, currentFrame, resultNextRunAdviseNodeVector ) == false )
+		return false;
+	std::vector< Node * > resultNeedNodeVector;
+	size_t count = resultNextRunAdviseNodeVector.size( );
+	if( count == 0 )
+		return true; // 执行完毕
+	auto data = resultNextRunAdviseNodeVector.data( );
+	size_t index = 0;
+	for( ; index < count; ++index )
+		switch( data[ index ]->getNodeType( ) ) {
+			case NodeEnum::NodeType::Call :
+				filterNodeNextTypeCallStack( data[ index ] );
+				break;
+			case NodeEnum::NodeType::Jump :
+				filterNodeNextTypeJumpStack( data[ index ] );
+				break;
+		}
+	return true;
+}
+bool NodeRunInfo::filterNodeNextTypeCallStack( Node *call_type_node ) {
+	printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Call]" ).arg( call_type_node->toQString( ) ), Create_SrackInfo( ) );
+	// 加入 functionStack
+	std::vector< Node * > resultNeedNodeVector;
+	if( call_type_node->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
+		return false;
+	auto needCount = resultNeedNodeVector.size( );
+	if( needCount == 0 )
+		return true;
+	auto findCount = functionVector.size( );
+	if( findCount == 0 )
+		return true;
+	auto needData = resultNeedNodeVector.data( );
+	size_t needIndex = 0;
+	size_t findIndex;
+	auto findData = functionVector.data( );
+	for( ; needIndex < needCount; needIndex += 1 )
+		switch( needData[ needIndex ]->getNodeType( ) ) {
+			case NodeEnum::NodeType::Function :
+				for( findIndex = 0; findIndex < findCount; findIndex += 1 )
+					if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
+						functionStack.emplace_front( findData[ findIndex ] );
+						break;
+					}
+				break;
+		}
+	return true;
+}
+bool NodeRunInfo::filterNodeNextTypeJumpStack( Node *jump_type_node ) {
+	printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Jump]" ).arg( jump_type_node->toQString( ) ), Create_SrackInfo( ) );
+	// 加入 pointStack
+	std::vector< Node * > resultNeedNodeVector;
+	if( jump_type_node->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
+		return false;
+	auto needCount = resultNeedNodeVector.size( );
+	if( needCount == 0 )
+		return true;
+	auto findCount = pointVector.size( );
+	if( findCount == 0 )
+		return true;
+	auto needData = resultNeedNodeVector.data( );
+	size_t needIndex = 0;
+	size_t findIndex;
+	auto findData = pointVector.data( );
+	for( ; needIndex < needCount; needIndex += 1 )
+		switch( needData[ needIndex ]->getNodeType( ) ) {
+			case NodeEnum::NodeType::Point :
+				for( findIndex = 0; findIndex < findCount; findIndex += 1 )
+					if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
+						pointStack.emplace_front( findData[ findIndex ] );
+						break;
+					}
+				break;
+		}
 	return true;
 }
 void NodeRunInfo::clear( ) {
