@@ -34,8 +34,7 @@ bool CreateNodeRunLink::linkHasNode( const Node *const check_node_ptr ) const {
 bool CreateNodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
 	auto beforeNode = getBeforeNode( );
 	if( empty == false && NodeRunLink::sortBilderList( reference_sort_vector ) == false )
-		if( beforeNode == nullptr )
-			return false;
+		return false;
 	auto &startNodeVector = get->getStartNodeVector( );
 	size_t index;
 	if( VectorTools::findIndex( startNodeVector, beforeNode, index ) == false )

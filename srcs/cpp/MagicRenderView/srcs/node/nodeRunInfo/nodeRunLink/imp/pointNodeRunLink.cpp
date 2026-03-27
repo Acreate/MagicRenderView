@@ -25,8 +25,7 @@ bool PointNodeRunLink::builder( ) {
 bool PointNodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
 	auto beg = getBeforeNode( );
 	if( empty == false && NodeRunLink::sortBilderList( reference_sort_vector ) == false )
-		if( beg == nullptr )
-			return false;
+		return false;
 	auto &startNodeVector = get->getStartNodeVector( );
 	size_t index;
 	if( VectorTools::findIndex( startNodeVector, beg, index ) == false )
