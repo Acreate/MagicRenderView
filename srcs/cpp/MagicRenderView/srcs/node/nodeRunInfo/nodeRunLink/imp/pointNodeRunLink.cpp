@@ -3,6 +3,7 @@
 #include "../../../../enums/nodeEnum.h"
 
 #include "../../../../tools/NodeRunLinkTools.h"
+#include "../../../../tools/vectorTools.h"
 
 #include "../../../node/node.h"
 bool PointNodeRunLink::builder( ) {
@@ -18,14 +19,17 @@ bool PointNodeRunLink::builder( ) {
 		return false;
 	if( filterDeprecatedNode( resultRefNodeVector ) == false )
 		return false;
+	empty = resultRefNodeVector.size( ) == 0;
 	return true;
 }
 bool PointNodeRunLink::sortBilderList( const std::vector< Node * > &reference_sort_vector ) {
 	auto beg = getBeforeNode( );
-	if( NodeRunLink::sortBilderList( reference_sort_vector ) == false )
+	if( empty == false && NodeRunLink::sortBilderList( reference_sort_vector ) == false )
 		if( beg == nullptr )
 			return false;
 	auto &startNodeVector = get->getStartNodeVector( );
-	startNodeVector.emplace_back( beg );
+	size_t index;
+	if( VectorTools::findIndex( startNodeVector, beg, index ) == false )
+		startNodeVector.emplace_back( beg );
 	return true;
 }

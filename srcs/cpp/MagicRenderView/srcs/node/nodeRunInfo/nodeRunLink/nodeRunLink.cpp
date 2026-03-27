@@ -18,6 +18,7 @@ NodeRunLink::NodeRunLink( Node *const init_node_ptr ) {
 	nodeRunLinkData = new NodeRunLinkData( init_node_ptr );
 	get = new NodeRunLinkTools::Get( nodeRunLinkData );
 	currentOver = nullptr;
+	empty = true;
 }
 bool NodeRunLink::getNextRunNode( const std::vector< Node * > &over_run_node_vector, Node *&result_next_node_ptr ) {
 	if( nodeRunLinkData->over )

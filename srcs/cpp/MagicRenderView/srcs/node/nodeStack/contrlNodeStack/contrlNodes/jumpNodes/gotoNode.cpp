@@ -3,7 +3,7 @@
 #include <enums/nodeEnum.h>
 
 #include <tools/nodeTools.h>
-#include "../../../../port/inputPort/anyVar/anyVarInputPort.h"
+
 #include "../../../../port/inputPort/point/pointInputPort.h"
 #include "../../../../port/inputPort/toPoint/toPointInputPort.h"
 
@@ -29,7 +29,7 @@ bool GotoNode::readyNodeRunData( ) {
 	return true;
 }
 bool GotoNode::fillInputPortCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame, std::vector< Node * > &result_need_run_ref_node_vector ) {
-	return nodeComponentControlPtr->getRefPortNodeVector( pointInputPort, result_need_run_ref_node_vector );
+	return nodeComponentControlPtr->getRefPortNodeVector( toPointInputPort, result_need_run_ref_node_vector );
 }
 
 bool GotoNode::fillNodeCall( const QDateTime &ndoe_run_start_data_time, size_t current_frame ) {

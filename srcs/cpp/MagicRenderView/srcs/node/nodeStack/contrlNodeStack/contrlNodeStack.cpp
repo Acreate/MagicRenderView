@@ -1,5 +1,7 @@
 ﻿#include "contrlNodeStack.h"
 
+#include "contrlNodes/callNodes/liftNode.h"
+#include "contrlNodes/functions/hookNode.h"
 #include "contrlNodes/jumpNodes/gotoNode.h"
 #include "contrlNodes/logicNodes/ifNode.h"
 #include "contrlNodes/pointNodes/makeNode.h"
@@ -12,10 +14,12 @@ bool ContrlNodeStack::init( ) {
 	setObjectName( name );
 	// 跳转
 	Def_EmaplaceBackNode( GotoNode );
+	Def_EmaplaceBackNode( LiftNode );
 	// 逻辑
 	Def_EmaplaceBackNode( IfNode );
 	// 标记
 	Def_EmaplaceBackNode( MakeNode );
+	Def_EmaplaceBackNode( HookNode );
 	return true;
 }
 
