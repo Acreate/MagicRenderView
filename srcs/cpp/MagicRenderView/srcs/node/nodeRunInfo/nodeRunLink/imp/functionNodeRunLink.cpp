@@ -19,8 +19,8 @@ bool FunctionNodeRunLink::builder( ) {
 	if( get->getNodeOutputInForRef( resultRefNodeVector ) == false )
 		return false;
 
-	if( filterDeprecatedNode( resultRefNodeVector ) == false )
-		return false;
+	//if( filterDeprecatedNode( resultRefNodeVector ) == false )
+	//	return false;
 	empty = resultRefNodeVector.size( ) == 0;
 	return true;
 }
