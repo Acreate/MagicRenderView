@@ -5,8 +5,6 @@
 
 #include "../enums/widgetEnum.h"
 
-#include "../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
-
 #include "../tools/aliasType.h"
 
 #include "../widget/mainWidget.h"
@@ -135,7 +133,7 @@ public:
 	/// @brief 获取最大的渲染大小
 	/// @return 最大的渲染大小
 	virtual QSize getMaxNodeRenderSize( ) const;
-	virtual NodeRunInfoEditor * builderCurrentAllNodeAtNodeRunInfo( );
+	virtual NodeRunInfo * builderCurrentAllNodeAtNodeRunInfo( );
 	/// @brief 释放运行对象
 	/// @param node_run_info 释放对象
 	/// @return 成功返回 nullptr

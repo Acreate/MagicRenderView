@@ -1,9 +1,0 @@
-﻿#ifndef FILTERRUNNODETYPE_H_H_HEAD__FILE__
-#define FILTERRUNNODETYPE_H_H_HEAD__FILE__
-
-
-class FilterRunNodeType {
-
-};
-
-#endif // FILTERRUNNODETYPE_H_H_HEAD__FILE__

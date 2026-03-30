@@ -15,7 +15,7 @@
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 
-#include "../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
+#include "../node/nodeRunInfo/imp/nodeRunInfo/NodeRunInfoEditor.h"
 void BuilderDirector::updateBuilderActionObjInfo( ) {
 	if( nodeRunInfo == nullptr )
 		resetBuilderActionObjInfo( );
@@ -214,7 +214,12 @@ bool BuilderDirector::builderNodeProject( ) {
 		emit release_node_run_info_signal( this, nodeRunInfo );
 		delete nodeRunInfo;
 	}
-	nodeRunInfo = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
+	NodeRunInfo *runInfo = nodeDirector->builderCurrentAllNodeAtNodeRunInfo( );
+	nodeRunInfo = qobject_cast< decltype(nodeRunInfo) >( runInfo );
+	if( nodeRunInfo == nullptr ) {
+		delete runInfo;
+		return false;
+	}
 	updateBuilderActionObjInfo( );
 	if( nodeRunInfo == nullptr )
 		return false;

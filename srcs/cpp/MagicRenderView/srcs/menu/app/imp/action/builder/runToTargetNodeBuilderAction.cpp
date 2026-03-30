@@ -2,9 +2,8 @@
 
 #include "../../../../../director/builderDirector.h"
 #include "../../../../../node/node/node.h"
-#include "../../../../../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
+#include "../../../../../node/nodeRunInfo/imp/nodeRunInfo/NodeRunInfoEditor.h"
 #include "../../../../../node/nodeRunInfo/nodeRunInfo.h"
-#include "../../../../../win/mainWindow.h"
 void RunToTargetNodeBuilderAction::releaTarget( Node *release_target, const SrackInfo &srack_info ) {
 	if( release_target == targetNode )
 		targetNode = nullptr;

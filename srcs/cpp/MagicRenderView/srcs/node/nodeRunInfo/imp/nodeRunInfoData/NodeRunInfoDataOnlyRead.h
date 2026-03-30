@@ -1,6 +1,6 @@
 ﻿#ifndef NODERUNINFODATAONLYREAD_H_H_HEAD__FILE__
 #define NODERUNINFODATAONLYREAD_H_H_HEAD__FILE__
-#include "../nodeRunInfoData.h"
+#include "../../nodeRunInfoData.h"
 
 class NodeRunInfoDataOnlyRead : public NodeRunInfoData {
 	Q_OBJECT;

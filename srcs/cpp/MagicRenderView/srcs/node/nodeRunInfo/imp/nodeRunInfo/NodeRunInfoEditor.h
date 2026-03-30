@@ -1,10 +1,8 @@
 ﻿#ifndef NODERUNINFOEDITOR_H_H_HEAD__FILE__
 #define NODERUNINFOEDITOR_H_H_HEAD__FILE__
 #include "NodeRunInfoOnlyRead.h"
-
 class NodeRunInfoEditor : public NodeRunInfoOnlyRead {
 	Q_OBJECT;
-
 public:
 	void setNodeRunInfoDataImage( NodeRunInfoData *new_node_run_info_data_image ) override;
 	void setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data ) override;

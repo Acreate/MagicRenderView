@@ -29,7 +29,7 @@
 #include "../win/mainWindow.h"
 #include "menuDirector.h"
 
-#include "../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
+#include "../node/nodeRunInfo/imp/nodeRunInfo/NodeRunInfoEditor.h"
 constexpr uint64_t maxGenerator = UINT_FAST64_MAX / sizeof( Node );
 bool NodeDirector::init( ) {
 	releaseObjResources( );
@@ -415,7 +415,7 @@ QSize NodeDirector::getMaxNodeRenderSize( ) const {
 	}
 	return QSize { x, y };
 }
-NodeRunInfoEditor * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( ) {
+NodeRunInfo * NodeDirector::builderCurrentAllNodeAtNodeRunInfo( ) {
 	NodeRunInfoEditor *result = new NodeRunInfoEditor( );
 	size_t count = nodeArchiveVector.size( );
 	if( count != 0 ) {

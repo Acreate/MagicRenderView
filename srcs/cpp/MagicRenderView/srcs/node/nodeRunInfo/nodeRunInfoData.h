@@ -6,7 +6,7 @@ class Node;
 class NodeRunInfoData : public QObject {
 	Q_OBJECT;
 	friend class NodeRunInfo;
-protected:
+private:
 	/// @brief 当前帧
 	size_t currentFrame;
 	/// @brief 最大帧

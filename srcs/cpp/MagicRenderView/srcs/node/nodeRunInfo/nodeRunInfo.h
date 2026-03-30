@@ -17,20 +17,16 @@ class NodeDirector;
 class SrackInfo;
 class NodeRunInfo : public QObject {
 	Q_OBJECT;
-protected:
+private:
 	Application *applicationPtr;
 	PrinterDirector *printerDirector;
 	NodeDirector *nodeDirectorPtr;
 	NodeRunInfoData *nodeRunInfoDataPtr;
 	NodeRunInfoData *nodeRunInfoDataImagePtr;
 protected:
-	virtual NodeRunInfoDataEditor * getNodeRunInfoDataEditor( ) const;
-	virtual NodeRunInfoDataOnlyRead * getNodeRunInfoDataOnlyRead( ) const;
 	virtual NodeRunInfoData * getNodeRunInfoData( ) const;
 	virtual void setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data );
 
-	virtual NodeRunInfoDataEditor * getNodeRunInfoDataEditorImage( ) const;
-	virtual NodeRunInfoDataOnlyRead * getNodeRunInfoDataOnlyReadImage( ) const;
 	virtual NodeRunInfoData * getNodeRunInfoDataImage( ) const;
 	virtual void setNodeRunInfoDataImage( NodeRunInfoData *new_node_run_info_data_image );
 

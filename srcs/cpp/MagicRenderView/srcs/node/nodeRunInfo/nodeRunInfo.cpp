@@ -3,6 +3,8 @@
 #include <qdatetime.h>
 #include <QThread>
 
+#include "nodeRunInfoData.h"
+
 #include "../../app/application.h"
 
 #include "../../director/printerDirector.h"
@@ -19,11 +21,11 @@
 
 #include "../../tools/NodeRunLinkTools.h"
 
-#include "imp/NodeRunInfoDataEditor.h"
+#include "imp/nodeRunInfoData/NodeRunInfoDataEditor.h"
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ) {
-	nodeRunInfoDataPtr = new NodeRunInfoData;
-	nodeRunInfoDataImagePtr = new NodeRunInfoData;
+	nodeRunInfoDataPtr = new NodeRunInfoDataEditor;
+	nodeRunInfoDataImagePtr = new NodeRunInfoDataEditor;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
@@ -41,12 +43,6 @@ bool NodeRunInfo::hasBuilderNode( const Node *check_node_ptr ) {
 			return true;
 	return false;
 }
-NodeRunInfoDataEditor * NodeRunInfo::getNodeRunInfoDataEditor( ) const {
-	return qobject_cast< NodeRunInfoDataEditor * >( nodeRunInfoDataPtr );
-}
-NodeRunInfoDataOnlyRead * NodeRunInfo::getNodeRunInfoDataOnlyRead( ) const {
-	return qobject_cast< NodeRunInfoDataOnlyRead * >( nodeRunInfoDataPtr );
-}
 NodeRunInfoData * NodeRunInfo::getNodeRunInfoData( ) const {
 	return nodeRunInfoDataPtr;
 }
@@ -54,12 +50,6 @@ void NodeRunInfo::setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data ) 
 	if( nodeRunInfoDataPtr )
 		delete nodeRunInfoDataPtr;
 	nodeRunInfoDataPtr = new_node_run_info_data;
-}
-NodeRunInfoDataEditor * NodeRunInfo::getNodeRunInfoDataEditorImage( ) const {
-	return qobject_cast< NodeRunInfoDataEditor * >( nodeRunInfoDataImagePtr );
-}
-NodeRunInfoDataOnlyRead * NodeRunInfo::getNodeRunInfoDataOnlyReadImage( ) const {
-	return qobject_cast< NodeRunInfoDataOnlyRead * >( nodeRunInfoDataImagePtr );
 }
 NodeRunInfoData * NodeRunInfo::getNodeRunInfoDataImage( ) const {
 	return nodeRunInfoDataImagePtr;
@@ -122,8 +112,6 @@ bool NodeRunInfo::builderRunInstance( ) {
 	nodeDirectorPtr = applicationPtr->getNodeDirector( );
 	if( printerDirector == nullptr )
 		return false;
-	BuilderEnum::BuilderErrorType errorType = BuilderEnum::BuilderErrorType::BuilderSortError;
-
 	std::vector< Node * > getRefNodeVector;
 	if( NodeRunLinkTools::fromBuilderNode( nodeRunInfoDataPtr->builderNodeVector, getRefNodeVector ) == false ) {
 		printerDirector->info( tr( "编译节点参考失败" ), Create_SrackInfo( ) );
