@@ -1,11 +1,11 @@
 ﻿#ifndef NODERUNINFODATA_H_H_HEAD__FILE__
 #define NODERUNINFODATA_H_H_HEAD__FILE__
 #include <QObject>
-
+class NodeRunInfo;
 class Node;
-class NodeRunLink;
 class NodeRunInfoData : public QObject {
 	Q_OBJECT;
+	friend class NodeRunInfo;
 protected:
 	/// @brief 当前帧
 	size_t currentFrame;
@@ -37,45 +37,45 @@ protected:
 	std::vector< Node * > builderReferenceSortVector;
 	/// @brief 已经调用完毕的列表
 	std::vector< Node * > runOverNodeVector;
-	/// @brief 编译链接当中的创建节点序列
-	std::vector< NodeRunLink * > createVector;
-	/// @brief 编译链接当中的点节点序列
-	std::vector< NodeRunLink * > pointVector;
-	/// @brief 编译链接当中的函数节点序列
-	std::vector< NodeRunLink * > functionVector;
-	/// @brief 链接列表
-	std::vector< NodeRunLink * > nodeRunLinkVector;
-	/// @brief 调用栈
-	std::list< NodeRunLink * > functionStack;
-	/// @brief 进程栈
-	std::list< NodeRunLink * > createStack;
-	/// @brief 定点栈
-	std::list< NodeRunLink * > pointStack;
 public:
 	NodeRunInfoData( );
-	virtual bool copyTargetToThis( const NodeRunInfoData *const other );
+protected:
+	/// @brief 拷贝数据到该对象
+	/// @param copy_target_ptr 拷贝目标
+	/// @return 失败返回 false
+	virtual bool copyNodeRunInfoDataToThis( const NodeRunInfoData * const copy_target_ptr );
+	/// @brief 获取当前帧
+	/// @return 帧
 	virtual size_t getCurrentFrame( ) const { return currentFrame; }
+	virtual void setCurrentFrame( size_t current_frame ) { currentFrame = current_frame; }
 	virtual size_t getMaxFrame( ) const { return maxFrame; }
+	virtual void setMaxFrame( size_t max_frame ) { maxFrame = max_frame; }
 	virtual bool isRunStop( ) const { return runStop; }
+	virtual void setRunStop( bool run_stop ) { runStop = run_stop; }
 	virtual bool isReady( ) const { return ready; }
+	virtual void setReady( bool ready ) { this->ready = ready; }
 	virtual qint64 getNextRunNodeTime( ) const { return nextRunNodeTime; }
+	virtual void setNextRunNodeTime( qint64 next_run_node_time ) { nextRunNodeTime = next_run_node_time; }
 	virtual QDateTime * getBuilderDataTime( ) const { return builderDataTime; }
+	virtual void setBuilderDataTime( QDateTime *builder_data_time ) { builderDataTime = builder_data_time; }
 	virtual QDateTime * getBrforeRunDataTime( ) const { return brforeRunDataTime; }
+	virtual void setBrforeRunDataTime( QDateTime *brfore_run_data_time ) { brforeRunDataTime = brfore_run_data_time; }
 	virtual QDateTime * getCurrentRunDataTime( ) const { return currentRunDataTime; }
+	virtual void setCurrentRunDataTime( QDateTime *current_run_data_time ) { currentRunDataTime = current_run_data_time; }
 	virtual Node * getBuffNode( ) const { return buffNode; }
+	virtual void setBuffNode( Node *buff_node ) { buffNode = buff_node; }
 	virtual Node * getCurrentNode( ) const { return currentNode; }
+	virtual void setCurrentNode( Node *current_node ) { currentNode = current_node; }
 	virtual Node * getOldNode( ) const { return oldNode; }
+	virtual void setOldNode( Node *old_node ) { oldNode = old_node; }
 	virtual const std::vector< Node * > & getBuilderNodeVector( ) const { return builderNodeVector; }
+	virtual void setBuilderNodeVector( const std::vector< Node * > &builder_node_vector ) { builderNodeVector = builder_node_vector; }
 	virtual const std::vector< Node * > & getBuilderBeginList( ) const { return builderBeginList; }
+	virtual void setBuilderBeginList( const std::vector< Node * > &builder_begin_list ) { builderBeginList = builder_begin_list; }
 	virtual const std::vector< Node * > & getBuilderReferenceSortVector( ) const { return builderReferenceSortVector; }
+	virtual void setBuilderReferenceSortVector( const std::vector< Node * > &builder_reference_sort_vector ) { builderReferenceSortVector = builder_reference_sort_vector; }
 	virtual const std::vector< Node * > & getRunOverNodeVector( ) const { return runOverNodeVector; }
-	virtual const std::vector< NodeRunLink * > & getCreateVector( ) const { return createVector; }
-	virtual const std::vector< NodeRunLink * > & getPointVector( ) const { return pointVector; }
-	virtual const std::vector< NodeRunLink * > & getFunctionVector( ) const { return functionVector; }
-	virtual const std::vector< NodeRunLink * > & getNodeRunLinkVector( ) const { return nodeRunLinkVector; }
-	virtual const std::list< NodeRunLink * > & getFunctionStack( ) const { return functionStack; }
-	virtual const std::list< NodeRunLink * > & getCreateStack( ) const { return createStack; }
-	virtual const std::list< NodeRunLink * > & getPointStack( ) const { return pointStack; }
+	virtual void setRunOverNodeVector( const std::vector< Node * > &run_over_node_vector ) { runOverNodeVector = run_over_node_vector; }
 };
 
 #endif // NODERUNINFODATA_H_H_HEAD__FILE__

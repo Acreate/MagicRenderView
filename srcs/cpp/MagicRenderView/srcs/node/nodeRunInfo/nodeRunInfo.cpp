@@ -19,51 +19,57 @@
 
 #include "../../tools/NodeRunLinkTools.h"
 
-#include "nodeRunLink/imp/functionNodeRunLink.h"
-#include "nodeRunLink/imp/createNodeRunLink.h"
-#include "nodeRunLink/imp/pointNodeRunLink.h"
-#include "nodeRunLink/nodeRunLink.h"
+#include "imp/NodeRunInfoDataEditor.h"
 
-NodeRunInfo::NodeRunInfo( ) : NodeRunInfoData( ) {
-	builderDataTime = new QDateTime;
-	brforeRunDataTime = new QDateTime;
-	currentRunDataTime = new QDateTime;
-	maxFrame = 60;
-	nextRunNodeTime = 10;
-	image = new NodeRunInfoData;
+NodeRunInfo::NodeRunInfo( ) : QObject( ) {
+	setNodeRunInfoData( new NodeRunInfoDataEditor );
+	setNodeRunInfoDataImage( new NodeRunInfoDataEditor );
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
-	size_t count = nodeRunLinkVector.size( );
-	size_t index;
-	NodeRunLink **nodeRunLinkData;
-	if( count ) {
-		nodeRunLinkData = nodeRunLinkVector.data( );
-		index = 0;
-		for( ; index < count; ++index )
-			delete nodeRunLinkData[ index ];
-	}
-	delete builderDataTime;
-	delete brforeRunDataTime;
-	delete currentRunDataTime;
-	delete image;
+	delete nodeRunInfoDataPtr;
+	delete nodeRunInfoDataImagePtr;
 }
 bool NodeRunInfo::hasBuilderNode( const Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr )
 		return false;
 	size_t builderNodeIndex;
-	size_t builderNodeCount = builderNodeVector.size( );
-	auto builderNodeArrayPtr = builderNodeVector.data( );
+	size_t builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
+	auto builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == check_node_ptr )
 			return true;
 	return false;
 }
+NodeRunInfoDataEditor * NodeRunInfo::getNodeRunInfoDataEditor( ) const {
+	return qobject_cast< NodeRunInfoDataEditor * >( nodeRunInfoDataPtr );
+}
+NodeRunInfoDataOnlyRead * NodeRunInfo::getNodeRunInfoDataOnlyRead( ) const {
+	return qobject_cast< NodeRunInfoDataOnlyRead * >( nodeRunInfoDataPtr );
+}
+NodeRunInfoData * NodeRunInfo::getNodeRunInfoData( ) const {
+	return nodeRunInfoDataPtr;
+}
+void NodeRunInfo::setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data ) {
+	nodeRunInfoDataPtr = new_node_run_info_data;
+}
+NodeRunInfoDataEditor * NodeRunInfo::getNodeRunInfoDataEditorImage( ) const {
+	return qobject_cast< NodeRunInfoDataEditor * >( nodeRunInfoDataImagePtr );
+}
+NodeRunInfoDataOnlyRead * NodeRunInfo::getNodeRunInfoDataOnlyReadImage( ) const {
+	return qobject_cast< NodeRunInfoDataOnlyRead * >( nodeRunInfoDataImagePtr );
+}
+NodeRunInfoData * NodeRunInfo::getNodeRunInfoDataImage( ) const {
+	return nodeRunInfoDataImagePtr;
+}
+void NodeRunInfo::setNodeRunInfoDataImage( NodeRunInfoData *new_node_run_info_data_image ) {
+	nodeRunInfoDataImagePtr = new_node_run_info_data_image;
+}
 void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count ) {
-	auto builderNodeCount = builderNodeVector.size( );
+	auto builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
 	size_t newSizet = append_node_array_count + builderNodeCount;
-	builderNodeVector.resize( newSizet );
-	auto builderNodeArrayPtr = builderNodeVector.data( );
+	nodeRunInfoDataPtr->builderNodeVector.resize( newSizet );
+	auto builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
 	size_t builderNodeIndex;
 	size_t index;
 	for( index = 0; index < append_node_array_count; index += 1 )
@@ -77,54 +83,54 @@ void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t 
 			builderNodeCount += 1;
 		}
 	if( newSizet != builderNodeCount )
-		builderNodeVector.resize( builderNodeCount );
-	builderNodeArrayPtr = builderNodeVector.data( );
-	for( index = 0; index < builderNodeCount; index += 1 )
-		appendBeginNode( builderNodeArrayPtr[ index ] );
+		nodeRunInfoDataPtr->builderNodeVector.resize( builderNodeCount );
+	builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
+	for( index = 0; index < builderNodeCount; index += 1 ) {
+		// todo :
+	}
 }
 void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
 		return;
 	size_t builderNodeIndex;
-	size_t builderNodeCount = builderNodeVector.size( );
-	auto builderNodeArrayPtr = builderNodeVector.data( );
+	size_t builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
+	auto builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity )
 			return;
-	builderNodeVector.emplace_back( append_node_unity );
-	appendBeginNode( append_node_unity );
+	nodeRunInfoDataPtr->builderNodeVector.emplace_back( append_node_unity );
+	// todo :
 }
 void NodeRunInfo::removeBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
 		return;
 	size_t builderNodeIndex;
-	size_t builderNodeCount = builderNodeVector.size( );
-	auto builderNodeArrayPtr = builderNodeVector.data( );
+	size_t builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
+	auto builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity ) {
-			builderNodeVector.erase( builderNodeIndex + builderNodeVector.begin( ) );
+			nodeRunInfoDataPtr->builderNodeVector.erase( builderNodeIndex + nodeRunInfoDataPtr->builderNodeVector.begin( ) );
 			return;
 		}
 }
 
 bool NodeRunInfo::builderRunInstance( ) {
-	if( runStop == false )
+	if( nodeRunInfoDataPtr->runStop == false )
 		return false;
 	emit start_builder_signal( this );
-	appinstancePtr = Application::getInstancePtr( );
-	if( appinstancePtr == nullptr )
+	applicationPtr = Application::getInstancePtr( );
+	if( applicationPtr == nullptr )
 		return false;
-	printerDirector = appinstancePtr->getPrinterDirector( );
+	printerDirector = applicationPtr->getPrinterDirector( );
 	if( printerDirector == nullptr )
 		return false;
-	nodeDirectorPtr = appinstancePtr->getNodeDirector( );
+	nodeDirectorPtr = applicationPtr->getNodeDirector( );
 	if( printerDirector == nullptr )
 		return false;
 	BuilderEnum::BuilderErrorType errorType = BuilderEnum::BuilderErrorType::BuilderSortError;
 	resetBilderData( );
 	if( sortFromBuilderNode( ) == false ) {
 		printerDirector->info( tr( "编译节点排序参考失败" ), Create_SrackInfo( ) );
-		emit builder_error_signal( nullptr, errorType, nullptr );
 		resetBilderData( );
 		return false;
 	}
@@ -133,134 +139,47 @@ bool NodeRunInfo::builderRunInstance( ) {
 	size_t builderNodeCount;
 	Node **builderNodeArrayPtr;
 
-	builderNodeCount = builderReferenceSortVector.size( );
-	builderNodeArrayPtr = builderReferenceSortVector.data( );
+	builderNodeCount = nodeRunInfoDataPtr->builderReferenceSortVector.size( );
+	builderNodeArrayPtr = nodeRunInfoDataPtr->builderReferenceSortVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
 		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	}
 
-	builderNodeCount = builderNodeVector.size( );
-	builderNodeArrayPtr = builderNodeVector.data( );
+	builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
+	builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
 	NodeRunLink *createNodeRunLink;
 	errorType = BuilderEnum::BuilderErrorType::None;
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		switch( builderNodeArrayPtr[ builderNodeIndex ]->getNodeType( ) ) {
 			case NodeEnum::NodeType::Point :
-				if( stackHasStartNode( pointVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
-					break;
-				createNodeRunLink = new PointNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 
-				if( createNodeRunLink->builder( ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
-
-				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
-
-				if( errorType != BuilderEnum::BuilderErrorType::None ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
-					errorType = BuilderEnum::BuilderErrorType::None;
-					delete createNodeRunLink;
-					break;
-				}
-				pointVector.emplace_back( createNodeRunLink );
-				emit builder_finish_signal( createNodeRunLink );
 				break;
 			case NodeEnum::NodeType::Create :
-				if( stackHasStartNode( createVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
-					break;
-				createNodeRunLink = new CreateNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 
-				if( createNodeRunLink->builder( ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
-
-				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
-
-				if( errorType != BuilderEnum::BuilderErrorType::None ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
-					errorType = BuilderEnum::BuilderErrorType::None;
-					delete createNodeRunLink;
-					break;
-				}
-				createVector.emplace_back( createNodeRunLink );
-				emit builder_finish_signal( createNodeRunLink );
 				break;
 
 			case NodeEnum::NodeType::Function :
-				if( stackHasStartNode( functionVector, builderNodeArrayPtr[ builderNodeIndex ] ) == true )
-					break;
-				createNodeRunLink = new FunctionNodeRunLink( builderNodeArrayPtr[ builderNodeIndex ] );
 
-				if( createNodeRunLink->builder( ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderError;
-
-				if( createNodeRunLink->sortBilderList( builderReferenceSortVector ) == false )
-					errorType = BuilderEnum::BuilderErrorType::NodeBuilderSortError;
-
-				if( errorType != BuilderEnum::BuilderErrorType::None ) {
-					emit builder_error_signal( createNodeRunLink, BuilderEnum::BuilderErrorType::NodeBuilderSortError, builderNodeArrayPtr[ builderNodeIndex ] );
-					errorType = BuilderEnum::BuilderErrorType::None;
-					delete createNodeRunLink;
-					break;
-				}
-				functionVector.emplace_back( createNodeRunLink );
-				emit builder_finish_signal( createNodeRunLink );
 				break;
 		}
-	runStop = true;
-	builderNodeCount = createVector.size( );
-	ready = builderNodeCount > 0;
-	if( ready ) {
-		// 放入存储
-		nodeRunLinkVector.append_range( createVector );
-		nodeRunLinkVector.append_range( functionVector );
-		nodeRunLinkVector.append_range( pointVector );
-		// 初始化
-		functionStack = std::list< NodeRunLink * >( createVector.begin( ), createVector.end( ) );
-		image->copyTargetToThis( this );
-		QString out;
-		for( auto &item : createVector )
-			out += "\n" + nodeDirectorPtr->nodeArrayToString( item->getLinkNodeVector( ) );
-		printerDirector->info( out, Create_SrackInfo( ) );
-	} else {
-		printerDirector->info( tr( "找不到匹配的起始节点（需要配置创建类型节点）" ), Create_SrackInfo( ) );
-		emit builder_error_signal( nullptr, BuilderEnum::BuilderErrorType::None, nullptr );
+	nodeRunInfoDataPtr->runStop = true;
+	if( nodeRunInfoDataPtr->ready ) {
+		if( this->nodeRunInfoDataImagePtr->copyNodeRunInfoDataToThis( this->nodeRunInfoDataPtr ) == false )
+			nodeRunInfoDataPtr->ready = false;
 	}
 	emit end_builder_signal( this );
-	return ready;
+	return nodeRunInfoDataPtr->ready;
 }
 
 bool NodeRunInfo::runNextNode( ) {
-	if( ready == false || runStop == false )
+	if( nodeRunInfoDataPtr->ready == false || nodeRunInfoDataPtr->runStop == false )
 		return false;
-	runStop = false;
-	emit auto_run_status_change_signal( this, runStop );
-	NodeRunLink *nextNodeRunLink;
-	bool findNextNodePtr = getNextNodeRunLinkPtr( nextNodeRunLink, buffNode );
-	if( findNextNodePtr == true ) {
-		oldNode = currentNode;
-		currentNode = buffNode;
-		if( oldNode )
-			oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-		if( nextNodeRunLink->runRunNode( *currentRunDataTime, currentFrame ) ) {
-			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Current_Run );
-			if( filterNodeNextTypeStack( currentNode ) == false ) {
+	nodeRunInfoDataPtr->runStop = false;
+	emit auto_run_status_change_signal( this, nodeRunInfoDataPtr->runStop );
 
-			}
-
-		} else {
-			currentNode->setNodeStatusType( NodeEnum::NodeStatusType::Error );
-			printerDirector->info( tr( "[%1] 运行 [%2] 节点异常" ).arg( nextNodeRunLink->metaObject( )->className( ) ).arg( buffNode->toQString( ) ), Create_SrackInfo( ) );
-		}
-	} else {
-		findNextNodePtr = toNextFrame( );
-		if( findNextNodePtr == false ) // 无法继续。返回 false
-			printerDirector->info( tr( "帧异常:无法匹配下一帧异常" ), Create_SrackInfo( ) );
-
-	}
-	runStop = true;
-	emit auto_run_status_change_signal( this, runStop );
-	return findNextNodePtr;
+	nodeRunInfoDataPtr->runStop = true;
+	emit auto_run_status_change_signal( this, nodeRunInfoDataPtr->runStop );
+	return nodeRunInfoDataPtr->runStop;
 }
 bool NodeRunInfo::runResidueNode( ) {
 	do {
@@ -270,7 +189,7 @@ bool NodeRunInfo::runResidueNode( ) {
 	return true;
 }
 bool NodeRunInfo::runToNextFrame( ) {
-	auto oldFrame = currentFrame;
+	auto oldFrame = nodeRunInfoDataPtr->currentFrame;
 	auto currentTime = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
 	qint64 nextTime;
 	qint64 sep;
@@ -280,10 +199,10 @@ bool NodeRunInfo::runToNextFrame( ) {
 		if( oldFrame != currentTime )
 			break;
 		do {
-			appinstancePtr->processEvents( );
+			applicationPtr->processEvents( );
 			nextTime = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
 			sep = nextTime - currentTime;
-			if( sep > nextRunNodeTime )
+			if( sep > nodeRunInfoDataPtr->nextRunNodeTime )
 				break;
 		} while( true );
 
@@ -298,13 +217,13 @@ bool NodeRunInfo::runToNode( const Node *target ) {
 	do {
 		if( runNextNode( ) == false )
 			break;
-		if( currentNode == target )
+		if( nodeRunInfoDataPtr->currentNode == target )
 			break;
 		do {
-			appinstancePtr->processEvents( );
+			applicationPtr->processEvents( );
 			nextTime = QDateTime::currentDateTime( ).toMSecsSinceEpoch( );
 			sep = nextTime - currentTime;
-			if( sep > nextRunNodeTime )
+			if( sep > nodeRunInfoDataPtr->nextRunNodeTime )
 				break;
 		} while( true );
 		currentTime = nextTime;
@@ -313,478 +232,79 @@ bool NodeRunInfo::runToNode( const Node *target ) {
 }
 bool NodeRunInfo::resetRunStartNode( ) {
 
-	if( runStop == false || ready == false )
+	if( nodeRunInfoDataPtr->runStop == false || nodeRunInfoDataPtr->ready == false )
 		return false;
-	size_t count = nodeRunLinkVector.size( );
+	size_t count = 0;
 	if( count == 0 ) {
-		ready = false;
+		nodeRunInfoDataPtr->ready = false;
 		return false;
 	}
-	if( this->copyTargetToThis( image ) == false ) {
+	if( nodeRunInfoDataPtr->copyNodeRunInfoDataToThis( nodeRunInfoDataImagePtr ) == false ) {
 		printerDirector->info( tr( "镜像重置数据失败" ), Create_SrackInfo( ) );
-		ready = false;
+		nodeRunInfoDataPtr->ready = false;
 		return false;
 	}
-	auto data = nodeRunLinkVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ]->builder( ) == false ) {
-			printerDirector->info( tr( "[%1] 重置失败" ).arg( data[ index ]->metaObject( )->className( ) ), Create_SrackInfo( ) );
-			ready = false;
-			return false;
-		}
-	*currentRunDataTime = QDateTime::currentDateTime( );
+	*nodeRunInfoDataPtr->currentRunDataTime = QDateTime::currentDateTime( );
 
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
-	runStop = true;
+	nodeRunInfoDataPtr->runStop = true;
 	return true;
 }
 void NodeRunInfo::resetData( ) {
 
-	builderNodeVector.clear( );
+	nodeRunInfoDataPtr->builderNodeVector.clear( );
 	resetBilderData( );
 }
 void NodeRunInfo::resetBilderData( ) {
-	ready = false;
-	*currentRunDataTime = QDateTime::currentDateTime( );
-	if( oldNode )
-		oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	if( currentNode )
-		currentNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	oldNode = currentNode = nullptr;
-	currentFrame = 0;
-
-	createStack.clear( );
-	pointStack.clear( );
-	functionStack.clear( );
-
-	createVector.clear( );
-	pointVector.clear( );
-	functionVector.clear( );
+	nodeRunInfoDataPtr->ready = false;
+	*nodeRunInfoDataPtr->currentRunDataTime = QDateTime::currentDateTime( );
+	if( nodeRunInfoDataPtr->oldNode )
+		nodeRunInfoDataPtr->oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	if( nodeRunInfoDataPtr->currentNode )
+		nodeRunInfoDataPtr->currentNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
+	nodeRunInfoDataPtr->oldNode = nodeRunInfoDataPtr->currentNode = nullptr;
+	nodeRunInfoDataPtr->currentFrame = 0;
 
 	size_t builderNodeIndex;
 	size_t builderNodeCount;
 	Node **builderNodeArrayPtr;
 
-	builderNodeCount = builderReferenceSortVector.size( );
-	builderNodeArrayPtr = builderReferenceSortVector.data( );
+	builderNodeCount = nodeRunInfoDataPtr->builderReferenceSortVector.size( );
+	builderNodeArrayPtr = nodeRunInfoDataPtr->builderReferenceSortVector.data( );
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
 		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
 	}
-	builderReferenceSortVector.clear( );
-	//builderBeginList.clear( );
+	nodeRunInfoDataPtr->builderReferenceSortVector.clear( );
 
-	size_t count = nodeRunLinkVector.size( );
-	size_t index;
-	NodeRunLink **nodeRunLinkData;
-	if( count ) {
-		nodeRunLinkData = nodeRunLinkVector.data( );
-		index = 0;
-		for( ; index < count; ++index )
-			delete nodeRunLinkData[ index ];
-		nodeRunLinkVector.clear( );
-	}
 }
-bool NodeRunInfo::getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *&result_node_ptr ) {
-
-	std::list< NodeRunLink * >::iterator iterator;
-	std::list< NodeRunLink * >::iterator end;
-	NodeRunLink *checkTarget;
-	// call 是否存在
-	iterator = functionStack.begin( );
-	end = functionStack.end( );
-	for( ; iterator != end; ++iterator ) {
-		checkTarget = *iterator;
-		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
-			continue;
-		if( result_node_ptr == nullptr )
-			continue;
-		result_next_node_ptr = checkTarget;
-		return true;
-	}
-	// create 是否存在	
-	iterator = createStack.begin( );
-	end = createStack.end( );
-	for( ; iterator != end; ++iterator ) {
-		checkTarget = *iterator;
-		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
-			continue;
-		if( result_node_ptr == nullptr )
-			continue;
-		result_next_node_ptr = checkTarget;
-		return true;
-	}
-	// if 是否存在
-	iterator = pointStack.begin( );
-	end = pointStack.end( );
-	for( ; iterator != end; ++iterator ) {
-		checkTarget = *iterator;
-		if( checkTarget->getNextRunNode( runOverNodeVector, result_node_ptr ) == false )
-			continue;
-		if( result_node_ptr == nullptr )
-			continue;
-		result_next_node_ptr = checkTarget;
-		return true;
-	}
-	return false;
-}
-bool NodeRunInfo::updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr ) {
-	if( update_next_node_ptr->isOver( ) == false )
-		return true;
-	return true;
-}
-bool NodeRunInfo::stackHasStartNode( const std::vector< NodeRunLink * > &check_vector, Node *check_node ) const {
-	size_t count = check_vector.size( );
-	auto data = check_vector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		if( data[ index ]->linkHasStartNode( check_node ) == true )
-			return true;
-	return false;
-}
-bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link ) {
-
-	size_t vectorCount;
-	NodeRunLink **vectorData;
-	size_t vectorIndex;
-	std::list< NodeRunLink * >::iterator iterator;
-	std::list< NodeRunLink * >::iterator end;
-	// call 堆栈吗?
-	vectorCount = functionVector.size( );
-	vectorData = functionVector.data( );
-	vectorIndex = 0;
-	for( ; vectorIndex < vectorCount; ++vectorIndex )
-		if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-			iterator = functionStack.begin( );
-			end = functionStack.end( );
-			for( ; iterator != end; ++iterator )
-				if( *iterator == vectorData[ vectorIndex ] ) {
-					// 删除堆栈序列
-					functionStack.erase( iterator );
-					return true;
-				}
-			break;
-		}
-	if( vectorIndex == vectorCount ) {
-		// point 堆栈吗?
-		vectorCount = pointVector.size( );
-		vectorData = pointVector.data( );
-		vectorIndex = 0;
-		for( ; vectorIndex < vectorCount; ++vectorIndex )
-			if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-				iterator = pointStack.begin( );
-				end = pointStack.end( );
-				for( ; iterator != end; ++iterator )
-					if( *iterator == vectorData[ vectorIndex ] ) {
-						// 删除堆栈调用
-						pointStack.erase( iterator );
-						return true;
-					}
-				break;
-			}
-	}
-	if( vectorIndex == vectorCount ) {
-		// create 堆栈吗?
-		vectorCount = createVector.size( );
-		vectorData = createVector.data( );
-		vectorIndex = 0;
-		for( ; vectorIndex < vectorCount; ++vectorIndex )
-			if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-				iterator = createStack.begin( );
-				end = createStack.end( );
-				for( ; iterator != end; ++iterator )
-					if( *iterator == vectorData[ vectorIndex ] ) {
-						// 删除堆栈调用
-						createStack.erase( iterator );
-						return true;
-					}
-			}
-	}
-	return false;
-}
-bool NodeRunInfo::insertNodeRunLinkTarget( const Node *const target_run_link ) {
-	size_t vectorCount;
-	NodeRunLink **vectorData;
-	size_t vectorIndex;
-	NodeEnum::NodeType nodeType;
-	nodeType = target_run_link->getNodeType( );
-	switch( nodeType ) {
-		case NodeEnum::NodeType::Function : {
-			vectorCount = functionVector.size( );
-			vectorData = functionVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ]->linkHasStartNode( target_run_link ) ) {
-					if( vectorData[ vectorIndex ]->isOver( ) )
-						rebuilderOverNodeRunLinkTarget( vectorData[ vectorIndex ] );
-					functionStack.emplace_front( vectorData[ vectorIndex ] );
-					break;
-				}
-			return true;
-			break;
-		}
-		case NodeEnum::NodeType::Point : {
-			vectorCount = pointVector.size( );
-			vectorData = pointVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ]->linkHasStartNode( target_run_link ) ) {
-					if( vectorData[ vectorIndex ]->isOver( ) )
-						rebuilderOverNodeRunLinkTarget( vectorData[ vectorIndex ] );
-					pointStack.emplace_back( vectorData[ vectorIndex ] );
-					break;
-				}
-			return true;
-			break;
-		}
-	}
-
-	printerDirector->info( tr( "[ %1 ]节点匹配异常" ).arg( target_run_link->toQString( ) ),Create_SrackInfo( ) );
-	return false;
-}
-bool NodeRunInfo::insertNodeRunLinkTarget( const std::vector< Node * > &target_run_link_vector ) {
-	size_t count;
-	const Node *const *data;
-	size_t index;
-	count = target_run_link_vector.size( );
-	data = target_run_link_vector.data( );
-	index = 0;
-	for( ; index < count; ++index )
-		if( insertNodeRunLinkTarget( data[ index ] ) == false )
-			return false;
-
-	return true;
-}
-bool NodeRunInfo::rebuilderOverNodeRunLinkTarget( NodeRunLink *rebuilder_target ) {
-	NodeEnum::NodeType nodeType;
-	size_t vectorCount;
-	NodeRunLink **vectorData;
-	size_t vectorIndex;
-	Node *currentNode = rebuilder_target->getCurrentNode( );
-	nodeType = currentNode->getNodeType( );
-	switch( nodeType ) {
-		case NodeEnum::NodeType::Call :
-		case NodeEnum::NodeType::Function :
-			vectorCount = functionVector.size( );
-			vectorData = functionVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ] == rebuilder_target ) {
-					if( rebuilder_target->builder( ) == false )
-						break;
-					filterOverNodeRunLinkVector( rebuilder_target->getLinkNodeVector( ) );
-					return true;
-				}
-			break;
-		case NodeEnum::NodeType::Point :
-		case NodeEnum::NodeType::Jump :
-			vectorCount = pointVector.size( );
-			vectorData = pointVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ] == rebuilder_target ) {
-					if( rebuilder_target->builder( ) == false )
-						break;
-					filterOverNodeRunLinkVector( rebuilder_target->getLinkNodeVector( ) );
-					return true;
-				}
-			break;
-	}
-	printerDirector->info( tr( "[%1] 编译失败" ).arg( currentNode->toQString( ) ),Create_SrackInfo( ) );
-	return false;
-}
-bool NodeRunInfo::removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::NodeType node_type ) {
-	size_t vectorCount;
-	NodeRunLink **vectorData;
-	size_t vectorIndex;
-	std::list< NodeRunLink * >::iterator iterator;
-	std::list< NodeRunLink * >::iterator end;
-	switch( node_type ) {
-		case NodeEnum::NodeType::Call : // call 堆栈吗?
-		case NodeEnum::NodeType::Function :
-			vectorCount = functionVector.size( );
-			vectorData = functionVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-					iterator = functionStack.begin( );
-					end = functionStack.end( );
-					for( ; iterator != end; ++iterator )
-						if( *iterator == vectorData[ vectorIndex ] ) {
-							// 删除堆栈序列
-							functionStack.erase( iterator );
-							return true;
-						}
-					break;
-				}
-			break;
-		case NodeEnum::NodeType::Point :
-		case NodeEnum::NodeType::Jump :
-			// point 堆栈吗?
-			vectorCount = pointVector.size( );
-			vectorData = pointVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-					iterator = pointStack.begin( );
-					end = pointStack.end( );
-					for( ; iterator != end; ++iterator )
-						if( *iterator == vectorData[ vectorIndex ] ) {
-							// 删除堆栈调用
-							pointStack.erase( iterator );
-							return true;
-						}
-					break;
-				}
-			break;
-		case NodeEnum::NodeType::Foreach :
-			break;
-		case NodeEnum::NodeType::Logic :
-			break;
-		case NodeEnum::NodeType::Process :// create 堆栈吗?
-		case NodeEnum::NodeType::Create :
-			vectorCount = createVector.size( );
-			vectorData = createVector.data( );
-			vectorIndex = 0;
-			for( ; vectorIndex < vectorCount; ++vectorIndex )
-				if( vectorData[ vectorIndex ]->linkHasEndNode( target_run_link ) ) {
-					iterator = createStack.begin( );
-					end = createStack.end( );
-					for( ; iterator != end; ++iterator )
-						if( *iterator == vectorData[ vectorIndex ] ) {
-							// 删除堆栈调用
-							createStack.erase( iterator );
-							return true;
-						}
-				}
-			break;
-	}
-
-	return false;
-}
-size_t NodeRunInfo::filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector ) {
-	size_t orgCount = runOverNodeVector.size( );
-	std::vector< Node * > result;
-	VectorTools::removeTarget( runOverNodeVector, filter_over_node_run_link_vector, result );
-	runOverNodeVector = result;
-	return orgCount - runOverNodeVector.size( );
-}
-
-bool NodeRunInfo::appendBeginNode( Node *begin_node ) {
-	if( begin_node->otherNodeOutputPortRefThisNodeInputPortVector.size( ) != 0 )
-		return false;
-	size_t index = 0;
-	if( VectorTools::findIndex( builderBeginList, begin_node, index ) == true )
-		return false;
-	builderBeginList.emplace_back( begin_node );
-	return true;
-}
-
 bool NodeRunInfo::sortFromBuilderNode( ) {
 
-	size_t count = builderBeginList.size( );
+	size_t count = nodeRunInfoDataPtr->builderBeginList.size( );
 	if( count == 0 )
 		return false;
 	size_t index;
 
 	std::vector< Node * > getRefNodeVector;
-	auto data = builderBeginList.data( );
+	auto data = nodeRunInfoDataPtr->builderBeginList.data( );
 	for( index = 0; index < count; ++index ) // 获取依赖
 		if( NodeRunLinkTools::getNodeRef( data[ index ], getRefNodeVector ) == false )
 			return false;
-	return NodeRunLinkTools::sortNodeRef( builderBeginList, getRefNodeVector, builderReferenceSortVector );
+	return NodeRunLinkTools::sortNodeRef( nodeRunInfoDataPtr->builderBeginList, getRefNodeVector, nodeRunInfoDataPtr->builderReferenceSortVector );
 }
 bool NodeRunInfo::toNextFrame( ) {
-	auto oldFrame = currentFrame;
-	if( this->copyTargetToThis( image ) == false )
+	auto oldFrame = nodeRunInfoDataPtr->currentFrame;
+	if( nodeRunInfoDataPtr->copyNodeRunInfoDataToThis( this->nodeRunInfoDataImagePtr ) == false )
 		return false;
-	if( currentFrame == maxFrame )
-		currentFrame = 0;
+	if( nodeRunInfoDataPtr->currentFrame == nodeRunInfoDataPtr->maxFrame )
+		nodeRunInfoDataPtr->currentFrame = 0;
 	else
-		currentFrame = oldFrame + 1;
-	return true;
-}
-bool NodeRunInfo::filterNodeNextTypeStack( Node *filter_target_node ) {
-	std::vector< Node * > resultNextRunAdviseNodeVector;
-	if( filter_target_node->fillOutputPortCall( *currentRunDataTime, currentFrame, resultNextRunAdviseNodeVector ) == false )
-		return false;
-	std::vector< Node * > resultNeedNodeVector;
-	size_t count = resultNextRunAdviseNodeVector.size( );
-	if( count == 0 )
-		return true; // 执行完毕
-	auto data = resultNextRunAdviseNodeVector.data( );
-	size_t index = 0;
-	for( ; index < count; ++index )
-		switch( data[ index ]->getNodeType( ) ) {
-			case NodeEnum::NodeType::Call :
-				filterNodeNextTypeCallStack( data[ index ] );
-				break;
-			case NodeEnum::NodeType::Jump :
-				filterNodeNextTypeJumpStack( data[ index ] );
-				break;
-		}
-	return true;
-}
-bool NodeRunInfo::filterNodeNextTypeCallStack( Node *call_type_node ) {
-	printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Call]" ).arg( call_type_node->toQString( ) ), Create_SrackInfo( ) );
-	// 加入 functionStack
-	std::vector< Node * > resultNeedNodeVector;
-	if( call_type_node->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
-		return false;
-	auto needCount = resultNeedNodeVector.size( );
-	if( needCount == 0 )
-		return true;
-	auto findCount = functionVector.size( );
-	if( findCount == 0 )
-		return true;
-	auto needData = resultNeedNodeVector.data( );
-	size_t needIndex = 0;
-	size_t findIndex;
-	auto findData = functionVector.data( );
-	for( ; needIndex < needCount; needIndex += 1 )
-		switch( needData[ needIndex ]->getNodeType( ) ) {
-			case NodeEnum::NodeType::Function :
-				for( findIndex = 0; findIndex < findCount; findIndex += 1 )
-					if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
-						functionStack.emplace_front( findData[ findIndex ] );
-						break;
-					}
-				break;
-		}
-	return true;
-}
-bool NodeRunInfo::filterNodeNextTypeJumpStack( Node *jump_type_node ) {
-	printerDirector->info( tr( "[%1] 节点类型 [NodeEnum::NodeType::Jump]" ).arg( jump_type_node->toQString( ) ), Create_SrackInfo( ) );
-	// 加入 pointStack
-	std::vector< Node * > resultNeedNodeVector;
-	if( jump_type_node->fillInputPortCall( *currentRunDataTime, currentFrame, resultNeedNodeVector ) == false )
-		return false;
-	auto needCount = resultNeedNodeVector.size( );
-	if( needCount == 0 )
-		return true;
-	auto findCount = pointVector.size( );
-	if( findCount == 0 )
-		return true;
-	auto needData = resultNeedNodeVector.data( );
-	size_t needIndex = 0;
-	size_t findIndex;
-	auto findData = pointVector.data( );
-	for( ; needIndex < needCount; needIndex += 1 )
-		switch( needData[ needIndex ]->getNodeType( ) ) {
-			case NodeEnum::NodeType::Point :
-				for( findIndex = 0; findIndex < findCount; findIndex += 1 )
-					if( findData[ findIndex ]->getBeforeNode( ) == needData[ needIndex ] ) {
-						pointStack.emplace_front( findData[ findIndex ] );
-						break;
-					}
-				break;
-		}
+		nodeRunInfoDataPtr->currentFrame = oldFrame + 1;
 	return true;
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
-	builderBeginList.clear( );
+	nodeRunInfoDataPtr->builderBeginList.clear( );
 	resetData( );
 }

@@ -4,11 +4,10 @@
 #include "vectorTools.h"
 
 #include "../node/node/node.h"
-#include "../node/nodeRunInfo/nodeRunLinkData.h"
+
 /// @brief 内联工具，不提供外部使用
 namespace inlineTools {
 	inline bool sortNodeRef( const std::vector< Node * > &ref_begin_sort_node_vector, const std::vector< Node * > &ref_sort_node_vector, std::vector< Node * > &result_ref_node_vector ) {
-		// todo:排序
 		std::vector< Node * > buff;
 		size_t beginCount = ref_begin_sort_node_vector.size( );
 		auto beginData = ref_begin_sort_node_vector.data( );
@@ -61,28 +60,6 @@ namespace inlineTools {
 		} while( true );
 		return true;
 	}
-}
-
-std::list<Node *> & NodeRunLinkTools::Get::getAdviseNodeVector( ) const {
-	return nodeRunLinkData->adviseNodeVector;
-}
-std::vector< Node * > & NodeRunLinkTools::Get::getLinkNodeVector( ) const {
-	return nodeRunLinkData->linkNodeVector;
-}
-std::vector< Node * > & NodeRunLinkTools::Get::getOverRunNodeVector( ) const {
-	return nodeRunLinkData->overRunNodeVector;
-}
-std::vector< Node * > & NodeRunLinkTools::Get::getStartNodeVector( ) const {
-	return nodeRunLinkData->startNodeVector;
-}
-bool NodeRunLinkTools::Get::getNodeRef( std::vector< Node * > &result_ref_node_vector ) {
-	return NodeRunLinkTools::getNodeRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
-}
-bool NodeRunLinkTools::Get::getNodeInputInForRef( std::vector< Node * > &result_ref_node_vector ) {
-	return NodeRunLinkTools::getNodeInputInForRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
-}
-bool NodeRunLinkTools::Get::getNodeOutputInForRef( std::vector< Node * > &result_ref_node_vector ) {
-	return NodeRunLinkTools::getNodeOutputInForRef( nodeRunLinkData->beforeNode, result_ref_node_vector );
 }
 
 bool NodeRunLinkTools::getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {

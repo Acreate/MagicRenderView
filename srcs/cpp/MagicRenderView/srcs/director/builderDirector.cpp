@@ -14,6 +14,8 @@
 #include "../menu/app/imp/action/builder/stopBuilderAction.h"
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
+
+#include "../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
 void BuilderDirector::updateBuilderActionObjInfo( ) {
 	if( nodeRunInfo == nullptr )
 		resetBuilderActionObjInfo( );

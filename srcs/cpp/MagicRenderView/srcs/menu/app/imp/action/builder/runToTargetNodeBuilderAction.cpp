@@ -2,6 +2,7 @@
 
 #include "../../../../../director/builderDirector.h"
 #include "../../../../../node/node/node.h"
+#include "../../../../../node/nodeRunInfo/imp/NodeRunInfoEditor.h"
 #include "../../../../../node/nodeRunInfo/nodeRunInfo.h"
 #include "../../../../../win/mainWindow.h"
 void RunToTargetNodeBuilderAction::releaTarget( Node *release_target, const SrackInfo &srack_info ) {
@@ -11,7 +12,7 @@ void RunToTargetNodeBuilderAction::releaTarget( Node *release_target, const Srac
 	this->trigger( );
 }
 void RunToTargetNodeBuilderAction::createNodeRunInfoAction( ) {
-	NodeRunInfo *nodeRunInfo = builderDirector->getNodeRunInfo( );
+	NodeRunInfoEditor *nodeRunInfo = builderDirector->getNodeRunInfo( );
 	// 1.如果功能编译状态是失效，那么重置它的效果为失效
 	// 2.如果目标不存在编译链当中，那么重置它的效果为失效
 	if( nodeRunInfo == nullptr || nodeRunInfo->hasBuilderNode( targetNode ) == false ) {

@@ -1,33 +1,27 @@
 ﻿#include "nodeRunInfoData.h"
-NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ) {
-	oldNode = currentNode = nullptr;
+
+NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ), oldNode( nullptr ), currentNode( nullptr ) {
 }
-bool NodeRunInfoData::copyTargetToThis( const NodeRunInfoData *const other ) {
-	if( this == nullptr || other == nullptr )
+
+bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const copy_target_ptr ) {
+	if( copy_target_ptr == nullptr )
 		return false;
-	if( this == other )
+	if( this == copy_target_ptr )
 		return true;
-	currentFrame = other->currentFrame;
-	maxFrame = other->maxFrame;
-	runStop = other->runStop;
-	ready = other->ready;
-	nextRunNodeTime = other->nextRunNodeTime;
-	builderDataTime = other->builderDataTime;
-	brforeRunDataTime = other->brforeRunDataTime;
-	currentRunDataTime = other->currentRunDataTime;
-	buffNode = other->buffNode;
-	currentNode = other->currentNode;
-	oldNode = other->oldNode;
-	builderNodeVector = other->builderNodeVector;
-	builderBeginList = other->builderBeginList;
-	builderReferenceSortVector = other->builderReferenceSortVector;
-	runOverNodeVector = other->runOverNodeVector;
-	createVector = other->createVector;
-	pointVector = other->pointVector;
-	functionVector = other->functionVector;
-	nodeRunLinkVector = other->nodeRunLinkVector;
-	functionStack = other->functionStack;
-	createStack = other->createStack;
-	pointStack = other->pointStack;
-	return this;
+	currentFrame = copy_target_ptr->currentFrame;
+	maxFrame = copy_target_ptr->maxFrame;
+	runStop = copy_target_ptr->runStop;
+	ready = copy_target_ptr->ready;
+	nextRunNodeTime = copy_target_ptr->nextRunNodeTime;
+	builderDataTime = copy_target_ptr->builderDataTime;
+	brforeRunDataTime = copy_target_ptr->brforeRunDataTime;
+	currentRunDataTime = copy_target_ptr->currentRunDataTime;
+	buffNode = copy_target_ptr->buffNode;
+	currentNode = copy_target_ptr->currentNode;
+	oldNode = copy_target_ptr->oldNode;
+	builderNodeVector = copy_target_ptr->builderNodeVector;
+	builderBeginList = copy_target_ptr->builderBeginList;
+	builderReferenceSortVector = copy_target_ptr->builderReferenceSortVector;
+	runOverNodeVector = copy_target_ptr->runOverNodeVector;
+	return true;
 }

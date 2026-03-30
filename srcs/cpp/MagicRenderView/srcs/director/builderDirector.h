@@ -6,6 +6,7 @@
 #include "../menu/app/imp/menu/builderApplicationMenu.h"
 #include "../menu/app/imp/toolBar/builderApplicationToolBar.h"
 
+class NodeRunInfoEditor;
 class Node;
 class NormalApplicationToolBar;
 class NormalApplicationMenu;
@@ -21,7 +22,7 @@ protected:
 	MainWindow *mainWindow;
 	Application *instancePtr;
 	NodeDirector *nodeDirector;
-	NodeRunInfo *nodeRunInfo;
+	NodeRunInfoEditor *nodeRunInfo;
 protected:
 	std::vector< BuilderApplicationMenu * > menus;
 	std::vector< BuilderApplicationToolBar * > toolBars;
@@ -58,7 +59,7 @@ public:
 	virtual bool nextStepBuilderNode( );
 	virtual bool runBuilderBuilderNode( );
 	virtual bool stopBuilderBuilderNode( );
-	virtual NodeRunInfo * getNodeRunInfo( ) const { return nodeRunInfo; }
+	virtual NodeRunInfoEditor * getNodeRunInfo( ) const { return nodeRunInfo; }
 Q_SIGNALS:
 	void release_node_run_info_signal( BuilderDirector *signal_ptr, NodeRunInfo *node_run_info );
 	void create_node_run_info_signalr( BuilderDirector *signal_ptr, NodeRunInfo *node_run_info );

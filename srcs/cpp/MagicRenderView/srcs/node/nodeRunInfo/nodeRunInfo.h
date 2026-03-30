@@ -2,40 +2,38 @@
 #define NODERUNINFO_H_H_HEAD__FILE__
 
 #include "nodeRunInfoData.h"
-
-class PrinterDirector;
-class NodeRunLink;
-class QDateTime;
-class Application;
+class NodeRunInfoDataOnlyRead;
+class NodeRunInfoDataEditor;
 namespace NodeEnum {
 	enum class NodeType;
 	enum class ErrorType;
 	enum class AdviseType;
 }
-namespace BuilderEnum {
-	enum class BuilderWarningType;
-	enum class BuilderErrorType;
-}
+class Application;
+class PrinterDirector;
 class Node;
 class NodeDirector;
 class SrackInfo;
-class NodeRunInfo : public NodeRunInfoData {
+class NodeRunInfo : public QObject {
 	Q_OBJECT;
-	friend class NodeDirector;
 protected:
-	/// @brief 应用实例
-	Application *appinstancePtr;
-	/// @brief 输出对象
+	Application *applicationPtr;
 	PrinterDirector *printerDirector;
-	/// @brief 节点管理对象
 	NodeDirector *nodeDirectorPtr;
-	/// @brief 镜像
-	NodeRunInfoData *image;
+	NodeRunInfoData *nodeRunInfoDataPtr;
+	NodeRunInfoData *nodeRunInfoDataImagePtr;
 protected:
+	virtual NodeRunInfoDataEditor * getNodeRunInfoDataEditor( ) const;
+	virtual NodeRunInfoDataOnlyRead * getNodeRunInfoDataOnlyRead( ) const;
+	virtual NodeRunInfoData * getNodeRunInfoData( ) const;
+	virtual void setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data );
+
+	virtual NodeRunInfoDataEditor * getNodeRunInfoDataEditorImage( ) const;
+	virtual NodeRunInfoDataOnlyRead * getNodeRunInfoDataOnlyReadImage( ) const;
+	virtual NodeRunInfoData * getNodeRunInfoDataImage( ) const;
+	virtual void setNodeRunInfoDataImage( NodeRunInfoData *new_node_run_info_data_image );
+
 	virtual void appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count );
-	virtual void appendBuilderNode( std::vector< Node * > &append_node_vector ) {
-		appendBuilderNode( append_node_vector.data( ), append_node_vector.size( ) );
-	}
 	virtual void appendBuilderNode( Node *append_node_unity );
 	virtual void removeBuilderNode( Node *append_node_unity );
 	/// @brief 编译实例
@@ -45,74 +43,16 @@ protected:
 	virtual void resetData( );
 	/// @brief 重置编译数据
 	virtual void resetBilderData( );
-	/// @brief 获取下一个节点对象指针
-	/// @param result_next_node_ptr 返回的下一个节点
-	/// @param result_node_ptr
-	/// @return 失败返回 null
-	virtual bool getNextNodeRunLinkPtr( NodeRunLink *&result_next_node_ptr, Node *&result_node_ptr );
-
-	/// @brief 更新下一个节点堆栈信息
-	/// @param update_next_node_ptr 更新的节点链接信息
-	/// @return 失败返回 false
-	virtual bool updateNextNodeRunLinkPtr( NodeRunLink *update_next_node_ptr );
-	/// @brief 检查序列是否存在匹配的起始节点
-	/// @param check_vector 检查的序列
-	/// @param check_node 起始节点
-	/// @return 不存在返回 false
-	virtual bool stackHasStartNode( const std::vector< NodeRunLink * > &check_vector, Node *check_node ) const;
-	/// @brief 在调用堆栈中移除目标
-	/// @param target_run_link 移除的目标
-	/// @return 失败返回 false
-	virtual bool removeNodeRunLinkTarget( Node *target_run_link );
-	/// @brief 插入节点到调用堆栈当中
-	/// @param target_run_link 插入目标
-	/// @return 失败返回 false
-	virtual bool insertNodeRunLinkTarget( const Node *target_run_link );
-	/// @brief 插入目标序列节点到调用堆栈当中
-	/// @param target_run_link_vector 插入目标序列
-	/// @return 失败返回 false
-	virtual bool insertNodeRunLinkTarget( const std::vector< Node * > &target_run_link_vector );
-	/// @brief 重新编译目标
-	/// @param rebuilder_target 重新编译对象
-	/// @return 失败返回 false
-	virtual bool rebuilderOverNodeRunLinkTarget( NodeRunLink *rebuilder_target );
-	/// @brief 在调用堆栈中移除目标
-	/// @param target_run_link 移除的目标
-	/// @param node_type 节点类型
-	/// @return 失败返回 false
-	virtual bool removeNodeRunLinkTarget( Node *target_run_link, NodeEnum::NodeType node_type );
-	/// @brief 从完成过滤列表当中过滤节点列表
-	/// @param filter_over_node_run_link_vector 过滤列表
-	/// @return 返回过滤个数
-	virtual size_t filterOverNodeRunLinkVector( const std::vector< Node * > &filter_over_node_run_link_vector );
-	/// @brief 追加一个开始节点
-	/// @param begin_node 追加节点
-	/// @return 失败返回 false
-	virtual bool appendBeginNode( Node *begin_node );
 	/// @brief 从起始节点获取信息，并且生成排序参考列表
 	/// @return 失败返回 false
 	virtual bool sortFromBuilderNode( );
 	/// @brief 到下一帧
 	/// @return 成功返回 true
 	virtual bool toNextFrame( );
-	/// @brief 过滤节点下一个类型的执行路线
-	/// @param filter_target_node 过滤节点
-	/// @return 失败返回 false
-	virtual bool filterNodeNextTypeStack( Node *filter_target_node );
-	/// @brief 过滤目标为 CALL 类型的节点
-	/// @param call_type_node 节点
-	/// @return 失败返回 false
-	virtual bool filterNodeNextTypeCallStack( Node *call_type_node );
-	/// @brief 过滤目标为 Jump 类型的节点
-	/// @param jump_type_node 节点
-	/// @return 失败返回 false
-	virtual bool filterNodeNextTypeJumpStack( Node *jump_type_node );
-public:
-	NodeRunInfo( );
-	~NodeRunInfo( ) override;
+	/// @brief 检查是否存在编译节点
+	/// @param check_node_ptr 检查的节点指针
+	/// @return 不存在返回 false
 	virtual bool hasBuilderNode( const Node *check_node_ptr );
-	virtual int getMsleepTime( ) const { return nextRunNodeTime; }
-	virtual void setMsleepTime( int msleep_time ) { nextRunNodeTime = msleep_time; }
 	/// @brief 运行下一个
 	/// @return 成功返回 true
 	virtual bool runNextNode( );
@@ -134,6 +74,9 @@ public:
 	virtual bool runStopNode( );
 	/// @brief 清理所有
 	virtual void clear( );
+public:
+	NodeRunInfo( );
+	~NodeRunInfo( ) override;
 Q_SIGNALS:
 	/// @brief 释放对象产生信号
 	/// @param release_obj_ptr 释放对象指针
@@ -153,19 +96,6 @@ Q_SIGNALS:
 	/// @brief 编译结束
 	/// @param change_obj 编译对象
 	void end_builder_signal( NodeRunInfo *change_obj );
-	/// @brief 编译完成信号
-	/// @param builder_link 完成对象
-	void builder_finish_signal( NodeRunLink *builder_link );
-	/// @brief 编译警告信号
-	/// @param builder_link 警告对象
-	/// @param warning_code 警告类型
-	/// @param warning_node_ptr 警告产生对象
-	void builder_warning_signal( NodeRunLink *builder_link, const BuilderEnum::BuilderWarningType &warning_code, const Node *const warning_node_ptr );
-	/// @brief 编译错误信号
-	/// @param builder_link 错误对象
-	/// @param error_code 错误类型
-	/// @param error_node_ptr 错误产生对象
-	void builder_error_signal( NodeRunLink *builder_link, const BuilderEnum::BuilderErrorType &error_code, const Node *const error_node_ptr );
 };
 
 #endif // NODERUNINFO_H_H_HEAD__FILE__
