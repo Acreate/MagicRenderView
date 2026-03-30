@@ -39,6 +39,7 @@ protected:
 	std::vector< Node * > runOverNodeVector;
 public:
 	NodeRunInfoData( );
+	~NodeRunInfoData( ) override;
 protected:
 	/// @brief 拷贝数据到该对象
 	/// @param copy_target_ptr 拷贝目标

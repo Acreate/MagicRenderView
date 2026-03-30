@@ -62,6 +62,18 @@ namespace inlineTools {
 	}
 }
 
+bool NodeRunLinkTools::fromBuilderNode( const std::vector< Node * > &builder_node_vector, std::vector< Node * > &result_node_vector ) {
+
+	size_t count = builder_node_vector.size( );
+	if( count == 0 )
+		return false;
+	size_t index;
+	auto data = builder_node_vector.data( );
+	for( index = 0; index < count; ++index ) // 获取依赖
+		if( NodeRunLinkTools::getNodeRef( data[ index ], result_node_vector ) == false )
+			return false;
+	return true;
+}
 bool NodeRunLinkTools::getNodeRef( Node *get_node_target, std::vector< Node * > &result_ref_node_vector ) {
 	if( get_node_target == nullptr )
 		return false;

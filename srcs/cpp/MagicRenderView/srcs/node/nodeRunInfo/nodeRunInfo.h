@@ -39,13 +39,6 @@ protected:
 	/// @brief 编译实例
 	/// @return 失败返回 false
 	virtual bool builderRunInstance( );
-	/// @brief 重置数据
-	virtual void resetData( );
-	/// @brief 重置编译数据
-	virtual void resetBilderData( );
-	/// @brief 从起始节点获取信息，并且生成排序参考列表
-	/// @return 失败返回 false
-	virtual bool sortFromBuilderNode( );
 	/// @brief 到下一帧
 	/// @return 成功返回 true
 	virtual bool toNextFrame( );

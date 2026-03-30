@@ -1,6 +1,12 @@
 ﻿#include "nodeRunInfoData.h"
 
+#include "../../enums/nodeEnum.h"
+
+#include "../node/node.h"
+
 NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ), oldNode( nullptr ), currentNode( nullptr ) {
+}
+NodeRunInfoData::~NodeRunInfoData( ) {
 }
 
 bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const copy_target_ptr ) {

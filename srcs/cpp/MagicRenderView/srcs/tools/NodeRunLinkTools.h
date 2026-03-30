@@ -3,9 +3,16 @@
 #include <list>
 #include <vector>
 
+#include "../node/node/node.h"
+
 class Node;
 namespace NodeRunLinkTools {
-	
+
+	/// @brief 获取编译队列
+	/// @param builder_node_vector 编译源
+	/// @param result_node_vector 编译返回队列
+	/// @return 失败返回 false
+	bool fromBuilderNode( const std::vector< Node * > &builder_node_vector, std::vector< Node * > &result_node_vector );
 	/// @brief 递归获取节点的所有依赖
 	/// @param get_node_target 获取节点
 	/// @param result_ref_node_vector 依赖列表

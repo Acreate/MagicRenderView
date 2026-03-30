@@ -22,8 +22,8 @@
 #include "imp/NodeRunInfoDataEditor.h"
 
 NodeRunInfo::NodeRunInfo( ) : QObject( ) {
-	setNodeRunInfoData( new NodeRunInfoDataEditor );
-	setNodeRunInfoDataImage( new NodeRunInfoDataEditor );
+	nodeRunInfoDataPtr = new NodeRunInfoData;
+	nodeRunInfoDataImagePtr = new NodeRunInfoData;
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
@@ -51,6 +51,8 @@ NodeRunInfoData * NodeRunInfo::getNodeRunInfoData( ) const {
 	return nodeRunInfoDataPtr;
 }
 void NodeRunInfo::setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data ) {
+	if( nodeRunInfoDataPtr )
+		delete nodeRunInfoDataPtr;
 	nodeRunInfoDataPtr = new_node_run_info_data;
 }
 NodeRunInfoDataEditor * NodeRunInfo::getNodeRunInfoDataEditorImage( ) const {
@@ -63,31 +65,25 @@ NodeRunInfoData * NodeRunInfo::getNodeRunInfoDataImage( ) const {
 	return nodeRunInfoDataImagePtr;
 }
 void NodeRunInfo::setNodeRunInfoDataImage( NodeRunInfoData *new_node_run_info_data_image ) {
+	if( nodeRunInfoDataImagePtr )
+		delete nodeRunInfoDataImagePtr;
 	nodeRunInfoDataImagePtr = new_node_run_info_data_image;
 }
 void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t &append_node_array_count ) {
 	auto builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
-	size_t newSizet = append_node_array_count + builderNodeCount;
-	nodeRunInfoDataPtr->builderNodeVector.resize( newSizet );
+	size_t newSize = append_node_array_count + builderNodeCount;
+	nodeRunInfoDataPtr->builderNodeVector.resize( newSize );
 	auto builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
-	size_t builderNodeIndex;
-	size_t index;
-	for( index = 0; index < append_node_array_count; index += 1 )
-		if( append_node_array_ptr[ index ] != nullptr ) {
-			for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
-				if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_array_ptr[ index ] )
-					break;
-			if( builderNodeIndex != builderNodeCount )
-				continue;
-			builderNodeArrayPtr[ builderNodeCount ] = append_node_array_ptr[ index ];
+
+	size_t appendIndex = 0;
+	size_t findIndex = 0;
+	for( ; appendIndex < append_node_array_count; ++appendIndex, findIndex = 0 )
+		if( ArrayTools::findIndex( builderNodeArrayPtr, builderNodeCount, append_node_array_ptr[ appendIndex ], findIndex ) == false ) {
+			builderNodeArrayPtr[ builderNodeCount ] = append_node_array_ptr[ appendIndex ];
 			builderNodeCount += 1;
 		}
-	if( newSizet != builderNodeCount )
+	if( builderNodeCount != newSize )
 		nodeRunInfoDataPtr->builderNodeVector.resize( builderNodeCount );
-	builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
-	for( index = 0; index < builderNodeCount; index += 1 ) {
-		// todo :
-	}
 }
 void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
@@ -99,7 +95,6 @@ void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity )
 			return;
 	nodeRunInfoDataPtr->builderNodeVector.emplace_back( append_node_unity );
-	// todo :
 }
 void NodeRunInfo::removeBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
@@ -128,45 +123,39 @@ bool NodeRunInfo::builderRunInstance( ) {
 	if( printerDirector == nullptr )
 		return false;
 	BuilderEnum::BuilderErrorType errorType = BuilderEnum::BuilderErrorType::BuilderSortError;
-	resetBilderData( );
-	if( sortFromBuilderNode( ) == false ) {
+
+	std::vector< Node * > getRefNodeVector;
+	if( NodeRunLinkTools::fromBuilderNode( nodeRunInfoDataPtr->builderNodeVector, getRefNodeVector ) == false ) {
+		printerDirector->info( tr( "编译节点参考失败" ), Create_SrackInfo( ) );
+		return false;
+	}
+	// 过滤开始节点列表
+	nodeRunInfoDataPtr->builderBeginList.clear( );
+	size_t count = getRefNodeVector.size( );
+	auto nodeDataPtr = getRefNodeVector.data( );
+	size_t index;
+
+	for( index = 0; index < count; ++index )
+		if( nodeDataPtr[ index ]->setNodeStatusType( NodeEnum::NodeStatusType::None ), nodeDataPtr[ index ]->getNodeType( ) == NodeEnum::NodeType::Create )
+			nodeRunInfoDataPtr->builderBeginList.emplace_back( nodeDataPtr[ index ] );
+
+	if( NodeRunLinkTools::sortNodeRef( nodeRunInfoDataPtr->builderBeginList, getRefNodeVector, nodeRunInfoDataPtr->builderReferenceSortVector ) == false ) {
 		printerDirector->info( tr( "编译节点排序参考失败" ), Create_SrackInfo( ) );
-		resetBilderData( );
 		return false;
 	}
 
-	size_t builderNodeIndex;
-	size_t builderNodeCount;
-	Node **builderNodeArrayPtr;
-
-	builderNodeCount = nodeRunInfoDataPtr->builderReferenceSortVector.size( );
-	builderNodeArrayPtr = nodeRunInfoDataPtr->builderReferenceSortVector.data( );
-	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
-		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	}
-
-	builderNodeCount = nodeRunInfoDataPtr->builderNodeVector.size( );
-	builderNodeArrayPtr = nodeRunInfoDataPtr->builderNodeVector.data( );
-	NodeRunLink *createNodeRunLink;
-	errorType = BuilderEnum::BuilderErrorType::None;
-	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
-		switch( builderNodeArrayPtr[ builderNodeIndex ]->getNodeType( ) ) {
-			case NodeEnum::NodeType::Point :
-
-				break;
-			case NodeEnum::NodeType::Create :
-
-				break;
-
-			case NodeEnum::NodeType::Function :
-
-				break;
-		}
 	nodeRunInfoDataPtr->runStop = true;
-	if( nodeRunInfoDataPtr->ready ) {
-		if( this->nodeRunInfoDataImagePtr->copyNodeRunInfoDataToThis( this->nodeRunInfoDataPtr ) == false )
-			nodeRunInfoDataPtr->ready = false;
+	if( nodeRunInfoDataPtr->ready == false || this->nodeRunInfoDataImagePtr->copyNodeRunInfoDataToThis( this->nodeRunInfoDataPtr ) == false ) {
+		nodeRunInfoDataPtr->ready = false;
+		emit end_builder_signal( this );
+		return nodeRunInfoDataPtr->ready;
 	}
+
+	// 输出-开始
+	auto arrayToString = nodeDirectorPtr->nodeArrayToString( nodeRunInfoDataPtr->builderReferenceSortVector );
+	printerDirector->info( arrayToString, Create_SrackInfo( ) );
+	// 输出-结束
+
 	emit end_builder_signal( this );
 	return nodeRunInfoDataPtr->ready;
 }
@@ -252,47 +241,7 @@ bool NodeRunInfo::runStopNode( ) {
 	nodeRunInfoDataPtr->runStop = true;
 	return true;
 }
-void NodeRunInfo::resetData( ) {
 
-	nodeRunInfoDataPtr->builderNodeVector.clear( );
-	resetBilderData( );
-}
-void NodeRunInfo::resetBilderData( ) {
-	nodeRunInfoDataPtr->ready = false;
-	*nodeRunInfoDataPtr->currentRunDataTime = QDateTime::currentDateTime( );
-	if( nodeRunInfoDataPtr->oldNode )
-		nodeRunInfoDataPtr->oldNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	if( nodeRunInfoDataPtr->currentNode )
-		nodeRunInfoDataPtr->currentNode->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	nodeRunInfoDataPtr->oldNode = nodeRunInfoDataPtr->currentNode = nullptr;
-	nodeRunInfoDataPtr->currentFrame = 0;
-
-	size_t builderNodeIndex;
-	size_t builderNodeCount;
-	Node **builderNodeArrayPtr;
-
-	builderNodeCount = nodeRunInfoDataPtr->builderReferenceSortVector.size( );
-	builderNodeArrayPtr = nodeRunInfoDataPtr->builderReferenceSortVector.data( );
-	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 ) {
-		builderNodeArrayPtr[ builderNodeIndex ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
-	}
-	nodeRunInfoDataPtr->builderReferenceSortVector.clear( );
-
-}
-bool NodeRunInfo::sortFromBuilderNode( ) {
-
-	size_t count = nodeRunInfoDataPtr->builderBeginList.size( );
-	if( count == 0 )
-		return false;
-	size_t index;
-
-	std::vector< Node * > getRefNodeVector;
-	auto data = nodeRunInfoDataPtr->builderBeginList.data( );
-	for( index = 0; index < count; ++index ) // 获取依赖
-		if( NodeRunLinkTools::getNodeRef( data[ index ], getRefNodeVector ) == false )
-			return false;
-	return NodeRunLinkTools::sortNodeRef( nodeRunInfoDataPtr->builderBeginList, getRefNodeVector, nodeRunInfoDataPtr->builderReferenceSortVector );
-}
 bool NodeRunInfo::toNextFrame( ) {
 	auto oldFrame = nodeRunInfoDataPtr->currentFrame;
 	if( nodeRunInfoDataPtr->copyNodeRunInfoDataToThis( this->nodeRunInfoDataImagePtr ) == false )
@@ -305,6 +254,6 @@ bool NodeRunInfo::toNextFrame( ) {
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
-	nodeRunInfoDataPtr->builderBeginList.clear( );
-	resetData( );
+	setNodeRunInfoData( new NodeRunInfoData );
+	setNodeRunInfoDataImage( new NodeRunInfoData );
 }
