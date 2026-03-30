@@ -8,6 +8,7 @@ class NodeRunInfoDataEditor : public NodeRunInfoDataOnlyRead {
 	Q_OBJECT;
 public:
 	bool copyNodeRunInfoDataToThis( const NodeRunInfoData *const copy_target_ptr ) override;
+	bool copyNodeRunInfoDataToThis( const NodeRunInfoData &copy_target_instance ) override;
 	void setBrforeRunDataTime( QDateTime *brfore_run_data_time ) override;
 	void setBuffNode( Node *buff_node ) override;
 	void setBuilderBeginList( const std::vector< Node * > &builder_begin_list ) override;

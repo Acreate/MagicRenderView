@@ -3,10 +3,14 @@
 #include "../../enums/nodeEnum.h"
 
 #include "../node/node.h"
+#include <QDateTime>
 
-NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( nullptr ), brforeRunDataTime( nullptr ), currentRunDataTime( nullptr ), oldNode( nullptr ), currentNode( nullptr ) {
+NodeRunInfoData::NodeRunInfoData( ) : QObject( ), builderDataTime( new QDateTime ), brforeRunDataTime( new QDateTime ), currentRunDataTime( new QDateTime ), oldNode( nullptr ), currentNode( nullptr ) {
 }
 NodeRunInfoData::~NodeRunInfoData( ) {
+	delete builderDataTime;
+	delete brforeRunDataTime;
+	delete currentRunDataTime;
 }
 
 bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const copy_target_ptr ) {
@@ -19,9 +23,9 @@ bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const co
 	runStop = copy_target_ptr->runStop;
 	ready = copy_target_ptr->ready;
 	nextRunNodeTime = copy_target_ptr->nextRunNodeTime;
-	builderDataTime = copy_target_ptr->builderDataTime;
-	brforeRunDataTime = copy_target_ptr->brforeRunDataTime;
-	currentRunDataTime = copy_target_ptr->currentRunDataTime;
+	*builderDataTime = *copy_target_ptr->builderDataTime;
+	*brforeRunDataTime = *copy_target_ptr->brforeRunDataTime;
+	*currentRunDataTime = *copy_target_ptr->currentRunDataTime;
 	buffNode = copy_target_ptr->buffNode;
 	currentNode = copy_target_ptr->currentNode;
 	oldNode = copy_target_ptr->oldNode;
@@ -30,4 +34,7 @@ bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const co
 	builderReferenceSortVector = copy_target_ptr->builderReferenceSortVector;
 	runOverNodeVector = copy_target_ptr->runOverNodeVector;
 	return true;
+}
+bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData &copy_target_instance ) {
+	return copyNodeRunInfoDataToThis( &copy_target_instance );
 }

@@ -1,7 +1,8 @@
 ﻿#ifndef NODERUNINFO_H_H_HEAD__FILE__
 #define NODERUNINFO_H_H_HEAD__FILE__
 
-#include "nodeRunInfoData.h"
+#include <QObject>
+class NodeRunInfoData;
 class NodeRunInfoDataOnlyRead;
 class NodeRunInfoDataEditor;
 namespace NodeEnum {

@@ -44,7 +44,11 @@ protected:
 	/// @brief 拷贝数据到该对象
 	/// @param copy_target_ptr 拷贝目标
 	/// @return 失败返回 false
-	virtual bool copyNodeRunInfoDataToThis( const NodeRunInfoData * const copy_target_ptr );
+	virtual bool copyNodeRunInfoDataToThis( const NodeRunInfoData *const copy_target_ptr );
+	/// @brief 拷贝数据到该对象
+	/// @param copy_target_instance 拷贝目标
+	/// @return 失败返回 false
+	virtual bool copyNodeRunInfoDataToThis( const NodeRunInfoData &copy_target_instance );
 	/// @brief 获取当前帧
 	/// @return 帧
 	virtual size_t getCurrentFrame( ) const { return currentFrame; }

@@ -155,7 +155,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 	auto arrayToString = nodeDirectorPtr->nodeArrayToString( nodeRunInfoDataPtr->builderReferenceSortVector );
 	printerDirector->info( arrayToString, Create_SrackInfo( ) );
 	// 输出-结束
-
+	*nodeRunInfoDataPtr->builderDataTime = QDateTime::currentDateTime( );
 	emit end_builder_signal( this );
 	return nodeRunInfoDataPtr->ready;
 }
@@ -254,6 +254,6 @@ bool NodeRunInfo::toNextFrame( ) {
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
-	setNodeRunInfoData( new NodeRunInfoData );
-	setNodeRunInfoDataImage( new NodeRunInfoData );
+	nodeRunInfoDataPtr->ready = false;
+	nodeRunInfoDataPtr->builderNodeVector.clear( );
 }
