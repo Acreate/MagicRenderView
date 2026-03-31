@@ -30,11 +30,23 @@ bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData *const co
 	currentNode = copy_target_ptr->currentNode;
 	oldNode = copy_target_ptr->oldNode;
 	builderNodeVector = copy_target_ptr->builderNodeVector;
-	builderBeginList = copy_target_ptr->builderBeginList;
-	builderReferenceSortVector = copy_target_ptr->builderReferenceSortVector;
+	builderBeginVector = copy_target_ptr->builderBeginVector;
 	runOverNodeVector = copy_target_ptr->runOverNodeVector;
 	return true;
 }
 bool NodeRunInfoData::copyNodeRunInfoDataToThis( const NodeRunInfoData &copy_target_instance ) {
 	return copyNodeRunInfoDataToThis( &copy_target_instance );
+}
+void NodeRunInfoData::clear( ) {
+	ready = false;
+	runStop = true;
+	currentFrame = 0;
+	buffNode = currentNode = oldNode = nullptr;
+	builderNodeVector.clear( );
+	builderBeginVector.clear( );
+	runOverNodeVector.clear( );
+	jumpNodeList.clear( );
+	createNodeList.clear( );
+	functionNodeList.clear( );
+	awaitNodeList.clear( );
 }

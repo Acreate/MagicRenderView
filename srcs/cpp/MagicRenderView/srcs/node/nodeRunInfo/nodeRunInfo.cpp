@@ -71,6 +71,8 @@ void NodeRunInfo::appendBuilderNode( Node **append_node_array_ptr, const size_t 
 		if( ArrayTools::findIndex( builderNodeArrayPtr, builderNodeCount, append_node_array_ptr[ appendIndex ], findIndex ) == false ) {
 			builderNodeArrayPtr[ builderNodeCount ] = append_node_array_ptr[ appendIndex ];
 			builderNodeCount += 1;
+			if( append_node_array_ptr[ appendIndex ]->getNodeType( ) == NodeEnum::NodeType::Create )
+				nodeRunInfoDataPtr->builderBeginVector.emplace_back( append_node_array_ptr[ appendIndex ] );
 		}
 	if( builderNodeCount != newSize )
 		nodeRunInfoDataPtr->builderNodeVector.resize( builderNodeCount );
@@ -85,6 +87,8 @@ void NodeRunInfo::appendBuilderNode( Node *append_node_unity ) {
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity )
 			return;
 	nodeRunInfoDataPtr->builderNodeVector.emplace_back( append_node_unity );
+	if( append_node_unity->getNodeType( ) == NodeEnum::NodeType::Create )
+		nodeRunInfoDataPtr->builderBeginVector.emplace_back( append_node_unity );
 }
 void NodeRunInfo::removeBuilderNode( Node *append_node_unity ) {
 	if( append_node_unity == nullptr )
@@ -95,7 +99,16 @@ void NodeRunInfo::removeBuilderNode( Node *append_node_unity ) {
 	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
 		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity ) {
 			nodeRunInfoDataPtr->builderNodeVector.erase( builderNodeIndex + nodeRunInfoDataPtr->builderNodeVector.begin( ) );
-			return;
+			if( append_node_unity->getNodeType( ) != NodeEnum::NodeType::Create )
+				return; // 不是 NodeEnum::NodeType::Create，则直接结束
+			break; // 跳到删除 NodeEnum::NodeType::Create
+		}
+	builderNodeCount = nodeRunInfoDataPtr->builderBeginVector.size( );
+	builderNodeArrayPtr = nodeRunInfoDataPtr->builderBeginVector.data( );
+	for( builderNodeIndex = 0; builderNodeIndex < builderNodeCount; builderNodeIndex += 1 )
+		if( builderNodeArrayPtr[ builderNodeIndex ] == append_node_unity ) {
+			nodeRunInfoDataPtr->builderBeginVector.erase( builderNodeIndex + nodeRunInfoDataPtr->builderBeginVector.begin( ) );
+			break;
 		}
 }
 
@@ -117,17 +130,15 @@ bool NodeRunInfo::builderRunInstance( ) {
 		printerDirector->info( tr( "编译节点参考失败" ), Create_SrackInfo( ) );
 		return false;
 	}
-	// 过滤开始节点列表
-	nodeRunInfoDataPtr->builderBeginList.clear( );
+
+	// 重置节点状态
 	size_t count = getRefNodeVector.size( );
 	auto nodeDataPtr = getRefNodeVector.data( );
 	size_t index;
-
 	for( index = 0; index < count; ++index )
-		if( nodeDataPtr[ index ]->setNodeStatusType( NodeEnum::NodeStatusType::None ), nodeDataPtr[ index ]->getNodeType( ) == NodeEnum::NodeType::Create )
-			nodeRunInfoDataPtr->builderBeginList.emplace_back( nodeDataPtr[ index ] );
+		nodeDataPtr[ index ]->setNodeStatusType( NodeEnum::NodeStatusType::None );
 
-	if( NodeRunLinkTools::sortNodeRef( nodeRunInfoDataPtr->builderBeginList, getRefNodeVector, nodeRunInfoDataPtr->builderReferenceSortVector ) == false ) {
+	if( NodeRunLinkTools::sortNodeRef( nodeRunInfoDataPtr->builderBeginVector, getRefNodeVector, nodeRunInfoDataPtr->builderNodeVector ) == false ) {
 		printerDirector->info( tr( "编译节点排序参考失败" ), Create_SrackInfo( ) );
 		return false;
 	}
@@ -140,7 +151,7 @@ bool NodeRunInfo::builderRunInstance( ) {
 	}
 
 	// 输出-开始
-	auto arrayToString = nodeDirectorPtr->nodeArrayToString( nodeRunInfoDataPtr->builderReferenceSortVector );
+	auto arrayToString = nodeDirectorPtr->nodeArrayToString( nodeRunInfoDataPtr->builderNodeVector );
 	printerDirector->info( arrayToString, Create_SrackInfo( ) );
 	// 输出-结束
 	*nodeRunInfoDataPtr->builderDataTime = QDateTime::currentDateTime( );
@@ -211,18 +222,12 @@ bool NodeRunInfo::resetRunStartNode( ) {
 
 	if( nodeRunInfoDataPtr->runStop == false || nodeRunInfoDataPtr->ready == false )
 		return false;
-	size_t count = 0;
-	if( count == 0 ) {
-		nodeRunInfoDataPtr->ready = false;
-		return false;
-	}
 	if( nodeRunInfoDataPtr->copyNodeRunInfoDataToThis( nodeRunInfoDataImagePtr ) == false ) {
 		printerDirector->info( tr( "镜像重置数据失败" ), Create_SrackInfo( ) );
 		nodeRunInfoDataPtr->ready = false;
 		return false;
 	}
 	*nodeRunInfoDataPtr->currentRunDataTime = QDateTime::currentDateTime( );
-
 	return true;
 }
 bool NodeRunInfo::runStopNode( ) {
@@ -242,6 +247,5 @@ bool NodeRunInfo::toNextFrame( ) {
 }
 void NodeRunInfo::clear( ) {
 	emit clear_signal( this, Create_SrackInfo( ) );
-	nodeRunInfoDataPtr->ready = false;
-	nodeRunInfoDataPtr->builderNodeVector.clear( );
+	nodeRunInfoDataPtr->clear( );
 }

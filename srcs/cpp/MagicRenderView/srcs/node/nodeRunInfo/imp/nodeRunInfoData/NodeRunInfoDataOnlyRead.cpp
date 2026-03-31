@@ -11,17 +11,14 @@ QDateTime * NodeRunInfoDataOnlyRead::getBrforeRunDataTime( ) const {
 Node * NodeRunInfoDataOnlyRead::getBuffNode( ) const {
 	return NodeRunInfoData::getBuffNode( );
 }
-const std::vector<Node *> & NodeRunInfoDataOnlyRead::getBuilderBeginList( ) const {
-	return NodeRunInfoData::getBuilderBeginList( );
+const std::vector<Node *> & NodeRunInfoDataOnlyRead::getBuilderBeginVector( ) const {
+	return NodeRunInfoData::getBuilderBeginVector( );
 }
 QDateTime * NodeRunInfoDataOnlyRead::getBuilderDataTime( ) const {
 	return NodeRunInfoData::getBuilderDataTime( );
 }
 const std::vector<Node *> & NodeRunInfoDataOnlyRead::getBuilderNodeVector( ) const {
 	return NodeRunInfoData::getBuilderNodeVector( );
-}
-const std::vector<Node *> & NodeRunInfoDataOnlyRead::getBuilderReferenceSortVector( ) const {
-	return NodeRunInfoData::getBuilderReferenceSortVector( );
 }
 size_t NodeRunInfoDataOnlyRead::getCurrentFrame( ) const {
 	return NodeRunInfoData::getCurrentFrame( );
@@ -43,4 +40,16 @@ Node * NodeRunInfoDataOnlyRead::getOldNode( ) const {
 }
 const std::vector<Node *> & NodeRunInfoDataOnlyRead::getRunOverNodeVector( ) const {
 	return NodeRunInfoData::getRunOverNodeVector( );
+}
+const std::list<Node *> & NodeRunInfoDataOnlyRead::getAwaitNodeList( ) const {
+	return NodeRunInfoData::getAwaitNodeList( );
+}
+const std::list<Node *> & NodeRunInfoDataOnlyRead::getCreateNodeList( ) const {
+	return NodeRunInfoData::getCreateNodeList( );
+}
+const std::list<Node *> & NodeRunInfoDataOnlyRead::getFunctionNodeList( ) const {
+	return NodeRunInfoData::getFunctionNodeList( );
+}
+const std::list<Node *> & NodeRunInfoDataOnlyRead::getJumpNodeList( ) const {
+	return NodeRunInfoData::getJumpNodeList( );
 }

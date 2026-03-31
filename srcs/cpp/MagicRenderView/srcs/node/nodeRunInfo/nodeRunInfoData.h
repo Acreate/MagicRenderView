@@ -32,11 +32,17 @@ private:
 	/// @brief 编译列表
 	std::vector< Node * > builderNodeVector;
 	/// @brief 编译时的起始节点列表
-	std::vector< Node * > builderBeginList;
-	/// @brief 编译节点的排序参考列表
-	std::vector< Node * > builderReferenceSortVector;
+	std::vector< Node * > builderBeginVector;
 	/// @brief 已经调用完毕的列表
 	std::vector< Node * > runOverNodeVector;
+	/// @brief 跳转节点堆栈
+	std::list< Node * > jumpNodeList;
+	/// @brief 创建节点堆栈
+	std::list< Node * > createNodeList;
+	/// @brief 调用节点堆栈
+	std::list< Node * > functionNodeList;
+	/// @brief 等待节点堆栈
+	std::list< Node * > awaitNodeList;
 public:
 	NodeRunInfoData( );
 	~NodeRunInfoData( ) override;
@@ -75,12 +81,19 @@ protected:
 	virtual void setOldNode( Node *old_node ) { oldNode = old_node; }
 	virtual const std::vector< Node * > & getBuilderNodeVector( ) const { return builderNodeVector; }
 	virtual void setBuilderNodeVector( const std::vector< Node * > &builder_node_vector ) { builderNodeVector = builder_node_vector; }
-	virtual const std::vector< Node * > & getBuilderBeginList( ) const { return builderBeginList; }
-	virtual void setBuilderBeginList( const std::vector< Node * > &builder_begin_list ) { builderBeginList = builder_begin_list; }
-	virtual const std::vector< Node * > & getBuilderReferenceSortVector( ) const { return builderReferenceSortVector; }
-	virtual void setBuilderReferenceSortVector( const std::vector< Node * > &builder_reference_sort_vector ) { builderReferenceSortVector = builder_reference_sort_vector; }
+	virtual const std::vector< Node * > & getBuilderBeginVector( ) const { return builderBeginVector; }
+	virtual void setBuilderBeginVector( const std::vector< Node * > &builder_begin_list ) { builderBeginVector = builder_begin_list; }
 	virtual const std::vector< Node * > & getRunOverNodeVector( ) const { return runOverNodeVector; }
 	virtual void setRunOverNodeVector( const std::vector< Node * > &run_over_node_vector ) { runOverNodeVector = run_over_node_vector; }
+	virtual const std::list< Node * > & getJumpNodeList( ) const { return jumpNodeList; }
+	virtual void setJumpNodeList( const std::list< Node * > &jump_node_list ) { jumpNodeList = jump_node_list; }
+	virtual const std::list< Node * > & getCreateNodeList( ) const { return createNodeList; }
+	virtual void setCreateNodeList( const std::list< Node * > &create_node_list ) { createNodeList = create_node_list; }
+	virtual const std::list< Node * > & getFunctionNodeList( ) const { return functionNodeList; }
+	virtual void setFunctionNodeList( const std::list< Node * > &function_node_list ) { functionNodeList = function_node_list; }
+	virtual const std::list< Node * > & getAwaitNodeList( ) const { return awaitNodeList; }
+	virtual void setAwaitNodeList( const std::list< Node * > &await_node_list ) { awaitNodeList = await_node_list; }
+	virtual void clear( );
 };
 
 #endif // NODERUNINFODATA_H_H_HEAD__FILE__
