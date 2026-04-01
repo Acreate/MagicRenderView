@@ -2,6 +2,7 @@
 #define NODERUNINFO_H_H_HEAD__FILE__
 
 #include <QObject>
+class NodeRunInfoStack;
 class NodeRunInfoData;
 class NodeRunInfoDataOnlyRead;
 class NodeRunInfoDataEditor;
@@ -23,6 +24,7 @@ private:
 	NodeDirector *nodeDirectorPtr;
 	NodeRunInfoData *nodeRunInfoDataPtr;
 	NodeRunInfoData *nodeRunInfoDataImagePtr;
+	NodeRunInfoStack* nodeRunInfoStackPtr;
 protected:
 	virtual NodeRunInfoData * getNodeRunInfoData( ) const;
 	virtual void setNodeRunInfoData( NodeRunInfoData *new_node_run_info_data );

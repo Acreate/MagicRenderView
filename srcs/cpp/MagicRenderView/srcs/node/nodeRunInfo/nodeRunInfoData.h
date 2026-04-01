@@ -2,10 +2,12 @@
 #define NODERUNINFODATA_H_H_HEAD__FILE__
 #include <QObject>
 class NodeRunInfo;
+class NodeRunInfoStack;
 class Node;
 class NodeRunInfoData : public QObject {
 	Q_OBJECT;
 	friend class NodeRunInfo;
+	friend class NodeRunInfoStack;
 private:
 	/// @brief 当前帧
 	size_t currentFrame;

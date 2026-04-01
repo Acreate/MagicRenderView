@@ -4,6 +4,7 @@
 #include <QThread>
 
 #include "nodeRunInfoData.h"
+#include "nodeRunInfoStack.h"
 
 #include "../../app/application.h"
 
@@ -26,11 +27,14 @@
 NodeRunInfo::NodeRunInfo( ) : QObject( ) {
 	nodeRunInfoDataPtr = new NodeRunInfoDataEditor;
 	nodeRunInfoDataImagePtr = new NodeRunInfoDataEditor;
+	nodeRunInfoStackPtr = new NodeRunInfoStack;
+	nodeRunInfoStackPtr->pushCreateStackLast( *nodeRunInfoDataPtr );
 }
 NodeRunInfo::~NodeRunInfo( ) {
 	emit release_signal( this, Create_SrackInfo( ) );
 	delete nodeRunInfoDataPtr;
 	delete nodeRunInfoDataImagePtr;
+	delete nodeRunInfoStackPtr;
 }
 bool NodeRunInfo::hasBuilderNode( const Node *check_node_ptr ) {
 	if( check_node_ptr == nullptr )
