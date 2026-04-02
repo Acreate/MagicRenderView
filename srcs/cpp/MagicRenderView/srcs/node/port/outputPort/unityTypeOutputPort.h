@@ -6,11 +6,8 @@
 class UnityTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	UnityTypeOutputPort( const QString &name )
-		: OutputPort( name ) { }
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Unity;
-	}
+	UnityTypeOutputPort( const QString &name );
+	NodeEnum::PortType getPortType( ) const override;
 };
 
 #endif // UNITYTYPEOUTPUTPORT_H_H_HEAD__FILE__

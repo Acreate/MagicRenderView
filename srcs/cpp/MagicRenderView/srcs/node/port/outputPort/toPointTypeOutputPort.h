@@ -7,10 +7,7 @@
 class ToPointTypeOutputPort : public OutputPort {
 	Q_OBJECT;
 public:
-	ToPointTypeOutputPort( const QString &name )
-		: OutputPort( name ) { }
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::ToPoint;
-	}
+	ToPointTypeOutputPort( const QString &name );
+	NodeEnum::PortType getPortType( ) const override;
 };
 #endif // TOPOINTTYPEOUTPUTPORT_H_H_HEAD__FILE__

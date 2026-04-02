@@ -2,14 +2,13 @@
 #define LIFTNODE_H_H_HEAD__FILE__
 #include "../../../../node/callNode.h"
 
-class AnyVarInputPort;
-class PointInputPort;
-class ToPointInputPort;
+class CallInputPort;
+class FunctionInputPort;
 class LiftNode : public CallNode {
 	Q_OBJECT;
 protected:
-	PointInputPort *pointInputPort;
-	ToPointInputPort *toPointInputPort;
+	CallInputPort *callInputPortPtr;
+	FunctionInputPort *functionInputPortPtr;
 public:
 	LiftNode( const QString &node_name )
 		: CallNode( node_name ) { }

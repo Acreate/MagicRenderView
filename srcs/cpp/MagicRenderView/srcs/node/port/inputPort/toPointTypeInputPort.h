@@ -6,11 +6,8 @@
 class ToPointTypeInputPort : public InputPort {
 	Q_OBJECT;
 public:
-	ToPointTypeInputPort( const QString &name )
-		: InputPort( name ) { }
+	ToPointTypeInputPort( const QString &name );
 
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::ToPoint;
-	}
+	NodeEnum::PortType getPortType( ) const override;
 };
 #endif // TOPOINTTYPEINPUTPORT_H_H_HEAD__FILE__

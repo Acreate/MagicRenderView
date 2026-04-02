@@ -6,10 +6,7 @@
 class UnityTypeInputPort : public InputPort {
 	Q_OBJECT;
 public:
-	UnityTypeInputPort( const QString &name )
-		: InputPort( name ) { }
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Unity;
-	}
+	UnityTypeInputPort( const QString &name );
+	NodeEnum::PortType getPortType( ) const override;
 };
 #endif // UNITYTYPEINPUTPORT_H_H_HEAD__FILE__

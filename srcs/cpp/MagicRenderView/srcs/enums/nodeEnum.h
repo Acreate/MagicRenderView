@@ -44,6 +44,8 @@ namespace NodeEnum {
 		Array,
 		Point,
 		ToPoint,
+		Call,
+		Function,
 	};
 	/// @brief 点击节点返回类型
 	enum class NodeClickType {

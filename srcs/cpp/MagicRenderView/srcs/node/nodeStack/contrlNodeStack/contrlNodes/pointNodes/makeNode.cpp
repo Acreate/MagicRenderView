@@ -4,6 +4,7 @@
 #include <node/port/outputPort/toPoint/toPointOutputPort.h>
 
 #include <tools/nodeTools.h>
+#include <enums/nodeEnum.h>
 
 Def_Entity_NodeTypeName_Function( MakeNode, Node::tr( "控制/记录位置" ) );
 

@@ -6,11 +6,8 @@
 class ArrayTypeInputPort : public InputPort {
 	Q_OBJECT;
 public:
-	ArrayTypeInputPort( const QString &name )
-		: InputPort( name ) { }
+	ArrayTypeInputPort( const QString &name );
 
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Array;
-	}
+	NodeEnum::PortType getPortType( ) const override;
 };
 #endif // ARRAYTYPEINPUTPORT_H_H_HEAD__FILE__

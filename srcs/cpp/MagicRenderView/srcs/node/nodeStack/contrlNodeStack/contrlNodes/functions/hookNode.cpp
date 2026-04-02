@@ -4,6 +4,7 @@
 #include <node/port/outputPort/toPoint/toPointOutputPort.h>
 
 #include <tools/nodeTools.h>
+#include <enums/nodeEnum.h>
 
 Def_Entity_NodeTypeName_Function( HookNode, Node::tr( "控制/钩子位置" ) );
 

@@ -4,6 +4,7 @@
 #include "pathTools.h"
 #include "vectorTools.h"
 
+#include <enums/nodeEnum.h>
 #include "../director/varDirector.h"
 
 #include "../node/node/node.h"

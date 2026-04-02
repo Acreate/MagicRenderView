@@ -1,5 +1,6 @@
 ﻿#include "portLinkType.h"
 
+#include <enums/nodeEnum.h>
 #include "../../director/varDirector.h"
 #include "../port/inputPort/inputPort.h"
 #include "../port/outputPort/outputPort.h"

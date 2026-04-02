@@ -2,8 +2,10 @@
 #define NODEPORT_H_H_HEAD__FILE__
 #include <QWidget>
 #include <define/portFrinedClass.h>
-#include <enums/nodeEnum.h>
 
+namespace NodeEnum {
+	enum class PortType;
+}
 Declaration_Class_Name( );
 
 class NodePort : public QWidget {

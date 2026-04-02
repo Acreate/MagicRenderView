@@ -7,11 +7,8 @@
 class PointTypeInputPort : public InputPort {
 	Q_OBJECT;
 public:
-	PointTypeInputPort( const QString &name )
-		: InputPort( name ) { }
+	PointTypeInputPort( const QString &name );
 
-	NodeEnum::PortType getPortType( ) const override {
-		return NodeEnum::PortType::Point;
-	}
+	NodeEnum::PortType getPortType( ) const override;
 };
 #endif // POINTTYPEINPUTPORT_H_H_HEAD__FILE__
